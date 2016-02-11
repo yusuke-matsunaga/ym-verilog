@@ -10,7 +10,7 @@
 
 
 #include "ym/pt/PtP.h"
-#include "ym//HashSet.h"
+#include "ym/HashSet.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

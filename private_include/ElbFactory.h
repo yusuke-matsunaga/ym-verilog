@@ -11,8 +11,8 @@
 
 #include "ym/ym_verilog.h"
 #include "ym/pt/PtP.h"
-#include "YmCell/cell_nsdef.h"
-#include "ym//Alloc.h"
+#include "ym/ym_cell.h"
+#include "ym/Alloc.h"
 
 #include "ElbFwd.h"
 

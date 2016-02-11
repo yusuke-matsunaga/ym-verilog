@@ -13,7 +13,7 @@
 #include "ym/pt/PtArray.h"
 #include "ym/pt/PtP.h"
 #include "ym/VlUdpVal.h"
-#include "ym//FileRegion.h"
+#include "ym/FileRegion.h"
 
 #include "PtiFwd.h"
 

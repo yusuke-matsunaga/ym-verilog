@@ -9,8 +9,8 @@
 /// All rights reserved.
 
 #include "ym/pt/PtP.h"
-#include "ym//FileLoc.h"
-#include "ym//FileRegion.h"
+#include "ym/FileLoc.h"
+#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

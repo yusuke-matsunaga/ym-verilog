@@ -10,9 +10,9 @@
 
 
 #include "ym/ym_verilog.h"
-#include "ym//File.h"
-#include "ym//FileRegion.h"
-#include "ym//StrBuff.h"
+#include "ym/File.h"
+#include "ym/FileRegion.h"
+#include "ym/StrBuff.h"
 #include "RawLex.h"
 
 

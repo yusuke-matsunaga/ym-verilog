@@ -11,8 +11,8 @@
 
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "ym//Alloc.h"
-#include "ym//HashMap.h"
+#include "ym/Alloc.h"
+#include "ym/HashMap.h"
 
 #include "TagDict.h"
 #include "ObjDict.h"

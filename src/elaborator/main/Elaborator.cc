@@ -20,12 +20,12 @@
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
 
-#include "YmCell/CellLibrary.h"
+#include "ym/CellLibrary.h"
 
 #include "PtMgr.h"
 #include "ElbModule.h"
 
-#include "ym//MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

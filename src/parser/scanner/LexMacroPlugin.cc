@@ -15,7 +15,7 @@
 #include "parser_common.h"
 #include "print_token.h"
 
-#include "ym//MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

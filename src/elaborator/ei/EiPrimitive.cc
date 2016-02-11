@@ -15,8 +15,8 @@
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
-#include "YmCell/Cell.h"
-#include "YmCell/CellPin.h"
+#include "ym/Cell.h"
+#include "ym/CellPin.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

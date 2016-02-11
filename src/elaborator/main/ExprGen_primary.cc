@@ -24,7 +24,7 @@
 #include "ElbExpr.h"
 #include "ElbGenvar.h"
 
-#include "ym//MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

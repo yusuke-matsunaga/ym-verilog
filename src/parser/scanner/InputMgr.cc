@@ -9,8 +9,8 @@
 
 #include "InputMgr.h"
 
-#include "ym//FileIDO.h"
-#include "ym//FileInfo.h"
+#include "ym/FileIDO.h"
+#include "ym/FileInfo.h"
 
 
 // ファイル末尾に改行がなくても warning としない時に 1

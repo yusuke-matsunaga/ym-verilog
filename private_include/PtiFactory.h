@@ -11,7 +11,7 @@
 
 #include "ym/pt/PtDecl.h"
 #include "PtiFwd.h"
-#include "ym//Alloc.h"
+#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

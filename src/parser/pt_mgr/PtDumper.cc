@@ -20,7 +20,7 @@
 #include "ym/pt/PtArray.h"
 #include "ym/VlUdpVal.h"
 
-#include "ym//StrBuff.h"
+#include "ym/StrBuff.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

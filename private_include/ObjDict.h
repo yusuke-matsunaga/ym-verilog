@@ -10,9 +10,9 @@
 
 
 #include "ym/ym_verilog.h"
-#include "ym//FileRegion.h"
-#include "ym//Alloc.h"
-#include "ym//UnitAlloc.h"
+#include "ym/FileRegion.h"
+#include "ym/Alloc.h"
+#include "ym/UnitAlloc.h"
 
 #include "ym/vl/VlFwd.h"
 #include "ElbFwd.h"

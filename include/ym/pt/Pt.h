@@ -14,7 +14,7 @@
 /// パース木の構成要素
 
 
-#include "ym//FileRegion.h"
+#include "ym/FileRegion.h"
 
 #include "ym/ym_verilog.h"
 

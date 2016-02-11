@@ -10,12 +10,12 @@
 
 
 #include "ym/pt/PtP.h"
-#include "ym//File.h"
-#include "ym//Alloc.h"
-#include "ym//FragAlloc.h"
-#include "ym//UnitAlloc.h"
-#include "ym//HashSet.h"
-#include "ym//HashMap.h"
+#include "ym/File.h"
+#include "ym/Alloc.h"
+#include "ym/FragAlloc.h"
+#include "ym/UnitAlloc.h"
+#include "ym/HashSet.h"
+#include "ym/HashMap.h"
 #include "PtiFwd.h"
 #include "PtiFactory.h"
 #include "PtiDecl.h"

@@ -12,7 +12,6 @@
 #include "ym/ym_verilog.h"
 #include "ym/BitVector.h"
 #include "ym/VlTime.h"
-#include "ym//RefCount.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -80,6 +79,10 @@ public:
   /// @brief 型変換を伴うコンストラクタ
   VlValue(const VlValue& src,
 	  const VlValueType& value_type);
+
+  /// @brief 代入演算子
+  const VlValue&
+  operator=(const VlValue& src);
 
   /// @brief デストラクタ
   ~VlValue();
@@ -226,7 +229,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値を持つ実体
-  SmartPtr<VlValueRep> mRep;
+  VlValueRep* mRep;
 
 };
 
@@ -785,11 +788,17 @@ multi_concat(const vector<VlValue>& src_list);
 /// @class VlValueRep VlValue.h "ym/VlValue.h"
 /// @brief VlValue の実体を表す仮想クラス
 //////////////////////////////////////////////////////////////////////
-class VlValueRep :
-  public RefCount
+class VlValueRep
 {
   friend class VlValue;
-  friend class SmartPtr<VlValueRep>;
+
+protected:
+
+  VlValueRep();
+
+  virtual
+  ~VlValueRep() { }
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -864,6 +873,29 @@ private:
   virtual
   BitVector
   bitvector_value(const VlValueType& req_type) const = 0;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 参照回数関係の関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 参照回数を増やす．
+  void
+  inc();
+
+  /// @brief 参照回数を減らす．
+  void
+  dec();
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 参照回数
+  ymuint mRefCount;
 
 };
 
@@ -1120,6 +1152,32 @@ BitVector
 VlValue::bitvector_value(const VlValueType& req_type) const
 {
   return mRep->bitvector_value(req_type);
+}
+
+
+inline
+VlValueRep::VlValueRep()
+{
+  mRefCount = 0;
+}
+
+// @brief 参照回数を増やす．
+inline
+void
+VlValueRep::inc()
+{
+  ++ mRefCount;
+}
+
+// @brief 参照回数を減らす．
+inline
+void
+VlValueRep::dec()
+{
+  -- mRefCount;
+  if ( mRefCount == 0 ) {
+    delete this;
+  }
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -11,7 +11,7 @@
 
 #include "ym/ym_verilog.h"
 #include "ym/VlScalarVal.h"
-#include "ym//HashFunc.h"
+#include "ym/HashFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

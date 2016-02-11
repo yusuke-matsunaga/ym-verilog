@@ -12,7 +12,7 @@
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtArray.h"
 
-#include "ym//FileRegion.h"
+#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

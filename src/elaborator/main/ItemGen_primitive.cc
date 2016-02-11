@@ -16,14 +16,14 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "YmCell/Cell.h"
-#include "YmCell/CellPin.h"
+#include "ym/Cell.h"
+#include "ym/CellPin.h"
 
 #include "ElbUdp.h"
 #include "ElbPrimitive.h"
 #include "ElbExpr.h"
 
-#include "ym//MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -10,7 +10,7 @@
 #include "InputFile.h"
 #include <fcntl.h>
 
-#include "ym//MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 #include "parser_common.h"
 

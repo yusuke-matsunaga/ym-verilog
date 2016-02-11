@@ -10,7 +10,7 @@
 
 
 #include "PtiFactory.h"
-#include "ym//Alloc.h"
+#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -10,8 +10,8 @@
 
 
 #include "ym/ym_verilog.h"
-#include "ym//StrBuff.h"
-#include "ym//FileRegion.h"
+#include "ym/StrBuff.h"
+#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

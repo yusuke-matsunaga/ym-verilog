@@ -12,9 +12,9 @@
 #include "ym/ym_verilog.h"
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "YmCell/cell_nsdef.h"
-#include "ym//File.h"
-#include "ym//SimpleAlloc.h"
+#include "ym/ym_cell.h"
+#include "ym/File.h"
+#include "ym/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

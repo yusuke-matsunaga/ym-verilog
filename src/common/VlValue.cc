@@ -39,42 +39,49 @@ VlValue::VlValue()
 VlValue::VlValue(const VlValue& src) :
   mRep(src.mRep)
 {
+  mRep->inc();
 }
 
 // @brief 整数値からのコンストラクタ
 VlValue::VlValue(int val) :
   mRep(new VlValueInt(val))
 {
+  mRep->inc();
 }
 
 // @brief ymuint からのコンストラクタ
 VlValue::VlValue(ymuint val) :
   mRep(new VlValueUint(val))
 {
+  mRep->inc();
 }
 
 // @brief スカラー値からのコンストラクタ
 VlValue::VlValue(const VlScalarVal& val) :
   mRep(new VlValueScalar(val))
 {
+  mRep->inc();
 }
 
 // @brief time からのコンストラクタ
 VlValue::VlValue(VlTime val) :
   mRep(new VlValueTime(val))
 {
+  mRep->inc();
 }
 
 // @brief 実数からのコンストラクタ
 VlValue::VlValue(double val) :
   mRep(new VlValueReal(val))
 {
+  mRep->inc();
 }
 
 // @brief ビットベクタからのコンストラクタ
 VlValue::VlValue(const BitVector& val) :
   mRep(new VlValueBitVector(val))
 {
+  mRep->inc();
 }
 
 // @brief 型変換を伴うコンストラクタ
@@ -104,12 +111,23 @@ VlValue::VlValue(const VlValue& src,
   else {
     ASSERT_NOT_REACHED;
   }
+  mRep->inc();
+}
+
+// @brief 代入演算子
+const VlValue&
+VlValue::operator=(const VlValue& src)
+{
+  src.mRep->inc();
+  mRep->dec();
+  mRep = src.mRep;
+  return *this;
 }
 
 // @brief デストラクタ
 VlValue::~VlValue()
 {
-  // SmartPtr<VlValueRep> が仕事をしてくれている．
+  mRep->dec();
 }
 
 // @brief 整数値を設定する．
@@ -117,6 +135,7 @@ void
 VlValue::set(int val)
 {
   mRep = new VlValueInt(val);
+  mRep->dec();
 }
 
 // @brief ymuint の値をセットする．
@@ -124,6 +143,7 @@ void
 VlValue::set(ymuint val)
 {
   mRep = new VlValueUint(val);
+  mRep->dec();
 }
 
 // @brief スカラー値をセットする．
@@ -131,6 +151,7 @@ void
 VlValue::set(const VlScalarVal& val)
 {
   mRep = new VlValueScalar(val);
+  mRep->dec();
 }
 
 // @brief time の値をセットする．
@@ -138,6 +159,7 @@ void
 VlValue::set(VlTime val)
 {
   mRep = new VlValueTime(val);
+  mRep->dec();
 }
 
 // @brief 実数値をセットする．
@@ -145,6 +167,7 @@ void
 VlValue::set(double val)
 {
   mRep = new VlValueReal(val);
+  mRep->dec();
 }
 
 // @brief ビットベクタの値をセットする．
@@ -152,6 +175,7 @@ void
 VlValue::set(const BitVector& val)
 {
   mRep = new VlValueBitVector(val);
+  mRep->dec();
 }
 
 // @relates VlValue

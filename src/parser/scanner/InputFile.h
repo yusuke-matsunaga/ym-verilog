@@ -11,11 +11,11 @@
 
 #include "ym/ym_verilog.h"
 
-#include "ym//Scanner.h"
-#include "ym//FileIDO.h"
-#include "ym//FileRegion.h"
-#include "ym//FileInfo.h"
-#include "ym//StrBuff.h"
+#include "ym/Scanner.h"
+#include "ym/FileIDO.h"
+#include "ym/FileRegion.h"
+#include "ym/FileInfo.h"
+#include "ym/StrBuff.h"
 
 #include "RawLex.h"
 

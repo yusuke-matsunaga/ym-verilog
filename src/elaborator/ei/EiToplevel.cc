@@ -10,7 +10,7 @@
 #include "EiFactory.h"
 #include "EiToplevel.h"
 
-#include "ym//FileRegion.h"
+#include "ym/FileRegion.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

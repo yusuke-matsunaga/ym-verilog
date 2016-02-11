@@ -12,10 +12,10 @@
 #include "ym/ym_verilog.h"
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "YmCell/cell_nsdef.h"
+#include "ym/ym_cell.h"
 
-#include "ym//SimpleAlloc.h"
-#include "ym//HashMap.h"
+#include "ym/SimpleAlloc.h"
+#include "ym/HashMap.h"
 
 #include "CfDict.h"
 #include "AttrDict.h"

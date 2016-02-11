@@ -10,7 +10,7 @@
 
 
 #include "ym/ym_verilog.h"
-#include "ym//UnitAlloc.h"
+#include "ym/UnitAlloc.h"
 
 #include "ElbFwd.h"
 

@@ -10,7 +10,7 @@
 
 
 #include "PtiFwd.h"
-#include "ym//Alloc.h"
+#include "ym/Alloc.h"
 #include "ym/pt/PtArray.h"
 
 

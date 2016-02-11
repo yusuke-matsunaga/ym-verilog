@@ -12,7 +12,7 @@
 #include "ym/pt/PtDecl.h"
 #include "ym/pt/PtArray.h"
 
-#include "ym//FileRegion.h"
+#include "ym/FileRegion.h"
 
 #include "PtiDecl.h"
 

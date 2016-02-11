@@ -13,8 +13,8 @@
 #include "ym/pt/PtArray.h"
 #include "ym/pt/PtP.h"
 
-#include "ym//FileRegion.h"
-#include "ym//HashMap.h"
+#include "ym/FileRegion.h"
+#include "ym/HashMap.h"
 
 #include "PtiDecl.h"
 

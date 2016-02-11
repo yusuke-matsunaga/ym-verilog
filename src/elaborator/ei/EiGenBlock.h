@@ -12,8 +12,8 @@
 #include "ElbScope.h"
 #include "ElbGfRoot.h"
 #include "ym/pt/PtP.h"
-#include "ym//StrBuff.h"
-#include "ym//HashMap.h"
+#include "ym/StrBuff.h"
+#include "ym/HashMap.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

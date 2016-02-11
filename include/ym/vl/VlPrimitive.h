@@ -11,7 +11,7 @@
 
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlFwd.h"
-#include "YmCell/cell_nsdef.h"
+#include "ym/ym_cell.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

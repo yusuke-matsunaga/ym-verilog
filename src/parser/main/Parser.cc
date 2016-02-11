@@ -18,7 +18,7 @@
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtStmt.h"
 
-#include "ym//MsgMgr.h"
+#include "ym/MsgMgr.h"
 
 
 const int debug = 0;
