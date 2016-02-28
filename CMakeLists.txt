@@ -229,10 +229,8 @@ set_source_files_properties ( ${CMAKE_CURRENT_BINARY_DIR}/verilog_grammer.cc GEN
 # ===================================================================
 #  ターゲットの設定
 # ===================================================================
-ym_add_library ( ym_verilog
-  SHARED
+ym_add_object_library ( ym_verilog
   ${common_SOURCES}
   ${elaborator_SOURCES}
   ${parser_SOURCES}
-  DESTINATION ${YM_INSTALL_LIBDIR}
   )
