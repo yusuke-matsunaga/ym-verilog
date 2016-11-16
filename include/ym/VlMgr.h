@@ -80,7 +80,7 @@ public:
 
   /// @brief エラボレーションを行う．
   /// @param[in] cell_library セルライブラリ
-  /// @param[in] エラー数を返す．
+  /// @return エラー数を返す．
   ymuint
   elaborate(const CellLibrary* cell_library = nullptr);
 
