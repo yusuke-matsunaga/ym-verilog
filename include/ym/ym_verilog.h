@@ -1,7 +1,7 @@
-﻿#ifndef YM_YM_YM_H
-#define YM_YM_YM_H
+﻿#ifndef YM_VERILOG_H
+#define YM_VERILOG_H
 
-/// @file ym/ym_ym_verilog.h
+/// @file ym/ym_verilog.h
 /// @brief ym-verilog に共通な定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -14,7 +14,7 @@
 /// ただし，主要なものは nsYm にインポートされている．
 /// 実装用のローカルな要素だけがこの名前空間に存在する．
 
-/// @defgroup VlGroup Verilog パッケージ
+/// @defgroup ym-verilog Verilog パッケージ
 ///
 /// Verilog-HDL(IEEE1364, IEEE1364-2001) フォーマットの
 /// フロントエンド
@@ -50,7 +50,7 @@ END_NAMESPACE_YM_VERILOG
 BEGIN_NAMESPACE_YM
 
 /// @defgroup VlCommon Verilog 用基本ユーティリティ
-/// @ingroup VlGroup
+/// @ingroup ym-verilog
 /// @{
 
 //////////////////////////////////////////////////////////////////////
@@ -565,4 +565,4 @@ using nsVerilog::VlValue;
 
 END_NAMESPACE_YM
 
-#endif // YM_YM_H
+#endif // YM_VERILOG_H
