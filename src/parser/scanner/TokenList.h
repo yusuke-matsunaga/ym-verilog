@@ -8,7 +8,7 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 #include "ym/FileRegion.h"
 
 

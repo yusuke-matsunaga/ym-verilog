@@ -5,7 +5,7 @@
 
 // シミュレーション時のスコープの状態を表すクラス
 
-#include <ym/ym_verilog.h>
+#include <ym/verilog.h>
 
 
 BEGIN_NAMESPACE_YM_VERILOG

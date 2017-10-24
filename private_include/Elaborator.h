@@ -9,10 +9,10 @@
 /// All rights reserved.
 
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 
 #include "ym/SimpleAlloc.h"
 #include "ym/HashMap.h"
@@ -58,7 +58,7 @@ public:
   /// @param[in] cell_library セルライブラリ
   Elaborator(ElbMgr& elb_mgr,
 	     ElbFactory& elb_factory,
-	     const CellLibrary* cell_library = nullptr);
+	     const ClibCellLibrary* cell_library = nullptr);
 
   /// @brief デストラクタ
   ~Elaborator();
@@ -126,7 +126,7 @@ private:
   /// @param[in] name セル名
   /// @return name という名のセルを返す．
   /// @note なければ nullptr を返す．
-  const Cell*
+  const ClibCell*
   find_cell(const char* name) const;
 
 
@@ -185,7 +185,7 @@ private:
   ElbFactory& mFactory;
 
   // セルライブラリ
-  const CellLibrary* mCellLibrary;
+  const ClibCellLibrary* mCellLibrary;
 
   // ElbStub 用のメモリアロケータ
   SimpleAlloc mAlloc;

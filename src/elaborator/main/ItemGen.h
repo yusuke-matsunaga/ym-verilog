@@ -9,9 +9,9 @@
 /// All rights reserved.
 
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 #include "ym/pt/PtP.h"
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 #include "ElbProxy.h"
 
 
@@ -165,7 +165,7 @@ private:
   void
   instantiate_cell(const VlNamedObj* parent,
 		   const PtItem* pt_head,
-		   const Cell* cell);
+		   const ClibCell* cell);
 
   /// @brief gate delay の生成を行う
   /// @param[in] prim_head ゲートプリミティブのヘッダ

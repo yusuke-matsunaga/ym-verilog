@@ -16,8 +16,8 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "ym/Cell.h"
-#include "ym/CellPin.h"
+#include "ym/ClibCell.h"
+#include "ym/ClibCellPin.h"
 
 #include "ElbUdp.h"
 #include "ElbPrimitive.h"
@@ -254,7 +254,7 @@ ItemGen::instantiate_udpheader(const VlNamedObj* parent,
 void
 ItemGen::instantiate_cell(const VlNamedObj* parent,
 			  const PtItem* pt_head,
-			  const Cell* cell)
+			  const ClibCell* cell)
 {
   ElbPrimHead* prim_head = factory().new_CellHead(parent,
 						  pt_head,
@@ -269,7 +269,7 @@ ItemGen::instantiate_cell(const VlNamedObj* parent,
       for (ymuint j = 0; j < port_num; ++ j) {
 	const PtConnection* pt_con = pt_inst->port(j);
 	const char* pin_name = pt_con->name();
-	const CellPin* pin = cell->pin(pin_name);
+	const ClibCellPin* pin = cell->pin(pin_name);
 	if ( pin == nullptr ) {
 	  ostringstream buf;
 	  buf << pin_name << ": No such pin.";
@@ -546,7 +546,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
 
-  const Cell* cell = prim->cell();
+  const ClibCell* cell = prim->cell();
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
@@ -554,7 +554,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
     const PtConnection* pt_con = pt_inst->port(i);
     ymuint index;
     if ( conn_by_name ) {
-      const CellPin* pin = cell->pin(pt_con->name());
+      const ClibCellPin* pin = cell->pin(pt_con->name());
       if ( pin == nullptr ) {
 	ostringstream buf;
 	buf << pt_con->name() << ": No such pin.";
@@ -653,7 +653,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
 
-  const Cell* cell = primitive->cell();
+  const ClibCell* cell = primitive->cell();
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
@@ -661,7 +661,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
     const PtConnection* pt_con = pt_inst->port(i);
     ymuint index;
     if ( conn_by_name ) {
-      const CellPin* pin = cell->pin(pt_con->name());
+      const ClibCellPin* pin = cell->pin(pt_con->name());
       if ( pin == nullptr ) {
 	ostringstream buf;
 	buf << pt_con->name() << ": No such pin.";

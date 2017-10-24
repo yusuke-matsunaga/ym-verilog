@@ -16,7 +16,7 @@
 
 #include "ym/FileRegion.h"
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 
 #include "ym/pt/PtUdp.h"
 #include "ym/pt/PtModule.h"

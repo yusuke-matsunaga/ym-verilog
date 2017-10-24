@@ -20,7 +20,7 @@
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
 
-#include "ym/CellLibrary.h"
+#include "ym/ClibCellLibrary.h"
 
 #include "PtMgr.h"
 #include "ElbModule.h"
@@ -36,7 +36,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] cell_library セルライブラリ
 Elaborator::Elaborator(ElbMgr& elb_mgr,
 		       ElbFactory& elb_factory,
-		       const CellLibrary* cell_library) :
+		       const ClibCellLibrary* cell_library) :
   mMgr(elb_mgr),
   mFactory(elb_factory),
   mCellLibrary(cell_library),
@@ -316,7 +316,7 @@ Elaborator::reg_constant_function(const VlNamedObj* parent,
 // @param[in] name セル名
 // @return name という名のセルを返す．
 // @note なければ nullptr を返す．
-const Cell*
+const ClibCell*
 Elaborator::find_cell(const char* name) const
 {
   if ( mCellLibrary ) {

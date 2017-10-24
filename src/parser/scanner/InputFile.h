@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 
 #include "ym/Scanner.h"
 #include "ym/FileIDO.h"

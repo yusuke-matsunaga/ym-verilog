@@ -1,7 +1,7 @@
 ﻿#ifndef YM_VERILOG_H
 #define YM_VERILOG_H
 
-/// @file ym/ym_verilog.h
+/// @file ym/verilog.h
 /// @brief ym-verilog に共通な定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///

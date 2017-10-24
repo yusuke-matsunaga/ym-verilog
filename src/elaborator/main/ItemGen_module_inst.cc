@@ -175,7 +175,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
   }
 
   // 正式な仕様にはないが，セルライブラリを探す．
-  const Cell* cell = find_cell(defname);
+  const ClibCell* cell = find_cell(defname);
   if ( cell ) {
     // ただしこの場合, mParamList は空でなければならない．
     PtConnectionArray pa_array = pt_head->paramassign_array();

@@ -11,7 +11,7 @@
 
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlFwd.h"
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -46,7 +46,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const = 0;
 
   /// @brief 0 の強さを得る．
@@ -134,7 +134,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const = 0;
 
   /// @brief 0 の強さを得る．

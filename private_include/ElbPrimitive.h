@@ -59,7 +59,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const = 0;
 
   /// @brief 0 の強さを得る．

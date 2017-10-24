@@ -15,8 +15,8 @@
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
-#include "ym/Cell.h"
-#include "ym/CellPin.h"
+#include "ym/ClibCell.h"
+#include "ym/ClibCellPin.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -76,7 +76,7 @@ EiFactory::new_UdpHead(const VlNamedObj* parent,
 ElbPrimHead*
 EiFactory::new_CellHead(const VlNamedObj* parent,
 			const PtItem* pt_header,
-			const Cell* cell)
+			const ClibCell* cell)
 {
   EiPrimHead* head = nullptr;
   void* p = mAlloc.get_memory(sizeof(EiPrimHeadC));
@@ -217,7 +217,7 @@ EiPrimHead::udp_defn() const
 }
 
 // @brief セルを返す．
-const Cell*
+const ClibCell*
 EiPrimHead::cell() const
 {
   return nullptr;
@@ -379,7 +379,7 @@ EiPrimHeadUD::set_delay(ElbDelay* expr)
 // @param[in] cell セル
 EiPrimHeadC::EiPrimHeadC(const VlNamedObj* parent,
 			 const PtItem* pt_header,
-			 const Cell* cell) :
+			 const ClibCell* cell) :
   EiPrimHead(parent, pt_header),
   mCell(cell)
 {
@@ -405,7 +405,7 @@ EiPrimHeadC::def_name() const
 }
 
 // @brief セルを返す．
-const Cell*
+const ClibCell*
 EiPrimHeadC::cell() const
 {
   return mCell;
@@ -501,7 +501,7 @@ EiPrimArray::udp_defn() const
 }
 
 // @brief セルを返す．
-const Cell*
+const ClibCell*
 EiPrimArray::cell() const
 {
   return head()->cell();
@@ -688,7 +688,7 @@ EiPrimitive::udp_defn() const
 }
 
 // @brief セルを返す．
-const Cell*
+const ClibCell*
 EiPrimitive::cell() const
 {
   return head()->cell();
@@ -737,7 +737,7 @@ EiPrimitive::init_port(EiPrimTerm* term_array)
 {
   mPortArray = term_array;
 
-  const Cell* cell = this->cell();
+  const ClibCell* cell = this->cell();
   if ( cell == nullptr ) {
     ymuint output_num;
     ymuint inout_num;
@@ -760,7 +760,7 @@ EiPrimitive::init_port(EiPrimTerm* term_array)
   else {
     ymuint n = cell->pin_num();
     for (ymuint i = 0; i < n; ++ i) {
-      const CellPin* pin = cell->pin(i);
+      const ClibCellPin* pin = cell->pin(i);
       tVlDirection dir;
       if ( pin->is_input() ) {
 	dir = kVlInput;

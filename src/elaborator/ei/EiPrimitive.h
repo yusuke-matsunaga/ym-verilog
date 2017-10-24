@@ -70,7 +70,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const;
 
   /// @brief 0 の強さを得る．
@@ -282,7 +282,7 @@ protected:
   /// @param[in] cell セル
   EiPrimHeadC(const VlNamedObj* parent,
 	      const PtItem* pt_header,
-	      const Cell* cell);
+	      const ClibCell* cell);
 
   /// @brief デストラクタ
   virtual
@@ -306,7 +306,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const;
 
 
@@ -316,7 +316,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // セル
-  const Cell* mCell;
+  const ClibCell* mCell;
 
 };
 
@@ -389,7 +389,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const;
 
   /// @brief 0 の強さを得る．
@@ -698,7 +698,7 @@ public:
 
   /// @brief セルを返す．
   virtual
-  const Cell*
+  const ClibCell*
   cell() const;
 
   /// @brief 0 の強さを得る．

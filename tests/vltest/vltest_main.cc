@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 #include "ym/CellLibrary.h"
 #include "ym/CellDotlibReader.h"
 #include "ym/CellMislibReader.h"

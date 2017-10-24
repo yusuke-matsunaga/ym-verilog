@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 #include "ym/VlValue.h"
 #include "ym/pt/PtP.h"
 #include "ym/pt/PtArray.h"
@@ -142,7 +142,7 @@ protected:
   /// @param[in] name セル名
   /// @return name という名のセルを返す．
   /// @note なければ nullptr を返す．
-  const Cell*
+  const ClibCell*
   find_cell(const char* name) const;
 
 
@@ -732,7 +732,7 @@ ElbProxy::find_obj_up(const VlNamedObj* base_scope,
 // @return name という名のセルを返す．
 // @note なければ nullptr を返す．
 inline
-const Cell*
+const ClibCell*
 ElbProxy::find_cell(const char* name) const
 {
   return mElaborator.find_cell(name);

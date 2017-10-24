@@ -410,7 +410,7 @@ public:
   ElbPrimHead*
   new_CellHead(const VlNamedObj* parent,
 	       const PtItem* pt_header,
-	       const Cell* cell);
+	       const ClibCell* cell);
 
   /// @brief プリミティブインスタンスを生成する．
   /// @param[in] head ヘッダ

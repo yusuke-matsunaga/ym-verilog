@@ -9,9 +9,9 @@
 /// All rights reserved.
 
 
-#include "ym/ym_verilog.h"
+#include "ym/verilog.h"
 #include "ym/pt/PtP.h"
-#include "ym/ym_cell.h"
+#include "ym/clib.h"
 #include "ym/Alloc.h"
 
 #include "ElbFwd.h"
@@ -409,7 +409,7 @@ public:
   ElbPrimHead*
   new_CellHead(const VlNamedObj* parent,
 	       const PtItem* pt_header,
-	       const Cell* cell) = 0;
+	       const ClibCell* cell) = 0;
 
   /// @brief プリミティブインスタンスを生成する．
   /// @param[in] head ヘッダ
