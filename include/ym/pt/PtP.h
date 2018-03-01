@@ -199,10 +199,11 @@ BEGIN_NAMESPACE_YM
 template <>
 struct HashFunc<nsVerilog::PtModule*>
 {
-  ymuint
+  HashType
   operator()(nsVerilog::PtModule* module) const
   {
-    return reinterpret_cast<ympuint>(module)/sizeof(void*);
+    ympuint tmp = reinterpret_cast<ympuint>(module)/sizeof(void*);
+    return static_cast<HashType>(tmp);
   }
 };
 
@@ -210,10 +211,11 @@ struct HashFunc<nsVerilog::PtModule*>
 template <>
 struct HashFunc<const nsVerilog::PtModule*>
 {
-  ymuint
+  HashType
   operator()(const nsYm::nsVerilog::PtModule* module) const
   {
-    return reinterpret_cast<ympuint>(module)/sizeof(void*);
+    ympuint tmp = reinterpret_cast<ympuint>(module)/sizeof(void*);
+    return static_cast<HashType>(tmp);
   }
 };
 
