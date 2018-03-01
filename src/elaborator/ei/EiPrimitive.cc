@@ -17,6 +17,7 @@
 #include "ym/pt/PtMisc.h"
 #include "ym/ClibCell.h"
 #include "ym/ClibCellPin.h"
+#include "ym/ClibCellPinList.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -758,9 +759,7 @@ EiPrimitive::init_port(EiPrimTerm* term_array)
     }
   }
   else {
-    ymuint n = cell->pin_num();
-    for (ymuint i = 0; i < n; ++ i) {
-      const ClibCellPin* pin = cell->pin(i);
+    for ( auto pin: cell->pin_list() ) {
       tVlDirection dir;
       if ( pin->is_input() ) {
 	dir = kVlInput;
@@ -774,7 +773,7 @@ EiPrimitive::init_port(EiPrimTerm* term_array)
       else {
 	ASSERT_NOT_REACHED;
       }
-      mPortArray[i].set(this, i, dir);
+      mPortArray[pin->pin_id()].set(this, pin->pin_id(), dir);
     }
   }
 }
