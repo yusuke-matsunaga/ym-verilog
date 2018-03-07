@@ -120,7 +120,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ハッシュ関数
-  HashType
+  SizeType
   hash() const;
 
 
@@ -336,10 +336,10 @@ VlTime::to_real() const
 
 // ハッシュ関数
 inline
-HashType
+SizeType
 VlTime::hash() const
 {
-  return static_cast<HashType>((mValue * mValue) >> 24);
+  return static_cast<SizeType>((mValue * mValue) >> 24);
 }
 
 // 加算付き代入
@@ -423,7 +423,7 @@ BEGIN_NAMESPACE_YM
 template <>
 struct HashFunc<nsVerilog::VlTime>
 {
-  HashType
+  SizeType
   operator()(nsVerilog::VlTime time) const
   {
     return time.hash();

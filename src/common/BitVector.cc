@@ -2703,7 +2703,7 @@ BitVector::has_xz() const
   }
 
   ymuint32 m = mask(size());
-  if ( (mVal0[n - 1] ^ mVal1[n - 1] | ~m) != kAll1 ) {
+  if ( ((mVal0[n - 1] ^ mVal1[n - 1]) | ~m) != kAll1 ) {
     return true;
   }
   return false;
