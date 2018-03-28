@@ -105,7 +105,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 	  << "\" is duplicately defined as module and as UDP.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      module->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      buf.str());
       ++ nerr;
@@ -115,7 +115,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
       buf << "module \"" << name<< "\" is redefined.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      module->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      buf.str());
       ++ nerr;
@@ -153,7 +153,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
       // defparam 文で適用できるものがあれば適用する．
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      FileRegion(),
-		      kMsgDebug,
+		      MsgType::Debug,
 		      "ELAB",
 		      "\"instantiate_defparam\" starts.");
 
@@ -180,7 +180,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
       // generate block の生成を行う．
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      FileRegion(),
-		      kMsgDebug,
+		      MsgType::Debug,
 		      "ELAB",
 		      "Phase 1 starts.");
 
@@ -201,7 +201,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 	  << " : not found.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_defparam->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      buf.str());
     }
@@ -210,7 +210,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     // 配列要素やビット要素の生成を行う．
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "ELAB",
 		    "Phase 2 starts.");
 
@@ -220,7 +220,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     // 名前の解決(リンク)を行う．
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "ELAB",
 		    "Phase 3 starts.");
 

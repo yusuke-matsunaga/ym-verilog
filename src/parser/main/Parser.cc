@@ -98,7 +98,7 @@ Parser::read_file(const string& filename,
     buf << filename << " : No such file.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    FileRegion(),
-		    kMsgFailure,
+		    MsgType::Failure,
 		    "VLPARSER",
 		    buf.str());
     return false;
@@ -242,7 +242,7 @@ Parser::check_function_statement(const PtStmt* stmt)
       << " cannot be used in function declaration.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  stmt->file_region(),
-		  kMsgError,
+		  MsgType::Error,
 		  "PARS",
 		  buf.str());
   return false;
@@ -261,7 +261,7 @@ Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
       if ( n > 1 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			ci->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"PARS",
 			" more than one 'default' labels.");
 	return false;

@@ -49,7 +49,7 @@ LpDefine::parse()
   if ( !expect(IDENTIFIER) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting an identifier after `define.");
@@ -63,7 +63,7 @@ LpDefine::parse()
 	<< cur_string() << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    buf.str());
     return false;
@@ -87,7 +87,7 @@ LpDefine::parse()
     if ( !expect(IDENTIFIER) ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_token_loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      "Syntax error: "
 		      "expecting an identifier after '('.");
@@ -106,7 +106,7 @@ LpDefine::parse()
 	if ( !expect(IDENTIFIER) ) {
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  cur_token_loc(),
-			  kMsgError,
+			  MsgType::Error,
 			  "LEX",
 			  "Syntax error: "
 			  "expecting an identifier after ','.");
@@ -119,7 +119,7 @@ LpDefine::parse()
       default:
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			cur_token_loc(),
-			kMsgError,
+			MsgType::Error,
 			"LEX",
 			"Syntax error: "
 			"expecting ')' or ',' after an identifier.");
@@ -131,7 +131,7 @@ LpDefine::parse()
     // それ以外はエラー
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting '(' or SPACE after a macro-name.");
@@ -180,7 +180,7 @@ LpDefine::parse()
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    macro_loc,
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    buf.str());
   }
@@ -217,7 +217,7 @@ LpUndef::parse()
   if ( !expect(IDENTIFIER) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting an identifier after `undef.");
@@ -230,7 +230,7 @@ LpUndef::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after macro-name.");
@@ -243,7 +243,7 @@ LpUndef::parse()
       buf << "forgetting a macro \"" << macroname << "\".";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_loc,
-		      kMsgDebug,
+		      MsgType::Debug,
 		      "LEX",
 		      buf.str());
     }
@@ -254,7 +254,7 @@ LpUndef::parse()
     buf << "macro `" << macroname << " is not defined.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc,
-		    kMsgWarning,
+		    MsgType::Warning,
 		    "LEX",
 		    buf.str());
   }
@@ -297,7 +297,7 @@ LpMacro::parse()
     buf << "macro `" << name() << " depends on itself.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    buf.str());
     return false;
@@ -308,7 +308,7 @@ LpMacro::parse()
     buf << "macro `" << name() << " found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    buf.str());
   }
@@ -320,7 +320,7 @@ LpMacro::parse()
     if ( !expect('(') ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_token_loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      "Syntax error: "
 		      "'(' is expected.");
@@ -351,7 +351,7 @@ LpMacro::parse()
 	  << mNumParam << ").";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_token_loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      buf.str());
       return false;

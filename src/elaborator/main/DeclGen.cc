@@ -160,7 +160,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	      << handle->file_region() << ".";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_item->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  continue;
@@ -189,7 +189,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 		<< ": Array object shall not be connected to IO port.";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    decl->file_region(),
-			    kMsgError,
+			    MsgType::Error,
 			    "ELAB",
 			    buf.str());
 	  }
@@ -205,7 +205,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	    buf << "reg or integer/time variable.";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    pt_item->file_region(),
-			    kMsgError,
+			    MsgType::Error,
 			    "ELAB",
 			    buf.str());
 	  }
@@ -233,7 +233,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 		  << pt_item->name() << "\".";
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      pt_item->file_region(),
-			      kMsgError,
+			      MsgType::Error,
 			      "ELAB",
 			      buf.str());
 	      continue;
@@ -246,7 +246,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 		<< pt_item->name() << "\".";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    pt_item->file_region(),
-			    kMsgError,
+			    MsgType::Error,
 			    "ELAB",
 			    buf.str());
 	    cout << "IO range: [" << left_val << ":" << right_val << "]"
@@ -264,7 +264,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	      << pt_item->name() << "\".";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_item->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  continue;
@@ -288,7 +288,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 		  << " because default_nettype = \"none\".";
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      pt_item->file_region(),
-			      kMsgError,
+			      MsgType::Error,
 			      "ELAB",
 			      buf.str());
 	      continue;
@@ -338,7 +338,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 		  << " : Implicit net declaration cannot have initial value.";
 	      MsgMgr::put_msg(__FILE__, __LINE__,
 			      pt_item->file_region(),
-			      kMsgError,
+			      MsgType::Error,
 			      "ELAB",
 			      buf.str());
 	      continue;
@@ -383,7 +383,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	  << namedobj->full_name() << " created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_head->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -486,7 +486,7 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
     buf << "Parameter(" << param->full_name() << ") created.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    file_region,
-		    kMsgInfo,
+		    MsgType::Info,
 		    "ELAB",
 		    buf.str());
 
@@ -575,7 +575,7 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
       buf << "NetArray(" << net_array->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -602,7 +602,7 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
       buf << "Net(" << net->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -705,7 +705,7 @@ DeclGen::instantiate_reg_head(const VlNamedObj* parent,
       buf << "RegArray(" << reg_array->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -734,7 +734,7 @@ DeclGen::instantiate_reg_head(const VlNamedObj* parent,
       buf << "Reg(" << reg->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -784,7 +784,7 @@ DeclGen::instantiate_var_head(const VlNamedObj* parent,
       buf << "VarArray(" << var_array->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -813,7 +813,7 @@ DeclGen::instantiate_var_head(const VlNamedObj* parent,
       buf << "Var(" << var->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -857,7 +857,7 @@ DeclGen::instantiate_event_head(const VlNamedObj* parent,
       buf << "NamedEventArray(" << ne_array->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -878,7 +878,7 @@ DeclGen::instantiate_event_head(const VlNamedObj* parent,
       buf << "NamedEvent(" << named_event->full_name() << ") created.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_item->file_region(),
-		      kMsgInfo,
+		      MsgType::Info,
 		      "ELAB",
 		      buf.str());
     }
@@ -901,7 +901,7 @@ DeclGen::instantiate_genvar_head(const VlNamedObj* parent,
     buf << "Genvar(" << genvar->full_name() << ") created.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    pt_item->file_region(),
-		    kMsgInfo,
+		    MsgType::Info,
 		    "ELAB",
 		    buf.str());
   }

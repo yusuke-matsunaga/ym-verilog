@@ -210,7 +210,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	// インデックスが範囲外
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			pt_expr1->file_region(),
-			kMsgWarning,
+			MsgType::Warning,
 			"ELAB",
 			"Bit-Select index is out of range.");
 	// ただ値が X になるだけでエラーにはならないそうだ．
@@ -249,7 +249,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	  // 左のインデックスが範囲外
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_left->file_region(),
-			  kMsgWarning,
+			  MsgType::Warning,
 			  "ELAB",
 			  "Left index is out of range.");
 	  // ただ値が X になるだけでエラーにはならないそうだ．
@@ -259,7 +259,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	  // 右のインデックスが範囲外
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_right->file_region(),
-			  kMsgWarning,
+			  MsgType::Warning,
 			  "ELAB",
 			  "Right index is out of range.");
 	  // ただ値が X になるだけでエラーにはならないそうだ．
@@ -300,7 +300,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	    // 左か右のインデックスが範囲外
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    pt_expr->file_region(),
-			    kMsgWarning,
+			    MsgType::Warning,
 			    "ELAB",
 			    "Index is out of range.");
 	    // ただ値が X になるだけでエラーにはならないそうだ．
@@ -350,7 +350,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	    // 左か右のインデックスが範囲外
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    pt_expr->file_region(),
-			    kMsgWarning,
+			    MsgType::Warning,
 			    "ELAB",
 			    "Index is out of range.");
 	    // ただ値が X になるだけでエラーにはならないそうだ．

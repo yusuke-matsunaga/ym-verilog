@@ -48,7 +48,7 @@ LpCellDefine::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgWarning,
+		    MsgType::Warning,
 		    "LEX",
 		    "`celldefine in module definition.");
   }
@@ -58,7 +58,7 @@ LpCellDefine::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after `celldefine.");
@@ -102,7 +102,7 @@ LpEndCellDefine::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgWarning,
+		    MsgType::Warning,
 		    "LEX",
 		    "`endcelldefine in module definition.");
   }
@@ -112,7 +112,7 @@ LpEndCellDefine::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after `endcelldefine.");
@@ -157,7 +157,7 @@ LpNetType::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`default_nettype in module definition.");
     return false;
@@ -188,7 +188,7 @@ LpNetType::parse()
   default:
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting net-type value after `default_net_type.");
@@ -198,7 +198,7 @@ LpNetType::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "new-line is expected.");
@@ -242,7 +242,7 @@ LpTimeScale::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`timescale in module definition.");
     return false;
@@ -258,7 +258,7 @@ LpTimeScale::parse()
   if ( !expect('/') ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting '/' after time-unit value.");
@@ -275,7 +275,7 @@ LpTimeScale::parse()
   if ( unit < precision ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "time precision is coarser than time unit.");
     return false;
@@ -284,7 +284,7 @@ LpTimeScale::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after time-precision value.");
@@ -329,7 +329,7 @@ LpTimeScale::parse_unit(int& unit)
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting 1/10/100.");
@@ -367,7 +367,7 @@ LpTimeScale::parse_unit(int& unit)
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting s/ms/us/ns/ps/fs.");
@@ -411,7 +411,7 @@ LpUnconnDrive::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`unconnected_drive in module definition.");
     return false;
@@ -425,7 +425,7 @@ LpUnconnDrive::parse()
   default:
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting \"pull0\" or \"pull1\""
@@ -436,7 +436,7 @@ LpUnconnDrive::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line.");
@@ -480,7 +480,7 @@ LpNounconnDrive::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`nounconnected_drive in module definition.");
     return false;
@@ -491,7 +491,7 @@ LpNounconnDrive::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after `nounconnected_drive.");
@@ -535,7 +535,7 @@ LpDecayTime::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`default_decay_time in module definition.");
     return false;
@@ -561,7 +561,7 @@ LpDecayTime::parse()
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting an integer or \"infinite\""
@@ -572,7 +572,7 @@ LpDecayTime::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "new-line is expected.");
@@ -616,7 +616,7 @@ LpTriregStrength::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`default_trireg_strength in module definition.");
     return false;
@@ -634,7 +634,7 @@ LpTriregStrength::parse()
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting an integer between 0 and 250 "
@@ -645,7 +645,7 @@ LpTriregStrength::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line.");
@@ -693,7 +693,7 @@ LpDelayMode::parse()
   if ( is_in_module() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "`delay_mode in module definition.");
     return false;
@@ -702,7 +702,7 @@ LpDelayMode::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line.");

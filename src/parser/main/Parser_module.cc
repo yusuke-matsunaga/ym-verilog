@@ -135,7 +135,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 	buf << "\"" << elem_name << "\" is not defined in the port list.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			elem->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			buf.str());
       }
@@ -145,7 +145,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 	buf << "\"" << elem_name << "\" is redefined.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			elem->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			buf.str());
       }
@@ -176,7 +176,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 	buf << "\"" << name << "\" is in the port list but not declared.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			port->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			buf.str());
       }

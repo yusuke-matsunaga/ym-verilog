@@ -329,7 +329,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 	<< " : cannot be used in a constant function.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    pt_stmt->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
   }
@@ -364,7 +364,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
     buf << expand_full_name(nb_array, name) << " : Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;
@@ -379,7 +379,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 	<< " : Not a named block, nor a task.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;
@@ -414,7 +414,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
     buf << expand_full_name(nb_array, name) << " : Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;
@@ -424,7 +424,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
     buf << expand_full_name(nb_array, name) << " : Not a task.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
   }
@@ -472,7 +472,7 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
     buf << name << " : No such system task.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;

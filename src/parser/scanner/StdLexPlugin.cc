@@ -50,7 +50,7 @@ LpInclude::parse()
   if ( !expect(STRING) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "`include should be followed by a quoted string.");
@@ -67,7 +67,7 @@ LpInclude::parse()
     buf << filename << " : No such file.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fileloc,
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    buf.str());
     return false;
@@ -77,7 +77,7 @@ LpInclude::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expectiong new-line after filename.");
@@ -91,7 +91,7 @@ LpInclude::parse()
     buf << filename << " includes itself.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    buf.str());
     return false;
@@ -102,7 +102,7 @@ LpInclude::parse()
     buf << "including " << filename << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fileloc,
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    buf.str());
   }
@@ -112,7 +112,7 @@ LpInclude::parse()
     buf << filename << " : Could not open.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fileloc,
-		    kMsgFailure,
+		    MsgType::Failure,
 		    "LEX",
 		    buf.str());
     return false;
@@ -153,7 +153,7 @@ LpLine::parse()
   if ( !expect(UNUM_INT) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting a number after `line.");
@@ -168,7 +168,7 @@ LpLine::parse()
   if ( !expect(STRING) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting a file-name after a line-number.");
@@ -187,7 +187,7 @@ LpLine::parse()
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting a level number(0, 1, or 2).");
@@ -197,7 +197,7 @@ LpLine::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line.");
@@ -214,7 +214,7 @@ LpLine::parse()
 	<< " : level - " << level;
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    line_loc,
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    buf.str());
   }
@@ -253,7 +253,7 @@ LpResetAll::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after `resetall.");
@@ -263,7 +263,7 @@ LpResetAll::parse()
   if ( debug() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    "resetall");
   }

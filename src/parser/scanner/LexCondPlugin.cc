@@ -219,7 +219,7 @@ LpIfdef::parse()
   if ( !expect(IDENTIFIER) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting an identifier after `ifdef/`ifndef");
@@ -231,7 +231,7 @@ LpIfdef::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after an identifier.");
@@ -291,7 +291,7 @@ LpElse::parse()
   if ( else_flag() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "duplicated `else.");
@@ -302,7 +302,7 @@ LpElse::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after `else.");
@@ -313,7 +313,7 @@ LpElse::parse()
     if ( true_nest_level() == 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      "Unbalanced `else.");
       return false;
@@ -354,7 +354,7 @@ LpElsif::parse()
   if ( else_flag() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "duplicated `elsif.");
@@ -364,7 +364,7 @@ LpElsif::parse()
   if ( !expect(IDENTIFIER) ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting an identifier after `elsif.");
@@ -377,7 +377,7 @@ LpElsif::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after an identifier.");
@@ -391,7 +391,7 @@ LpElsif::parse()
     if ( true_nest_level() == 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      "Unbalanced `elsif.");
       return false;
@@ -436,7 +436,7 @@ LpEndif::parse()
   if ( !expect_nl() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "Syntax error: "
 		    "expecting new-line after `endif.");
@@ -448,7 +448,7 @@ LpEndif::parse()
     if ( true_nest_level() == 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      "Unbalanced `endif.");
       return false;

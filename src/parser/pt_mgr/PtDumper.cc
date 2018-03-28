@@ -977,11 +977,9 @@ PtDumper::put(const char* label,
 void
 PtDumper::put_parent_file(const FileLoc& file_loc)
 {
-  list<FileLoc> file_list;
+  vector<FileLoc> file_list;
   file_loc.parent_loc_list(file_list);
-  for (list<FileLoc>::const_iterator p = file_list.begin();
-       p != file_list.end(); ++ p) {
-    const FileLoc& loc = *p;
+  for ( auto loc: file_list ) {
     PtHeader x(*this, "mParentFile", "IncFile", false);
     mStream << "name = " << loc.filename()
 	    << ", line = " << loc.line();

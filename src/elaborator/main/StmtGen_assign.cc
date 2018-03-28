@@ -55,7 +55,7 @@ StmtGen::instantiate_assign(const VlNamedObj* parent,
       ostringstream buf;
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_stmt->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      "assignment in a constant function cannot have"
 		      " timing/event specification.");

@@ -158,7 +158,7 @@ ItemGen::defparam_override(const VlModule* module,
 	<< "\" is not a parameter.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
 
@@ -172,7 +172,7 @@ ItemGen::defparam_override(const VlModule* module,
 	<< "\" is a localparam, which shall not be override.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
 
@@ -188,7 +188,7 @@ ItemGen::defparam_override(const VlModule* module,
       << " = " << rhs_expr->decompile() << ".";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  fr,
-		  kMsgInfo,
+		  MsgType::Info,
 		  "ELAB",
 		  buf.str());
 
@@ -247,7 +247,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 	<< lhs->decompile() << " = " << rhs->decompile() << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    pt_elem->file_region(),
-		    kMsgInfo,
+		    MsgType::Info,
 		    "ELAB",
 		    buf.str());
   }
@@ -354,7 +354,7 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
       if ( found ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			pt_gencase->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			"Matches more than one labels.");
 	return;
@@ -385,7 +385,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
     buf << pt_genfor->loop_var() << " : Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return;
@@ -396,7 +396,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
     buf << pt_genfor->loop_var() << " : Not a genvar.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return;
@@ -407,7 +407,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
     buf << pt_genfor->loop_var() << " : Already in use.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return;
@@ -425,7 +425,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
     if ( val < 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      fr,
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      "genvar should not be negative.");
       return;
@@ -467,7 +467,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
       if ( val < 0 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			fr,
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			"genvar should not be negative.");
 	break;

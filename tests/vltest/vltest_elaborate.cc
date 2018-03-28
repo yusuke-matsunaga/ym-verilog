@@ -37,8 +37,8 @@ elaborate_mode(const vector<string>& filename_list,
   }
   else {
     tmh->set_mask(kMaskAll);
-    tmh->delete_mask(kMsgInfo);
-    tmh->delete_mask(kMsgDebug);
+    tmh->delete_mask(MsgType::Info);
+    tmh->delete_mask(MsgType::Debug);
   }
   MsgMgr::reg_handler(tmh);
 

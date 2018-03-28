@@ -376,7 +376,7 @@ ExprGen::error_common(const PtExpr* pt_expr,
 {
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  pt_expr->file_region(),
-		  kMsgError,
+		  MsgType::Error,
 		  label,
 		  msg);
 }

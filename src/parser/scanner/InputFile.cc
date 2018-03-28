@@ -194,7 +194,7 @@ InputFile::_read_token(StrBuff& buff)
 	  << "only B|b|O|o|D|d|H|h is allowed here.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      buf.str());
     }
@@ -373,7 +373,7 @@ InputFile::_read_token(StrBuff& buff)
 	  << "\' [" << c << " in digit code].";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_loc(),
-		      kMsgError,
+		      MsgType::Error,
 		      "LEX",
 		      buf.str());
       return ERROR;
@@ -413,7 +413,7 @@ InputFile::_read_token(StrBuff& buff)
       << "\' [" << c << " in digit code].";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  cur_loc(),
-		  kMsgError,
+		  MsgType::Error,
 		  "LEX",
 		  buf.str());
   return ERROR;
@@ -495,7 +495,7 @@ InputFile::read_bin_str(int c,
 	  << "only \'01xXzZ?\' are allowed here.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  cur_loc(),
-		  kMsgError,
+		  MsgType::Error,
 		  "LEX",
 		  msg_buf.str());
   return ERROR;
@@ -577,7 +577,7 @@ InputFile::read_oct_str(int c,
 	  << "only \'0-7xXzZ?\' are allowed here.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  cur_loc(),
-		  kMsgError,
+		  MsgType::Error,
 		  "LEX",
 		  msg_buf.str());
   return ERROR;
@@ -673,7 +673,7 @@ InputFile::read_dec_str(int c,
 	  << "only \'0-9xXzZ?\' are allowed here.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  cur_loc(),
-		  kMsgError,
+		  MsgType::Error,
 		  "LEX",
 		  msg_buf.str());
   return ERROR;
@@ -757,7 +757,7 @@ InputFile::read_hex_str(int c,
 	  << "only \'0-9a-ha-HxXzZ?\' are allowed here.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  cur_loc(),
-		  kMsgError,
+		  MsgType::Error,
 		  "LEX",
 		  msg_buf.str());
   return ERROR;
@@ -920,7 +920,7 @@ InputFile::read_dq_str(StrBuff& buff)
   // 文字列が終わらないうちに改行が来てしまった．
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  cur_loc(),
-		  kMsgError,
+		  MsgType::Error,
 		  "LEX",
 		  "new line in quoted string.");
   return ERROR;
@@ -947,7 +947,7 @@ InputFile::read_esc_str(StrBuff& buff)
     // escaped identifier でも非 ascii 文字は違反
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_loc(),
-		    kMsgError,
+		    MsgType::Error,
 		    "LEX",
 		    "non-ascii character in escaped string.");
     return ERROR;
@@ -1199,7 +1199,7 @@ InputFile::read_comment(StrBuff& buff)
 	// '*/' を読む前に EOF になってしまった．
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			cur_loc(),
-			kMsgError,
+			MsgType::Error,
 			"LEX",
 			"unexpected end-of-file in comment block(/*).");
 	return ERROR;

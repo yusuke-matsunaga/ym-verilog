@@ -59,7 +59,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   buf << "instantiating UDP \"" << def_name << "\".";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  file_region,
-		  kMsgInfo,
+		  MsgType::Info,
 		  "ELAB",
 		  buf.str());
 
@@ -118,7 +118,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
     if ( !evaluate_scalar(nullptr, pt_init_value, val, true) ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      ifr,
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      "Only 1-bit constants are allowed here.");
       return;
@@ -151,7 +151,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	// サイズが合わない．
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			tfr,
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			"Number of input symbols mimatch.");
 	return;
@@ -169,7 +169,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	      << " : transition symbol for combinational UDP";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;
@@ -180,7 +180,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	  buf << symbol.to_string() << " : illegal symbol for input field.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;
@@ -193,7 +193,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	if ( pt_udp_entry->current() ) {
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_udp_entry->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  "Combinational UDP should not have "
 			  "\'current state\' value.");
@@ -211,7 +211,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	  buf << symbol.to_string() << " : illegal symbol for output field.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;
@@ -249,7 +249,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	// サイズが合わない．
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			tfr,
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			"Number of input symbols mimatch.");
 	return;
@@ -268,7 +268,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	  if ( nt > 1 ) {
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    pt_v->file_region(),
-			    kMsgError,
+			    MsgType::Error,
 			    "ELAB",
 			    "More than one transition symbols "
 			    "in the same row.");
@@ -285,7 +285,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	if ( !pt_v ) {
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  tfr,
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  "Sequential UDP requires \'current state\' value.");
 	  return;
@@ -300,7 +300,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	      << " : transition symbol for current state field.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;
@@ -312,7 +312,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	      << " : illegal symbol for current state field.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;
@@ -332,7 +332,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	      << " : transition symbol for output field.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;
@@ -344,7 +344,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 	      << " : illegal symbol for output field.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_v->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  return;

@@ -373,7 +373,7 @@ ExprGen::evaluate_int(const VlNamedObj* parent,
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_expr->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      "Integer value required.");
     }
@@ -435,7 +435,7 @@ ExprGen::evaluate_bitvector(const VlNamedObj* parent,
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_expr->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      "Bit-vector value required.");
     }

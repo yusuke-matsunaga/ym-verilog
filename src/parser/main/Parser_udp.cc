@@ -86,7 +86,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
 	// 複数の出力宣言があった．
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			io->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"PARS",
 			"More than two output declarations");
 	sane = false;
@@ -110,7 +110,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
 	buf << elem->name() << ": Defined more than once.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			elem->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"PARS",
 			buf.str());
 	sane = false;
@@ -131,7 +131,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
       buf << "\"" << port_name << "\" undefined.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      file_region,
-		      kMsgError,
+		      MsgType::Error,
 		      "PARS",
 		      buf.str());
       sane = false;
@@ -144,7 +144,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
 	buf << port_name << " must be an output.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			ioelem->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"PARS",
 			buf.str());
 	sane = false;
@@ -163,7 +163,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
       buf << "\"" << ioelem->name() << "\" does not appear in portlist.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      ioelem->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "PARS",
 		      buf.str());
     }
@@ -177,7 +177,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
     // 二つ以上の reg 宣言があった．
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    decl_array[1]->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "PARS",
 		    "More than two 'reg' declarations.");
     sane = false;
@@ -198,7 +198,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
 	    << out_item->name() << "\".";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			regitem->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"PARS",
 			buf.str());
 	sane = false;
@@ -290,7 +290,7 @@ Parser::new_Udp(const FileRegion& file_region,
 	    << out_item->name() << "\".";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			init_loc,
-			kMsgError,
+			MsgType::Error,
 			"PARS",
 			buf.str());
 	return;
@@ -301,7 +301,7 @@ Parser::new_Udp(const FileRegion& file_region,
 	// これは warning にする．
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			init_value->file_region(),
-			kMsgWarning,
+			MsgType::Warning,
 			"PARS",
 			"Both output declaration and initial block"
 			" have the initial values,"
@@ -324,7 +324,7 @@ Parser::new_Udp(const FileRegion& file_region,
       // sequential primitive でなければ初期値を持てない．
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      init_loc,
-		      kMsgError,
+		      MsgType::Error,
 		      "PARS",
 		      "Combinational primitive can not have the initial value.");
       return;

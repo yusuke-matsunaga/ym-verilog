@@ -106,7 +106,7 @@ Parser::check_PortArray(PtIOHeadArray iohead_array)
 	buf << "\"" << name << "\" is redefined.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			elem->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			buf.str());
 	return false;

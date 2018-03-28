@@ -97,7 +97,7 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
   buf << "instantiating task/func : " << taskfunc->full_name() << ".";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  pt_item->file_region(),
-		  kMsgInfo,
+		  MsgType::Info,
 		  "ELAB",
 		  buf.str());
 

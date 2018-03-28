@@ -201,7 +201,7 @@ Parser::new_GenFor(const FileRegion& fr,
 	<< ")";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
-		    kMsgError,
+		    MsgType::Error,
 		    "PARSER",
 		    buf.str());
   }

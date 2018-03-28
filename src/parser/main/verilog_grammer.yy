@@ -4195,7 +4195,7 @@ init_val
   if ( $1 != 0 && $1 != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    @1,
-		    kMsgError,
+		    MsgType::Error,
 		    "PARSER",
 		    "expectiong 1 or 0.");
     YYERROR;
@@ -4209,7 +4209,7 @@ init_val
   if ( $1 != 1 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    @1,
-		    kMsgError,
+		    MsgType::Error,
 		    "PARSER",
 		    "UDP's initial constant size should be 1.");
     YYERROR;
@@ -4218,7 +4218,7 @@ init_val
 	    strcmp($3, "Z") == 0 ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    @3,
-		    kMsgError,
+		    MsgType::Error,
 		    "PARSER",
 		    "Z value is not allowd here.");
     YYERROR;
@@ -4231,7 +4231,7 @@ init_val
 {
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  @1,
-		  kMsgError,
+		  MsgType::Error,
 		  "PARSER",
 		  "illegal base: only 'b is allowed here.");
   YYERROR;
@@ -4240,7 +4240,7 @@ init_val
 {
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  @1,
-		  kMsgError,
+		  MsgType::Error,
 		  "PARS",
 		  "UDP's initial constant size should be 1.");
   YYERROR;
@@ -4249,7 +4249,7 @@ init_val
 {
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  @1,
-		  kMsgError,
+		  MsgType::Error,
 		  "PARSER",
 		  "UDP's initial constant size should be 1.");
   YYERROR;
@@ -6745,7 +6745,7 @@ number
 {
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  @1,
-		  kMsgError,
+		  MsgType::Error,
 		  "PAR",
 		  "size is too big.");
   YYERROR;
@@ -6985,7 +6985,7 @@ hierarchical_identifier
     // エラー: 添字に使える式ではなかった．
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    $3->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "PARS",
 		    "illegal expression in hierarchical identifier.");
     $$ = NULL;
@@ -7006,7 +7006,7 @@ hierarchical_identifier
     // エラー: 添字に使える式ではなかった．
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    $3->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "PARS",
 		    "illegal expression in hierarchical identifier.");
     $$ = NULL;
@@ -7074,7 +7074,7 @@ yyerror(YYLTYPE* llocp,
 
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  *llocp,
-		  kMsgError,
+		  MsgType::Error,
 		  "PARS",
 		  s2);
 

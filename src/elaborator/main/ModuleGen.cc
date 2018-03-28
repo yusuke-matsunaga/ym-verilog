@@ -64,7 +64,7 @@ ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
   buf << "instantiating top module \"" << name << "\".";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  file_region,
-		  kMsgInfo,
+		  MsgType::Info,
 		  "ELAB",
 		  buf.str());
 
@@ -86,7 +86,7 @@ ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
   buf2 << "module \"" << module->full_name() << "\" has been created.";
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  file_region,
-		  kMsgInfo,
+		  MsgType::Info,
 		  "ELAB",
 		  buf2.str());
 
@@ -130,7 +130,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
 	  buf << param_con->name(i) << " : No such parameter.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  pt_con->file_region(),
-			  kMsgError,
+			  MsgType::Error,
 			  "ELAB",
 			  buf.str());
 	  continue;
@@ -175,7 +175,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
       if ( paramport_list.size() < n ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			param_con->file_region(),
-			kMsgError,
+			MsgType::Error,
 			"ELAB",
 			"Too many parameters.");
       }
@@ -289,7 +289,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
 	<< ": Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    pt_portref->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;
@@ -301,7 +301,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
 	<< ": Array shall not be connected to a module port.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    pt_portref->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;
@@ -313,7 +313,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
 	<< ": Illegal type for port connection.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    pt_portref->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
     return nullptr;
@@ -340,7 +340,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
       // 添字が範囲外
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_index->file_region(),
-		      kMsgWarning,
+		      MsgType::Warning,
 		      "ELAB",
 		      "Index is out of range.");
     }
@@ -358,7 +358,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
       // 左の添字が範囲外
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_left->file_region(),
-		      kMsgWarning,
+		      MsgType::Warning,
 		      "ELAB",
 		      "Left index is out of range.");
     }
@@ -367,7 +367,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
       // 右の添字が範囲外
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_right->file_region(),
-		      kMsgWarning,
+		      MsgType::Warning,
 		      "ELAB",
 		      "Right index is out of range.");
     }

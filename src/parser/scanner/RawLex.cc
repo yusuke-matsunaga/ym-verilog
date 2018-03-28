@@ -129,7 +129,7 @@ RawLex::get_token()
 	if ( mDebug ) {
 	  MsgMgr::put_msg(__FILE__, __LINE__,
 			  cur_token_loc(),
-			  kMsgDebug,
+			  MsgType::Debug,
 			  "LEX",
 			  "Reached to the EOF.");
 	}
@@ -151,7 +151,7 @@ RawLex::get_token()
 	    buf << "macro `" << macroname << " is not defined.";
 	    MsgMgr::put_msg(__FILE__, __LINE__,
 			    cur_token_loc(),
-			    kMsgError,
+			    MsgType::Error,
 			    "LEX",
 			    buf.str());
 	    goto error;
@@ -212,7 +212,7 @@ RawLex::get_token()
 	print_token(buf, id, cur_string());
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			cur_token_loc(),
-			kMsgDebug,
+			MsgType::Debug,
 			"LEX",
 			buf.str());
       }
@@ -225,7 +225,7 @@ RawLex::get_token()
       case EOF:
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			cur_token_loc(),
-			kMsgError,
+			MsgType::Error,
 			"LEX",
 			"Unexpected EOF.");
 	return ERROR;
@@ -253,7 +253,7 @@ RawLex::get_token()
   if ( mDebug ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    "Error exit.");
   }
@@ -278,7 +278,7 @@ RawLex::get_raw_token()
 	print_token(buf, token->id(), mCurString);
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			cur_token_loc(),
-			kMsgDebug,
+			MsgType::Debug,
 			"LEX",
 			buf.str());
       }
@@ -345,7 +345,7 @@ RawLex::get_raw_token()
     print_token(buf, id, mCurString);
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cur_token_loc(),
-		    kMsgDebug,
+		    MsgType::Debug,
 		    "LEX",
 		    buf.str());
   }

@@ -145,7 +145,7 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
   if ( value_type0.is_real_type() ) {
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cond->file_region(),
-		    kMsgError,
+		    MsgType::Error,
 		    "ELAB",
 		    "Case expression should not be real-type.");
     return nullptr;
@@ -159,7 +159,7 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
     if ( value_type1.is_real_type() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      expr->file_region(),
-		      kMsgError,
+		      MsgType::Error,
 		      "ELAB",
 		      "Case-item expression should not be real-type.");
       return nullptr;
