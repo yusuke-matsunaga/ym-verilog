@@ -53,10 +53,10 @@ set ( vltest_SOURCES
 
 add_executable ( vltest
   ${vltest_SOURCES}
-  $<TARGET_OBJECTS:ym_verilog_d>
-  $<TARGET_OBJECTS:ym_cell_d>
-  $<TARGET_OBJECTS:ym_logic_d>
-  $<TARGET_OBJECTS:ym_base_d>
+  $<TARGET_OBJECTS:ym_verilog_ad>
+  $<TARGET_OBJECTS:ym_cell_ad>
+  $<TARGET_OBJECTS:ym_logic_ad>
+  $<TARGET_OBJECTS:ym_base_ad>
   )
 
 target_compile_options ( vltest
