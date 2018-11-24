@@ -58,7 +58,7 @@ public:
   /// @param[in] cell_library セルライブラリ
   Elaborator(ElbMgr& elb_mgr,
 	     ElbFactory& elb_factory,
-	     const ClibCellLibrary* cell_library = nullptr);
+	     const ClibCellLibrary& cell_library);
 
   /// @brief デストラクタ
   ~Elaborator();
@@ -69,7 +69,7 @@ public:
   /// @brief エラボレーションを行う．
   /// @param[in] pt_mgr パース木を管理するクラス
   /// @return エラー数を返す．
-  ymuint
+  int
   operator()(const PtMgr& pt_mgr);
 
 
@@ -185,7 +185,7 @@ private:
   ElbFactory& mFactory;
 
   // セルライブラリ
-  const ClibCellLibrary* mCellLibrary;
+  ClibCellLibrary mCellLibrary;
 
   // ElbStub 用のメモリアロケータ
   SimpleAlloc mAlloc;

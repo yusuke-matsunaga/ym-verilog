@@ -88,8 +88,8 @@ VlMgr::pt_udp_list() const
 // @brief エラボレーションを行う．
 // @param[in] cell_library セルライブラリ
 // @param[in] エラー数を返す．
-ymuint
-VlMgr::elaborate(const ClibCellLibrary* cell_library)
+int
+VlMgr::elaborate(const ClibCellLibrary& cell_library)
 {
   Elaborator elab(*mElbMgr, *mElbFactory, cell_library);
 

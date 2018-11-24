@@ -38,7 +38,6 @@ protected:
 	     const PtItem* pt_header);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimHead();
 
 
@@ -48,52 +47,43 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
   /// @brief UDP 定義を返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const ElbUdpDefn*
-  udp_defn() const;
+  udp_defn() const override;
 
-  /// @brief セルを返す．
-  virtual
-  const ClibCell*
-  cell() const;
+  /// @brief セル番号を返す．
+  int
+  cell_id() const override;
 
   /// @brief 0 の強さを得る．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief 1 の強さを得る．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief 遅延式を得る．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief 遅延式を設定する．
   /// @note このクラスではなにもしない．
-  virtual
   void
-  set_delay(ElbDelay* expr);
+  set_delay(ElbDelay* expr) override;
 
 
 private:
@@ -128,7 +118,6 @@ private:
 	      const PtItem* pt_header);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimHeadD();
 
 
@@ -138,14 +127,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式を得る．
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief 遅延式を設定する．
-  virtual
   void
-  set_delay(ElbDelay* expr);
+  set_delay(ElbDelay* expr) override;
 
 
 private:
@@ -179,7 +166,6 @@ protected:
 	      const ElbUdpDefn* udp);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimHeadU();
 
 
@@ -189,19 +175,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
   /// @brief UDP 定義を返す．
-  virtual
   const ElbUdpDefn*
-  udp_defn() const;
+  udp_defn() const override;
 
 
 private:
@@ -235,7 +218,6 @@ private:
 	       const ElbUdpDefn* udp);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimHeadUD();
 
 
@@ -245,13 +227,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式を得る．
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief 遅延式を設定する．
   void
-  set_delay(ElbDelay* expr);
+  set_delay(ElbDelay* expr) override;
 
 
 private:
@@ -279,13 +260,12 @@ protected:
   /// @brief コンストラクタ
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_header パース木の定義
-  /// @param[in] cell セル
+  /// @param[in] cell_id セル番号
   EiPrimHeadC(const VlNamedObj* parent,
 	      const PtItem* pt_header,
-	      const ClibCell* cell);
+	      int cell_id);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimHeadC();
 
 
@@ -295,19 +275,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
-  /// @brief セルを返す．
-  virtual
-  const ClibCell*
-  cell() const;
+  /// @brief セル番号を返す．
+  int
+  cell_id() const override;
 
 
 private:
@@ -315,8 +292,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // セル
-  const ClibCell* mCell;
+  // セル番号
+  int mCellId;
 
 };
 
@@ -336,7 +313,6 @@ protected:
   EiPrimitive();
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimitive();
 
 
@@ -346,14 +322,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -362,9 +336,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
 
 public:
@@ -373,50 +346,41 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
   /// @brief UPD 定義を返す．
-  virtual
   const VlUdpDefn*
-  udp_defn() const;
+  udp_defn() const override;
 
-  /// @brief セルを返す．
-  virtual
-  const ClibCell*
-  cell() const;
+  /// @brief セル番号を返す．
+  int
+  cell_id() const override;
 
   /// @brief 0 の強さを得る．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief 1 の強さを得る．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief 遅延式を得る．
-  virtual
   const VlDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief ポート数を得る．
-  virtual
-  ymuint
-  port_num() const;
+  int
+  port_num() const override;
 
   /// @brief ポート端子を得る．
   /// @param[in] pos 位置番号 (0 <= pos < port_num())
-  virtual
   const VlPrimTerm*
-  prim_term(ymuint pos) const;
+  prim_term(ymuint pos) const override;
 
 
 public:
@@ -429,7 +393,7 @@ public:
   /// @param[in] expr 接続する式
   void
   connect(ymuint pos,
-	  ElbExpr* expr);
+	  ElbExpr* expr) override;
 
 
 protected:
@@ -488,7 +452,6 @@ private:
   EiPrimitive1();
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimitive1();
 
 
@@ -513,9 +476,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -524,14 +486,12 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダを得る．
-  virtual
   ElbPrimHead*
-  head() const;
+  head() const override;
 
   /// @brief パース木のインスタンス定義を得る．
-  virtual
   const PtInst*
-  pt_inst() const;
+  pt_inst() const override;
 
 
 private:
@@ -571,7 +531,6 @@ private:
 	       EiPrimTerm* term_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimitive2();
 
 
@@ -581,9 +540,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -592,14 +550,12 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダを得る．
-  virtual
   ElbPrimHead*
-  head() const;
+  head() const override;
 
   /// @brief パース木のインスタンス定義を得る．
-  virtual
   const PtInst*
-  pt_inst() const;
+  pt_inst() const override;
 
 
 private:
@@ -640,7 +596,6 @@ private:
 	      EiPrimTerm* term_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimArray();
 
 
@@ -650,14 +605,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -666,14 +619,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -682,76 +633,62 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
   /// @brief UDP 定義を返す．
-  virtual
   const VlUdpDefn*
-  udp_defn() const;
+  udp_defn() const override;
 
   /// @brief セルを返す．
-  virtual
   const ClibCell*
-  cell() const;
+  cell() const override;
 
   /// @brief 0 の強さを得る．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief 1 の強さを得る．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief 遅延式を得る．
-  virtual
   const VlDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief 要素数を返す．
-  virtual
-  ymuint
-  elem_num() const;
+  int
+  elem_num() const override;
 
   /// @brief 要素のプリミティブを返す．
   /// @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
-  virtual
   const VlPrimitive*
-  elem_by_offset(ymuint offset) const;
+  elem_by_offset(ymuint offset) const override;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
-  virtual
   const VlPrimitive*
-  elem_by_index(int index) const;
+  elem_by_index(int index) const override;
 
 
 public:
@@ -812,7 +749,6 @@ private:
   EiPrimTerm();
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimTerm();
 
 
@@ -822,14 +758,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -838,24 +772,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のプリミティブを返す．
-  virtual
   const VlPrimitive*
-  primitive() const;
+  primitive() const override;
 
   /// @brief 入出力の種類を返す．
-  virtual
   tVlDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 端子番号を返す．
-  virtual
-  ymuint
-  term_index() const;
+  int
+  term_index() const override;
 
   /// @brief 接続しているネットを表す式を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
 
 public:

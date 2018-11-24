@@ -88,7 +88,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  ymuint
+  int
   bit_size() const = 0;
 
   /// @brief オフセット値の取得
@@ -99,7 +99,7 @@ public:
   virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const = 0;
+		  int& offset) const = 0;
 
   /// @brief データ型の取得
   /// @retval kVpiVarInteger 整数型

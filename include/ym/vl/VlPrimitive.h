@@ -11,7 +11,6 @@
 
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlFwd.h"
-#include "ym/clib.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -44,10 +43,10 @@ public:
   const VlUdpDefn*
   udp_defn() const = 0;
 
-  /// @brief セルを返す．
+  /// @brief セル番号を返す．
   virtual
-  const ClibCell*
-  cell() const = 0;
+  int
+  cell_id() const = 0;
 
   /// @brief 0 の強さを得る．
   virtual
@@ -132,10 +131,10 @@ public:
   const VlUdpDefn*
   udp_defn() const = 0;
 
-  /// @brief セルを返す．
+  /// @brief セル番号を返す．
   virtual
-  const ClibCell*
-  cell() const = 0;
+  int
+  cell_id() const = 0;
 
   /// @brief 0 の強さを得る．
   virtual

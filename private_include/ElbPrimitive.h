@@ -101,7 +101,6 @@ protected:
   ElbPrimArray();
 
   /// @brief デストラクタ
-  virtual
   ~ElbPrimArray();
 
 
@@ -162,7 +161,6 @@ protected:
   ElbPrimitive();
 
   /// @brief デストラクタ
-  virtual
   ~ElbPrimitive();
 
 
@@ -243,7 +241,6 @@ protected:
   ElbPrimTerm() { }
 
   /// @brief デストラクタ
-  virtual
   ~ElbPrimTerm() { }
 
 

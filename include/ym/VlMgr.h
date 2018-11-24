@@ -12,7 +12,7 @@
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "ym/clib.h"
+#include "ym/ClibCellLibrary.h"
 #include "ym/File.h"
 #include "ym/SimpleAlloc.h"
 
@@ -81,8 +81,8 @@ public:
   /// @brief エラボレーションを行う．
   /// @param[in] cell_library セルライブラリ
   /// @return エラー数を返す．
-  ymuint
-  elaborate(const ClibCellLibrary* cell_library = nullptr);
+  int
+  elaborate(const ClibCellLibrary& cell_library = ClibCellLibrary());
 
   /// @brief UDP 定義のリストを返す．
   const list<const VlUdpDefn*>&
