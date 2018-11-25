@@ -81,7 +81,7 @@ public:
   ///  - kVpiSysTaskCall
   ///  - kVpiTaskCall
   virtual
-  ymuint
+  int
   arg_num() const = 0;
 
   /// @brief 引数の取得
@@ -91,7 +91,7 @@ public:
   ///  - kVpiTaskCall
   virtual
   const VlExpr*
-  arg(ymuint pos) const = 0;
+  arg(int pos) const = 0;
 
   /// @brief control の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -187,7 +187,7 @@ public:
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   virtual
-  ymuint
+  int
   caseitem_num() const = 0;
 
   /// @brief case item の取得
@@ -197,7 +197,7 @@ public:
   /// @note default caseitem がある場合には常に最後の要素となる．
   virtual
   const VlCaseItem*
-  caseitem(ymuint pos) const = 0;
+  caseitem(int pos) const = 0;
 
   /// @brief 初期化代入文の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -220,7 +220,7 @@ public:
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   virtual
-  ymuint
+  int
   child_stmt_num() const = 0;
 
   /// @brief 子供のステートメントの取得
@@ -232,7 +232,7 @@ public:
   ///  - kVpiNamedFork
   virtual
   const VlStmt*
-  child_stmt(ymuint pos) const = 0;
+  child_stmt(int pos) const = 0;
 
 };
 
@@ -259,14 +259,14 @@ public:
   /// @brief 条件式のリストの要素数を返す．
   /// @note 通常は1以上だが default caseitem の場合は0を返す．
   virtual
-  ymuint
+  int
   expr_num() const = 0;
 
   /// @brief 条件式を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < expr_num() )
   virtual
   const VlExpr*
-  expr(ymuint pos) const = 0;
+  expr(int pos) const = 0;
 
   /// @brief 本体のステートメントを返す．
   virtual

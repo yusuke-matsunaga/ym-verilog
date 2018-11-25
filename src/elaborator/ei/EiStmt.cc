@@ -49,11 +49,13 @@ EiStmtBase::parent() const
   return mParent;
 }
 
+#if 0
 // @brief 親の process を返す．
 ElbProcess*
 EiStmtBase::process() const
 {
   return mProcess;
 }
+#endif
 
 END_NAMESPACE_YM_VERILOG

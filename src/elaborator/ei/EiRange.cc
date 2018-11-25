@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief 範囲の配列を生成する．
 // @param[in] dim_size 要素数
 ElbRange*
-EiFactory::new_RangeArray(ymuint dim_size)
+EiFactory::new_RangeArray(int dim_size)
 {
   void* p = mAlloc.get_memory(sizeof(EiRange) * dim_size);
   EiRange* range_array = new (p) EiRange[dim_size];
@@ -72,7 +72,7 @@ EiRange::file_region() const
 }
 
 // @brief 要素数(ビット幅)を返す．
-ymuint
+int
 EiRange::size() const
 {
   return calc_size(mLeftVal, mRightVal);
@@ -127,7 +127,7 @@ EiRange::is_in(int index) const
 // @retval false index が範囲外
 bool
 EiRange::calc_offset(int index,
-		     ymuint& offset) const
+		     int& offset) const
 {
   return calc_offset(mLeftVal, mRightVal, index, offset);
 }
@@ -139,7 +139,7 @@ EiRange::calc_offset(int index,
 // @retval false index が範囲外
 bool
 EiRange::calc_roffset(int index,
-		      ymuint& offset) const
+		      int& offset) const
 {
   return calc_roffset(mLeftVal, mRightVal, index, offset);
 }
@@ -195,7 +195,7 @@ EiRangeImpl::set(const PtExpr* left,
 }
 
 // @brief サイズを返す．
-ymuint
+int
 EiRangeImpl::size() const
 {
   return EiRange::calc_size(mLeftVal, mRightVal);
@@ -244,7 +244,7 @@ EiRangeImpl::is_in(int index) const
 // @retval false index が範囲外
 bool
 EiRangeImpl::calc_offset(int index,
-			 ymuint& offset) const
+			 int& offset) const
 {
   return EiRange::calc_offset(mLeftVal, mRightVal, index, offset);
 }
@@ -256,7 +256,7 @@ EiRangeImpl::calc_offset(int index,
 // @retval false index が範囲外
 bool
 EiRangeImpl::calc_roffset(int index,
-			  ymuint& offset) const
+			  int& offset) const
 {
   return EiRange::calc_roffset(mLeftVal, mRightVal, index, offset);
 }
@@ -282,14 +282,14 @@ EiRangeImpl::rindex(int roffset) const
 
 // @brief コンストラクタ
 // @brief dim_size 次元数
-EiRangeArray::EiRangeArray(ymuint dim_size,
+EiRangeArray::EiRangeArray(int dim_size,
 			   EiRange* array) :
   mDimSize(dim_size),
   mArray(array)
 {
   // 要素数を計算する．
   mElemSize = 1;
-  for (ymuint i = 0; i < dim_size; ++ i) {
+  for ( int i = 0; i < dim_size; ++ i ) {
     mElemSize *= array[i].size();
   }
 }
@@ -303,12 +303,12 @@ EiRangeArray::~EiRangeArray()
 // @param[in] offset オフセット
 // @param[out] index_list
 void
-EiRangeArray::index(ymuint offset,
+EiRangeArray::index(int offset,
 		    vector<int>& index_list) const
 {
-  ymuint n = size();
+  int n = size();
   index_list.resize(n);
-  for (ymuint i = n; i -- > 0; ) {
+  for ( int i = n; i -- > 0; ) {
     const EiRange* r = range(i);
     int k = r->size();
     int offset1 = offset % k;
@@ -324,20 +324,20 @@ EiRangeArray::index(ymuint offset,
 // @retval false index_list のいずれかの値が範囲外だった．
 bool
 EiRangeArray::calc_offset(const vector<int>& index_list,
-			  ymuint& offset) const
+			  int& offset) const
 {
-  ymuint n = size();
+  int n = size();
   if ( index_list.size() != n ) {
     // そもそもインデックス配列のサイズが違う．
     return false;
   }
 
   offset = 0;
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     const EiRange* r = range(i);
     int k = r->size();
     offset *= k;
-    ymuint offset1;
+    int offset1;
     if ( r->calc_roffset(index_list[i], offset1) ) {
       offset += offset1;
     }

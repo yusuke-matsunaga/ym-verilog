@@ -41,7 +41,6 @@ protected:
   ElbStmt();
 
   /// @brief デストラクタ
-  virtual
   ~ElbStmt();
 
 
@@ -58,34 +57,30 @@ public:
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlNamedObj*
-  scope() const;
+  scope() const override;
 
   /// @brief task の実体を返す．
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiTaskCall
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlTaskFunc*
-  task() const;
+  task() const override;
 
   /// @brief user systf クラスへのポインタを返す．
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiSysTaskCall
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlUserSystf*
-  user_systf() const;
+  user_systf() const override;
 
   /// @brief 引数の数の取得
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiSysTaskCall
   ///  - kVpiTaskCall
   /// @note このクラスでは 0 を返す．
-  virtual
-  ymuint
-  arg_num() const;
+  int
+  arg_num() const override;
 
   /// @brief 引数の取得
   /// @param[in] pos 位置 (0 <= pos < arg_num())
@@ -93,9 +88,8 @@ public:
   ///  - kVpiSysTaskCall
   ///  - kVpiTaskCall
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  arg(ymuint pos) const;
+  arg(int pos) const override;
 
   /// @brief control の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -103,9 +97,8 @@ public:
   ///  - kVpiDelayControl
   ///  - kVpiEventControl
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlControl*
-  control() const;
+  control() const override;
 
   /// @brief 本体のステートメントの取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -119,9 +112,8 @@ public:
   ///  - kVpiWait
   ///  - kVpiWhile
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlStmt*
-  body_stmt() const;
+  body_stmt() const override;
 
   /// @brief 式の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -133,9 +125,8 @@ public:
   ///  - kVpiWait
   ///  - kVpiWhile
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 代入のブロッキング/ノンブロッキングの区別の取得
   /// @retval true ブロッキング代入文を表す．
@@ -143,9 +134,8 @@ public:
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiAssignment
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_blocking() const;
+  is_blocking() const override;
 
   /// @brief 左辺式の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -155,9 +145,8 @@ public:
   ///  - kVpiForce
   ///  - kVpiRelease
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺式の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -165,69 +154,61 @@ public:
   ///  - kVpiAssignment
   ///  - kVpiForce
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  rhs() const;
+  rhs() const override;
 
   /// @brief イベントプライマリの取得
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiEvent
   /// @note 返されるオブジェクトの型は kVpiNamedEvent のはず．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  named_event() const;
+  named_event() const override;
 
   /// @brief 条件が成り立たなかったとき実行されるステートメントの取得
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiIfElse
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlStmt*
-  else_stmt() const;
+  else_stmt() const override;
 
   /// @brief case type の取得
   /// @return case type
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   /// @note このクラスでは kVpiCaseExact を返す．
-  virtual
   tVpiCaseType
-  case_type() const;
+  case_type() const override;
 
   /// @brief case item の要素数の取得
   /// @return case item の要素数
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   /// @note このクラスでは 0 を返す．
-  virtual
-  ymuint
-  caseitem_num() const;
+  int
+  caseitem_num() const override;
 
   /// @brief case item の取得
   /// @param[in] pos 位置番号 (0 <= pos < caseitem_num())
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlCaseItem*
-  caseitem(ymuint pos) const;
+  caseitem(int pos) const override;
 
   /// @brief 初期化代入文の取得
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiFor
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlStmt*
-  init_stmt() const;
+  init_stmt() const override;
 
   /// @brief 繰り返し代入文の取得
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiFor
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlStmt*
-  inc_stmt() const;
+  inc_stmt() const override;
 
   /// @brief 子供のステートメントの数の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -236,9 +217,8 @@ public:
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   /// @note このクラスでは 0 を返す．
-  virtual
-  ymuint
-  child_stmt_num() const;
+  int
+  child_stmt_num() const override;
 
   /// @brief 子供のステートメントの取得
   /// @param[in] pos 位置番号 (0 <= pos < stmt_num())
@@ -247,9 +227,8 @@ public:
   ///  - kVpiFork
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
-  virtual
   const VlStmt*
-  child_stmt(ymuint pos) const;
+  child_stmt(int pos) const override;
 
 
 public:
@@ -265,16 +244,16 @@ public:
   /// @note このクラスでは何もしない．
   virtual
   void
-  set_caseitem(ymuint pos,
+  set_caseitem(int pos,
 	       const PtCaseItem* pt_caseitem,
 	       ElbExpr** expr_array,
 	       ElbStmt* stmt);
 
-  /// @brief 子供ののステートメントの取得
+  /// @brief 子供のステートメントの取得
   /// @note このクラスでは nullptr を返す．
   virtual
   ElbStmt*
-  _child_stmt(ymuint pos) const;
+  _child_stmt(int pos) const;
 
 
 public:

@@ -125,7 +125,7 @@ EiExpr::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note このクラスでは 0 を返す．
-ymuint
+int
 EiExpr::declarray_dimension() const
 {
   return 0;
@@ -135,14 +135,14 @@ EiExpr::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::declarray_index(ymuint pos) const
+EiExpr::declarray_index(int pos) const
 {
   return nullptr;
 }
 
 // @brief 配列型宣言要素への参照のオフセットを返す．
 // @note 固定インデックスの場合のみ意味を持つ．
-ymuint
+int
 EiExpr::declarray_offset() const
 {
   return 0;
@@ -266,7 +266,7 @@ EiExpr::op_type() const
 // @brief オペランド数を返す．
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは 0 を返す．
-ymuint
+int
 EiExpr::operand_num() const
 {
   return 0;
@@ -276,14 +276,14 @@ EiExpr::operand_num() const
 // @param[in] pos 位置番号
 // @note 演算子の時，意味を持つ．
 const VlExpr*
-EiExpr::operand(ymuint pos) const
+EiExpr::operand(int pos) const
 {
   return _operand(pos);
 }
 
 // @brief 繰り返し数を返す．
 // @note multiple concatenation の時のみ意味を持つ．
-ymuint
+int
 EiExpr::rep_num() const
 {
   return 0;
@@ -329,7 +329,7 @@ EiExpr::user_systf() const
 // @brief 引数の数を返す．
 // @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
 // @note このクラスでは 0 を返す．
-ymuint
+int
 EiExpr::argument_num() const
 {
   return 0;
@@ -340,7 +340,7 @@ EiExpr::argument_num() const
 // @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::argument(ymuint pos) const
+EiExpr::argument(int pos) const
 {
   return nullptr;
 }
@@ -349,7 +349,7 @@ EiExpr::argument(ymuint pos) const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 0 を返す．
-ymuint
+int
 EiExpr::lhs_elem_num() const
 {
   return 0;
@@ -360,7 +360,7 @@ EiExpr::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::lhs_elem(ymuint pos) const
+EiExpr::lhs_elem(int pos) const
 {
   return nullptr;
 }

@@ -28,7 +28,6 @@ public:
   EiUserSystf();
 
   /// @brief デストラクタ
-  virtual
   ~EiUserSystf();
 
 
@@ -38,39 +37,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を返す．
-  virtual
   string
-  name() const;
+  name() const override;
 
   /// @brief system task の時 true を返す．
-  virtual
   bool
-  system_task() const;
+  system_task() const override;
 
   /// @brief system function の時 true を返す．
-  virtual
   bool
-  system_function() const;
+  system_function() const override;
 
   /// @brief system function の型を返す．
-  virtual
   tVpiFuncType
-  function_type() const;
+  function_type() const override;
 
   /// @brief compile 時のコールバック関数
-  virtual
-  ymuint
-  on_compile();
+  int
+  on_compile() override;
 
   /// @brief 実行時のコールバック関数
-  virtual
-  ymuint
-  on_call();
+  int
+  on_call() override;
 
   /// @brief SizedFunc の場合にサイズを返す．
-  virtual
-  ymuint
-  size() const;
+  int
+  size() const override;
 
 };
 
@@ -90,7 +82,6 @@ public:
   EiUserSystf1();
 
   /// @brief デストラクタ
-  virtual
   ~EiUserSystf1();
 
 
@@ -100,39 +91,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を返す．
-  virtual
   string
-  name() const;
+  name() const override;
 
   /// @brief system task の時 true を返す．
-  virtual
   bool
-  system_task() const;
+  system_task() const override;
 
   /// @brief system function の時 true を返す．
-  virtual
   bool
-  system_function() const;
+  system_function() const override;
 
   /// @brief system function の型を返す．
-  virtual
   tVpiFuncType
-  function_type() const;
+  function_type() const override;
 
   /// @brief compile 時のコールバック関数
-  virtual
-  ymuint
-  on_compile();
+  int
+  on_compile() override;
 
   /// @brief 実行時のコールバック関数
-  virtual
-  ymuint
-  on_call();
+  int
+  on_call() override;
 
   /// @brief SizedFunc の場合にサイズを返す．
-  virtual
-  ymuint
-  size() const;
+  int
+  size() const override;
 
 };
 

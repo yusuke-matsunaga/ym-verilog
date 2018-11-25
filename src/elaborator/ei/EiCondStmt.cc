@@ -165,7 +165,7 @@ EiFactory::new_CaseStmt(const VlNamedObj* parent,
 			const PtStmt* pt_stmt,
 			ElbExpr* expr)
 {
-  ymuint caseitem_num = pt_stmt->caseitem_num();
+  int caseitem_num = pt_stmt->caseitem_num();
 
   void* q = mAlloc.get_memory(sizeof(EiCaseItem) * caseitem_num);
   EiCaseItem* array = new (q) EiCaseItem[caseitem_num];
@@ -541,7 +541,7 @@ EiCaseItem::file_region() const
 }
 
 // @brief 条件式のリストの要素数を返す．
-ymuint
+int
 EiCaseItem::expr_num() const
 {
   return mExprNum;
@@ -550,7 +550,7 @@ EiCaseItem::expr_num() const
 // @brief 条件式を返す．
 // @param[in] pos 位置番号
 const VlExpr*
-EiCaseItem::expr(ymuint pos) const
+EiCaseItem::expr(int pos) const
 {
   return mExprList[pos];
 }
@@ -578,7 +578,7 @@ EiCaseStmt::EiCaseStmt(const VlNamedObj* parent,
 		       ElbProcess* process,
 		       const PtStmt* pt_stmt,
 		       ElbExpr* expr,
-		       ymuint caseitem_num,
+		       int caseitem_num,
 		       EiCaseItem* caseitem_array) :
   EiStmtBase(parent, process, pt_stmt),
   mCondition(expr),
@@ -621,7 +621,7 @@ EiCaseStmt::expr() const
 }
 
 // @brief case item のリストの要素数を返す．
-ymuint
+int
 EiCaseStmt::caseitem_num() const
 {
   return mCaseItemNum;
@@ -630,7 +630,7 @@ EiCaseStmt::caseitem_num() const
 // @brief case item を返す．
 // @param[in] pos 位置番号
 const VlCaseItem*
-EiCaseStmt::caseitem(ymuint pos) const
+EiCaseStmt::caseitem(int pos) const
 {
   return &mCaseItemList[pos];
 }
@@ -640,7 +640,7 @@ EiCaseStmt::caseitem(ymuint pos) const
 // @param[in] expr_array ラベルのリスト用配列
 // @param[in] stmt 本体のステートメント
 void
-EiCaseStmt::set_caseitem(ymuint pos,
+EiCaseStmt::set_caseitem(int pos,
 			 const PtCaseItem* pt_caseitem,
 			 ElbExpr** expr_array,
 			 ElbStmt* stmt)

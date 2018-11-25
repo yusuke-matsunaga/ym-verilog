@@ -35,7 +35,6 @@ protected:
 	      const PtDeclHead* pt_head);
 
   /// @brief デストラクタ
-  virtual
   ~EiParamHead();
 
 
@@ -45,68 +44,58 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief このオブジェクトの属しているスコープを返す．
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 符号の取得
   /// @param[in] val 値
   /// @retval true 符号つき
   /// @retval false 符号なし
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
   bool
-  is_signed(const VlValue& val) const;
+  is_signed(const VlValue& val) const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
   /// @param[in] val 値
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
-  ymuint
-  bit_size(const VlValue& val) const;
+  int
+  bit_size(const VlValue& val) const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
@@ -115,23 +104,20 @@ public:
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset,
-		  const VlValue& val) const;
+		  int& offset,
+		  const VlValue& val) const override;
 
   /// @breif 値の型を返す．
   /// @param[in] val 値
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
   VlValueType
-  value_type(const VlValue& val) const;
+  value_type(const VlValue& val) const override;
 
   /// @brief データ型の取得
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
 
 protected:
@@ -184,7 +170,6 @@ protected:
 	       int right_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiParamHeadV();
 
 
@@ -198,54 +183,46 @@ public:
   /// @retval true 符号つき
   /// @retval false 符号なし
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
   bool
-  is_signed(const VlValue& val) const;
+  is_signed(const VlValue& val) const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
   /// @param[in] val 値
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  ymuint
-  bit_size(const VlValue& val) const;
+  int
+  bit_size(const VlValue& val) const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
@@ -254,18 +231,16 @@ public:
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset,
-		  const VlValue& val) const;
+		  int& offset,
+		  const VlValue& val) const override;
 
   /// @breif 値の型を返す．
   /// @param[in] val 値
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  virtual
   VlValueType
-  value_type(const VlValue& val) const;
+  value_type(const VlValue& val) const override;
 
 
 protected:
@@ -297,7 +272,6 @@ protected:
 	      const PtNamedBase* pt_item);
 
   /// @brief デストラクタ
-  virtual
   ~EiParameter();
 
 
@@ -307,14 +281,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -323,14 +295,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -340,83 +310,70 @@ public:
 
   /// @breif 値の型を返す．
   /// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// @brief localparam のときに true 返す．
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_local_param() const;
+  is_local_param() const override;
 
 
 public:
@@ -425,17 +382,15 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値の取得
-  virtual
   VlValue
-  get_value() const;
+  get_value() const override;
 
   /// @brief 値の設定
   /// @param[in] expr 値を表す式
   /// @param[in] value 値
-  virtual
   void
   set_expr(const PtExpr* expr,
-	   const VlValue& value);
+	   const VlValue& value) override;
 
 
 private:
@@ -476,7 +431,6 @@ protected:
 	       const PtNamedBase* pt_item);
 
   /// @brief デストラクタ
-  virtual
   ~EiLocalParam();
 
 
@@ -487,9 +441,8 @@ public:
 
   /// @brief localparam のときに true 返す．
   /// @note このクラスでは true を返す．
-  virtual
   bool
-  is_local_param() const;
+  is_local_param() const override;
 
 };
 

@@ -38,7 +38,6 @@ protected:
 		const VlValue& rhs_value);
 
   /// @brief デストラクタ
-  virtual
   ~EiParamAssign();
 
 
@@ -48,14 +47,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -64,30 +61,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．
-  virtual
   const VlModule*
-  parent() const;
+  parent() const override;
 
   /// @brief 左辺のパラメータを返す．
-  virtual
   const VlDecl*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺値を返す．
-  virtual
   VlValue
-  rhs_value() const;
+  rhs_value() const override;
 
   /// @brief 右辺の式を表す文字列を返す．
-  virtual
   string
-  rhs_string() const;
+  rhs_string() const override;
 
   /// @brief 名前による接続の場合に true を返す．
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_conn_by_name() const;
+  is_conn_by_name() const override;
 
 
 private:
@@ -137,7 +129,6 @@ private:
 		 const VlValue& rhs_value);
 
   /// @brief デストラクタ
-  virtual
   ~EiParamAssign2();
 
 
@@ -148,9 +139,8 @@ public:
 
   /// @brief 名前による接続の場合に true を返す．
   /// @note このクラスでは true を返す．
-  virtual
   bool
-  is_conn_by_name() const;
+  is_conn_by_name() const override;
 
 };
 
@@ -181,7 +171,6 @@ private:
 	     const VlValue& rhs_value);
 
   /// @brief デストラクタ
-  virtual
   ~EiDefParam();
 
 
@@ -191,14 +180,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -207,24 +194,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．
-  virtual
   const VlModule*
-  parent() const;
+  parent() const override;
 
   /// @brief 左辺値を返す．
-  virtual
   const VlDecl*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺値を返す．
-  virtual
   VlValue
-  rhs_value() const;
+  rhs_value() const override;
 
   /// @brief 右辺の式を表す文字列を返す．
-  virtual
   string
-  rhs_string() const;
+  rhs_string() const override;
 
 
 private:

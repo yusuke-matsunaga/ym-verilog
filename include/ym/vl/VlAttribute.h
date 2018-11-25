@@ -71,14 +71,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  ymuint
+  int
   size() const = 0;
 
   /// @brief 内容を返す．
   /// @param[in] pos 位置番号 (0 <= pos < size() )
   virtual
   VlAttribute*
-  elem(ymuint pos) const = 0;
+  elem(int pos) const = 0;
 
 };
 

@@ -44,7 +44,7 @@ public:
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   virtual
-  ymuint
+  int
   elem_num() const = 0;
 
   /// @brief 左辺式の要素の取得
@@ -52,7 +52,7 @@ public:
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   virtual
   ElbExpr*
-  elem(ymuint pos) const = 0;
+  elem(int pos) const = 0;
 
 
 private:

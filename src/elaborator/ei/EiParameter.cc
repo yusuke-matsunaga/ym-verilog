@@ -224,7 +224,7 @@ EiParamHead::is_little_endian() const
 // @brief ビット幅を返す．
 // @param[in] val 値
 // @note ヘッダに型指定がない時は値から情報を得る．
-ymuint
+int
 EiParamHead::bit_size(const VlValue& val) const
 {
   switch ( mPtHead->data_type() ) {
@@ -257,7 +257,7 @@ EiParamHead::bit_size(const VlValue& val) const
 // @note ヘッダに型指定がない時は値から情報を得る．
 bool
 EiParamHead::calc_bit_offset(int index,
-			     ymuint& offset,
+			     int& offset,
 			     const VlValue& val) const
 {
   switch ( mPtHead->data_type() ) {
@@ -429,7 +429,7 @@ EiParamHeadV::is_little_endian() const
 // @brief ビット幅を返す．
 // @param[in] val 値
 // @note ヘッダに型指定がない時は値から情報を得る．
-ymuint
+int
 EiParamHeadV::bit_size(const VlValue& val) const
 {
   return mRange.size();
@@ -444,7 +444,7 @@ EiParamHeadV::bit_size(const VlValue& val) const
 // @note ヘッダに型指定がない時は値から情報を得る．
 bool
 EiParamHeadV::calc_bit_offset(int index,
-			      ymuint& offset,
+			      int& offset,
 			      const VlValue& val) const
 {
   return mRange.calc_offset(index, offset);
@@ -602,7 +602,7 @@ EiParameter::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiParameter::bit_size() const
 {
   return mHead->bit_size(mValue);
@@ -615,7 +615,7 @@ EiParameter::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiParameter::calc_bit_offset(int index,
-			     ymuint& offset) const
+			     int& offset) const
 {
   return mHead->calc_bit_offset(index, offset, mValue);
 }

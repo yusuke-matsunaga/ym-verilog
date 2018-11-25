@@ -43,7 +43,6 @@ protected:
 	       ElbExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiAssignBase();
 
 
@@ -53,14 +52,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 左辺を返す．
-  virtual
   const VlExpr*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺を返す．
-  virtual
   const VlExpr*
-  rhs() const;
+  rhs() const override;
 
 
 protected:
@@ -115,7 +112,6 @@ protected:
 		 ElbControl* control);
 
   /// @brief デストラクタ
-  virtual
   ~EiNbAssignment();
 
 
@@ -125,9 +121,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -136,9 +131,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief control を返す．nullptr の場合もありうる．
-  virtual
   const VlControl*
-  control() const;
+  control() const override;
 
 
 private:
@@ -179,7 +173,6 @@ private:
 	       ElbControl* control);
 
   /// @brief デストラクタ
-  virtual
   ~EiAssignment();
 
 
@@ -190,9 +183,8 @@ public:
 
   /// @brief 代入のブロッキング/ノンブロッキングの区別の取得
   /// @note このクラスでは true を返す．
-  virtual
   bool
-  is_blocking() const;
+  is_blocking() const override;
 
 };
 
@@ -223,7 +215,6 @@ private:
 	       ElbExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiAssignStmt();
 
 
@@ -233,9 +224,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -265,7 +255,6 @@ private:
 	      ElbExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiForceStmt();
 
 
@@ -275,9 +264,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -302,7 +290,6 @@ protected:
 		 ElbExpr* lhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeassignBase();
 
 
@@ -312,9 +299,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 左辺を返す．
-  virtual
   const VlExpr*
-  lhs() const;
+  lhs() const override;
 
 
 private:
@@ -351,7 +337,6 @@ private:
 		 ElbExpr* lhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeassignStmt();
 
 
@@ -361,9 +346,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -391,7 +375,6 @@ private:
 		ElbExpr* lhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiReleaseStmt();
 
 
@@ -401,9 +384,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 

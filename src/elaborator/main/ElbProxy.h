@@ -13,6 +13,7 @@
 #include "ym/VlValue.h"
 #include "ym/pt/PtP.h"
 #include "ym/pt/PtArray.h"
+#include "ym/ClibCellLibrary.h"
 #include "Elaborator.h"
 #include "ElbMgr.h"
 #include "ElbFactory.h"
@@ -140,10 +141,16 @@ protected:
 
   /// @brief セルの探索
   /// @param[in] name セル名
-  /// @return name という名のセルを返す．
-  /// @note なければ nullptr を返す．
-  const ClibCell*
-  find_cell(const char* name) const;
+  /// @return name という名のセル番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  find_cell_id(const char* name) const;
+
+  /// @brief セルの取得
+  /// @param[in] cell_id セル番号
+  const ClibCell&
+  get_cell(int cell_id) const;
 
 
 protected:
@@ -729,13 +736,23 @@ ElbProxy::find_obj_up(const VlNamedObj* base_scope,
 
 // @brief セルの探索
 // @param[in] name セル名
-// @return name という名のセルを返す．
-// @note なければ nullptr を返す．
+// @return name という名のセル番号を返す．
+//
+// なければ -1 を返す．
 inline
-const ClibCell*
-ElbProxy::find_cell(const char* name) const
+int
+ElbProxy::find_cell_id(const char* name) const
 {
-  return mElaborator.find_cell(name);
+  return mElaborator.find_cell_id(name);
+}
+
+// @brief セルの取得
+// @param[in] cell_id セル番号
+inline
+const ClibCell&
+ElbProxy::get_cell(int cell_id) const
+{
+  return mElaborator.mCellLibrary.cell(cell_id);
 }
 
 // @brief UDP を登録する．

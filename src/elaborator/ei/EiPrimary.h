@@ -30,7 +30,6 @@ protected:
   EiPrimaryBase(const PtExpr* pt_expr);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimaryBase();
 
 
@@ -40,9 +39,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief プライマリ(net/reg/variables/parameter)の時に true を返す．
-  virtual
   bool
-  is_primary() const;
+  is_primary() const override;
 
 
 public:
@@ -53,17 +51,15 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 };
 
@@ -86,7 +82,6 @@ private:
 	    ElbDecl* obj);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimary();
 
 
@@ -96,9 +91,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -107,43 +101,37 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlDeclBase*
-  decl_base() const;
+  decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDecl*
-  decl_obj() const;
+  decl_obj() const override;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 1 を返す．
-  virtual
-  ymuint
-  lhs_elem_num() const;
+  int
+  lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
   /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは pos = 0 の時，自分自身を返す．
-  virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const;
+  lhs_elem(int pos) const override;
 
 
 private:
@@ -175,7 +163,6 @@ private:
 		ElbDecl* obj);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclPrimary();
 
 
@@ -185,9 +172,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -196,53 +182,45 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief プライマリ(net/reg/variables/parameter)の時に true を返す．
-  virtual
   bool
-  is_primary() const;
+  is_primary() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlDeclBase*
-  decl_base() const;
+  decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDecl*
-  decl_obj() const;
+  decl_obj() const override;
 
   /// @brief Verilog-HDL の文字列を得る．
-  virtual
   string
-  decompile() const;
+  decompile() const override;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 1 を返す．
-  virtual
-  ymuint
-  lhs_elem_num() const;
+  int
+  lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
   /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは pos = 0 の時に自分自身 を返す．
-  virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const;
+  lhs_elem(int pos) const override;
 
 
 public:
@@ -253,17 +231,15 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 
 private:
@@ -272,9 +248,8 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パース木の定義要素を返す．
-  virtual
   const PtBase*
-  pt_obj() const;
+  pt_obj() const override;
 
 
 private:
@@ -309,7 +284,6 @@ private:
 		 ElbParameter* obj);
 
   /// @brief デストラクタ
-  virtual
   ~EiParamPrimary();
 
 
@@ -319,9 +293,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -330,34 +303,29 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note このクラスでは true を返す．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 定数値を返す．
   /// @note kVpiConstant の時，意味を持つ．
   /// @note それ以外では動作は不定
-  virtual
   VlValue
-  constant_value() const;
+  constant_value() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlDeclBase*
-  decl_base() const;
+  decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDecl*
-  decl_obj() const;
+  decl_obj() const override;
 
 
 private:
@@ -389,11 +357,10 @@ private:
   /// @param[in] index_list インデックスのリスト
   EiArrayElemPrimary(const PtExpr* pt_expr,
 		     ElbDeclArray* obj,
-		     ymuint dim,
+		     int dim,
 		     ElbExpr** index_list);
 
   /// @brief デストラクタ
-  virtual
   ~EiArrayElemPrimary();
 
 
@@ -403,9 +370,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -414,56 +380,48 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlDeclBase*
-  decl_base() const;
+  decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDeclArray*
-  declarray_obj() const;
+  declarray_obj() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note それ以外では 0 を返す．
-  virtual
-  ymuint
-  declarray_dimension() const;
+  int
+  declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlExpr*
-  declarray_index(ymuint pos) const;
+  declarray_index(int pos) const override;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 1 を返す．
-  virtual
-  ymuint
-  lhs_elem_num() const;
+  int
+  lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
   /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは pos = 0 の時に自分自身 を返す．
-  virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const;
+  lhs_elem(int pos) const override;
 
 
 private:
@@ -475,7 +433,7 @@ private:
   ElbDeclArray* mObj;
 
   // 配列の次元
-  ymuint32 mDim;
+  int mDim;
 
   // インデックスのリスト
   ElbExpr** mIndexList;
@@ -500,10 +458,9 @@ private:
   /// @param[in] offset オフセット
   EiConstArrayElemPrimary(const PtExpr* pt_expr,
 			  ElbDeclArray* obj,
-			  ymuint offset);
+			  int offset);
 
   /// @brief デストラクタ
-  virtual
   ~EiConstArrayElemPrimary();
 
 
@@ -513,9 +470,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -524,69 +480,59 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 部分/ビット指定が定数の時 true を返す．
   /// @note kVpiPartSelect/kVpiBitSelect の時，意味を持つ．
   /// @note それ以外では常に false を返す．
-  virtual
   bool
-  is_constant_select() const;
+  is_constant_select() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlDeclBase*
-  decl_base() const;
+  decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDeclArray*
-  declarray_obj() const;
+  declarray_obj() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note それ以外では 0 を返す．
-  virtual
-  ymuint
-  declarray_dimension() const;
+  int
+  declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlExpr*
-  declarray_index(ymuint pos) const;
+  declarray_index(int pos) const override;
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
-  virtual
-  ymuint
-  declarray_offset() const;
+  int
+  declarray_offset() const override;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 1 を返す．
-  virtual
-  ymuint
-  lhs_elem_num() const;
+  int
+  lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
   /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは pos = 0 の時に自分自身 を返す．
-  virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const;
+  lhs_elem(int pos) const override;
 
 
 private:
@@ -598,7 +544,7 @@ private:
   ElbDeclArray* mObj;
 
   // オフセット
-  ymuint32 mOffset;
+  int mOffset;
 
 };
 
@@ -621,7 +567,6 @@ private:
 		 const VlNamedObj* obj);
 
   /// @brief デストラクタ
-  virtual
   ~EiScopePrimary();
 
 
@@ -631,9 +576,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -642,20 +586,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 対象のオブジェクトを返す．
-  virtual
   const VlNamedObj*
-  scope_obj() const;
+  scope_obj() const override;
 
 
 private:
@@ -687,7 +628,6 @@ private:
 		     ElbPrimitive* obj);
 
   /// @brief デストラクタ
-  virtual
   ~EiPrimitivePrimary();
 
 
@@ -697,9 +637,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -708,20 +647,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 対象のオブジェクトを返す．
-  virtual
   const VlPrimitive*
-  primitive_obj() const;
+  primitive_obj() const override;
 
 
 private:

@@ -26,7 +26,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] expr_list 式の配列
 ElbDelay*
 EiFactory::new_Delay(const PtBase* pt_obj,
-		     ymuint elem_num,
+		     int elem_num,
 		     ElbExpr** expr_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiDelay));
@@ -45,7 +45,7 @@ EiFactory::new_Delay(const PtBase* pt_obj,
 // @param[in] elem_num 要素数
 // @param[in] expr_list 式の配列
 EiDelay::EiDelay(const PtBase* pt_obj,
-		 ymuint elem_num,
+		 int elem_num,
 		 ElbExpr** expr_list) :
   mPtObj(pt_obj),
   mElemNum(elem_num),
@@ -74,7 +74,7 @@ EiDelay::file_region() const
 }
 
 // @brief 要素数を返す．
-ymuint
+int
 EiDelay::elem_num() const
 {
   return mElemNum;
@@ -83,7 +83,7 @@ EiDelay::elem_num() const
 // @brief 値を返す．
 // @param[in] pos 位置番号 ( 0 <= pos < elem_num() )
 const VlExpr*
-EiDelay::expr(ymuint pos) const
+EiDelay::expr(int pos) const
 {
   return mElemArray[pos];
 }
@@ -94,7 +94,7 @@ EiDelay::decompile() const
 {
   string ans = "(";
   string comma = "";
-  for (ymuint i = 0; i < elem_num(); ++ i) {
+  for ( int i = 0; i < elem_num(); ++ i ) {
     ans += comma;
     ans += expr(i)->decompile();
     comma = ", ";

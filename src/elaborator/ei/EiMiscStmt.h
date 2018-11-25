@@ -41,7 +41,6 @@ private:
 	      ElbExpr* named_event);
 
   /// @brief デストラクタ
-  virtual
   ~EiEventStmt();
 
 
@@ -51,9 +50,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -62,9 +60,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief named event を返す．
-  virtual
   const VlExpr*
-  named_event() const;
+  named_event() const override;
 
 
 private:
@@ -98,7 +95,6 @@ private:
 	     const PtStmt* pt_stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiNullStmt();
 
 
@@ -108,9 +104,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -135,12 +130,11 @@ protected:
   EiTcBase(const VlNamedObj* parent,
 	   ElbProcess* process,
 	   const PtStmt* pt_stmt,
-	   ymuint arg_num,
+	   int arg_num,
 	   ElbExpr** arg_array);
 
   /// @brief デストラクタ
-  virtual
-  ~EiTcBase();
+  ~EiTcBase() override;
 
 
 public:
@@ -149,15 +143,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 引数の数を返す．
-  virtual
-  ymuint
-  argument_num() const;
+  int
+  arg_num() const override;
 
   /// @brief 引数の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
-  virtual
   const VlExpr*
-  argument(ymuint pos) const;
+  arg(int pos) const override;
 
 
 private:
@@ -169,7 +161,7 @@ private:
   /// @param[in] pos 位置番号
   /// @param[in] arg 設定する引数
   void
-  set_argument(ymuint pos,
+  set_argument(int pos,
 	       ElbExpr* arg);
 
 
@@ -179,7 +171,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 引数の数
-  ymuint32 mArgumentNum;
+  int mArgumentNum;
 
   // 引数のリスト
   ElbExpr** mArgumentList;
@@ -209,11 +201,10 @@ private:
 	     ElbProcess* process,
 	     const PtStmt* pt_stmt,
 	     ElbTaskFunc* task,
-	     ymuint arg_num,
+	     int arg_num,
 	     ElbExpr** arg_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiTaskCall();
 
 
@@ -223,9 +214,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -234,9 +224,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief task の実体を返す．
-  virtual
   const VlTaskFunc*
-  task() const;
+  task() const override;
 
 
 private:
@@ -272,11 +261,10 @@ private:
 		ElbProcess* process,
 		const PtStmt* pt_stmt,
 		const ElbUserSystf* user_systf,
-		ymuint arg_num,
+		int arg_num,
 		ElbExpr** arg_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiSysTaskCall();
 
 
@@ -286,9 +274,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -297,9 +284,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief user systf クラスへのポインタを返す．
-  virtual
   const VlUserSystf*
-  user_systf() const;
+  user_systf() const override;
 
 
 private:
@@ -336,7 +322,6 @@ private:
 		const VlNamedObj* target);
 
   /// @brief デストラクタ
-  virtual
   ~EiDisableStmt();
 
 
@@ -346,9 +331,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -361,9 +345,8 @@ public:
   /// 型が VlNamedObj になっているが実際には
   /// ElbFunction/ElbTask/EiNamedFork/EiNamedBegin
   /// のいずれか
-  virtual
   const VlNamedObj*
-  scope() const;
+  scope() const override;
 
 
 private:
@@ -403,7 +386,6 @@ private:
 	     ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiCtrlStmt();
 
 
@@ -413,9 +395,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -424,14 +405,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief コントロールを返す．
-  virtual
   const VlControl*
-  control() const;
+  control() const override;
 
   /// @brief 本文のステートメントを返す．
-  virtual
   const VlStmt*
-  body_stmt() const;
+  body_stmt() const override;
 
 
 private:

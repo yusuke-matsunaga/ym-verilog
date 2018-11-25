@@ -29,7 +29,6 @@ protected:
   EiIOHead(const PtIOHead* pt_header);
 
   /// @brief デストラクタ
-  virtual
   ~EiIOHead();
 
 
@@ -39,27 +38,23 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 方向を返す．
-  virtual
   tVlDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 親のモジュールの取得
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbModule*
-  module() const;
+  module() const override;
 
   /// @brief 親のタスクの取得
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbTaskFunc*
-  task() const;
+  task() const override;
 
   /// @brief 親の関数の取得
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbTaskFunc*
-  function() const;
+  function() const override;
 
 
 private:
@@ -91,7 +86,6 @@ private:
 	      const PtIOHead* pt_header);
 
   /// @brief デストラクタ
-  virtual
   ~EiModIOHead();
 
 
@@ -102,7 +96,7 @@ public:
 
   /// @brief 親のモジュールの取得
   ElbModule*
-  module() const;
+  module() const override;
 
 
 private:
@@ -134,7 +128,6 @@ private:
 	     const PtIOHead* pt_header);
 
   /// @brief デストラクタ
-  virtual
   ~EiTaskIOHead();
 
 
@@ -145,7 +138,7 @@ public:
 
   /// @brief 親のタスクの取得
   ElbTaskFunc*
-  task() const;
+  task() const override;
 
 
 private:
@@ -177,7 +170,6 @@ private:
 		   const PtIOHead* pt_header);
 
   /// @brief デストラクタ
-  virtual
   ~EiFunctionIOHead();
 
 
@@ -188,7 +180,7 @@ public:
 
   /// @brief 親の関数の取得
   ElbTaskFunc*
-  function() const;
+  function() const override;
 
 
 private:
@@ -217,7 +209,6 @@ private:
   EiIODecl();
 
   /// @brief デストラクタ
-  virtual
   ~EiIODecl();
 
 
@@ -227,14 +218,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -243,81 +232,67 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 方向を返す．
-  virtual
   tVlDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief 対応する宣言要素を返す．
-  virtual
   const VlDecl*
-  decl() const;
+  decl() const override;
 
   /// @brief 親のモジュールの取得
-  virtual
   const VlModule*
-  module() const;
+  module() const override;
 
   /// @brief 親の UDP の取得
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlUdpDefn*
-  udp_defn() const;
+  udp_defn() const override;
 
   /// @brief 親のタスクの取得
-  virtual
   const VlTaskFunc*
-  task() const;
+  task() const override;
 
   /// @brief 親の関数の取得
-  virtual
   const VlTaskFunc*
-  function() const;
+  function() const override;
 
 
 public:
@@ -326,9 +301,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 対応する ElbDecl を返す．
-  virtual
   ElbDecl*
-  _decl() const;
+  _decl() const override;
 
 
 public:

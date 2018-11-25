@@ -30,19 +30,19 @@ ElbUdpDefn*
 EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 		       bool is_protected)
 {
-  ymuint port_num = pt_udp->port_num();
+  int port_num = pt_udp->port_num();
   void* q = mAlloc.get_memory(sizeof(EiUdpIO) * port_num);
   EiUdpIO* iodecl = new (q) EiUdpIO[port_num];
 
-  ymuint table_size = pt_udp->table_array().size();
+  int table_size = pt_udp->table_array().size();
   void* r = mAlloc.get_memory(sizeof(EiTableEntry) * table_size);
   EiTableEntry* table = new (r) EiTableEntry[table_size];
 
-  ymuint row_size = port_num;
+  int row_size = port_num;
   if ( pt_udp->prim_type() == kVpiSeqPrim ) {
     ++ row_size;
   }
-  ymuint vsize = row_size * table_size;
+  int vsize = row_size * table_size;
   void* s = mAlloc.get_memory(sizeof(VlUdpVal) * vsize);
   VlUdpVal* val_array = new (s) VlUdpVal[vsize];
 
@@ -51,10 +51,10 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 				     port_num, iodecl,
 				     table_size, table,
 				     val_array);
-  for (ymuint i = 0; i < port_num; ++ i) {
+  for ( int i = 0; i < port_num; ++ i ) {
     iodecl[i].mUdp = udp;
   }
-  for (ymuint i = 0; i < table_size; ++ i) {
+  for ( int i = 0; i < table_size; ++ i ) {
     table[i].mUdp = udp;
     table[i].mValArray = val_array;
     val_array += row_size;
@@ -77,9 +77,9 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 // @param[in] val_array テーブル中の値を納める配列
 EiUdpDefn::EiUdpDefn(const PtUdp* pt_udp,
 		     bool is_protected,
-		     ymuint io_num,
+		     int io_num,
 		     EiUdpIO* io_array,
-		     ymuint table_num,
+		     int table_num,
 		     EiTableEntry* table,
 		     VlUdpVal* val_array) :
   mPtUdp(pt_udp),
@@ -128,7 +128,7 @@ EiUdpDefn::prim_type() const
 }
 
 // @brief ポート数を返す．
-ymuint
+int
 EiUdpDefn::port_num() const
 {
   return mPortNum;
@@ -137,7 +137,7 @@ EiUdpDefn::port_num() const
 // @brief 入力の宣言要素を返す．
 // @param[in] pos 入力番号
 const VlIODecl*
-EiUdpDefn::input(ymuint pos) const
+EiUdpDefn::input(int pos) const
 {
   return &mIODeclList[pos];
 }
@@ -177,7 +177,7 @@ EiUdpDefn::init_val_string() const
 }
 
 // @brief table entry の行数を返す．
-ymuint
+int
 EiUdpDefn::table_size() const
 {
   return mTableEntrySize;
@@ -186,7 +186,7 @@ EiUdpDefn::table_size() const
 // @brief table entry を返す．
 // @param[in] pos 行番号
 const VlTableEntry*
-EiUdpDefn::table_entry(ymuint pos) const
+EiUdpDefn::table_entry(int pos) const
 {
   return &mTableEntryList[pos];
 }
@@ -197,7 +197,7 @@ EiUdpDefn::table_entry(ymuint pos) const
 // @param[in] name 名前
 // @param[in] dir 向き
 void
-EiUdpDefn::set_io(ymuint pos,
+EiUdpDefn::set_io(int pos,
 		  const PtIOHead* pt_header,
 		  const PtIOItem* pt_item)
 {
@@ -220,7 +220,7 @@ EiUdpDefn::set_initial(const PtExpr* init_expr,
 // @param[in] pt_udp_entry パース木の一行分の定義
 // @param[in] vals シンボル値の配列
 void
-EiUdpDefn::set_tableentry(ymuint pos,
+EiUdpDefn::set_tableentry(int pos,
 			  const PtUdpEntry* pt_udp_entry,
 			  const vector<VlUdpVal>& vals)
 {
@@ -326,7 +326,7 @@ EiUdpIO::right_range_string() const
 
 // @brief サイズを返す．
 // このクラスは 1 を返す．
-ymuint
+int
 EiUdpIO::bit_size() const
 {
   return 1;
@@ -412,10 +412,10 @@ EiTableEntry::file_region() const
 }
 
 // @brief 一行の要素数を返す．
-ymuint
+int
 EiTableEntry::size() const
 {
-  ymuint row_size = mUdp->port_num();
+  int row_size = mUdp->port_num();
   if ( mUdp->prim_type() == kVpiSeqPrim ) {
     ++ row_size;
   }
@@ -424,7 +424,7 @@ EiTableEntry::size() const
 
 // @brief pos 番目の位置の値を返す．
 VlUdpVal
-EiTableEntry::val(ymuint pos) const
+EiTableEntry::val(int pos) const
 {
   return mValArray[pos];
 }
@@ -433,15 +433,15 @@ EiTableEntry::val(ymuint pos) const
 string
 EiTableEntry::str() const
 {
-  ymuint n = size();
-  ymuint in = n - 1; // 出力変数の分を減らす
+  int n = size();
+  int in = n - 1; // 出力変数の分を減らす
   if ( mUdp->prim_type() == vpiSeqPrim ) {
     -- in; // さらに状態変数の分を減らす．
   }
-  ymuint in1 = in - 1;
-  ymuint n1 = n - 1;
+  int in1 = in - 1;
+  int n1 = n - 1;
   string s;
-  for (ymuint pos = 0; pos < n; ++ pos) {
+  for ( int pos = 0; pos < n; ++ pos ) {
     s += val(pos).to_string();
     if ( pos < in1 ) {
       s += " ";
@@ -459,8 +459,8 @@ EiTableEntry::set(const PtUdpEntry* pt_entry,
 		  const vector<VlUdpVal>& vals)
 {
   mPtUdpEntry = pt_entry;
-  ymuint n = size();
-  for (ymuint i = 0; i < n; ++ i) {
+  int n = size();
+  for ( int i = 0; i < n; ++ i ) {
     mValArray[i] = vals[i];
   }
 }

@@ -74,11 +74,11 @@ public:
   def_name() const;
 
   /// @brief ポート数を返す．
-  ymuint
+  int
   port_num() const;
 
   /// @brief 入出力宣言数を返す．
-  ymuint
+  int
   io_num() const;
 
   /// @brief cell instance のチェック
@@ -169,7 +169,6 @@ protected:
   EiModule();
 
   /// @brief デストラクタ
-  virtual
   ~EiModule();
 
   /// @brief ポート配列とIO配列を初期化する．
@@ -186,14 +185,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -202,9 +199,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
 
 public:
@@ -214,104 +210,86 @@ public:
 
   /// @brief definition location を返す．
   /// @return 定義側のファイル位置の情報を返す．
-  virtual
   FileRegion
-  def_file_region() const;
+  def_file_region() const override;
 
   /// @brief definition name を返す．
   /// @return 定義名を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
   /// @brief cell instance のチェック
   /// @return cell instance の場合に true を返す．
-  virtual
   bool
-  is_cell_instance() const;
+  is_cell_instance() const override;
 
   /// @brief protect のチェック
   /// @return protect されていたら true を返す．
-  virtual
   bool
-  is_protected() const;
+  is_protected() const override;
 
   /// @brief top module の時 true を返す．
-  virtual
   bool
-  is_top_module() const;
+  is_top_module() const override;
 
   /// @brief time unit を返す．
   /// @return 結果は 2 〜 -15 の整数
   /// @return もしくは未定義を表す -16
-  virtual
   int
-  time_unit() const;
+  time_unit() const override;
 
   /// @brief time precision を返す．
   /// @return 結果は 2 〜 -15 の整数
   /// @return もしくは未定義を表す -16
-  virtual
   int
-  time_precision() const;
+  time_precision() const override;
 
   /// @brief default net type を返す．
-  virtual
   tVpiNetType
-  def_net_type() const;
+  def_net_type() const override;
 
   /// @brief unconnected drive を返す．
-  virtual
   tVpiUnconnDrive
-  unconn_drive() const;
+  unconn_drive() const override;
 
   /// @brief default delay mode を返す．
-  virtual
   tVpiDefDelayMode
-  def_delay_mode() const;
+  def_delay_mode() const override;
 
   /// @brief default decay time を返す．
-  virtual
   int
-  def_decay_time() const;
+  def_decay_time() const override;
 
   /// @brief config 情報を返す．
-  virtual
   string
-  config() const;
+  config() const override;
 
   /// @brief library 情報を返す．
-  virtual
   string
-  library() const;
+  library() const override;
 
   /// @brief cell 情報を返す．
-  virtual
   string
-  cell() const;
+  cell() const override;
 
   /// @brief ポート数を返す．
-  virtual
-  ymuint
-  port_num() const;
+  int
+  port_num() const override;
 
   /// @brief ポートの取得
   /// @param[in] pos 取得するポートの位置 (0 <= pos < port_num())
   /// @return pos 番目のポートを返す．
-  virtual
   const VlPort*
-  port(ymuint pos) const;
+  port(int pos) const override;
 
   /// @brief 入出力数を得る．
-  virtual
-  ymuint
-  io_num() const;
+  int
+  io_num() const override;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
-  virtual
   const VlIODecl*
-  io(ymuint pos) const;
+  io(int pos) const override;
 
 
 public:
@@ -325,34 +303,31 @@ public:
   /// @param[in] pt_item パース木のIO宣言要素
   /// @param[in] decl 対応する宣言要素
   /// @param[in] 符号付き属性の補正値
-  virtual
   void
-  init_iodecl(ymuint pos,
+  init_iodecl(int pos,
 	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
-	      ElbDecl* decl);
+	      ElbDecl* decl) override;
 
   /// @brief ポートの初期設定を行う．
   /// @param[in] index ポート番号
   /// @param[in] pt_port パース木のポート定義
   /// @param[in] low_conn 下位の接続
   /// @param[in] dir 向き
-  virtual
   void
-  init_port(ymuint index,
+  init_port(int index,
 	    const PtPort* pt_port,
 	    ElbExpr* low_conn,
-	    tVlDirection dir);
+	    tVlDirection dir) override;
 
   /// @brief ポートの high_conn を接続する．
   /// @param[in] index ポート番号
   /// @param[in] high_conn 上位の接続の式
   /// @param[in] conn_by_name 名前による割り当て時に true とするフラグ
-  virtual
   void
-  set_port_high_conn(ymuint index,
+  set_port_high_conn(int index,
 		     ElbExpr* high_conn,
-		     bool conn_by_name);
+		     bool conn_by_name) override;
 
 
 private:
@@ -400,7 +375,6 @@ private:
   EiModule1();
 
   /// @brief デストラクタ
-  virtual
   ~EiModule1();
 
 
@@ -427,9 +401,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -438,21 +411,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 配列要素の時 true を返す．
-  virtual
   bool
-  is_array() const;
+  is_array() const override;
 
   /// @brief インデックスの値を返す．
   /// @note 配列要素の時のみ意味を持つ．
-  virtual
   int
-  index() const;
+  index() const override;
 
   /// @brief 親の配列を返す．
   /// @note 配列要素の時のみ意味を持つ．
-  virtual
   const VlModuleArray*
-  module_array() const;
+  module_array() const override;
 
 
 private:
@@ -461,14 +431,12 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダ情報を返す．
-  virtual
   const EiModuleHead&
-  head() const;
+  head() const override;
 
   /// @brief ヘッダ情報を返す．
-  virtual
   EiModuleHead&
-  head();
+  head() override;
 
 
 private:
@@ -510,7 +478,6 @@ private:
 	    const PtInst* pt_inst);
 
   /// @brief デストラクタ
-  virtual
   ~EiModule2();
 
 
@@ -520,9 +487,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -531,21 +497,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 配列要素の時 true を返す．
-  virtual
   bool
-  is_array() const;
+  is_array() const override;
 
   /// @brief インデックスの値を返す．
   /// @note 配列要素の時のみ意味を持つ．
-  virtual
   int
-  index() const;
+  index() const override;
 
   /// @brief 親の配列を返す．
   /// @note 配列要素の時のみ意味を持つ．
-  virtual
   const VlModuleArray*
-  module_array() const;
+  module_array() const override;
 
 
 private:
@@ -554,14 +517,12 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ヘッダ情報を返す．
-  virtual
   const EiModuleHead&
-  head() const;
+  head() const override;
 
   /// @brief ヘッダ情報を返す．
-  virtual
   EiModuleHead&
-  head();
+  head() override;
 
 
 private:
@@ -601,7 +562,6 @@ private:
 		EiModule1* array);
 
   /// @brief デストラクタ
-  virtual
   ~EiModuleArray();
 
 
@@ -611,14 +571,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -627,14 +585,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -643,41 +599,34 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲の MSB の値を返す．
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief 要素数を返す．
-  virtual
-  ymuint
-  elem_num() const;
+  int
+  elem_num() const override;
 
   /// @brief 要素を返す．
   /// @param[in] offset 位置番号 (0 <= offset < elem_num())
-  virtual
   const VlModule*
-  elem_by_offset(ymuint offset) const;
+  elem_by_offset(int offset) const override;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
-  virtual
   const VlModule*
-  elem_by_index(int index) const;
+  elem_by_index(int index) const override;
 
 
 public:
@@ -687,7 +636,7 @@ public:
 
   /// @brief 要素を返す．
   ElbModule*
-  _module(ymuint offset);
+  _module(int offset) override;
 
 
 public:

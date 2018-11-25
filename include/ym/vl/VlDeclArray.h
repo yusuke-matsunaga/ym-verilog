@@ -33,6 +33,11 @@ public:
   // VlDeclArray の派生クラスに共通な仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 配列型オブジェクトの時に true を返す．
+  virtual
+  bool
+  is_array() const = 0;
+
   /// @brief 多次元の配列型オブジェクトの時に true を返す．
   virtual
   bool
@@ -40,18 +45,18 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  ymuint
+  int
   dimension() const = 0;
 
   /// @brief 範囲の取得
   /// @param[in] pos 位置 ( 0 <= pos < dimension() )
   virtual
   const VlRange*
-  range(ymuint pos) const = 0;
+  range(int pos) const = 0;
 
   /// @brief 配列の要素数の取得
   virtual
-  ymuint
+  int
   array_size() const = 0;
 
   /// @brief 1次元配列の場合にインデックスからオフセットを計算する．
@@ -62,7 +67,7 @@ public:
   virtual
   bool
   calc_array_offset(int index,
-		    ymuint& offset) const = 0;
+		    int& offset) const = 0;
 
   /// @brief 他次元配列の場合にインデックスのリストからオフセットを計算する．
   /// @param[in] index_list インデックスのリスト
@@ -72,7 +77,7 @@ public:
   virtual
   bool
   calc_array_offset(const vector<int>& index_list,
-		    ymuint& offset) const = 0;
+		    int& offset) const = 0;
 
 };
 

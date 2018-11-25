@@ -35,7 +35,6 @@ private:
 	   int val);
 
   /// @brief デストラクタ
-  virtual
   ~EiGenvar();
 
 
@@ -45,14 +44,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -61,44 +58,42 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // EiGenvar に固有の関数
+  // ElbGenvar に固有の関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 使用中の時 true を返す．
   bool
-  is_inuse() const;
+  is_inuse() const override;
 
   /// @brief 使用中にする．
   void
-  set_inuse();
+  set_inuse() override;
 
   /// @brief 使用を終える．
   void
-  reset_inuse();
+  reset_inuse() override;
 
   /// @brief 現在の値を返す．
   int
-  value() const;
+  value() const override;
 
   /// @brief 値を設定する．
   void
-  set_value(int value);
+  set_value(int value) override;
 
   /// @brief 元となったパース木の定義要素を返す．
   const PtDeclItem*
-  pt_item() const;
+  pt_item() const override;
 
 private:
   //////////////////////////////////////////////////////////////////////

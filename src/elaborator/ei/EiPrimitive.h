@@ -380,7 +380,7 @@ public:
   /// @brief ポート端子を得る．
   /// @param[in] pos 位置番号 (0 <= pos < port_num())
   const VlPrimTerm*
-  prim_term(ymuint pos) const override;
+  prim_term(int pos) const override;
 
 
 public:
@@ -392,7 +392,7 @@ public:
   /// @param[in] pos ポート番号 (0 から始まる)
   /// @param[in] expr 接続する式
   void
-  connect(ymuint pos,
+  connect(int pos,
 	  ElbExpr* expr) override;
 
 
@@ -406,16 +406,18 @@ protected:
   void
   init_port(EiPrimTerm* term_array);
 
+  /// @brief ポート配列を初期化する．
+  /// @param[in] term_array 端子の配列
+  /// @param[in] cell セル
+  void
+  init_port(EiPrimTerm* term_array,
+	    const ClibCell& cell);
+
 
 private:
   //////////////////////////////////////////////////////////////////////
   // EiPrimitive の仮想関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ヘッダを得る．
-  virtual
-  ElbPrimHead*
-  head() const = 0;
 
   /// @brief パース木のインスタンス定義を得る．
   virtual
@@ -429,7 +431,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ポート数
-  ymuint32 mPortNum;
+  int mPortNum;
 
   // ポートの配列
   EiPrimTerm* mPortArray;
@@ -467,6 +469,17 @@ public:
   void
   init(EiPrimArray* prim_array,
        int index,
+       EiPrimTerm* term_array);
+
+  /// @brief 初期設定を行う．
+  /// @param[in] prim_array 親の配列
+  /// @param[in] index インデックス番号
+  /// @param[in] cell セル
+  /// @param[in] term_array 端子の配列
+  void
+  init(EiPrimArray* prim_array,
+       int index,
+       const ClibCell& cell,
        EiPrimTerm* term_array);
 
 
@@ -527,6 +540,16 @@ private:
   /// @param[in] pt_inst インスタンス定義
   /// @param[in] term_array 端子の配列
   EiPrimitive2(ElbPrimHead* head,
+	       const PtInst* pt_inst,
+	       EiPrimTerm* term_array);
+
+  /// @brief コンストラクタ
+  /// @param[in] head ヘッダ
+  /// @param[in] cell セル
+  /// @param[in] pt_inst インスタンス定義
+  /// @param[in] term_array 端子の配列
+  EiPrimitive2(ElbPrimHead* head,
+	       const ClibCell& cell,
 	       const PtInst* pt_inst,
 	       EiPrimTerm* term_array);
 
@@ -595,6 +618,20 @@ private:
 	      EiPrimitive1* elem_array,
 	      EiPrimTerm* term_array);
 
+  /// @brief コンストラクタ
+  /// @param[in] head ヘッダ
+  /// @param[in] cell セル
+  /// @param[in] pt_inst インスタンス定義
+  /// @param[in] range 範囲
+  /// @param[in] elem_array 要素の配列
+  /// @param[in] term_array 端子の配列
+  EiPrimArray(ElbPrimHead* head,
+	      const ClibCell& cell,
+	      const PtInst* pt_inst,
+	      const EiRangeImpl& range,
+	      EiPrimitive1* elem_array,
+	      EiPrimTerm* term_array);
+
   /// @brief デストラクタ
   ~EiPrimArray();
 
@@ -644,9 +681,9 @@ public:
   const VlUdpDefn*
   udp_defn() const override;
 
-  /// @brief セルを返す．
-  const ClibCell*
-  cell() const override;
+  /// @brief セル番号を返す．
+  int
+  cell_id() const override;
 
   /// @brief 0 の強さを得る．
   tVpiStrength
@@ -683,7 +720,7 @@ public:
   /// @brief 要素のプリミティブを返す．
   /// @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
   const VlPrimitive*
-  elem_by_offset(ymuint offset) const override;
+  elem_by_offset(int offset) const override;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
@@ -698,15 +735,15 @@ public:
 
   /// @brief 要素のプリミティブを取り出す．
   ElbPrimitive*
-  _primitive_by_offset(ymuint offset) const;
+  _primitive_by_offset(int offset) const override;
 
   /// @brief 要素のプリミティブを取り出す．
   ElbPrimitive*
-  _primitive_by_index(int index) const;
+  _primitive_by_index(int index) const override;
 
   /// @brief ヘッダを得る．
   ElbPrimHead*
-  head() const;
+  head() const override;
 
   /// @brief パース木のインスタンス定義を得る．
   const PtInst*
@@ -796,8 +833,8 @@ public:
   /// @brief 内容を設定する．
   void
   set(ElbPrimitive* primitive,
-      ymuint index,
-      tVlDirection dir);
+      int index,
+      tVlDirection dir) override;
 
 
 private:
@@ -809,7 +846,7 @@ private:
   ElbPrimitive* mPrimitive;
 
   // インデックス + 方向(3bit)
-  ymuint32 mIndexDir;
+  int mIndexDir;
 
   // 接続している式
   ElbExpr* mExpr;

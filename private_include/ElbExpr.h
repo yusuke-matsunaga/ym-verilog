@@ -29,7 +29,6 @@ protected:
   ElbExpr();
 
   /// @brief デストラクタ
-  virtual
   ~ElbExpr();
 
 
@@ -39,14 +38,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求された値のタイプを返す．
-  virtual
   VlValueType
-  req_type() const;
+  req_type() const override;
 
   /// @brief 式のビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
 
 public:
@@ -77,7 +74,7 @@ public:
   /// @note 演算子の時，意味を持つ．
   virtual
   ElbExpr*
-  _operand(ymuint pos) const = 0;
+  _operand(int pos) const = 0;
 
 
 public:

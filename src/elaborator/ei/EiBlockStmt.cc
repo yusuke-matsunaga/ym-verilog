@@ -32,7 +32,7 @@ EiFactory::new_Begin(const VlNamedObj* parent,
 		     const PtStmt* pt_stmt,
 		     ElbStmt** stmt_list)
 {
-  ymuint stmt_num = pt_stmt->stmt_array().size();
+  int stmt_num = pt_stmt->stmt_array().size();
   void* p = mAlloc.get_memory(sizeof(EiBegin));
   EiBegin* stmt = new (p) EiBegin(parent, process, pt_stmt,
 				  stmt_num, stmt_list);
@@ -51,7 +51,7 @@ EiFactory::new_Fork(const VlNamedObj* parent,
 		    const PtStmt* pt_stmt,
 		    ElbStmt** stmt_list)
 {
-  ymuint stmt_num = pt_stmt->stmt_array().size();
+  int stmt_num = pt_stmt->stmt_array().size();
   void* p = mAlloc.get_memory(sizeof(EiFork));
   EiFork* stmt = new (p) EiFork(parent, process, pt_stmt,
 				stmt_num, stmt_list);
@@ -70,7 +70,7 @@ EiFactory::new_NamedBegin(const VlNamedObj* block,
 			  const PtStmt* pt_stmt,
 			  ElbStmt** stmt_list)
 {
-  ymuint stmt_num = pt_stmt->stmt_array().size();
+  int stmt_num = pt_stmt->stmt_array().size();
   void* p = mAlloc.get_memory(sizeof(EiNamedBegin));
   EiNamedBegin* stmt = new (p) EiNamedBegin(block, process,
 					    stmt_num, stmt_list);
@@ -89,7 +89,7 @@ EiFactory::new_NamedFork(const VlNamedObj* block,
 			 const PtStmt* pt_stmt,
 			 ElbStmt** stmt_list)
 {
-  ymuint stmt_num = pt_stmt->stmt_array().size();
+  int stmt_num = pt_stmt->stmt_array().size();
   void* p = mAlloc.get_memory(sizeof(EiNamedFork));
   EiNamedFork* stmt = new (p) EiNamedFork(block, process,
 					  stmt_num, stmt_list);
@@ -111,7 +111,7 @@ EiFactory::new_NamedFork(const VlNamedObj* block,
 EiBlockStmt::EiBlockStmt(const VlNamedObj* parent,
 			 ElbProcess* process,
 			 const PtStmt* pt_stmt,
-			 ymuint stmt_num,
+			 int stmt_num,
 			 ElbStmt** array) :
   EiStmtBase(parent, process, pt_stmt),
   mStmtNum(stmt_num),
@@ -125,7 +125,7 @@ EiBlockStmt::~EiBlockStmt()
 }
 
 // @brief 中身のステートメントのリストの要素数を返す．
-ymuint
+int
 EiBlockStmt::child_stmt_num() const
 {
   return mStmtNum;
@@ -134,7 +134,7 @@ EiBlockStmt::child_stmt_num() const
 // @brief 中身のステートメントを返す．
 // @param[in] pos 位置番号
 ElbStmt*
-EiBlockStmt::_child_stmt(ymuint pos) const
+EiBlockStmt::_child_stmt(int pos) const
 {
   return mStmtList[pos];
 }
@@ -153,7 +153,7 @@ EiBlockStmt::_child_stmt(ymuint pos) const
 EiBegin::EiBegin(const VlNamedObj* parent,
 		 ElbProcess* process,
 		 const PtStmt* pt_stmt,
-		 ymuint stmt_num,
+		 int stmt_num,
 		 ElbStmt** array) :
   EiBlockStmt(parent, process, pt_stmt, stmt_num, array)
 {
@@ -185,7 +185,7 @@ EiBegin::type() const
 EiFork::EiFork(const VlNamedObj* parent,
 	       ElbProcess* process,
 	       const PtStmt* pt_stmt,
-	       ymuint stmt_num,
+	       int stmt_num,
 	       ElbStmt** array) :
   EiBlockStmt(parent, process, pt_stmt, stmt_num, array)
 {
@@ -215,7 +215,7 @@ EiFork::type() const
 // @param[in] array ステートメントのリスト用配列
 EiNamedBlockStmt::EiNamedBlockStmt(const VlNamedObj* block,
 				   ElbProcess* process,
-				   ymuint stmt_num,
+				   int stmt_num,
 				   ElbStmt** array) :
   mBlockScope(block),
   mProcess(process),
@@ -251,7 +251,7 @@ EiNamedBlockStmt::scope() const
 }
 
 // @brief 中身のステートメントのリストの要素数を返す．
-ymuint
+int
 EiNamedBlockStmt::child_stmt_num() const
 {
   return mStmtNum;
@@ -260,7 +260,7 @@ EiNamedBlockStmt::child_stmt_num() const
 // @brief 中身のステートメントを返す．
 // @param[in] pos 位置番号
 ElbStmt*
-EiNamedBlockStmt::_child_stmt(ymuint pos) const
+EiNamedBlockStmt::_child_stmt(int pos) const
 {
   return mStmtList[pos];
 }
@@ -277,7 +277,7 @@ EiNamedBlockStmt::_child_stmt(ymuint pos) const
 // @param[in] array ステートメントのリスト用配列
 EiNamedBegin::EiNamedBegin(const VlNamedObj* block,
 			   ElbProcess* process,
-			   ymuint stmt_num,
+			   int stmt_num,
 			   ElbStmt** array) :
   EiNamedBlockStmt(block, process, stmt_num, array)
 {
@@ -307,7 +307,7 @@ EiNamedBegin::type() const
 // @param[in] array ステートメントのリスト用配列
 EiNamedFork::EiNamedFork(const VlNamedObj* block,
 			 ElbProcess* process,
-			 ymuint stmt_num,
+			 int stmt_num,
 			 ElbStmt** array) :
   EiNamedBlockStmt(block, process, stmt_num, array)
 {

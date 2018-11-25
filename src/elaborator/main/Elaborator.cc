@@ -36,7 +36,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] cell_library セルライブラリ
 Elaborator::Elaborator(ElbMgr& elb_mgr,
 		       ElbFactory& elb_factory,
-		       const ClibCellLibrary* cell_library) :
+		       const ClibCellLibrary& cell_library) :
   mMgr(elb_mgr),
   mFactory(elb_factory),
   mCellLibrary(cell_library),
@@ -79,7 +79,7 @@ Elaborator::~Elaborator()
 // @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 // @param[in] msg_mgr メッセージマネージャ
 // @return エラー数を返す．
-ymuint
+int
 Elaborator::operator()(const PtMgr& pt_mgr)
 {
   const list<const PtUdp*>& udp_list = pt_mgr.pt_udp_list();
@@ -94,7 +94,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
   // モジュールテンプレートの辞書を作る．
   // と同時に UDP 名とモジュール名の重複チェックを行う．
-  ymuint nerr = 0;
+  int nerr = 0;
   for (list<const PtModule*>::const_iterator p = module_list.begin();
        p != module_list.end(); ++ p) {
     const PtModule* module = *p;
@@ -245,7 +245,7 @@ void
 Elaborator::add_defparamstub(const VlModule* module,
 			     const PtItem* pt_header)
 {
-  for (ymuint i = 0; i < pt_header->size(); ++ i) {
+  for ( int i = 0; i < pt_header->size(); ++ i ) {
     const PtDefParam* pt_defparam = pt_header->defparam(i);
     mDefParamStubList.push_back(DefParamStub(module, pt_header, pt_defparam));
   }
@@ -314,17 +314,12 @@ Elaborator::reg_constant_function(const VlNamedObj* parent,
 
 // @brief セルの探索
 // @param[in] name セル名
-// @return name という名のセルを返す．
-// @note なければ nullptr を返す．
-const ClibCell*
-Elaborator::find_cell(const char* name) const
+// @return name という名のセル番号を返す．
+// @note なければ -1 を返す．
+int
+Elaborator::find_cell_id(const char* name) const
 {
-  if ( mCellLibrary ) {
-    return mCellLibrary->cell(name);
-  }
-  else {
-    return nullptr;
-  }
+  return mCellLibrary.cell_id(name);
 }
 
 END_NAMESPACE_YM_VERILOG

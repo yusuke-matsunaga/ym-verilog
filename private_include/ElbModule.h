@@ -31,7 +31,6 @@ protected:
   ElbModuleArray();
 
   /// @brief デストラクタ
-  virtual
   ~ElbModuleArray();
 
 
@@ -43,7 +42,7 @@ public:
   /// @brief 要素を返す．
   virtual
   ElbModule*
-  _module(ymuint offset) = 0;
+  _module(int offset) = 0;
 
 
 public:
@@ -82,7 +81,6 @@ protected:
   ElbModule();
 
   /// @brief デストラクタ
-  virtual
   ~ElbModule();
 
 
@@ -98,7 +96,7 @@ public:
   /// @param[in] decl 対応する宣言要素
   virtual
   void
-  init_iodecl(ymuint pos,
+  init_iodecl(int pos,
 	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
 	      ElbDecl* decl) = 0;
@@ -110,7 +108,7 @@ public:
   /// @param[in] dir 向き
   virtual
   void
-  init_port(ymuint index,
+  init_port(int index,
 	    const PtPort* pt_port,
 	    ElbExpr* low_conn,
 	    tVlDirection dir) = 0;
@@ -121,7 +119,7 @@ public:
   /// @param[in] conn_by_name 名前による割り当て時に true とするフラグ
   virtual
   void
-  set_port_high_conn(ymuint index,
+  set_port_high_conn(int index,
 		     ElbExpr* high_conn,
 		     bool conn_by_name) = 0;
 

@@ -85,7 +85,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  ymuint
+  int
   bit_size() const = 0;
 
   /// @brief 対応する宣言要素返す．

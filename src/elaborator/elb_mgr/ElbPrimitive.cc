@@ -69,13 +69,13 @@ ElbPrimitive::~ElbPrimitive()
 // @retval -1 port_size が少なすぎる．
 int
 ElbPrimitive::get_port_size(tVpiPrimType type,
-			    ymuint port_size,
-			    ymuint& output_num,
-			    ymuint& inout_num,
-			    ymuint& input_num)
+			    int port_size,
+			    int& output_num,
+			    int& inout_num,
+			    int& input_num)
 {
-  ymuint min_size = 0;
-  ymuint max_size = port_size;
+  int min_size = 0;
+  int max_size = port_size;
 
   switch ( type ) {
   case kVpiAndPrim:

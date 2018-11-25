@@ -99,7 +99,7 @@ public:
   /// @param[in] val 値
   /// @note ヘッダが型指定を持たない時には値から情報を得る．
   virtual
-  ymuint
+  int
   bit_size(const VlValue& val) const = 0;
 
   /// @brief オフセット値の取得
@@ -112,7 +112,7 @@ public:
   virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset,
+		  int& offset,
 		  const VlValue& val) const = 0;
 
   /// @breif 値の型を返す．
@@ -177,7 +177,7 @@ public:
   /// @note このクラスでは nullptr を返す．
   virtual
   const VlDecl*
-  elem_by_offset(ymuint offset) const;
+  elem_by_offset(int offset) const;
 
   /// @brief データ型の取得
   /// @retval データ型 パラメータや変数の場合

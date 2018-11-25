@@ -38,7 +38,7 @@ public:
   /// @brief 符号なし整数からの変換コンストラクタ
   /// @param[in] val 値
   explicit
-  VlTime(ymuint val);
+  VlTime(unsigned int val);
 
   /// @brief double からの変換コンストラクタ
   /// @param[in] val 値
@@ -74,7 +74,7 @@ public:
 
   /// @brief 符号なし整数の値を設定する．
   void
-  set(ymuint val);
+  set(unsigned int val);
 
   /// @brief double の値を設定する．
   void
@@ -100,7 +100,7 @@ public:
 
   /// @brief 符号なし整数への変換
   /// @note 符号なし整数に入りきらない値の時はおかしな値になる．
-  ymuint
+  unsigned int
   to_uint() const;
 
   /// @brief 論理値への変換
@@ -210,7 +210,7 @@ VlTime::VlTime(PLI_UINT32 l,
 
 // @brief 符号なし整数からの変換コンストラクタ
 inline
-VlTime::VlTime(ymuint val) :
+VlTime::VlTime(unsigned int val) :
   mValue(val)
 {
 }
@@ -259,7 +259,7 @@ VlTime::set(PLI_UINT32 l,
 // @brief 符号なし整数の値を設定する．
 inline
 void
-VlTime::set(ymuint val)
+VlTime::set(unsigned int val)
 {
   mValue = val;
 }
@@ -305,10 +305,10 @@ VlTime::high() const
 // @brief 符号なし整数への変換
 // @note 符号なし整数に入りきらない値の時はおかしな値になる．
 inline
-ymuint
+unsigned int
 VlTime::to_uint() const
 {
-  return static_cast<ymuint32>(mValue);
+  return static_cast<unsigned int>(mValue);
 }
 
 // @brief 論理値への変換

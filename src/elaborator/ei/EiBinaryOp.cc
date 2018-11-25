@@ -120,7 +120,7 @@ EiBinaryOp::is_const() const
 }
 
 // @brief オペランド数を返す．
-ymuint
+int
 EiBinaryOp::operand_num() const
 {
   return 2;
@@ -129,7 +129,7 @@ EiBinaryOp::operand_num() const
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 ElbExpr*
-EiBinaryOp::_operand(ymuint pos) const
+EiBinaryOp::_operand(int pos) const
 {
   return mOpr[pos];
 }

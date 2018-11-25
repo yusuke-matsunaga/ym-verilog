@@ -298,7 +298,7 @@ EiIODecl::right_range_string() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiIODecl::bit_size() const
 {
   return mDecl->bit_size();

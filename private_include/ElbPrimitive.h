@@ -57,10 +57,10 @@ public:
   const ElbUdpDefn*
   udp_defn() const = 0;
 
-  /// @brief セルを返す．
+  /// @brief セル番号を返す．
   virtual
-  const ClibCell*
-  cell() const = 0;
+  int
+  cell_id() const = 0;
 
   /// @brief 0 の強さを得る．
   virtual
@@ -112,7 +112,7 @@ public:
   /// @brief 要素のプリミティブを取り出す．
   virtual
   ElbPrimitive*
-  _primitive_by_offset(ymuint offset) const = 0;
+  _primitive_by_offset(int offset) const = 0;
 
   /// @brief 要素のプリミティブを取り出す．
   virtual
@@ -174,7 +174,7 @@ public:
   /// @param[in] expr 接続する式
   virtual
   void
-  connect(ymuint pos,
+  connect(int pos,
 	  ElbExpr* expr) = 0;
 
   /// @brief ヘッダを得る．
@@ -210,10 +210,10 @@ public:
   static
   int
   get_port_size(tVpiPrimType type,
-		ymuint port_size,
-		ymuint& output_num,
-		ymuint& inout_num,
-		ymuint& input_num);
+		int port_size,
+		int& output_num,
+		int& inout_num,
+		int& input_num);
 
 
 private:
@@ -253,7 +253,7 @@ public:
   virtual
   void
   set(ElbPrimitive* primitive,
-      ymuint index,
+      int index,
       tVlDirection dir) = 0;
 
 };

@@ -42,7 +42,7 @@ ElbExpr::req_type() const
 }
 
 // @brief 式のビット幅を返す．
-ymuint
+int
 ElbExpr::bit_size() const
 {
   return value_type().size();
@@ -67,7 +67,7 @@ ElbExpr::calc_type(const VlValueType& type0,
   }
 
   // どちらか一方が sized なら結果も sized
-  ymuint ans_size = 0;
+  int ans_size = 0;
   if ( type0.is_sized() ) {
     is_sized = true;
     ans_size = type0.size();
@@ -95,7 +95,7 @@ ElbExpr::calc_type2(const VlValueType& type0,
 
   // どちらか一方が sized なら結果も sized
   bool is_sized = false;
-  ymuint ans_size = 0;
+  int ans_size = 0;
   if ( type0.is_sized() ) {
     is_sized = true;
     ans_size = type0.size();
@@ -124,8 +124,8 @@ ElbExpr::update_size(const VlValueType& type,
     return type;
   }
 
-  ymuint req_size = req_type.size();
-  ymuint size = type.size();
+  int req_size = req_type.size();
+  int size = type.size();
   if ( req_size <= size ) {
     return type;
   }

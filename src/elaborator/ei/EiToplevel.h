@@ -29,7 +29,6 @@ private:
   EiToplevel();
 
   /// @brief デストラクタ
-  virtual
   ~EiToplevel();
 
 
@@ -39,14 +38,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -56,20 +53,17 @@ public:
 
   /// @brief このオブジェクトの属しているスコープを返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief このオブジェクトの属している module を返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlModule*
-  parent_module() const;
+  parent_module() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 };
 

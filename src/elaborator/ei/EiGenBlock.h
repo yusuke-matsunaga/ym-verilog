@@ -38,7 +38,6 @@ protected:
 	     const PtItem* pt_item);
 
   /// @brief デストラクタ
-  virtual
   ~EiGenBlock();
 
 
@@ -48,14 +47,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -64,14 +61,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -107,8 +102,7 @@ private:
 	   const PtItem* pt_item);
 
   /// @brief デストラクタ
-  virtual
-  ~EiGfRoot();;
+  ~EiGfRoot();
 
 
 public:
@@ -117,14 +111,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -133,14 +125,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -149,15 +139,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 子供のスコープを追加する．
-  virtual
   void
   add(int index,
-      const VlNamedObj* block);
+      const VlNamedObj* block) override;
 
   /// @brief 子供のスコープを取り出す．
-  virtual
   const VlNamedObj*
-  elem_by_index(int index);
+  elem_by_index(int index) override;
 
 
 private:
@@ -197,7 +185,6 @@ private:
 	    int index);
 
   /// @brief デストラクタ
-  virtual
   ~EiGfBlock();
 
 
@@ -207,9 +194,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:

@@ -153,7 +153,7 @@ EiImpNet::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiImpNet::bit_size() const
 {
   return 1;
@@ -166,7 +166,7 @@ EiImpNet::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiImpNet::calc_bit_offset(int index,
-			  ymuint& offset) const
+			  int& offset) const
 {
   if ( index == 0 ) {
     offset = 0;

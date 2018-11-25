@@ -44,7 +44,7 @@ EiFactory::new_Function(const VlNamedObj* parent,
   ASSERT_COND( left != nullptr && right != nullptr );
 
   // IO数を数え配列を初期化する．
-  ymuint io_num = pt_item->ioitem_num();
+  int io_num = pt_item->ioitem_num();
   void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (q) EiIODecl[io_num];
 
@@ -63,7 +63,7 @@ EiFactory::new_Function(const VlNamedObj* parent,
 			const PtItem* pt_item)
 {
   // IO数を数え配列を初期化する．
-  ymuint io_num = pt_item->ioitem_num();
+  int io_num = pt_item->ioitem_num();
   void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (q) EiIODecl[io_num];
 
@@ -81,7 +81,7 @@ EiFactory::new_Task(const VlNamedObj* parent,
 		    const PtItem* pt_item)
 {
   // IO数を数え配列を初期化する．
-  ymuint io_num = pt_item->ioitem_num();
+  int io_num = pt_item->ioitem_num();
   void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (q) EiIODecl[io_num];
 
@@ -102,7 +102,7 @@ EiFactory::new_Task(const VlNamedObj* parent,
 // @param[in] io_array IO の配列
 EiTaskFunc::EiTaskFunc(const VlNamedObj* parent,
 		       const PtItem* pt_item,
-		       ymuint io_num,
+		       int io_num,
 		       EiIODecl* io_array):
   mParent(parent),
   mPtItem(pt_item),
@@ -146,7 +146,7 @@ EiTaskFunc::automatic() const
 }
 
 // @brief 入出力数を得る．
-ymuint
+int
 EiTaskFunc::io_num() const
 {
   return mIODeclNum;
@@ -155,7 +155,7 @@ EiTaskFunc::io_num() const
 // @brief 入出力を得る．
 // @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 const VlIODecl*
-EiTaskFunc::io(ymuint pos) const
+EiTaskFunc::io(int pos) const
 {
   return &mIODeclList[pos];
 }
@@ -174,7 +174,7 @@ EiTaskFunc::stmt() const
 // @param[in] pt_item パース木のIO宣言要素
 // @param[in] decl 対応する宣言要素
 void
-EiTaskFunc::init_iodecl(ymuint pos,
+EiTaskFunc::init_iodecl(int pos,
 			ElbIOHead* head,
 			const PtIOItem* pt_item,
 			ElbDecl* decl)
@@ -192,7 +192,7 @@ EiTaskFunc::set_stmt(ElbStmt* stmt)
 // @brief 入出力を得る．
 // @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 ElbIODecl*
-EiTaskFunc::_io(ymuint pos) const
+EiTaskFunc::_io(int pos) const
 {
   return &mIODeclList[pos];
 }
@@ -216,7 +216,7 @@ EiTaskFunc::_stmt() const
 // @param[in] io_array IO の配列
 EiTask::EiTask(const VlNamedObj* parent,
 	       const PtItem* pt_item,
-	       ymuint io_num,
+	       int io_num,
 	       EiIODecl* io_array) :
   EiTaskFunc(parent, pt_item, io_num, io_array)
 {
@@ -288,7 +288,7 @@ EiTask::right_range_string() const
 }
 
 // @brief 出力のビット幅を返す．
-ymuint
+int
 EiTask::bit_size() const
 {
   return 0;
@@ -322,7 +322,7 @@ EiTask::is_constant_function() const
 // @param[in] io_array IO の配列
 EiFunction::EiFunction(const VlNamedObj* parent,
 		       const PtItem* pt_item,
-		       ymuint io_num,
+		       int io_num,
 		       EiIODecl* io_array) :
   EiTaskFunc(parent, pt_item, io_num, io_array)
 {
@@ -414,7 +414,7 @@ EiFunction::right_range_string() const
 }
 
 // @brief 出力のビット幅を返す．
-ymuint
+int
 EiFunction::bit_size() const
 {
   switch ( pt_item()->data_type() ) {
@@ -470,7 +470,7 @@ EiFunction::is_constant_function() const
 // @param[in] right_val 範囲の LSB の値
 EiFunctionV::EiFunctionV(const VlNamedObj* parent,
 			 const PtItem* pt_item,
-			 ymuint io_num,
+			 int io_num,
 			 EiIODecl* io_array,
 			 const PtExpr* left,
 			 const PtExpr* right,
@@ -526,7 +526,7 @@ EiFunctionV::right_range_string() const
 }
 
 // @brief 出力のビット幅を返す．
-ymuint
+int
 EiFunctionV::bit_size() const
 {
   return mRange.size();

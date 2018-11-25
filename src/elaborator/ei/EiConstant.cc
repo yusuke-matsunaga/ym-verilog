@@ -26,9 +26,9 @@ ElbExpr*
 EiFactory::new_Constant(const PtExpr* pt_expr)
 {
   tVpiConstType const_type = pt_expr->const_type();
-  ymuint size = pt_expr->const_size();
+  int size = pt_expr->const_size();
   bool is_signed = false;
-  ymuint base = 0;
+  int base = 0;
   switch ( const_type ) {
   case kVpiIntConst:
     if ( pt_expr->const_str() == nullptr ) {
@@ -142,7 +142,7 @@ EiConstant::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiConstant::_operand(ymuint pos) const
+EiConstant::_operand(int pos) const
 {
   return nullptr;
 }
@@ -218,7 +218,7 @@ EiBitVectorConst::~EiBitVectorConst()
 VlValueType
 EiBitVectorConst::value_type() const
 {
-  ymuint size = mValue.size();
+  int size = mValue.size();
   bool sign = ( static_cast<int>(mConstType) & 8 ) == 8;
   return VlValueType(sign, true, size);
 }
@@ -308,7 +308,7 @@ EiStringConst::~EiStringConst()
 VlValueType
 EiStringConst::value_type() const
 {
-  ymuint size = mValue.size();
+  int size = mValue.size();
   return VlValueType(false, true, size);
 }
 

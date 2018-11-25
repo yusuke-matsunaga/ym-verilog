@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbExpr*
 EiFactory::new_FuncCall(const PtExpr* pt_expr,
 			const ElbTaskFunc* func,
-			ymuint arg_size,
+			int arg_size,
 			ElbExpr** arg_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiFuncCall));
@@ -45,7 +45,7 @@ EiFactory::new_FuncCall(const PtExpr* pt_expr,
 ElbExpr*
 EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
 			   const ElbUserSystf* user_systf,
-			   ymuint arg_size,
+			   int arg_size,
 			   ElbExpr** arg_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiSysFuncCall));
@@ -65,7 +65,7 @@ EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
 // @param[in] arg_size 引数の数
 // @param[in] arg_list 引数のリスト
 EiFcBase::EiFcBase(const PtExpr* pt_expr,
-		   ymuint arg_size,
+		   int arg_size,
 		   ElbExpr** arg_list) :
   EiExprBase(pt_expr),
   mArgNum(arg_size),
@@ -79,7 +79,7 @@ EiFcBase::~EiFcBase()
 }
 
 // @brief 引数の数を返す．
-ymuint
+int
 EiFcBase::argument_num() const
 {
   return mArgNum;
@@ -88,7 +88,7 @@ EiFcBase::argument_num() const
 // @brief 引数の取得
 // @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
 ElbExpr*
-EiFcBase::argument(ymuint pos) const
+EiFcBase::argument(int pos) const
 {
   return mArgList[pos];
 }
@@ -107,7 +107,7 @@ EiFcBase::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiFcBase::_operand(ymuint pos) const
+EiFcBase::_operand(int pos) const
 {
   return nullptr;
 }
@@ -124,7 +124,7 @@ EiFcBase::_operand(ymuint pos) const
 // @param[in] arg_list 引数のリスト
 EiFuncCall::EiFuncCall(const PtExpr* pt_expr,
 		       const ElbTaskFunc* func,
-		       ymuint arg_size,
+		       int arg_size,
 		       ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),
   mFunc(func)
@@ -174,8 +174,8 @@ bool
 EiFuncCall::is_const() const
 {
   if ( mFunc->is_constant_function() ) {
-    ymuint n = argument_num();
-    for (ymuint i = 0; i < n; ++ i) {
+    int n = argument_num();
+    for ( int i = 0; i < n; ++ i ) {
       if ( !argument(i)->is_const() ) {
 	return false;
       }
@@ -212,7 +212,7 @@ EiFuncCall::function() const
 // @param[in] arg_list 引数のリスト
 EiSysFuncCall::EiSysFuncCall(const PtExpr* pt_expr,
 			     const ElbUserSystf* user_systf,
-			     ymuint arg_size,
+			     int arg_size,
 			     ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),
   mUserSystf(user_systf)

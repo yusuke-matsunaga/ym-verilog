@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief attribute instance のリストを生成する．
 // @param[in] n 要素数
 ElbAttrList*
-EiFactory::new_AttrList(ymuint n)
+EiFactory::new_AttrList(int n)
 {
   void* q = mAlloc.get_memory(sizeof(EiAttribute) * n);
   EiAttribute* array = new (q) EiAttribute[n];
@@ -90,7 +90,7 @@ EiAttribute::expr() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-EiAttrList::EiAttrList(ymuint n,
+EiAttrList::EiAttrList(int n,
 		       EiAttribute* array) :
   mSize(n),
   mArray(array)
@@ -103,7 +103,7 @@ EiAttrList::~EiAttrList()
 }
 
 // @brief 要素数を返す．
-ymuint
+int
 EiAttrList::size() const
 {
   return mSize;
@@ -112,7 +112,7 @@ EiAttrList::size() const
 // @brief 内容を返す．
 // @param[in] pos 位置番号 (0 <= pos < size() )
 VlAttribute*
-EiAttrList::elem(ymuint pos) const
+EiAttrList::elem(int pos) const
 {
   return &mArray[pos];
 }
@@ -123,7 +123,7 @@ EiAttrList::elem(ymuint pos) const
 // @param[in] expr 値を表す式
 // @param[in] def 定義側の属性のとき true とするフラグ
 void
-EiAttrList::set(ymuint pos,
+EiAttrList::set(int pos,
 		const PtAttrSpec* pt_as,
 		ElbExpr* expr,
 		bool def)

@@ -161,11 +161,11 @@ private:
   /// @brief セル instance の生成を行う
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head ヘッダ
-  /// @param[in] cell セル
+  /// @param[in] cell_id セル番号
   void
   instantiate_cell(const VlNamedObj* parent,
 		   const PtItem* pt_head,
-		   const ClibCell* cell);
+		   int cell_id);
 
   /// @brief gate delay の生成を行う
   /// @param[in] prim_head ゲートプリミティブのヘッダ

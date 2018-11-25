@@ -30,7 +30,6 @@ protected:
   EiConstant(const PtExpr* pt_expr);
 
   /// @brief デストラクタ
-  virtual
   ~EiConstant();
 
 
@@ -40,9 +39,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -52,9 +50,8 @@ public:
 
   /// @brief 定数の時 true を返す．
   /// @note このクラスは常に true を返す．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
 
 public:
@@ -65,17 +62,15 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 };
 
@@ -98,7 +93,6 @@ private:
 	     int value);
 
   /// @brief デストラクタ
-  virtual
   ~EiIntConst();
 
 
@@ -108,22 +102,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  virtual
   tVpiConstType
-  constant_type() const;
+  constant_type() const override;
 
   /// @brief 定数値を返す．
   /// @note kVpiConstant の時，意味を持つ．
   /// @note それ以外では動作は不定
-  virtual
   VlValue
-  constant_value() const;
+  constant_value() const override;
 
 
 private:
@@ -157,7 +148,6 @@ private:
 		   const BitVector& value);
 
   /// @brief デストラクタ
-  virtual
   ~EiBitVectorConst();
 
 
@@ -167,22 +157,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  virtual
   tVpiConstType
-  constant_type() const;
+  constant_type() const override;
 
   /// @brief 定数値を返す．
   /// @note kVpiConstant の時，意味を持つ．
   /// @note それ以外では動作は不定
-  virtual
   VlValue
-  constant_value() const;
+  constant_value() const override;
 
 
 private:
@@ -217,7 +204,6 @@ private:
 	      double value);
 
   /// @brief デストラクタ
-  virtual
   ~EiRealConst();
 
 
@@ -227,22 +213,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  virtual
   tVpiConstType
-  constant_type() const;
+  constant_type() const override;
 
   /// @brief 定数値を返す．
   /// @note kVpiConstant の時，意味を持つ．
   /// @note それ以外では動作は不定
-  virtual
   VlValue
-  constant_value() const;
+  constant_value() const override;
 
 
 private:
@@ -274,7 +257,6 @@ private:
 		const string& value);
 
   /// @brief デストラクタ
-  virtual
   ~EiStringConst();
 
 
@@ -284,22 +266,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  virtual
   tVpiConstType
-  constant_type() const;
+  constant_type() const override;
 
   /// @brief 定数値を返す．
   /// @note kVpiConstant の時，意味を持つ．
   /// @note それ以外では動作は不定
-  virtual
   VlValue
-  constant_value() const;
+  constant_value() const override;
 
 
 private:

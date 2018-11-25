@@ -30,7 +30,6 @@ private:
   EiRange();
 
   /// @brief デストラクタ
-  virtual
   ~EiRange();
 
 
@@ -40,14 +39,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -56,75 +53,65 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数(ビット幅)を返す．
-  virtual
-  ymuint
-  size() const;
+  int
+  size() const override;
 
   /// @brief MSB の値を返す．
   /// @retval MSB の値 値が確定しているとき
   /// @retval -1 値が確定していない
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief LSB の値を返す．
   /// @retval LSB の値 値が確定しているとき
   /// @retval -1 値が確定していない
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief MSB を表す文字列を返す．
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief LSB を表す文字列を返す．
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief 範囲のチェック
   /// @param[in] index インデックス
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
-  virtual
   bool
-  is_in(int index) const;
+  is_in(int index) const override;
 
   /// @brief LSB からのオフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset index の LSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
-  virtual
   bool
   calc_offset(int index,
-	      ymuint& offset) const;
+	      int& offset) const override;
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset index の MSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
-  virtual
   bool
   calc_roffset(int index,
-	       ymuint& offset) const;
+	       int& offset) const override;
 
   /// @brief offset の逆関数
   /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
-  virtual
   int
-  index(int offset) const;
+  index(int offset) const override;
 
   /// @brief roffset の逆関数
   /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
-  virtual
   int
-  rindex(int roffset) const;
+  rindex(int roffset) const override;
 
 
 public:
@@ -134,9 +121,8 @@ public:
 
   /// @brief 値を設定する．
   /// @param[in] src 元となる情報
-  virtual
   void
-  set(const ElbRangeSrc& src);
+  set(const ElbRangeSrc& src) override;
 
 
 public:
@@ -148,7 +134,7 @@ public:
   /// @param[in] left 範囲の MSB
   /// @param[in] right 範囲の LSB
   static
-  ymuint
+  int
   calc_size(int left,
 	    int right);
 
@@ -176,7 +162,7 @@ public:
   calc_offset(int left,
 	      int right,
 	      int index,
-	      ymuint& offset);
+	      int& offset);
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] left 範囲の MSB
@@ -190,7 +176,7 @@ public:
   calc_roffset(int left,
 	       int right,
 	       int index,
-	       ymuint& offset);
+	       int& offset);
 
   /// @brief offset の逆関数
   /// @param[in] left 範囲の MSB
@@ -230,10 +216,10 @@ private:
   const PtExpr* mRightRange;
 
   // MSB の値
-  ymint32 mLeftVal;
+  int mLeftVal;
 
   // LSB の値
-  ymint32 mRightVal;
+  int mRightVal;
 
 };
 
@@ -251,7 +237,6 @@ public:
   EiRangeImpl();
 
   /// @brief デストラクタ
-  virtual
   ~EiRangeImpl();
 
 
@@ -278,7 +263,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数(ビット幅)を返す．
-  ymuint
+  int
   size() const;
 
   /// @brief MSB の値を返す．
@@ -319,7 +304,7 @@ public:
   /// @retval false index が範囲外
   bool
   calc_offset(int index,
-	      ymuint& offset) const;
+	      int& offset) const;
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] index インデックス
@@ -328,7 +313,7 @@ public:
   /// @retval false index が範囲外
   bool
   calc_roffset(int index,
-	       ymuint& offset) const;
+	       int& offset) const;
 
   /// @brief offset の逆関数
   /// @param[in] offset LSB からのオフセット値
@@ -355,10 +340,10 @@ private:
   const PtExpr* mRightRange;
 
   // MSB の値
-  ymint32 mLeftVal;
+  int mLeftVal;
 
   // LSB の値
-  ymint32 mRightVal;
+  int mRightVal;
 
 };
 
@@ -373,7 +358,7 @@ public:
 
   /// @brief コンストラクタ
   /// @brief dim_size 次元数
-  EiRangeArray(ymuint dim_size,
+  EiRangeArray(int dim_size,
 	       EiRange* array);
 
   // デストラクタ
@@ -386,24 +371,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数を得る．
-  ymuint
+  int
   size() const;
 
   /// @brief 要素数を計算する
   /// @return サイズを返す．
-  ymuint
+  int
   elem_size() const;
 
   /// @brief pos 番めの範囲を返す．
   /// @param[in] pos 位置番号
   EiRange*
-  range(ymuint pos) const;
+  range(int pos) const;
 
   /// @brief アドレス(オフセット)からインデックスのリストを作る．
   /// @param[in] offset オフセット
   /// @param[out] index_list インデックスのリスト
   void
-  index(ymuint offset,
+  index(int offset,
 	vector<int>& index_list) const;
 
   /// @brief インデックスのリストからオフセットを得る．
@@ -413,7 +398,7 @@ public:
   /// @retval false index_list のいずれかの値が範囲外だった．
   bool
   calc_offset(const vector<int>& index_list,
-	      ymuint& offset) const;
+	      int& offset) const;
 
 
 private:
@@ -422,13 +407,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 次元数
-  ymuint32 mDimSize;
+  int mDimSize;
 
   // 範囲の配列
   EiRange* mArray;
 
   // 要素数
-  ymuint32 mElemSize;
+  int mElemSize;
 
 };
 
@@ -439,7 +424,7 @@ private:
 
 // @brief サイズを返す．
 inline
-ymuint
+int
 EiRange::calc_size(int left,
 		   int right)
 {
@@ -481,7 +466,7 @@ bool
 EiRange::calc_offset(int left,
 		     int right,
 		     int index,
-		     ymuint& offset)
+		     int& offset)
 {
   if ( left >= right ) {
     if ( right <= index && index <= left ) {
@@ -510,7 +495,7 @@ bool
 EiRange::calc_roffset(int left,
 		      int right,
 		      int index,
-		      ymuint& offset)
+		      int& offset)
 {
   if ( left >= right ) {
     if ( right <= index && index <= left ) {
@@ -575,7 +560,7 @@ EiRangeImpl::is_little_endian() const
 
 // @brief 次元数を得る．
 inline
-ymuint
+int
 EiRangeArray::size() const
 {
   return mDimSize;
@@ -584,7 +569,7 @@ EiRangeArray::size() const
 // @brief 要素数を計算する
 // @return サイズを返す．
 inline
-ymuint
+int
 EiRangeArray::elem_size() const
 {
   return mElemSize;
@@ -594,7 +579,7 @@ EiRangeArray::elem_size() const
 // @param[in] pos 位置番号
 inline
 EiRange*
-EiRangeArray::range(ymuint pos) const
+EiRangeArray::range(int pos) const
 {
   return &mArray[pos];
 }

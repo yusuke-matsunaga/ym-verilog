@@ -56,17 +56,17 @@ public:
 
   /// @brief compile 時のコールバック関数
   virtual
-  ymuint
+  int
   on_compile() = 0;
 
   /// @brief 実行時のコールバック関数
   virtual
-  ymuint
+  int
   on_call() = 0;
 
   /// @brief SizedFunc の場合にサイズを返す．
   virtual
-  ymuint
+  int
   size() const = 0;
 
 };

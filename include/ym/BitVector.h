@@ -47,7 +47,7 @@ public:
   /// - 符号なし
   /// - 基数は10
   explicit
-  BitVector(ymuint32 val = 0);
+  BitVector(unsigned int val = 0);
 
   /// @brief int からのキャスト用コンストラクタ
   /// @param[in] val 値
@@ -86,7 +86,7 @@ public:
   /// - 基数は2
   explicit
   BitVector(const VlScalarVal& value,
-	    ymuint32 size = 1);
+	    int size = 1);
 
   /// @brief C文字列からの変換用コンストラクタ
   /// @param[in] str 文字列 (C文字列)
@@ -119,9 +119,9 @@ public:
   /// @param[in] base 基数を表す数字 (2, 8, 10, 16 のみが妥当な値)
   /// @param[in] str 値の内容を表す文字列
   /// @note とはいってもサイズと基数は str に含まれていない
-  BitVector(ymuint32 size,
+  BitVector(int size,
 	    bool is_signed,
-	    ymuint32 base,
+	    int base,
 	    const string& str);
 
   /// @brief 連結演算用のコンストラクタ
@@ -147,7 +147,7 @@ public:
   /// - MSB が x か z の場合には x または z を補う．
   /// - src のビット長が size よりも長ければ切り捨てる．
   BitVector(const BitVector& src,
-	    ymuint32 size);
+	    int size);
 
   /// @brief ビット長の変換と属性の変更を行うコピーコンストラクタもどき
   /// @param[in] src 変換元のオブジェクト
@@ -156,10 +156,10 @@ public:
   /// @param[in] is_signed 符号の有無
   /// @param[in] base 基数
   BitVector(const BitVector& src,
-	    ymuint32 size,
+	    int size,
 	    bool is_sized,
 	    bool is_signed,
-	    ymuint32 base);
+	    int base);
 
   /// @brief 代入演算子
   /// @param[in] src コピー元のオブジェクト
@@ -174,7 +174,7 @@ public:
   /// - 符号なし
   /// - 基数は10
   const BitVector&
-  operator=(ymuint32 val);
+  operator=(unsigned int val);
 
   /// @brief int からの代入演算子
   /// @param[in] val 値
@@ -245,10 +245,10 @@ public:
   /// @param[in] base 基数
   void
   set_with_attr(const BitVector& src,
-		ymuint32 size,
+		int size,
 		bool is_sized,
 		bool is_signed,
-		ymuint32 base);
+		int base);
 
   /// @brief Verilog-HDL (IEEE1364-2001) 形式の文字列から値をセットする関数．
   /// @param[in] str Verilog形式の文字列
@@ -279,28 +279,28 @@ public:
   /// @return 生成されたオブジェクト
   static
   BitVector
-  zero(ymuint32 size = 1);
+  zero(int size = 1);
 
   /// @brief 1 を表すオブジェクトを生成する
   /// @param size ビット数．デフォルトは 1
   /// @return 生成されたオブジェクト
   static
   BitVector
-  one(ymuint32 size = 1);
+  one(int size = 1);
 
   /// @brief X を表すオブジェクトを生成する
   /// @param size ビット数．デフォルトは 1
   /// @return 生成されたオブジェクト
   static
   BitVector
-  x(ymuint32 size = 1);
+  x(int size = 1);
 
   /// @brief Z を表すオブジェクトを生成する
   /// @param size ビット数．デフォルトは 1
   /// @return 生成されたオブジェクト
   static
   BitVector
-  z(ymuint32 size = 1);
+  z(int size = 1);
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -485,11 +485,11 @@ public:
   operator<<=(const BitVector& src);
 
   /// @brief 論理左シフトつき代入
-  /// @param[in] src シフト量 (ymuint32)
+  /// @param[in] src シフト量 (int)
   /// @return 自分自身を返す．
   /// @note 自分自身を src だけ論理左シフトしたものを代入する．
   const BitVector&
-  operator<<=(ymuint32 src);
+  operator<<=(int src);
 
   /// @brief 論理右シフトつき代入
   /// @param[in] src シフト量 (BitVector)
@@ -499,11 +499,11 @@ public:
   operator>>=(const BitVector& src);
 
   /// @brief 論理右シフトつき代入
-  /// @param[in] src シフト量 (ymuint32)
+  /// @param[in] src シフト量 (int)
   /// @return 自分自身を返す．
   /// @note 自分自身を src だけ論理右シフトしたものを代入する．
   const BitVector&
-  operator>>=(ymuint32 src);
+  operator>>=(int src);
 
   /// @brief 算術左シフトつき代入
   /// @param[in] src シフト量 (BitVector)
@@ -513,11 +513,11 @@ public:
   alshift(const BitVector& src);
 
   /// @brief 算術左シフトつき代入
-  /// @param[in] src シフト量 (ymuint32)
+  /// @param[in] src シフト量 (int)
   /// @return 自分自身を返す．
   /// @note 自分自身を src だけ算術左シフトしたものを代入する．
   const BitVector&
-  alshift(ymuint32 src);
+  alshift(int src);
 
   /// @brief 算術右シフトつき代入
   /// @param[in] src シフト量 (BitVector)
@@ -527,11 +527,11 @@ public:
   arshift(const BitVector& src);
 
   /// @brief 算術右シフトつき代入
-  /// @param[in] src シフト量 (ymuint32)
+  /// @param[in] src シフト量 (int)
   /// @return 自分自身を返す．
   /// @note 自分自身を src だけ算術右シフトしたものを代入する．
   const BitVector&
-  arshift(ymuint32 src);
+  arshift(int src);
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -601,7 +601,7 @@ public:
   merge(const BitVector& src);
 
   /// @brief サイズを返す．
-  ymuint32
+  int
   size() const;
 
   /// @brief 実際のサイズはともかくサイズの指定があるかどうかを返す．
@@ -613,7 +613,7 @@ public:
   is_signed() const;
 
   /// @brief 表示用の基数を得る．
-  ymuint32
+  int
   base() const;
 
   /// @brief pos ビット目の値を得る．
@@ -723,7 +723,7 @@ public:
   /// @note opt_base が 2, 8, 10, 16 の時には内部で持っている基数を無視して
   /// opt_base を基数と見なす．
   string
-  verilog_string(ymuint32 opt_base = 0) const;
+  verilog_string(int opt_base = 0) const;
 
   /// @brief 内容を10進数で表した文字列を返す．
   string
@@ -786,81 +786,87 @@ public:
 
 
 private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  // ビットベクタ用の符号なし整数
+  using uword = ymuint64;
 
   // mVal0, mVal1 のリサイズをする．
   void
-  resize(ymuint32 size);
+  resize(int size);
 
   // 属性(サイズの有無, 符号の有無, 基数)をセットする．
   void
   set_type(bool has_size,
 	   bool has_sign,
-	   ymuint32 base);
+	   int base);
 
   // 値をセットする．(1ワードバージョン)
   void
-  set(ymuint32 val0,
-      ymuint32 val1,
-      ymuint32 size,
+  set(uword val0,
+      uword val1,
+      int size,
       bool is_sized,
       bool is_signed,
       int base);
 
   // 値をセットする．(ベクタバージョン)
   void
-  set(const ymuint32* val0,
-      const ymuint32* val1,
-      ymuint32 src_size,
-      ymuint32 size,
+  set(const uword* val0,
+      const uword* val1,
+      int src_size,
+      int size,
       bool is_sized,
       bool is_signed,
       int base);
 
   // 値をセットする．(ベクタバージョン)
   void
-  set(const vector<ymuint32>& val0,
-      const vector<ymuint32>& val1,
-      ymuint32 src_size,
-      ymuint32 size,
+  set(const vector<uword>& val0,
+      const vector<uword>& val1,
+      int src_size,
+      int size,
       bool is_sized,
       bool is_signed,
       int base);
 
   // Verilog 形式の2進数から変換するための共通ルーティン
   void
-  set_from_binstring(ymuint32 size,
+  set_from_binstring(int size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
-		     ymuint32 pos);
+		     int pos);
 
   // Verilog 形式の8進数から変換するための共通ルーティン
   void
-  set_from_octstring(ymuint32 size,
+  set_from_octstring(int size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
-		     ymuint32 pos);
+		     int pos);
 
   // Verilog 形式の10進数から変換するための共通ルーティン
   void
-  set_from_decstring(ymuint32 size,
+  set_from_decstring(int size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
-		     ymuint32 pos);
+		     int pos);
 
   // Verilog 形式の16進数から変換するための共通ルーティン
   void
-  set_from_hexstring(ymuint32 size,
+  set_from_hexstring(int size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
-		     ymuint32 pos);
+		     int pos);
 
   // 文字列からの変換用コンストラクタの共通ルーティン
   void
-  set_from_string(ymuint32 strsize,
+  set_from_string(int strsize,
 		  const char* str);
 
   /// @brief src を 10 で割る．
@@ -868,31 +874,31 @@ private:
   /// @param[out] q 求まった商を格納する変数
   /// @return 余りを返す．
   static
-  ymuint32
-  div10(const ymuint32* src,
-	ymuint32 n,
-	ymuint32* q);
+  int
+  div10(const uword* src,
+	int n,
+	uword* q);
 
   /// @brief val を10進数で表した文字列を返す．
   static
   string
-  dec_str_sub(const ymuint32* val,
-	      ymuint32 n);
+  dec_str_sub(const uword* val,
+	      int n);
 
   /// @brief ビット長からブロック数を得る．
   static
-  ymuint32
-  block(ymuint32 size);
+  int
+  block(int size);
 
   /// @brief ビット長から最後のブロックのシフト数を得る．
   static
-  ymuint32
-  shift(ymuint32 size);
+  int
+  shift(int size);
 
   /// @brief size からマスクパタンを作る
   static
-  ymuint32
-  mask(ymuint32 size);
+  uword
+  mask(int size);
 
 
 private:
@@ -901,7 +907,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ビット長
-  ymuint32 mSize;
+  int mSize;
 
   // sized, signed, base をパックした変数
   ymuint32 mFlags;
@@ -909,8 +915,8 @@ private:
   // 値を保持するベクタ
   // サイズは block(mSize)
   // mVal0:Val1 の組み合わせで値を表す．
-  ymuint32* mVal0;
-  ymuint32* mVal1;
+  uword* mVal0;
+  uword* mVal1;
 
 
 private:
@@ -918,17 +924,17 @@ private:
   // 定数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ymuint32 のビット長
+  /// @brief uword のビット長
   static
-  const ymuint32 kBlockSize = sizeof(ymuint32) * 8;
+  const int kBlockSize = sizeof(uword) * 8;
 
   /// @brief すべてが0のパタン
   static
-  const ymuint32 kAll0 = 0x00000000;
+  const uword kAll0 = 0x00000000;
 
   /// @brief すべてが1のパタン
   static
-  const ymuint32 kAll1 = 0xFFFFFFFF;
+  const uword kAll1 = 0xFFFFFFFF;
 
 };
 
@@ -1285,11 +1291,11 @@ operator<<(const BitVector& src1,
 /// @relates BitVector
 /// @brief 論理左シフト
 /// @param[in] src1 元の値
-/// @param[in] src2 シフト量 (ymuint32)
+/// @param[in] src2 シフト量 (int)
 /// @return src1 を src2 だけ論理左シフトしたもの
 BitVector
 operator<<(const BitVector& src1,
-	   ymuint32 src2);
+	   int src2);
 
 /// @relates BitVector
 /// @brief 論理右シフト
@@ -1303,11 +1309,11 @@ operator>>(const BitVector& src1,
 /// @relates BitVector
 /// @brief 論理右シフト
 /// @param[in] src1 元の値
-/// @param[in] src2 シフト量 (ymuint32)
+/// @param[in] src2 シフト量 (int)
 /// @return src1 を src2 だけ論理右シフトしたもの
 BitVector
 operator>>(const BitVector& src1,
-	   ymuint32 src2);
+	   int src2);
 
 /// @relates BitVector
 /// @brief 算術左シフト
@@ -1322,11 +1328,11 @@ alshift(const BitVector& src1,
 /// @relates BitVector
 /// @brief 算術左シフト
 /// @param[in] src1 元の値
-/// @param[in] src2 シフト量 (ymuint32)
+/// @param[in] src2 シフト量 (int)
 /// @return src1 を src2 だけ算術左シフトしたもの
 BitVector
 alshift(const BitVector& src1,
-	ymuint32 src2);
+	int src2);
 
 /// @relates BitVector
 /// @brief 算術右シフト
@@ -1340,11 +1346,11 @@ arshift(const BitVector& src1,
 /// @relates BitVector
 /// @brief 算術右シフト
 /// @param[in] src1 元の値
-/// @param[in] src2 シフト量 (ymuint32)
+/// @param[in] src2 シフト量 (int)
 /// @return src1 を src2 だけ算術右シフトしたもの
 BitVector
 arshift(const BitVector& src1,
-	ymuint32 src2);
+	int src2);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -1640,11 +1646,11 @@ operator<<(const BitVector& src1,
   return BitVector(src1) <<= src2;
 }
 
-// 論理左シフト src2 が ymuint32 のバージョン
+// 論理左シフト src2 が int のバージョン
 inline
 BitVector
 operator<<(const BitVector& src1,
-	   ymuint32 src2)
+	   int src2)
 {
   return BitVector(src1) <<= src2;
 }
@@ -1658,11 +1664,11 @@ operator>>(const BitVector& src1,
   return BitVector(src1) >>= src2;
 }
 
-// 論理右シフト src2 が ymuint32 のバージョン
+// 論理右シフト src2 が int のバージョン
 inline
 BitVector
 operator>>(const BitVector& src1,
-	   ymuint32 src2)
+	   int src2)
 {
   return BitVector(src1) >>= src2;
 }
@@ -1677,10 +1683,10 @@ BitVector::alshift(const BitVector& src)
 }
 
 // 算術左シフトつき代入
-// src が ymuint32 のバージョン
+// src が int のバージョン
 inline
 const BitVector&
-BitVector::alshift(ymuint32 src)
+BitVector::alshift(int src)
 {
   // 実は論理左シフトそのもの
   return operator<<=(src);
@@ -1696,11 +1702,11 @@ alshift(const BitVector& src1,
   return operator<<(src1, src2);
 }
 
-// 算術左シフト src2 が ymuint32 のバージョン
+// 算術左シフト src2 が int のバージョン
 inline
 BitVector
 alshift(const BitVector& src1,
-	ymuint32 src2)
+	int src2)
 {
   // 実は論理左シフトそのもの
   return operator<<(src1, src2);
@@ -1715,11 +1721,11 @@ arshift(const BitVector& src1,
   return BitVector(src1).arshift(src2);
 }
 
-// 算術右シフト src2 が ymuint32 のバージョン
+// 算術右シフト src2 が int のバージョン
 inline
 BitVector
 arshift(const BitVector& src1,
-	ymuint32 src2)
+	int src2)
 {
   return BitVector(src1).arshift(src2);
 }
@@ -1734,7 +1740,7 @@ BitVector::value_type() const
 
 // サイズを返す．
 inline
-ymuint32
+int
 BitVector::size() const
 {
   return mSize;
@@ -1758,7 +1764,7 @@ BitVector::is_signed() const
 
 // 表示用の基数を得る．
 inline
-ymuint32
+int
 BitVector::base() const
 {
   return mFlags >> 2;
@@ -1788,7 +1794,7 @@ inline
 ymuint32
 BitVector::to_uint32() const
 {
-  return mVal1[0];
+  return static_cast<ymuint32>(mVal1[0]);
 }
 
 // int の数値に変換可能なら true を返す．

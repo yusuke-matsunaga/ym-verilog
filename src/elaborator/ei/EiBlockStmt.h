@@ -38,11 +38,10 @@ protected:
   EiBlockStmt(const VlNamedObj* parent,
 	      ElbProcess* process,
 	      const PtStmt* pt_stmt,
-	      ymuint stmt_num,
+	      int stmt_num,
 	      ElbStmt** array);
 
   /// @brief デストラクタ
-  virtual
   ~EiBlockStmt();
 
 
@@ -52,9 +51,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 子供のステートメントのリストの要素数を返す．
-  virtual
-  ymuint
-  child_stmt_num() const;
+  int
+  child_stmt_num() const override;
 
 
 public:
@@ -64,9 +62,8 @@ public:
 
   /// @brief 子供のステートメントを返す．
   /// @param[in] pos 位置番号
-  virtual
   ElbStmt*
-  _child_stmt(ymuint pos) const;
+  _child_stmt(int pos) const override;
 
 
 private:
@@ -75,7 +72,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ステートメント数
-  ymuint mStmtNum;
+  int mStmtNum;
 
   // ステートメントのリスト
   ElbStmt** mStmtList;
@@ -104,11 +101,10 @@ private:
   EiBegin(const VlNamedObj* parent,
 	  ElbProcess* process,
 	  const PtStmt* pt_stmt,
-	  ymuint stmt_num,
+	  int stmt_num,
 	  ElbStmt** array);
 
   /// @brief デストラクタ
-  virtual
   ~EiBegin();
 
 
@@ -118,9 +114,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -146,11 +141,10 @@ private:
   EiFork(const VlNamedObj* parent,
 	 ElbProcess* process,
 	 const PtStmt* pt_stmt,
-	 ymuint stmt_num,
+	 int stmt_num,
 	 ElbStmt** array);
 
   /// @brief デストラクタ
-  virtual
   ~EiFork();
 
 
@@ -160,9 +154,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -186,11 +179,10 @@ protected:
   /// @param[in] array ステートメントのリスト用配列
   EiNamedBlockStmt(const VlNamedObj* block,
 		   ElbProcess* process,
-		   ymuint stmt_num,
+		   int stmt_num,
 		   ElbStmt** array);
 
   /// @brief デストラクタ
-  virtual
   ~EiNamedBlockStmt();
 
 
@@ -200,9 +192,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -211,18 +202,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 対応するスコープを返す．
-  virtual
   const VlNamedObj*
-  scope() const;
+  scope() const override;
 
   /// @brief 子供ののステートメントのリストの要素数を返す．
-  ymuint
-  child_stmt_num() const;
+  int
+  child_stmt_num() const override;
 
 
 public:
@@ -233,7 +222,7 @@ public:
   /// @brief 子供のステートメントを返す．
   /// @param[in] pos 位置番号
   ElbStmt*
-  _child_stmt(ymuint pos) const;
+  _child_stmt(int pos) const override;
 
 
 private:
@@ -248,7 +237,7 @@ private:
   ElbProcess* mProcess;
 
   // ステートメント数
-  ymuint32 mStmtNum;
+  int mStmtNum;
 
   // ステートメントのリスト
   ElbStmt** mStmtList;
@@ -275,11 +264,10 @@ private:
   /// @param[in] array ステートメントのリスト用配列
   EiNamedBegin(const VlNamedObj* block,
 	       ElbProcess* process,
-	       ymuint stmt_num,
+	       int stmt_num,
 	       ElbStmt** array);
 
   /// @brief デストラクタ
-  virtual
   ~EiNamedBegin();
 
 
@@ -289,9 +277,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -315,11 +302,10 @@ private:
   /// @param[in] array ステートメントのリスト用配列
   EiNamedFork(const VlNamedObj* block,
 	      ElbProcess* process,
-	      ymuint stmt_num,
+	      int stmt_num,
 	      ElbStmt** array);
 
   /// @brief デストラクタ
-  virtual
   ~EiNamedFork();
 
 
@@ -329,9 +315,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 

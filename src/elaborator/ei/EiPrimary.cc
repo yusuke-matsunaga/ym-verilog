@@ -65,10 +65,10 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 		       ElbDeclArray* obj,
 		       const vector<ElbExpr*>& index_list)
 {
-  ymuint n = index_list.size();
+  int n = index_list.size();
   void* q = mAlloc.get_memory(sizeof(ElbExpr*) * n);
   ElbExpr** index_array = new (q) ElbExpr*[n];
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     index_array[i] = index_list[i];
   }
   void* p = mAlloc.get_memory(sizeof(EiArrayElemPrimary));
@@ -82,7 +82,7 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 ElbExpr*
 EiFactory::new_Primary(const PtExpr* pt_expr,
 		       ElbDeclArray* obj,
-		       ymuint offset)
+		       int offset)
 {
   void* p = mAlloc.get_memory(sizeof(EiConstArrayElemPrimary));
   return new (p) EiConstArrayElemPrimary(pt_expr, obj, offset);
@@ -148,7 +148,7 @@ EiPrimaryBase::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiPrimaryBase::_operand(ymuint pos) const
+EiPrimaryBase::_operand(int pos) const
 {
   return nullptr;
 }
@@ -215,7 +215,7 @@ EiPrimary::decl_obj() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-ymuint
+int
 EiPrimary::lhs_elem_num() const
 {
   return 1;
@@ -226,7 +226,7 @@ EiPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiPrimary::lhs_elem(ymuint pos) const
+EiPrimary::lhs_elem(int pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -308,7 +308,7 @@ EiDeclPrimary::decompile() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-ymuint
+int
 EiDeclPrimary::lhs_elem_num() const
 {
   return 1;
@@ -319,7 +319,7 @@ EiDeclPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiDeclPrimary::lhs_elem(ymuint pos) const
+EiDeclPrimary::lhs_elem(int pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -339,7 +339,7 @@ EiDeclPrimary::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiDeclPrimary::_operand(ymuint pos) const
+EiDeclPrimary::_operand(int pos) const
 {
   return nullptr;
 }
@@ -430,7 +430,7 @@ EiParamPrimary::decl_obj() const
 // @param[in] index_list インデックスのリスト
 EiArrayElemPrimary::EiArrayElemPrimary(const PtExpr* pt_expr,
 				       ElbDeclArray* obj,
-				       ymuint dim,
+				       int dim,
 				       ElbExpr** index_list) :
   EiPrimaryBase(pt_expr),
   mObj(obj),
@@ -485,7 +485,7 @@ EiArrayElemPrimary::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note それ以外では 0 を返す．
-ymuint
+int
 EiArrayElemPrimary::declarray_dimension() const
 {
   return mDim;
@@ -495,7 +495,7 @@ EiArrayElemPrimary::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note それ以外では nullptr を返す．
 const VlExpr*
-EiArrayElemPrimary::declarray_index(ymuint pos) const
+EiArrayElemPrimary::declarray_index(int pos) const
 {
   return mIndexList[pos];
 }
@@ -504,7 +504,7 @@ EiArrayElemPrimary::declarray_index(ymuint pos) const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-ymuint
+int
 EiArrayElemPrimary::lhs_elem_num() const
 {
   return 1;
@@ -515,7 +515,7 @@ EiArrayElemPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiArrayElemPrimary::lhs_elem(ymuint pos) const
+EiArrayElemPrimary::lhs_elem(int pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -532,7 +532,7 @@ EiArrayElemPrimary::lhs_elem(ymuint pos) const
 // @param[in] offset オフセット
 EiConstArrayElemPrimary::EiConstArrayElemPrimary(const PtExpr* pt_expr,
 						 ElbDeclArray* obj,
-						 ymuint offset) :
+						 int offset) :
   EiPrimaryBase(pt_expr),
   mObj(obj),
   mOffset(offset)
@@ -594,7 +594,7 @@ EiConstArrayElemPrimary::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note それ以外では 0 を返す．
-ymuint
+int
 EiConstArrayElemPrimary::declarray_dimension() const
 {
   return 0;
@@ -604,14 +604,14 @@ EiConstArrayElemPrimary::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note それ以外では nullptr を返す．
 const VlExpr*
-EiConstArrayElemPrimary::declarray_index(ymuint pos) const
+EiConstArrayElemPrimary::declarray_index(int pos) const
 {
   return nullptr;
 }
 
 // @brief 配列型宣言要素への参照のオフセットを返す．
 // @note 固定インデックスの場合のみ意味を持つ．
-ymuint
+int
 EiConstArrayElemPrimary::declarray_offset() const
 {
   return mOffset;
@@ -621,7 +621,7 @@ EiConstArrayElemPrimary::declarray_offset() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-ymuint
+int
 EiConstArrayElemPrimary::lhs_elem_num() const
 {
   return 1;
@@ -632,7 +632,7 @@ EiConstArrayElemPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiConstArrayElemPrimary::lhs_elem(ymuint pos) const
+EiConstArrayElemPrimary::lhs_elem(int pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;

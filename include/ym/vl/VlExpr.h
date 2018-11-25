@@ -55,7 +55,7 @@ public:
   /// @brief 式のビット幅を返す．
   /// @note value_type().size() を同じ
   virtual
-  ymuint
+  int
   bit_size() const = 0;
 
   /// @brief 定数式の時 true を返す．
@@ -121,7 +121,7 @@ public:
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note それ以外では 0 を返す．
   virtual
-  ymuint
+  int
   declarray_dimension() const = 0;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
@@ -129,12 +129,12 @@ public:
   /// @note それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  declarray_index(ymuint pos) const = 0;
+  declarray_index(int pos) const = 0;
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
   virtual
-  ymuint
+  int
   declarray_offset() const = 0;
 
   /// @brief スコープへの参照の場合，対象のオブジェクトを返す．
@@ -232,7 +232,7 @@ public:
   /// @note kVpiOperation の時，意味を持つ．
   /// @note それ以外では 0 を返す．
   virtual
-  ymuint
+  int
   operand_num() const = 0;
 
   /// @brief オペランドを返す．
@@ -241,13 +241,13 @@ public:
   /// @note それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  operand(ymuint pos) const = 0;
+  operand(int pos) const = 0;
 
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．
   /// @note multiple concatenation の時は operand(0) と等しい．
   virtual
-  ymuint
+  int
   rep_num() const = 0;
 
   /// @brief 定数型を返す．
@@ -281,7 +281,7 @@ public:
   /// @brief 引数の数を返す．
   /// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
   virtual
-  ymuint
+  int
   argument_num() const = 0;
 
   /// @brief 引数を返す．
@@ -290,13 +290,13 @@ public:
   /// @note それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  argument(ymuint pos) const = 0;
+  argument(int pos) const = 0;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   virtual
-  ymuint
+  int
   lhs_elem_num() const = 0;
 
   /// @brief 左辺式の要素の取得
@@ -304,7 +304,7 @@ public:
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const = 0;
+  lhs_elem(int pos) const = 0;
 
 };
 

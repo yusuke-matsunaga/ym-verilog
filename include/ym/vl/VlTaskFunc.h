@@ -42,14 +42,14 @@ public:
 
   /// @brief 入出力数を得る．
   virtual
-  ymuint
+  int
   io_num() const = 0;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   virtual
   const VlIODecl*
-  io(ymuint pos) const = 0;
+  io(int pos) const = 0;
 
   /// @brief 本体のステートメントを得る．
   virtual
@@ -106,7 +106,7 @@ public:
 
   /// @brief 出力のビット幅を返す．
   virtual
-  ymuint
+  int
   bit_size() const = 0;
 
 };

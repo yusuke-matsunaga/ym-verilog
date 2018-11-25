@@ -29,56 +29,58 @@ hexchar(int val)
 
 // @brief val を10進数で表した文字列を得る．
 string
-size_to_dec_str(ymuint32 val)
+size_to_dec_str(int val)
 {
   string ans;
   if ( val >= 10 ) {
-    ymuint32 q = val / 10;
+    int q = val / 10;
     ans = size_to_dec_str(q);
   }
-  ymuint32 r = val % 10;
+  int r = val % 10;
   char c = static_cast<char>('0' + r);
   ans += c;
   return ans;
 }
 
+using uword = ymuint64;
+
 // @brief a * b の結果を2ワードで返す．
 // - <ret-val>.first が high-word
 // - <ret-val>.second が low-word
-pair<ymuint32, ymuint32>
-mult32(ymuint32 a,
-       ymuint32 b)
+pair<uword, uword>
+mult32(uword a,
+       uword b)
 {
-  ymuint32 al = a & 0xffff;
-  ymuint32 ah = a >> 16;
-  ymuint32 bl = b & 0xffff;
-  ymuint32 bh = b >> 16;
+  uword al = a & 0xffff;
+  uword ah = a >> 16;
+  uword bl = b & 0xffff;
+  uword bh = b >> 16;
 
-  ymuint32 tmp_ll = al * bl;
-  ymuint32 tmp_lh = al * bh;
-  ymuint32 tmp_hl = ah * bl;
-  ymuint32 tmp_hh = ah * bh;
+  uword tmp_ll = al * bl;
+  uword tmp_lh = al * bh;
+  uword tmp_hl = ah * bl;
+  uword tmp_hh = ah * bh;
 
-  ymuint32 tmp_lll = tmp_ll & 0xffff;
-  ymuint32 tmp_llh = tmp_ll >> 16;
-  ymuint32 tmp_lhl = tmp_lh & 0xffff;
-  ymuint32 tmp_lhh = tmp_lh >> 16;
-  ymuint32 tmp_hll = tmp_hl & 0xffff;
-  ymuint32 tmp_hlh = tmp_hl >> 16;
-  ymuint32 tmp_hhl = tmp_hh & 0xffff;
-  ymuint32 tmp_hhh = tmp_hh >> 16;
+  uword tmp_lll = tmp_ll & 0xffff;
+  uword tmp_llh = tmp_ll >> 16;
+  uword tmp_lhl = tmp_lh & 0xffff;
+  uword tmp_lhh = tmp_lh >> 16;
+  uword tmp_hll = tmp_hl & 0xffff;
+  uword tmp_hlh = tmp_hl >> 16;
+  uword tmp_hhl = tmp_hh & 0xffff;
+  uword tmp_hhh = tmp_hh >> 16;
 
-  ymuint32 c0 = tmp_lll;
-  ymuint32 c1 = tmp_llh + tmp_hll + tmp_lhl;
-  ymuint32 c1h = c1 >> 16;
+  uword c0 = tmp_lll;
+  uword c1 = tmp_llh + tmp_hll + tmp_lhl;
+  uword c1h = c1 >> 16;
   c1 &= 0xffff;
-  ymuint32 c2 = c1h + tmp_hlh + tmp_lhh + tmp_hhl;
-  ymuint32 c2h = c2 >> 16;
+  uword c2 = c1h + tmp_hlh + tmp_lhh + tmp_hhl;
+  uword c2h = c2 >> 16;
   c2 &= 0xffff;
-  ymuint32 c3 = c2h + tmp_hhh;
+  uword c3 = c2h + tmp_hhh;
 
-  ymuint32 cl = (c1 << 16) + c0;
-  ymuint32 ch = (c3 << 16) + c2;
+  uword cl = (c1 << 16) + c0;
+  uword ch = (c3 << 16) + c2;
 
   return make_pair(ch, cl);
 }
@@ -88,24 +90,24 @@ END_NONAMESPACE
 
 // @brief ビット長からブロック数を得る．
 inline
-ymuint32
-BitVector::block(ymuint32 size)
+int
+BitVector::block(int size)
 {
   return (size + kBlockSize - 1) / kBlockSize;
 }
 
 // @brief ビット長から最後のブロックのシフト数を得る．
 inline
-ymuint32
-BitVector::shift(ymuint32 size)
+int
+BitVector::shift(int size)
 {
   return size - (block(size) - 1) * kBlockSize;
 }
 
 // @brief size からマスクパタンを作る
 inline
-ymuint32
-BitVector::mask(ymuint32 size)
+uword
+BitVector::mask(int size)
 {
   return kAll1 >> (kBlockSize - shift(size));
 }
@@ -114,17 +116,17 @@ BitVector::mask(ymuint32 size)
 // @param[in] src 元の値
 // @param[out] q 求まった商を格納する変数
 // @return 余りを返す．
-ymuint32
-BitVector::div10(const ymuint32* src,
-		 ymuint32 n,
-		 ymuint32* q)
+int
+BitVector::div10(const uword* src,
+		 int n,
+		 uword* q)
 {
-  ymuint32 l = n * kBlockSize;
-  ymuint32 r = 0;
-  for (ymuint32 i = l; i -- > 0; ) {
+  int l = n * kBlockSize;
+  int r = 0;
+  for ( int i = l; i -- > 0; ) {
     r <<= 1;
-    ymuint32 blk = i / kBlockSize;
-    ymuint32 pos = i % kBlockSize;
+    int blk = i / kBlockSize;
+    int pos = i % kBlockSize;
     if ( (src[blk] >> pos) & 1 ) {
       r |= 1;
     }
@@ -138,16 +140,16 @@ BitVector::div10(const ymuint32* src,
 
 // @brief val を10進数で表した文字列を返す．
 string
-BitVector::dec_str_sub(const ymuint32* val,
-		       ymuint32 n)
+BitVector::dec_str_sub(const uword* val,
+		       int n)
 {
-  ymuint32 val1[n];
-  for (ymuint32 i = 0; i < n; ++ i) {
+  uword val1[n];
+  for ( int i = 0; i < n; ++ i ) {
     val1[i] = 0;
   }
-  ymuint32 r = div10(val, n, val1);
+  int r = div10(val, n, val1);
   bool zero = true;
-  for (ymuint32 i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     if ( val1[i] ) {
       zero = false;
       break;
@@ -167,7 +169,7 @@ BitVector::dec_str_sub(const ymuint32* val,
 //////////////////////////////////////////////////////////////////////
 
 // 空のコンストラクタ
-BitVector::BitVector(ymuint32 val) :
+BitVector::BitVector(unsigned int val) :
   mSize(0),
   mVal0(nullptr),
   mVal1(nullptr)
@@ -182,7 +184,7 @@ BitVector::BitVector(ymuint32 val) :
 // - 符号なし
 // - 基数は10
 const BitVector&
-BitVector::operator=(ymuint32 val)
+BitVector::operator=(unsigned int val)
 {
   set(~val, val, kVpiSizeInteger, false, false, 10);
   return *this;
@@ -278,16 +280,16 @@ BitVector::operator=(VlTime time)
 
 // スカラ値からのキャスト用コンストラクタ
 BitVector::BitVector(const VlScalarVal& value,
-		     ymuint32 size) :
+		     int size) :
   mSize(0),
   mVal0(nullptr),
   mVal1(nullptr)
 {
   resize(size);
   set_type(true, false, 2);
-  ymuint32 n = block(size);
-  ymuint32 val0 = kAll0;
-  ymuint32 val1 = kAll1;
+  int n = block(size);
+  uword val0 = kAll0;
+  uword val1 = kAll1;
 
   if ( value.is_zero() ) {
     val0 = kAll1;
@@ -308,11 +310,11 @@ BitVector::BitVector(const VlScalarVal& value,
   else {
     ASSERT_NOT_REACHED;
   }
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  for ( int i = 0; i < n - 1; ++ i ) {
     mVal0[i] = val0;
     mVal1[i] = val1;
   }
-  ymuint32 m = mask(size);
+  uword m = mask(size);
   mVal0[n - 1] = val0 | (~m);
   mVal1[n - 1] = val1 & m;
 }
@@ -336,7 +338,7 @@ const BitVector&
 BitVector::operator=(const char* str)
 {
   if ( str ) {
-    ymuint32 strsize = strlen(str);
+    int strsize = strlen(str);
     set_from_string(strsize, str);
   }
   else {
@@ -364,37 +366,37 @@ BitVector::BitVector(const string& str) :
 const BitVector&
 BitVector::operator=(const string& str)
 {
-  ymuint32 strsize = str.size();
+  int strsize = str.size();
   if ( strsize == 0 ) {
     set_from_string(1, "\0");
   }
   else {
     // 上の set_from_string() を使ってもできるけど
     // c_str() を呼びたくない．
-    ymuint32 s = strsize * 8;
+    int s = strsize * 8;
 
     resize(s);
     set_type(true, false, 2);
 
-    ymuint32 j = 0;
-    ymuint32 k = 0;
-    ymuint32 tmp = 0;
-    for (ymuint32 i = strsize; i -- > 0; ) {
+    int j = 0;
+    int k = 0;
+    uword tmp = 0;
+    for ( int i = strsize; i -- > 0; ) {
       char c = str[i];
-      tmp += (static_cast<ymuint32>(c) << (k * 8));
+      tmp += (static_cast<uword>(c) << (k * 8));
       ++ k;
       if ( k == 4 ) {
 	mVal0[j] = ~tmp;
-	mVal1[j] = tmp;
+	mVal1[j] =  tmp;
 	++ j;
 	k = 0;
 	tmp = 0;
       }
     }
     if ( k != 0 ) {
-      ymuint32 mask = kAll1 << (k * 8);
+      uword mask = kAll1 << (k * 8);
       mVal0[j] = ~tmp | mask;
-      mVal1[j] = tmp;
+      mVal1[j] =  tmp;
     }
   }
   return *this;
@@ -425,9 +427,9 @@ BitVector::operator=(double val)
 }
 
 // Verilog-HDL 形式の文字列からの変換コンストラクタ
-BitVector::BitVector(ymuint32 size,
+BitVector::BitVector(int size,
 		     bool is_signed,
-		     ymuint32 base,
+		     int base,
 		     const string& str) :
   mSize(0),
   mVal0(nullptr),
@@ -439,8 +441,8 @@ BitVector::BitVector(ymuint32 size,
     is_sized = false;
   }
   switch ( base ) {
-  case 2: set_from_binstring(size, is_sized, is_signed, str, 0); break;
-  case 8: set_from_octstring(size, is_sized, is_signed, str, 0); break;
+  case  2: set_from_binstring(size, is_sized, is_signed, str, 0); break;
+  case  8: set_from_octstring(size, is_sized, is_signed, str, 0); break;
   case 10: set_from_decstring(size, is_sized, is_signed, str, 0); break;
   case 16: set_from_hexstring(size, is_sized, is_signed, str, 0); break;
   default: cerr << "illegal base : " << base << endl;
@@ -455,32 +457,30 @@ BitVector::BitVector(const list<BitVector>& src_list) :
   mVal0(nullptr),
   mVal1(nullptr)
 {
-  ymuint32 tl = 0;
-  for (list<BitVector>::const_iterator p = src_list.begin();
-       p != src_list.end(); ++p ) {
-    tl += p->size();
+  // ビット長を求める．
+  int tl = 0;
+  for ( const auto& bv: src_list ) {
+    tl += bv.size();
   }
 
   resize(tl);
   set_type(true, false, 2);
 
-  ymuint32 blk = 0;
-  ymuint32 pos = 0;
-  for (list<BitVector>::const_iterator p = src_list.begin();
-       p != src_list.end(); ++p ) {
-    const BitVector& v = *p;
-    ymuint32 l = v.size();
-    ymuint32 b = block(l);
-    ymuint32 s = shift(l);
-    ymuint32 m = mask(l);
+  int blk = 0;
+  int pos = 0;
+  for ( const auto& bv: src_list ) {
+    int l = bv.size();
+    int b = block(l);
+    int s = shift(l);
+    uword m = mask(l);
     if ( pos == 0 ) {
-      for (ymuint32 i = 0; i < b - 1; ++ i) {
-	mVal0[blk] = v.mVal0[i];
-	mVal1[blk] = v.mVal1[i];
+      for ( int i = 0; i < b - 1; ++ i ) {
+	mVal0[blk] = bv.mVal0[i];
+	mVal1[blk] = bv.mVal1[i];
 	++ blk;
       }
-      mVal0[blk] = v.mVal0[b - 1] & m;
-      mVal1[blk] = v.mVal1[b - 1] & m;
+      mVal0[blk] = bv.mVal0[b - 1] & m;
+      mVal1[blk] = bv.mVal1[b - 1] & m;
       pos = s;
       if ( pos == kBlockSize ) {
 	pos = 0;
@@ -488,16 +488,16 @@ BitVector::BitVector(const list<BitVector>& src_list) :
       }
     }
     else {
-      ymuint32 rpos = kBlockSize - pos;
-      for (ymuint32 i = 0; i < b - 1; ++ i) {
-	mVal0[blk] |= (v.mVal0[i] << pos);
-	mVal1[blk] |= (v.mVal1[i] << pos);
+      int rpos = kBlockSize - pos;
+      for ( int i = 0; i < b - 1; ++ i ) {
+	mVal0[blk] |= (bv.mVal0[i] << pos);
+	mVal1[blk] |= (bv.mVal1[i] << pos);
 	++ blk;
-	mVal0[blk] |= (v.mVal0[i] >> rpos);
-	mVal1[blk] |= (v.mVal1[i] >> rpos);
+	mVal0[blk] |= (bv.mVal0[i] >> rpos);
+	mVal1[blk] |= (bv.mVal1[i] >> rpos);
       }
-      ymuint32 val0 = v.mVal0[b - 1] & m;
-      ymuint32 val1 = v.mVal1[b - 1] & m;
+      uword val0 = bv.mVal0[b - 1] & m;
+      uword val1 = bv.mVal1[b - 1] & m;
       mVal0[blk] |= (val0 << pos);
       mVal1[blk] |= (val1 << pos);
       pos += s;
@@ -521,32 +521,29 @@ BitVector::BitVector(const vector<BitVector>& src_list) :
   mVal0(nullptr),
   mVal1(nullptr)
 {
-  ymuint32 tl = 0;
-  for (vector<BitVector>::const_iterator p = src_list.begin();
-       p != src_list.end(); ++p ) {
-    tl += p->size();
+  int tl = 0;
+  for ( const auto& bv: src_list ) {
+    tl += bv.size();
   }
 
   resize(tl);
   set_type(true, false, 2);
 
-  ymuint32 blk = 0;
-  ymuint32 pos = 0;
-  for (vector<BitVector>::const_iterator p = src_list.begin();
-       p != src_list.end(); ++p ) {
-    const BitVector& v = *p;
-    ymuint32 l = v.size();
-    ymuint32 b = block(l);
-    ymuint32 s = shift(l);
-    ymuint32 m = mask(l);
+  int blk = 0;
+  int pos = 0;
+  for ( const auto& bv: src_list ) {
+    int l = bv.size();
+    int b = block(l);
+    int s = shift(l);
+    uword m = mask(l);
     if ( pos == 0 ) {
-      for (ymuint32 i = 0; i < b - 1; ++ i) {
-	mVal0[blk] = v.mVal0[i];
-	mVal1[blk] = v.mVal1[i];
+      for ( int i = 0; i < b - 1; ++ i ) {
+	mVal0[blk] = bv.mVal0[i];
+	mVal1[blk] = bv.mVal1[i];
 	++ blk;
       }
-      mVal0[blk] = v.mVal0[b - 1] & m;
-      mVal1[blk] = v.mVal1[b - 1] & m;
+      mVal0[blk] = bv.mVal0[b - 1] & m;
+      mVal1[blk] = bv.mVal1[b - 1] & m;
       pos = s;
       if ( pos == kBlockSize ) {
 	pos = 0;
@@ -554,16 +551,16 @@ BitVector::BitVector(const vector<BitVector>& src_list) :
       }
     }
     else {
-      ymuint32 rpos = kBlockSize - pos;
-      for (ymuint32 i = 0; i < b - 1; ++ i) {
-	mVal0[blk] |= (v.mVal0[i] << pos);
-	mVal1[blk] |= (v.mVal1[i] << pos);
+      int rpos = kBlockSize - pos;
+      for ( int i = 0; i < b - 1; ++ i ) {
+	mVal0[blk] |= (bv.mVal0[i] << pos);
+	mVal1[blk] |= (bv.mVal1[i] << pos);
 	++ blk;
-	mVal0[blk] |= (v.mVal0[i] >> rpos);
-	mVal1[blk] |= (v.mVal1[i] >> rpos);
+	mVal0[blk] |= (bv.mVal0[i] >> rpos);
+	mVal1[blk] |= (bv.mVal1[i] >> rpos);
       }
-      ymuint32 val0 = v.mVal0[b - 1] & m;
-      ymuint32 val1 = v.mVal1[b - 1] & m;
+      uword val0 = bv.mVal0[b - 1] & m;
+      uword val1 = bv.mVal1[b - 1] & m;
       mVal0[blk] |= (val0 << pos);
       mVal1[blk] |= (val1 << pos);
       pos += s;
@@ -584,10 +581,10 @@ BitVector::BitVector(const BitVector& src) :
   mSize(src.mSize),
   mFlags(src.mFlags)
 {
-  ymuint32 n = block(mSize);
-  mVal0 = new ymuint32[n];
-  mVal1 = new ymuint32[n];
-  for (ymuint32 i = 0; i < n; ++ i) {
+  int n = block(mSize);
+  mVal0 = new uword[n];
+  mVal1 = new uword[n];
+  for ( int i = 0; i < n; ++ i ) {
     mVal0[i] = src.mVal0[i];
     mVal1[i] = src.mVal1[i];
   }
@@ -600,10 +597,10 @@ BitVector::operator=(const BitVector& src)
   if ( &src != this ) {
     mSize = src.mSize;
     mFlags = src.mFlags;
-    ymuint32 n = block(mSize);
-    mVal0 = new ymuint32[n];
-    mVal1 = new ymuint32[n];
-    for (ymuint32 i = 0; i < n; ++ i) {
+    int n = block(mSize);
+    mVal0 = new uword[n];
+    mVal1 = new uword[n];
+    for ( int i = 0; i < n; ++ i ) {
       mVal0[i] = src.mVal0[i];
       mVal1[i] = src.mVal1[i];
     }
@@ -613,7 +610,7 @@ BitVector::operator=(const BitVector& src)
 
 // ビット長の変換を行うコピーコンストラクタもどき
 BitVector::BitVector(const BitVector& src,
-		     ymuint32 size) :
+		     int size) :
   mSize(0),
   mVal0(nullptr),
   mVal1(nullptr)
@@ -624,10 +621,10 @@ BitVector::BitVector(const BitVector& src,
 
 // ビット長の変換と属性の変更を行うコピーコンストラクタもどき
 BitVector::BitVector(const BitVector& src,
-		     ymuint32 size,
+		     int size,
 		     bool is_sized,
 		     bool is_signed,
-		     ymuint32 base) :
+		     int base) :
   mSize(0),
   mVal0(nullptr),
   mVal1(nullptr)
@@ -677,10 +674,10 @@ BitVector::operator=(const VlScalarVal& value)
 // @param[in] base 基数
 void
 BitVector::set_with_attr(const BitVector& src,
-			 ymuint32 size,
+			 int size,
 			 bool is_sized,
 			 bool is_signed,
-			 ymuint32 base)
+			 int base)
 {
   set(src.mVal0, src.mVal1, src.size(), size, is_sized, is_signed, base);
 }
@@ -689,10 +686,10 @@ BitVector::set_with_attr(const BitVector& src,
 bool
 BitVector::set_from_verilog_string(const string& str)
 {
-  ymuint32 size = kBlockSize; // デフォルト値
+  int size = kBlockSize; // デフォルト値
   bool is_sized = false; // デフォルト値
   bool is_signed = true; // デフォルト値
-  ymuint32 base = 10; // デフォルト値
+  int base = 10; // デフォルト値
 
   // ビット長を求める．
   string::size_type pos = str.find_first_of('\'');
@@ -709,9 +706,9 @@ BitVector::set_from_verilog_string(const string& str)
     is_signed = false;
     switch ( str[pos] ) {
     case 'b':
-    case 'B': base = 2; pos ++; break;
+    case 'B': base =  2; pos ++; break;
     case 'o':
-    case 'O': base = 8; pos ++; break;
+    case 'O': base =  8; pos ++; break;
     case 'd':
     case 'D': base = 10; pos ++; break;
     case 'h':
@@ -723,9 +720,9 @@ BitVector::set_from_verilog_string(const string& str)
 	is_signed = true;
 	switch ( str[pos] ) {
 	case 'b':
-	case 'B': base = 2; pos ++; break;
+	case 'B': base =  2; pos ++; break;
 	case 'o':
-	case 'O': base = 8; pos ++; break;
+	case 'O': base =  8; pos ++; break;
 	case 'd':
 	case 'D': base = 10; pos ++; break;
 	case 'h':
@@ -750,8 +747,8 @@ BitVector::set_from_verilog_string(const string& str)
   }
 
   switch ( base ) {
-  case 2: set_from_binstring(size, is_sized, is_signed, str, 0); break;
-  case 8: set_from_octstring(size, is_sized, is_signed, str, 0); break;
+  case  2: set_from_binstring(size, is_sized, is_signed, str, 0); break;
+  case  8: set_from_octstring(size, is_sized, is_signed, str, 0); break;
   case 10: set_from_decstring(size, is_sized, is_signed, str, 0); break;
   case 16: set_from_hexstring(size, is_sized, is_signed, str, 0); break;
   default: cerr << "illegal base : " << base << endl;
@@ -769,7 +766,7 @@ BitVector::coerce(const VlValueType& type)
   if ( !type.is_no_type() ) {
     bool is_signed = type.is_signed();
     bool is_sized = type.is_sized();
-    ymuint32 req_size = type.size();
+    int req_size = type.size();
 
     if ( size() == req_size ) {
       set_type(is_sized, is_signed, base());
@@ -784,57 +781,57 @@ BitVector::coerce(const VlValueType& type)
 
 // 0 を表すオブジェクトを生成する
 BitVector
-BitVector::zero(ymuint32 size)
+BitVector::zero(int size)
 {
   return BitVector(VlScalarVal::zero(), size);
 }
 
 // 1 を表すオブジェクトを生成する
 BitVector
-BitVector::one(ymuint32 size)
+BitVector::one(int size)
 {
   return BitVector(VlScalarVal::one(), size);
 }
 
 // X を表すオブジェクトを生成する
 BitVector
-BitVector::x(ymuint32 size)
+BitVector::x(int size)
 {
   return BitVector(VlScalarVal::x(), size);
 }
 
 // Z を表すオブジェクトを生成する
 BitVector
-BitVector::z(ymuint32 size)
+BitVector::z(int size)
 {
   return BitVector(VlScalarVal::z(), size);
 }
 
 // Verilog 形式の2進数から変換するための共通ルーティン
 void
-BitVector::set_from_binstring(ymuint32 size,
+BitVector::set_from_binstring(int size,
 			      bool is_sized,
 			      bool is_signed,
 			      const string& str,
-			      ymuint32 pos)
+			      int pos)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
   string::size_type end = str.size();
-  ymuint32 src_size = end - pos;
-  ymuint32 src_n = block(src_size);
-  ymuint32 val0[src_n];
-  ymuint32 val1[src_n];
-  for (ymuint32 i = 0; i < src_n; ++ i) {
+  int src_size = end - pos;
+  int src_n = block(src_size);
+  uword val0[src_n];
+  uword val1[src_n];
+  for ( int i = 0; i < src_n; ++ i ) {
     val0[i] = kAll1;
     val1[i] = kAll0;
   }
-  ymuint32 vpos = src_size - 1;
-  for ( ; pos < end; pos ++, vpos --) {
-    ymuint32 blk = vpos / kBlockSize;
-    ymuint32 sft = vpos - blk * kBlockSize;
-    ymuint32 ppat = 1 << sft;
-    ymuint32 npat = ~ppat;
+  int vpos = src_size - 1;
+  for ( ; pos < end; pos ++, vpos -- ) {
+    int blk = vpos / kBlockSize;
+    int sft = vpos - blk * kBlockSize;
+    uword ppat = 1 << sft;
+    uword npat = ~ppat;
     char c = str[pos];
     if ( c == '0' ) {
       val0[blk] |= ppat;
@@ -871,34 +868,34 @@ BitVector::set_from_binstring(ymuint32 size,
 
 // Verilog 形式の8進数から変換するための共通ルーティン
 void
-BitVector::set_from_octstring(ymuint32 size,
+BitVector::set_from_octstring(int size,
 			      bool is_sized,
 			      bool is_signed,
 			      const string& str,
-			      ymuint32 pos)
+			      int pos)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
   string::size_type end = str.size();
-  ymuint32 src_size = (end - pos) * 3;
-  ymuint32 src_n = block(src_size);
-  ymuint32 val0[src_n];
-  ymuint32 val1[src_n];
-  for (ymuint32 i = 0; i < src_n; ++ i) {
+  int src_size = (end - pos) * 3;
+  int src_n = block(src_size);
+  uword val0[src_n];
+  uword val1[src_n];
+  for ( int i = 0; i < src_n; ++ i ) {
     val0[i] = kAll1;
     val1[i] = kAll0;
   }
-  ymuint32 vpos = src_size - 3;
-  for ( ; pos < end; pos ++, vpos -= 3) {
-    ymuint32 blk = vpos / kBlockSize;
-    ymuint32 sft = vpos - blk * kBlockSize;
+  int vpos = src_size - 3;
+  for ( ; pos < end; pos ++, vpos -= 3 ) {
+    int blk = vpos / kBlockSize;
+    int sft = vpos - blk * kBlockSize;
     char c = str[pos];
     if ( '0' <= c && c <= '7' ) {
-      ymuint32 val = c - '0';
-      ymuint32 lppat = val << sft;
-      ymuint32 rppat = val >> (kBlockSize - sft);
-      ymuint32 lnpat = ~lppat;
-      ymuint32 rnpat = ~rppat;
+      int val = c - '0';
+      uword lppat = val << sft;
+      uword rppat = val >> (kBlockSize - sft);
+      uword lnpat = ~lppat;
+      uword rnpat = ~rppat;
       val0[blk] &= lnpat;
       val1[blk] |= lppat;
       if ( rppat ) {
@@ -907,8 +904,8 @@ BitVector::set_from_octstring(ymuint32 size,
       }
     }
     else if ( c == 'x' || c == 'X' ) {
-      ymuint32 lppat = 7 << sft;
-      ymuint32 rppat = 7 >> (kBlockSize - sft);
+      uword lppat = 7 << sft;
+      uword rppat = 7 >> (kBlockSize - sft);
       val0[blk] |= lppat;
       val1[blk] |= lppat;
       if ( rppat ) {
@@ -917,8 +914,8 @@ BitVector::set_from_octstring(ymuint32 size,
       }
     }
     else if ( c == 'z' || c == 'Z' || c == '?' ) {
-      ymuint32 lnpat = ~(7 << sft);
-      ymuint32 rnpat = ~(7 >> (kBlockSize - sft));
+      uword lnpat = ~(7 << sft);
+      uword rnpat = ~(7 >> (kBlockSize - sft));
       val0[blk] &= lnpat;
       val1[blk] &= lnpat;
       if ( rnpat != kAll1 ) {
@@ -945,20 +942,20 @@ BitVector::set_from_octstring(ymuint32 size,
 
 // Verilog 形式の10進数から変換するための共通ルーティン
 void
-BitVector::set_from_decstring(ymuint32 size,
+BitVector::set_from_decstring(int size,
 			      bool is_sized,
 			      bool is_signed,
 			      const string& str,
-			      ymuint32 pos)
+			      int pos)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
-  vector<ymuint32> val0;
-  vector<ymuint32> val1;
-  ymuint32 src_size = 0;
+  vector<uword> val0;
+  vector<uword> val1;
+  int src_size = 0;
   string::size_type end = str.size();
-  const ymuint32 sft = kBlockSize - 4;
-  for ( ; pos < end; pos ++) {
+  const int sft = kBlockSize - 4;
+  for ( ; pos < end; ++ pos ) {
     char c = str[pos];
     if ( c < '0' || '9' < c ) {
       // 本当は例外を投げるのがいいな．
@@ -967,14 +964,14 @@ BitVector::set_from_decstring(ymuint32 size,
       return;
     }
     else {
-      ymuint32 n = val1.size();
-      ymuint32 carry = c - '0';
-      for (ymuint32 i = 0; i < n; ++ i) {
-	ymuint32 tmp = val1[i];
-	ymuint32 u = tmp >> sft;
-	ymuint32 l = tmp - (u << sft);
-	ymuint32 u10 = u * 10;
-	ymuint32 l10 = l * 10;
+      int n = val1.size();
+      uword carry = c - '0';
+      for ( int i = 0; i < n; ++ i ) {
+	uword tmp = val1[i];
+	uword u = tmp >> sft;
+	uword l = tmp - (u << sft);
+	uword u10 = u * 10;
+	uword l10 = l * 10;
 	val1[i] = carry + l10 + ((u10 % 16) << sft);
 	val0[i] = ~val1[i];
 	carry = u10 / 16;
@@ -985,10 +982,10 @@ BitVector::set_from_decstring(ymuint32 size,
       }
     }
   }
-  ymuint32 last = val1.size();
+  int last = val1.size();
   if ( last ) {
     last --;
-    for (ymuint32 vpos = kBlockSize; vpos -- > 0; ) {
+    for ( int vpos = kBlockSize; vpos -- > 0; ) {
       if ( val1[last] & (1 << vpos) ) {
 	src_size = vpos + last * kBlockSize + 1;
 	break;
@@ -1013,56 +1010,56 @@ BitVector::set_from_decstring(ymuint32 size,
 
 // Verilog 形式の16進数から変換するための共通ルーティン
 void
-BitVector::set_from_hexstring(ymuint32 size,
+BitVector::set_from_hexstring(int size,
 			      bool is_sized,
 			      bool is_signed,
 			      const string& str,
-			      ymuint32 pos)
+			      int pos)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
   string::size_type end = str.size();
-  ymuint32 src_size = (end - pos) * 4;
-  ymuint32 src_n = block(src_size);
-  ymuint32 val0[src_n];
-  ymuint32 val1[src_n];
-  for (ymuint32 i = 0; i < src_n; ++ i) {
+  int src_size = (end - pos) * 4;
+  int src_n = block(src_size);
+  uword val0[src_n];
+  uword val1[src_n];
+  for ( int i = 0; i < src_n; ++ i ) {
     val0[i] = kAll1;
     val1[i] = kAll0;
   }
-  ymuint32 vpos = src_size - 4;
+  int vpos = src_size - 4;
   for ( ; pos < end; pos ++, vpos -= 4) {
-    ymuint32 blk = vpos / kBlockSize;
-    ymuint32 sft = vpos - blk * kBlockSize;
+    int blk = vpos / kBlockSize;
+    int sft = vpos - blk * kBlockSize;
     char c = str[pos];
     if ( '0' <= c && c <= '9' ) {
-      ymuint32 val = c - '0';
-      ymuint32 ppat = val << sft;
-      ymuint32 npat = ~ppat;
+      uword val = c - '0';
+      uword ppat = val << sft;
+      uword npat = ~ppat;
       val0[blk] &= npat;
       val1[blk] |= ppat;
     }
     else if ( 'a' <= c && c <= 'f' ) {
-      ymuint32 val = c - 'a' + 10;
-      ymuint32 ppat = val << sft;
-      ymuint32 npat = ~ppat;
+      uword val = c - 'a' + 10;
+      uword ppat = val << sft;
+      uword npat = ~ppat;
       val0[blk] &= npat;
       val1[blk] |= ppat;
     }
     else if ( 'A' <= c && c <= 'F' ) {
-      ymuint32 val = c - 'A' + 10;
-      ymuint32 ppat = val << sft;
-      ymuint32 npat = ~ppat;
+      uword val = c - 'A' + 10;
+      uword ppat = val << sft;
+      uword npat = ~ppat;
       val0[blk] &= npat;
       val1[blk] |= ppat;
     }
     else if ( c == 'x' || c == 'X' ) {
-      ymuint32 ppat = 15 << sft;
+      uword ppat = 15 << sft;
       val0[blk] |= ppat;
       val1[blk] |= ppat;
     }
     else if ( c == 'z' || c == 'Z' || c == '?' ) {
-      ymuint32 npat = ~(15 << sft);
+      uword npat = ~(15 << sft);
       val0[blk] &= npat;
       val1[blk] &= npat;
     }
@@ -1085,31 +1082,31 @@ BitVector::set_from_hexstring(ymuint32 size,
 
 // 文字列からの変換用コンストラクタの共通ルーティン
 void
-BitVector::set_from_string(ymuint32 strsize,
+BitVector::set_from_string(int strsize,
 			   const char* str)
 {
-  ymuint32 s = strsize * 8;
+  int s = strsize * 8;
 
   resize(s);
   set_type(true, false, 2);
 
-  ymuint32 j = 0;
-  ymuint32 k = 0;
-  ymuint32 tmp = 0;
-  for (ymuint32 i = strsize; i -- > 0; ) {
+  int j = 0;
+  int k = 0;
+  uword tmp = 0;
+  for ( int i = strsize; i -- > 0; ) {
     char c = str[i];
-    tmp += (static_cast<ymuint32>(c) << (k * 8));
+    tmp += (static_cast<uword>(c) << (k * 8));
     ++ k;
     if ( k == 4 ) {
       mVal0[j] = ~tmp;
-      mVal1[j] = tmp;
+      mVal1[j] =  tmp;
       ++ j;
       k = 0;
       tmp = 0;
     }
   }
   if ( k != 0 ) {
-    ymuint32 mask = kAll1 << (k * 8);
+    uword mask = kAll1 << (k * 8);
     mVal0[j] = ~tmp | mask;
     mVal1[j] = tmp;
   }
@@ -1137,10 +1134,10 @@ BitVector::complement()
   }
 
   // 全ビットを反転して1を足す
-  ymuint32 n = block(size());
+  int n = block(size());
   bool carry = true;
-  ymuint32 m = mask(size());
-  for (ymuint32 i = 0; i < n; ++ i) {
+  uword m = mask(size());
+  for ( int i = 0; i < n; ++ i ) {
     mVal1[i] = mVal0[i];
     if ( carry ) {
       if ( mVal1[i] == kAll1 ) {
@@ -1166,13 +1163,13 @@ BitVector::complement()
 const BitVector&
 BitVector::operator+=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     // てきとー
     ans_base = 10;
@@ -1192,10 +1189,10 @@ BitVector::operator+=(const BitVector& src)
 
   set_type(ans_sized, ans_signed, ans_base);
 
-  ymuint32 n = block(size());
-  ymuint32 carry = 0;
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 old_val = mVal1[i];
+  int n = block(size());
+  uword carry = 0;
+  for ( int i = 0; i < n; ++ i ) {
+    uword old_val = mVal1[i];
     mVal1[i] += src.mVal1[i] + carry;
     mVal0[i] = ~mVal1[i];
     // carry 条件ってなに？
@@ -1215,13 +1212,13 @@ BitVector::operator+=(const BitVector& src)
 const BitVector&
 BitVector::operator-=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     // てきとー
     ans_base = 10;
@@ -1241,10 +1238,10 @@ BitVector::operator-=(const BitVector& src)
 
   set_type(ans_sized, ans_signed, ans_base);
 
-  ymuint32 n = block(size());
-  ymuint32 carry = 1;
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 old_val = mVal1[i];
+  int n = block(size());
+  uword carry = 1;
+  for ( int i = 0; i < n; ++ i ) {
+    uword old_val = mVal1[i];
     mVal1[i] += ~src.mVal1[i] + carry;
     mVal0[i] = ~mVal1[i];
     // carry 条件ってなに？
@@ -1264,13 +1261,13 @@ BitVector::operator-=(const BitVector& src)
 const BitVector&
 BitVector::operator*=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     ans_base = 10;
   }
@@ -1292,22 +1289,22 @@ BitVector::operator*=(const BitVector& src)
 
   set_type(ans_sized, ans_signed, ans_base);
 
-  ymuint32 n = block(size());
-  ymuint32 carry = 0;
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 v = carry;
+  int n = block(size());
+  uword carry = 0;
+  for ( int i = 0; i < n; ++ i ) {
+    uword v = carry;
     carry = 0;
-    for (ymuint32 j = 0; j <= i; ++ j) {
-      ymuint32 old_v = v;
-      pair<ymuint32, ymuint32> tmp = mult32(tmp1.mVal1[j], tmp2.mVal1[i - j]);
+    for ( int j = 0; j <= i; ++ j ) {
+      uword old_v = v;
+      pair<uword, uword> tmp = mult32(tmp1.mVal1[j], tmp2.mVal1[i - j]);
       v += tmp.second;
       if ( v < old_v ) {
 	++ carry;
       }
     }
-    for (ymuint32 j = 0; j < i; ++ j) {
-      ymuint32 old_v = v;
-      pair<ymuint32, ymuint32> tmp = mult32(tmp1.mVal1[j], tmp2.mVal1[i - j - 1]);
+    for ( int j = 0; j < i; ++ j ) {
+      uword old_v = v;
+      pair<uword, uword> tmp = mult32(tmp1.mVal1[j], tmp2.mVal1[i - j - 1]);
       v += tmp.first;
       if ( v < old_v ) {
 	++ carry;
@@ -1317,7 +1314,7 @@ BitVector::operator*=(const BitVector& src)
     mVal0[i] = ~v;
   }
   // 上位ビットをマスクしておく
-  ymuint32 m = mask(ans_size);
+  uword m = mask(ans_size);
   mVal0[n - 1] |= ~m;
   mVal1[n - 1] &= m;
 
@@ -1332,13 +1329,13 @@ BitVector::operator*=(const BitVector& src)
 const BitVector&
 BitVector::operator/=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     ans_base = 10;
   }
@@ -1364,7 +1361,7 @@ BitVector::operator/=(const BitVector& src)
   tmp2.set_type(tmp2.is_sized(), false, tmp2.base());
 
   BitVector p(VlScalarVal::zero(), ans_size);
-  for (ymuint32 i = ans_size; i -- > 0; ) {
+  for ( int i = ans_size; i -- > 0; ) {
     p <<= 1;
     if ( tmp1.value(i).is_one() ) {
       p.mVal0[0] &= ~1U;
@@ -1388,13 +1385,13 @@ BitVector::operator/=(const BitVector& src)
 const BitVector&
 BitVector::operator%=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = src.base();
+  int ans_base = src.base();
   if ( ans_base != src.base() ) {
     ans_base = 10;
   }
@@ -1419,7 +1416,7 @@ BitVector::operator%=(const BitVector& src)
   set_type(ans_sized, ans_signed, ans_base);
   *this = BitVector(VlScalarVal::zero(), ans_size);
 
-  for (ymuint32 i = ans_size; i -- > 0; ) {
+  for ( int i = ans_size; i -- > 0; ) {
     operator<<=(1);
     if ( tmp1.value(i).is_one() ) {
       mVal0[0] &= ~1U;
@@ -1441,13 +1438,13 @@ BitVector::operator%=(const BitVector& src)
 const BitVector&
 BitVector::power(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     ans_base = 10;
   }
@@ -1473,7 +1470,7 @@ BitVector::power(const BitVector& src)
   BitVector i(src);
   BitVector c1(1);
   BitVector c0(0);
-  for (i = i - c1; i > c0; i = i - c1) {
+  for ( i = i - c1; i > c0; i = i - c1 ) {
     ans *= *this;
   }
   return *this = ans;
@@ -1513,8 +1510,8 @@ BitVector::lt_base(const BitVector& src1,
     }
   }
 
-  ymuint32 n = block(src1.size());
-  for (ymuint32 i = n; i -- > 0; ) {
+  int n = block(src1.size());
+  for ( int i = n; i -- > 0; ) {
     if ( src1.mVal1[i] < src2.mVal1[i] ) {
       return !invert;
     }
@@ -1599,14 +1596,14 @@ BitVector::eq_base(const BitVector& src1,
 
   if ( mode == 2 ) {
     // x を 0 または 1 と見なす等価比較
-    ymuint32 n = block(src1.size());
-    for (ymuint32 i = 0; i < n - 1; ++ i) {
+    int n = block(src1.size());
+    for ( int i = 0; i < n - 1; ++ i ) {
       if ( ((src1.mVal0[i] & src2.mVal0[i]) | (src1.mVal1[i] & src2.mVal1[i]))
 	   != kAll1 ) {
 	return false;
       }
     }
-    ymuint32 m = mask(src1.size());
+    uword m = mask(src1.size());
     if ( ((src1.mVal0[n - 1] & src2.mVal0[n - 1]) |
 	  (src1.mVal1[n - 1] & src2.mVal1[n - 1]) |
 	  ~m) != kAll1 ) {
@@ -1616,23 +1613,23 @@ BitVector::eq_base(const BitVector& src1,
   }
 
   // x と z を 0 または 1 と見なす等価比較
-  ymuint32 n = block(src1.size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    ymuint32 val01 = src1.mVal0[i];
-    ymuint32 val11 = src1.mVal1[i];
-    ymuint32 val02 = src2.mVal0[i];
-    ymuint32 val12 = src2.mVal1[i];
+  int n = block(src1.size());
+  for ( int i = 0; i < n - 1; ++ i ) {
+    uword val01 = src1.mVal0[i];
+    uword val11 = src1.mVal1[i];
+    uword val02 = src2.mVal0[i];
+    uword val12 = src2.mVal1[i];
     if ( ((val01 & val02) | (val11 & val12)) != kAll1 &&
 	 ((val01 | val02) & (val11 | val12)) != kAll0 ) {
       return false;
     }
   }
 
-  ymuint32 m = mask(src1.size());
-  ymuint32 val01 = src1.mVal0[n - 1];
-  ymuint32 val11 = src1.mVal1[n - 1];
-  ymuint32 val02 = src2.mVal0[n - 1];
-  ymuint32 val12 = src2.mVal1[n - 1];
+  uword m = mask(src1.size());
+  uword val01 = src1.mVal0[n - 1];
+  uword val11 = src1.mVal1[n - 1];
+  uword val02 = src2.mVal0[n - 1];
+  uword val12 = src2.mVal1[n - 1];
   if ( ((val01 & val02) | (val11 & val12) | ~m ) != kAll1 &&
        ((val01 | val02) & (val11 | val12) &  m ) != kAll0 ) {
     return false;
@@ -1781,11 +1778,11 @@ BitVector::negate()
   // 基本的には val0 と val1 を交換すればよいが，
   // z を含んでいたときが例外となる．
   // z のビットは x にするのでともに1と立てる
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 pat0 = mVal0[i];
-    ymuint32 pat1 = mVal1[i];
-    ymuint32 zpat = ~pat0 & ~pat1; // 1 なら Z
+  int n = block(size());
+  for ( int i = 0; i < n; ++ i ) {
+    uword pat0 = mVal0[i];
+    uword pat1 = mVal1[i];
+    uword zpat = ~pat0 & ~pat1; // 1 なら Z
     mVal0[i] = pat1 | zpat;
     mVal1[i] = pat0 | zpat;
   }
@@ -1796,13 +1793,13 @@ BitVector::negate()
 const BitVector&
 BitVector::operator&=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     // てきとー
     ans_base = 2;
@@ -1820,17 +1817,17 @@ BitVector::operator&=(const BitVector& src)
 
   // 基本的には val0 を or して val1 を and すればよいが，
   // z を含んでいたときが例外となる．
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 val1_0 = mVal0[i];
-    ymuint32 val1_1 = mVal1[i];
-    ymuint32 zpat;
+  int n = block(size());
+  for ( int i = 0; i < n; ++ i ) {
+    uword val1_0 = mVal0[i];
+    uword val1_1 = mVal1[i];
+    uword zpat;
     // z のパタンを x に直しておく．
     zpat = ~val1_0 & ~val1_1;
     val1_0 |= zpat;
     val1_1 |= zpat;
-    ymuint32 val2_0 = src.mVal0[i];
-    ymuint32 val2_1 = src.mVal1[i];
+    uword val2_0 = src.mVal0[i];
+    uword val2_1 = src.mVal1[i];
     // z のパタンを x に直しておく．
     zpat = ~val2_0 & ~val2_1;
     val2_0 |= zpat;
@@ -1847,13 +1844,13 @@ BitVector::operator&=(const BitVector& src)
 const BitVector&
 BitVector::operator|=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     // てきとー
     ans_base = 2;
@@ -1871,17 +1868,17 @@ BitVector::operator|=(const BitVector& src)
 
   // 基本的には val0 を and して val1 を or すればよいが，
   // z を含んでいたときが例外となる．
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 val1_0 = mVal0[i];
-    ymuint32 val1_1 = mVal1[i];
-    ymuint32 zpat;
+  int n = block(size());
+  for ( int i = 0; i < n; ++ i ) {
+    uword val1_0 = mVal0[i];
+    uword val1_1 = mVal1[i];
+    uword zpat;
     // z のパタンを x に直しておく．
     zpat = ~val1_0 & ~val1_1;
     val1_0 |= zpat;
     val1_1 |= zpat;
-    ymuint32 val2_0 = src.mVal0[i];
-    ymuint32 val2_1 = src.mVal1[i];
+    uword val2_0 = src.mVal0[i];
+    uword val2_1 = src.mVal1[i];
     // z のパタンを x に直しておく．
     zpat = ~val2_0 & ~val2_1;
     val2_0 |= zpat;
@@ -1898,13 +1895,13 @@ BitVector::operator|=(const BitVector& src)
 const BitVector&
 BitVector::operator^=(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     // てきとー
     ans_base = 2;
@@ -1921,17 +1918,17 @@ BitVector::operator^=(const BitVector& src)
   set_type(ans_sized, ans_signed, ans_base);
 
   // 計算の仕方は否定とANDとORを組み合わせたもの
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 val1_0 = mVal0[i];
-    ymuint32 val1_1 = mVal1[i];
-    ymuint32 zpat;
+  int n = block(size());
+  for ( int i = 0; i < n; ++ i ) {
+    uword val1_0 = mVal0[i];
+    uword val1_1 = mVal1[i];
+    uword zpat;
     // z のパタンを x に直しておく．
     zpat = ~val1_0 & ~val1_1;
     val1_0 |= zpat;
     val1_1 |= zpat;
-    ymuint32 val2_0 = mVal0[i];
-    ymuint32 val2_1 = mVal1[i];
+    uword val2_0 = mVal0[i];
+    uword val2_1 = mVal1[i];
     // z のパタンを x に直しておく．
     zpat = ~val2_0 & ~val2_1;
     val2_0 |= zpat;
@@ -1961,9 +1958,9 @@ BitVector::reduction_and() const
     return VlScalarVal::x();
   }
 
-  ymuint32 n = block(size());
-  ymuint32 m = mask(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  int n = block(size());
+  uword m = mask(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
     if ( mVal0[i] ) {
       // 1 ビットでも 0 のビットがあれば結果は0
       return VlScalarVal::zero();
@@ -1984,9 +1981,9 @@ BitVector::reduction_nand() const
     return VlScalarVal::x();
   }
 
-  ymuint32 n = block(size());
-  ymuint32 m = mask(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  int n = block(size());
+  uword m = mask(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
     if ( mVal0[i] ) {
       // 1 ビットでも 0 のビットがあれば結果は1
       return VlScalarVal::one();
@@ -2006,9 +2003,9 @@ BitVector::reduction_or() const
   if ( has_xz() ) {
     return VlScalarVal::x();
   }
-  ymuint32 n = block(size());
-  ymuint32 m = mask(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  int n = block(size());
+  uword m = mask(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
     if ( mVal1[i] ) {
       // 1 ビットでも 1 のビットがあれば結果は1
       return VlScalarVal::one();
@@ -2028,9 +2025,9 @@ BitVector::reduction_nor() const
   if ( has_xz() ) {
     return VlScalarVal::x();
   }
-  ymuint32 n = block(size());
-  ymuint32 m = mask(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  int n = block(size());
+  uword m = mask(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
     if ( mVal1[i] ) {
       // 1 ビットでも 1 のビットがあれば結果は0
       return VlScalarVal::zero();
@@ -2050,19 +2047,19 @@ BitVector::reduction_xor() const
   if ( has_xz() ) {
     return VlScalarVal::x();
   }
-  ymuint32 n = block(size());
+  int n = block(size());
   // xor は地道に数えるしかない
   // 高速に行うには8ビット単位ぐらいで表引きをすればよい．
-  ymuint32 v = 0;
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    for (ymuint32 b = 0; b < kBlockSize; b ++) {
+  uword v = 0;
+  for ( int i = 0; i < n - 1; ++ i ) {
+    for ( int b = 0; b < kBlockSize; b ++ ) {
       if ( (mVal1[i] >> b) & 1 ) {
 	v ^= 1;
       }
     }
   }
-  ymuint32 s = shift(size());
-  for (ymuint32 b = 0; b < s; b ++) {
+  int s = shift(size());
+  for ( int b = 0; b < s; b ++ ) {
     if ( (mVal1[n - 1] >> b) & 1 ) {
       v ^= 1;
     }
@@ -2082,19 +2079,19 @@ BitVector::reduction_xnor() const
   if ( has_xz() ) {
     return VlScalarVal::x();
   }
-  ymuint32 n = block(size());
+  int n = block(size());
   // xor は地道に数えるしかない
   // 高速に行うには8ビット単位ぐらいで表引きをすればよい．
-  ymuint32 v = 0;
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    for (ymuint32 b = 0; b < kBlockSize; b ++) {
+  uword v = 0;
+  for ( int i = 0; i < n - 1; ++ i ) {
+    for ( int b = 0; b < kBlockSize; b ++ ) {
       if ( (mVal1[i] >> b) & 1 ) {
 	v ^= 1;
       }
     }
   }
-  ymuint32 s = shift(size());
-  for (ymuint32 b = 0; b < s; b ++) {
+  int s = shift(size());
+  for ( int b = 0; b < s; ++ b ) {
     if ( (mVal1[n - 1] >> b) & 1 ) {
       v ^= 1;
     }
@@ -2133,40 +2130,40 @@ BitVector::operator<<=(const BitVector& src)
 }
 
 // 論理左シフトつき代入
-// src2 が ymuint32 のバージョン
+// src2 が int のバージョン
 const BitVector&
-BitVector::operator<<=(ymuint32 sft)
+BitVector::operator<<=(int sft)
 {
   if ( sft == 0 ) {
     // シフト量が0のときはそのまま返す
     return *this;
   }
 
-  ymuint32 n = block(size());
-  ymuint32 bit_sft = sft % kBlockSize; // ブロック内のシフト量
-  ymuint32 blk_sft = sft / kBlockSize; // ブロック単位のシフト量
-  ymuint32 rbit_sft = kBlockSize - bit_sft;
-  ymuint32 en = n - blk_sft;
+  int n = block(size());
+  int bit_sft = sft % kBlockSize; // ブロック内のシフト量
+  int blk_sft = sft / kBlockSize; // ブロック単位のシフト量
+  int rbit_sft = kBlockSize - bit_sft;
+  int en = n - blk_sft;
 
   if ( bit_sft == 0 ) {
     // この向きでコピーしないと破壊してしまう．
-    for (ymuint32 i = en; i -- > 0; ) {
+    for ( int i = en; i -- > 0; ) {
       mVal0[i + blk_sft] = mVal0[i];
       mVal1[i + blk_sft] = mVal1[i];
     }
   }
   else {
-    for (ymuint32 i = en; i -- > 0; ) {
-      ymuint32 lval0 = (mVal0[i] << bit_sft);
-      ymuint32 lval1 = (mVal1[i] << bit_sft);
-      ymuint32 rval0 = ((i > 0) ? mVal0[i - 1] : kAll1) >> rbit_sft;
-      ymuint32 rval1 = ((i > 0) ? mVal1[i - 1] : kAll0) >> rbit_sft;
+    for ( int i = en; i -- > 0; ) {
+      uword lval0 = (mVal0[i] << bit_sft);
+      uword lval1 = (mVal1[i] << bit_sft);
+      uword rval0 = ((i > 0) ? mVal0[i - 1] : kAll1) >> rbit_sft;
+      uword rval1 = ((i > 0) ? mVal1[i - 1] : kAll0) >> rbit_sft;
       mVal0[i + blk_sft] = lval0 | rval0;
       mVal1[i + blk_sft] = lval1 | rval1;
     }
   }
   // 空のブロックを詰める
-  for (ymuint32 i = 0; i < blk_sft; ++ i) {
+  for ( int i = 0; i < blk_sft; ++ i ) {
     mVal0[i] = kAll1;
     mVal1[i] = kAll0;
   }
@@ -2191,38 +2188,38 @@ BitVector::operator>>=(const BitVector& src)
 }
 
 // 論理右シフトつき代入
-// src2 が ymuint32 のバージョン
+// src2 が ind のバージョン
 const BitVector&
-BitVector::operator>>=(ymuint32 sft)
+BitVector::operator>>=(int sft)
 {
   if ( sft == 0 ) {
     // シフト量が0の時はそのまま返す．
     return *this;
   }
 
-  ymuint32 n = block(size());
-  ymuint32 bit_sft = sft % kBlockSize; // ブロック内のシフト量
-  ymuint32 blk_sft = sft / kBlockSize; // ブロック単位のシフト量
-  ymuint32 lbit_sft = kBlockSize - bit_sft;
+  int n = block(size());
+  int bit_sft = sft % kBlockSize; // ブロック内のシフト量
+  int blk_sft = sft / kBlockSize; // ブロック単位のシフト量
+  int lbit_sft = kBlockSize - bit_sft;
 
   if ( bit_sft == 0 ) {
-    for (ymuint32 i = blk_sft; i < n; ++ i) {
+    for ( int i = blk_sft; i < n; ++ i ) {
       mVal0[i - blk_sft] = mVal0[i];
       mVal1[i - blk_sft] = mVal1[i];
     }
   }
   else {
-    for (ymuint32 i = blk_sft; i < n; ++ i) {
-      ymuint32 r0 = mVal0[i] >> bit_sft;
-      ymuint32 r1 = mVal1[i] >> bit_sft;
-      ymuint32 l0 = ((i < n - 1) ? mVal0[i + 1] : kAll1) << lbit_sft;
-      ymuint32 l1 = ((i < n - 1) ? mVal1[i + 1] : kAll0) << lbit_sft;
+    for ( int i = blk_sft; i < n; ++ i ) {
+      uword r0 = mVal0[i] >> bit_sft;
+      uword r1 = mVal1[i] >> bit_sft;
+      uword l0 = ((i < n - 1) ? mVal0[i + 1] : kAll1) << lbit_sft;
+      uword l1 = ((i < n - 1) ? mVal1[i + 1] : kAll0) << lbit_sft;
       mVal0[i - blk_sft] = l0 | r0;
       mVal1[i - blk_sft] = l1 | r1;
     }
   }
   // 上位ビットに0を詰めておく．
-  for (ymuint32 i = n - blk_sft; i < n; ++ i) {
+  for ( int i = n - blk_sft; i < n; ++ i ) {
     mVal0[i] = kAll1;
     mVal1[i] = kAll0;
   }
@@ -2246,44 +2243,44 @@ BitVector::arshift(const BitVector& src)
 }
 
 // 算術右シフトつき代入
-// src が ymuint32 のバージョン
+// src が int のバージョン
 const BitVector&
-BitVector::arshift(ymuint32 sft)
+BitVector::arshift(int sft)
 {
   if ( sft == 0 ) {
     // シフト量が0の時はそのまま返す．
     return *this;
   }
 
-  ymuint32 n = block(size());
-  ymuint32 bit_sft = sft % kBlockSize; // ブロック内のシフト量
-  ymuint32 blk_sft = sft / kBlockSize; // ブロック単位のシフト量
-  ymuint32 lbit_sft = kBlockSize - bit_sft;
+  int n = block(size());
+  int bit_sft = sft % kBlockSize; // ブロック内のシフト量
+  int blk_sft = sft / kBlockSize; // ブロック単位のシフト量
+  int lbit_sft = kBlockSize - bit_sft;
 
-  ymuint32 pad0 = kAll1;
-  ymuint32 pad1 = kAll0;
+  uword pad0 = kAll1;
+  uword pad1 = kAll0;
   if ( is_negative() ) {
     pad0 = kAll0;
     pad1 = kAll1;
   }
 
   if ( bit_sft == 0 ) {
-    for (ymuint32 i = blk_sft; i < n; ++ i) {
+    for ( int i = blk_sft; i < n; ++ i ) {
       mVal0[i - blk_sft] = mVal0[i];
       mVal1[i - blk_sft] = mVal1[i];
     }
   }
   else {
-    for (ymuint32 i = blk_sft; i < n; ++ i) {
-      ymuint32 r0 = mVal0[i] >> bit_sft;
-      ymuint32 r1 = mVal1[i] >> bit_sft;
-      ymuint32 l0 = ((i < n - 1) ? mVal0[i + 1] : pad0) << lbit_sft;
-      ymuint32 l1 = ((i < n - 1) ? mVal1[i + 1] : pad1) << lbit_sft;
+    for ( int i = blk_sft; i < n; ++ i ) {
+      uword r0 = mVal0[i] >> bit_sft;
+      uword r1 = mVal1[i] >> bit_sft;
+      uword l0 = ((i < n - 1) ? mVal0[i + 1] : pad0) << lbit_sft;
+      uword l1 = ((i < n - 1) ? mVal1[i + 1] : pad1) << lbit_sft;
       mVal0[i - blk_sft] = l0 | r0;
       mVal1[i - blk_sft] = l1 | r1;
     }
   }
-  for (ymuint32 i = n - blk_sft; i < n; ++ i) {
+  for ( int i = n - blk_sft; i < n; ++ i ) {
     mVal0[i] = pad0;
     mVal1[i] = pad1;
   }
@@ -2313,7 +2310,7 @@ ite(const BitVector& src1,
     const BitVector& src3)
 {
   bool has_size = src1.is_sized() || src2.is_sized();
-  ymuint32 size = src1.size();
+  int size = src1.size();
   if ( size < src2.size() ) {
     size = src2.size();
   }
@@ -2420,7 +2417,7 @@ BitVector::part_select(int msb,
     return BitVector::x();
   }
 
-  ymuint32 new_size = msb - lsb + 1;
+  int new_size = msb - lsb + 1;
   if ( lsb >= static_cast<int>(size()) || msb < 0 ) {
     // 完全に範囲外
     return BitVector::x(new_size);
@@ -2429,15 +2426,15 @@ BitVector::part_select(int msb,
   BitVector ans(VlScalarVal::x(), new_size);
   // とりあえず参照コードということでビット単位に転送してます．
   // 本当は part_select 書き込みのようなブロック転送のコードの方が速い
-  ymuint32 start = 0;
-  ymuint32 end = new_size - 1;
+  int start = 0;
+  int end = new_size - 1;
   if ( lsb < 0 ) {
     start = -lsb;
   }
   if ( msb >= static_cast<int>(size()) ) {
     end -= msb - size() + 1;
   }
-  for (ymuint32 i = start; i <= end; ++ i) {
+  for ( int i = start; i <= end; ++ i ) {
     ans.set_value(i, value(i + lsb));
   }
   return ans;
@@ -2456,15 +2453,15 @@ BitVector::part_select(int msb,
     return;
   }
 
-  ymuint32 l = msb - lsb + 1;
-  ymuint32 src_blk = block(l);
-  ymuint32 src_mask = mask(l);
+  int l = msb - lsb + 1;
+  int src_blk = block(l);
+  uword src_mask = mask(l);
 
-  ymuint32 blk0 = lsb / kBlockSize;
-  ymuint32 sft0 = lsb - blk0 * kBlockSize;
+  uword blk0 = lsb / kBlockSize;
+  uword sft0 = lsb - blk0 * kBlockSize;
 
   if ( sft0 == 0 ) {
-    for (ymuint32 i = 0; i < src_blk - 1; ++ i) {
+    for ( int i = 0; i < src_blk - 1; ++ i ) {
       mVal0[i + blk0] = val.mVal0[i];
       mVal1[i + blk0] = val.mVal1[i];
     }
@@ -2475,14 +2472,14 @@ BitVector::part_select(int msb,
   }
   else {
     if ( src_blk == 1 ) {
-      ymuint32 val0 = val.mVal0[0] & src_mask;
-      ymuint32 val1 = val.mVal1[0] & src_mask;
-      ymuint32 lval0 = val0 << sft0;
-      ymuint32 rval0 = val0 >> (kBlockSize - sft0);
-      ymuint32 lval1 = val1 << sft0;
-      ymuint32 rval1 = val1 >> (kBlockSize - sft0);
-      ymuint32 lsrc_mask = src_mask << sft0;
-      ymuint32 rsrc_mask = src_mask >> (kBlockSize - sft0);
+      uword val0 = val.mVal0[0] & src_mask;
+      uword val1 = val.mVal1[0] & src_mask;
+      uword lval0 = val0 << sft0;
+      uword rval0 = val0 >> (kBlockSize - sft0);
+      uword lval1 = val1 << sft0;
+      uword rval1 = val1 >> (kBlockSize - sft0);
+      uword lsrc_mask = src_mask << sft0;
+      uword rsrc_mask = src_mask >> (kBlockSize - sft0);
       mVal0[blk0] &= ~lsrc_mask;
       mVal0[blk0] |=  lval0;
       mVal1[blk0] &= ~lsrc_mask;
@@ -2495,19 +2492,19 @@ BitVector::part_select(int msb,
       }
     }
     else {
-      ymuint32 val0 = val.mVal0[0];
-      ymuint32 val1 = val.mVal1[0];
-      ymuint32 lval0 = val0 << sft0;
-      ymuint32 rval0 = val0 >> (kBlockSize - sft0);
-      ymuint32 lval1 = val1 << sft0;
-      ymuint32 rval1 = val1 >> (kBlockSize - sft0);
-      ymuint32 lmask = kAll1 << sft0;
-      ymuint32 rmask = kAll1 >> (kBlockSize - sft0);
+      uword val0 = val.mVal0[0];
+      uword val1 = val.mVal1[0];
+      uword lval0 = val0 << sft0;
+      uword rval0 = val0 >> (kBlockSize - sft0);
+      uword lval1 = val1 << sft0;
+      uword rval1 = val1 >> (kBlockSize - sft0);
+      uword lmask = kAll1 << sft0;
+      uword rmask = kAll1 >> (kBlockSize - sft0);
       mVal0[blk0] &= ~lmask;
       mVal0[blk0] |= lval0;
       mVal1[blk0] &= ~lmask;
       mVal1[blk0] |= lval1;
-      for (ymuint32 i = 1; i < src_blk - 1; ++ i) {
+      for ( int i = 1; i < src_blk - 1; ++ i ) {
 	val0 = val.mVal0[i];
 	val1 = val.mVal1[i];
 	lval0 = val0 << sft0;
@@ -2519,7 +2516,7 @@ BitVector::part_select(int msb,
       }
       lval0 = (val.mVal0[src_blk - 1] & src_mask) << sft0;
       lval1 = (val.mVal1[src_blk - 1] & src_mask) << sft0;
-      ymuint32 lsrc_mask = src_mask << sft0;
+      uword lsrc_mask = src_mask << sft0;
       mVal0[blk0 + src_blk - 1] &= ~(lsrc_mask | rmask);
       mVal0[blk0 + src_blk - 1] |= lval0 | rval0;
       mVal1[blk0 + src_blk - 1] &= ~(lsrc_mask | rmask);
@@ -2551,13 +2548,13 @@ BitVector::bit_select(int bpos,
 const BitVector&
 BitVector::merge(const BitVector& src)
 {
-  ymuint32 ans_size = size();
+  int ans_size = size();
   if ( ans_size < src.size() ) {
     ans_size = src.size();
   }
   bool ans_sized = is_sized() || src.is_sized();
   bool ans_signed = is_signed() && src.is_signed();
-  ymuint32 ans_base = base();
+  int ans_base = base();
   if ( ans_base != src.base() ) {
     ans_base = 2;
   }
@@ -2570,17 +2567,17 @@ BitVector::merge(const BitVector& src)
 
   set_type(ans_sized, ans_signed, ans_base);
 
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n; ++ i) {
-    ymuint32 val1_0 = mVal0[i];
-    ymuint32 val1_1 = mVal1[i];
-    ymuint32 val2_0 = src.mVal0[i];
-    ymuint32 val2_1 = src.mVal1[i];
+  int n = block(size());
+  for ( int i = 0; i < n; ++ i ) {
+    uword val1_0 = mVal0[i];
+    uword val1_1 = mVal1[i];
+    uword val2_0 = src.mVal0[i];
+    uword val2_1 = src.mVal1[i];
     // z を x に変換する
-    ymuint32 zpat1 = ~val1_0 & ~val1_1;
+    uword zpat1 = ~val1_0 & ~val1_1;
     val1_0 |= zpat1;
     val1_1 |= zpat1;
-    ymuint32 zpat2 = ~val2_0 & ~val2_1;
+    uword zpat2 = ~val2_0 & ~val2_1;
     val2_0 |= zpat2;
     val2_1 |= zpat2;
     mVal0[i] = val1_0 | val2_0;
@@ -2599,9 +2596,9 @@ BitVector::value(int pos) const
     return VlScalarVal::x();
   }
 
-  ymuint32 blk = pos / kBlockSize;
-  ymuint32 sft = pos - blk * kBlockSize;
-  ymuint32 msk = 1 << sft;
+  int blk = pos / kBlockSize;
+  int sft = pos - blk * kBlockSize;
+  uword msk = 1 << sft;
   if ( mVal1[blk] & msk ) {
     if ( mVal0[blk] & msk ) {
       return VlScalarVal::x();
@@ -2630,9 +2627,9 @@ BitVector::set_value(int pos,
     return;
   }
 
-  ymuint32 blk = pos / kBlockSize;
-  ymuint32 sft = pos - blk * kBlockSize;
-  ymuint32 msk = 1 << sft;
+  int blk = pos / kBlockSize;
+  int sft = pos - blk * kBlockSize;
+  uword msk = 1 << sft;
   if ( val.is_zero() ) {
     mVal0[blk] |= msk;
     mVal1[blk] &= ~msk;
@@ -2658,15 +2655,15 @@ BitVector::set_value(int pos,
 bool
 BitVector::has_x() const
 {
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    ymuint32 tmp = mVal0[i] & mVal1[i];
+  int n = block(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
+    uword tmp = mVal0[i] & mVal1[i];
     if ( tmp ) {
       return true;
     }
   }
 
-  ymuint32 m = mask(size());
+  uword m = mask(size());
   if ( mVal0[n - 1] & mVal1[n - 1] & m ) {
     return true;
   }
@@ -2677,14 +2674,14 @@ BitVector::has_x() const
 bool
 BitVector::has_z() const
 {
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  int n = block(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
     if ( (mVal0[i] | mVal1[i]) != kAll1 ) {
       return true;
     }
   }
 
-  ymuint32 m = mask(size());
+  uword m = mask(size());
   if ( (mVal0[n - 1] | mVal1[n - 1] | ~m) != kAll1 ) {
     return true;
   }
@@ -2695,14 +2692,14 @@ BitVector::has_z() const
 bool
 BitVector::has_xz() const
 {
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
+  int n = block(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
     if ( (mVal0[i] ^ mVal1[i]) != kAll1 ) {
       return true;
     }
   }
 
-  ymuint32 m = mask(size());
+  uword m = mask(size());
   if ( ((mVal0[n - 1] ^ mVal1[n - 1]) | ~m) != kAll1 ) {
     return true;
   }
@@ -2714,14 +2711,14 @@ BitVector::has_xz() const
 void
 BitVector::z_to_x()
 {
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    ymuint32 zpat = ~mVal0[i] & ~mVal1[i];
+  int n = block(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
+    uword zpat = ~mVal0[i] & ~mVal1[i];
     mVal0[i] |= zpat;
     mVal1[i] |= zpat;
   }
-  ymuint32 m = mask(size());
-  ymuint32 zpat = ~mVal0[n - 1] & ~mVal1[n - 1] & m;
+  uword m = mask(size());
+  uword zpat = ~mVal0[n - 1] & ~mVal1[n - 1] & m;
   mVal0[n - 1] |= zpat;
   mVal1[n - 1] |= zpat;
 }
@@ -2731,16 +2728,16 @@ BitVector::z_to_x()
 void
 BitVector::xz_to_0()
 {
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    ymuint32 pat = ~mVal0[i] & mVal1[i];
+  int n = block(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
+    uword pat = ~mVal0[i] & mVal1[i];
     mVal0[i] = ~pat;
     mVal1[i] = pat;
   }
-  ymuint32 m = mask(size());
-  ymuint32 pat = ~mVal0[n - 1] & mVal1[n - 1];
-  ymuint32 andpat = ~pat | ~m;
-  ymuint32 orpat = pat & m;
+  uword m = mask(size());
+  uword pat = ~mVal0[n - 1] & mVal1[n - 1];
+  uword andpat = ~pat | ~m;
+  uword orpat = pat & m;
   mVal0[n - 1] = (mVal0[n - 1] | orpat) & andpat;
   mVal1[n - 1] = (mVal1[n - 1] | orpat) & andpat;
 }
@@ -2752,9 +2749,9 @@ BitVector::to_real() const
 {
   BitVector tmp = *this;
   tmp.xz_to_0();
-  ymuint32 n = block(size());
+  int n = block(size());
   double ans = 0.0;
-  for (ymuint32 i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     const double mag = static_cast<double>(1 << (i * kBlockSize));
     ans += static_cast<double>(mVal1[i]) * mag;
   }
@@ -2768,10 +2765,10 @@ BitVector::to_real() const
 VlScalarVal
 BitVector::to_logic() const
 {
-  ymuint32 n = block(size());
-  for (ymuint32 i = 0; i < n - 1; ++ i) {
-    ymuint32 pat0 = mVal0[i];
-    ymuint32 pat_xor = pat0 ^ mVal1[i];
+  int n = block(size());
+  for ( int i = 0; i < n - 1; ++ i ) {
+    uword pat0 = mVal0[i];
+    uword pat_xor = pat0 ^ mVal1[i];
     if ( pat_xor != kAll1 ) {
       // X/Z のパタンがあった
       return VlScalarVal::x();
@@ -2780,9 +2777,9 @@ BitVector::to_logic() const
       return VlScalarVal::one();
     }
   }
-  ymuint32 m = mask(size());
-  ymuint32 pat0 = mVal0[n - 1];
-  ymuint32 pat_xor = (pat0 ^ mVal1[n - 1]) | ~m;
+  uword m = mask(size());
+  uword pat0 = mVal0[n - 1];
+  uword pat_xor = (pat0 ^ mVal1[n - 1]) | ~m;
   if ( pat_xor != kAll1 ) {
     // X/Z のパタンがあった
     return VlScalarVal::x();
@@ -2798,13 +2795,13 @@ BitVector::to_logic() const
 string
 BitVector::to_string() const
 {
-  ymuint32 n = size();
-  ymuint32 nc = (n + 7) / 8;
+  int n = size();
+  int nc = (n + 7) / 8;
   string ans;
-  for (ymuint32 i = nc; i -- > 0; ) {
+  for ( int i = nc; i -- > 0; ) {
     char c = 0;
-    ymuint32 base = i << 3;
-    for (ymuint32 j = 0; j < 8; ++ j) {
+    int base = i << 3;
+    for ( int j = 0; j < 8; ++ j ) {
       if ( value(base + j).is_one() ) {
 	c |= (1 << j);
       }
@@ -2818,7 +2815,7 @@ BitVector::to_string() const
 // Verilog-HDL の形式で出力する．
 // 内容を Verilog-HDL (IEEE1364-2001) の形式の文字列に変換する．
 string
-BitVector::verilog_string(ymuint32 opt_base) const
+BitVector::verilog_string(int opt_base) const
 {
   // まず最初に符号付きでマイナスの場合には補数を取る．
   if ( is_negative() ) {
@@ -2839,7 +2836,7 @@ BitVector::verilog_string(ymuint32 opt_base) const
   // サイズなしの場合には上位の0は無視する．
   bool skip_zeros = !is_sized();
 
-  ymuint32 l = size();
+  int l = size();
   if ( l == 1 ) {
     VlScalarVal v = value(0);
     if ( v.is_zero() ) {
@@ -2931,10 +2928,10 @@ BitVector::dec_str() const
 string
 BitVector::bin_str(bool skip_zeros) const
 {
-  ymuint32 l = size();
+  int l = size();
   bool first = true;
   string ans;
-  for (ymuint32 i = l; i -- > 0; ) {
+  for ( int i = l; i -- > 0; ) {
     VlScalarVal v = value(i);
     if ( skip_zeros && v.is_zero() ) {
       continue;
@@ -2971,16 +2968,16 @@ BitVector::bin_str(bool skip_zeros) const
 string
 BitVector::oct_str(bool skip_zeros) const
 {
-  ymuint32 l = size();
-  ymuint32 blk = block(l);
-  ymuint32 pos = shift(l);
-  ymuint32 tmp0 = 7;
-  ymuint32 tmp1 = 0;
+  int l = size();
+  int blk = block(l);
+  int pos = shift(l);
+  uword tmp0 = 7;
+  uword tmp1 = 0;
   string ans;
   while ( blk -- > 0 ) {
-    for (ymuint32 i = pos; i -- > 0; ) {
-      ymuint32 bit0 = (mVal0[blk] >> i) & 1;
-      ymuint32 bit1 = (mVal1[blk] >> i) & 1;
+    for ( int i = pos; i -- > 0; ) {
+      uword bit0 = (mVal0[blk] >> i) & 1;
+      uword bit1 = (mVal1[blk] >> i) & 1;
       tmp0 = ((tmp0 << 1) + bit0) & 7;
       tmp1 = ((tmp1 << 1) + bit1) & 7;
       l --;
@@ -3025,16 +3022,16 @@ BitVector::oct_str(bool skip_zeros) const
 string
 BitVector::hex_str(bool skip_zeros) const
 {
-  ymuint32 l = size();
-  ymuint32 blk = block(l);
-  ymuint32 pos = shift(l);
-  ymuint32 tmp0 = 15;
-  ymuint32 tmp1 = 0;
+  int l = size();
+  int blk = block(l);
+  int pos = shift(l);
+  uword tmp0 = 15;
+  uword tmp1 = 0;
   string ans;
   while ( blk -- > 0 ) {
-    for (ymuint32 i = pos; i -- > 0; ) {
-      ymuint32 bit0 = (mVal0[blk] >> i) & 1;
-      ymuint32 bit1 = (mVal1[blk] >> i) & 1;
+    for ( int i = pos; i -- > 0; ) {
+      uword bit0 = (mVal0[blk] >> i) & 1;
+      uword bit1 = (mVal1[blk] >> i) & 1;
       tmp0 = ((tmp0 << 1) + bit0) & 15;
       tmp1 = ((tmp1 << 1) + bit1) & 15;
       l --;
@@ -3078,9 +3075,9 @@ BitVector::hex_str(bool skip_zeros) const
 // 値をセットする関数
 // これは1語に収まる時に用いる．
 void
-BitVector::set(ymuint32 val0,
-	       ymuint32 val1,
-	       ymuint32 size,
+BitVector::set(uword val0,
+	       uword val1,
+	       int size,
 	       bool has_size,
 	       bool has_sign,
 	       int base)
@@ -3089,17 +3086,17 @@ BitVector::set(ymuint32 val0,
 
   resize(size);
   set_type(has_size, has_sign, base);
-  ymuint32 m = mask(size);
+  uword m = mask(size);
   mVal0[0] = val0 | ~m;
   mVal1[0] = val1 & m;
 }
 
 // 値をセットする関数
 void
-BitVector::set(const ymuint32* val0,
-	       const ymuint32* val1,
-	       ymuint32 src_size,
-	       ymuint32 size,
+BitVector::set(const uword* val0,
+	       const uword* val1,
+	       int src_size,
+	       int size,
 	       bool has_size,
 	       bool has_sign,
 	       int base)
@@ -3107,18 +3104,18 @@ BitVector::set(const ymuint32* val0,
   resize(size);
   set_type(has_size, has_sign, base);
 
-  ymuint32 n = block(size);
-  ymuint32 src_n = block(src_size);
+  int n = block(size);
+  int src_n = block(src_size);
 
   // val0, val1 の最後のビットの値
   // デフォルトでは 0 を表すビットパタンだが x や z の場合もある．
   // 最上位ビットが1で符号付きの場合には1を詰める．
-  ymuint32 last_val0 = kAll1;
-  ymuint32 last_val1 = kAll0;
+  uword last_val0 = kAll1;
+  uword last_val1 = kAll0;
 
-  ymuint32 src_s = shift(src_size);
-  ymuint32 last_bit0 = (val0[src_n - 1] >> (src_s - 1)) & 1;
-  ymuint32 last_bit1 = (val1[src_n - 1] >> (src_s - 1)) & 1;
+  int src_s = shift(src_size);
+  uword last_bit0 = (val0[src_n - 1] >> (src_s - 1)) & 1;
+  uword last_bit1 = (val1[src_n - 1] >> (src_s - 1)) & 1;
   if ( last_bit0 && last_bit1 ) { // x
     last_val1 = kAll1;
   }
@@ -3131,13 +3128,13 @@ BitVector::set(const ymuint32* val0,
   }
 
   // コピーする
-  for (ymuint32 i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     if ( i < src_n - 1 ) {
       mVal0[i] = val0[i];
       mVal1[i] = val1[i];
     }
     else if ( i == src_n - 1 ) {
-      ymuint32 sm = mask(src_size);
+      uword sm = mask(src_size);
       mVal0[i] = (last_val0 & ~sm) | (val0[i] & sm);
       mVal1[i] = (last_val1 & ~sm) | (val1[i] & sm);
     }
@@ -3148,17 +3145,17 @@ BitVector::set(const ymuint32* val0,
   }
 
   // 上位ビットをトリミングしておく
-  ymuint32 m = mask(size);
+  uword m = mask(size);
   mVal0[n - 1] |= ~m;
   mVal1[n - 1] &= m;
 }
 
 // 値をセットする関数
 void
-BitVector::set(const vector<ymuint32>& val0,
-	       const vector<ymuint32>& val1,
-	       ymuint32 src_size,
-	       ymuint32 size,
+BitVector::set(const vector<uword>& val0,
+	       const vector<uword>& val1,
+	       int src_size,
+	       int size,
 	       bool has_size,
 	       bool has_sign,
 	       int base)
@@ -3166,18 +3163,18 @@ BitVector::set(const vector<ymuint32>& val0,
   resize(size);
   set_type(has_size, has_sign, base);
 
-  ymuint32 n = block(size);
-  ymuint32 src_n = block(src_size);
+  int n = block(size);
+  int src_n = block(src_size);
 
   // val0, val1 の最後のビットの値
   // デフォルトでは 0 を表すビットパタンだが x や z の場合もある．
   // 最上位ビットが1で符号付きの場合には1を詰める．
-  ymuint32 last_val0 = kAll1;
-  ymuint32 last_val1 = kAll0;
+  uword last_val0 = kAll1;
+  uword last_val1 = kAll0;
 
-  ymuint32 src_s = shift(src_size);
-  ymuint32 last_bit0 = (val0[src_n - 1] >> (src_s - 1)) & 1;
-  ymuint32 last_bit1 = (val1[src_n - 1] >> (src_s - 1)) & 1;
+  int src_s = shift(src_size);
+  uword last_bit0 = (val0[src_n - 1] >> (src_s - 1)) & 1;
+  uword last_bit1 = (val1[src_n - 1] >> (src_s - 1)) & 1;
   if ( last_bit0 && last_bit1 ) { // x
     last_val1 = kAll1;
   }
@@ -3190,13 +3187,13 @@ BitVector::set(const vector<ymuint32>& val0,
   }
 
   // コピーする
-  for (ymuint32 i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     if ( i < src_n - 1 ) {
       mVal0[i] = val0[i];
       mVal1[i] = val1[i];
     }
     else if ( i == src_n - 1 ) {
-      ymuint32 sm = mask(src_size);
+      uword sm = mask(src_size);
       mVal0[i] = (last_val0 & ~sm) | (val0[i] & sm);
       mVal1[i] = (last_val1 & ~sm) | (val1[i] & sm);
     }
@@ -3207,23 +3204,23 @@ BitVector::set(const vector<ymuint32>& val0,
   }
 
   // 上位ビットをトリミングしておく
-  ymuint32 m = mask(size);
+  uword m = mask(size);
   mVal0[n - 1] |= ~m;
   mVal1[n - 1] &= m;
 }
 
 // mVal0, mVal1 のリサイズをする．
 void
-BitVector::resize(ymuint32 size)
+BitVector::resize(int size)
 {
-  ymuint32 old_bsize = block(mSize);
+  int old_bsize = block(mSize);
   mSize = size;
-  ymuint32 new_bsize = block(mSize);
+  int new_bsize = block(mSize);
   if ( new_bsize > old_bsize ) {
     delete [] mVal0;
     delete [] mVal1;
-    mVal0 = new ymuint32[new_bsize];
-    mVal1 = new ymuint32[new_bsize];
+    mVal0 = new uword[new_bsize];
+    mVal1 = new uword[new_bsize];
   }
 }
 
@@ -3231,7 +3228,7 @@ BitVector::resize(ymuint32 size)
 void
 BitVector::set_type(bool has_size,
 		    bool has_sign,
-		    ymuint32 base)
+		    int base)
 {
   mFlags = 0;
   if ( has_size ) {

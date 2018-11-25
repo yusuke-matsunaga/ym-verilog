@@ -29,7 +29,6 @@ protected:
   EiDeclHead(const VlNamedObj* parent);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHead();
 
 
@@ -40,7 +39,7 @@ public:
 
   /// @brief このオブジェクトの属しているスコープを返す．
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
 
 
@@ -73,7 +72,6 @@ protected:
 	       const PtDeclHead* pt_head);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPt();
 
 
@@ -83,113 +81,100 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint32
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
   /// @brief vectored|scalared 属性の取得
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
-  virtual
   tVpiVsType
-  vs_type() const;
+  vs_type() const override;
 
   /// @brief drive0 strength の取得
   /// @retval 0 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief drive1 strength の取得
   /// @retval 1 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief charge strength の取得
   /// @retval 電荷の強度
   /// @retval kVpiNoStrength strength の指定なし
-  virtual
   tVpiStrength
-  charge() const;
+  charge() const override;
 
 
 private:
@@ -221,7 +206,6 @@ private:
 		const PtDeclHead* pt_head);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPtD();
 
 
@@ -233,9 +217,8 @@ public:
   /// @brief 遅延式の取得
   /// @retval delay
   /// @retval nullptr delay の指定なし
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
 
 public:
@@ -244,9 +227,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式の設定
-  virtual
   void
-  set_delay(ElbDelay* delay);
+  set_delay(ElbDelay* delay) override;
 
 
 private:
@@ -286,7 +268,6 @@ protected:
 		int right_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPtV();
 
 
@@ -296,58 +277,53 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint32
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
 
 protected:
@@ -387,7 +363,6 @@ private:
 		 int right_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPtVD();
 
 
@@ -399,9 +374,8 @@ public:
   /// @brief delay の取得
   /// @retval delay
   /// @retval nullptr delay の指定なし
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
 
 public:
@@ -410,9 +384,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式の設定
-  virtual
   void
-  set_delay(ElbDelay* delay);
+  set_delay(ElbDelay* delay) override;
 
 
 private:
@@ -446,7 +419,6 @@ protected:
 		tVpiAuxType aux_type);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPt2();
 
 
@@ -457,84 +429,75 @@ public:
 
   /// @brief 型の取得
   /// @return vpi_user.h で定義された型 (vpiModule など)
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint32
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
 
 private:
@@ -579,7 +542,6 @@ private:
 		 int right_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPt2V();
 
 
@@ -589,58 +551,53 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint32
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
 
 private:
@@ -672,7 +629,6 @@ protected:
 		const PtItem* pt_item);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPt3();
 
 
@@ -683,85 +639,77 @@ public:
 
   /// @brief 型の取得
   /// @return vpi_user.h で定義された型 (vpiModule など)
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint32
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
-  /// @note このクラスでは kVpiNone を返す．
-  virtual
+  ///
+  /// このクラスでは kVpiNone を返す．
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
 
 private:
@@ -801,7 +749,6 @@ private:
 		 int right_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiDeclHeadPt3V();
 
 
@@ -811,58 +758,53 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
-  virtual
+  ///
+  /// 範囲を持たないときの値は不定
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
-  virtual
+  ///
+  /// 範囲を持たない時の値は不定
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief left_range >= right_range の時に true を返す．
-  virtual
   bool
-  is_big_endian() const;
+  is_big_endian() const override;
 
   /// @brief left_range <= right_range の時に true を返す．
-  virtual
   bool
-  is_little_endian() const;
+  is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint32
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief オフセット値の取得
   /// @param[in] index インデックス
   /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const;
+		  int& offset) const override;
 
 
 private:

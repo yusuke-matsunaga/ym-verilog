@@ -48,14 +48,14 @@ public:
 
   /// @brief ポート数を返す．
   virtual
-  ymuint
+  int
   port_num() const = 0;
 
   /// @brief 入力の宣言要素を返す．
   /// @param[in] pos 入力番号 ( 0 <= pos < port_num() - 1 )
   virtual
   const VlIODecl*
-  input(ymuint pos) const = 0;
+  input(int pos) const = 0;
 
   /// @brief 出力の宣言要素を返す．
   virtual
@@ -80,14 +80,14 @@ public:
 
   /// @brief table entry の行数を返す．
   virtual
-  ymuint
+  int
   table_size() const = 0;
 
   /// @brief table entry を返す．
   /// @param[in] pos 行番号
   virtual
   const VlTableEntry*
-  table_entry(ymuint pos) const = 0;
+  table_entry(int pos) const = 0;
 
 };
 
@@ -112,13 +112,13 @@ public:
 
   /// @brief 一行の要素数を返す．
   virtual
-  ymuint
+  int
   size() const = 0;
 
   /// @brief pos 番目の位置の値を返す．
   virtual
   VlUdpVal
-  val(ymuint pos) const = 0;
+  val(int pos) const = 0;
 
   /// @brief 一行文の内容を表す文字列をつくる．
   virtual

@@ -66,14 +66,14 @@ public:
 
   /// @brief イベント条件式の数を返す．
   virtual
-  ymuint
+  int
   event_num() const = 0;
 
   /// @brief イベント条件式を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
   virtual
   const VlExpr*
-  event(ymuint pos) const = 0;
+  event(int pos) const = 0;
 
 };
 

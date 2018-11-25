@@ -296,7 +296,7 @@ EiDeclHeadPt::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDeclHeadPt::bit_size() const
 {
   switch ( mPtHead->type() ) {
@@ -344,7 +344,7 @@ EiDeclHeadPt::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt::calc_bit_offset(int index,
-			      ymuint& offset) const
+			      int& offset) const
 {
   switch ( mPtHead->type() ) {
   case kPtDecl_Reg:
@@ -594,7 +594,7 @@ EiDeclHeadPtV::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDeclHeadPtV::bit_size() const
 {
   return mRange.size();
@@ -607,7 +607,7 @@ EiDeclHeadPtV::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPtV::calc_bit_offset(int index,
-			       ymuint& offset) const
+			       int& offset) const
 {
   return mRange.calc_offset(index, offset);
 }
@@ -765,7 +765,7 @@ EiDeclHeadPt2::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDeclHeadPt2::bit_size() const
 {
   switch ( mAuxType ) {
@@ -794,7 +794,7 @@ EiDeclHeadPt2::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt2::calc_bit_offset(int index,
-			       ymuint& offset) const
+			       int& offset) const
 {
   switch ( mAuxType ) {
   case kVpiAuxNet:
@@ -942,7 +942,7 @@ EiDeclHeadPt2V::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDeclHeadPt2V::bit_size() const
 {
   return mRange.size();
@@ -955,7 +955,7 @@ EiDeclHeadPt2V::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt2V::calc_bit_offset(int index,
-				ymuint& offset) const
+				int& offset) const
 {
   return mRange.calc_offset(index, offset);
 }
@@ -1059,7 +1059,7 @@ EiDeclHeadPt3::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDeclHeadPt3::bit_size() const
 {
   switch ( data_type() ) {
@@ -1082,7 +1082,7 @@ EiDeclHeadPt3::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt3::calc_bit_offset(int index,
-			       ymuint& offset) const
+			       int& offset) const
 {
   switch ( data_type() ) {
   case kVpiVarNone:
@@ -1220,7 +1220,7 @@ EiDeclHeadPt3V::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDeclHeadPt3V::bit_size() const
 {
   return mRange.size();
@@ -1233,7 +1233,7 @@ EiDeclHeadPt3V::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt3V::calc_bit_offset(int index,
-				ymuint& offset) const
+				int& offset) const
 {
   return mRange.calc_offset(index, offset);
 }

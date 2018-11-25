@@ -46,7 +46,6 @@ protected:
 	     ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiLoopStmt();
 
 
@@ -56,14 +55,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 条件式を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 本体のステートメントを返す．
-  virtual
   const VlStmt*
-  body_stmt() const;
+  body_stmt() const override;
 
 
 protected:
@@ -114,7 +111,6 @@ private:
 	      ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiWhileStmt();
 
 
@@ -124,9 +120,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -156,7 +151,6 @@ private:
 	       ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiRepeatStmt();
 
 
@@ -166,9 +160,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -198,7 +191,6 @@ private:
 	     ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiWaitStmt();
 
 
@@ -208,9 +200,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 };
 
@@ -244,7 +235,6 @@ private:
 	    ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiForStmt();
 
 
@@ -254,9 +244,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -265,14 +254,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// 初期化文を返す．
-  virtual
   const VlStmt*
-  init_stmt() const;
+  init_stmt() const override;
 
   /// 繰り返し文を返す．
-  virtual
   const VlStmt*
-  inc_stmt() const;
+  inc_stmt() const override;
 
 
 private:
@@ -312,7 +299,6 @@ private:
 		ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiForeverStmt();
 
 
@@ -322,9 +308,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -333,9 +318,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 本体のステートメントを返す．
-  virtual
   const VlStmt*
-  body_stmt() const;
+  body_stmt() const override;
 
 
 private:
@@ -374,7 +358,6 @@ protected:
 	   ElbStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiIfStmt();
 
 
@@ -384,9 +367,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -395,14 +377,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 条件式を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 本体のステートメントを返す．
-  virtual
   const VlStmt*
-  body_stmt() const;
+  body_stmt() const override;
 
 
 protected:
@@ -455,7 +435,6 @@ private:
 	       ElbStmt* else_stmt);
 
   /// @brief デストラクタ
-  virtual
   ~EiIfElseStmt();
 
 
@@ -465,9 +444,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -476,9 +454,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief else ステートメントを返す．
-  virtual
   const VlStmt*
-  else_stmt() const;
+  else_stmt() const override;
 
 
 private:
@@ -509,7 +486,6 @@ private:
   EiCaseItem();
 
   /// @brief デストラクタ
-  virtual
   ~EiCaseItem();
 
 
@@ -519,14 +495,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -535,20 +509,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 条件式のリストの要素数を返す．
-  virtual
-  ymuint
-  expr_num() const;
+  int
+  expr_num() const override;
 
   /// @brief 条件式を返す．
   /// @param[in] pos 位置番号
-  virtual
   const VlExpr*
-  expr(ymuint pos) const;
+  expr(int pos) const override;
 
   /// @brief 本体のステートメントを返す．
-  virtual
   const VlStmt*
-  body_stmt() const;
+  body_stmt() const override;
 
 
 private:
@@ -560,7 +531,7 @@ private:
   const PtCaseItem* mPtCaseItem;
 
   // ラベルのリストの要素数
-  ymuint32 mExprNum;
+  int mExprNum;
 
   // ラベルのリスト
   ElbExpr** mExprList;
@@ -594,11 +565,10 @@ private:
 	     ElbProcess* process,
 	     const PtStmt* pt_stmt,
 	     ElbExpr* expr,
-	     ymuint caseitem_num,
+	     int caseitem_num,
 	     EiCaseItem* caseitem_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiCaseStmt();
 
 
@@ -608,9 +578,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -619,25 +588,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief case type を返す．
-  virtual
   tVpiCaseType
-  case_type() const;
+  case_type() const override;
 
   /// @brief 条件式を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief case item のリストの要素数を返す．
-  virtual
-  ymuint
-  caseitem_num() const;
+  int
+  caseitem_num() const override;
 
   /// @brief case item を返す．
   /// @param[in] pos 位置番号
-  virtual
   const VlCaseItem*
-  caseitem(ymuint pos) const;
+  caseitem(int pos) const override;
 
 
 public:
@@ -650,12 +615,11 @@ public:
   /// @param[in] pt_caseitem パース木の caseitem 定義
   /// @param[in] expr_array 条件式を納める配列
   /// @param[in] stmt 本体のステートメント
-  virtual
   void
-  set_caseitem(ymuint pos,
+  set_caseitem(int pos,
 	       const PtCaseItem* pt_caseitem,
 	       ElbExpr** expr_array,
-	       ElbStmt* stmt);
+	       ElbStmt* stmt) override;
 
 
 private:
@@ -667,7 +631,7 @@ private:
   ElbExpr* mCondition;
 
   // case item の要素数
-  ymuint32 mCaseItemNum;
+  int mCaseItemNum;
 
   // case item のリスト
   EiCaseItem* mCaseItemList;

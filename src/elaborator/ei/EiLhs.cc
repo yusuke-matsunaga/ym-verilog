@@ -25,9 +25,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] lhs_elem_array 左辺の要素の配列
 ElbExpr*
 EiFactory::new_Lhs(const PtExpr* pt_expr,
-		   ymuint opr_size,
+		   int opr_size,
 		   ElbExpr** opr_array,
-		   ymuint lhs_elem_num,
+		   int lhs_elem_num,
 		   ElbExpr** lhs_elem_array)
 {
   void* p = mAlloc.get_memory(sizeof(EiLhs));
@@ -48,9 +48,9 @@ EiFactory::new_Lhs(const PtExpr* pt_expr,
 // @param[in] lhs_elem_array 左辺の要素の配列
 // @note opr_array と lhs_elem_array は別物
 EiLhs::EiLhs(const PtExpr* pt_expr,
-	     ymuint opr_size,
+	     int opr_size,
 	     ElbExpr** opr_array,
-	     ymuint lhs_elem_num,
+	     int lhs_elem_num,
 	     ElbExpr** lhs_elem_array) :
   EiConcatOp(pt_expr, opr_size, opr_array),
   mNum(lhs_elem_num),
@@ -67,7 +67,7 @@ EiLhs::~EiLhs()
 // @brief 左辺式の要素数の取得
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
-ymuint
+int
 EiLhs::lhs_elem_num() const
 {
   return mNum;
@@ -77,7 +77,7 @@ EiLhs::lhs_elem_num() const
 // @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 const VlExpr*
-EiLhs::lhs_elem(ymuint pos) const
+EiLhs::lhs_elem(int pos) const
 {
   return mArray[pos];
 }

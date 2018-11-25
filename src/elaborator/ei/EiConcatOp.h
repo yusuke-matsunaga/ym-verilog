@@ -30,11 +30,10 @@ protected:
   /// @param[in] opr_size オペランド数
   /// @param[in] opr_array オペランドを格納する配列
   EiConcatOp(const PtExpr* pt_expr,
-	     ymuint opr_size,
+	     int opr_size,
 	     ElbExpr** opr_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiConcatOp();
 
 
@@ -44,20 +43,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note オペランドが定数ならこの式も定数となる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief オペランド数を返す．
-  virtual
-  ymuint
-  operand_num() const;
+  int
+  operand_num() const override;
 
 
 public:
@@ -68,9 +64,8 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
 
 public:
@@ -79,9 +74,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief オペランドを返す．
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 
 protected:
@@ -90,8 +84,8 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ビット幅を返す．
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
 
 private:
@@ -100,13 +94,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // オペランド数
-  ymuint32 mOprNum;
+  int mOprNum;
 
   // オペランドの配列
   ElbExpr** mOprList;
 
   // 結果のビット幅
-  ymuint32 mSize;
+  int mSize;
 
 };
 
@@ -132,11 +126,10 @@ private:
   EiMultiConcatOp(const PtExpr* pt_expr,
 		  int rep_num,
 		  ElbExpr* rep_expr,
-		  ymuint opr_size,
+		  int opr_size,
 		  ElbExpr** opr_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiMultiConcatOp();
 
 
@@ -146,20 +139,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief オペランド数を返す．
-  virtual
-  ymuint
-  operand_num() const;
+  int
+  operand_num() const override;
 
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．
-  virtual
-  ymuint
-  rep_num() const;
+  int
+  rep_num() const override;
 
 
 public:
@@ -169,9 +159,8 @@ public:
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 
 private:
@@ -186,19 +175,6 @@ private:
   ElbExpr* mRepExpr;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ビット幅を返す．
-inline
-ymuint
-EiConcatOp::bit_size() const
-{
-  return mSize;
-}
 
 END_NAMESPACE_YM_VERILOG
 

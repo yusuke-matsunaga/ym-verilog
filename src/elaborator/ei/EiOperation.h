@@ -28,7 +28,6 @@ protected:
   EiOperation(const PtExpr* pt_expr);
 
   /// @brief デストラクタ
-  virtual
   ~EiOperation();
 
 
@@ -38,9 +37,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -49,14 +47,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 演算子の時に true を返す．
-  virtual
   bool
-  is_operation() const;
+  is_operation() const override;
 
   /// @brief 演算子のタイプを返す．
-  virtual
   tVlOpType
-  op_type() const;
+  op_type() const override;
 
 };
 

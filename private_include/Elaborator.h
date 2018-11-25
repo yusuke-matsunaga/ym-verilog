@@ -12,7 +12,7 @@
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "ym/clib.h"
+#include "ym/ClibCellLibrary.h"
 
 #include "ym/SimpleAlloc.h"
 #include "ym/HashMap.h"
@@ -124,10 +124,11 @@ private:
 
   /// @brief セルの探索
   /// @param[in] name セル名
-  /// @return name という名のセルを返す．
-  /// @note なければ nullptr を返す．
-  const ClibCell*
-  find_cell(const char* name) const;
+  /// @return name という名のセル番号を返す．
+  ///
+  /// なければ -1 を返す．
+  int
+  find_cell_id(const char* name) const;
 
 
 private:

@@ -167,7 +167,7 @@ EiPartSelect::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note それ以外では 0 を返す．
-ymuint
+int
 EiPartSelect::declarray_dimension() const
 {
   return parent_expr()->declarray_dimension();
@@ -177,7 +177,7 @@ EiPartSelect::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note それ以外では nullptr を返す．
 const VlExpr*
-EiPartSelect::declarray_index(ymuint pos) const
+EiPartSelect::declarray_index(int pos) const
 {
   return parent_expr()->declarray_index(pos);
 }
@@ -194,7 +194,7 @@ EiPartSelect::parent_expr() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-ymuint
+int
 EiPartSelect::lhs_elem_num() const
 {
   return 1;
@@ -205,7 +205,7 @@ EiPartSelect::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiPartSelect::lhs_elem(ymuint pos) const
+EiPartSelect::lhs_elem(int pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -225,7 +225,7 @@ EiPartSelect::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiPartSelect::_operand(ymuint pos) const
+EiPartSelect::_operand(int pos) const
 {
   return nullptr;
 }

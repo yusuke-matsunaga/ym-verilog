@@ -31,7 +31,6 @@ private:
   EiAttribute();
 
   /// @brief デストラクタ
-  virtual
   ~EiAttribute();
 
 
@@ -41,14 +40,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -57,19 +54,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 属性名を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief def_attribute なら true を返す．
-  virtual
   bool
-  def_attribute() const;
+  def_attribute() const override;
 
   /// @brief 値を表す式を返す．
-  virtual
   VlExpr*
-  expr() const;
+  expr() const override;
 
 
 private:
@@ -101,7 +95,7 @@ class EiAttrList :
 private:
 
   /// @brief コンストラクタ
-  EiAttrList(ymuint n,
+  EiAttrList(int n,
 	     EiAttribute* array);
 
   /// @brief デストラクタ
@@ -114,15 +108,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  virtual
-  ymuint
-  size() const;
+  int
+  size() const override;
 
   /// @brief 内容を返す．
   /// @param[in] pos 位置番号 (0 <= pos < size() )
-  virtual
   VlAttribute*
-  elem(ymuint pos) const;
+  elem(int pos) const override;
 
 
 public:
@@ -135,12 +127,11 @@ public:
   /// @param[in] pt_as パース木の定義要素
   /// @param[in] expr 値を表す式
   /// @param[in] def 定義側の属性のとき true とするフラグ
-  virtual
   void
-  set(ymuint pos,
+  set(int pos,
       const PtAttrSpec* pt_as,
       ElbExpr* expr,
-      bool def);
+      bool def) override;
 
 
 private:
@@ -149,7 +140,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  ymuint32 mSize;
+  int mSize;
 
   // 要素の配列
   EiAttribute* mArray;

@@ -62,7 +62,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  ymuint
+  int
   bit_size() const = 0;
 
   /// @brief 左辺を返す．

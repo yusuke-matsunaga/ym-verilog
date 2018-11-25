@@ -71,7 +71,7 @@ EiFactory::new_TaskCall(const VlNamedObj* parent,
 			ElbTaskFunc* task,
 			ElbExpr** arg_array)
 {
-  ymuint n = pt_stmt->arg_num();
+  int n = pt_stmt->arg_num();
   void* p = mAlloc.get_memory(sizeof(EiTaskCall));
   EiTaskCall* stmt = new (p) EiTaskCall(parent, process, pt_stmt,
 					task, n, arg_array);
@@ -92,7 +92,7 @@ EiFactory::new_SysTaskCall(const VlNamedObj* parent,
 			   const ElbUserSystf* user_systf,
 			   ElbExpr** arg_array)
 {
-  ymuint n = pt_stmt->arg_num();
+  int n = pt_stmt->arg_num();
   void* p = mAlloc.get_memory(sizeof(EiSysTaskCall));
   EiSysTaskCall* stmt = new (p) EiSysTaskCall(parent, process, pt_stmt,
 					      user_systf, n, arg_array);
@@ -218,7 +218,7 @@ EiNullStmt::type() const
 EiTcBase::EiTcBase(const VlNamedObj* parent,
 		   ElbProcess* process,
 		   const PtStmt* pt_stmt,
-		   ymuint arg_num,
+		   int arg_num,
 		   ElbExpr** arg_array) :
   EiStmtBase(parent, process, pt_stmt),
   mArgumentNum(arg_num),
@@ -232,15 +232,15 @@ EiTcBase::~EiTcBase()
 }
 
 // @brief 引数の数を返す．
-ymuint
-EiTcBase::argument_num() const
+int
+EiTcBase::arg_num() const
 {
   return mArgumentNum;
 }
 
 // @brief 引数の取得
 const VlExpr*
-EiTcBase::argument(ymuint pos) const
+EiTcBase::arg(int pos) const
 {
   return mArgumentList[pos];
 }
@@ -249,7 +249,7 @@ EiTcBase::argument(ymuint pos) const
 // @param[in] pos 位置番号
 // @param[in] arg 設定する引数
 void
-EiTcBase::set_argument(ymuint pos,
+EiTcBase::set_argument(int pos,
 		       ElbExpr* arg)
 {
   mArgumentList[pos] = arg;
@@ -271,7 +271,7 @@ EiTaskCall::EiTaskCall(const VlNamedObj* parent,
 		       ElbProcess* process,
 		       const PtStmt* pt_stmt,
 		       ElbTaskFunc* task,
-		       ymuint arg_num,
+		       int arg_num,
 		       ElbExpr** arg_array) :
   EiTcBase(parent, process, pt_stmt, arg_num, arg_array),
   mTask(task)
@@ -313,7 +313,7 @@ EiSysTaskCall::EiSysTaskCall(const VlNamedObj* parent,
 			     ElbProcess* process,
 			     const PtStmt* pt_stmt,
 			     const ElbUserSystf* user_systf,
-			     ymuint arg_num,
+			     int arg_num,
 			     ElbExpr** arg_array) :
   EiTcBase(parent, process, pt_stmt, arg_num, arg_array),
   mUserSystf(user_systf)

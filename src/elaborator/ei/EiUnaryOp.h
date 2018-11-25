@@ -54,7 +54,6 @@ protected:
 	    ElbExpr* opr1);
 
   /// @brief デストラクタ
-  virtual
   ~EiUnaryOp();
 
 
@@ -65,14 +64,12 @@ public:
 
   /// @brief 定数の時 true を返す．
   /// @note オペランドが定数ならこの式も定数となる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief オペランド数を返す．
-  virtual
-  ymuint
-  operand_num() const;
+  int
+  operand_num() const override;
 
 
 public:
@@ -82,9 +79,8 @@ public:
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 
 protected:
@@ -130,7 +126,6 @@ private:
 	  ElbExpr* opr1);
 
   /// @brief デストラクタ
-  virtual
   ~EiNotOp();
 
 
@@ -140,9 +135,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
 
 public:
@@ -153,9 +147,8 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
 };
 
@@ -178,7 +171,6 @@ private:
 	     ElbExpr* opr1);
 
   /// @brief デストラクタ
-  virtual
   ~EiBitNegOp();
 
 
@@ -188,9 +180,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
 
 public:
@@ -201,9 +192,8 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
 
 private:
@@ -235,7 +225,6 @@ protected:
 		ElbExpr* opr1);
 
   /// @brief デストラクタ
-  virtual
   ~EiReductionOp();
 
 
@@ -245,9 +234,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
 
 public:
@@ -258,9 +246,8 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
 };
 
@@ -282,7 +269,6 @@ protected:
 		 ElbExpr* opr1);
 
   /// @brief デストラクタ
-  virtual
   ~EiUnaryArithOp();
 
 
@@ -292,9 +278,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
 
 public:
@@ -305,9 +290,8 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
 };
 
@@ -330,7 +314,6 @@ protected:
 		ElbExpr* opr1);
 
   /// @brief デストラクタ
-  virtual
   ~EiEventEdgeOp();
 
 
@@ -340,9 +323,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
 
 public:
@@ -353,9 +335,8 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
 };
 

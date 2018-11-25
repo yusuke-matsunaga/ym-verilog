@@ -204,7 +204,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
     bool stat1 = evaluate_int(parent, pt_expr1, index_val, false);
     if ( stat1 ) {
       // 固定インデックスだった．
-      ymuint offset;
+      int offset;
       bool stat2 = decl_base->calc_bit_offset(index_val, offset);
       if ( !stat2 ) {
 	// インデックスが範囲外
@@ -243,7 +243,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	  error_range_order(pt_expr);
 	  return nullptr;
 	}
-	ymuint offset;
+	int offset;
 	bool stat3 = decl_base->calc_bit_offset(index1_val, offset);
 	if ( !stat3 ) {
 	  // 左のインデックスが範囲外
@@ -293,7 +293,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	    index1_val = base_val;
 	    index2_val = base_val + range_val - 1;
 	  }
-	  ymuint offset;
+	  int offset;
 	  bool stat3 = decl_base->calc_bit_offset(index1_val, offset);
 	  bool stat4 = decl_base->calc_bit_offset(index2_val, offset);
 	  if ( !stat3 || !stat4 ) {
@@ -343,7 +343,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	    index1_val = base_val - range_val + 1;
 	    index2_val = base_val;
 	  }
-	  ymuint offset;
+	  int offset;
 	  bool stat3 = decl_base->calc_bit_offset(index1_val, offset);
 	  bool stat4 = decl_base->calc_bit_offset(index2_val, offset);
 	  if ( !stat3 || !stat4 ) {
@@ -479,7 +479,7 @@ ExprGen::instantiate_genvar(const VlNamedObj* parent,
 {
   bool has_range_select = (pt_expr->left_range() && pt_expr->right_range());
 
-  ymuint isize = pt_expr->index_num();
+  int isize = pt_expr->index_num();
   if (  isize > 1 || (isize == 1 && has_range_select) ) {
     // 配列型ではない．
     error_dimension_mismatch(pt_expr);
@@ -528,9 +528,9 @@ ExprGen::instantiate_primary_sub(ElbObjHandle* handle,
 				 bool& has_bit_select)
 {
   // 配列の次元
-  ymuint dsize = 0;
+  int dsize = 0;
   // プライマリ式の次元 (ビット指定を含んでいる可能性あり)
-  ymuint isize = pt_expr->index_num();
+  int isize = pt_expr->index_num();
 
   // 範囲指定があるとき true となるフラグ
   has_range_select = (pt_expr->left_range() && pt_expr->right_range());
@@ -565,11 +565,11 @@ ExprGen::instantiate_primary_sub(ElbObjHandle* handle,
     value_type = declarray->value_type();
 
     // 添字が定数ならオフセットを計算する．
-    ymuint offset = 0;
-    ymuint mlt = 1;
+    int offset = 0;
+    int mlt = 1;
     bool const_index = true;
-    for (ymuint i = 0; i < dsize; ++ i) {
-      ymuint j = dsize - i - 1;
+    for ( int i = 0; i < dsize; ++ i ) {
+      int j = dsize - i - 1;
       const PtExpr* pt_expr1 = pt_expr->index(j);
       int index_val;
       bool stat = evaluate_int(parent, pt_expr1, index_val, false);
@@ -587,7 +587,7 @@ ExprGen::instantiate_primary_sub(ElbObjHandle* handle,
       // 添字の式を生成する．
       vector<ElbExpr*> index_list;
       index_list.reserve(dsize);
-      for (ymuint i = 0; i < dsize; ++ i) {
+      for ( int i = 0; i < dsize; ++ i ) {
 	const PtExpr* pt_expr1 = pt_expr->index(i);
 	ElbExpr* expr1 = instantiate_expr(parent, env, pt_expr1);
 	if ( !expr1 ) {
@@ -750,7 +750,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 
   bool has_range_select = (pt_expr->left_range() && pt_expr->right_range());
 
-  ymuint isize = pt_expr->index_num();
+  int isize = pt_expr->index_num();
   if (  isize > 1 || (isize == 1 && has_range_select) ) {
     // 配列型ではない．
     if ( put_error ) {
@@ -842,7 +842,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 	}
 	return VlValue();
       }
-      ymuint offset;
+      int offset;
       if ( !param->calc_bit_offset(index1, offset) ) {
 	// インデックスが範囲外だった．
 	// エラーではなく X になる．
@@ -897,14 +897,14 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 	ASSERT_NOT_REACHED;
 	break;
       }
-      ymuint msb_offset;
+      int msb_offset;
       bool stat1 = param->calc_bit_offset(index1, msb_offset);
-      ymuint lsb_offset;
+      int lsb_offset;
       bool stat2 = param->calc_bit_offset(index2, lsb_offset);
       if ( stat1 && stat2 ) {
 	return VlValue(val.bitvector_value().part_select(msb_offset, lsb_offset));
       }
-      ymuint bw;
+      int bw;
       if ( index1 < index2 ) {
 	bw = index2 - index1 + 1;
       }

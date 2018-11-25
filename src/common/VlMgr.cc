@@ -19,8 +19,7 @@
 #include "ElbUdp.h"
 #include "ElbUserSystf.h"
 #include "ElbAttribute.h"
-
-#include "EiFactory.h"
+#include "ElbFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -31,7 +30,7 @@ VlMgr::VlMgr() :
   mPtMgr(new PtMgr),
   mPtiFactory(PtiFactory::make_obj("cpt", mAlloc)),
   mElbMgr(new ElbMgr(mAlloc)),
-  mElbFactory(new EiFactory(mAlloc))
+  mElbFactory(ElbFactory::new_obj(mAlloc))
 {
 }
 

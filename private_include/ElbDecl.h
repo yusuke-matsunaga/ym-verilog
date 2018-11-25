@@ -96,7 +96,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  ymuint
+  int
   bit_size() const = 0;
 
   /// @brief オフセット値の取得
@@ -107,7 +107,7 @@ public:
   virtual
   bool
   calc_bit_offset(int index,
-		  ymuint& offset) const = 0;
+		  int& offset) const = 0;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -201,7 +201,6 @@ protected:
   ElbDecl();
 
   /// @brief デストラクタ
-  virtual
   ~ElbDecl();
 
 
@@ -212,21 +211,93 @@ public:
 
   /// @brief 定数値を持つ型のときに true を返す．
   /// @note このクラスは false を返す．
-  virtual
   bool
-  is_consttype() const;
+  is_consttype() const override;
 
   /// @brief localparam のときに true 返す．
   /// @note このクラスは false を返す．
-  virtual
   bool
-  is_local_param() const;
+  is_local_param() const override;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbDecl の仮想関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief スカラー値を返す．
+  virtual
+  VlScalarVal
+  get_scalar() const = 0;
+
+  /// @brief スカラー値を設定する．
+  /// @param[in] val 値
+  virtual
+  void
+  set_scalar(const VlScalarVal& val) = 0;
+
+  /// @brief 論理値を返す．
+  virtual
+  VlScalarVal
+  get_logic() const = 0;
+
+  /// @brief real 型の値を返す．
+  virtual
+  double
+  get_real() const = 0;
+
+  /// @brief real 型の値を設定する．
+  /// @param[in] val 値
+  virtual
+  void
+  set_real(double val) = 0;
+
+  /// @brief bitvector 型の値を返す．
+  /// @param[out] val 値
+  /// @param[in] req_type 要求される型
+  virtual
+  void
+  get_bitvector(BitVector& val,
+		const VlValueType& req_type = VlValueType()) const = 0;
+
+  /// @brief bitvector 型の値を設定する．
+  virtual
+  void
+  set_bitvector(const BitVector& val) = 0;
+
+  /// @brief ビット選択値を返す．
+  /// @param[in] index ビット位置
+  virtual
+  VlScalarVal
+  get_bitselect(int index) const = 0;
+
+  /// @brief ビット値を設定する．
+  /// @param[in] index ビット位置
+  /// @param[in] val 値
+  virtual
+  void
+  set_bitselect(int index,
+		const VlScalarVal& val) = 0;
+
+  /// @brief 範囲選択値を返す．
+  /// @param[in] left 範囲の MSB
+  /// @param[in] right 範囲の LSB
+  /// @param[out] val 値
+  virtual
+  void
+  get_partselect(int left,
+		 int right,
+		 BitVector& val) const = 0;
+
+  /// @brief 範囲値を設定する．
+  /// @param[in] left 範囲の MSB
+  /// @param[in] right 範囲の LSB
+  /// @param[in] val 値
+  virtual
+  void
+  set_partselect(int left,
+		 int right,
+		 const BitVector& val) = 0;
 
   /// @brief 符号付きに補正する．
   virtual
@@ -235,7 +306,8 @@ public:
 
   /// @brief 初期値の設定
   /// @param[in] expr 初期値
-  /// @note このクラスでは何もしない．
+  ///
+  /// このクラスでは何もしない．
   virtual
   void
   set_init(ElbExpr* expr);
@@ -282,7 +354,6 @@ protected:
   ElbDeclArray();
 
   /// @brief デストラクタ
-  virtual
   ~ElbDeclArray();
 
 
@@ -300,34 +371,34 @@ public:
   /// @param[in] offset 要素のオフセット
   virtual
   VlScalarVal
-  get_scalar(ymuint offset) const = 0;
+  get_scalar(int offset) const = 0;
 
   /// @brief スカラー値を設定する．
   /// @param[in] offset 要素のオフセット
   /// @param[in] val 値
   virtual
   void
-  set_scalar(ymuint offset,
+  set_scalar(int offset,
 	     const VlScalarVal& val) = 0;
 
   /// @brief 論理値を返す．
   /// @param[in] offset 要素のオフセット
   virtual
   VlScalarVal
-  get_logic(ymuint offset) const = 0;
+  get_logic(int offset) const = 0;
 
   /// @brief real 型の値を返す．
   /// @param[in] offset 要素のオフセット
   virtual
   double
-  get_real(ymuint offset) const = 0;
+  get_real(int offset) const = 0;
 
   /// @brief real 型の値を設定する．
   /// @param[in] offset 要素のオフセット
   /// @param[in] val 値
   virtual
   void
-  set_real(ymuint offset,
+  set_real(int offset,
 	   double val) = 0;
 
   /// @brief bitvector 型の値を返す．
@@ -336,7 +407,7 @@ public:
   /// @param[in] req_type 要求される型
   virtual
   void
-  get_bitvector(ymuint offset,
+  get_bitvector(int offset,
 		BitVector& val,
 		const VlValueType& req_type = VlValueType()) const = 0;
 
@@ -345,7 +416,7 @@ public:
   /// @param[in] val 値
   virtual
   void
-  set_bitvector(ymuint offset,
+  set_bitvector(int offset,
 		const BitVector& val) = 0;
 
   /// @brief ビット選択値を返す．
@@ -353,7 +424,7 @@ public:
   /// @param[in] index ビット位置
   virtual
   VlScalarVal
-  get_bitselect(ymuint offset,
+  get_bitselect(int offset,
 		int index) const = 0;
 
   /// @brief ビット値を設定する．
@@ -362,7 +433,7 @@ public:
   /// @param[in] val 値
   virtual
   void
-  set_bitselect(ymuint offset,
+  set_bitselect(int offset,
 		int index,
 		const VlScalarVal& val) = 0;
 
@@ -373,7 +444,7 @@ public:
   /// @param[in] val 値
   virtual
   void
-  get_partselect(ymuint offset,
+  get_partselect(int offset,
 		 int left,
 		 int right,
 		 BitVector& val) const = 0;
@@ -385,7 +456,7 @@ public:
   /// @param[in] val 値
   virtual
   void
-  set_partselect(ymuint offset,
+  set_partselect(int offset,
 		 int left,
 		 int right,
 		 const BitVector& val) = 0;

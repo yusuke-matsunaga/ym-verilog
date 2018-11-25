@@ -200,7 +200,7 @@ EiContAssign::file_region() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiContAssign::bit_size() const
 {
   return lhs()->bit_size();

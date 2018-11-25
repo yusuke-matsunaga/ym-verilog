@@ -11,9 +11,8 @@
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
-#include "ym/clib.h"
 #include "ym/Alloc.h"
-
+#include "ym/clib.h"
 #include "ElbFwd.h"
 
 
@@ -26,6 +25,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 class ElbFactory
 {
 public:
+
+  /// @brief オブジェクトを生成する関数
+  static
+  ElbFactory*
+  new_obj(Alloc& alloc);
 
   /// @brief デストラクタ
   virtual
@@ -244,7 +248,7 @@ public:
   /// @param[in] dim_size 要素数
   virtual
   ElbRange*
-  new_RangeArray(ymuint dim_size) = 0;
+  new_RangeArray(int dim_size) = 0;
 
   /// @brief 宣言要素の配列を生成する．
   /// @param[in] parent 親のスコープ
@@ -404,12 +408,12 @@ public:
   /// @brief セルプリミティブのヘッダを生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_header パース木の定義
-  /// @param[in] cell セル
+  /// @param[in] cell_id セル番号
   virtual
   ElbPrimHead*
   new_CellHead(const VlNamedObj* parent,
 	       const PtItem* pt_header,
-	       const ClibCell* cell) = 0;
+	       int cell_id) = 0;
 
   /// @brief プリミティブインスタンスを生成する．
   /// @param[in] head ヘッダ
@@ -434,6 +438,34 @@ public:
 		     const PtExpr* right,
 		     int left_val,
 		     int right_val) = 0;
+
+  /// @brief セルプリミティブインスタンスを生成する．
+  /// @param[in] head ヘッダ
+  /// @param[in] cell セル
+  /// @param[in] pt_inst インスタンス定義
+  virtual
+  ElbPrimitive*
+  new_CellPrimitive(ElbPrimHead* head,
+		    const ClibCell& cell,
+		    const PtInst* pt_inst) = 0;
+
+  /// @brief セルプリミティブ配列インスタンスを生成する．
+  /// @param[in] head ヘッダ
+  /// @param[in] cell セル
+  /// @param[in] pt_inst インスタンス定義
+  /// @param[in] left 範囲の MSB の式
+  /// @param[in] right 範囲の LSB の式
+  /// @param[in] left_val 範囲の MSB の値
+  /// @param[in] right_val 範囲の LSB の値
+  virtual
+  ElbPrimArray*
+  new_CellPrimitiveArray(ElbPrimHead* head,
+			 const ClibCell& cell,
+			 const PtInst* pt_inst,
+			 const PtExpr* left,
+			 const PtExpr* right,
+			 int left_val,
+			 int right_val) = 0;
 
   /// @brief function を生成する．
   /// @param[in] parent 親のスコープ
@@ -479,7 +511,7 @@ public:
   /// @param[in] stmt_num 要素数
   virtual
   ElbStmt**
-  new_StmtList(ymuint stmt_num) = 0;
+  new_StmtList(int stmt_num) = 0;
 
   /// @brief 代入文を生成する．
   /// @param[in] parent 親のスコープ
@@ -801,7 +833,7 @@ public:
   virtual
   ElbControl*
   new_EventControl(const PtControl* pt_control,
-		   ymuint event_num,
+		   int event_num,
 		   ElbExpr** event_list) = 0;
 
   /// @brief リピートコントロールを生成する．
@@ -813,14 +845,14 @@ public:
   ElbControl*
   new_RepeatControl(const PtControl* pt_control,
 		    ElbExpr* rep,
-		    ymuint event_num,
+		    int event_num,
 		    ElbExpr** event_list) = 0;
 
   /// @brief 式のポインタ配列を生成する．
   /// @param[in] elem_num 要素数
   virtual
   ElbExpr**
-  new_ExprList(ymuint elem_num) = 0;
+  new_ExprList(int elem_num) = 0;
 
   /// @brief 単項演算子を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -865,7 +897,7 @@ public:
   virtual
   ElbExpr*
   new_ConcatOp(const PtExpr* pt_expr,
-	       ymuint opr_size,
+	       int opr_size,
 	       ElbExpr** opr_list) = 0;
 
   /// @brief 反復連結演算子を生成する．
@@ -879,7 +911,7 @@ public:
   new_MultiConcatOp(const PtExpr* pt_expr,
 		    int rep_num,
 		    ElbExpr* rep_expr,
-		    ymuint opr_size,
+		    int opr_size,
 		    ElbExpr** opr_list) = 0;
 
   /// @brief プライマリ式を生成する．
@@ -925,7 +957,7 @@ public:
   ElbExpr*
   new_Primary(const PtExpr* pt_expr,
 	      ElbDeclArray* obj,
-	      ymuint offset) = 0;
+	      int offset) = 0;
 
   /// @brief 固定ビット選択式を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -1035,7 +1067,7 @@ public:
   ElbExpr*
   new_FuncCall(const PtExpr* pt_expr,
 	       const ElbTaskFunc* func,
-	       ymuint arg_size,
+	       int arg_size,
 	       ElbExpr** arg_list) = 0;
 
   /// @brief システム関数呼び出し式を生成する．
@@ -1047,7 +1079,7 @@ public:
   ElbExpr*
   new_SysFuncCall(const PtExpr* pt_expr,
 		  const ElbUserSystf* user_systf,
-		  ymuint arg_size,
+		  int arg_size,
 		  ElbExpr** arg_list) = 0;
 
   /// @brief システム関数/システムタスクの引数を生成する．
@@ -1075,9 +1107,9 @@ public:
   virtual
   ElbExpr*
   new_Lhs(const PtExpr* pt_expr,
-	  ymuint opr_size,
+	  int opr_size,
 	  ElbExpr** opr_array,
-	  ymuint lhs_elem_num,
+	  int lhs_elem_num,
 	  ElbExpr** lhs_elem_array) = 0;
 
   /// @brief 遅延値を生成する．
@@ -1087,14 +1119,14 @@ public:
   virtual
   ElbDelay*
   new_Delay(const PtBase* pt_obj,
-	    ymuint elem_num,
+	    int elem_num,
 	    ElbExpr** expr_list) = 0;
 
   /// @brief attribute instance のリストを生成する．
   /// @param[in] n 要素数
   virtual
   ElbAttrList*
-  new_AttrList(ymuint n) = 0;
+  new_AttrList(int n) = 0;
 
 };
 

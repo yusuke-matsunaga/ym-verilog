@@ -32,13 +32,12 @@ private:
   /// @param[in] lhs_elem_array 左辺の要素の配列
   /// @note opr_array と lhs_elem_array は別物
   EiLhs(const PtExpr* pt_expr,
-	ymuint opr_size,
+	int opr_size,
 	ElbExpr** opr_array,
-	ymuint lhs_elem_num,
+	int lhs_elem_num,
 	ElbExpr** lhs_elem_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiLhs();
 
 
@@ -50,16 +49,14 @@ public:
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-  virtual
-  ymuint
-  lhs_elem_num() const;
+  int
+  lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
   /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-  virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const;
+  lhs_elem(int pos) const override;
 
 
 private:
@@ -68,7 +65,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  ymuint mNum;
+  int mNum;
 
   // 要素の配列
   ElbExpr** mArray;

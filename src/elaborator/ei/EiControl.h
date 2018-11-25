@@ -33,7 +33,6 @@ protected:
   EiControl(const PtControl* pt_control);
 
   /// デストラクタ
-  virtual
   ~EiControl();
 
 
@@ -43,9 +42,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -55,28 +53,24 @@ public:
 
   /// @brief 遅延式を返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  delay() const;
+  delay() const override;
 
   /// @brief 繰り返し式を返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief イベント条件式の数を返す．
   /// @note このクラスでは 0 を返す．
-  virtual
-  ymuint
-  event_num() const;
+  int
+  event_num() const override;
 
   /// @brief イベント条件式を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlExpr*
-  event(ymuint pos) const;
+  event(int pos) const override;
 
 
 private:
@@ -111,7 +105,6 @@ private:
 		 ElbExpr* delay);
 
   /// デストラクタ
-  virtual
   ~EiDelayControl();
 
 
@@ -121,9 +114,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -132,9 +124,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// 遅延式を返す．
-  virtual
   const VlExpr*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -167,11 +158,10 @@ protected:
   /// @param[in] event_num イベントリストの要素数
   /// @param[in] event_list イベントリストを表す配列
   EiEventControl(const PtControl* pt_control,
-		 ymuint event_num,
+		 int event_num,
 		 ElbExpr** event_list);
 
   /// @brief デストラクタ
-  virtual
   ~EiEventControl();
 
 
@@ -181,9 +171,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -192,15 +181,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief イベント条件式の数を返す．
-  virtual
-  ymuint
-  event_num() const;
+  int
+  event_num() const override;
 
   /// @brief イベント条件式を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
-  virtual
   const VlExpr*
-  event(ymuint pos) const;
+  event(int pos) const override;
 
 
 private:
@@ -209,7 +196,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // イベントリストの要素数
-  ymuint32 mEventNum;
+  int mEventNum;
 
   // イベントリスト
   ElbExpr** mEventList;
@@ -236,11 +223,10 @@ private:
   /// @param[in] event_list イベントリストを表す配列
   EiRepeatControl(const PtControl* pt_control,
 		  ElbExpr* rep,
-		  ymuint event_num,
+		  int event_num,
 		  ElbExpr** event_list);
 
   /// デストラクタ
-  virtual
   ~EiRepeatControl();
 
 
@@ -250,9 +236,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -261,9 +246,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// 繰り返し式を返す．
-  virtual
   const VlExpr*
-  expr() const;
+  expr() const override;
 
 
 private:

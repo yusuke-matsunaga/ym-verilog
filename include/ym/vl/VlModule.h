@@ -56,14 +56,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  ymuint
+  int
   elem_num() const = 0;
 
   /// @brief 要素を返す．
   /// @param[in] offset 位置番号 (0 <= offset < elem_num())
   virtual
   const VlModule*
-  elem_by_offset(ymuint offset) const = 0;
+  elem_by_offset(int offset) const = 0;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
@@ -202,7 +202,7 @@ public:
 
   /// @brief ポート数を返す．
   virtual
-  ymuint
+  int
   port_num() const = 0;
 
   /// @brief ポートの取得
@@ -210,18 +210,18 @@ public:
   /// @return pos 番目のポートを返す．
   virtual
   const VlPort*
-  port(ymuint pos) const = 0;
+  port(int pos) const = 0;
 
   /// @brief 入出力数を得る．
   virtual
-  ymuint
+  int
   io_num() const = 0;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   virtual
   const VlIODecl*
-  io(ymuint pos) const = 0;
+  io(int pos) const = 0;
 
 };
 

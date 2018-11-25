@@ -35,11 +35,10 @@ protected:
   /// @param[in] io_array IO の配列
   EiTaskFunc(const VlNamedObj* parent,
 	     const PtItem* pt_item,
-	     ymuint io_num,
+	     int io_num,
 	     EiIODecl* io_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiTaskFunc();
 
 
@@ -49,9 +48,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -60,14 +58,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief このオブジェクトの属しているスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 public:
@@ -76,25 +72,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief automatic 宣言されていたら true を返す．
-  virtual
   bool
-  automatic() const;
+  automatic() const override;
 
   /// @brief 入出力数を得る．
-  virtual
-  ymuint
-  io_num() const;
+  int
+  io_num() const override;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
-  virtual
   const VlIODecl*
-  io(ymuint pos) const;
+  io(int pos) const override;
 
   /// @brief 本体のステートメントを得る．
-  virtual
   const VlStmt*
-  stmt() const;
+  stmt() const override;
 
 
 public:
@@ -108,28 +100,24 @@ public:
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木のIO宣言要素
   /// @param[in] decl 対応する宣言要素
-  virtual
   void
-  init_iodecl(ymuint pos,
+  init_iodecl(int pos,
   	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
-	      ElbDecl* decl);
+	      ElbDecl* decl) override;
 
   /// @brief 本体のステートメントをセットする．
-  virtual
   void
-  set_stmt(ElbStmt* stmt);
+  set_stmt(ElbStmt* stmt) override;
 
   /// @brief 入出力を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
-  virtual
   ElbIODecl*
-  _io(ymuint pos) const;
+  _io(int pos) const override;
 
   /// @brief 本体の ElbStmt を得る．
-  virtual
   ElbStmt*
-  _stmt() const;
+  _stmt() const override;
 
 
 protected:
@@ -154,7 +142,7 @@ private:
   const PtItem* mPtItem;
 
   // 入出力数
-  ymuint32 mIODeclNum;
+  int mIODeclNum;
 
   // 入出力のリスト
   EiIODecl* mIODeclList;
@@ -183,11 +171,10 @@ protected:
   /// @param[in] io_array IO の配列
   EiTask(const VlNamedObj* parent,
 	 const PtItem* pt_item,
-	 ymuint io_num,
+	 int io_num,
 	 EiIODecl* io_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiTask();
 
 
@@ -197,9 +184,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -208,48 +194,40 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief function type を返す．
-  virtual
   tVpiFuncType
-  func_type() const;
+  func_type() const override;
 
   /// @brief 符号付きの時 true を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief 出力のビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
 
 public:
@@ -260,14 +238,12 @@ public:
 
   /// @brief 出力変数をセットする．
   /// @param[in] ovar 出力変数
-  virtual
   void
-  set_ovar(ElbDecl* ovar);
+  set_ovar(ElbDecl* ovar) override;
 
   /// @brief constant function の時に true を返す．
-  virtual
   bool
-  is_constant_function() const;
+  is_constant_function() const override;
 
 };
 
@@ -290,11 +266,10 @@ protected:
   /// @param[in] io_array IO の配列
   EiFunction(const VlNamedObj* parent,
 	     const PtItem* pt_item,
-	     ymuint io_num,
+	     int io_num,
 	     EiIODecl* io_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiFunction();
 
 
@@ -304,9 +279,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -315,48 +289,40 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief function type を返す．
-  virtual
   tVpiFuncType
-  func_type() const;
+  func_type() const override;
 
   /// @brief 符号付きの時 true を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief 出力のビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
 
 public:
@@ -367,14 +333,12 @@ public:
 
   /// @brief 出力変数をセットする．
   /// @param[in] ovar 出力変数
-  virtual
   void
-  set_ovar(ElbDecl* ovar);
+  set_ovar(ElbDecl* ovar) override;
 
   /// @brief constant function の時に true を返す．
-  virtual
   bool
-  is_constant_function() const;
+  is_constant_function() const override;
 
 
 private:
@@ -410,7 +374,7 @@ protected:
   /// @param[in] right_val 範囲の LSB の値
   EiFunctionV(const VlNamedObj* parent,
 	      const PtItem* pt_item,
-	      ymuint io_num,
+	      int io_num,
 	      EiIODecl* io_array,
 	      const PtExpr* left,
 	      const PtExpr* right,
@@ -418,7 +382,6 @@ protected:
 	      int right_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiFunctionV();
 
 
@@ -428,38 +391,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief 出力のビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
 
 private:

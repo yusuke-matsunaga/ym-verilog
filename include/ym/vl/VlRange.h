@@ -37,7 +37,7 @@ public:
 
   /// @brief 要素数(ビット幅)を返す．
   virtual
-  ymuint
+  int
   size() const = 0;
 
   /// @brief MSB の値を返す．
@@ -80,7 +80,7 @@ public:
   virtual
   bool
   calc_offset(int index,
-	      ymuint& offset) const = 0;
+	      int& offset) const = 0;
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] index インデックス
@@ -90,7 +90,7 @@ public:
   virtual
   bool
   calc_roffset(int index,
-	       ymuint& offset) const = 0;
+	       int& offset) const = 0;
 
   /// @brief offset の逆関数
   /// @param[in] offset LSB からのオフセット値

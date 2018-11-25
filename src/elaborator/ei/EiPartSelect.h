@@ -30,7 +30,6 @@ protected:
 	       ElbExpr* parent_expr);
 
   /// @brief デストラクタ
-  virtual
   ~EiPartSelect();
 
 
@@ -40,9 +39,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -52,66 +50,56 @@ public:
 
   /// @brief 定数の時 true を返す．
   /// @note 参照している要素の型によって決まる．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 範囲指定の時に true を返す．
-  virtual
   bool
-  is_partselect() const;
+  is_partselect() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlDeclBase*
-  decl_base() const;
+  decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDecl*
-  decl_obj() const;
+  decl_obj() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
   /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
-  virtual
   const VlDeclArray*
-  declarray_obj() const;
+  declarray_obj() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note それ以外では 0 を返す．
-  virtual
-  ymuint
-  declarray_dimension() const;
+  int
+  declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlExpr*
-  declarray_index(ymuint pos) const;
+  declarray_index(int pos) const override;
 
   /// @brief 親の式を返す．
-  virtual
   const VlExpr*
-  parent_expr() const;
+  parent_expr() const override;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 1 を返す．
-  virtual
-  ymuint
-  lhs_elem_num() const;
+  int
+  lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
   /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは pos = 0 の時，自分自身を返す．
-  virtual
   const VlExpr*
-  lhs_elem(ymuint pos) const;
+  lhs_elem(int pos) const override;
 
 
 public:
@@ -122,17 +110,15 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 
 private:
@@ -170,7 +156,6 @@ private:
 		    int index2_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiConstPartSelect();
 
 
@@ -180,44 +165,37 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式の値のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 固定選択子の時 true を返す．
   /// @note ビット選択，部分選択の時，意味を持つ．
-  virtual
   bool
-  is_constant_select() const;
+  is_constant_select() const override;
 
   /// @brief 範囲指定のモードを返す．
-  virtual
   tVpiRangeMode
-  range_mode() const;
+  range_mode() const override;
 
   /// @brief 範囲の MSB の式を返す．
   /// @note 通常の範囲選択の時，意味を持つ．
-  virtual
   const VlExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲の LSB の式を返す．
   /// @note 通常の範囲選択の時，意味を持つ．
-  virtual
   const VlExpr*
-  right_range() const;
+  right_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
   /// @note 式に対する範囲選択の時，意味を持つ．
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
   /// @note 式に対する範囲選択の時，意味を持つ．
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
 
 private:
@@ -262,7 +240,6 @@ protected:
 		  int range_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiVarPartSelect();
 
 
@@ -272,29 +249,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式の値のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 固定選択子の時 true を返す．
   /// @note ビット選択，部分選択の時，意味を持つ．
-  virtual
   bool
-  is_constant_select() const;
+  is_constant_select() const override;
 
   /// @brief 範囲のベースを表す式を返す．
   /// @note 可変範囲選択の時，意味を持つ．
   /// @note それ以外では nullptr を返す．
-  virtual
   const VlExpr*
-  base() const;
+  base() const override;
 
   /// @brief 範囲のビット幅を返す．
   /// @note 可変範囲選択の時，意味を持つ．
   /// @note それ以外では 0 を返す．
-  virtual
   int
-  range_width() const;
+  range_width() const override;
 
 
 private:
@@ -339,7 +312,6 @@ private:
 		   int range_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiPlusPartSelect();
 
 
@@ -349,9 +321,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定のモードを返す．
-  virtual
   tVpiRangeMode
-  range_mode() const;
+  range_mode() const override;
 
 };
 
@@ -380,7 +351,6 @@ private:
 		    int range_val);
 
   /// @brief デストラクタ
-  virtual
   ~EiMinusPartSelect();
 
 
@@ -390,9 +360,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定のモードを返す．
-  virtual
   tVpiRangeMode
-  range_mode() const;
+  range_mode() const override;
 
 };
 

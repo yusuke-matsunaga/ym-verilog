@@ -40,7 +40,7 @@ EiPort::~EiPort()
 void
 EiPort::init(ElbModule* module,
 	     const PtPort* pt_port,
-	     ymuint index,
+	     int index,
 	     ElbExpr* low_conn,
 	     tVlDirection dir)
 {
@@ -119,7 +119,7 @@ EiPort::module() const
 }
 
 // @brief ポートリストの何番目のポートかを表すインデックスを返す．
-ymuint
+int
 EiPort::port_index() const
 {
   return mIndex;

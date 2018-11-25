@@ -30,7 +30,6 @@ private:
   EiPort();
 
   /// @brief デストラクタ
-  virtual
   ~EiPort();
 
 
@@ -40,14 +39,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -56,49 +53,40 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力の区別を得る．
-  virtual
   tVlDirection
-  direction() const;
+  direction() const override;
 
   /// @brief ビット幅を返す．
-  virtual
   int
-  bit_size() const;
+  bit_size() const override;
 
   /// @brief 名前による接続を持つとき true を返す．
-  virtual
   bool
-  is_conn_by_name() const;
+  is_conn_by_name() const override;
 
   /// @brief 明示的に名前がついているとき true を返す．
-  virtual
   bool
-  is_explicit_name() const;
+  is_explicit_name() const override;
 
   /// @brief 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 親のモジュールを取出す
-  virtual
   const VlModule*
-  module() const;
+  module() const override;
 
   /// @brief ポートリストの何番目のポートかを表すインデックスを返す．
-  virtual
-  ymuint
-  port_index() const;
+  int
+  port_index() const override;
 
   /// @brief 上位の接続先を返す．
-  virtual
   const VlExpr*
-  high_conn() const;
+  high_conn() const override;
 
   /// @brief 下位の接続先を返す．
-  virtual
   const VlExpr*
-  low_conn() const;
+  low_conn() const override;
 
 
 public:
@@ -112,16 +100,14 @@ public:
   /// @param[in] index ポート番号
   /// @param[in] low_conn 下位の接続
   /// @param[in] dir 向き
-  virtual
   void
   init(ElbModule* parent,
        const PtPort* pt_port,
-       ymuint index,
+       int index,
        ElbExpr* low_conn,
        tVlDirection dir);
 
   /// @brief high_conn を接続する．
-  virtual
   void
   set_high_conn(ElbExpr* high_conn,
 		bool conn_by_name);
@@ -139,7 +125,7 @@ private:
   const PtPort* mPtPort;
 
   // ポート番号
-  ymuint32 mIndex;
+  int mIndex;
 
   // 上位の接続先
   ElbExpr* mHighConn;

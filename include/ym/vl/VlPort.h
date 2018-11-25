@@ -72,7 +72,7 @@ public:
 
   /// @brief ポートリストの何番目のポートかを表すインデックスを返す．
   virtual
-  ymuint
+  int
   port_index() const = 0;
 
   /// @brief 上位の接続先を返す．

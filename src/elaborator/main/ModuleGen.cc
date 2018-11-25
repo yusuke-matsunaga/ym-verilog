@@ -119,10 +119,10 @@ ModuleGen::phase1_module_item(ElbModule* module,
 
   // パラメータの割り当てを作る．
   if ( param_con ) {
-    ymuint n = param_con->elem_num();
+    int n = param_con->elem_num();
     if ( param_con->named_con() ) {
       // 名前による割り当て
-      for (ymuint i = 0; i < n; ++ i) {
+      for ( int i = 0; i < n; ++ i ) {
 	const PtConnection* pt_con = param_con->pt_con(i);
 	ElbObjHandle* handle = find_obj(module, pt_con->name());
 	if ( handle == nullptr || handle->type() != kVpiParameter ) {
@@ -153,19 +153,19 @@ ModuleGen::phase1_module_item(ElbModule* module,
       // パラメータポートリストの名前を現れた順番に paramport_list に入れる．
       vector<const char*> paramport_list;
       if ( has_paramportdecl ) {
-	for (ymuint i = 0; i < paramport_array.size(); ++ i) {
+	for ( int i = 0; i < paramport_array.size(); ++ i ) {
 	  const PtDeclHead* pt_param = paramport_array[i];
-	  for (ymuint j = 0; j < pt_param->item_num(); ++ j) {
+	  for ( int j = 0; j < pt_param->item_num(); ++ j ) {
 	    const PtDeclItem* pt_item = pt_param->item(j);
 	    paramport_list.push_back(pt_item->name());
 	  }
 	}
       }
       else {
-	for (ymuint i = 0; i < declhead_array.size(); ++ i) {
+	for ( int i = 0; i < declhead_array.size(); ++ i ) {
 	  const PtDeclHead* pt_decl = declhead_array[i];
 	  if ( pt_decl->type() == kPtDecl_Param ) {
-	    for (ymuint j = 0; j < pt_decl->item_num(); ++ j) {
+	    for ( int j = 0; j < pt_decl->item_num(); ++ j ) {
 	      const PtDeclItem* pt_item = pt_decl->item(j);
 	      paramport_list.push_back(pt_item->name());
 	    }
@@ -180,7 +180,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
 			"Too many parameters.");
       }
       else {
-	for (ymuint i = 0; i < n; ++ i) {
+	for ( int i = 0; i < n; ++ i ) {
 	  const PtConnection* pt_con = param_con->pt_con(i);
 	  const char* tmp_name = paramport_list[i];
 	  ElbObjHandle* handle = find_obj(module, tmp_name);
@@ -232,11 +232,11 @@ void
 ModuleGen::instantiate_port(ElbModule* module,
 			    const PtModule* pt_module)
 {
-  ymuint port_num = pt_module->port_num();
-  for (ymuint index = 0; index < port_num; ++ index) {
+  int port_num = pt_module->port_num();
+  for ( int index = 0; index < port_num; ++ index ) {
     const PtPort* pt_port = pt_module->port(index);
     // 内側の接続と向きを作る．
-    ymuint n = pt_port->portref_size();
+    int n = pt_port->portref_size();
 
     ElbExpr* low_conn = nullptr;
     tVlDirection dir = kVlNoDirection;
@@ -252,7 +252,7 @@ ModuleGen::instantiate_port(ElbModule* module,
       ElbExpr** expr_list = factory().new_ExprList(n);
       ElbExpr** lhs_elem_array = factory().new_ExprList(n);
 
-      for (ymuint i = 0; i < n; ++ i) {
+      for ( int i = 0; i < n; ++ i ) {
 	const PtExpr* pt_portexpr = pt_port->portref_elem(i);
 	ElbExpr* portexpr = instantiate_portref(module, pt_portexpr);
 	if ( !portexpr ) {
@@ -334,7 +334,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
     if ( !stat ) {
       return nullptr;
     }
-    ymuint offset;
+    int offset;
     bool stat2 = decl->calc_bit_offset(index_val, offset);
     if ( !stat2 ) {
       // 添字が範囲外
@@ -352,7 +352,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
     if ( !evaluate_range(module, pt_left, pt_right, left_val, right_val) ) {
       return nullptr;
     }
-    ymuint offset;
+    int offset;
     bool stat1 = decl->calc_bit_offset(left_val, offset);
     if ( !stat1 ) {
       // 左の添字が範囲外

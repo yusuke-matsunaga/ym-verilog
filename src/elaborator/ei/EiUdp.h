@@ -44,14 +44,13 @@ private:
   /// @param[in] val_array テーブル中の値を納める配列
   EiUdpDefn(const PtUdp* pt_udp,
 	    bool is_protected,
-	    ymuint io_num,
+	    int io_num,
 	    EiUdpIO* io_array,
-	    ymuint table_num,
+	    int table_num,
 	    EiTableEntry* table,
 	    VlUdpVal* val_array);
 
   /// @brief デストラクタ
-  virtual
   ~EiUdpDefn();
 
 
@@ -61,14 +60,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -77,57 +74,47 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定義された名前を返す．
-  virtual
   const char*
-  def_name() const;
+  def_name() const override;
 
   /// @brief primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief ポート数を返す．
-  virtual
-  ymuint
-  port_num() const;
+  int
+  port_num() const override;
 
   /// @brief 入力の宣言要素を返す．
   /// @param[in] pos 入力番号 ( 0 <= pos < port_num() - 1 )
-  virtual
   const VlIODecl*
-  input(ymuint pos) const;
+  input(int pos) const override;
 
   /// @brief 出力の宣言要素を返す．
-  virtual
   const VlIODecl*
-  output() const;
+  output() const override;
 
   /// @brief protected かどうかを返す．
-  virtual
   bool
-  is_protected() const;
+  is_protected() const override;
 
   /// @brief 初期値を返す．
   /// @return 0/1/X を返す．
-  virtual
   VlScalarVal
-  init_val() const;
+  init_val() const override;
 
   /// @brief 初期値を表す文字列を返す．
-  virtual
   string
-  init_val_string() const;
+  init_val_string() const override;
 
   /// @brief table entry の行数を返す．
-  virtual
-  ymuint
-  table_size() const;
+  int
+  table_size() const override;
 
   /// @brief table entry を返す．
   /// @param[in] pos 行番号
-  virtual
   const VlTableEntry*
-  table_entry(ymuint pos) const;
+  table_entry(int pos) const override;
 
 
 public:
@@ -141,25 +128,25 @@ public:
   /// @param[in] name 名前
   /// @param[in] dir 向き
   void
-  set_io(ymuint pos,
+  set_io(int pos,
 	 const PtIOHead* pt_header,
-	 const PtIOItem* pt_item);
+	 const PtIOItem* pt_item) override;
 
   /// @brief 初期値を設定する．
   /// @param[in] init_expr 初期値を表す式
   /// @param[in] init_val 初期値
   void
   set_initial(const PtExpr* init_expr,
-	      const VlScalarVal& init_val);
+	      const VlScalarVal& init_val) override;
 
   /// @brief table entry の内容を設定する．
   /// @param[in] pos 行番号
   /// @param[in] pt_udp_entry パース木の一行分の定義
   /// @param[in] vals シンボル値の配列
   void
-  set_tableentry(ymuint pos,
+  set_tableentry(int pos,
 		 const PtUdpEntry* pt_udp_entry,
-		 const vector<VlUdpVal>& vals);
+		 const vector<VlUdpVal>& vals) override;
 
 
 private:
@@ -171,7 +158,7 @@ private:
   const PtUdp* mPtUdp;
 
   // ポート数
-  ymuint32 mPortNum;
+  int mPortNum;
 
   // protect されているとき true にするフラグ
   bool mProtected;
@@ -186,7 +173,7 @@ private:
   VlScalarVal mInitVal;
 
   // table entry のサイズ
-  ymuint32 mTableEntrySize;
+  int mTableEntrySize;
 
   // table entry のリスト
   EiTableEntry* mTableEntryList;
@@ -212,7 +199,6 @@ private:
   EiUdpIO();
 
   /// @brief デストラクタ
-  virtual
   ~EiUdpIO();
 
 
@@ -222,14 +208,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -238,85 +222,71 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 方向を返す．
-  virtual
   tVlDirection
-  direction() const;
+  direction() const override;
 
   /// @brief 符号の属性の取得
   /// @return 符号付きのとき true を返す．
   /// @note このクラスは false を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲指定を持つとき true を返す．
-  virtual
   bool
-  has_range() const;
+  has_range() const override;
 
   /// @brief MSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  left_range_val() const;
+  left_range_val() const override;
 
   /// @brief LSB の値を返す．
   /// @note 範囲を持たないときの値は不定
-  virtual
   int
-  right_range_val() const;
+  right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  left_range_string() const;
+  left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
   /// @note 範囲を持たない時の値は不定
-  virtual
   string
-  right_range_string() const;
+  right_range_string() const override;
 
   /// @brief サイズを返す．
   /// このクラスは 1 を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief 対応する宣言要素を返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const VlDecl*
-  decl() const;
+  decl() const override;
 
   /// @brief 親のモジュールの取得
   /// @return このクラスは nullptr を返す．
-  virtual
   const VlModule*
-  module() const;
+  module() const override;
 
   /// @brief 親のUDP定義を返す．
-  virtual
   const VlUdpDefn*
-  udp_defn() const;
+  udp_defn() const override;
 
   /// @brief 親のタスクの取得
   /// @return このクラスは nullptr を返す．
-  virtual
   const VlTaskFunc*
-  task() const;
+  task() const override;
 
   /// @brief 親の関数の取得
   /// @return このクラスは nullptr を返す．
-  virtual
   const VlTaskFunc*
-  function() const;
+  function() const override;
 
 
 private:
@@ -365,7 +335,6 @@ private:
   EiTableEntry();
 
   /// @brief デストラクタ
-  virtual
   ~EiTableEntry();
 
 
@@ -375,14 +344,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -391,19 +358,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 一行の要素数を返す．
-  virtual
-  ymuint
-  size() const;
+  int
+  size() const override;
 
   /// @brief pos 番目の位置の値を返す．
-  virtual
   VlUdpVal
-  val(ymuint pos) const;
+  val(int pos) const override;
 
   /// @brief 一行文の内容を表す文字列をつくる．
-  virtual
   string
-  str() const;
+  str() const override;
 
 
 public:
@@ -414,7 +378,7 @@ public:
   /// @brief 設定する．
   void
   set(const PtUdpEntry* pt_entry,
-      const vector<VlUdpVal>& vals);
+      const vector<VlUdpVal>& vals) override;
 
 
 private:

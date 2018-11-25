@@ -57,7 +57,7 @@ ElbStmt::user_systf() const
 // @brief 引数の数の取得
 // @note kEnable/kSysEnable で意味のある関数
 // @note このクラスでは 0 を返す．
-ymuint
+int
 ElbStmt::arg_num() const
 {
   return 0;
@@ -68,7 +68,7 @@ ElbStmt::arg_num() const
 // @note kEnable/kSysEnable で意味のある関数
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-ElbStmt::arg(ymuint pos) const
+ElbStmt::arg(int pos) const
 {
   return nullptr;
 }
@@ -157,7 +157,7 @@ ElbStmt::case_type() const
 // @return case item の要素数
 // @note kCase/kCaseX/kCaseZ で意味のある関数
 // @note このクラスでは 0 を返す．
-ymuint
+int
 ElbStmt::caseitem_num() const
 {
   return 0;
@@ -168,7 +168,7 @@ ElbStmt::caseitem_num() const
 // @note kCase/kCaseX/kCaseZ で意味のある関数
 // @note このクラスでは nullptr を返す．
 const VlCaseItem*
-ElbStmt::caseitem(ymuint pos) const
+ElbStmt::caseitem(int pos) const
 {
   return nullptr;
 }
@@ -194,7 +194,7 @@ ElbStmt::inc_stmt() const
 // @brief 子供のステートメントの数の取得
 // @note kParBlock/kSeqBlock で意味のある関数
 // @note このクラスでは 0 を返す．
-ymuint
+int
 ElbStmt::child_stmt_num() const
 {
   return 0;
@@ -204,7 +204,7 @@ ElbStmt::child_stmt_num() const
 // @param[in] pos 位置番号 (0 <= pos < stmt_num())
 // @note kParBlock/kSeqBlock で意味のある関数
 const VlStmt*
-ElbStmt::child_stmt(ymuint pos) const
+ElbStmt::child_stmt(int pos) const
 {
   return _child_stmt(pos);
 }
@@ -216,7 +216,7 @@ ElbStmt::child_stmt(ymuint pos) const
 // @param[in] stmt 本体のステートメント
 // @note このクラスでは何もしない．
 void
-ElbStmt::set_caseitem(ymuint pos,
+ElbStmt::set_caseitem(int pos,
 		      const PtCaseItem* pt_caseitem,
 		      ElbExpr** expr_array,
 		      ElbStmt* stmt)
@@ -226,7 +226,7 @@ ElbStmt::set_caseitem(ymuint pos,
 // @brief 子供ののステートメントの取得
 // @note このクラスでは nullptr を返す．
 ElbStmt*
-ElbStmt::_child_stmt(ymuint pos) const
+ElbStmt::_child_stmt(int pos) const
 {
   return nullptr;
 }

@@ -30,11 +30,10 @@ protected:
   /// @param[in] arg_size 引数の数
   /// @param[in] arg_list 引数のリスト
   EiFcBase(const PtExpr* pt_expr,
-	   ymuint arg_size,
+	   int arg_size,
 	   ElbExpr** arg_list);
 
   /// @brief デストラクタ
-  virtual
   ~EiFcBase();
 
 
@@ -44,15 +43,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 引数の数を返す．
-  virtual
-  ymuint
-  argument_num() const;
+  int
+  argument_num() const override;
 
   /// @brief 引数の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
-  virtual
   ElbExpr*
-  argument(ymuint pos) const;
+  argument(int pos) const override;
 
 
 public:
@@ -63,17 +60,15 @@ public:
   /// @brief 要求される式の型を計算してセットする．
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
-  virtual
   void
-  _set_reqsize(const VlValueType& type);
+  _set_reqsize(const VlValueType& type) override;
 
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbExpr*
-  _operand(ymuint pos) const;
+  _operand(int pos) const override;
 
 
 private:
@@ -82,7 +77,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 引数の数
-  ymuint32 mArgNum;
+  int mArgNum;
 
   // 引数の配列
   ElbExpr** mArgList;
@@ -108,11 +103,10 @@ private:
   /// @param[in] arg_list 引数のリスト
   EiFuncCall(const PtExpr* pt_expr,
 	     const ElbTaskFunc* func,
-	     ymuint arg_size,
+	     int arg_size,
 	     ElbExpr** arg_list);
 
   /// @brief デストラクタ
-  virtual
   ~EiFuncCall();
 
 
@@ -122,9 +116,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -133,25 +126,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief 関数呼び出しの時に true を返す．
-  virtual
   bool
-  is_funccall() const;
+  is_funccall() const override;
 
   /// @brief 対象の関数を返す．
   /// @note kVpiFuncCall の時，意味を持つ．
-  virtual
   const VlTaskFunc*
-  function() const;
+  function() const override;
 
 
 private:
@@ -183,11 +172,10 @@ private:
   /// @param[in] arg_list 引数のリスト
   EiSysFuncCall(const PtExpr* pt_expr,
 		const ElbUserSystf* user_systf,
-		ymuint arg_size,
+		int arg_size,
 		ElbExpr** arg_list);
 
   /// @brief デストラクタ
-  virtual
   ~EiSysFuncCall();
 
 
@@ -197,9 +185,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
 
 public:
@@ -208,26 +195,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式のタイプを返す．
-  virtual
   VlValueType
-  value_type() const;
+  value_type() const override;
 
   /// @brief 定数の時 true を返す．
   /// @note このクラスは false を返す．
-  virtual
   bool
-  is_const() const;
+  is_const() const override;
 
   /// @brief システム関数よびあどい時に true を返す．
-  virtual
   bool
-  is_sysfunccall() const;
+  is_sysfunccall() const override;
 
   /// @brief 対象のシステム関数を返す．
   /// @note kVpiSysFuncCall の時，意味を持つ．
-  virtual
   const VlUserSystf*
-  user_systf() const;
+  user_systf() const override;
 
 
 private:

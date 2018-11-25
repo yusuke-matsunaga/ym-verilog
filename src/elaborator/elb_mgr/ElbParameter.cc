@@ -67,7 +67,7 @@ ElbParameter::elem_by_index(int index) const
 // @retval nullptr offset が範囲外の場合．またはビット展開されていない場合
 // @note このクラスでは nullptr を返す．
 const VlDecl*
-ElbParameter::elem_by_offset(ymuint offset) const
+ElbParameter::elem_by_offset(int offset) const
 {
   return nullptr;
 }

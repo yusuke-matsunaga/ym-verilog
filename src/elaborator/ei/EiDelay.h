@@ -30,11 +30,10 @@ private:
   /// @param[in] elem_num 要素数
   /// @param[in] expr_list 式の配列
   EiDelay(const PtBase* pt_obj,
-	  ymuint elem_num,
+	  int elem_num,
 	  ElbExpr** expr_list);
 
   /// @brief デストラクタ
-  virtual
   ~EiDelay();
 
 
@@ -44,14 +43,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -60,19 +57,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  virtual
-  ymuint
-  elem_num() const;
+  int
+  elem_num() const override;
 
   /// @brief 値を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < elem_num() )
-  virtual
   const VlExpr*
-  expr(ymuint pos) const;
+  expr(int pos) const override;
 
   /// @brief Verilog-HDL の文字列を得る．
   string
-  decompile() const;
+  decompile() const override;
 
 
 private:
@@ -84,7 +79,7 @@ private:
   const PtBase* mPtObj;
 
   // 要素数
-  ymuint32 mElemNum;
+  int mElemNum;
 
   // 要素の配列
   ElbExpr** mElemArray;

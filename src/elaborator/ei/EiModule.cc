@@ -180,14 +180,14 @@ EiModuleHead::def_name() const
 }
 
 // @brief ポート数を返す．
-ymuint
+int
 EiModuleHead::port_num() const
 {
   return mPtModule->port_num();
 }
 
 /// @brief 入出力宣言数を返す．
-ymuint
+int
 EiModuleHead::io_num() const
 {
   return mPtModule->iodecl_num();
@@ -439,7 +439,7 @@ EiModule::cell() const
 }
 
 // @brief ポート数を返す．
-ymuint
+int
 EiModule::port_num() const
 {
   return head().port_num();
@@ -449,13 +449,13 @@ EiModule::port_num() const
 // @param[in] pos 取得するポートの位置 (0 <= pos < port_num())
 // @return pos 番目のポートを返す．
 const VlPort*
-EiModule::port(ymuint pos) const
+EiModule::port(int pos) const
 {
   return &mPortList[pos];
 }
 
 // @brief 入出力数を得る．
-ymuint
+int
 EiModule::io_num() const
 {
   return head().io_num();
@@ -464,7 +464,7 @@ EiModule::io_num() const
 // @brief 入出力の取得
 // @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 const VlIODecl*
-EiModule::io(ymuint pos) const
+EiModule::io(int pos) const
 {
   return &mIODeclList[pos];
 }
@@ -475,7 +475,7 @@ EiModule::io(ymuint pos) const
 // @param[in] pt_item パース木のIO宣言要素
 // @param[in] decl 対応する宣言要素
 void
-EiModule::init_iodecl(ymuint pos,
+EiModule::init_iodecl(int pos,
 		      ElbIOHead* head,
 		      const PtIOItem* pt_item,
 		      ElbDecl* decl)
@@ -489,7 +489,7 @@ EiModule::init_iodecl(ymuint pos,
 // @param[in] low_conn 下位の接続
 // @param[in] dir 向き
 void
-EiModule::init_port(ymuint index,
+EiModule::init_port(int index,
 		    const PtPort* pt_port,
 		    ElbExpr* low_conn,
 		    tVlDirection dir)
@@ -502,7 +502,7 @@ EiModule::init_port(ymuint index,
 // @param[in] high_conn 上位の接続の式
 // @param[in] conn_by_name 名前による割り当て時に true とするフラグ
 void
-EiModule::set_port_high_conn(ymuint index,
+EiModule::set_port_high_conn(int index,
 			     ElbExpr* high_conn,
 			     bool conn_by_name)
 {
@@ -744,7 +744,7 @@ EiModuleArray::right_range_string() const
 }
 
 // @brief 要素数を返す．
-ymuint
+int
 EiModuleArray::elem_num() const
 {
   return mRange.size();
@@ -753,7 +753,7 @@ EiModuleArray::elem_num() const
 // @brief 要素を返す．
 // @param[in] offset 位置番号 (0 <= offset < elem_num())
 const VlModule*
-EiModuleArray::elem_by_offset(ymuint offset) const
+EiModuleArray::elem_by_offset(int offset) const
 {
   return &mArray[offset];
 }
@@ -763,7 +763,7 @@ EiModuleArray::elem_by_offset(ymuint offset) const
 const VlModule*
 EiModuleArray::elem_by_index(int index) const
 {
-  ymuint offset;
+  int offset;
   if ( mRange.calc_offset(index, offset) ) {
     return &mArray[offset];
   }
@@ -790,7 +790,7 @@ EiModuleArray::head()
 
 // @brief 要素を返す．
 ElbModule*
-EiModuleArray::_module(ymuint offset)
+EiModuleArray::_module(int offset)
 {
   return &mArray[offset];
 }

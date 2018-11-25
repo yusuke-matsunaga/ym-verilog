@@ -238,7 +238,7 @@ EiDecl::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-ymuint
+int
 EiDecl::bit_size() const
 {
   return mHead->bit_size();
@@ -251,7 +251,7 @@ EiDecl::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDecl::calc_bit_offset(int index,
-			ymuint& offset) const
+			int& offset) const
 {
   return mHead->calc_bit_offset(index, offset);
 }
@@ -527,7 +527,7 @@ EiDeclS::set_bitvector(const BitVector& val)
 VlScalarVal
 EiDeclS::get_bitselect(int index) const
 {
-  ymuint offset;
+  int offset;
   if ( calc_bit_offset(index, offset) ) {
     // offset == 0 のはず．
     return mVal;
@@ -545,7 +545,7 @@ void
 EiDeclS::set_bitselect(int index,
 		       const VlScalarVal& val)
 {
-  ymuint offset;
+  int offset;
   if ( calc_bit_offset(index, offset) ) {
     // offset == 0 のはず．
     mVal = val;
@@ -561,8 +561,8 @@ EiDeclS::get_partselect(int left,
 			int right,
 			BitVector& val) const
 {
-  ymuint bpos1;
-  ymuint bpos2;
+  int bpos1;
+  int bpos2;
   if ( calc_bit_offset(left, bpos1) &&
        calc_bit_offset(right, bpos2) ) {
     val = mVal;
@@ -578,8 +578,8 @@ EiDeclS::set_partselect(int left,
 			int right,
 			const BitVector& val)
 {
-  ymuint bpos1;
-  ymuint bpos2;
+  int bpos1;
+  int bpos2;
   if ( calc_bit_offset(left, bpos1) &&
        calc_bit_offset(right, bpos2) ) {
     mVal = val.to_scalar();
@@ -775,7 +775,7 @@ EiDeclV::set_bitvector(const BitVector& val)
 VlScalarVal
 EiDeclV::get_bitselect(int index) const
 {
-  ymuint bpos;
+  int bpos;
   if ( calc_bit_offset(index, bpos) ) {
     return mVal.bit_select(bpos);
   }
@@ -791,7 +791,7 @@ void
 EiDeclV::set_bitselect(int index,
 		       const VlScalarVal& val)
 {
-  ymuint bpos;
+  int bpos;
   if ( calc_bit_offset(index, bpos) ) {
     mVal.bit_select(bpos, val);
   }
@@ -806,8 +806,8 @@ EiDeclV::get_partselect(int left,
 			int right,
 			BitVector& val) const
 {
-  ymuint bpos1;
-  ymuint bpos2;
+  int bpos1;
+  int bpos2;
   if ( calc_bit_offset(left, bpos1) &&
        calc_bit_offset(right, bpos2) ) {
     val = mVal.part_select(bpos1, bpos2);
@@ -833,8 +833,8 @@ EiDeclV::set_partselect(int left,
 			int right,
 			const BitVector& val)
 {
-  ymuint bpos1;
-  ymuint bpos2;
+  int bpos1;
+  int bpos2;
   if ( calc_bit_offset(left, bpos1) &&
        calc_bit_offset(right, bpos2) ) {
     mVal.part_select(bpos1, bpos2, val);

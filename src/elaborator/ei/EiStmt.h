@@ -38,7 +38,6 @@ protected:
 	     const PtStmt* pt_stmt);
 
   /// デストラクタ
-  virtual
   ~EiStmtBase();
 
 
@@ -48,9 +47,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -59,15 +57,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のスコープを返す．
-  virtual
   const VlNamedObj*
-  parent() const;
+  parent() const override;
 
+#if 0
   /// @brief 親の process を返す．
-  virtual
   ElbProcess*
-  process() const;
-
+  process() const override;
+#endif
 
 protected:
   //////////////////////////////////////////////////////////////////////

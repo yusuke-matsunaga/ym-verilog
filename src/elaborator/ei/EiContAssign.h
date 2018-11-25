@@ -32,7 +32,6 @@ protected:
 	   const PtItem* pt_head);
 
   /// @brief デストラクタ
-  virtual
   ~EiCaHead();
 
 
@@ -42,25 +41,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．
-  virtual
   const VlModule*
-  module() const;
+  module() const override;
 
   /// @brief 0の強さを返す．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief 1の強さを返す．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief 遅延を表す式を返す．
   /// @note このクラスでは nullptr を返す．
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -97,7 +92,6 @@ private:
 	    ElbDelay* delay);
 
   /// @brief デストラクタ
-  virtual
   ~EiCaHeadD();
 
 
@@ -107,9 +101,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延を表す式を返す．
-  virtual
   ElbDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -141,7 +134,6 @@ protected:
 	       ElbExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiContAssign();
 
 
@@ -151,14 +143,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  virtual
   tVpiObjType
-  type() const;
+  type() const override;
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -167,19 +157,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ビット幅を返す．
-  virtual
-  ymuint
-  bit_size() const;
+  int
+  bit_size() const override;
 
   /// @brief 左辺を返す．
-  virtual
   const VlExpr*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺を返す．
-  virtual
   const VlExpr*
-  rhs() const;
+  rhs() const override;
 
 
 private:
@@ -221,7 +208,6 @@ private:
 		ElbExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiContAssign1();
 
 
@@ -231,29 +217,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．
-  virtual
   const VlModule*
-  module() const;
+  module() const override;
 
   /// @brief 0の強さを返す．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief 1の強さを返す．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief 遅延を表す式を返す．
-  virtual
   const VlDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief ネット宣言中の assignment の時に true を返す．
-  virtual
   bool
-  has_net_decl_assign() const;
+  has_net_decl_assign() const override;
 
 
 private:
@@ -289,7 +270,6 @@ private:
 		ElbExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~EiContAssign2();
 
 
@@ -299,29 +279,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．
-  virtual
   const VlModule*
-  module() const;
+  module() const override;
 
   /// @brief 0の強さを返す．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief 1の強さを返す．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief 遅延を表す式を返す．
-  virtual
   const VlDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief ネット宣言中の assignment の時に true を返す．
-  virtual
   bool
-  has_net_decl_assign() const;
+  has_net_decl_assign() const override;
 
 
 private:
