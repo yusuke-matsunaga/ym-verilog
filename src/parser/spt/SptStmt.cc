@@ -140,7 +140,7 @@ SptStmt::name() const
 // @brief 引数の数の取得
 // @return 引数の数
 // @note kEnable/kSysEnable で意味のある関数
-ymuint
+int
 SptStmt::arg_num() const
 {
   return mArgArray.size();
@@ -150,7 +150,7 @@ SptStmt::arg_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
 // @note kEnable/kSysEnable で意味のある関数
 const PtExpr*
-SptStmt::arg(ymuint pos) const
+SptStmt::arg(int pos) const
 {
   return mArgArray[pos];
 }
@@ -221,7 +221,7 @@ SptStmt::else_body() const
 // case item の要素数の取得
 // @return case item の要素数
 // kCase/kCaseX/kCaseZ で意味のある関数
-ymuint
+int
 SptStmt::caseitem_num() const
 {
   return mCaseItemArray.size();
@@ -230,7 +230,7 @@ SptStmt::caseitem_num() const
 // case item の取得
 // kCase/kCaseX/kCaseZ で意味のある関数
 const PtCaseItem*
-SptStmt::caseitem(ymuint pos) const
+SptStmt::caseitem(int pos) const
 {
   return mCaseItemArray[pos];
 }
@@ -300,7 +300,7 @@ SptCaseItem::file_region() const
 // @brief ラベルの数の取得
 // @retval ラベルの数 通常の case ラベルの場合
 // @retval 0 default の場合
-ymuint
+int
 SptCaseItem::label_num() const
 {
   return mLabelArray.size();
@@ -309,7 +309,7 @@ SptCaseItem::label_num() const
 // @brief ラベルの取得
 // @param[in] pos 位置番号 ( 0 <= pos < label_num() )
 const PtExpr*
-SptCaseItem::label(ymuint pos) const
+SptCaseItem::label(int pos) const
 {
   return mLabelArray[pos];
 }

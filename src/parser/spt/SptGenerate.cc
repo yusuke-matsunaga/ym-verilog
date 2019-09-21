@@ -164,7 +164,7 @@ SptGenCaseItem::file_region() const
 // @brief ラベルの数の取得
 // @return ラベル数\n
 // 0 の時は default の意味
-ymuint
+int
 SptGenCaseItem::label_num() const
 {
   return mLabelArray.size();
@@ -173,7 +173,7 @@ SptGenCaseItem::label_num() const
 // @brief ラベルの取得
 // @param[in] pos 位置番号 ( 0 <= pos < label_num() )
 const PtExpr*
-SptGenCaseItem::label(ymuint pos) const
+SptGenCaseItem::label(int pos) const
 {
   return mLabelArray[pos];
 }
@@ -220,7 +220,7 @@ SptGenCase::expr() const
 }
 
 // case item の要素数を返す．
-ymuint
+int
 SptGenCase::size() const
 {
   return mCaseItemArray.size();
@@ -228,7 +228,7 @@ SptGenCase::size() const
 
 // case item を返す．
 const PtGenCaseItem*
-SptGenCase::caseitem(ymuint pos) const
+SptGenCase::caseitem(int pos) const
 {
   return mCaseItemArray[pos];
 }

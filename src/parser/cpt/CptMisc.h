@@ -49,7 +49,7 @@ public:
   /// @retval イベントリストのサイズ event control/repeat control の場合
   /// @retval 0 上記以外
   virtual
-  ymuint
+  int
   event_num() const;
 
   /// @brief イベントリストの要素の取得
@@ -57,7 +57,7 @@ public:
   /// @note event control/repeat control の場合のみ意味を持つ
   virtual
   const PtExpr*
-  event(ymuint pos) const;
+  event(int pos) const;
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
@@ -164,7 +164,7 @@ public:
   /// @retval イベントリストのサイズ event control/repeat control の場合
   /// @retval 0 上記以外
   virtual
-  ymuint
+  int
   event_num() const;
 
   /// @brief イベントリストの要素の取得
@@ -172,7 +172,7 @@ public:
   /// @note event control/repeat control の場合のみ意味を持つ
   virtual
   const PtExpr*
-  event(ymuint pos) const;
+  event(int pos) const;
 
 
 private:
@@ -234,7 +234,7 @@ public:
   /// @retval イベントリストのサイズ event control/repeat control の場合
   /// @retval 0 上記以外
   virtual
-  ymuint
+  int
   event_num() const;
 
   /// @brief イベントリストの要素の取得
@@ -242,7 +242,7 @@ public:
   /// @note event control/repeat control の場合のみ意味を持つ
   virtual
   const PtExpr*
-  event(ymuint pos) const;
+  event(int pos) const;
 
 
 private:
@@ -487,7 +487,7 @@ public:
   /// @brief 値を取り出す．
   virtual
   const PtExpr*
-  value(ymuint pos) const;
+  value(int pos) const;
 
 
 private:
@@ -627,14 +627,14 @@ public:
   /// @brief 要素数の取得
   /// @return 要素数
   virtual
-  ymuint
+  int
   attrspec_num() const;
 
   /// @brief 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
   virtual
   const PtAttrSpec*
-  attrspec(ymuint pos) const;
+  attrspec(int pos) const;
 
 
 private:

@@ -112,7 +112,7 @@ CptIOHBase::right_range() const
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CptIOHBase::item_num() const
 {
   return mItemArray.size();
@@ -121,7 +121,7 @@ CptIOHBase::item_num() const
 // @brief 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < item_num() )
 const PtIOItem*
-CptIOHBase::item(ymuint pos) const
+CptIOHBase::item(int pos) const
 {
   return mItemArray[pos];
 }

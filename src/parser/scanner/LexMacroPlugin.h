@@ -113,7 +113,7 @@ public:
   /// @param[in] num_param パラメータ数
   LpMacro(RawLex& lex,
 	  const char* name,
-	  ymuint num_param);
+	  int num_param);
 
   /// @brief デストラクタ
   virtual
@@ -143,7 +143,7 @@ private:
   StrBuff mName;
 
   // パラメータ数
-  ymuint32 mNumParam;
+  int mNumParam;
 
   // 置き換えテンプレート
   TokenList mTokenList;

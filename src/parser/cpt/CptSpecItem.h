@@ -57,14 +57,14 @@ public:
 
   /// @brief ターミナルリストの要素数を返す．
   virtual
-  ymuint
+  int
   size() const;
 
   /// @brief ターミナルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtExpr*
-  terminal(ymuint pos) const;
+  terminal(int pos) const;
 
 
 private:
@@ -202,14 +202,14 @@ public:
   /// @brief 入力リストの要素数の取得
   /// @return 入力リストの要素数
   virtual
-  ymuint
+  int
   input_num() const;
 
   /// @brief 入力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < input_num() )
   virtual
   const PtExpr*
-  input(ymuint pos) const;
+  input(int pos) const;
 
   /// @brief 入力の極性を取り出す．
   /// @note 0の場合もありうる．
@@ -225,14 +225,14 @@ public:
   /// @brief 出力リストの要素数の取得
   /// @return 出力リストの要素数
   virtual
-  ymuint
+  int
   output_num() const;
 
   /// @brief 出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < output_num() )
   virtual
   const PtExpr*
-  output(ymuint pos) const;
+  output(int pos) const;
 
   /// @brief 出力の極性を取り出す．
   /// @note 0の場合もありうる．
@@ -340,7 +340,7 @@ public:
   /// @note 0の場合もある．
   virtual
   const PtExpr*
-  value(ymuint pos) const;
+  value(int pos) const;
 
 
 private:

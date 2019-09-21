@@ -11,7 +11,6 @@
 
 #include "ym/verilog.h"
 #include "ym/VlScalarVal.h"
-#include "ym/HashFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -417,19 +416,19 @@ operator>=(VlTime op1,
 
 END_NAMESPACE_YM_VERILOG
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_STD
 
 // VlTimeをキーにしたハッシュ関数クラスの定義
 template <>
-struct HashFunc<nsVerilog::VlTime>
+struct hash<YM_NAMESPACE::nsVerilog::VlTime>
 {
   SizeType
-  operator()(nsVerilog::VlTime time) const
+  operator()(YM_NAMESPACE::nsVerilog::VlTime time) const
   {
     return time.hash();
   }
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_STD
 
 #endif // YM_VLTIME_H

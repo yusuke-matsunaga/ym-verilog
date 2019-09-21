@@ -38,7 +38,7 @@ PtMgr::clear()
 
 // @brief 登録されているモジュールのリストを返す．
 // @return 登録されているモジュールのリスト
-const list<const PtModule*>&
+const vector<const PtModule*>&
 PtMgr::pt_module_list() const
 {
   return mModuleList;
@@ -46,7 +46,7 @@ PtMgr::pt_module_list() const
 
 // @brief 登録されている UDP のリストを返す．
 // @return 登録されている UDP のリスト
-const list<const PtUdp*>&
+const vector<const PtUdp*>&
 PtMgr::pt_udp_list() const
 {
   return mUdpList;
@@ -58,7 +58,7 @@ PtMgr::pt_udp_list() const
 bool
 PtMgr::check_def_name(const char* name) const
 {
-  return mDefNames.check(name);
+  return mDefNames.count(name) > 0;
 }
 
 // UDP の登録
@@ -81,7 +81,7 @@ PtMgr::reg_module(const PtModule* module)
 void
 PtMgr::reg_defname(const char* name)
 {
-  mDefNames.add(name);
+  mDefNames.insert(name);
 }
 
 END_NAMESPACE_YM_VERILOG

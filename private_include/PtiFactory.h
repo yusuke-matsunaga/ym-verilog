@@ -2019,7 +2019,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& fr,
-	       ymuint value) = 0;
+	       unsigned int value) = 0;
 
   /// @brief 整数型の定数の生成
   /// @param[in] fr ファイル位置の情報
@@ -2050,7 +2050,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& fr,
-	       ymuint size,
+	       int size,
 	       tVpiConstType const_type,
 	       const char* value) = 0;
 
@@ -2327,7 +2327,7 @@ protected:
   /// @param[in] size 配列のサイズ
   template<typename T>
   T*
-  alloc_array(ymuint size);
+  alloc_array(int size);
 
 
   /// @brief メモリアロケータを得る．
@@ -2355,7 +2355,7 @@ private:
 template<typename T>
 inline
 T*
-PtiFactory::alloc_array(ymuint size)
+PtiFactory::alloc_array(int size)
 {
   void* p = mAlloc.get_memory(sizeof(T) * size);
   return new (p) T[size];

@@ -58,14 +58,14 @@ public:
 
   /// @brief 要素数を取り出す．
   virtual
-  ymuint
+  int
   size() const;
 
   /// @brief module/UDP/gate instance 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtInst*
-  inst(ymuint pos) const;
+  inst(int pos) const;
 
 
 private:
@@ -266,14 +266,14 @@ public:
 
   /// @brief 要素数を取り出す．
   virtual
-  ymuint
+  int
   size() const;
 
   /// @brief module/UDP/gate instance 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtInst*
-  inst(ymuint pos) const;
+  inst(int pos) const;
 
 
 private:
@@ -527,14 +527,14 @@ public:
   /// @brief ポート数の取得
   /// @return ポート数
   virtual
-  ymuint
+  int
   port_num() const;
 
   /// @brief ポートの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
   virtual
   const PtConnection*
-  port(ymuint pos) const;
+  port(int pos) const;
 
 
 private:

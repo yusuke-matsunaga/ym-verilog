@@ -14,7 +14,6 @@
 #include "ym/pt/PtP.h"
 
 #include "ym/FileRegion.h"
-#include "ym/HashMap.h"
 
 #include "PtiDecl.h"
 
@@ -153,13 +152,13 @@ public:
   /// @brief ポート数の取得
   /// @return ポート数
   virtual
-  ymuint
+  int
   port_num() const;
 
   /// @brief ポートの取得
   virtual
   const PtPort*
-  port(ymuint pos) const;
+  port(int pos) const;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual
@@ -169,7 +168,7 @@ public:
   /// @brief 入出力宣言の要素数の取得
   /// @note 個々のヘッダが持つ要素数の総和を計算する．
   virtual
-  ymuint
+  int
   iodecl_num() const;
 
   /// @brief 宣言ヘッダ配列の取得
@@ -263,7 +262,7 @@ private:
   PtIOHeadArray mIOHeadArray;
 
   // 入出力宣言の要素数
-  ymuint32 mIODeclNum;
+  int mIODeclNum;
 
   // 宣言リスト
   PtDeclHeadArray mDeclHeadArray;
@@ -272,7 +271,7 @@ private:
   PtItemArray mItemArray;
 
   // 関数定義の辞書
-  HashMap<string, const PtItem*> mFuncDic;
+  unordered_map<string, const PtItem*> mFuncDic;
 
 };
 
@@ -292,7 +291,6 @@ protected:
 	  const char* ext_name);
 
   /// @brief デストラクタ
-  virtual
   ~CptPort();
 
 
@@ -321,20 +319,20 @@ public:
 
   /// @brief 内部のポート結線リストのサイズの取得
   virtual
-  ymuint
+  int
   portref_size() const;
 
   /// @brief 内部のポート結線リストの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   const PtExpr*
-  portref_elem(ymuint pos) const;
+  portref_elem(int pos) const;
 
   /// @brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   tVlDirection
-  portref_dir(ymuint pos) const;
+  portref_dir(int pos) const;
 
 
 public:
@@ -347,7 +345,7 @@ public:
   /// @param[in] dir 方向
   virtual
   void
-  _set_portref_dir(ymuint pos,
+  _set_portref_dir(int pos,
 		   tVlDirection dir);
 
 
@@ -397,20 +395,20 @@ public:
 
   /// @brief 内部のポート結線リストのサイズの取得
   virtual
-  ymuint
+  int
   portref_size() const;
 
   /// @brief 内部のポート結線リストの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   const PtExpr*
-  portref_elem(ymuint pos) const;
+  portref_elem(int pos) const;
 
   ///@brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   tVlDirection
-  portref_dir(ymuint pos) const;
+  portref_dir(int pos) const;
 
 
 public:
@@ -423,7 +421,7 @@ public:
   /// @param[in] dir 方向
   virtual
   void
-  _set_portref_dir(ymuint pos,
+  _set_portref_dir(int pos,
 		   tVlDirection dir);
 
 
@@ -470,20 +468,20 @@ public:
 
   /// @brief 内部のポート結線リストのサイズの取得
   virtual
-  ymuint
+  int
   portref_size() const;
 
   /// @brief 内部のポート結線リストの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   const PtExpr*
-  portref_elem(ymuint pos) const;
+  portref_elem(int pos) const;
 
   ///@brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   tVlDirection
-  portref_dir(ymuint pos) const;
+  portref_dir(int pos) const;
 
 
 public:
@@ -496,7 +494,7 @@ public:
   /// @param[in] dir 方向
   virtual
   void
-  _set_portref_dir(ymuint pos,
+  _set_portref_dir(int pos,
 		   tVlDirection dir);
 
 

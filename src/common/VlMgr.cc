@@ -61,7 +61,7 @@ VlMgr::clear()
 bool
 VlMgr::read_file(const string& filename,
 		 const SearchPathList& searchpath,
-		 const list<VlLineWatcher*> watcher_list)
+		 const vector<VlLineWatcher*> watcher_list)
 {
   Parser parser(*mPtMgr, mAlloc, *mPtiFactory);
 
@@ -70,7 +70,7 @@ VlMgr::read_file(const string& filename,
 
 // @brief 登録されているモジュールのリストを返す．
 // @return 登録されているモジュールのリスト
-const list<const PtModule*>&
+const vector<const PtModule*>&
 VlMgr::pt_module_list() const
 {
   return mPtMgr->pt_module_list();
@@ -78,7 +78,7 @@ VlMgr::pt_module_list() const
 
 // @brief 登録されている UDP のリストを返す．
 // @return 登録されている UDP のリスト
-const list<const PtUdp*>&
+const vector<const PtUdp*>&
 VlMgr::pt_udp_list() const
 {
   return mPtMgr->pt_udp_list();
@@ -96,7 +96,7 @@ VlMgr::elaborate(const ClibCellLibrary& cell_library)
 }
 
 // @brief UDP 定義のリストを返す．
-const list<const VlUdpDefn*>&
+const vector<const VlUdpDefn*>&
 VlMgr::udp_list() const
 {
   return mElbMgr->udp_list();
@@ -113,7 +113,7 @@ VlMgr::find_udp(const char* name) const
 }
 
 // @brief topmodule のリストを返す．
-const list<const VlModule*>&
+const vector<const VlModule*>&
 VlMgr::topmodule_list() const
 {
   return mElbMgr->topmodule_list();

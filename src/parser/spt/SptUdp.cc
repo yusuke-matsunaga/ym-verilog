@@ -69,7 +69,7 @@ SptUdp::name() const
 }
 
 // ポート数を取り出す．
-ymuint
+int
 SptUdp::port_num() const
 {
   return mPortArray.size();
@@ -77,7 +77,7 @@ SptUdp::port_num() const
 
 // ポートを取り出す．
 const PtPort*
-SptUdp::port(ymuint pos) const
+SptUdp::port(int pos) const
 {
   return mPortArray[pos];
 }

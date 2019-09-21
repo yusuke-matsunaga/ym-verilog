@@ -68,26 +68,26 @@ public:
   /// @return 要素数
   /// @note さまざまな意味で用いられる．
   virtual
-  ymuint
+  int
   size() const = 0;
 
   /// @brief defparam 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtDefParam*
-  defparam(ymuint pos) const = 0;
+  defparam(int pos) const = 0;
 
   /// @brief continuous assign 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtContAssign*
-  contassign(ymuint pos) const = 0;
+  contassign(int pos) const = 0;
 
   /// @brief module/UDP/gate instance 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtInst*
-  inst(ymuint pos) const = 0;
+  inst(int pos) const = 0;
 
   /// @brief automatic 情報の取得
   /// @retval true automatic 宣言された task/function
@@ -98,7 +98,7 @@ public:
 
   /// @brief IO宣言の要素数の取得
   virtual
-  ymuint
+  int
   ioitem_num() const = 0;
 
   /// @brief IO宣言リストの配列の取得
@@ -179,7 +179,7 @@ public:
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtExpr*
-  terminal(ymuint pos) const = 0;
+  terminal(int pos) const = 0;
 
   /// @brief パス記述の取得
   /// @return パス記述
@@ -217,7 +217,7 @@ public:
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtGenCaseItem*
-  caseitem(ymuint pos) const = 0;
+  caseitem(int pos) const = 0;
 
   /// @brief 繰り返し制御用の変数名の取得
   /// @return 繰り返し制御用の変数名
@@ -353,14 +353,14 @@ public:
   /// @brief ポート数の取得
   /// @return ポート数
   virtual
-  ymuint
+  int
   port_num() const = 0;
 
   /// @brief ポートの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
   virtual
   const PtConnection*
-  port(ymuint pos) const = 0;
+  port(int pos) const = 0;
 
 };
 
@@ -390,14 +390,14 @@ public:
   /// @return ラベル数\n
   /// 0 の時は default の意味
   virtual
-  ymuint
+  int
   label_num() const = 0;
 
   /// @brief ラベルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
   virtual
   const PtExpr*
-  label(ymuint pos) const = 0;
+  label(int pos) const = 0;
 
   /// @brief 宣言のリストの取得
   virtual
@@ -443,14 +443,14 @@ public:
   /// @brief 入力リストの要素数の取得
   /// @return 入力リストの要素数
   virtual
-  ymuint
+  int
   input_num() const = 0;
 
   /// @brief 入力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < input_num() )
   virtual
   const PtExpr*
-  input(ymuint pos) const = 0;
+  input(int pos) const = 0;
 
   /// @brief 入力の極性の取得
   /// @return 入力の極性\n
@@ -468,14 +468,14 @@ public:
   /// @brief 出力リストの要素数の取得
   /// @return 出力リストの要素数
   virtual
-  ymuint
+  int
   output_num() const = 0;
 
   /// @brief 出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < output_num() )
   virtual
   const PtExpr*
-  output(ymuint pos) const = 0;
+  output(int pos) const = 0;
 
   /// @brief 出力の極性の取得
   /// @return 出力の極性\n
@@ -525,7 +525,7 @@ public:
   /// 0の場合もある．
   virtual
   const PtExpr*
-  value(ymuint pos) const = 0;
+  value(int pos) const = 0;
 
 };
 

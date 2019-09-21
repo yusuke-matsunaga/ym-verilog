@@ -62,7 +62,7 @@ public:
   /// @retval イベントリストのサイズ event control/repeat control の場合
   /// @retval 0 上記以外
   virtual
-  ymuint
+  int
   event_num() const;
 
   /// @brief イベントリストの要素の取得
@@ -70,7 +70,7 @@ public:
   /// @note event control/repeat control の場合のみ意味を持つ
   virtual
   const PtExpr*
-  event(ymuint pos) const;
+  event(int pos) const;
 
   /// 繰り返し数の取得
   virtual
@@ -263,7 +263,7 @@ public:
   /// 値の取得
   virtual
   const PtExpr*
-  value(ymuint pos) const;
+  value(int pos) const;
 
 
 private:
@@ -332,7 +332,7 @@ private:
   // インデックス
   // ただし使うときは1ビット左にシフトして最下位ビットに1を立てておく．
   // インデックス0とインデックスなしを区別するため．
-  ymuint32 mIndex;
+  unsigned int mIndex;
 
 };
 
@@ -363,14 +363,14 @@ public:
   /// @brief 要素数の取得
   /// @return 要素数
   virtual
-  ymuint
+  int
   attrspec_num() const;
 
   /// @brief 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
   virtual
   const PtAttrSpec*
-  attrspec(ymuint pos) const;
+  attrspec(int pos) const;
 
 
 private:

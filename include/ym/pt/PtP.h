@@ -10,7 +10,6 @@
 
 
 #include "ym/verilog.h"
-#include "ym/HashFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -193,14 +192,14 @@ typedef PtArray<const PtAttrSpec> PtAttrSpecArray;
 
 END_NAMESPACE_YM_VERILOG
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_STD
 
 // PtModule へのポインタをキーにしたハッシュ関数クラスの定義
 template <>
-struct HashFunc<nsVerilog::PtModule*>
+struct hash<YM_NAMESPACE::nsVerilog::PtModule*>
 {
   SizeType
-  operator()(nsVerilog::PtModule* module) const
+  operator()(YM_NAMESPACE::nsVerilog::PtModule* module) const
   {
     ympuint tmp = reinterpret_cast<ympuint>(module)/sizeof(void*);
     return static_cast<SizeType>(tmp);
@@ -209,16 +208,16 @@ struct HashFunc<nsVerilog::PtModule*>
 
 // const PtModule へのポインタをキーにしたハッシュ関数クラスの定義
 template <>
-struct HashFunc<const nsVerilog::PtModule*>
+struct hash<const YM_NAMESPACE::nsVerilog::PtModule*>
 {
   SizeType
-  operator()(const nsYm::nsVerilog::PtModule* module) const
+  operator()(const YM_NAMESPACE::nsVerilog::PtModule* module) const
   {
     ympuint tmp = reinterpret_cast<ympuint>(module)/sizeof(void*);
     return static_cast<SizeType>(tmp);
   }
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_STD
 
 #endif // YM_PT_PTP_H

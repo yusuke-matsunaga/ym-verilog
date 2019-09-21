@@ -101,14 +101,14 @@ public:
 
   /// @brief 要素数の取得
   virtual
-  ymuint
+  int
   item_num() const;
 
   /// @brief 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
   virtual
   const PtIOItem*
-  item(ymuint pos) const;
+  item(int pos) const;
 
 
 private:

@@ -69,7 +69,7 @@ CptUdp::name() const
 }
 
 // ポート数を取り出す．
-ymuint
+int
 CptUdp::port_num() const
 {
   return mPortArray.size();
@@ -77,7 +77,7 @@ CptUdp::port_num() const
 
 // 先頭のポートを取り出す．
 const PtPort*
-CptUdp::port(ymuint pos) const
+CptUdp::port(int pos) const
 {
   return mPortArray[pos];
 }

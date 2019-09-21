@@ -95,13 +95,13 @@ Parser::add_port(PtiPort* port)
 bool
 Parser::check_PortArray(PtIOHeadArray iohead_array)
 {
-  HashSet<string> portref_dic;
-  for (ymuint i = 0; i < iohead_array.size(); ++ i) {
+  unordered_set<string> portref_dic;
+  for ( int i = 0; i < iohead_array.size(); ++ i ) {
     const PtIOHead* head = iohead_array[i];
-    for (ymuint j = 0; j < head->item_num(); ++ j) {
+    for ( int j = 0; j < head->item_num(); ++ j ) {
       const PtIOItem* elem = head->item(j);
       string name = elem->name();
-      if ( portref_dic.check(name) ) {
+      if ( portref_dic.count(name) > 0 ) {
 	ostringstream buf;
 	buf << "\"" << name << "\" is redefined.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -111,7 +111,7 @@ Parser::check_PortArray(PtIOHeadArray iohead_array)
 			buf.str());
 	return false;
       }
-      portref_dic.add(name);
+      portref_dic.insert(name);
     }
   }
   return true;
@@ -121,8 +121,8 @@ Parser::check_PortArray(PtIOHeadArray iohead_array)
 PtiPortArray
 Parser::new_PortArray(PtIOHeadArray iohead_array)
 {
-  ymuint n = 0;
-  for (ymuint i = 0; i < iohead_array.size(); ++ i) {
+  int n = 0;
+  for ( int i = 0; i < iohead_array.size(); ++ i ) {
     n += iohead_array[i]->item_num();
   }
   // port_array を確保する．
@@ -131,9 +131,9 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
 
   // ポートを生成し arary に格納する．
   n = 0;
-  for (ymuint i = 0; i < iohead_array.size(); ++ i) {
+  for ( int i = 0; i < iohead_array.size(); ++ i ) {
     const PtIOHead* head = iohead_array[i];
-    for (ymuint j = 0; j < head->item_num(); ++ j) {
+    for ( int j = 0; j < head->item_num(); ++ j ) {
       const PtIOItem* elem = head->item(j);
       const char* name = elem->name();
       const PtExpr* portref = mFactory.new_Primary(elem->file_region(), name);

@@ -91,16 +91,16 @@ SptModule::SptModule(const FileRegion& file_region,
     | (static_cast<ymuint32>(suppress_faults) << 26)
     ;
 
-  ymuint n = 0;
-  for (ymuint i = 0; i < mIOHeadArray.size(); ++ i) {
+  int n = 0;
+  for ( int i = 0; i < mIOHeadArray.size(); ++ i ) {
     n += mIOHeadArray[i]->item_num();
   }
   mIODeclNum = n;
 
-  for (ymuint i = 0; i < mItemArray.size(); ++ i) {
+  for ( int i = 0; i < mItemArray.size(); ++ i ) {
     const PtItem* item = mItemArray[i];
     if ( item->type() == kPtItem_Func ) {
-      mFuncDic.add(item->name(), item);
+      mFuncDic[item->name()] = item;
     }
   }
 }
@@ -135,7 +135,7 @@ SptModule::paramport_array() const
 
 // @brief ポート数の取得
 // @return ポート数
-ymuint
+int
 SptModule::port_num() const
 {
   return mPortArray.size();
@@ -143,7 +143,7 @@ SptModule::port_num() const
 
 // ポートの取得
 const PtPort*
-SptModule::port(ymuint pos) const
+SptModule::port(int pos) const
 {
   return mPortArray[pos];
 }
@@ -156,7 +156,7 @@ SptModule::iohead_array() const
 }
 
 // @brief 入出力宣言の要素数の取得
-ymuint
+int
 SptModule::iodecl_num() const
 {
   return mIODeclNum;
@@ -335,9 +335,8 @@ SptModule::cell() const
 const PtItem*
 SptModule::find_function(const char* name) const
 {
-  const PtItem* item;
-  if ( mFuncDic.find(name, item) ) {
-    return item;
+  if ( mFuncDic.count(name) > 0 ) {
+    return mFuncDic.at(name);
   }
   else {
     return nullptr;
@@ -411,7 +410,7 @@ SptPort::portref() const
 
 // 内部のポート結線リストのサイズの取得
 // @return 内部のポート結線リストのサイズ
-ymuint
+int
 SptPort::portref_size() const
 {
   return mPortRefArray.size();
@@ -420,14 +419,14 @@ SptPort::portref_size() const
 // 内部のポート結線の取得
 // @return 先頭のポート結線
 const PtExpr*
-SptPort::portref_elem(ymuint pos) const
+SptPort::portref_elem(int pos) const
 {
   return mPortRefArray[pos];
 }
 
 // @brief 内部のポート結線の報告の取得
 tVlDirection
-SptPort::portref_dir(ymuint pos) const
+SptPort::portref_dir(int pos) const
 {
   return mDirArray[pos];
 }
@@ -436,7 +435,7 @@ SptPort::portref_dir(ymuint pos) const
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 // @param[in] dir 方向
 void
-SptPort::_set_portref_dir(ymuint pos,
+SptPort::_set_portref_dir(int pos,
 			  tVlDirection dir)
 {
   mDirArray[pos] = dir;
@@ -547,7 +546,7 @@ SptFactory::new_Port(const FileRegion& file_region,
 		     const PtExpr* portref,
 		     const char* ext_name)
 {
-  ymuint portref_num = 1;
+  int portref_num = 1;
   const PtExpr** portref_array = alloc_array<const PtExpr*>(portref_num);
   portref_array[0] = portref;
   void* p = alloc().get_memory(sizeof(SptPort));

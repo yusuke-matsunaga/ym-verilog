@@ -73,7 +73,7 @@ LpDefine::parse()
   FileRegion macro_loc = cur_token_loc();
 
   // パラメータ名をキーにして位置番号を格納する連想配列
-  HashMap<string, ymuint> param_dic;
+  unordered_map<string, int> param_dic;
 
   // ここは空白が重要なので get_raw_token() を呼ぶ．
   int id = get_raw_token();
@@ -83,7 +83,7 @@ LpDefine::parse()
   else if ( id == '(' ) {
     // パラメータあり
     // パラメータを param_dic に記録
-    ymuint pos = 0;
+    int pos = 0;
     if ( !expect(IDENTIFIER) ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      cur_token_loc(),
@@ -93,7 +93,7 @@ LpDefine::parse()
 		      "expecting an identifier after '('.");
       return false;
     }
-    param_dic.add(cur_string(), pos);
+    param_dic[cur_string()] = pos;
     ++ pos;
     for ( bool go = true; go; ) {
       int id = get_nospace_token();
@@ -112,7 +112,7 @@ LpDefine::parse()
 			  "expecting an identifier after ','.");
 	  return false;
 	}
-	param_dic.add(cur_string(), pos);
+	param_dic[cur_string()] = pos;
 	++ pos;
 	break;
 
@@ -140,7 +140,7 @@ LpDefine::parse()
 
   // マクロをプラグインとして生成
   const char* macroname = defsymbol.c_str();
-  ymuint n = param_dic.num();
+  int n = param_dic.size();
   LpMacro* macro = new LpMacro(lex(), macroname, n);
 
   // マクロ本体を macro に記録
@@ -148,9 +148,8 @@ LpDefine::parse()
     for (int id = get_nospace_token();
 	 id != NL && id != EOF;
 	 id = get_nospace_token()) {
-      ymuint pos;
-      if ( id == IDENTIFIER &&
-	   param_dic.find(cur_string(), pos) ) {
+      if ( id == IDENTIFIER && param_dic.count(cur_string()) > 0 ) {
+	int pos = param_dic.at(cur_string());
 	// 置き換え対象のパラメータ
 	macro->mTokenList.add(pos);
       }
@@ -275,7 +274,7 @@ LpUndef::parse()
 // @param[in] num_param パラメータ数
 LpMacro::LpMacro(RawLex& lex,
 		 const char* name,
-		 ymuint num_param) :
+		 int num_param) :
   LexPlugin(lex, name),
   mNumParam(num_param)
 {
@@ -326,7 +325,7 @@ LpMacro::parse()
 		      "'(' is expected.");
       return false;
     }
-    ymuint pos = 0;
+    int pos = 0;
     for (bool go = true; go && pos < mNumParam; ) {
       int id = get_nospace_token();
       switch ( id ) {

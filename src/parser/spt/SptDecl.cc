@@ -119,7 +119,7 @@ SptIOHead::right_range() const
 }
 
 // @brief 要素数の取得
-ymuint
+int
 SptIOHead::item_num() const
 {
   return mItemArray.size();
@@ -128,7 +128,7 @@ SptIOHead::item_num() const
 // @brief 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < item_num() )
 const PtIOItem*
-SptIOHead::item(ymuint pos) const
+SptIOHead::item(int pos) const
 {
   return mItemArray[pos];
 }
@@ -324,7 +324,7 @@ SptDeclHead::delay() const
 }
 
 // @brief 要素数の取得
-ymuint
+int
 SptDeclHead::item_num() const
 {
   return mItemArray.size();
@@ -333,7 +333,7 @@ SptDeclHead::item_num() const
 // @brief 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < item_num() )
 const PtDeclItem*
-SptDeclHead::item(ymuint pos) const
+SptDeclHead::item(int pos) const
 {
   return mItemArray[pos];
 }
@@ -392,7 +392,7 @@ SptDeclItem::name() const
 
 // dimension list のサイズの取得
 // @return dimension list のサイズ
-ymuint
+int
 SptDeclItem::dimension_list_size() const
 {
   return mRangeArray.size();
@@ -401,7 +401,7 @@ SptDeclItem::dimension_list_size() const
 // 範囲の取得
 // @return 先頭の要素
 const PtRange*
-SptDeclItem::range(ymuint pos) const
+SptDeclItem::range(int pos) const
 {
   return mRangeArray[pos];
 }

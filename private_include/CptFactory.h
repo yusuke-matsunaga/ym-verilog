@@ -1210,7 +1210,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& fr,
-	       ymuint value);
+	       unsigned int value);
 
   /// @brief 整数型の定数の生成
   virtual
@@ -1229,7 +1229,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& fr,
-	       ymuint size,
+	       int size,
 	       tVpiConstType const_type,
 	       const char* value);
 

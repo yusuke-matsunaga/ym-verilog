@@ -61,7 +61,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -69,7 +69,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
@@ -82,14 +82,14 @@ public:
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
   virtual
-  ymuint
+  int
   index_num() const;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   virtual
   const PtExpr*
-  index(ymuint pos) const;
+  index(int pos) const;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
@@ -124,14 +124,14 @@ public:
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   /// @note このクラスでは 0 を返す．
   virtual
-  ymuint
+  int
   const_size() const;
 
   /// @brief 整数型の値の取得
   /// @return 値
   /// @note このクラスでは 0 を返す．
   virtual
-  ymuint
+  unsigned int
   const_uint() const;
 
   /// @brief 整数型および文字列型の定数の文字列表現の取得
@@ -262,7 +262,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -270,7 +270,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -320,7 +320,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -328,7 +328,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -376,7 +376,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -384,7 +384,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -439,7 +439,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -447,7 +447,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -538,7 +538,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -546,7 +546,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -597,7 +597,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -605,7 +605,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -893,14 +893,14 @@ public:
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
   virtual
-  ymuint
+  int
   index_num() const;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   virtual
   const PtExpr*
-  index(ymuint pos) const;
+  index(int pos) const;
 
   // index_list も range も持たないとき true を返す．
   virtual
@@ -1399,7 +1399,7 @@ protected:
 
   // コンストラクタ
   CptIntConstant1(const FileRegion& file_region,
-		  ymuint value);
+		  unsigned int value);
 
   // デストラクタ
   virtual
@@ -1431,7 +1431,7 @@ public:
 
   // 整数型の値の取得
   virtual
-  ymuint
+  unsigned int
   const_uint() const;
 
 
@@ -1441,7 +1441,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  ymuint32 mValue;
+  unsigned int mValue;
 
 };
 
@@ -1508,7 +1508,7 @@ protected:
 
   // コンストラクタ
   CptIntConstant3(const FileRegion& file_region,
-		  ymuint size,
+		  int size,
 		  tVpiConstType const_type,
 		  const char* value);
 
@@ -1529,7 +1529,7 @@ public:
 
   // 整数型の定数のサイズの取得
   virtual
-  ymuint
+  int
   const_size() const;
 
   // 文字列型の値の取得
@@ -1547,7 +1547,7 @@ private:
   tVpiConstType mConstType;
 
   // サイズ
-  ymuint32 mSize;
+  int mSize;
 
   // 値を表す文字列
   const char* mValue;

@@ -158,7 +158,7 @@ void
 EiGfRoot::add(int index,
 	      const VlNamedObj* block)
 {
-  mTable.add(index, block);
+  mTable[index] = block;
 }
 
 
@@ -166,9 +166,8 @@ EiGfRoot::add(int index,
 const VlNamedObj*
 EiGfRoot::elem_by_index(int index)
 {
-  const VlNamedObj* ans;
-  if ( mTable.find(index, ans) ) {
-    return ans;
+  if ( mTable.count(index) ) {
+    return mTable.at(index);
   }
   else {
     return nullptr;

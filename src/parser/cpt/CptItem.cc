@@ -67,7 +67,7 @@ CptItem::paramassign_array() const
 // @brief 要素数の取得
 // @return 要素数
 // このクラスでは 0 を返す．
-ymuint
+int
 CptItem::size() const
 {
   return 0;
@@ -76,7 +76,7 @@ CptItem::size() const
 // @brief defparam 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtDefParam*
-CptItem::defparam(ymuint pos) const
+CptItem::defparam(int pos) const
 {
   return nullptr;
 }
@@ -84,7 +84,7 @@ CptItem::defparam(ymuint pos) const
 // @brief continuous assign 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtContAssign*
-CptItem::contassign(ymuint pos) const
+CptItem::contassign(int pos) const
 {
   return nullptr;
 }
@@ -92,7 +92,7 @@ CptItem::contassign(ymuint pos) const
 // @brief module/UDP/gate instance 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtInst*
-CptItem::inst(ymuint pos) const
+CptItem::inst(int pos) const
 {
   return nullptr;
 }
@@ -117,7 +117,7 @@ CptItem::automatic() const
 }
 
 // @brief IO宣言の要素数の取得
-ymuint
+int
 CptItem::ioitem_num() const
 {
   return 0;
@@ -234,7 +234,7 @@ CptItem::specpath_type() const
 // @brief ターミナルの取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtExpr*
-CptItem::terminal(ymuint pos) const
+CptItem::terminal(int pos) const
 {
   return nullptr;
 }
@@ -290,7 +290,7 @@ CptItem::else_item_array() const
 // @return pos 番目の case item
 // このクラスでは nullptr を返す．
 const PtGenCaseItem*
-CptItem::caseitem(ymuint pos) const
+CptItem::caseitem(int pos) const
 {
   return nullptr;
 }
@@ -355,7 +355,7 @@ CptDefParamH::type() const
 }
 
 // 要素数を返す．
-ymuint
+int
 CptDefParamH::size() const
 {
   return mArray.size();
@@ -364,7 +364,7 @@ CptDefParamH::size() const
 // @brief defparam 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtDefParam*
-CptDefParamH::defparam(ymuint pos) const
+CptDefParamH::defparam(int pos) const
 {
   return mArray[pos];
 }
@@ -453,7 +453,7 @@ CptContAssignH::type() const
 }
 
 // 要素数を返す．
-ymuint
+int
 CptContAssignH::size() const
 {
   return mArray.size();
@@ -462,7 +462,7 @@ CptContAssignH::size() const
 // @brief continuous assign 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtContAssign*
-CptContAssignH::contassign(ymuint pos) const
+CptContAssignH::contassign(int pos) const
 {
   return mArray[pos];
 }
@@ -693,8 +693,8 @@ CptTf::CptTf(const FileRegion& file_region,
   mDeclHeadArray(declhead_array),
   mBody(stmt)
 {
-  ymuint n = 0;
-  for (ymuint i = 0; i < iohead_array.size(); ++ i) {
+  int n = 0;
+  for ( int i = 0; i < iohead_array.size(); ++ i ) {
     n += iohead_array[i]->item_num();
   }
   mIOItemNum = n;
@@ -727,7 +727,7 @@ CptTf::automatic() const
 }
 
 // @brief IO宣言の要素数の取得
-ymuint
+int
 CptTf::ioitem_num() const
 {
   return mIOItemNum;

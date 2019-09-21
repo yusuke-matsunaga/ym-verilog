@@ -77,7 +77,7 @@ SptExpr::name() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 SptExpr::operand_num() const
 {
   return 0;
@@ -87,7 +87,7 @@ SptExpr::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-SptExpr::operand(ymuint pos) const
+SptExpr::operand(int pos) const
 {
   return nullptr;
 }
@@ -104,7 +104,7 @@ SptExpr::is_const_index() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-ymuint
+int
 SptExpr::index_num() const
 {
   return 0;
@@ -113,7 +113,7 @@ SptExpr::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-SptExpr::index(ymuint pos) const
+SptExpr::index(int pos) const
 {
   return nullptr;
 }
@@ -158,7 +158,7 @@ SptExpr::const_type() const
 // @return サイズ\n
 // サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
 // このクラスでは 0 を返す．
-ymuint
+int
 SptExpr::const_size() const
 {
   return 0;
@@ -167,7 +167,7 @@ SptExpr::const_size() const
 // @brief 整数型の値の取得
 // @return 値
 // このクラスでは 0 を返す．
-ymuint
+unsigned int
 SptExpr::const_uint() const
 {
   return 0;
@@ -305,7 +305,7 @@ SptOpr1::index_value() const
 
 // @brief オペランドの数の取得
 // @return オペランドの数
-ymuint
+int
 SptOpr1::operand_num() const
 {
   return mSize;
@@ -315,7 +315,7 @@ SptOpr1::operand_num() const
 // @param[in] pos 取り出すオペランドの位置（最初の位置は 0）
 // @return pos 番目のオペランド
 const PtExpr*
-SptOpr1::operand(ymuint pos) const
+SptOpr1::operand(int pos) const
 {
   return mExprList[pos];
 }
@@ -370,7 +370,7 @@ SptOpr2::index_value() const
 
 // @brief オペランドの数の取得
 // @return オペランドの数
-ymuint
+int
 SptOpr2::operand_num() const
 {
   return mExprArray.size();
@@ -380,7 +380,7 @@ SptOpr2::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-SptOpr2::operand(ymuint pos) const
+SptOpr2::operand(int pos) const
 {
   return mExprArray[pos];
 }
@@ -431,7 +431,7 @@ SptFuncCall::name() const
 
 // @brief 引数の数の取得
 // @return 引数の数
-ymuint
+int
 SptFuncCall::operand_num() const
 {
   return mArgArray.size();
@@ -441,7 +441,7 @@ SptFuncCall::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-SptFuncCall::operand(ymuint pos) const
+SptFuncCall::operand(int pos) const
 {
   return mArgArray[pos];
 }
@@ -510,7 +510,7 @@ SptPrimary::is_const_index() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-ymuint
+int
 SptPrimary::index_num() const
 {
   return mIndexArray.size();
@@ -519,7 +519,7 @@ SptPrimary::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-SptPrimary::index(ymuint pos) const
+SptPrimary::index(int pos) const
 {
   return mIndexArray[pos];
 }
@@ -562,8 +562,8 @@ SptPrimary::right_range() const
 // @param[in] rvalue 実数型の時の値
 SptConstant::SptConstant(const FileRegion& file_region,
 			 tVpiConstType const_type,
-			 ymuint size,
-			 ymuint uvalue,
+			 int size,
+			 unsigned int uvalue,
 			 const char* svalue,
 			 double rvalue) :
   SptExpr(file_region, kPtConstExpr),
@@ -582,7 +582,7 @@ SptConstant::~SptConstant()
 
 // @brief 整数型の定数のサイズの取得
 // @return サイズ
-ymuint
+int
 SptConstant::const_size() const
 {
   return mSize;
@@ -590,7 +590,7 @@ SptConstant::const_size() const
 
 // @brief 整数型の値の取得
 // @return 整数型の値
-ymuint
+unsigned int
 SptConstant::const_uint() const
 {
   return mUintValue;
@@ -1014,7 +1014,7 @@ SptFactory::new_SysFuncCall(const FileRegion& file_region,
 // @return 生成された定数
 const PtExpr*
 SptFactory::new_IntConst(const FileRegion& file_region,
-			 ymuint value)
+			 unsigned int value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
   return new (p) SptConstant(file_region, kVpiIntConst,
@@ -1057,7 +1057,7 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 // @return 生成された定数
 const PtExpr*
 SptFactory::new_IntConst(const FileRegion& file_region,
-			 ymuint size,
+			 int size,
 			 tVpiConstType const_type,
 			 const char* value)
 {

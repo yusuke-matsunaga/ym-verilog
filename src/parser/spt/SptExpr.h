@@ -75,7 +75,7 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
@@ -83,7 +83,7 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
@@ -96,14 +96,14 @@ public:
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
   virtual
-  ymuint
+  int
   index_num() const;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   virtual
   const PtExpr*
-  index(ymuint pos) const;
+  index(int pos) const;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
@@ -138,14 +138,14 @@ public:
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   /// @note このクラスでは 0 を返す．
   virtual
-  ymuint
+  int
   const_size() const;
 
   /// @brief 整数型の値の取得
   /// @return 値
   /// @note このクラスでは 0 を返す．
   virtual
-  ymuint
+  unsigned int
   const_uint() const;
 
   /// @brief 整数型および文字列型の定数の文字列表現の取得
@@ -246,13 +246,13 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// pos 番目のオペランドを取り出す．
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -264,7 +264,7 @@ private:
   tVlOpType mOpType;
 
   // オペランド数
-  ymuint32 mSize;
+  int mSize;
 
   // オペランドの配列
   const PtExpr* mExprList[3];
@@ -315,13 +315,13 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  ymuint
+  int
   operand_num() const;
 
   /// pos 番目のオペランドを取り出す．
   virtual
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -376,14 +376,14 @@ public:
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  ymuint
+  int
   operand_num() const;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(ymuint pos) const;
+  operand(int pos) const;
 
 
 private:
@@ -451,14 +451,14 @@ public:
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
   virtual
-  ymuint
+  int
   index_num() const;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   virtual
   const PtExpr*
-  index(ymuint pos) const;
+  index(int pos) const;
 
   /// 範囲指定モードの取得
   virtual
@@ -518,8 +518,8 @@ private:
   /// コンストラクタ
   SptConstant(const FileRegion& file_region,
 	      tVpiConstType const_type,
-	      ymuint size,
-	      ymuint uvalue,
+	      int size,
+	      unsigned int uvalue,
 	      const char* svalue,
 	      double rvalue);
 
@@ -545,12 +545,12 @@ public:
 
   // 整数型の定数のサイズの取得
   virtual
-  ymuint
+  int
   const_size() const;
 
   // 整数型の値の取得
   virtual
-  ymuint
+  unsigned int
   const_uint() const;
 
   // 文字列型の値の取得
@@ -574,10 +574,10 @@ private:
 
   // サイズ
   // 0 の時は指定なし
-  ymuint32 mSize;
+  int mSize;
 
   // 整数の値
-  ymuint32 mUintValue;
+  unsigned int mUintValue;
 
   // 文字列の値
   const char* mStrValue;

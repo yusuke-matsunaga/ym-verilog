@@ -10,7 +10,6 @@
 
 
 #include "ym/pt/PtP.h"
-#include "ym/HashSet.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -40,12 +39,12 @@ public:
 
   /// @brief 登録されているモジュールのリストを返す．
   /// @return 登録されているモジュールのリスト
-  const list<const PtModule*>&
+  const vector<const PtModule*>&
   pt_module_list() const;
 
   /// @brief 登録されている UDP のリストを返す．
   /// @return 登録されている UDP のリスト
-  const list<const PtUdp*>&
+  const vector<const PtUdp*>&
   pt_udp_list() const;
 
   /// @brief インスタンス記述で用いられている名前かどうか調べる．
@@ -83,14 +82,14 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // UDP 定義のリスト
-  list<const PtUdp*> mUdpList;
+  vector<const PtUdp*> mUdpList;
 
   // モジュール定義のリスト
-  list<const PtModule*> mModuleList;
+  vector<const PtModule*> mModuleList;
 
   // インスタンス記述で用いられている名前
   // たぶんモジュール名か UDP名のはず
-  HashSet<string> mDefNames;
+  unordered_set<string> mDefNames;
 
 };
 

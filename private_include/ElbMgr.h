@@ -12,7 +12,6 @@
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
 #include "ym/Alloc.h"
-#include "ym/HashMap.h"
 
 #include "TagDict.h"
 #include "ObjDict.h"
@@ -57,7 +56,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief UDP 定義のリストを返す．
-  const list<const VlUdpDefn*>&
+  const vector<const VlUdpDefn*>&
   udp_list() const;
 
   /// @brief 名前から UDP 定義を取出す．
@@ -68,7 +67,7 @@ public:
   find_udp(const char* name) const;
 
   /// @brief topmodule のリストを返す．
-  const list<const VlModule*>&
+  const vector<const VlModule*>&
   topmodule_list() const;
 
   /// @brief 名前から UserSystf を取出す．
@@ -392,16 +391,16 @@ private:
   Alloc& mAlloc;
 
   // UDP のリスト
-  list<const VlUdpDefn*> mUdpList;
+  vector<const VlUdpDefn*> mUdpList;
 
   // UDP の辞書
-  HashMap<string, const ElbUdpDefn*> mUdpHash;
+  unordered_map<string, const ElbUdpDefn*> mUdpHash;
 
   // topmodule のリスト
-  list<const VlModule*> mTopmoduleList;
+  vector<const VlModule*> mTopmoduleList;
 
   // UserSystf の辞書
-  HashMap<string, const ElbUserSystf*> mSystfHash;
+  unordered_map<string, const ElbUserSystf*> mSystfHash;
 
   // 名前をキーにしたオブジェクトの辞書
   ObjDict mObjDict;

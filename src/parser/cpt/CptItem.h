@@ -68,26 +68,26 @@ public:
   /// @return 要素数
   /// @note このクラスでは 0 を返す．
   virtual
-  ymuint32
+  int
   size() const;
 
   /// @brief defparam 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtDefParam*
-  defparam(ymuint32 pos) const;
+  defparam(int pos) const;
 
   /// @brief continuous assign 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtContAssign*
-  contassign(ymuint32 pos) const;
+  contassign(int pos) const;
 
   /// @brief module/UDP/gate instance 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtInst*
-  inst(ymuint32 pos) const;
+  inst(int pos) const;
 
   /// @brief automatic 情報の取得
   /// @retval true automatic 宣言された task/function
@@ -105,7 +105,7 @@ public:
 
   /// @brief IO宣言の要素数の取得
   virtual
-  ymuint32
+  int
   ioitem_num() const;
 
   /// @brief IO宣言リストの配列の取得
@@ -196,7 +196,7 @@ public:
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtExpr*
-  terminal(ymuint32 pos) const;
+  terminal(int pos) const;
 
   /// @brief パス記述の取得
   /// @return パス記述
@@ -236,7 +236,7 @@ public:
   /// @note このクラスでは nullptr を返す．
   virtual
   const PtGenCaseItem*
-  caseitem(ymuint32 pos) const;
+  caseitem(int pos) const;
 
   /// @brief 繰り返し制御用の変数名の取得
   /// @return 繰り返し制御用の変数名
@@ -299,14 +299,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  ymuint32
+  int
   size() const;
 
   /// @brief defparam 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtDefParam*
-  defparam(ymuint32 pos) const;
+  defparam(int pos) const;
 
 
 private:
@@ -430,14 +430,14 @@ public:
 
   /// @brief 要素数を得る．
   virtual
-  ymuint32
+  int
   size() const;
 
   /// @brief continuous assign 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   virtual
   const PtContAssign*
-  contassign(ymuint32 pos) const;
+  contassign(int pos) const;
 
 
 private:
@@ -801,7 +801,7 @@ public:
 
   /// @brief IO宣言の要素数の取得
   virtual
-  ymuint32
+  int
   ioitem_num() const;
 
   /// @brief IO宣言リストの配列の取得
@@ -835,7 +835,7 @@ private:
   bool mAutomatic;
 
   // IO宣言の要素数
-  ymuint32 mIOItemNum;
+  int mIOItemNum;
 
   // IO宣言の配列
   PtIOHeadArray mIOHeadArray;

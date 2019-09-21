@@ -64,13 +64,13 @@ public:
 
   // ポート数を取り出す．
   virtual
-  ymuint
+  int
   port_num() const;
 
   // ポートを返す．
   virtual
   const PtPort*
-  port(ymuint pos) const;
+  port(int pos) const;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual

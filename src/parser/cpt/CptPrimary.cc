@@ -103,7 +103,7 @@ CptPrimaryI::file_region() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-ymuint
+int
 CptPrimaryI::index_num() const
 {
   return mIndexArray.size();
@@ -112,7 +112,7 @@ CptPrimaryI::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-CptPrimaryI::index(ymuint pos) const
+CptPrimaryI::index(int pos) const
 {
   return mIndexArray[pos];
 }

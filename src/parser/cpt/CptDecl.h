@@ -115,14 +115,14 @@ public:
   /// @brief 要素数の取得
   /// @return 要素数
   virtual
-  ymuint
+  int
   item_num() const;
 
   /// @brief 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
   virtual
   const PtDeclItem*
-  item(ymuint pos) const;
+  item(int pos) const;
 
 
 private:
@@ -1347,14 +1347,14 @@ public:
   /// @brief dimension list のサイズを取り出す．
   /// @return ここでは常に 0 を返す．
   virtual
-  ymuint
+  int
   dimension_list_size() const;
 
   /// 範囲の取得
   /// @note ここでは常に nullptr を返す．
   virtual
   const PtRange*
-  range(ymuint pos) const;
+  range(int pos) const;
 
   /// @brief 初期値を取り出す．
   /// @return ここでは常に nullptr を返す．
@@ -1455,13 +1455,13 @@ public:
   /// @brief dimension list のサイズを取り出す．
   /// @return dimension list のサイズ
   virtual
-  ymuint
+  int
   dimension_list_size() const;
 
   /// 範囲の取得
   virtual
   const PtRange*
-  range(ymuint pos) const;
+  range(int pos) const;
 
 
 private:

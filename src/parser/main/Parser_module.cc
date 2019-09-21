@@ -97,22 +97,22 @@ Parser::new_Module1995(const FileRegion& file_region,
 
   // port_array をスキャンして中で用いられている名前を portref_dic
   // に登録する．
-  HashSet<string> portref_dic;
-  for (ymuint i = 0; i < port_array.size(); ++ i) {
+  unordered_set<string> portref_dic;
+  for ( int i = 0; i < port_array.size(); ++ i ) {
     PtiPort* port = port_array[i];
-    ymuint n = port->portref_size();
-    for (ymuint j = 0; j < n; ++ j) {
+    int n = port->portref_size();
+    for ( int j = 0; j < n; ++ j ) {
       const PtExpr* portref = port->portref_elem(j);
       const char* name = portref->name();
-      portref_dic.add(name);
+      portref_dic.insert(name);
     }
   }
 
   // 入出力ポート宣言に現れる名前を iodecl_names に入れる．
   // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
   // 持たない場合にはデフォルトタイプのネットを生成する．
-  HashMap<string, tVlDirection> iodecl_dirs;
-  for (ymuint i = 0; i < iohead_array.size(); ++ i) {
+  unordered_map<string, tVlDirection> iodecl_dirs;
+  for ( int i = 0; i < iohead_array.size(); ++ i ) {
     const PtIOHead* io_head = iohead_array[i];
     // 名前をキーにして方向を記録しておく
     tVlDirection dir = kVlNoDirection;
@@ -123,12 +123,12 @@ Parser::new_Module1995(const FileRegion& file_region,
     default:
       ASSERT_NOT_REACHED;
     }
-    for (ymuint j = 0; j < io_head->item_num(); ++ j) {
+    for ( int j = 0; j < io_head->item_num(); ++ j ) {
       const PtIOItem* elem = io_head->item(j);
       const char* elem_name = elem->name();
 
       // まず未定義/多重定義のエラーをチェックする．
-      if ( !portref_dic.check(elem_name) ) {
+      if ( portref_dic.count(elem_name) == 0 ) {
 	// port expression に現れない信号線名
 	// 未定義エラー
 	ostringstream buf;
@@ -139,7 +139,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 			"ELAB",
 			buf.str());
       }
-      if ( iodecl_dirs.check(elem_name) ) {
+      if ( iodecl_dirs.count(elem_name) > 0 ) {
 	// 二重登録エラー
 	ostringstream buf;
 	buf << "\"" << elem_name << "\" is redefined.";
@@ -150,7 +150,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 			buf.str());
       }
       else {
-	iodecl_dirs.add(elem_name, dir);
+	iodecl_dirs[elem_name] = dir;
       }
     }
   }
@@ -159,18 +159,17 @@ Parser::new_Module1995(const FileRegion& file_region,
   // 調べる．
   // 同時に名無しのポートがあるかどうかしらべる．
   bool named_port = true;
-  for (ymuint i = 0; i < port_array.size(); ++ i) {
+  for ( int i = 0; i < port_array.size(); ++ i ) {
     PtiPort* port = port_array[i];
     if ( port->ext_name() == nullptr ) {
       // 1つでも名前を持たないポートがあったら名前での結合はできない．
       named_port = false;
     }
-    ymuint n = port->portref_size();
-    for (ymuint j = 0; j < n; ++ j) {
+    int n = port->portref_size();
+    for ( int j = 0; j < n; ++ j ) {
       const PtExpr* portref = port->portref_elem(j);
       const char* name = portref->name();
-      tVlDirection dir;
-      if ( !iodecl_dirs.find(name, dir) ) {
+      if ( iodecl_dirs.count(name) == 0 ) {
 	// name は IOH リストに存在しない．
 	ostringstream buf;
 	buf << "\"" << name << "\" is in the port list but not declared.";
@@ -181,6 +180,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 			buf.str());
       }
       else {
+	tVlDirection dir = iodecl_dirs.at(name);
 	port->_set_portref_dir(j, dir);
       }
     }

@@ -54,7 +54,7 @@ CptExpr::name() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 CptExpr::operand_num() const
 {
   return 0;
@@ -64,7 +64,7 @@ CptExpr::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptExpr::operand(ymuint pos) const
+CptExpr::operand(int pos) const
 {
   return nullptr;
 }
@@ -81,7 +81,7 @@ CptExpr::is_const_index() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-ymuint
+int
 CptExpr::index_num() const
 {
   return 0;
@@ -90,7 +90,7 @@ CptExpr::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-CptExpr::index(ymuint pos) const
+CptExpr::index(int pos) const
 {
   return nullptr;
 }
@@ -135,7 +135,7 @@ CptExpr::const_type() const
 // @return サイズ\n
 // サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
 // このクラスでは 0 を返す．
-ymuint
+int
 CptExpr::const_size() const
 {
   return 0;
@@ -144,7 +144,7 @@ CptExpr::const_size() const
 // @brief 整数型の値の取得
 // @return 値
 // このクラスでは 0 を返す．
-ymuint
+unsigned int
 CptExpr::const_uint() const
 {
   return 0;
@@ -288,7 +288,7 @@ CptOpr1::index_value() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 CptOpr1::operand_num() const
 {
   return 1;
@@ -298,7 +298,7 @@ CptOpr1::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptOpr1::operand(ymuint pos) const
+CptOpr1::operand(int pos) const
 {
   if ( pos == 0 ) {
     return mOpr;
@@ -339,7 +339,7 @@ CptOpr2::file_region() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 CptOpr2::operand_num() const
 {
   return 2;
@@ -349,7 +349,7 @@ CptOpr2::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptOpr2::operand(ymuint pos) const
+CptOpr2::operand(int pos) const
 {
   if ( pos < 2 ) {
     return mOpr[pos];
@@ -393,7 +393,7 @@ CptOpr3::file_region() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 CptOpr3::operand_num() const
 {
   return 3;
@@ -403,7 +403,7 @@ CptOpr3::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptOpr3::operand(ymuint pos) const
+CptOpr3::operand(int pos) const
 {
   if ( pos < 3 ) {
     return mOpr[pos];
@@ -454,7 +454,7 @@ CptConcat::op_type() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 CptConcat::operand_num() const
 {
   return mExprArray.size();
@@ -464,7 +464,7 @@ CptConcat::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptConcat::operand(ymuint pos) const
+CptConcat::operand(int pos) const
 {
   return mExprArray[pos];
 }
@@ -538,7 +538,7 @@ CptMinTypMax::op_type() const
 }
 
 // 子供の数の取得
-ymuint
+int
 CptMinTypMax::operand_num() const
 {
   return 3;
@@ -549,7 +549,7 @@ CptMinTypMax::operand_num() const
 //     = 1 : Typ
 //     = 2 : Max
 const PtExpr*
-CptMinTypMax::operand(ymuint idx) const
+CptMinTypMax::operand(int idx) const
 {
   if ( idx < 3 ) {
     return mValue[idx];
@@ -595,7 +595,7 @@ CptFuncCallBase::name() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-ymuint
+int
 CptFuncCallBase::operand_num() const
 {
   return mArgArray.size();
@@ -605,7 +605,7 @@ CptFuncCallBase::operand_num() const
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptFuncCallBase::operand(ymuint pos) const
+CptFuncCallBase::operand(int pos) const
 {
   return mArgArray[pos];
 }
@@ -724,7 +724,7 @@ CptConstant::type() const
 
 // コンストラクタ
 CptIntConstant1::CptIntConstant1(const FileRegion& file_region,
-				 ymuint value) :
+				 unsigned int value) :
   CptConstant(file_region),
   mValue(value)
 {
@@ -750,7 +750,7 @@ CptIntConstant1::is_index_expr() const
 }
 
 // 整数型の値の取得
-ymuint
+unsigned int
 CptIntConstant1::const_uint() const
 {
   return mValue;
@@ -797,7 +797,7 @@ CptIntConstant2::const_str() const
 
 // コンストラクタ
 CptIntConstant3::CptIntConstant3(const FileRegion& file_region,
-				 ymuint size,
+				 int size,
 				 tVpiConstType const_type,
 				 const char* value) :
   CptConstant(file_region),
@@ -820,7 +820,7 @@ CptIntConstant3::const_type() const
 }
 
 // 整数型の定数のサイズの取得
-ymuint
+int
 CptIntConstant3::const_size() const
 {
   return mSize;
@@ -1008,7 +1008,7 @@ CptFactory::new_SysFuncCall(const FileRegion& file_region,
 // 定数を生成する．
 const PtExpr*
 CptFactory::new_IntConst(const FileRegion& file_region,
-			 ymuint value)
+			 unsigned int value)
 {
   ++ mNumIntConstant1;
   void* p = alloc().get_memory(sizeof(CptIntConstant1));
@@ -1039,7 +1039,7 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 // 定数を生成する．
 const PtExpr*
 CptFactory::new_IntConst(const FileRegion& file_region,
-			 ymuint size,
+			 int size,
 			 tVpiConstType const_type,
 			 const char* value)
 {

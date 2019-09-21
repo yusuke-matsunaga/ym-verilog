@@ -15,7 +15,6 @@
 #include "ym/ClibCellLibrary.h"
 
 #include "ym/SimpleAlloc.h"
-#include "ym/HashMap.h"
 
 #include "CfDict.h"
 #include "AttrDict.h"
@@ -216,7 +215,7 @@ private:
   CfDict mCfDict;
 
   // モジュールテンプレートの辞書
-  HashMap<string, const PtModule*> mModuleDict;
+  unordered_map<string, const PtModule*> mModuleDict;
 
   // attribute instance の辞書
   AttrDict mAttrDict;

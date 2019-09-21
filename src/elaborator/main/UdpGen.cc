@@ -50,7 +50,7 @@ UdpGen::~UdpGen()
 void
 UdpGen::instantiate_udp(const PtUdp* pt_udp)
 {
-  typedef HashMap<string, pair<const PtIOHead*, const PtIOItem*> > IODict;
+  typedef unordered_map<string, pair<const PtIOHead*, const PtIOItem*> > IODict;
 
   const FileRegion& file_region = pt_udp->file_region();
   const char* def_name = pt_udp->name();
@@ -63,9 +63,9 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 		  "ELAB",
 		  buf.str());
 
-  ymuint io_size = pt_udp->port_num();
+  int io_size = pt_udp->port_num();
 
-  ymuint isize = io_size - 1;
+  int isize = io_size - 1;
   tVpiPrimType ptype = pt_udp->prim_type();
   bool is_protected = true; // 何これ?
 
@@ -77,12 +77,12 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   // ポート名をキーにしたIOテンプレートの辞書を作る．
   IODict iodict;
   const PtIOHead* outhead = nullptr;
-  for (ymuint i = 0; i < pt_udp->iohead_array().size(); ++ i) {
+  for ( int i = 0; i < pt_udp->iohead_array().size(); ++ i ) {
     const PtIOHead* iohead = pt_udp->iohead_array()[i];
-    for (ymuint j = 0; j < iohead->item_num(); ++ j) {
+    for ( int j = 0; j < iohead->item_num(); ++ j ) {
       const PtIOItem* elem = iohead->item(j);
       const char* name = elem->name();
-      iodict.add(name, make_pair(iohead, elem));
+      iodict[name] = make_pair(iohead, elem);
       if ( strcmp(name, outname) == 0 ) {
 	outhead = iohead;
       }
@@ -91,14 +91,13 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 
   // IOポートを実体化する．
   // ただし port_list に現れる名前の順番にしたがって実体化しなければならない．
-  for (ymuint i = 0; i < io_size; ++ i) {
+  for ( int i = 0; i < io_size; ++ i ) {
     const PtPort* port = pt_udp->port(i);
     const char* name = port->ext_name();
-    pair<const PtIOHead*, const PtIOItem*> ans;
-    bool found = iodict.find(name, ans);
-    ASSERT_COND( found );
-    const PtIOHead* pt_header = ans.first;
-    const PtIOItem* pt_item = ans.second;
+    ASSERT_COND( iodict.count(name) > 0 );
+    auto tmp = iodict.at(name);
+    const PtIOHead* pt_header = tmp.first;
+    const PtIOItem* pt_item = tmp.second;
     udp->set_io(i, pt_header, pt_item);
   }
 
@@ -134,16 +133,16 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
     // 組合わせ回路
 
     // 一行のサイズは入出力数と一致する．
-    ymuint row_size = io_size;
+    int row_size = io_size;
 
     // 出力値の位置
-    ymuint opos = row_size - 1;
+    int opos = row_size - 1;
 
     // 一行文のデータを保持しておくためのバッファ
     vector<VlUdpVal> row_data(row_size);
 
     PtUdpEntryArray table = pt_udp->table_array();
-    for (ymuint i = 0; i < table.size(); ++ i) {
+    for ( int i = 0; i < table.size(); ++ i ) {
       const PtUdpEntry* pt_udp_entry = table[i];
       const FileRegion& tfr = pt_udp_entry->file_region();
       PtUdpValueArray input_array = pt_udp_entry->input_array();
@@ -158,7 +157,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
       }
 
       // 入力
-      for (ymuint j = 0; j < isize; ++ j) {
+      for ( int j = 0; j < isize; ++ j ) {
 	const PtUdpValue* pt_v = input_array[j];
 	VlUdpVal symbol = pt_v->symbol();
 
@@ -228,19 +227,19 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
     // 順序回路
 
     // 一行のサイズは入出力 + 現状態
-    ymuint row_size = io_size + 1;
+    int row_size = io_size + 1;
 
     // 現状態値の位置
-    ymuint cpos = isize;
+    int cpos = isize;
 
     // 出力値の位置
-    ymuint opos = io_size;
+    int opos = io_size;
 
     // 一行文のデータを保持しておくためのバッファ
     vector<VlUdpVal> row_data(row_size);
 
     PtUdpEntryArray table = pt_udp->table_array();
-    for (ymuint i = 0; i < table.size(); ++ i) {
+    for ( int i = 0; i < table.size(); ++ i ) {
       const PtUdpEntry* pt_udp_entry = table[i];
       const FileRegion& tfr = pt_udp_entry->file_region();
       PtUdpValueArray input_array = pt_udp_entry->input_array();
@@ -256,10 +255,10 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
       }
 
       // 一行中に含まれるエッジタイプのシンボルの数
-      ymuint nt = 0;
+      int nt = 0;
 
       // 入力
-      for (ymuint j = 0; j < isize; ++ j) {
+      for ( int j = 0; j < isize; ++ j ) {
 	const PtUdpValue* pt_v = input_array[j];
 	VlUdpVal symbol = pt_v->symbol();
 

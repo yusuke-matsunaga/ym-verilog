@@ -65,7 +65,7 @@ public:
   /// @return 引数の数
   /// @note kEnable/kSysEnable で意味のある関数
   virtual
-  ymuint
+  int
   arg_num() const = 0;
 
   /// @brief 引数の取得
@@ -73,7 +73,7 @@ public:
   /// @note kEnable/kSysEnable で意味のある関数
   virtual
   const PtExpr*
-  arg(ymuint pos) const = 0;
+  arg(int pos) const = 0;
 
   /// @brief コントロールの取得
   /// @return ディレイ/イベントコントロール
@@ -128,7 +128,7 @@ public:
   /// @return case item の要素数
   /// @note kCase/kCaseX/kCaseZ で意味のある関数
   virtual
-  ymuint
+  int
   caseitem_num() const = 0;
 
   /// @brief case item の取得
@@ -136,7 +136,7 @@ public:
   /// @note kCase/kCaseX/kCaseZ で意味のある関数
   virtual
   const PtCaseItem*
-  caseitem(ymuint pos) const = 0;
+  caseitem(int pos) const = 0;
 
   /// @brief 初期化代入文の取得
   /// @return 初期化代入文
@@ -192,14 +192,14 @@ public:
   /// @retval ラベルの数 通常の case ラベルの場合
   /// @retval 0 default の場合
   virtual
-  ymuint
+  int
   label_num() const = 0;
 
   /// @brief ラベルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
   virtual
   const PtExpr*
-  label(ymuint pos) const = 0;
+  label(int pos) const = 0;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント

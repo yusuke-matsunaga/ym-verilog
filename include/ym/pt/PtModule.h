@@ -130,14 +130,14 @@ public:
 
   /// @brief ポート数を取り出す．
   virtual
-  ymuint
+  int
   port_num() const = 0;
 
   /// @brief ポートを取り出す．
   /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
   virtual
   const PtPort*
-  port(ymuint pos) const = 0;
+  port(int pos) const = 0;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual
@@ -147,7 +147,7 @@ public:
   /// @brief 入出力宣言の要素数の取得
   /// @note 個々のヘッダが持つ要素数の総和を計算する．
   virtual
-  ymuint
+  int
   iodecl_num() const = 0;
 
   /// @brief 宣言ヘッダ配列の取得

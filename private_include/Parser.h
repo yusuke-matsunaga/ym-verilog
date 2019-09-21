@@ -14,8 +14,6 @@
 #include "ym/Alloc.h"
 #include "ym/FragAlloc.h"
 #include "ym/UnitAlloc.h"
-#include "ym/HashSet.h"
-#include "ym/HashMap.h"
 #include "PtiFwd.h"
 #include "PtiFactory.h"
 #include "PtiDecl.h"
@@ -66,7 +64,7 @@ public:
   bool
   read_file(const string& filename,
 	    const SearchPathList& searchpath,
-	    const list<VlLineWatcher*>& watcher_list);
+	    const vector<VlLineWatcher*>& watcher_list);
 
 
 public:

@@ -42,7 +42,7 @@ CptControl::delay() const
 // @brief イベントリストのサイズの取得
 // @retval イベントリストのサイズ event control/repeat control の場合
 // @retval 0 上記以外
-ymuint
+int
 CptControl::event_num() const
 {
   return 0;
@@ -52,7 +52,7 @@ CptControl::event_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < event_num() )
 // @note event control/repeat control の場合のみ意味を持つ
 const PtExpr*
-CptControl::event(ymuint pos) const
+CptControl::event(int pos) const
 {
   return nullptr;
 }
@@ -142,7 +142,7 @@ CptEventControl::type() const
 // @brief イベントリストのサイズの取得
 // @retval イベントリストのサイズ event control/repeat control の場合
 // @retval 0 上記以外
-ymuint
+int
 CptEventControl::event_num() const
 {
   return mEventArray.size();
@@ -152,7 +152,7 @@ CptEventControl::event_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < event_num() )
 // @note event control/repeat control の場合のみ意味を持つ
 const PtExpr*
-CptEventControl::event(ymuint pos) const
+CptEventControl::event(int pos) const
 {
   return mEventArray[pos];
 }
@@ -202,7 +202,7 @@ CptRepeatControl::rep_expr() const
 // @brief イベントリストのサイズの取得
 // @retval イベントリストのサイズ event control/repeat control の場合
 // @retval 0 上記以外
-ymuint
+int
 CptRepeatControl::event_num() const
 {
   return mEventArray.size();
@@ -212,7 +212,7 @@ CptRepeatControl::event_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < event_num() )
 // @note event control/repeat control の場合のみ意味を持つ
 const PtExpr*
-CptRepeatControl::event(ymuint pos) const
+CptRepeatControl::event(int pos) const
 {
   return mEventArray[pos];
 }
@@ -414,7 +414,7 @@ CptDelay::file_region() const
 
 // 値を取り出す．
 const PtExpr*
-CptDelay::value(ymuint pos) const
+CptDelay::value(int pos) const
 {
   if ( pos < 3 ) {
     return mValue[pos];
@@ -514,7 +514,7 @@ CptAttrInst::~CptAttrInst()
 
 // @brief 要素数の取得
 // @return 要素数
-ymuint
+int
 CptAttrInst::attrspec_num() const
 {
   return mAttrSpecArray.size();
@@ -523,7 +523,7 @@ CptAttrInst::attrspec_num() const
 // @brief 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
 const PtAttrSpec*
-CptAttrInst::attrspec(ymuint pos) const
+CptAttrInst::attrspec(int pos) const
 {
   return mAttrSpecArray[pos];
 }

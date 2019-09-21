@@ -69,16 +69,16 @@ CptModule::CptModule(const FileRegion& file_region,
     | (static_cast<ymuint32>(suppress_faults) << 26)
     ;
 
-  ymuint n = 0;
-  for (ymuint i = 0; i < mIOHeadArray.size(); ++ i) {
+  int n = 0;
+  for ( int i = 0; i < mIOHeadArray.size(); ++ i ) {
     n += mIOHeadArray[i]->item_num();
   }
   mIODeclNum = n;
 
-  for (ymuint i = 0; i < mItemArray.size(); ++ i) {
+  for ( int i = 0; i < mItemArray.size(); ++ i ) {
     const PtItem* item = mItemArray[i];
     if ( item->type() == kPtItem_Func ) {
-      mFuncDic.add(item->name(), item);
+      mFuncDic[item->name()] = item;
     }
   }
 }
@@ -111,7 +111,7 @@ CptModule::paramport_array() const
 
 // @brief ポート数の取得
 // @return ポート数
-ymuint
+int
 CptModule::port_num() const
 {
   return mPortArray.size();
@@ -119,7 +119,7 @@ CptModule::port_num() const
 
 // ポートを返す．
 const PtPort*
-CptModule::port(ymuint pos) const
+CptModule::port(int pos) const
 {
   return mPortArray[pos];
 }
@@ -133,7 +133,7 @@ CptModule::iohead_array() const
 
 // @brief 入出力宣言の要素数の取得
 // @note 個々のヘッダが持つ要素数の総和を計算する．
-ymuint
+int
 CptModule::iodecl_num() const
 {
   return mIODeclNum;
@@ -314,9 +314,8 @@ CptModule::cell() const
 const PtItem*
 CptModule::find_function(const char* name) const
 {
-  const PtItem* ans;
-  if ( mFuncDic.find(name, ans) ) {
-    return ans;
+  if ( mFuncDic.count(name) > 0 ) {
+    return mFuncDic.at(name);
   }
   else {
     return nullptr;
@@ -364,7 +363,7 @@ CptPort::portref() const
 }
 
 // @brief 内部のポート結線リストのサイズの取得
-ymuint
+int
 CptPort::portref_size() const
 {
   return 0;
@@ -373,7 +372,7 @@ CptPort::portref_size() const
 // @brief 内部のポート結線リストの取得
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 const PtExpr*
-CptPort::portref_elem(ymuint pos) const
+CptPort::portref_elem(int pos) const
 {
   ASSERT_NOT_REACHED;
   return nullptr;
@@ -382,7 +381,7 @@ CptPort::portref_elem(ymuint pos) const
 //@brief 内部ポート結線の方向の取得
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 tVlDirection
-CptPort::portref_dir(ymuint pos) const
+CptPort::portref_dir(int pos) const
 {
   ASSERT_NOT_REACHED;
   return kVlNoDirection;
@@ -392,7 +391,7 @@ CptPort::portref_dir(ymuint pos) const
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 // @param[in] dir 方向
 void
-CptPort::_set_portref_dir(ymuint pos,
+CptPort::_set_portref_dir(int pos,
 			  tVlDirection dir)
 {
   ASSERT_NOT_REACHED;
@@ -425,7 +424,7 @@ CptPort1::portref() const
 }
 
 // @brief 内部のポート結線リストのサイズの取得
-ymuint
+int
 CptPort1::portref_size() const
 {
   return 1;
@@ -434,7 +433,7 @@ CptPort1::portref_size() const
 // @brief 内部のポート結線リストの取得
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 const PtExpr*
-CptPort1::portref_elem(ymuint pos) const
+CptPort1::portref_elem(int pos) const
 {
   ASSERT_COND( pos == 0 );
   return mPortRef;
@@ -443,7 +442,7 @@ CptPort1::portref_elem(ymuint pos) const
 // @brief 内部ポート結線の方向の取得
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 tVlDirection
-CptPort1::portref_dir(ymuint pos) const
+CptPort1::portref_dir(int pos) const
 {
   return mDir;
 }
@@ -452,7 +451,7 @@ CptPort1::portref_dir(ymuint pos) const
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 // @param[in] dir 方向
 void
-CptPort1::_set_portref_dir(ymuint pos,
+CptPort1::_set_portref_dir(int pos,
 			   tVlDirection dir)
 {
   ASSERT_COND( pos == 0 );
@@ -482,7 +481,7 @@ CptPort2::~CptPort2()
 }
 
 // @brief 内部のポート結線リストのサイズの取得
-ymuint
+int
 CptPort2::portref_size() const
 {
   return mPortRefArray.size();
@@ -491,7 +490,7 @@ CptPort2::portref_size() const
 // @brief 内部のポート結線リストの取得
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 const PtExpr*
-CptPort2::portref_elem(ymuint pos) const
+CptPort2::portref_elem(int pos) const
 {
   return mPortRefArray[pos];
 }
@@ -499,7 +498,7 @@ CptPort2::portref_elem(ymuint pos) const
 // @brief 内部ポート結線の方向の取得
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 tVlDirection
-CptPort2::portref_dir(ymuint pos) const
+CptPort2::portref_dir(int pos) const
 {
   return mDirArray[pos];
 }
@@ -508,7 +507,7 @@ CptPort2::portref_dir(ymuint pos) const
 // @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
 // @param[in] dir 方向
 void
-CptPort2::_set_portref_dir(ymuint pos,
+CptPort2::_set_portref_dir(int pos,
 			   tVlDirection dir)
 {
   mDirArray[pos] = dir;
@@ -635,7 +634,7 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  ymuint n = portref_array.size();
+  int n = portref_array.size();
   tVlDirection* dir_array = alloc_array<tVlDirection>(n);
   void* p = alloc().get_memory(sizeof(CptPort2));
   return new (p) CptPort2(file_region, portref,

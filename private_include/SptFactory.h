@@ -1821,7 +1821,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& file_region,
-	       ymuint value);
+	       unsigned int value);
 
   /// @brief 整数型の定数の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1852,7 +1852,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& file_region,
-	       ymuint size,
+	       int size,
 	       tVpiConstType const_type,
 	       const char* value);
 

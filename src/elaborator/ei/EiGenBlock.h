@@ -13,7 +13,6 @@
 #include "ElbGfRoot.h"
 #include "ym/pt/PtP.h"
 #include "ym/StrBuff.h"
-#include "ym/HashMap.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -160,7 +159,7 @@ private:
   const PtItem* mPtItem;
 
   // 子供のスコープのハッシュ表
-  HashMap<int, const VlNamedObj*> mTable;
+  unordered_map<int, const VlNamedObj*> mTable;
 
 };
 

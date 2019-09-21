@@ -76,7 +76,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
       return;
     }
 
-    for (ymuint i = 0; i < pt_head->size(); ++ i) {
+    for ( int i = 0; i < pt_head->size(); ++ i ) {
       const PtInst* pt_inst = pt_head->inst(i);
       const char* name = pt_inst->name();
       if ( name == nullptr ) {
@@ -122,13 +122,13 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
 
 	// パラメータ割り当て式の生成
 	PtConnectionArray pa_array = pt_head->paramassign_array();
-	ymuint n = pa_array.size();
+	int n = pa_array.size();
 	bool named_con = false;
 	if ( n > 0 && pa_array[0]->name() != nullptr ) {
 	  named_con = true;
 	}
 	ElbParamCon param_con(pt_head->file_region(), n, named_con);
-	for (ymuint i = 0; i < n; ++ i) {
+	for ( int i = 0; i < n; ++ i ) {
 	  const PtConnection* pt_con = pa_array[i];
 	  const PtExpr* expr = pt_con->expr();
 	  VlValue value = evaluate_expr(parent, expr, true);
@@ -149,7 +149,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
     // ただしこの場合, mParamList は空でなければならない．
     // 問題は delay が mParamList に見える場合があるということ．
     PtConnectionArray pa_array = pt_head->paramassign_array();
-    ymuint param_size = pa_array.size();
+    int param_size = pa_array.size();
     const PtDelay* pt_delay = pt_head->delay();
     if ( param_size > 0 && pa_array[0]->name() != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -179,7 +179,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
   if ( cell_id != -1 ) {
     // ただしこの場合, mParamList は空でなければならない．
     PtConnectionArray pa_array = pt_head->paramassign_array();
-    ymuint param_size = pa_array.size();
+    int param_size = pa_array.size();
     if ( param_size > 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      fr,
@@ -252,21 +252,21 @@ ItemGen::phase1_module_array(const VlNamedObj* parent,
 
   // パラメータ割り当て式の生成
   PtConnectionArray pa_array = pt_head->paramassign_array();
-  ymuint param_num = pa_array.size();
+  int param_num = pa_array.size();
   bool named_con = false;
   if ( param_num > 0 && pa_array[0]->name() != nullptr ) {
     named_con = true;
   }
   ElbParamCon param_con(pt_head->file_region(), param_num, named_con);
-  for (ymuint i = 0; i < param_num; ++ i) {
+  for ( int i = 0; i < param_num; ++ i ) {
     const PtConnection* pt_con = pa_array[i];
     const PtExpr* expr = pt_con->expr();
     VlValue value = evaluate_expr(parent, expr, true);
     param_con.set(i, pt_con, expr, value);
   }
 
-  ymuint n = module_array->elem_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  int n = module_array->elem_num();
+  for ( int i = 0; i < n; ++ i ) {
     ElbModule* module1 = module_array->_module(i);
 
 #if 0
@@ -302,11 +302,11 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   const VlNamedObj* parent = module_array->parent();
   const FileRegion& fr = pt_inst->file_region();
 
-  ymuint module_size = module_array->elem_num();
+  int module_size = module_array->elem_num();
   ElbModule* module0 = module_array->_module(0);
-  ymuint port_num = module0->port_num();
+  int port_num = module0->port_num();
 
-  ymuint n = pt_inst->port_num();
+  int n = pt_inst->port_num();
   // ポートの割り当てを行う．
   // 例外: ポートを一つも取らないモジュールの場合
   // module_name instance_name ()
@@ -336,22 +336,22 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
-  HashMap<string, ymuint> port_index;
+  unordered_map<string, int> port_index;
   if ( conn_by_name ) {
     // ポート名とインデックスの辞書を作る．
-    ymuint n = pt_module->port_num();
-    for (ymuint index = 0; index < n; ++ index) {
+    int n = pt_module->port_num();
+    for ( int index = 0; index < n; ++ index ) {
       const PtPort* pt_port = pt_module->port(index);
       const char* name = pt_port->ext_name();
       if ( name != nullptr ) {
-	port_index.add(name, index);
+	port_index[name] = index;
       }
     }
   }
 
   // ポートに接続する式を生成する．
   ElbEnv env;
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     const PtConnection* pt_con = pt_inst->port(i);
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
@@ -359,12 +359,12 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
     }
 
     // この式が対応するインデックス
-    ymuint index;
+    int index;
     if ( conn_by_name ) {
       // 名前による割り当ての場合はポート名で探す．
       const char* port_name = pt_con->name();
       ASSERT_COND(port_name != nullptr );
-      if ( !port_index.find(port_name, index) ) {
+      if ( port_index.count(port_name) == 0 ) {
 	ostringstream buf;
 	buf << port_name << " : does not exist in the port list.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -374,6 +374,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 			buf.str());
 	continue;
       }
+      int index = port_index.at(port_name);
       ASSERT_COND ( index < port_num );
     }
     else {
@@ -390,7 +391,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       continue;
     }
 
-    ymuint port_size = port->bit_size();
+    int port_size = port->bit_size();
     if ( port->direction() == kVlInput ) {
       // 入力ポートには任意の式を接続できる．
       ElbExpr* tmp = instantiate_expr(parent, env, pt_expr);
@@ -407,7 +408,8 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 			"Real expression cannot connect to module port.");
 	continue;
       }
-      ymuint expr_size = type.size();
+
+      int expr_size = type.size();
       if ( expr_size == 0 ) {
 	// もともとサイズがなければ port_size に合わせる．
 	tmp->set_reqsize(VlValueType(false, true, port_size));
@@ -417,7 +419,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       // 配列型インスタンスの場合 expr_size に制限がある．
       if ( port_size == expr_size ) {
 	// サイズが等しい場合はそのまま接続する．
-	for (ymuint i = 0; i < module_size; ++ i) {
+	for ( int i = 0; i < module_size; ++ i ) {
 	  ElbModule* module1 = module_array->_module(i);
 	  module1->set_port_high_conn(index, tmp, conn_by_name);
 	}
@@ -425,7 +427,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       else if ( port_size * module_size == expr_size ) {
 	ASSERT_COND( module_size > 1 );
 	// tmp を 分割する．
-	for (ymuint i = 0; i < module_size; ++ i) {
+	for ( int i = 0; i < module_size; ++ i ) {
 	  ElbModule* module1 = module_array->_module(i);
 	  ElbExpr* tmp1 = nullptr;
 	  if ( port_size == 1 ) {
@@ -463,12 +465,13 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 			"Real expression cannot connect to module port.");
 	continue;
       }
-      ymuint expr_size = type.size();
+
+      int expr_size = type.size();
       if ( expr_size == port_size ) {
 	// 式のサイズとポートサイズが等しければ全部のモジュールに
 	// 同一の式を接続する．
 	// 普通に考えていいアイデアとは思えない．
-	for (ymuint i = 0; i < module_size; ++ i) {
+	for ( int i = 0; i < module_size; ++ i ) {
 	  ElbModule* module1 = module_array->_module(i);
 	  module1->set_port_high_conn(index, tmp, conn_by_name);
 	}
@@ -493,7 +496,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 
 #if 0
     // attribute instance の設定
-    for (ymuint i = 0; i < module_size; ++ i) {
+    for ( int i = 0; i < module_size; ++ i ) {
       ElbModule* module1 = module_array->_module(i);
       const VlPort* port = module1->port(index);
 
@@ -519,9 +522,9 @@ ItemGen::link_module(ElbModule* module,
 
   const FileRegion& fr = pt_inst->file_region();
 
-  ymuint port_num = module->port_num();
+  int port_num = module->port_num();
 
-  ymuint n = pt_inst->port_num();
+  int n = pt_inst->port_num();
   // ポートの割り当てを行う．
   // 例外: ポートを一つも取らないモジュールの場合
   // module_name instance_name ()
@@ -551,22 +554,22 @@ ItemGen::link_module(ElbModule* module,
 
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
-  HashMap<string, ymuint> port_index;
+  unordered_map<string, int> port_index;
   if ( conn_by_name ) {
     // ポート名とインデックスの辞書を作る．
-    ymuint n = pt_module->port_num();
-    for (ymuint index = 0; index < n; ++ index) {
+    int n = pt_module->port_num();
+    for ( int index = 0; index < n; ++ index) {
       const PtPort* pt_port = pt_module->port(index);
       const char* name = pt_port->ext_name();
       if ( name != nullptr ) {
-	port_index.add(name, index);
+	port_index[name] = index;
       }
     }
   }
 
   // ポートに接続する式を生成する．
   ElbEnv env;
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     const PtConnection* pt_con = pt_inst->port(i);
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
@@ -574,12 +577,12 @@ ItemGen::link_module(ElbModule* module,
     }
 
     // この式に対応するポート番号を求める．
-    ymuint index ;
+    int index ;
     if ( conn_by_name ) {
       // 名前による割り当ての場合はポート名で探す．
       const char* port_name = pt_con->name();
       ASSERT_COND( port_name != nullptr );
-      if ( !port_index.find(port_name, index) ) {
+      if ( port_index.count(port_name) == 0 ) {
 	ostringstream buf;
 	buf << port_name << " : does not exist in the port list.";
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -589,6 +592,7 @@ ItemGen::link_module(ElbModule* module,
 			buf.str());
 	continue;
       }
+      int index = port_index.at(port_name);
       ASSERT_COND( index < port_num );
     }
     else {
@@ -604,7 +608,7 @@ ItemGen::link_module(ElbModule* module,
       continue;
     }
 
-    ymuint port_size = port->bit_size();
+    int port_size = port->bit_size();
 
     if ( port->direction() == kVlInput ) {
       // 入力ポートには任意の式を接続できる．
@@ -622,7 +626,7 @@ ItemGen::link_module(ElbModule* module,
 			"Real expression cannot connect to module port.");
 	continue;
       }
-      ymuint expr_size = type.size();
+      int expr_size = type.size();
 
       // 単独のインスタンスの場合 expr のサイズは補正される．
       // ... でいいんだよね．

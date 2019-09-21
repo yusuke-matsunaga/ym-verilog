@@ -49,20 +49,20 @@ public:
 
   /// @brief 内部のポート結線リストのサイズの取得
   virtual
-  ymuint
+  int
   portref_size() const = 0;
 
   /// @brief 内部のポート結線リストの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   const PtExpr*
-  portref_elem(ymuint pos) const = 0;
+  portref_elem(int pos) const = 0;
 
   /// @brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   tVlDirection
-  portref_dir(ymuint pos) const = 0;
+  portref_dir(int pos) const = 0;
 
 };
 

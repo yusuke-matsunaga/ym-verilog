@@ -121,7 +121,7 @@ CptDeclHead::delay() const
 
 // @brief 要素数の取得
 // @return 要素数
-ymuint
+int
 CptDeclHead::item_num() const
 {
   return mItemArray.size();
@@ -130,7 +130,7 @@ CptDeclHead::item_num() const
 // @brief 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < item_num() )
 const PtDeclItem*
-CptDeclHead::item(ymuint pos) const
+CptDeclHead::item(int pos) const
 {
   return mItemArray[pos];
 }
@@ -1037,7 +1037,7 @@ CptDeclItemBase::name() const
 
 // dimension list のサイズの取得
 // @return ここでは常に 0 を返す．
-ymuint
+int
 CptDeclItemBase::dimension_list_size() const
 {
   return 0;
@@ -1045,7 +1045,7 @@ CptDeclItemBase::dimension_list_size() const
 
 // 範囲の取得
 const PtRange*
-CptDeclItemBase::range(ymuint pos) const
+CptDeclItemBase::range(int pos) const
 {
   return nullptr;
 }
@@ -1116,7 +1116,7 @@ CptDeclItemR::file_region() const
 }
 
 // dimension list のサイズの取得
-ymuint
+int
 CptDeclItemR::dimension_list_size() const
 {
   return mRangeArray.size();
@@ -1124,7 +1124,7 @@ CptDeclItemR::dimension_list_size() const
 
 // 範囲の取得
 const PtRange*
-CptDeclItemR::range(ymuint pos) const
+CptDeclItemR::range(int pos) const
 {
   return mRangeArray[pos];
 }
@@ -1139,8 +1139,8 @@ CptDeclItemR::range(ymuint pos) const
 // @param name 名前
 // @param init_value 初期値
 CptDeclItemI::CptDeclItemI(const FileRegion& file_region,
-			 const char* name,
-			 const PtExpr* init_value) :
+			   const char* name,
+			   const PtExpr* init_value) :
   CptDeclItem(file_region, name),
   mInitValue(init_value)
 {

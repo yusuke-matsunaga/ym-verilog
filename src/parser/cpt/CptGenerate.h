@@ -355,13 +355,13 @@ public:
 
   /// @brief case item の要素数を返す．
   virtual
-  ymuint
+  int
   size() const;
 
   /// @brief case item を返す．
   virtual
   const PtGenCaseItem*
-  caseitem(ymuint pos) const;
+  caseitem(int pos) const;
 
 
 private:
@@ -416,14 +416,14 @@ public:
   /// @return ラベル数\n
   /// 0 の時は default の意味
   virtual
-  ymuint
+  int
   label_num() const;
 
   /// @brief ラベルの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
   virtual
   const PtExpr*
-  label(ymuint pos) const;
+  label(int pos) const;
 
   /// @brief 宣言ヘッダ配列の取得
   virtual

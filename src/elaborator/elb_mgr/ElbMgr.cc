@@ -75,7 +75,7 @@ ElbMgr::clear()
 }
 
 // @brief UDP 定義のリストを返す．
-const list<const VlUdpDefn*>&
+const vector<const VlUdpDefn*>&
 ElbMgr::udp_list() const
 {
   return mUdpList;
@@ -88,9 +88,8 @@ ElbMgr::udp_list() const
 const ElbUdpDefn*
 ElbMgr::find_udp(const char* name) const
 {
-  const ElbUdpDefn* ans;
-  if ( mUdpHash.find(name, ans) ) {
-    return ans;
+  if ( mUdpHash.count(name) > 0 ) {
+    return mUdpHash.at(name);
   }
   else {
     return nullptr;
@@ -105,7 +104,7 @@ ElbMgr::reg_udp(const char* def_name,
 		const ElbUdpDefn* udp)
 {
   mUdpList.push_back(udp);
-  mUdpHash.add(def_name, udp);
+  mUdpHash[def_name] = udp;
 }
 
 // @brief グローバルスコープを登録する．
@@ -116,7 +115,7 @@ ElbMgr::reg_toplevel(const VlNamedObj* toplevel)
 }
 
 // @brief topmodule のリストを返す．
-const list<const VlModule*>&
+const vector<const VlModule*>&
 ElbMgr::topmodule_list() const
 {
   return mTopmoduleList;
@@ -129,9 +128,8 @@ ElbMgr::topmodule_list() const
 const ElbUserSystf*
 ElbMgr::find_user_systf(const char* name) const
 {
-  const ElbUserSystf* ans;
-  if ( mSystfHash.find(name, ans) ) {
-    return ans;
+  if ( mSystfHash.count(name) > 0 ) {
+    return mSystfHash.at(name);
   }
   else {
     return nullptr;
@@ -142,7 +140,7 @@ ElbMgr::find_user_systf(const char* name) const
 void
 ElbMgr::reg_user_systf(const ElbUserSystf* systf)
 {
-  mSystfHash.add(systf->_name(), systf);
+  mSystfHash[systf->_name()] = systf;
 }
 
 // @brief internal scope を登録する．

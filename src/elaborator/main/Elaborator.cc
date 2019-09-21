@@ -82,22 +82,18 @@ Elaborator::~Elaborator()
 int
 Elaborator::operator()(const PtMgr& pt_mgr)
 {
-  const list<const PtUdp*>& udp_list = pt_mgr.pt_udp_list();
-  const list<const PtModule*>& module_list = pt_mgr.pt_module_list();
+  auto& udp_list = pt_mgr.pt_udp_list();
+  auto& module_list = pt_mgr.pt_module_list();
 
   // UDP の生成
-  for (list<const PtUdp*>::const_iterator p = udp_list.begin();
-       p != udp_list.end(); ++ p) {
-    const PtUdp* pt_udp = *p;
+  for ( auto pt_udp: udp_list ) {
     mUdpGen->instantiate_udp(pt_udp);
   }
 
   // モジュールテンプレートの辞書を作る．
   // と同時に UDP 名とモジュール名の重複チェックを行う．
   int nerr = 0;
-  for (list<const PtModule*>::const_iterator p = module_list.begin();
-       p != module_list.end(); ++ p) {
-    const PtModule* module = *p;
+  for ( auto module: module_list ) {
     const char* name = module->name();
     if ( mMgr.find_udp(name) != nullptr ) {
       ostringstream buf;
@@ -110,7 +106,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 		      buf.str());
       ++ nerr;
     }
-    else if ( mModuleDict.check(name) ) {
+    else if ( mModuleDict.count(name) > 0 ) {
       ostringstream buf;
       buf << "module \"" << name<< "\" is redefined.";
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -122,7 +118,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     }
     else {
       // モジュール名をキーにして登録する．
-      mModuleDict.add(name, module);
+      mModuleDict[name] = module;
     }
   }
   if ( nerr == 0 ) {
@@ -132,9 +128,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     mMgr.reg_toplevel(toplevel);
 
     // トップモジュールの生成
-    for (list<const PtModule*>::const_iterator p = module_list.begin();
-	 p != module_list.end(); ++ p) {
-      const PtModule* module = *p;
+    for ( auto module: module_list ) {
       if ( !pt_mgr.check_def_name(module->name()) ) {
 	// 他のモジュールから参照されていないモジュールをトップモジュールとみなす．
 	mModuleGen->phase1_topmodule(toplevel, module);
@@ -192,9 +186,8 @@ Elaborator::operator()(const PtMgr& pt_mgr)
       mPhase1StubList2.eval();
     }
     // 適用できなかった defparam 文のチェック
-    for (list<DefParamStub>::iterator p = mDefParamStubList.begin();
-	 p != mDefParamStubList.end(); ++ p) {
-      const PtDefParam* pt_defparam = p->mPtDefparam;
+    for ( auto stub: mDefParamStubList ) {
+      auto pt_defparam = stub.mPtDefparam;
       ostringstream buf;
       buf << expand_full_name(pt_defparam->namebranch_array(),
 			      pt_defparam->name())
@@ -281,9 +274,8 @@ Elaborator::add_phase3stub(ElbStub* stub)
 const PtModule*
 Elaborator::find_moduledef(const char* name) const
 {
-  const PtModule* ans;
-  if ( mModuleDict.find(name, ans) ) {
-    return ans;
+  if ( mModuleDict.count(name) > 0 ) {
+    return mModuleDict.at(name);
   }
   else {
     return nullptr;

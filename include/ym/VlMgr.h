@@ -60,16 +60,16 @@ public:
   bool
   read_file(const string& filename,
 	    const SearchPathList& searchpath = SearchPathList(),
-	    const list<VlLineWatcher*> watcher_list = list<VlLineWatcher*>());
+	    const vector<VlLineWatcher*> watcher_list = vector<VlLineWatcher*>());
 
   /// @brief 登録されているモジュールのリストを返す．
   /// @return 登録されているモジュールのリスト
-  const list<const PtModule*>&
+  const vector<const PtModule*>&
   pt_module_list() const;
 
   /// @brief 登録されている UDP のリストを返す．
   /// @return 登録されている UDP のリスト
-  const list<const PtUdp*>&
+  const vector<const PtUdp*>&
   pt_udp_list() const;
 
 
@@ -85,7 +85,7 @@ public:
   elaborate(const ClibCellLibrary& cell_library = ClibCellLibrary());
 
   /// @brief UDP 定義のリストを返す．
-  const list<const VlUdpDefn*>&
+  const vector<const VlUdpDefn*>&
   udp_list() const;
 
   /// @brief 名前から UDP 定義を取出す．
@@ -96,7 +96,7 @@ public:
   find_udp(const char* name) const;
 
   /// @brief topmodule のリストを返す．
-  const list<const VlModule*>&
+  const vector<const VlModule*>&
   topmodule_list() const;
 
   /// @brief 名前から UserSystf を取出す．

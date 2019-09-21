@@ -93,7 +93,7 @@ CptStmt::name() const
 // @brief 引数の数の取得
 // @return 引数の数
 // @note kEnable/kSysEnable で意味のある関数
-ymuint
+int
 CptStmt::arg_num() const
 {
   return 0;
@@ -103,7 +103,7 @@ CptStmt::arg_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
 // @note kEnable/kSysEnable で意味のある関数
 const PtExpr*
-CptStmt::arg(ymuint pos) const
+CptStmt::arg(int pos) const
 {
   return nullptr;
 }
@@ -182,7 +182,7 @@ CptStmt::else_body() const
 // @return case item の要素数
 // kCase/kCaseX/kCaseZ で意味のある関数
 // このクラスでは 0 を返す．
-ymuint
+int
 CptStmt::caseitem_num() const
 {
   return 0;
@@ -192,7 +192,7 @@ CptStmt::caseitem_num() const
 // kCase/kCaseX/kCaseZ で意味のある関数
 // このクラスでは nullptr を返す．
 const PtCaseItem*
-CptStmt::caseitem(ymuint /* pos */) const
+CptStmt::caseitem(int /* pos */) const
 {
   return nullptr;
 }
@@ -322,7 +322,7 @@ CptEnableBase::name() const
 // @brief 引数の数の取得
 // @return 引数の数
 // @note kEnable/kSysEnable で意味のある関数
-ymuint
+int
 CptEnableBase::arg_num() const
 {
   return mArgArray.size();
@@ -332,7 +332,7 @@ CptEnableBase::arg_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
 // @note kEnable/kSysEnable で意味のある関数
 const PtExpr*
-CptEnableBase::arg(ymuint pos) const
+CptEnableBase::arg(int pos) const
 {
   return mArgArray[pos];
 }
@@ -951,7 +951,7 @@ CptCase::expr() const
 }
 
 // case item の要素数を返す．
-ymuint
+int
 CptCase::caseitem_num() const
 {
   return mCaseItemArray.size();
@@ -959,7 +959,7 @@ CptCase::caseitem_num() const
 
 // case item を返す．
 const PtCaseItem*
-CptCase::caseitem(ymuint pos) const
+CptCase::caseitem(int pos) const
 {
   return mCaseItemArray[pos];
 }
@@ -1044,7 +1044,7 @@ CptCaseItem::file_region() const
 
 // ラベルの数を得る．
 // 0 の時は '*' の意味
-ymuint
+int
 CptCaseItem::label_num() const
 {
   return mLabelArray.size();
@@ -1053,7 +1053,7 @@ CptCaseItem::label_num() const
 // @brief ラベルの取得
 // @param[in] pos 位置番号 ( 0 <= pos < label_num() )
 const PtExpr*
-CptCaseItem::label(ymuint pos) const
+CptCaseItem::label(int pos) const
 {
   return mLabelArray[pos];
 }

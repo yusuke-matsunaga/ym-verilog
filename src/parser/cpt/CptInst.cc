@@ -55,7 +55,7 @@ CptGateH::prim_type() const
 }
 
 // 要素数を返す．
-ymuint
+int
 CptGateH::size() const
 {
   return mInstArray.size();
@@ -64,7 +64,7 @@ CptGateH::size() const
 // @brief module/UDP/gate instance 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtInst*
-CptGateH::inst(ymuint pos) const
+CptGateH::inst(int pos) const
 {
   return mInstArray[pos];
 }
@@ -201,7 +201,7 @@ CptMuH::name() const
 }
 
 // 要素数を取り出す．
-ymuint
+int
 CptMuH::size() const
 {
   return mInstArray.size();
@@ -210,7 +210,7 @@ CptMuH::size() const
 // @brief module/UDP/gate instance 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < size() )
 const PtInst*
-CptMuH::inst(ymuint pos) const
+CptMuH::inst(int pos) const
 {
   return mInstArray[pos];
 }
@@ -386,7 +386,7 @@ CptInst::right_range() const
 
 // @brief ポート数の取得
 // @return ポート数
-ymuint
+int
 CptInst::port_num() const
 {
   return mPortArray.size();
@@ -395,7 +395,7 @@ CptInst::port_num() const
 // @brief ポートの取得
 // @param[in] pos 位置番号 ( 0 <= pos < port_num() )
 const PtConnection*
-CptInst::port(ymuint pos) const
+CptInst::port(int pos) const
 {
   return mPortArray[pos];
 }
@@ -407,8 +407,8 @@ CptInst::port(ymuint pos) const
 
 // コンストラクタ
 CptInstN::CptInstN(const FileRegion& file_region,
-		       const char* name,
-		       PtConnectionArray con_array) :
+		   const char* name,
+		   PtConnectionArray con_array) :
   CptInst(file_region, con_array),
   mName(name)
 {

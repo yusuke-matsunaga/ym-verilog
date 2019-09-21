@@ -75,7 +75,7 @@ SptControl::delay() const
 // イベントリストのサイズの取得
 // @retval イベントリストのサイズ event control/repeat control の場合
 // @retval nullptr 上記以外
-ymuint
+int
 SptControl::event_num() const
 {
   return mEventArray.size();
@@ -85,7 +85,7 @@ SptControl::event_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < event_num() )
 // @note event control/repeat control の場合のみ意味を持つ
 const PtExpr*
-SptControl::event(ymuint pos) const
+SptControl::event(int pos) const
 {
   return mEventArray[pos];
 }
@@ -287,7 +287,7 @@ SptDelay::file_region() const
 // @return pos 番目の遅延を表す式
 // 該当する要素がなければ nullptr を返す．
 const PtExpr*
-SptDelay::value(ymuint pos) const
+SptDelay::value(int pos) const
 {
   if ( pos < 3 ) {
     return mValue[pos];
@@ -367,7 +367,7 @@ SptAttrInst::~SptAttrInst()
 
 // 要素数の取得
 // @return 要素数
-ymuint
+int
 SptAttrInst::attrspec_num() const
 {
   return mAttrSpecArray.size();
@@ -376,7 +376,7 @@ SptAttrInst::attrspec_num() const
 // @brief 要素の取得
 // @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
 const PtAttrSpec*
-SptAttrInst::attrspec(ymuint pos) const
+SptAttrInst::attrspec(int pos) const
 {
   return mAttrSpecArray[pos];
 }

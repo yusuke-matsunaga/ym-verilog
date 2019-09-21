@@ -82,15 +82,14 @@ Parser::~Parser()
 bool
 Parser::read_file(const string& filename,
 		  const SearchPathList& searchpath,
-		  const list<VlLineWatcher*>& watcher_list)
+		  const vector<VlLineWatcher*>& watcher_list)
 {
   int yyparse(Parser&);
 
   lex().set_searchpath(searchpath);
 
-  for (list<VlLineWatcher*>::const_iterator p = watcher_list.begin();
-       p != watcher_list.end(); ++ p) {
-    lex().reg_watcher(*p);
+  for ( auto watcher: watcher_list ) {
+    lex().reg_watcher(watcher);
   }
 
   if ( !lex().open_file(filename) ) {

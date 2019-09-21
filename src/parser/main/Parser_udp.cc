@@ -78,8 +78,8 @@ Parser::new_Udp1995(const FileRegion& file_region,
   // の確認を行う．
   // まず portdecl_list の各要素を名前をキーにした連想配列に格納する．
   // ついでに output の数を数える．
-  HashMap<string, const PtIOItem*> iomap;
-  for (ymuint i = 0; i < iohead_array.size(); ++ i) {
+  unordered_map<string, const PtIOItem*> iomap;
+  for ( int i = 0; i < iohead_array.size(); ++ i ) {
     const PtIOHead* io = iohead_array[i];
     if ( io->type() == kPtIO_Output ) {
       if ( out_item ) {
@@ -102,9 +102,9 @@ Parser::new_Udp1995(const FileRegion& file_region,
 	is_seq = true;
       }
     }
-    for (ymuint j = 0; j < io->item_num(); ++ j) {
+    for ( int j = 0; j < io->item_num(); ++ j ) {
       const PtIOItem* elem = io->item(j);
-      if ( iomap.check(elem->name()) ) {
+      if ( iomap.count(elem->name()) > 0 ) {
 	// 二重登録
 	ostringstream buf;
 	buf << elem->name() << ": Defined more than once.";
@@ -116,17 +116,16 @@ Parser::new_Udp1995(const FileRegion& file_region,
 	sane = false;
 	break;
       }
-      iomap.add(elem->name(), elem);
+      iomap[elem->name()] = elem;
     }
   }
 
   // port_list に現れる名前が iolist 中にあるか調べる．
   PtiPortArray port_array = get_port_array();
-  for (ymuint i = 0; i < port_array.size(); ++ i) {
+  for ( int i = 0; i < port_array.size(); ++ i ) {
     const PtiPort* port = port_array[i];
     const char* port_name = port->ext_name();
-    const PtIOItem* ioelem;
-    if ( !iomap.find(port_name, ioelem) ) {
+    if ( iomap.count(port_name) == 0 ) {
       ostringstream buf;
       buf << "\"" << port_name << "\" undefined.";
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -138,6 +137,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
       break;
     }
     if ( i == 0 ) {
+      const PtIOItem* ioelem = iomap.at(port_name);
       if ( out_item != ioelem ) {
 	// 最初の名前は output でなければならない．
 	ostringstream buf;
@@ -154,11 +154,10 @@ Parser::new_Udp1995(const FileRegion& file_region,
     iomap.erase(port_name);
   }
 
-  if ( iomap.num() > 0 ) {
+  if ( iomap.size() > 0 ) {
     // iolist 中のみに現れる要素がある．
-    for (HashMapIterator<string, const PtIOItem*> q = iomap.begin();
-	 q != iomap.end(); ++ q) {
-      const PtIOItem* ioelem = q.value();
+    for ( auto q: iomap ) {
+      const PtIOItem* ioelem = q.second;
       ostringstream buf;
       buf << "\"" << ioelem->name() << "\" does not appear in portlist.";
       MsgMgr::put_msg(__FILE__, __LINE__,

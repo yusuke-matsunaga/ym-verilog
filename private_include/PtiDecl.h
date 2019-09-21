@@ -33,7 +33,7 @@ public:
   /// @param[in] dir 方向
   virtual
   void
-  _set_portref_dir(ymuint pos,
+  _set_portref_dir(int pos,
 		   tVlDirection dir) = 0;
 
 };
