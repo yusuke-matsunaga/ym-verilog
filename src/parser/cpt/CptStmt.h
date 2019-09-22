@@ -29,7 +29,6 @@ public:
   CptStmt(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptStmt();
 
 
@@ -40,142 +39,106 @@ public:
 
   /// @brief ファイル位置の取得
   /// @return ファイル位置
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief ステートメントの種類を表す文字列の取得
   /// @return ステートメントの種類を表す文字列
-  virtual
   const char*
-  stmt_name() const;
+  stmt_name() const override;
 
   /// @brief 階層ブランチの取得
   /// @note kDisable/kEnable/kSysEnable で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
   /// @brief 名前の取得
   /// @return 名前
   /// @note kDisable/kEnable/kSysEnable/kParBlock/kSeqBlock で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
-  /// @brief 引数の数の取得
-  /// @return 引数の数
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  int
-  arg_num() const;
-
-  /// @brief 引数の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  const PtExpr*
-  arg(int pos) const;
+  /// @brief 引数のリストの取得
+  PtExprArray
+  arg_list() const override;
 
   /// @brief コントロールの取得
   /// @return ディレイ/イベントコントロール
   /// @note kDc/kEc で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtControl*
-  control() const;
+  control() const override;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント
   /// @note kDc/kEc/kWait/kForever/kRepeat/kWhile/kFor/kIf で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
   /// @brief 式の取得
   /// @return 式
   /// @note kWait/kRepeat/kWhile/kFor/kIf/kCase/kCaseX/kCaseZ で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 左辺式の取得
   /// @return 左辺式
   /// @note kAssign/kForce/kPcAssign/kRelease/kDeassign で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺式の取得
   /// @return 右辺式
   /// @note kAssign/kForce/kPcAssign で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  rhs() const;
+  rhs() const override;
 
   /// @brief イベントプライマリの取得
   /// @return イベントプライマリ
   /// @note kEvent で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  primary() const;
+  primary() const override;
 
   /// @brief 条件が成り立たなかったとき実行されるステートメントの取得
   /// @return 条件が成り立たなかったとき実行されるステートメント
   /// @note kIf で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStmt*
-  else_body() const;
+  else_body() const override;
 
-  /// @brief case item の要素数の取得
-  /// @return case item の要素数
-  /// @note kCase/kCaseX/kCaseZ で意味のある関数
-  /// @note このクラスでは 0 を返す．
-  virtual
-  int
-  caseitem_num() const;
-
-  /// @brief case item の取得
-  /// @note kCase/kCaseX/kCaseZ で意味のある関数
-  /// @note このクラスでは nullptr を返す．
-  virtual
-  const PtCaseItem*
-  caseitem(int pos) const;
+  /// @brief case item のリストの取得
+  PtCaseItemArray
+  caseitem_list() const override;
 
   /// @brief 初期化代入文の取得
   /// @return 初期化代入文
   /// @note kFor で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStmt*
-  init_stmt() const;
+  init_stmt() const override;
 
   /// @brief 繰り返し代入文の取得
   /// @return 繰り返し代入文
   /// @note kFor で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStmt*
-  next_stmt() const;
+  next_stmt() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief 子供のステートメント配列の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
-  virtual
   PtStmtArray
-  stmt_array() const;
+  stmt_array() const override;
 
 
 private:
@@ -204,7 +167,6 @@ protected:
 	     const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~CptDisable();
 
 
@@ -215,9 +177,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtDisableStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 
 public:
@@ -226,9 +187,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 末尾の名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -258,7 +218,6 @@ protected:
 	      const char* tail_name);
 
   /// @brief デストラクタ
-  virtual
   ~CptDisableH();
 
 
@@ -268,9 +227,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -298,7 +256,6 @@ protected:
 		PtExprArray arg_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptEnableBase();
 
 
@@ -308,23 +265,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 末尾の名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
-  /// @brief 引数の数の取得
-  /// @return 引数の数
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  int
-  arg_num() const;
-
-  /// @brief 引数の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  const PtExpr*
-  arg(int pos) const;
+  /// @brief 引数のリストの取得
+  PtExprArray
+  arg_list() const override;
 
 
 private:
@@ -357,7 +303,6 @@ protected:
 	    PtExprArray arg_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptEnable();
 
 
@@ -368,9 +313,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtEnableStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -392,7 +336,6 @@ protected:
 	     PtExprArray arg_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptEnableH();
 
 
@@ -402,9 +345,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -434,7 +376,6 @@ private:
 	       PtExprArray arg_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptSysEnable();
 
 
@@ -445,9 +386,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtSysEnableStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -466,7 +406,6 @@ protected:
 	      const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptCtrlStmt();
 
 
@@ -476,14 +415,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief コントロールを返す．
-  virtual
   const PtControl*
-  control() const;
+  control() const override;
 
   /// @brief 本体を取り出す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -516,7 +453,6 @@ private:
 	    const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptDcStmt();
 
 
@@ -527,9 +463,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtDcStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -550,7 +485,6 @@ private:
 	    const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptEcStmt();
 
 
@@ -561,9 +495,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtEcStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -580,12 +513,11 @@ private:
 
   /// @brief コンストラクタ
   CptWait(const FileRegion& file_region,
-	  const PtExpr* cond,
+	  const PtExpr* expr,
 	  const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
-  ~CptWait();
+  ~CptWait() override;
 
 
 public:
@@ -595,19 +527,16 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtWaitStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief 条件を返す．
-  virtual
   const PtExpr*
-  cond() const;
+  expr() const override;
 
   /// @brief 実行すべき本体を返す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -616,7 +545,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 条件
-  const PtExpr* mCond;
+  const PtExpr* mExpr;
 
   // 実行すべき本体
   const PtStmt* mBody;
@@ -637,7 +566,6 @@ protected:
 		const PtExpr* lhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptAssignBase();
 
 
@@ -647,9 +575,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief lhs を得る．
-  virtual
   const PtExpr*
-  lhs() const;
+  lhs() const override;
 
 
 private:
@@ -679,7 +606,6 @@ protected:
 	    const PtExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptAssign();
 
 
@@ -690,14 +616,12 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtAssignStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief rhs を得る．
-  virtual
   const PtExpr*
-  rhs() const;
+  rhs() const override;
 
 
 private:
@@ -728,7 +652,6 @@ protected:
 	     const PtControl* control);
 
   /// @brief デストラクタ
-  virtual
   ~CptAssignC();
 
 
@@ -738,9 +661,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief コントロールを返す．
-  virtual
   const PtControl*
-  control() const;
+  control() const override;
 
 
 private:
@@ -770,7 +692,6 @@ protected:
 	      const PtExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptNbAssign();
 
 
@@ -781,9 +702,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtNbAssignStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -805,7 +725,6 @@ private:
 	       const PtControl* control);
 
   /// @brief デストラクタ
-  virtual
   ~CptNbAssignC();
 
 
@@ -816,9 +735,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtNbAssignStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -839,7 +757,6 @@ protected:
 	      const PtExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptPcAssign();
 
 
@@ -850,14 +767,12 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtPcaAssignStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief 右辺式を返す．
-  virtual
   const PtExpr*
-  rhs() const;
+  rhs() const override;
 
 
 private:
@@ -886,7 +801,6 @@ protected:
 	      const PtExpr* lhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptDeassign();
 
 
@@ -897,9 +811,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtDeassignStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -920,7 +833,6 @@ private:
 	   const PtExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptForce();
 
 
@@ -931,9 +843,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtForceStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -953,7 +864,6 @@ private:
 	     const PtExpr* lhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptRelease();
 
 
@@ -964,9 +874,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtReleaseStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -986,7 +895,6 @@ protected:
 	       const PtExpr* event);
 
   /// @brief デストラクタ
-  virtual
   ~CptEventStmt();
 
 
@@ -997,14 +905,12 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtEventStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief イベントプライマリを返す．
-  virtual
   const PtExpr*
-  primary() const;
+  primary() const override;
 
 
 private:
@@ -1032,7 +938,6 @@ private:
   CptNullStmt(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptNullStmt();
 
 
@@ -1043,9 +948,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtNullStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1066,7 +970,6 @@ protected:
 	const PtStmt* then_body);
 
   /// @brief デストラクタ
-  virtual
   ~CptIf();
 
 
@@ -1077,19 +980,16 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtIfStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief 条件式を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 成り立ったとき実行されるステートメント
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -1123,7 +1023,6 @@ protected:
 	    const PtStmt* else_body);
 
   /// @brief デストラクタ
-  virtual
   ~CptIfElse();
 
 
@@ -1133,9 +1032,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 成り立たなかったとき実行されるステートメント
-  virtual
   const PtStmt*
-  else_body() const;
+  else_body() const override;
 
 
 private:
@@ -1174,27 +1072,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
-  /// @brief ラベルの数の取得
-  /// @retval ラベルの数 通常の case ラベルの場合
-  /// @retval 0 default の場合
-  virtual
-  int
-  label_num() const;
-
-  /// @brief ラベルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-  virtual
-  const PtExpr*
-  label(int pos) const;
+  /// @brief ラベルのリストの取得
+  PtExprArray
+  label_list() const override;
 
   /// @brief 本体のステートメント得る．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -1230,7 +1117,6 @@ protected:
 	  PtCaseItemArray caseitem_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptCase();
 
 
@@ -1241,24 +1127,16 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtCaseStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief 比較される式を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
-  /// @brief case item の要素数を返す．
-  virtual
-  int
-  caseitem_num() const;
-
-  /// @brief case item を返す．
-  virtual
-  const PtCaseItem*
-  caseitem(int pos) const;
+  /// @brief case item のリストの取得
+  PtCaseItemArray
+  caseitem_list() const override;
 
 
 private:
@@ -1291,7 +1169,6 @@ protected:
 	   PtCaseItemArray caseitem_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptCaseX();
 
 
@@ -1302,9 +1179,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note ここでは kPtCaseXStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1325,7 +1201,6 @@ protected:
 	   PtCaseItemArray caseitem_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptCaseZ();
 
 
@@ -1336,9 +1211,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note ここでは kPtCaseZStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1356,7 +1230,6 @@ protected:
 	      const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptLoopStmt();
 
 
@@ -1366,9 +1239,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 実行すべき本体を返す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -1397,7 +1269,6 @@ private:
 	     const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptForever();
 
 
@@ -1408,9 +1279,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtForeverStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1431,7 +1301,6 @@ protected:
 	    const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptRepeat();
 
 
@@ -1442,14 +1311,12 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtRepeatStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief 繰り返し式を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
 
 private:
@@ -1475,11 +1342,10 @@ protected:
 
   /// @brief コンストラクタ
   CptWhile(const FileRegion& file_region,
-	   const PtExpr* cond,
+	   const PtExpr* expr,
 	   const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptWhile();
 
 
@@ -1490,9 +1356,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtWhileStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1515,7 +1380,6 @@ protected:
 	 const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptFor();
 
 
@@ -1526,19 +1390,16 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtForStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief 初期化代入式を取出す
-  virtual
   const PtStmt*
-  init_stmt() const;
+  init_stmt() const override;
 
   /// @brief 繰り返し代入式を取出す
-  virtual
   const PtStmt*
-  next_stmt() const;
+  next_stmt() const override;
 
 
 private:
@@ -1568,7 +1429,6 @@ protected:
 	       PtStmtArray stmt_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptStmtBlock();
 
 
@@ -1579,9 +1439,8 @@ public:
 
   /// @brief 子供のステートメント配列の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
-  virtual
   PtStmtArray
-  stmt_array() const;
+  stmt_array() const override;
 
 
 private:
@@ -1612,7 +1471,6 @@ protected:
 		PtStmtArray stmt_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptStmtBlockN();
 
 
@@ -1622,14 +1480,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を取り出す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
 
 private:
@@ -1661,7 +1517,6 @@ protected:
 	      PtStmtArray stmt_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptParBlock();
 
 
@@ -1672,9 +1527,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtParBlockStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1696,7 +1550,6 @@ protected:
 	       PtStmtArray stmt_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptParBlockN();
 
 
@@ -1707,9 +1560,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtNamedParBlockStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1729,7 +1581,6 @@ protected:
 	      PtStmtArray stmt_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptSeqBlock();
 
 
@@ -1740,9 +1591,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtSeqBlockStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 
@@ -1764,7 +1614,6 @@ protected:
 	       PtStmtArray stmt_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptSeqBlockN();
 
 
@@ -1775,9 +1624,8 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtNamedSeqBlockStmt を返す．
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
 };
 

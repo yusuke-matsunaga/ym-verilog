@@ -36,7 +36,7 @@ AttrHash::~AttrHash()
 void
 AttrHash::clear()
 {
-  for (ymuint i = 0; i < mSize; ++ i ) {
+  for ( SizeType i = 0; i < mSize; ++ i ) {
     mTable[i] = nullptr;
   }
   mNum = 0;
@@ -56,7 +56,7 @@ AttrHash::add(const VlObj* obj,
   if ( !cell ) {
     cell = new_cell(obj);
   }
-  ymuint pos = (def) ? 1 : 0;
+  SizeType pos = (def) ? 1 : 0;
   ASSERT_COND(cell->mAttrList[pos] == nullptr );
   cell->mAttrList[pos] = attr_list;
 }
@@ -71,7 +71,7 @@ AttrHash::find(const VlObj* obj,
   // 該当の Cell が存在するか調べる．
   Cell* cell = find_cell(obj);
   if ( cell ) {
-    ymuint pos = (def) ? 1 : 0;
+    SizeType pos = (def) ? 1 : 0;
     return cell->mAttrList[pos];
   }
   return nullptr;
@@ -84,13 +84,13 @@ AttrHash::new_cell(const VlObj* obj)
 {
   if ( mNum >= mLimit ) {
     // テーブルを拡張する．
-    ymuint old_size = mSize;
+    SizeType old_size = mSize;
     Cell** old_table = mTable;
     alloc_table(old_size << 1);
-    for (ymuint i = 0; i < old_size; ++ i) {
-      for (Cell* cell = old_table[i]; cell; ) {
+    for ( SizeType i = 0; i < old_size; ++ i ) {
+      for ( Cell* cell = old_table[i]; cell; ) {
 	Cell* next = cell->mLink;
-	ymuint pos = hash_func(cell->mObj);
+	SizeType pos = hash_func(cell->mObj);
 	cell->mLink = mTable[pos];
 	mTable[pos] = cell;
 	cell = next;
@@ -98,7 +98,7 @@ AttrHash::new_cell(const VlObj* obj)
     }
     delete [] old_table;
   }
-  ymuint pos = hash_func(obj);
+  SizeType pos = hash_func(obj);
   void* p = mAlloc.get_memory(sizeof(Cell));
   Cell* cell = new (p) Cell;
   cell->mObj = obj;
@@ -115,8 +115,8 @@ AttrHash::new_cell(const VlObj* obj)
 AttrHash::Cell*
 AttrHash::find_cell(const VlObj* obj) const
 {
-  ymuint pos = hash_func(obj);
-  for (Cell* cell = mTable[pos]; cell; cell = cell->mLink) {
+  SizeType pos = hash_func(obj);
+  for ( Cell* cell = mTable[pos]; cell; cell = cell->mLink ) {
     if ( cell->mObj == obj ) {
       return cell;
     }
@@ -125,7 +125,7 @@ AttrHash::find_cell(const VlObj* obj) const
 }
 
 // @brief このオブジェクトが使用しているメモリ量を返す．
-ymuint
+SizeType
 AttrHash::allocated_size() const
 {
   return sizeof(Cell*) * mSize;
@@ -133,18 +133,18 @@ AttrHash::allocated_size() const
 
 // @brief テーブルの領域を確保する．
 void
-AttrHash::alloc_table(ymuint size)
+AttrHash::alloc_table(SizeType size)
 {
   mSize = size;
-  mLimit = static_cast<ymuint>(mSize * 1.8);
+  mLimit = static_cast<SizeType>(mSize * 1.8);
   mTable = new Cell*[mSize];
-  for (ymuint i = 0; i < mSize; ++ i) {
+  for ( SizeType i = 0; i < mSize; ++ i ) {
     mTable[i] = nullptr;
   }
 }
 
 // @brief ハッシュ値を計算する．
-ymuint
+SizeType
 AttrHash::hash_func(const VlObj* obj) const
 {
   ympuint tmp = reinterpret_cast<ympuint>(obj);

@@ -106,16 +106,14 @@ PtDumper::file_loc_mode() const
 // @brief パーサーの内部情報の表示
 // @param[in] parser パーサー
 void
-PtDumper::put(const list<const PtUdp*>& udp_list,
-	      const list<const PtModule*>& module_list)
+PtDumper::put(const vector<const PtUdp*>& udp_list,
+	      const vector<const PtModule*>& module_list)
 {
-  for (list<const PtUdp*>::const_iterator p = udp_list.begin();
-       p != udp_list.end(); ++ p) {
-    put(*p);
+  for ( auto udp: udp_list ) {
+    put(udp);
   }
-  for (list<const PtModule*>::const_iterator p = module_list.begin();
-       p != module_list.end(); ++ p) {
-    put(*p);
+  for ( auto module: module_list ) {
+    put(module);
   }
 }
 
@@ -135,25 +133,21 @@ PtDumper::put(const PtUdp* udp)
 
   put("mName", udp->name());
 
-  for (ymuint i = 0; i < udp->port_num(); ++ i) {
-    const PtPort* port = udp->port(i);
+  for ( auto port: udp->port_list() ) {
     put("mPort", port->ext_name());
   }
-  for (ymuint i = 0; i < udp->iohead_array().size(); ++ i) {
-    const PtIOHead* io = udp->iohead_array()[i];
+  for ( auto io: udp->iohead_array() ) {
     put("mIO", io);
   }
 
   put("mInitial", udp->init_value());
 
-  for (ymuint i = 0; i < udp->table_array().size(); ++ i) {
-    const PtUdpEntry* entry = udp->table_array()[i];
+  for ( auto entry: udp->table_array() ) {
     PtHeader x(*this, "mTable", "UdpEntry");
 
     put("mFileRegion", entry->file_region());
 
-    for (ymuint j = 0; j < entry->input_array().size(); ++ j) {
-      const PtUdpValue* v = entry->input_array()[j];
+    for ( auto v: entry->input_array() ) {
       put("mInput", v);
     }
     put("mCurrent", entry->current());
@@ -245,8 +239,7 @@ PtDumper::put(const PtModule* m)
     put("mParamPort", param);
   }
 
-  for (ymuint i = 0; i < m->port_num(); ++ i) {
-    const PtPort* port = m->port(i);
+  for ( auto port: m->port_list() ) {
     PtHeader x(*this, "mPort", "Port");
 
     put("mFileRegion", port->file_region());
@@ -313,8 +306,7 @@ PtDumper::put(const char* label,
   put("mLeftRange", io->left_range());
   put("mRightRange", io->right_range());
 
-  for (ymuint i = 0; i < io->item_num(); ++ i) {
-    const PtIOItem* item = io->item(i);
+  for ( auto item: io->item_list() ) {
     PtHeader x(*this, "mElem", "IOElem");
 
     put("mFileRegion", item->file_region());
@@ -399,14 +391,12 @@ PtDumper::put(const char* label,
   put("mStrength", decl->strength());
   put("mDelay", decl->delay());
 
-  for (ymuint i = 0; i < decl->item_num(); ++ i) {
-    const PtDeclItem* item = decl->item(i);
+  for ( auto item: decl->item_list() ) {
     PtHeader x(*this, "mElem", "DeclItem");
 
     put("mFileRegion", item->file_region());
     put("mName", item->name());
-    for (ymuint j = 0; j < item->dimension_list_size(); ++ j) {
-      const PtRange* range = item->range(j);
+    for ( auto range: item->range_list() ) {
       PtHeader x(*this, "mDimension", "Range");
 
       put("mLeftRange", range->left());
@@ -471,8 +461,7 @@ PtDumper::put(const char* label,
 
   switch ( item->type() ) {
   case kPtItem_DefParam:
-    for (ymuint i = 0; i < item->size(); ++ i) {
-      const PtDefParam* dp = item->defparam(i);
+    for ( auto dp: item->defparam_list() ) {
       PtHeader x(*this, "mElem", "DefParam");
 
       put("mFileRegion", dp->file_region());
@@ -485,8 +474,7 @@ PtDumper::put(const char* label,
   case kPtItem_ContAssign:
     put("mStrength", item->strength());
     put("mDelay", item->delay());
-    for (ymuint i = 0; i < item->size(); ++ i) {
-      const PtContAssign* ca = item->contassign(i);
+    for ( auto ca: item->contassign_list() ) {
       PtHeader x(*this, "mElem", "ContAssign");
 
       put("mFileRegion", ca->file_region());
@@ -518,8 +506,7 @@ PtDumper::put(const char* label,
     put("mPrimType", item->prim_type());
     put("mStrength", item->strength());
     put("mDelay", item->delay());
-    for (ymuint i = 0; i < item->size(); ++ i) {
-      const PtInst* gi = item->inst(i);
+    for ( auto gi: item->inst_list() ) {
       PtHeader x(*this, "mElem", "GateInst");
 
       put("mFileRegion", gi->file_region());
@@ -530,8 +517,7 @@ PtDumper::put(const char* label,
 	put("mLeftRange", gi->left_range());
 	put("mRightrange", gi->right_range());
       }
-      for (ymuint j = 0; j < gi->port_num(); ++ j) {
-	const PtConnection* con = gi->port(j);
+      for ( auto con: gi->port_list() ) {
 	put("mPortCon", con);
       }
     }
@@ -539,14 +525,12 @@ PtDumper::put(const char* label,
 
   case kPtItem_MuInst:
     put("mDefName", item->name());
-    for (ymuint i = 0; i < item->paramassign_array().size(); ++ i) {
-      const PtConnection* con = item->paramassign_array()[i];
+    for ( auto con: item->paramassign_array() ) {
       put("mParamCon", con);
     }
     put("mStrength", item->strength());
     put("mDelay", item->delay());
-    for (ymuint i = 0; i < item->size(); ++ i) {
-      const PtInst* mui = item->inst(i);
+    for ( auto mui: item->inst_list() ) {
       PtHeader x(*this, "mElem", "MuInst");
 
       put("mFileRegion", mui->file_region());
@@ -555,16 +539,14 @@ PtDumper::put(const char* label,
 	put("mLeftRange", mui->left_range());
 	put("mRightRange", mui->right_range());
       }
-      for (ymuint j = 0; j < mui->port_num(); ++ j) {
-	const PtConnection* con = mui->port(j);
+      for ( auto con: mui->port_list() ) {
 	put("mPortCon", con);
       }
     }
     break;
 
   case kPtItem_SpecItem:
-    for (ymuint i = 0; i < item->size(); ++ i) {
-      const PtExpr* expr = item->terminal(i);
+    for ( auto expr: item->terminal_list() ) {
       put("mTerminal", expr);
     }
     break;
@@ -606,13 +588,11 @@ PtDumper::put(const char* label,
 
   case kPtItem_GenCase:
     put("mExpr", item->expr());
-    for (ymuint i = 0; i < item->size(); ++ i) {
-      const PtGenCaseItem* gci = item->caseitem(i);
+    for ( auto gci: item->caseitem_list() ) {
       PtHeader x(*this, "mCaseItem", "GenCaseItem");
 
       put("mFileRegion", gci->file_region());
-      for (ymuint j = 0; j < gci->label_num(); ++ j) {
-	const PtExpr* expr = gci->label(j);
+      for ( auto expr: gci->label_list() ) {
 	put("mLabel", expr);
       }
       put_decl_item("mBody", gci->declhead_array(), gci->item_array());
@@ -773,8 +753,7 @@ PtDumper::put(const char* label,
   case kPtSysEnableStmt:
     put(stmt->namebranch_array());
     put("mName", stmt->name());
-    for (ymuint i = 0; i < stmt->arg_num(); ++ i) {
-      const PtExpr* arg = stmt->arg(i);
+    for ( auto arg: stmt->arg_list() ) {
       if ( arg ) {
 	put("mArg", arg);
       }
@@ -823,13 +802,11 @@ PtDumper::put(const char* label,
   case kPtCaseXStmt:
   case kPtCaseZStmt:
     put("mExpr", stmt->expr());
-    for (ymuint i = 0; i < stmt->caseitem_num(); ++ i) {
-      const PtCaseItem* ci = stmt->caseitem(i);
+    for ( auto ci: stmt->caseitem_list() ) {
       PtHeader x(*this, "mCaseItem", "CaseItem");
 
       put("mFileRegion", ci->file_region());
-      for (ymuint j = 0; j < ci->label_num(); ++ j) {
-	const PtExpr* expr = ci->label(j);
+      for ( auto expr: ci->label_list() ) {
 	put("mLabel", expr);
       }
       put("mBody", ci->body());
@@ -1505,8 +1482,7 @@ PtDumper::put(const char* label,
   put("mFileRegion", ctrl->file_region());
   put("mDelay", ctrl->delay());
   put("mRepExpr", ctrl->rep_expr());
-  for (ymuint i = 0; i < ctrl->event_num(); ++ i) {
-    const PtExpr* expr = ctrl->event(i);
+  for ( auto expr: ctrl->event_list() ) {
     put("mEvent", expr);
   }
 }

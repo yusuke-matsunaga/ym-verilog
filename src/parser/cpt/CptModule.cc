@@ -9,7 +9,7 @@
 
 #include "CptModule.h"
 #include "CptFactory.h"
-
+#include "PtiDecl.h"
 #include "ym/pt/PtItem.h"
 
 
@@ -38,21 +38,21 @@ CptModule::CptModule(const FileRegion& file_region,
 		     const string& library,
 		     const string& cell,
 		     PtDeclHeadArray paramport_array,
-		     PtiPortArray port_array,
+		     PtPortArray port_array,
 		     PtIOHeadArray iohead_array,
 		     PtDeclHeadArray declhead_array,
 		     PtItemArray item_array) :
-  mFileRegion(file_region),
-  mName(name),
-  mDefDecayTime(decay),
-  mConfig(config),
-  mLibrary(library),
-  mCell(cell),
-  mParamPortArray(paramport_array),
-  mPortArray(port_array),
-  mIOHeadArray(iohead_array),
-  mDeclHeadArray(declhead_array),
-  mItemArray(item_array)
+  mFileRegion{file_region},
+  mName{name},
+  mDefDecayTime{decay},
+  mConfig{config},
+  mLibrary{library},
+  mCell{cell},
+  mParamPortArray{paramport_array},
+  mPortArray{port_array},
+  mIOHeadArray{iohead_array},
+  mDeclHeadArray{declhead_array},
+  mItemArray{item_array}
 {
   mFlags =
     static_cast<ymuint32>(is_cell)
@@ -69,14 +69,12 @@ CptModule::CptModule(const FileRegion& file_region,
     | (static_cast<ymuint32>(suppress_faults) << 26)
     ;
 
-  int n = 0;
-  for ( int i = 0; i < mIOHeadArray.size(); ++ i ) {
-    n += mIOHeadArray[i]->item_num();
+  mIODeclNum = 0;
+  for ( auto head: mIOHeadArray ) {
+    mIODeclNum += head->item_list().size();
   }
-  mIODeclNum = n;
 
-  for ( int i = 0; i < mItemArray.size(); ++ i ) {
-    const PtItem* item = mItemArray[i];
+  for ( auto item: mItemArray ) {
     if ( item->type() == kPtItem_Func ) {
       mFuncDic[item->name()] = item;
     }
@@ -109,19 +107,11 @@ CptModule::paramport_array() const
   return mParamPortArray;
 }
 
-// @brief ポート数の取得
-// @return ポート数
-int
-CptModule::port_num() const
+// @brief ポートのリストを取り出す．
+PtPortArray
+CptModule::port_list() const
 {
-  return mPortArray.size();
-}
-
-// ポートを返す．
-const PtPort*
-CptModule::port(int pos) const
-{
-  return mPortArray[pos];
+  return mPortArray;
 }
 
 // @brief 入出力宣言ヘッダ配列の取得
@@ -132,8 +122,9 @@ CptModule::iohead_array() const
 }
 
 // @brief 入出力宣言の要素数の取得
-// @note 個々のヘッダが持つ要素数の総和を計算する．
-int
+//
+// 個々のヘッダが持つ要素数の総和を計算する．
+SizeType
 CptModule::iodecl_num() const
 {
   return mIODeclNum;
@@ -566,7 +557,7 @@ CptFactory::new_Module(const FileRegion& file_region,
 		       const string& library,
 		       const string& cell,
 		       PtDeclHeadArray paramport_array,
-		       PtiPortArray port_array,
+		       PtPortArray port_array,
 		       PtIOHeadArray iohead_array,
 		       PtDeclHeadArray declhead_array,
 		       PtItemArray item_array)

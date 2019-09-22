@@ -44,7 +44,7 @@ EiFactory::new_Function(const VlNamedObj* parent,
   ASSERT_COND( left != nullptr && right != nullptr );
 
   // IO数を数え配列を初期化する．
-  int io_num = pt_item->ioitem_num();
+  SizeType io_num = pt_item->ioitem_num();
   void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (q) EiIODecl[io_num];
 
@@ -63,7 +63,7 @@ EiFactory::new_Function(const VlNamedObj* parent,
 			const PtItem* pt_item)
 {
   // IO数を数え配列を初期化する．
-  int io_num = pt_item->ioitem_num();
+  SizeType io_num = pt_item->ioitem_num();
   void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (q) EiIODecl[io_num];
 

@@ -119,20 +119,11 @@ CptDeclHead::delay() const
   return nullptr;
 }
 
-// @brief 要素数の取得
-// @return 要素数
-int
-CptDeclHead::item_num() const
+// @brief 要素のリストの取得
+PtDeclItemArray
+CptDeclHead::item_list() const
 {
-  return mItemArray.size();
-}
-
-// @brief 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-const PtDeclItem*
-CptDeclHead::item(int pos) const
-{
-  return mItemArray[pos];
+  return mItemArray;
 }
 
 // @brief 要素リストの設定
@@ -1043,11 +1034,11 @@ CptDeclItemBase::dimension_list_size() const
   return 0;
 }
 
-// 範囲の取得
-const PtRange*
-CptDeclItemBase::range(int pos) const
+// 範囲のリストの取得
+PtRangeArray
+CptDeclItemBase::range_list() const
 {
-  return nullptr;
+  return PtRangeArray{};
 }
 
 // 初期値の取得
@@ -1122,11 +1113,11 @@ CptDeclItemR::dimension_list_size() const
   return mRangeArray.size();
 }
 
-// 範囲の取得
-const PtRange*
-CptDeclItemR::range(int pos) const
+// 範囲のリストの取得
+PtRangeArray
+CptDeclItemR::range_list() const
 {
-  return mRangeArray[pos];
+  return mRangeArray;
 }
 
 

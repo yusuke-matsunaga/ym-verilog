@@ -142,7 +142,7 @@ private:
 	  PtrList<const PtAttrInst>* ai_list,
 	  bool is_seq,
 	  const PtIOItem* out_item,
-	  PtiPortArray port_array,
+	  PtPortArray port_array,
 	  PtIOHeadArray iohead_array);
 
 
@@ -175,8 +175,12 @@ public:
   bool
   check_PortArray(PtIOHeadArray iohead_array);
 
+  /// @brief PtiPort の vector からポート配列を作る．
+  PtPortArray
+  new_PortArray(const vector<PtiPort*>& port_vector);
+
   /// @brief 入出力宣言からポートを作る．
-  PtiPortArray
+  PtPortArray
   new_PortArray(PtIOHeadArray iohead_array);
 
   /// @brief 空のポートの生成
@@ -2093,9 +2097,9 @@ public:
   void
   add_port(PtiPort* port);
 
-  /// @brief ポートリストを配列に変換する．
-  PtiPortArray
-  get_port_array();
+  /// @brief ポートリストをvectorに変換する．
+  vector<PtiPort*>
+  get_port_vector();
 
   /// @brief ポート参照リストを初期化する．
   void
@@ -2270,10 +2274,11 @@ public:
 
   /// @brief 式のリストから配列を生成する．(multi_concat用)
   /// @param[in] pre_expr list の前に挿入する式
-  /// @note 結果として list は削除される．
+  /// @param[in] expr_list 式
+  /// @note 結果として expr_list は削除される．
   PtExprArray
   ExprArray(const PtExpr* pre_expr,
-	    PtrList<const PtExpr>* list);
+	    PtrList<const PtExpr>* expr_list);
 
 
 public:
@@ -2318,9 +2323,9 @@ private:
   // 内部で用いられるデータ型の定義
   //////////////////////////////////////////////////////////////////////
 
-  typedef PtrList<PtiIOHead, const PtIOHead> PtIOHeadList;
-  typedef PtrList<PtiDeclHead, const PtDeclHead> PtDeclHeadList;
-  typedef PtrList<const PtItem, const PtItem> PtItemList;
+  using PtIOHeadList = PtrList<PtiIOHead, const PtIOHead>;
+  using PtDeclHeadList = PtrList<PtiDeclHead, const PtDeclHead>;
+  using PtItemList = PtrList<const PtItem, const PtItem>;
 
 
 private:
@@ -2365,7 +2370,7 @@ private:
   PtiFactory& mFactory;
 
   // 字句解析を行うオブジェクト
-  Lex* mLex;
+  unique_ptr<Lex> mLex;
 
   // PuList<> のメモリ確保用オブジェクト
   FragAlloc mTmpAlloc;

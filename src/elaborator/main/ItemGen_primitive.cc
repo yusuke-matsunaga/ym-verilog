@@ -65,10 +65,9 @@ ItemGen::instantiate_gateheader(const VlNamedObj* parent,
 			     prim_head, pt_delay));
   }
 
-  for ( int i = 0; i < pt_head->size(); ++ i ) {
-    const PtInst* pt_inst = pt_head->inst(i);
+  for ( auto pt_inst: pt_head->inst_list() ) {
     const FileRegion& fr = pt_inst->file_region();
-    int port_num = pt_inst->port_num();
+    SizeType port_num = pt_inst->port_list().size();
     int output_num;
     int inout_num;
     int input_num;
@@ -177,10 +176,9 @@ ItemGen::instantiate_udpheader(const VlNamedObj* parent,
 			     prim_head, pt_head));
   }
 
-  for ( int i = 0; i < pt_head->size(); ++ i ) {
-    const PtInst* pt_inst = pt_head->inst(i);
-    if ( pt_inst->port_num() > 0 &&
-	 pt_inst->port(0)->name() != nullptr ) {
+  for ( auto pt_inst: pt_head->inst_list() ) {
+    if ( pt_inst->port_list().size() > 0 &&
+	 pt_inst->port_list()[0]->name() != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_inst->file_region(),
 		      MsgType::Error,
@@ -189,7 +187,7 @@ ItemGen::instantiate_udpheader(const VlNamedObj* parent,
       continue;
     }
 
-    int port_num = pt_inst->port_num();
+    SizeType port_num = pt_inst->port_list().size();
     if ( udpdefn->port_num() != port_num ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_inst->file_region(),
@@ -260,15 +258,13 @@ ItemGen::instantiate_cell(const VlNamedObj* parent,
 						  pt_head,
 						  cell_id);
   const ClibCell& cell = get_cell(cell_id);
-  for ( int i = 0; i < pt_head->size(); ++ i ) {
-    const PtInst* pt_inst = pt_head->inst(i);
+  for ( auto pt_inst: pt_head->inst_list() ) {
     // ポート数のチェックを行う．
-    int port_num = pt_inst->port_num();
+    SizeType port_num = pt_inst->port_list().size();
     if ( port_num > 0 &&
-	 pt_inst->port(0)->name() != nullptr ) {
+	 pt_inst->port_list()[0]->name() != nullptr ) {
       // 名前による結合
-      for ( int j = 0; j < port_num; ++ j ) {
-	const PtConnection* pt_con = pt_inst->port(j);
+      for ( auto pt_con: pt_inst->port_list() ) {
 	const char* pin_name = pt_con->name();
 	int pin_id = cell.pin_id(pin_name);
 	if ( pin_id == -1 ) {
@@ -364,7 +360,7 @@ ItemGen::link_udp_delay(ElbPrimHead* prim_head,
 			const PtItem* pt_head)
 {
   const VlNamedObj* parent = prim_head->parent();
-  int param_size = pt_head->paramassign_array().size();
+  SizeType param_size = pt_head->paramassign_array().size();
   const PtDelay* pt_delay = pt_head->delay();
   ElbDelay* delay = nullptr;
   if ( pt_delay ) {
@@ -387,15 +383,15 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
 			 const PtInst* pt_inst)
 {
   const VlNamedObj* parent = prim_array->parent();
-  int arraysize = prim_array->elem_num();
+  SizeType arraysize = prim_array->elem_num();
 
   // ポートの情報を得るために先頭の要素を取り出す．
   const VlPrimitive* prim = prim_array->elem_by_offset(0);
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  for ( int index = 0; index < pt_inst->port_num(); ++ index ) {
-    const PtConnection* pt_con = pt_inst->port(index);
+  int index = 0;
+  for ( auto pt_con: pt_inst->port_list() ) {
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
       // 空の接続式は許されない．
@@ -408,6 +404,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
     }
 
     const VlPrimTerm* term = prim->prim_term(index);
+    ++ index;
     ElbExpr* tmp = nullptr;
     if ( term->direction() == kVlInput ) {
       // 入力に接続するのは通常の右辺式
@@ -430,7 +427,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
 		      "Real expression cannot connect to UDP port.");
       continue;
     }
-    int expr_size = type.size();
+    SizeType expr_size = type.size();
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       for ( int i = 0; i < arraysize; ++ i ) {
@@ -478,8 +475,8 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  for ( int index = 0; index < pt_inst->port_num(); ++ index ) {
-    const PtConnection* pt_con = pt_inst->port(index);
+  int index = 0;
+  for ( auto pt_con: pt_inst->port_list() ) {
     // UDP instance の場合には ai_list は無視する．
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
@@ -487,6 +484,7 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
     }
 
     const VlPrimTerm* term = primitive->prim_term(index);
+    ++ index;
     ElbExpr* tmp = nullptr;
     if ( term->direction() == kVlInput ) {
       // 入力に接続するのは通常の右辺式
@@ -509,7 +507,8 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
 		      "Real expression cannot connect to UDP port.");
       continue;
     }
-    int expr_size = type.size();
+
+    SizeType expr_size = type.size();
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       primitive->connect(index, tmp);
@@ -540,20 +539,20 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
 			 const PtInst* pt_inst)
 {
   const VlNamedObj* parent = prim_array->parent();
-  int arraysize = prim_array->elem_num();
+  SizeType arraysize = prim_array->elem_num();
 
   // ポートの情報を得るために先頭の要素を取り出す．
   const VlPrimitive* prim = prim_array->elem_by_offset(0);
 
   // YACC の文法から一つでも named_con なら全部そう
-  bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
+  bool conn_by_name = (pt_inst->port_list()[0]->name() != nullptr);
 
   const ClibCell& cell = get_cell(prim->cell_id());
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  for ( int i = 0; i < pt_inst->port_num(); ++ i ) {
-    const PtConnection* pt_con = pt_inst->port(i);
+  int pos = 0;
+  for ( auto pt_con: pt_inst->port_list() ) {
     int index;
     if ( conn_by_name ) {
       int pin_id = cell.pin_id(pt_con->name());
@@ -570,7 +569,8 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       index = pin_id;
     }
     else {
-      index = i;
+      index = pos;
+      ++ pos;
     }
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
@@ -606,7 +606,8 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
 		      "Real expression cannot connect to UDP port.");
       continue;
     }
-    int expr_size = type.size();
+
+    SizeType expr_size = type.size();
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       for ( int i = 0; i < arraysize; ++ i ) {
@@ -653,14 +654,14 @@ ItemGen::link_cell(ElbPrimitive* primitive,
   const VlNamedObj* parent = primitive->parent();
 
   // YACC の文法から一つでも named_con なら全部そう
-  bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
+  bool conn_by_name = (pt_inst->port_list()[0]->name() != nullptr);
 
   const ClibCell& cell = get_cell(primitive->cell_id());
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  for ( int i = 0; i < pt_inst->port_num(); ++ i ) {
-    const PtConnection* pt_con = pt_inst->port(i);
+  int pos = 0;
+  for ( auto pt_con: pt_inst->port_list() ) {
     int index;
     if ( conn_by_name ) {
       int pin_id = cell.pin_id(pt_con->name());
@@ -677,7 +678,8 @@ ItemGen::link_cell(ElbPrimitive* primitive,
       index = pin_id;
     }
     else {
-      index = i;
+      index = pos;
+      ++ pos;
     }
     // ai_list は無視する．
     const PtExpr* pt_expr = pt_con->expr();

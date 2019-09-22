@@ -67,9 +67,8 @@ RawLex::~RawLex()
 
   // LexPlugin は LexPluginDict のデストラクタで削除される．
 
-  for (list<LexState*>::iterator p = mStates.begin();
-       p != mStates.end(); ++ p) {
-    delete *p;
+  for ( auto state: mStates ) {
+    delete state;
   }
   delete mInputMgr;
 }
@@ -448,9 +447,8 @@ RawLex::debug()
 void
 RawLex::resetall(const FileRegion& file_region)
 {
-  for (list<LexState*>::iterator p = mStates.begin();
-       p != mStates.end(); ++ p) {
-    (*p)->resetall(file_region);
+  for ( auto state: mStates ) {
+    state->resetall(file_region);
   }
 }
 
@@ -473,9 +471,8 @@ RawLex::is_macro_defined(const char* name) const
 bool
 RawLex::check_macro(const char* name) const
 {
-  ymuint n = mMacroStack.size();
-  for (ymuint i = 0; i < n; ++ i) {
-    if ( mMacroStack[i].check_name(name) ) {
+  for ( auto macro: mMacroStack ) {
+    if ( macro.check_name(name) ) {
       return true;
     }
   }

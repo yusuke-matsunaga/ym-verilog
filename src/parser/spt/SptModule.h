@@ -9,8 +9,9 @@
 /// All rights reserved.
 
 
-#include "ym/pt/PtModule.h"
 #include "ym/FileRegion.h"
+#include "ym/pt/PtArray.h"
+#include "ym/pt/PtModule.h"
 #include "PtiDecl.h"
 
 
@@ -45,7 +46,7 @@ private:
 	    const string& library,
 	    const string& cell,
 	    PtDeclHeadArray paramport_array,
-	    PtiPortArray port_array,
+	    PtPortArray port_array,
 	    PtIOHeadArray iodecl_array,
 	    PtDeclHeadArray decl_array,
 	    PtItemArray item_array);
@@ -60,152 +61,117 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// macromodule 情報の取得
-  virtual
   bool
-  is_macromodule() const;
+  is_macromodule() const override;
 
   /// cell 情報の取得
-  virtual
   bool
-  is_cell() const;
+  is_cell() const override;
 
   /// protect 情報の取得
-  virtual
   bool
-  is_protected() const;
+  is_protected() const override;
 
   /// time unit の取得
-  virtual
   int
-  time_unit() const;
+  time_unit() const override;
 
   /// time precision の取得
-  virtual
   int
-  time_precision() const;
+  time_precision() const override;
 
   /// default net type の取得
-  virtual
   tVpiNetType
-  nettype() const;
+  nettype() const override;
 
   /// unconnected drive の取得
-  virtual
   tVpiUnconnDrive
-  unconn_drive() const;
+  unconn_drive() const override;
 
   /// default delay mode の取得
-  virtual
   tVpiDefDelayMode
-  delay_mode() const;
+  delay_mode() const override;
 
   /// default decay time の取得
-  virtual
   int
-  decay_time() const;
+  decay_time() const override;
 
   /// portfaults 情報の取得
-  virtual
   bool
-  portfaults() const;
+  portfaults() const override;
 
   /// suppress_faults 情報の取得
-  virtual
   bool
-  suppress_faults() const;
+  suppress_faults() const override;
 
   /// config 情報の取得
-  virtual
   const string&
-  config() const;
+  config() const override;
 
   /// library 情報の取得
-  virtual
   const string&
-  library() const;
+  library() const override;
 
   /// cell 情報の取得
-  virtual
   const string&
-  cell() const;
+  cell() const override;
 
   /// @brief パラメータポート宣言配列の取得
-  virtual
   PtDeclHeadArray
-  paramport_array() const;
+  paramport_array() const override;
 
-  /// @brief ポート数の取得
-  /// @return ポート数
-  virtual
-  int
-  port_num() const;
-
-  /// @brief ポートの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
-  virtual
-  const PtPort*
-  port(int pos) const;
+  /// @brief ポートのリストの取得
+  PtPortArray
+  port_list() const override;
 
   /// @brief 入出力宣言ヘッダ配列の取得
-  virtual
   PtIOHeadArray
-  iohead_array() const;
+  iohead_array() const override;
 
   /// @brief 入出力宣言の要素数の取得
   /// @note 個々のヘッダが持つ要素数の総和を計算する．
-  virtual
-  int
-  iodecl_num() const;
+  SizeType
+  iodecl_num() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief item 配列の取得
-  virtual
   PtItemArray
-  item_array() const;
+  item_array() const override;
 
   /// 関数名から関数の検索
-  virtual
   const PtItem*
-  find_function(const char* name) const;
+  find_function(const char* name) const override;
 
   /// top_module フラグを下ろす
-  virtual
   void
-  clear_topmodule() const;
+  clear_topmodule() const override;
 
   /// top module のチェック
-  virtual
   bool
-  is_topmodule() const;
+  is_topmodule() const override;
 
   /// @brief in_use フラグの設定
-  virtual
   void
-  set_in_use() const;
+  set_in_use() const override;
 
   /// @brief in_use フラグの解除
-  virtual
   void
-  reset_in_use() const;
+  reset_in_use() const override;
 
   /// @brief in_use フラグの取得
-  virtual
   bool
-  is_in_use() const;
+  is_in_use() const override;
 
 
 private:
@@ -252,13 +218,13 @@ private:
   PtDeclHeadArray mParamPortArray;
 
   // ポートの配列
-  PtiPortArray mPortArray;
+  PtPortArray mPortArray;
 
   // 入出力宣言の配列
   PtIOHeadArray mIOHeadArray;
 
   // 入出力宣言の要素数
-  int mIODeclNum;
+  SizeType mIODeclNum;
 
   // 宣言リスト
   PtDeclHeadArray mDeclHeadArray;
@@ -289,7 +255,6 @@ private:
 	  const char* ext_name);
 
   /// @brief デストラクタ
-  virtual
   ~SptPort();
 
 
@@ -299,34 +264,28 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 外向の名前の取得
-  virtual
   const char*
-  ext_name() const;
+  ext_name() const override;
 
   /// @brief 内側のポート結線を表す式の取得
-  virtual
   const PtExpr*
-  portref() const;
+  portref() const override;
 
   /// @brief 内部のポート結線リストのサイズの取得
-  virtual
   int
-  portref_size() const;
+  portref_size() const override;
 
   /// @brief 内部のポート結線の取得
-  virtual
   const PtExpr*
-  portref_elem(int pos) const;
+  portref_elem(int pos) const override;
 
-  /// @brief 内部のポート結線の報告の取得
-  virtual
+  /// @brief 内部のポート結線の方向の取得
   tVlDirection
-  portref_dir(int pos) const;
+  portref_dir(int pos) const override;
 
 
 public:
@@ -337,10 +296,9 @@ public:
   /// @brief portref の方向を設定する．
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   /// @param[in] dir 方向
-  virtual
   void
   _set_portref_dir(int pos,
-		   tVlDirection dir);
+		   tVlDirection dir) override;
 
 
 private:

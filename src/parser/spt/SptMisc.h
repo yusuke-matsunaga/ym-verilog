@@ -34,7 +34,6 @@ private:
 	     PtExprArray event_array);
 
   /// デストラクタ
-  virtual
   ~SptControl();
 
 
@@ -44,38 +43,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 型の取得
-  virtual
   tPtCtrlType
-  type() const;
+  type() const override;
 
   /// 遅延式の取得
-  virtual
   const PtExpr*
-  delay() const;
+  delay() const override;
 
-  /// @brief イベントリストのサイズの取得
-  /// @retval イベントリストのサイズ event control/repeat control の場合
-  /// @retval 0 上記以外
-  virtual
-  int
-  event_num() const;
-
-  /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+  /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  virtual
-  const PtExpr*
-  event(int pos) const;
+  PtExprArray
+  event_list() const override;
 
   /// 繰り返し数の取得
-  virtual
   const PtExpr*
-  rep_expr() const;
+  rep_expr() const override;
 
 
 private:
@@ -114,7 +100,6 @@ private:
 		const char* name = nullptr);
 
   /// デストラクタ
-  virtual
   ~SptConnection();
 
 
@@ -124,19 +109,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// 式の取得
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
 
 private:
@@ -176,7 +158,6 @@ private:
 	      tVpiStrength charge);
 
   /// デストラクタ
-  virtual
   ~SptStrength();
 
 
@@ -186,24 +167,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// drive strength0 の取得
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// drive strength1 の取得
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// charge strength の取得
-  virtual
   tVpiStrength
-  charge() const;
+  charge() const override;
 
 
 private:
@@ -246,7 +223,6 @@ private:
 	   const PtExpr* value3);
 
   /// デストラクタ
-  virtual
   ~SptDelay();
 
 
@@ -256,14 +232,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 値の取得
-  virtual
   const PtExpr*
-  value(int pos) const;
+  value(SizeType pos) const override;
 
 
 private:
@@ -296,7 +270,6 @@ public:
 		int index);
 
   /// デストラクタ
-  virtual
   ~SptNameBranch();
 
 
@@ -306,19 +279,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// インデックスの有無のチェック
-  virtual
   bool
-  has_index() const;
+  has_index() const override;
 
   /// インデックスの取得
-  virtual
   int
-  index() const;
+  index() const override;
 
 
 private:
@@ -351,7 +321,6 @@ private:
   SptAttrInst(PtAttrSpecArray as_array);
 
   /// デストラクタ
-  virtual
   ~SptAttrInst();
 
 
@@ -360,17 +329,9 @@ public:
   // PtAttrInst の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 要素数の取得
-  /// @return 要素数
-  virtual
-  int
-  attrspec_num() const;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
-  virtual
-  const PtAttrSpec*
-  attrspec(int pos) const;
+  /// @brief 要素のリストの取得
+  PtAttrSpecArray
+  attrspec_list() const override;
 
 
 private:
@@ -400,7 +361,6 @@ private:
 	      const PtExpr* expr);
 
   /// デストラクタ
-  virtual
   ~SptAttrSpec();
 
 
@@ -410,19 +370,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// 式の取得
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
 
 private:

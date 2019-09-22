@@ -249,21 +249,11 @@ CptGenCaseItem::file_region() const
   return mFileRegion;
 }
 
-// @brief ラベルの数の取得
-// @return ラベル数\n
-// 0 の時は default の意味
-int
-CptGenCaseItem::label_num() const
+// @brief ラベルのリストの取得
+PtExprArray
+CptGenCaseItem::label_list() const
 {
-  return mLabelArray.size();
-}
-
-// @brief ラベルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-const PtExpr*
-CptGenCaseItem::label(int pos) const
-{
-  return mLabelArray[pos];
+  return mLabelArray;
 }
 
 // @brief 宣言ヘッダ配列の取得
@@ -321,18 +311,11 @@ CptGenCase::expr() const
   return mExpr;
 }
 
-// case item の要素数を返す．
-int
-CptGenCase::size() const
+// @brief case item のリストを返す．
+PtGenCaseItemArray
+CptGenCase::caseitem_list() const
 {
-  return mCaseItemArray.size();
-}
-
-// case item を返す．
-const PtGenCaseItem*
-CptGenCase::caseitem(int pos) const
-{
-  return mCaseItemArray[pos];
+  return mCaseItemArray;
 }
 
 

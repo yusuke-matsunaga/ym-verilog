@@ -40,16 +40,10 @@ public:
   tVpiPrimType
   prim_type() const = 0;
 
-  /// @brief ポート数を取り出す．
+  /// @brief ポートのリストを取り出す．
   virtual
-  int
-  port_num() const = 0;
-
-  /// @brief ポートを取り出す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
-  virtual
-  const PtPort*
-  port(int pos) const = 0;
+  PtPortArray
+  port_list() const = 0;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual

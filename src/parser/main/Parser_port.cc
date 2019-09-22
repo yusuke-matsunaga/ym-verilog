@@ -96,10 +96,8 @@ bool
 Parser::check_PortArray(PtIOHeadArray iohead_array)
 {
   unordered_set<string> portref_dic;
-  for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    const PtIOHead* head = iohead_array[i];
-    for ( int j = 0; j < head->item_num(); ++ j ) {
-      const PtIOItem* elem = head->item(j);
+  for ( auto head: iohead_array ) {
+    for ( auto elem: head->item_list() ) {
       string name = elem->name();
       if ( portref_dic.count(name) > 0 ) {
 	ostringstream buf;
@@ -117,24 +115,36 @@ Parser::check_PortArray(PtIOHeadArray iohead_array)
   return true;
 }
 
+// @brief PtiPort の vector からポート配列を作る．
+PtPortArray
+Parser::new_PortArray(const vector<PtiPort*>& port_vector)
+{
+  SizeType num = port_vector.size();
+  void* p = mAlloc.get_memory(sizeof(PtPort*) * num);
+  const PtPort** body = new (p) const PtPort*[num];
+  for ( SizeType i = 0; i < num; ++ i ) {
+    body[i] = port_vector[i];
+  }
+  return PtPortArray(num, body);
+}
+
 // @brief 入出力宣言からポートを作る．
-PtiPortArray
+PtPortArray
 Parser::new_PortArray(PtIOHeadArray iohead_array)
 {
-  int n = 0;
-  for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    n += iohead_array[i]->item_num();
+  SizeType num = 0;
+  for ( auto head: iohead_array ) {
+    num += head->item_list().size();
   }
+
   // port_array を確保する．
-  void* p = mAlloc.get_memory(sizeof(PtiPort*) * n);
-  PtiPort** array = new (p) PtiPort*[n];
+  void* p = mAlloc.get_memory(sizeof(PtPort*) * num);
+  const PtPort** array = new (p) const PtPort*[num];
 
   // ポートを生成し arary に格納する．
-  n = 0;
-  for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    const PtIOHead* head = iohead_array[i];
-    for ( int j = 0; j < head->item_num(); ++ j ) {
-      const PtIOItem* elem = head->item(j);
+  SizeType i = 0;
+  for ( auto head: iohead_array ) {
+    for ( auto elem: head->item_list() ) {
       const char* name = elem->name();
       const PtExpr* portref = mFactory.new_Primary(elem->file_region(), name);
       PtiPort* port = mFactory.new_Port(elem->file_region(), portref, name);
@@ -146,11 +156,11 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
       default: ASSERT_NOT_REACHED;
       }
       port->_set_portref_dir(0, dir);
-      array[n] = port;
-      ++ n;
+      array[i] = port;
+      ++ i;
     }
   }
-  return PtiPortArray(n, array);
+  return PtPortArray(num, array);
 }
 
 

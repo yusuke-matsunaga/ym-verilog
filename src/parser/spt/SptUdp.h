@@ -11,6 +11,7 @@
 
 #include "ym/pt/PtUdp.h"
 #include "ym/pt/PtDecl.h"
+#include "ym/pt/PtArray.h"
 #include "ym/VlUdpVal.h"
 #include "ym/FileRegion.h"
 #include "PtiFwd.h"
@@ -31,14 +32,13 @@ private:
   // コンストラクタ
   SptUdp(const FileRegion& file_region,
 	 const char* name,
-	 PtiPortArray port_array,
+	 PtPortArray port_array,
 	 PtIOHeadArray iohead_array,
 	 bool is_seq,
 	 const PtExpr* init_value,
 	 PtUdpEntryArray entry_array);
 
   // デストラクタ
-  virtual
   ~SptUdp();
 
 
@@ -48,44 +48,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // primitive type を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   // 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
-  // ポート数を取り出す．
-  virtual
-  int
-  port_num() const;
-
-  // ポートを返す．
-  virtual
-  const PtPort*
-  port(int pos) const;
+  /// @brief ポートのリストを取り出す．
+  PtPortArray
+  port_list() const override;
 
   /// @brief 入出力宣言ヘッダ配列の取得
-  virtual
   PtIOHeadArray
-  iohead_array() const;
+  iohead_array() const override;
 
   // 初期値を取出す．
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
   /// @brief テーブルを取り出す．
-  virtual
   PtUdpEntryArray
-  table_array() const;
+  table_array() const override;
 
 
 private:
@@ -100,7 +88,7 @@ private:
   const char* mName;
 
   // ポートの配列
-  PtiPortArray mPortArray;
+  PtPortArray mPortArray;
 
   // 入出力宣言の配列
   PtIOHeadArray mIOHeadArray;
@@ -134,7 +122,6 @@ private:
 	      const PtUdpValue* output);
 
   // デストラクタ
-  virtual
   ~SptUdpEntry();
 
 
@@ -144,24 +131,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 入力値の配列を取り出す．
-  virtual
   PtUdpValueArray
-  input_array() const;
+  input_array() const override;
 
   // 現状態の値を取り出す．
-  virtual
   const PtUdpValue*
-  current() const;
+  current() const override;
 
   // 出力の値を取り出す．
-  virtual
   const PtUdpValue*
-  output() const;
+  output() const override;
 
 
 private:
@@ -204,7 +187,6 @@ private:
 	      char symbol2);
 
   // デストラクタ
-  virtual
   ~SptUdpValue();
 
 
@@ -214,14 +196,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // シンボルを取り出す．
-  virtual
   VlUdpVal
-  symbol() const;
+  symbol() const override;
 
 
 private:

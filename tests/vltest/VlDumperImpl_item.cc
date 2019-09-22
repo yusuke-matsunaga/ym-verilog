@@ -27,10 +27,7 @@ VlDumperImpl::put_primarray_list(const char* label,
 {
   VlDumpHeader x(this, label, "PrimitiveArrayList");
 
-  for (vector<const VlPrimArray*>::const_iterator p = primarray_list.begin();
-       p != primarray_list.end(); ++ p) {
-    const VlPrimArray* primarray = *p;
-
+  for ( auto primarray: primarray_list ) {
     const char* nm = nullptr;
     switch ( primarray->type() ) {
     case kVpiGateArray:   nm = "GateArray"; break;
@@ -117,9 +114,8 @@ VlDumperImpl::put_primitive_list(const char* label,
 {
   VlDumpHeader x(this, label, "PrimitiveList");
 
-  for (vector<const VlPrimitive*>::const_iterator p = primitive_list.begin();
-       p != primitive_list.end(); ++ p) {
-    put_primitive(label, mgr, *p);
+  for ( auto prim: primitive_list ) {
+    put_primitive(label, mgr, prim);
   }
 }
 
@@ -287,9 +283,8 @@ VlDumperImpl::put_contassign_list(const char* label,
 {
   VlDumpHeader x(this, label, "ContAssignList");
 
-  for (vector<const VlContAssign*>::const_iterator p = ca_list.begin();
-       p != ca_list.end(); ++ p) {
-    put_contassign(label, mgr, *p);
+  for ( auto ca: ca_list ) {
+    put_contassign(label, mgr, ca);
   }
 }
 

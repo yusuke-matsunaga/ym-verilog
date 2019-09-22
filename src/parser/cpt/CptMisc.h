@@ -28,7 +28,6 @@ protected:
   CptControl();
 
   /// @brief デストラクタ
-  virtual
   ~CptControl();
 
 
@@ -41,31 +40,20 @@ public:
   /// @retval 遅延を表す式 delay control の場合
   /// @retval nullptr 上記以外
   /// @note デフォルトでは nullptr を返す．
-  virtual
   const PtExpr*
-  delay() const;
+  delay() const override;
 
-  /// @brief イベントリストのサイズの取得
-  /// @retval イベントリストのサイズ event control/repeat control の場合
-  /// @retval 0 上記以外
-  virtual
-  int
-  event_num() const;
-
-  /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+  /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  virtual
-  const PtExpr*
-  event(int pos) const;
+  PtExprArray
+  event_list() const override;
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
   /// @retval nullptr 上記以外
   /// @note デフォルトでは nullptr を返す．
-  virtual
   const PtExpr*
-  rep_expr() const;
+  rep_expr() const override;
 
 };
 
@@ -85,7 +73,6 @@ private:
 		  const PtExpr* value);
 
   /// @brief デストラクタ
-  virtual
   ~CptDelayControl();
 
 
@@ -95,20 +82,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtDelayControl を返す．
-  virtual
   tPtCtrlType
-  type() const;
+  type() const override;
 
   /// @brief 遅延式を返す．
-  virtual
   const PtExpr*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -140,7 +124,6 @@ private:
 		  PtExprArray event_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptEventControl();
 
 
@@ -150,29 +133,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtEventControl を返す．
-  virtual
   tPtCtrlType
-  type() const;
+  type() const override;
 
-  /// @brief イベントリストのサイズの取得
-  /// @retval イベントリストのサイズ event control/repeat control の場合
-  /// @retval 0 上記以外
-  virtual
-  int
-  event_num() const;
-
-  /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+  /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  virtual
-  const PtExpr*
-  event(int pos) const;
+  PtExprArray
+  event_list() const override;
 
 
 private:
@@ -205,7 +177,6 @@ private:
 		   PtExprArray event_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptRepeatControl();
 
 
@@ -215,34 +186,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtRepeatControl を返す．
-  virtual
   tPtCtrlType
-  type() const;
+  type() const override;
 
   /// @brief 繰り返し数を得る．
-  virtual
   const PtExpr*
-  rep_expr() const;
+  rep_expr() const override;
 
-  /// @brief イベントリストのサイズの取得
-  /// @retval イベントリストのサイズ event control/repeat control の場合
-  /// @retval 0 上記以外
-  virtual
-  int
-  event_num() const;
-
-  /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+  /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  virtual
-  const PtExpr*
-  event(int pos) const;
+  PtExprArray
+  event_list() const override;
 
 
 private:
@@ -275,7 +234,6 @@ protected:
 		const PtExpr* expr);
 
   /// @brief デストラクタ
-  virtual
   ~CptConnection();
 
 
@@ -285,22 +243,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を取出す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 名前の取得
   /// @retval 名前 named connection の場合
   /// @retval "" ordered connection の場合
   /// @note デフォルトでは nullptr を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 式を取り出す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
 
 private:
@@ -332,7 +287,6 @@ protected:
 		const PtExpr* expr);
 
   /// @brief デストラクタ
-  virtual
   ~CptOrderedCon();
 
 };
@@ -354,7 +308,6 @@ protected:
 	      const PtExpr* expr);
 
   /// @brief デストラクタ
-  virtual
   ~CptNamedCon();
 
 
@@ -364,9 +317,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を取り出す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -400,7 +352,6 @@ private:
 	      tVpiStrength value1);
 
   /// @brief デストラクタ
-  virtual
   ~CptStrength();
 
 
@@ -410,24 +361,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を取出す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief drive strength0 を返す．
-  virtual
   tVpiStrength
-  drive0() const;
+  drive0() const override;
 
   /// @brief drive strength1 を返す．
-  virtual
   tVpiStrength
-  drive1() const;
+  drive1() const override;
 
   /// @brief charge strength を返す．
-  virtual
   tVpiStrength
-  charge() const;
+  charge() const override;
 
 
 private:
@@ -438,9 +385,9 @@ private:
   // ファイル位置
   FileRegion mFileRegion;
 
-  tVpiStrength mValue1;
-  tVpiStrength mValue2;
-  tVpiStrength mValue3;
+  // 値の配列
+  tVpiStrength mValue[3];
+
 };
 
 
@@ -470,7 +417,6 @@ private:
 	   const PtExpr* value3);
 
   /// @brief デストラクタ
-  virtual
   ~CptDelay();
 
 
@@ -480,14 +426,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を取出す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 値を取り出す．
-  virtual
   const PtExpr*
-  value(int pos) const;
+  value(SizeType pos) const override;
 
 
 private:
@@ -516,7 +460,6 @@ public:
   CptNameBranch(const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~CptNameBranch();
 
 
@@ -526,24 +469,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を取り出す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief インデックスの有無のチェック
   /// @retval true インデックスを持っている時
   /// @retval false インデックスを持っていない時
   /// @note デフォルトで false を返す．
-  virtual
   bool
-  has_index() const;
+  has_index() const override;
 
   /// @brief インデックスの取得
   /// @return インデックスの値
   /// @note デフォルトで 0 を返す．
-  virtual
   int
-  index() const;
+  index() const override;
 
 
 private:
@@ -570,7 +510,6 @@ public:
 		 int index);
 
   /// @brief デストラクタ
-  virtual
   ~CptNameBranchI();
 
 
@@ -580,14 +519,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief インデックスを持っている時 true を返す．
-  virtual
   bool
-  has_index() const;
+  has_index() const override;
 
   /// @brief インデックスを取り出す．
-  virtual
   int
-  index() const;
+  index() const override;
 
 
 private:
@@ -615,7 +552,6 @@ private:
   CptAttrInst(PtAttrSpecArray as_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptAttrInst();
 
 
@@ -624,17 +560,9 @@ public:
   // PtAttrInst の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 要素数の取得
-  /// @return 要素数
-  virtual
-  int
-  attrspec_num() const;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
-  virtual
-  const PtAttrSpec*
-  attrspec(int pos) const;
+  /// @brief 要素のリストの取得
+  PtAttrSpecArray
+  attrspec_list() const override;
 
 
 private:
@@ -664,7 +592,6 @@ private:
 	      const PtExpr* expr);
 
   /// @brief デストラクタ
-  virtual
   ~CptAttrSpec();
 
 
@@ -674,19 +601,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 名前を取り出す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 式を取り出す．nullptr の場合もある．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
 
 private:

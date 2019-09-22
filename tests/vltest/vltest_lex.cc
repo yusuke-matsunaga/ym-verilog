@@ -33,8 +33,8 @@ lex_mode(const vector<string>& filename_list,
   MsgHandler* handler = new StreamMsgHandler(&cerr);
   MsgMgr::reg_handler(handler);
 
-  ymuint c = loop + 1;
-  for (ymuint i = 0; i < c; ++ i) {
+  int c = loop + 1;
+  for ( int i = 0; i < c; ++ i ) {
 
     Lex lex;
 
@@ -58,9 +58,7 @@ lex_mode(const vector<string>& filename_list,
     int nt_rn = 0;
     int nt_s = 0;
     int ns = 0;
-    for (vector<string>::const_iterator p = filename_list.begin();
-	 p != filename_list.end(); ++ p) {
-      const string& filename = *p;
+    for ( auto filename: filename_list ) {
       if ( !lex.open_file(filename) ) {
 	cerr << filename << " : cannot open" << endl;
 	return;

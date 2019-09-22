@@ -64,30 +64,20 @@ public:
   PtConnectionArray
   paramassign_array() const = 0;
 
-  /// @brief 要素数の取得
-  /// @return 要素数
-  /// @note さまざまな意味で用いられる．
+  /// @brief defparam のリストの取得
   virtual
-  int
-  size() const = 0;
+  PtDefParamArray
+  defparam_list() const = 0;
 
-  /// @brief defparam 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
+  /// @brief continuous assign のリストの取得
   virtual
-  const PtDefParam*
-  defparam(int pos) const = 0;
+  PtContAssignArray
+  contassign_list() const = 0;
 
-  /// @brief continuous assign 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
+  /// @brief module/UDP/gate instance リストの取得
   virtual
-  const PtContAssign*
-  contassign(int pos) const = 0;
-
-  /// @brief module/UDP/gate instance 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtInst*
-  inst(int pos) const = 0;
+  PtInstArray
+  inst_list() const = 0;
 
   /// @brief automatic 情報の取得
   /// @retval true automatic 宣言された task/function
@@ -175,11 +165,10 @@ public:
   tVpiSpecPathType
   specpath_type() const = 0;
 
-  /// @brief ターミナルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
+  /// @brief ターミナルのリストの取得
   virtual
-  const PtExpr*
-  terminal(int pos) const = 0;
+  PtExprArray
+  terminal_list() const = 0;
 
   /// @brief パス記述の取得
   /// @return パス記述
@@ -213,11 +202,10 @@ public:
   PtItemArray
   else_item_array() const = 0;
 
-  /// @brief case item の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
+  /// @brief case item のリストの取得
   virtual
-  const PtGenCaseItem*
-  caseitem(int pos) const = 0;
+  PtGenCaseItemArray
+  caseitem_list() const = 0;
 
   /// @brief 繰り返し制御用の変数名の取得
   /// @return 繰り返し制御用の変数名
@@ -350,17 +338,11 @@ public:
   const PtExpr*
   right_range() const = 0;
 
-  /// @brief ポート数の取得
-  /// @return ポート数
+  /// @brief ポートのリストの取得
   virtual
-  int
-  port_num() const = 0;
+  PtConnectionArray
+  port_list() const = 0;
 
-  /// @brief ポートの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
-  virtual
-  const PtConnection*
-  port(int pos) const = 0;
 
 };
 
@@ -386,18 +368,10 @@ public:
   // PtGenCaseItem の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ラベルの数の取得
-  /// @return ラベル数\n
-  /// 0 の時は default の意味
+  /// @brief ラベルのリストの取得
   virtual
-  int
-  label_num() const = 0;
-
-  /// @brief ラベルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-  virtual
-  const PtExpr*
-  label(int pos) const = 0;
+  PtExprArray
+  label_list() const = 0;
 
   /// @brief 宣言のリストの取得
   virtual
@@ -440,17 +414,10 @@ public:
   int
   edge() const = 0;
 
-  /// @brief 入力リストの要素数の取得
-  /// @return 入力リストの要素数
+  /// @brief 入力のリストの取得
   virtual
-  int
-  input_num() const = 0;
-
-  /// @brief 入力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < input_num() )
-  virtual
-  const PtExpr*
-  input(int pos) const = 0;
+  PtExprArray
+  input_list() const = 0;
 
   /// @brief 入力の極性の取得
   /// @return 入力の極性\n
@@ -465,17 +432,10 @@ public:
   int
   op() const = 0;
 
-  /// @brief 出力リストの要素数の取得
-  /// @return 出力リストの要素数
+  /// @brief 出力のリストの取得
   virtual
-  int
-  output_num() const = 0;
-
-  /// @brief 出力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < output_num() )
-  virtual
-  const PtExpr*
-  output(int pos) const = 0;
+  PtExprArray
+  output_list() const = 0;
 
   /// @brief 出力の極性の取得
   /// @return 出力の極性\n
@@ -525,7 +485,7 @@ public:
   /// 0の場合もある．
   virtual
   const PtExpr*
-  value(int pos) const = 0;
+  value(SizeType pos) const = 0;
 
 };
 

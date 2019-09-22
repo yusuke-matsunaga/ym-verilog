@@ -50,9 +50,8 @@ VlDumperImpl::put_process_list(const char* label,
 {
   VlDumpHeader x(this, label, "ProcessList");
 
-  for (vector<const VlProcess*>::const_iterator p = process_list.begin();
-       p != process_list.end(); ++ p) {
-    put_process(label, mgr, *p);
+  for ( auto process: process_list ) {
+    put_process(label, mgr, process);
   }
 }
 
@@ -156,12 +155,11 @@ VlDumperImpl::put_stmt(const char* label,
   case kVpiCase:
     put("vpiCaseType", stmt->case_type() );
     put_expr("vpiCondition", mgr, stmt->expr() );
-    for (ymuint i = 0; i < stmt->caseitem_num(); ++ i) {
+    for ( auto ci: stmt->caseitem_list() ) {
       VlDumpHeader x(this, "vpiCaseItem", "CaseItem");
-      const VlCaseItem* ci = stmt->caseitem(i);
       put("FileRegion", ci->file_region() );
-      for (ymuint j = 0; j < ci->expr_num(); ++ j) {
-	put_expr("vpiExpr", mgr, ci->expr(j) );
+      for ( auto expr: ci->expr_list() ) {
+	put_expr("vpiExpr", mgr, expr);
       }
       put_stmt("vpiStmt", mgr, ci->body_stmt() );
     }
@@ -216,9 +214,8 @@ VlDumperImpl::put_stmt_list(const char* label,
 {
   VlDumpHeader x(this, label, "StmtList");
 
-  for (vector<const VlStmt*>::const_iterator p = stmt_list.begin();
-       p != stmt_list.end(); ++ p) {
-    put_stmt(label, mgr, *p);
+  for ( auto stmt: stmt_list ) {
+    put_stmt(label, mgr, stmt);
   }
 }
 

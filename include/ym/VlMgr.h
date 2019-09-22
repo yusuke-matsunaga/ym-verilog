@@ -261,16 +261,16 @@ private:
   SimpleAlloc mAlloc;
 
   // Pt オブジェクトを管理するクラス
-  PtMgr* mPtMgr;
+  unique_ptr<PtMgr> mPtMgr;
 
   // Ptオブジェクトの生成を行うファクトリクラス
-  PtiFactory* mPtiFactory;
+  unique_ptr<PtiFactory> mPtiFactory;
 
   // Elb オブジェクトを管理するクラス
-  ElbMgr* mElbMgr;
+  unique_ptr<ElbMgr> mElbMgr;
 
   // Elbオブジェクトの生成を行うファクトリクラス
-  ElbFactory* mElbFactory;
+  unique_ptr<ElbFactory> mElbFactory;
 
 };
 

@@ -61,19 +61,10 @@ public:
   const char*
   name() const = 0;
 
-  /// @brief 引数の数の取得
-  /// @return 引数の数
-  /// @note kEnable/kSysEnable で意味のある関数
+  /// @brief 引数のリストの取得
   virtual
-  int
-  arg_num() const = 0;
-
-  /// @brief 引数の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  const PtExpr*
-  arg(int pos) const = 0;
+  PtExprArray
+  arg_list() const = 0;
 
   /// @brief コントロールの取得
   /// @return ディレイ/イベントコントロール
@@ -124,19 +115,10 @@ public:
   const PtStmt*
   else_body() const = 0;
 
-  /// @brief case item の要素数の取得
-  /// @return case item の要素数
-  /// @note kCase/kCaseX/kCaseZ で意味のある関数
+  /// @brief case item のリストの取得
   virtual
-  int
-  caseitem_num() const = 0;
-
-  /// @brief case item の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < caseitem_size() )
-  /// @note kCase/kCaseX/kCaseZ で意味のある関数
-  virtual
-  const PtCaseItem*
-  caseitem(int pos) const = 0;
+  PtCaseItemArray
+  caseitem_list() const = 0;
 
   /// @brief 初期化代入文の取得
   /// @return 初期化代入文
@@ -188,18 +170,10 @@ public:
   // PtCaseItem の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ラベルの数の取得
-  /// @retval ラベルの数 通常の case ラベルの場合
-  /// @retval 0 default の場合
+  /// @brief ラベルのリストの取得
   virtual
-  int
-  label_num() const = 0;
-
-  /// @brief ラベルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-  virtual
-  const PtExpr*
-  label(int pos) const = 0;
+  PtExprArray
+  label_list() const = 0;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント

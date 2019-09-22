@@ -68,9 +68,9 @@ public:
   const PtrListIterator&
   operator++();
 
-  /// @brief 正しい内容をさしているときに true を返す．
+  /// @brief 等価比較演算子
   bool
-  is_valid() const;
+  operator==(const PtrListIterator& right) const;
 
 
 private:
@@ -122,7 +122,7 @@ public:
 
   /// @brief 要素数の取得
   /// @return 要素数
-  ymuint
+  SizeType
   size() const;
 
   /// @brief 空の時に true を返す．
@@ -132,6 +132,10 @@ public:
   /// @brief 先頭の反復子を返す．
   PtrListIterator<T1>
   begin() const;
+
+  /// @brief 末尾の反復子を返す．
+  PtrListIterator<T1>
+  end() const;
 
   /// @brief 先頭の要素を返す．
   T1*
@@ -153,6 +157,11 @@ public:
   PtArray<T2>
   to_array(Alloc& alloc);
 
+  /// @brief 内容をvectorにコピーする．
+  /// @note この処理の後ではリストは空になる．
+  vector<T2*>
+  to_vector();
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -169,7 +178,7 @@ private:
   Cell* mEnd;
 
   // 要素数
-  ymuint32 mNum;
+  SizeType mNum;
 
 };
 
@@ -223,6 +232,25 @@ PtrListIterator<T>::operator*() const
   }
 }
 
+// @brief 等価比較演算子
+template <typename T>
+inline
+bool
+PtrListIterator<T>::operator==(const PtrListIterator<T>& right) const
+{
+  return mCell == right.mCell;
+}
+
+// @brief 非等価比較演算子
+template <typename T>
+inline
+bool
+operator!=(const PtrListIterator<T>& left,
+	   const PtrListIterator<T>& right)
+{
+  return !left.operator==(right);
+}
+
 // @brief 次の要素を指す．
 template <typename T>
 inline
@@ -233,15 +261,6 @@ PtrListIterator<T>::operator++()
     mCell = mCell->mLink;
   }
   return *this;
-}
-
-// @brief 正しい内容をさしているときに true を返す．
-template <typename T>
-inline
-bool
-PtrListIterator<T>::is_valid() const
-{
-  return mCell != nullptr;
 }
 
 
@@ -316,7 +335,7 @@ PtrList<T1, T2>::push_back(T1* elem)
 template <typename T1,
 	  typename T2>
 inline
-ymuint
+SizeType
 PtrList<T1, T2>::size() const
 {
   return mNum;
@@ -340,6 +359,16 @@ PtrListIterator<T1>
 PtrList<T1, T2>::begin() const
 {
   return PtrListIterator<T1>(mTop);
+}
+
+// @brief 先頭の反復子を返す．
+template <typename T1,
+	  typename T2>
+inline
+PtrListIterator<T1>
+PtrList<T1, T2>::end() const
+{
+  return PtrListIterator<T1>(nullptr);
 }
 
 // @brief 先頭の要素を返す．
@@ -381,15 +410,34 @@ inline
 PtArray<T2>
 PtrList<T1, T2>::to_array(Alloc& alloc)
 {
-  ymuint n = mNum;
+  SizeType n = mNum;
   void* p = alloc.get_memory(sizeof(T2*) * n);
   T2** array = new (p) T2*[n];
-  ymuint i = 0;
-  for (Cell* cell = mTop; cell; cell = cell->mLink, ++ i) {
+  SizeType i = 0;
+  for ( Cell* cell = mTop; cell; cell = cell->mLink, ++ i ) {
     array[i] = cell->mPtr;
   }
   clear();
-  return PtArray<T2>(n, array);
+  return PtArray<T2>{n, const_cast<const T2**>(array)};
+}
+
+// @brief 内容を配列にコピーする．
+// @param[in] array 対象の配列
+// @note この処理の後ではリストは空になる．
+template <typename T1,
+	  typename T2>
+inline
+vector<T2*>
+PtrList<T1, T2>::to_vector()
+{
+  SizeType n = mNum;
+  vector<T2*> vec(n);
+  SizeType i = 0;
+  for ( Cell* cell = mTop; cell; cell = cell->mLink, ++ i ) {
+    vec[i] = cell->mPtr;
+  }
+  clear();
+  return vec;
 }
 
 END_NAMESPACE_YM_VERILOG

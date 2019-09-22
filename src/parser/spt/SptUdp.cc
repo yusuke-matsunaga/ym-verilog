@@ -22,18 +22,18 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 SptUdp::SptUdp(const FileRegion& file_region,
 	       const char* name,
-	       PtiPortArray port_array,
+	       PtPortArray port_array,
 	       PtIOHeadArray iohead_array,
 	       bool is_seq,
 	       const PtExpr* init_value,
 	       PtUdpEntryArray entry_array) :
-  mFileRegion(file_region),
-  mName(name),
-  mPortArray(port_array),
-  mIOHeadArray(iohead_array),
-  mSeq(is_seq),
-  mInitValue(init_value),
-  mTableArray(entry_array)
+  mFileRegion{file_region},
+  mName{name},
+  mPortArray{port_array},
+  mIOHeadArray{iohead_array},
+  mSeq{is_seq},
+  mInitValue{init_value},
+  mTableArray{entry_array}
 {
 }
 
@@ -68,18 +68,11 @@ SptUdp::name() const
   return mName;
 }
 
-// ポート数を取り出す．
-int
-SptUdp::port_num() const
+// @brief ポートのリストを取り出す．
+PtPortArray
+SptUdp::port_list() const
 {
-  return mPortArray.size();
-}
-
-// ポートを取り出す．
-const PtPort*
-SptUdp::port(int pos) const
-{
-  return mPortArray[pos];
+  return mPortArray;
 }
 
 /// @brief 入出力宣言ヘッダ配列の取得
@@ -113,10 +106,10 @@ SptUdpEntry::SptUdpEntry(const FileRegion& file_region,
 			 PtUdpValueArray input_array,
 			 const PtUdpValue* current,
 			 const PtUdpValue* output) :
-  mFileRegion(file_region),
-  mInputArray(input_array),
-  mCurrent(current),
-  mOutput(output)
+  mFileRegion{file_region},
+  mInputArray{input_array},
+  mCurrent{current},
+  mOutput{output}
 {
 }
 
@@ -161,8 +154,8 @@ SptUdpEntry::output() const
 // コンストラクタ
 SptUdpValue::SptUdpValue(const FileRegion& file_region,
 			 char symbol1) :
-  mFileRegion(file_region),
-  mSymbol(symbol1)
+  mFileRegion{file_region},
+  mSymbol{symbol1}
 {
 }
 
@@ -170,8 +163,8 @@ SptUdpValue::SptUdpValue(const FileRegion& file_region,
 SptUdpValue::SptUdpValue(const FileRegion& file_region,
 			 char symbol1,
 			 char symbol2) :
-  mFileRegion(file_region),
-  mSymbol(symbol1, symbol2)
+  mFileRegion{file_region},
+  mSymbol{symbol1, symbol2}
 {
 }
 
@@ -210,7 +203,7 @@ SptUdpValue::symbol() const
 const PtUdp*
 SptFactory::new_CmbUdp(const FileRegion& file_region,
 		       const char* name,
-		       PtiPortArray port_array,
+		       PtPortArray port_array,
 		       PtIOHeadArray iohead_array,
 		       PtUdpEntryArray entry_array)
 {
@@ -235,7 +228,7 @@ SptFactory::new_CmbUdp(const FileRegion& file_region,
 const PtUdp*
 SptFactory::new_SeqUdp(const FileRegion& file_region,
 		       const char* name,
-		       PtiPortArray port_array,
+		       PtPortArray port_array,
 		       PtIOHeadArray iohead_array,
 		       const PtExpr* init_value,
 		       PtUdpEntryArray entry_array)

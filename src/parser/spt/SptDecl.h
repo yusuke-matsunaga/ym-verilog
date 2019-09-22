@@ -10,9 +10,9 @@
 
 
 #include "ym/FileRegion.h"
+#include "ym/pt/PtArray.h"
 
 #include "PtiDecl.h"
-
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -38,7 +38,6 @@ private:
 	    const PtExpr* right);
 
   /// デストラクタ
-  virtual
   ~SptIOHead();
 
 
@@ -48,55 +47,40 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 型の取得
-  virtual
   tPtIOType
-  type() const;
+  type() const override;
 
   /// 補助的な型の取得
-  virtual
   tVpiAuxType
-  aux_type() const;
+  aux_type() const override;
 
   /// 補助的なネット型の取得
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
   /// 補助的な変数型の取得
-  virtual
   tVpiVarType
-  var_type() const;
+  var_type() const override;
 
   /// 符号の取得
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// 範囲のMSBの取得
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// 範囲のLSBの取得
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
-  /// @brief 要素数の取得
-  virtual
-  int
-  item_num() const;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-  virtual
-  const PtIOItem*
-  item(int pos) const;
+  /// @brief 要素のリストの取得
+  PtIOItemArray
+  item_list() const override;
 
 
 private:
@@ -106,9 +90,8 @@ private:
 
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト
-  virtual
   void
-  set_elem(PtIOItemArray elem_array);
+  set_elem(PtIOItemArray elem_array) override;
 
 
 private:
@@ -163,7 +146,6 @@ private:
 	    const PtExpr* init_value);
 
   /// デストラクタ
-  virtual
   ~SptIOItem();
 
 
@@ -173,19 +155,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// 初期値の取得
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
 
 private:
@@ -228,7 +207,6 @@ private:
 	      const PtDelay* delay);
 
   /// デストラクタ
-  virtual
   ~SptDeclHead();
 
 
@@ -238,66 +216,48 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 宣言要素の型の取得
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
   /// 符号の取得
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// 範囲のMSBの取得
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// 範囲のLSBの取得
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
   /// データ型の取得
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// net 型の取得
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
   /// vectored|scalared 属性の取得
-  virtual
   tVpiVsType
-  vs_type() const;
+  vs_type() const override;
 
   /// strength の取得
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// delay の取得
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
-  /// @brief 要素数の取得
-  /// @return 要素数
-  virtual
-  int
-  item_num() const;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-  virtual
-  const PtDeclItem*
-  item(int pos) const;
+  /// @brief 要素のリストの取得
+  PtDeclItemArray
+  item_list() const override;
 
 
 private:
@@ -307,9 +267,8 @@ private:
 
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト(配列)
-  virtual
   void
-  set_elem(PtDeclItemArray elem_array);
+  set_elem(PtDeclItemArray elem_array) override;
 
 
 private:
@@ -371,7 +330,6 @@ private:
 	      const PtExpr* init_value);
 
   /// デストラクタ
-  virtual
   ~SptDeclItem();
 
 
@@ -381,29 +339,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// dimension list のサイズの取得
-  virtual
   int
-  dimension_list_size() const;
+  dimension_list_size() const override;
 
-  /// 範囲の取得
-  virtual
-  const PtRange*
-  range(int pos) const;
+  /// 範囲のリストの取得
+  PtRangeArray
+  range_list() const override;
 
   /// 初期値の取得
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
 
 private:
@@ -441,7 +394,6 @@ public:
 	   const PtExpr* lsb);
 
   /// @brief デストラクタ
-  virtual
   ~SptRange();
 
 
@@ -451,19 +403,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 範囲の MSB を取り出す．
-  virtual
   const PtExpr*
-  left() const;
+  left() const override;
 
   /// @brief 範囲の LSB を取り出す．
-  virtual
   const PtExpr*
-  right() const;
+  right() const override;
 
 
 private:

@@ -386,9 +386,8 @@ VlDumperImpl::put_decl_list(const char* label,
 {
   VlDumpHeader x(this, label, "DeclList");
 
-  for (vector<const VlDecl*>::const_iterator p = decl_list.begin();
-       p != decl_list.end(); ++ p) {
-    put_decl(label, mgr, *p);
+  for ( auto decl: decl_list ) {
+    put_decl(label, mgr, decl);
   }
 }
 
@@ -400,9 +399,8 @@ VlDumperImpl::put_declarray_list(const char* label,
 {
   VlDumpHeader x(this, label, "DeclArrayList");
 
-  for (vector<const VlDeclArray*>::const_iterator p = declarray_list.begin();
-       p != declarray_list.end(); ++ p) {
-    put_declarray(label, mgr, *p);
+  for ( auto declarray: declarray_list ) {
+    put_declarray(label, mgr, declarray);
   }
 }
 
@@ -414,10 +412,7 @@ VlDumperImpl::put_defparam_list(const char* label,
 {
   VlDumpHeader x(this, label, "DefParamList");
 
-  for (vector<const VlDefParam*>::const_iterator p = defparam_list.begin();
-       p != defparam_list.end(); ++ p) {
-    const VlDefParam* defparam = *p;
-
+  for ( auto defparam: defparam_list ) {
     VlDumpHeader x(this, label, "DefParam");
 
     put("FileRegion", defparam->file_region() );
@@ -439,10 +434,7 @@ VlDumperImpl::put_paramassign_list(const char* label,
 {
   VlDumpHeader x(this, label, "ParamAssignList");
 
-  for (vector<const VlParamAssign*>::const_iterator p = pa_list.begin();
-       p != pa_list.end(); ++ p) {
-    const VlParamAssign* paramassign = *p;
-
+  for ( auto paramassign: pa_list ) {
     VlDumpHeader x(this, label, "ParamAssign");
 
     put("FileRegion", paramassign->file_region() );

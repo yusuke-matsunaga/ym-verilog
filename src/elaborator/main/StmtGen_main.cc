@@ -95,8 +95,7 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   case kPtCaseStmt:
   case kPtCaseXStmt:
   case kPtCaseZStmt:
-    for (ymuint i = 0; i < pt_stmt->caseitem_num(); ++ i) {
-      const PtCaseItem* pt_item = pt_stmt->caseitem(i);
+    for ( auto pt_item: pt_stmt->caseitem_list() ) {
       phase1_stmt(parent, pt_item->body());
     }
     break;
@@ -432,15 +431,16 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_num());
-  for (ymuint i = 0; i < pt_stmt->arg_num(); ++ i) {
-    const PtExpr* pt_expr = pt_stmt->arg(i);
+  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list().size());
+  SizeType wpos = 0;
+  for ( auto pt_expr: pt_stmt->arg_list() ) {
     ElbExpr* expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       // エラーが起った．
       return nullptr;
     }
-    arg_list[i] = expr;
+    arg_list[wpos] = expr;
+    ++ wpos;
   }
 
   // task call ステートメントの生成
@@ -479,9 +479,9 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   }
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_num());
-  for (ymuint i = 0; i < pt_stmt->arg_num(); ++ i) {
-    const PtExpr* pt_expr = pt_stmt->arg(i);
+  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list().size());
+  SizeType wpos = 0;
+  for ( auto pt_expr: pt_stmt->arg_list() ) {
     ElbExpr* arg = nullptr;
     // 空の引数があるのでエラーと区別する．
     if ( pt_expr ) {
@@ -491,7 +491,8 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
 	return nullptr;
       }
     }
-    arg_list[i] = arg;
+    arg_list[wpos] = arg;
+    ++ wpos;
   }
 
   // system task call ステートメントの生成
@@ -544,10 +545,10 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
   }
 
   // イベントリストの生成を行う．
-  ymuint event_num = pt_control->event_num();
+  SizeType event_num = pt_control->event_list().size();
   ElbExpr** event_list = factory().new_ExprList(event_num);
-  for (ymuint i = 0; i < event_num; ++ i) {
-    const PtExpr* pt_expr = pt_control->event(i);
+  for ( SizeType i = 0; i < event_num; ++ i ) {
+    const PtExpr* pt_expr = pt_control->event_list()[i];
     ElbExpr* expr = instantiate_event_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;

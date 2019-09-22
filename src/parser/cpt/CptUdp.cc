@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptUdp::CptUdp(const FileRegion& file_region,
 	       const char* name,
-	       PtiPortArray port_array,
+	       PtPortArray port_array,
 	       PtIOHeadArray iohead_array,
 	       bool is_seq,
 	       const PtExpr* init_value,
@@ -68,18 +68,11 @@ CptUdp::name() const
   return mName;
 }
 
-// ポート数を取り出す．
-int
-CptUdp::port_num() const
+// @brief ポートのリストを取り出す．
+PtPortArray
+CptUdp::port_list() const
 {
-  return mPortArray.size();
-}
-
-// 先頭のポートを取り出す．
-const PtPort*
-CptUdp::port(int pos) const
-{
-  return mPortArray[pos];
+  return mPortArray;
 }
 
 // @brief 入出力宣言ヘッダ配列の取得
@@ -235,7 +228,7 @@ CptUdpValue::symbol() const
 const PtUdp*
 CptFactory::new_CmbUdp(const FileRegion& file_region,
 		       const char* name,
-		       PtiPortArray port_array,
+		       PtPortArray port_array,
 		       PtIOHeadArray iohead_array,
 		       PtUdpEntryArray entry_array)
 {
@@ -261,7 +254,7 @@ CptFactory::new_CmbUdp(const FileRegion& file_region,
 const PtUdp*
 CptFactory::new_SeqUdp(const FileRegion& file_region,
 		       const char* name,
-		       PtiPortArray port_array,
+		       PtPortArray port_array,
 		       PtIOHeadArray iohead_array,
 		       const PtExpr* init_value,
 		       PtUdpEntryArray entry_array)

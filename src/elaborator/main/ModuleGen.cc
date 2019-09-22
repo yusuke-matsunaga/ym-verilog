@@ -155,8 +155,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
       if ( has_paramportdecl ) {
 	for ( int i = 0; i < paramport_array.size(); ++ i ) {
 	  const PtDeclHead* pt_param = paramport_array[i];
-	  for ( int j = 0; j < pt_param->item_num(); ++ j ) {
-	    const PtDeclItem* pt_item = pt_param->item(j);
+	  for ( auto pt_item: pt_param->item_list() ) {
 	    paramport_list.push_back(pt_item->name());
 	  }
 	}
@@ -165,8 +164,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
 	for ( int i = 0; i < declhead_array.size(); ++ i ) {
 	  const PtDeclHead* pt_decl = declhead_array[i];
 	  if ( pt_decl->type() == kPtDecl_Param ) {
-	    for ( int j = 0; j < pt_decl->item_num(); ++ j ) {
-	      const PtDeclItem* pt_item = pt_decl->item(j);
+	    for ( auto pt_item: pt_decl->item_list() ) {
 	      paramport_list.push_back(pt_item->name());
 	    }
 	  }
@@ -232,11 +230,10 @@ void
 ModuleGen::instantiate_port(ElbModule* module,
 			    const PtModule* pt_module)
 {
-  int port_num = pt_module->port_num();
-  for ( int index = 0; index < port_num; ++ index ) {
-    const PtPort* pt_port = pt_module->port(index);
+  int index = 0;
+  for ( auto pt_port: pt_module->port_list() ) {
     // 内側の接続と向きを作る．
-    int n = pt_port->portref_size();
+    SizeType n = pt_port->portref_size();
 
     ElbExpr* low_conn = nullptr;
     tVlDirection dir = kVlNoDirection;
@@ -273,6 +270,7 @@ ModuleGen::instantiate_port(ElbModule* module,
       low_conn = factory().new_Lhs(pt_portref, n, expr_list, n, lhs_elem_array);
     }
     module->init_port(index, pt_port, low_conn, dir);
+    ++ index;
   }
 }
 

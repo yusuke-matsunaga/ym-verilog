@@ -48,13 +48,13 @@ elaborate_mode(const vector<string>& filename_list,
   }
 
   VlTestLineWatcher watcher(watch_line);
-  list<VlLineWatcher*> watcher_list;
+  vector<VlLineWatcher*> watcher_list;
   if ( watch_line ) {
     watcher_list.push_back(&watcher);
   }
 
-  ymuint c = loop + 1;
-  for (ymuint i = 0; i < c; ++ i) {
+  int c = loop + 1;
+  for ( int i = 0; i < c; ++ i ) {
 
 #if !defined(YM_DEBUG)
     try {
@@ -63,9 +63,7 @@ elaborate_mode(const vector<string>& filename_list,
       StopWatch timer;
       timer.start();
       VlMgr vlmgr;
-      for (vector<string>::const_iterator p = filename_list.begin();
-	   p != filename_list.end(); ++ p) {
-	const string& name = *p;
+      for ( auto name: filename_list ) {
 	if ( verbose ) {
 	  cerr << "Reading " << name;
 	  cerr.flush();

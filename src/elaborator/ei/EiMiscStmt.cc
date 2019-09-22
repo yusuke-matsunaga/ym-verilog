@@ -17,6 +17,7 @@
 #include "ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
+#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -71,7 +72,7 @@ EiFactory::new_TaskCall(const VlNamedObj* parent,
 			ElbTaskFunc* task,
 			ElbExpr** arg_array)
 {
-  int n = pt_stmt->arg_num();
+  int n = pt_stmt->arg_list().size();
   void* p = mAlloc.get_memory(sizeof(EiTaskCall));
   EiTaskCall* stmt = new (p) EiTaskCall(parent, process, pt_stmt,
 					task, n, arg_array);
@@ -92,7 +93,7 @@ EiFactory::new_SysTaskCall(const VlNamedObj* parent,
 			   const ElbUserSystf* user_systf,
 			   ElbExpr** arg_array)
 {
-  int n = pt_stmt->arg_num();
+  int n = pt_stmt->arg_list().size();
   void* p = mAlloc.get_memory(sizeof(EiSysTaskCall));
   EiSysTaskCall* stmt = new (p) EiSysTaskCall(parent, process, pt_stmt,
 					      user_systf, n, arg_array);

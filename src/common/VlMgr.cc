@@ -27,20 +27,16 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 VlMgr::VlMgr() :
   mAlloc(4096),
-  mPtMgr(new PtMgr),
-  mPtiFactory(PtiFactory::make_obj("cpt", mAlloc)),
-  mElbMgr(new ElbMgr(mAlloc)),
-  mElbFactory(ElbFactory::new_obj(mAlloc))
+  mPtMgr{new PtMgr},
+  mPtiFactory{PtiFactory::make_obj("cpt", mAlloc)},
+  mElbMgr{new ElbMgr(mAlloc)},
+  mElbFactory{ElbFactory::new_obj(mAlloc)}
 {
 }
 
 // @brief デストラクタ
 VlMgr::~VlMgr()
 {
-  delete mPtMgr;
-  delete mPtiFactory;
-  delete mElbMgr;
-  delete mElbFactory;
 }
 
 // @brief 内容をクリアする．

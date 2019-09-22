@@ -64,37 +64,25 @@ CptItem::paramassign_array() const
   return PtConnectionArray();
 }
 
-// @brief 要素数の取得
-// @return 要素数
-// このクラスでは 0 を返す．
-int
-CptItem::size() const
+// @brief defparam のリストの取得
+PtDefParamArray
+CptItem::defparam_list() const
 {
-  return 0;
+  return PtDefParamArray{};
 }
 
-// @brief defparam 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtDefParam*
-CptItem::defparam(int pos) const
+// @brief continuous assign のリストの取得
+PtContAssignArray
+CptItem::contassign_list() const
 {
-  return nullptr;
+  return PtContAssignArray{};
 }
 
-// @brief continuous assign 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtContAssign*
-CptItem::contassign(int pos) const
+// @brief module/UDP/gate instance リストの取得
+PtInstArray
+CptItem::inst_list() const
 {
-  return nullptr;
-}
-
-// @brief module/UDP/gate instance 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtInst*
-CptItem::inst(int pos) const
-{
-  return nullptr;
+  return PtInstArray{};
 }
 
 // @brief 名前の取得
@@ -231,12 +219,11 @@ CptItem::specpath_type() const
   return kVpiSpecPathNull; // ダミー
 }
 
-// @brief ターミナルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtExpr*
-CptItem::terminal(int pos) const
+// @brief ターミナルのリストの取得
+PtExprArray
+CptItem::terminal_list() const
 {
-  return nullptr;
+  return PtExprArray{};
 }
 
 // @brief パス記述の取得
@@ -285,14 +272,11 @@ CptItem::else_item_array() const
   return PtItemArray();
 }
 
-// @brief case item の取得
-// @param[in] pos 取得する case item の位置(最初の位置は 0)
-// @return pos 番目の case item
-// このクラスでは nullptr を返す．
-const PtGenCaseItem*
-CptItem::caseitem(int pos) const
+// @brief case item のリストの取得
+PtGenCaseItemArray
+CptItem::caseitem_list() const
 {
-  return nullptr;
+  return PtGenCaseItemArray{};
 }
 
 // @brief 繰り返し制御用の変数名の取得
@@ -354,19 +338,11 @@ CptDefParamH::type() const
   return kPtItem_DefParam;
 }
 
-// 要素数を返す．
-int
-CptDefParamH::size() const
+// @brief defparam リストの取得
+PtDefParamArray
+CptDefParamH::defparam_list() const
 {
-  return mArray.size();
-}
-
-// @brief defparam 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtDefParam*
-CptDefParamH::defparam(int pos) const
-{
-  return mArray[pos];
+  return mArray;
 }
 
 
@@ -384,7 +360,7 @@ CptDefParam::CptDefParam(const FileRegion& file_region,
   mName(tail_name),
   mExpr(value)
 {
-  ASSERT_COND(value );
+  ASSERT_COND( value );
 }
 
 // デストラクタ
@@ -452,19 +428,11 @@ CptContAssignH::type() const
   return kPtItem_ContAssign;
 }
 
-// 要素数を返す．
-int
-CptContAssignH::size() const
+// @brief continuous assign リストの取得
+PtContAssignArray
+CptContAssignH::contassign_list() const
 {
-  return mArray.size();
-}
-
-// @brief continuous assign 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtContAssign*
-CptContAssignH::contassign(int pos) const
-{
-  return mArray[pos];
+  return mArray;
 }
 
 
@@ -695,7 +663,7 @@ CptTf::CptTf(const FileRegion& file_region,
 {
   int n = 0;
   for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    n += iohead_array[i]->item_num();
+    n += iohead_array[i]->item_list().size();
   }
   mIOItemNum = n;
 }
@@ -724,13 +692,6 @@ bool
 CptTf::automatic() const
 {
   return mAutomatic;
-}
-
-// @brief IO宣言の要素数の取得
-int
-CptTf::ioitem_num() const
-{
-  return mIOItemNum;
 }
 
 // @brief IO宣言リストの配列の取得

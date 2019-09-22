@@ -46,9 +46,7 @@ rawlex_mode(const vector<string>& filename_list,
   StopWatch timer;
   timer.start();
 
-  for (vector<string>::const_iterator p = filename_list.begin();
-       p != filename_list.end(); ++ p) {
-    const string& filename = *p;
+  for ( auto filename: filename_list ) {
     if ( !lex.open_file(filename) ) {
       cerr << filename << " : cannot open" << endl;
       return;

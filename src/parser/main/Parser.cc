@@ -46,7 +46,7 @@ Parser::Parser(PtMgr& ptmgr,
   mPtMgr(ptmgr),
   mAlloc(alloc),
   mFactory(ptifactory),
-  mLex(new Lex),
+  mLex{new Lex},
   mTmpAlloc(4096),
   mCellAlloc(sizeof(PtrList<void>::Cell), 1024),
   mPortList(mCellAlloc),
@@ -70,7 +70,6 @@ Parser::Parser(PtMgr& ptmgr,
 // @brief デストラクタ
 Parser::~Parser()
 {
-  delete mLex;
 }
 
 // @brief ファイルを読み込む．
@@ -199,8 +198,7 @@ Parser::check_function_statement(const PtStmt* stmt)
   case kPtCaseStmt:
   case kPtCaseXStmt:
   case kPtCaseZStmt:
-    for (ymuint i = 0; i < stmt->caseitem_num(); ++ i) {
-      const PtCaseItem* item = stmt->caseitem(i);
+    for ( auto item: stmt->caseitem_list() ) {
       if ( !check_function_statement(item->body()) ) {
 	return false;
       }
@@ -225,7 +223,7 @@ Parser::check_function_statement(const PtStmt* stmt)
 
   case kPtSeqBlockStmt:
   case kPtNamedSeqBlockStmt:
-    for (ymuint i = 0; i < stmt->stmt_array().size(); ++ i) {
+    for ( int i = 0; i < stmt->stmt_array().size(); ++ i ) {
       const PtStmt* stmt1 = stmt->stmt_array()[i];
       if ( !check_function_statement(stmt1) ) {
 	return false;
@@ -251,11 +249,9 @@ Parser::check_function_statement(const PtStmt* stmt)
 bool
 Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
 {
-  ymuint n = 0;
-  for (PtrList<const PtCaseItem>::const_iterator p = ci_list->begin();
-       p.is_valid(); ++ p) {
-    const PtCaseItem* ci = *p;
-    if ( ci->label_num() == 0 ) {
+  int n = 0;
+  for ( auto ci: *ci_list ) {
+    if ( ci->label_list().size() == 0 ) {
       ++ n;
       if ( n > 1 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -272,23 +268,22 @@ Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
 
 // @brief 式のリストから配列を生成する．(multi_concat用)
 // @param[in] pre_expr list の前に挿入する式
-// @note 結果として list は削除される．
+// @note 結果として expr_list は削除される．
 PtExprArray
 Parser::ExprArray(const PtExpr* pre_expr,
-		  PtrList<const PtExpr>* list)
+		  PtrList<const PtExpr>* expr_list_p)
 {
-  ymuint n = list->size();
+  SizeType n = expr_list_p->size();
   void* p = mAlloc.get_memory(sizeof(const PtExpr*) * (n + 1));
   const PtExpr** array = new (p) const PtExpr*[n + 1];
   array[0] = pre_expr;
-  ymuint i = 1;
-  for (PtrList<const PtExpr>::const_iterator p = list->begin();
-       p.is_valid(); ++ p, ++ i) {
-    array[i] = *p;
+  int i = 1;
+  for ( auto expr: *expr_list_p ) {
+    array[i] = expr;
   }
 
-  list->~PtrList<const PtExpr>();
-  mTmpAlloc.put_memory(sizeof(PtrList<const PtExpr>), list);
+  expr_list_p->~PtrList<const PtExpr>();
+  mTmpAlloc.put_memory(sizeof(PtrList<const PtExpr>), expr_list_p);
 
   return PtExprArray(n + 1, array);
 }

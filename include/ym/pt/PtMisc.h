@@ -48,19 +48,11 @@ public:
   const PtExpr*
   delay() const = 0;
 
-  /// @brief イベントリストのサイズの取得
-  /// @retval イベントリストのサイズ event control/repeat control の場合
-  /// @retval 0 上記以外
-  virtual
-  int
-  event_num() const = 0;
-
-  /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+  /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
   virtual
-  const PtExpr*
-  event(int pos) const = 0;
+  PtExprArray
+  event_list() const = 0;
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
@@ -178,7 +170,7 @@ public:
   /// 該当する要素がなければ nullptr を返す．
   virtual
   const PtExpr*
-  value(int pos) const = 0;
+  value(SizeType pos) const = 0;
 
 };
 
@@ -253,17 +245,10 @@ public:
   // PtAttrInst の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 要素数の取得
-  /// @return 要素数
+  /// @brief 要素のリストの取得
   virtual
-  int
-  attrspec_num() const = 0;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
-  virtual
-  const PtAttrSpec*
-  attrspec(int pos) const = 0;
+  PtAttrSpecArray
+  attrspec_list() const = 0;
 
 };
 

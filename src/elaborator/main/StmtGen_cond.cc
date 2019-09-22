@@ -86,21 +86,19 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 
   // この case 文に関係する全ての式のリスト
   vector<ElbExpr*> expr_list;
-  ymuint ne = 0;
-  for (ymuint i = 0; i < pt_stmt->caseitem_num(); ++ i) {
-    const PtCaseItem* pt_item = pt_stmt->caseitem(i);
-    ne += pt_item->label_num();
+  SizeType ne = 0;
+  for ( auto pt_item: pt_stmt->caseitem_list() ) {
+    ne += pt_item->label_list().size();
   }
   expr_list.reserve(ne);
 
   // default caseitem を末尾にするために順序づけを行う．
   // Parser::check_default_label() で default が高々1個しかないことは確認済み．
-  ymuint nc = pt_stmt->caseitem_num();
+  SizeType nc = pt_stmt->caseitem_list().size();
   vector<const PtCaseItem*> caseitem_list(nc);
-  ymuint wpos = 0;
-  for (ymuint i = 0; i < nc; ++ i) {
-    const PtCaseItem* pt_item = pt_stmt->caseitem(i);
-    if ( pt_item->label_num() > 0 ) {
+  SizeType wpos = 0;
+  for ( auto pt_item: pt_stmt->caseitem_list() ) {
+    if ( pt_item->label_list().size() > 0 ) {
       caseitem_list[wpos] = pt_item;
       ++ wpos;
     }
@@ -110,8 +108,8 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
   }
 
   // case-item の生成
-  for (ymuint i = 0; i < nc; ++ i) {
-    const PtCaseItem* pt_item = caseitem_list[i];
+  wpos = 0;
+  for ( auto pt_item: caseitem_list ) {
     ElbStmt* body = nullptr;
     if ( pt_item->body() ) {
       body = instantiate_stmt(parent, process, env, pt_item->body());
@@ -121,20 +119,22 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
     }
 
     // ラベルの生成と設定
-    ymuint n = pt_item->label_num();
+    SizeType n = pt_item->label_list().size();
     ElbExpr** label_list = factory().new_ExprList(n);
-    for (ymuint j = 0; j < n; ++ j) {
-      const PtExpr* pt_expr = pt_item->label(j);
+    SizeType pos = 0;
+    for ( auto pt_expr: pt_item->label_list() ) {
       ElbExpr* tmp = instantiate_expr(parent, env, pt_expr);
       if ( !tmp ) {
 	// たぶんエラー
 	return nullptr;
       }
-      label_list[j] = tmp;
+      label_list[pos] = tmp;
+      ++ pos;
       expr_list.push_back(tmp);
     }
 
-    stmt->set_caseitem(i, pt_item, label_list, body);
+    stmt->set_caseitem(wpos, pt_item, label_list, body);
+    ++ wpos;
   }
 
   // expr_list のサイズを合わせる．
@@ -151,10 +151,8 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
     return nullptr;
   }
   bool sign = value_type0.is_signed();
-  ymuint size = value_type0.size();
-  for (vector<ElbExpr*>::iterator p = expr_list.begin();
-       p != expr_list.end(); ++ p) {
-    ElbExpr* expr = *p;
+  SizeType size = value_type0.size();
+  for ( auto expr: expr_list ) {
     VlValueType value_type1 = expr->value_type();
     if ( value_type1.is_real_type() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -167,7 +165,7 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
     if ( value_type1.is_signed() ) {
       sign = true;
     }
-    ymuint size1 = value_type1.size();
+    SizeType size1 = value_type1.size();
     if ( size < size1 ) {
       size = size1;
     }
@@ -175,9 +173,7 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 
   VlValueType value_type(sign, true, size);
   cond->set_reqsize(value_type);
-  for (vector<ElbExpr*>::iterator p = expr_list.begin();
-       p != expr_list.end(); ++ p) {
-    ElbExpr* expr = *p;
+  for ( auto expr: expr_list ) {
     expr->set_reqsize(value_type);
   }
 

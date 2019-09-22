@@ -10,7 +10,6 @@
 
 
 #include "ym/verilog.h"
-#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -27,8 +26,6 @@ class PtiPort;
 class PtiPortRef;
 class PtiIOHead;
 class PtiDeclHead;
-
-typedef PtArray<PtiPort> PtiPortArray;
 
 END_NAMESPACE_YM_VERILOG
 

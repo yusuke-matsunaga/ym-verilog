@@ -40,8 +40,8 @@ public:
   /// @param[in] udp_list UDP のリスト
   /// @param[in] module_list モジュールのリスト
   void
-  put(const list<const PtUdp*>& udp_list,
-      const list<const PtModule*>& module_list);
+  put(const vector<const PtUdp*>& udp_list,
+      const vector<const PtModule*>& module_list);
 
 
   /// @brief UDP を表示する

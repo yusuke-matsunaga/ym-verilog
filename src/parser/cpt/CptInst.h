@@ -12,7 +12,6 @@
 #include "CptItem.h"
 
 
-
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
@@ -31,7 +30,6 @@ protected:
 	   PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGateH();
 
 
@@ -41,31 +39,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kGateInst を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
   /// @brief プリミティブタイプを返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
-  /// @brief 要素数を取り出す．
-  virtual
-  int
-  size() const;
-
-  /// @brief module/UDP/gate instance 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtInst*
-  inst(int pos) const;
+  /// @brief module/UDP/gate instance リストの取得
+  PtInstArray
+  inst_list() const override;
 
 
 private:
@@ -102,7 +90,6 @@ protected:
 	    PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGateHS();
 
 
@@ -112,9 +99,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief strength を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
 
 private:
@@ -145,7 +131,6 @@ protected:
 	    PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGateHD();
 
 
@@ -155,9 +140,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief delay を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -189,7 +173,6 @@ protected:
 	     PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGateHSD();
 
 
@@ -199,14 +182,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief strength を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -239,8 +220,7 @@ protected:
 	 PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
-  ~CptMuH();
+  ~CptMuH() override;
 
 
 public:
@@ -249,31 +229,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_MuInst を返す
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
   /// @brief 定義名を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
-  /// @brief 要素数を取り出す．
-  virtual
-  int
-  size() const;
-
-  /// @brief module/UDP/gate instance 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtInst*
-  inst(int pos) const;
+  /// @brief module/UDP/gate instance リストの取得
+  PtInstArray
+  inst_list() const override;
 
 
 private:
@@ -310,7 +280,6 @@ protected:
 	  PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptMuHP();
 
 
@@ -320,9 +289,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パラメータ割り当てリストの取得
-  virtual
   PtConnectionArray
-  paramassign_array() const;
+  paramassign_array() const override;
 
 
 private:
@@ -353,7 +321,6 @@ protected:
 	  PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptMuHS();
 
 
@@ -363,9 +330,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief strength を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
 
 private:
@@ -396,7 +362,6 @@ protected:
 	  PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptMuHD();
 
 
@@ -406,9 +371,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief delay を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -440,7 +404,6 @@ protected:
 	   PtInstArray inst_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptMuHSD();
 
 
@@ -450,14 +413,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief strength を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -489,7 +450,6 @@ protected:
 	  PtConnectionArray con_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptInst();
 
 
@@ -499,42 +459,30 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 名前の取得
   /// @return 名前
   /// @note このクラスでは nullptr を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 範囲の左側の式の取得
   /// @return 範囲の左側の式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲の右側の式の取得
   /// @return 範囲の右側の式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
-  /// @brief ポート数の取得
-  /// @return ポート数
-  virtual
-  int
-  port_num() const;
-
-  /// @brief ポートの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
-  virtual
-  const PtConnection*
-  port(int pos) const;
+  /// @brief ポートのリストの取得
+  PtConnectionArray
+  port_list() const override;
 
 
 private:
@@ -567,7 +515,6 @@ protected:
 	   PtConnectionArray con_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptInstN();
 
 
@@ -577,9 +524,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -611,7 +557,6 @@ protected:
 	   PtConnectionArray con_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptInstR();
 
 
@@ -621,14 +566,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief range の MSB を取出す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief range の LSB を取出す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:

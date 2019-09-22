@@ -22,8 +22,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] type 式の種類を表す型
 SptExpr::SptExpr(const FileRegion& file_region,
 		 tPtExprType type) :
-  mFileRegion(file_region),
-  mType(type)
+  mFileRegion{file_region},
+  mType{type}
 {
 }
 
@@ -77,17 +77,38 @@ SptExpr::name() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 SptExpr::operand_num() const
 {
   return 0;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+SptExpr::operand0() const
+{
+  return nullptr;
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+SptExpr::operand1() const
+{
+  return nullptr;
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+SptExpr::operand2() const
+{
+  return nullptr;
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-SptExpr::operand(int pos) const
+SptExpr::operand(SizeType pos) const
 {
   return nullptr;
 }
@@ -104,7 +125,7 @@ SptExpr::is_const_index() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-int
+SizeType
 SptExpr::index_num() const
 {
   return 0;
@@ -113,7 +134,7 @@ SptExpr::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-SptExpr::index(int pos) const
+SptExpr::index(SizeType pos) const
 {
   return nullptr;
 }
@@ -240,12 +261,12 @@ SptOpr1::SptOpr1(const FileRegion& file_region,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2,
 		 const PtExpr* opr3) :
-  SptExpr(file_region, kPtOprExpr),
-  mOpType(op_type)
+  SptExpr{file_region, kPtOprExpr},
+  mOpType{op_type},
+  mExprList{opr1, opr2, opr3}
 {
-  mExprList[0] = opr1;
-  if ( (mExprList[1] = opr2) ) {
-    if ( (mExprList[2] = opr3) ) {
+  if ( opr2 ) {
+    if ( opr3 ) {
       mSize = 3;
     }
     else {
@@ -292,10 +313,10 @@ SptOpr1::index_value() const
 {
   switch ( mOpType ) {
   case kVlNullOp:
-    return operand(0)->index_value();
+    return operand0()->index_value();
 
   case kVlMinusOp:
-    return - operand(0)->index_value();
+    return - operand0()->index_value();
 
   default:
     break;
@@ -305,17 +326,38 @@ SptOpr1::index_value() const
 
 // @brief オペランドの数の取得
 // @return オペランドの数
-int
+SizeType
 SptOpr1::operand_num() const
 {
   return mSize;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+SptOpr1::operand0() const
+{
+  return mExprList[0];
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+SptOpr1::operand1() const
+{
+  return mExprList[1];
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+SptOpr1::operand2() const
+{
+  return mExprList[2];
 }
 
 // @brief オペランドを取り出す
 // @param[in] pos 取り出すオペランドの位置（最初の位置は 0）
 // @return pos 番目のオペランド
 const PtExpr*
-SptOpr1::operand(int pos) const
+SptOpr1::operand(SizeType pos) const
 {
   return mExprList[pos];
 }
@@ -328,13 +370,13 @@ SptOpr1::operand(int pos) const
 // @brief コンストラクタ
 // @param[in] file_reigon ファイル位置の情報
 // @param[in] op_type 演算子の種類
-// @param[in] opr_array　オペランドのリスト
+// @param[in] opr_array オペランドのリスト
 SptOpr2::SptOpr2(const FileRegion& file_region,
 		 tVlOpType op_type,
 		 PtExprArray opr_array) :
-  SptExpr(file_region, kPtOprExpr),
-  mOpType(op_type),
-  mExprArray(opr_array)
+  SptExpr{file_region, kPtOprExpr},
+  mOpType{op_type},
+  mExprArray{opr_array}
 {
 }
 
@@ -370,19 +412,60 @@ SptOpr2::index_value() const
 
 // @brief オペランドの数の取得
 // @return オペランドの数
-int
+SizeType
 SptOpr2::operand_num() const
 {
   return mExprArray.size();
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+SptOpr2::operand0() const
+{
+  if ( operand_num() > 0 ) {
+    return mExprArray[0];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+SptOpr2::operand1() const
+{
+  if ( operand_num() > 1 ) {
+    return mExprArray[1];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+SptOpr2::operand2() const
+{
+  if ( operand_num() > 2 ) {
+    return mExprArray[2];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-SptOpr2::operand(int pos) const
+SptOpr2::operand(SizeType pos) const
 {
-  return mExprArray[pos];
+  if ( operand_num() > pos ) {
+    return mExprArray[pos];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 
@@ -402,10 +485,10 @@ SptFuncCall::SptFuncCall(const FileRegion& file_region,
 			 PtNameBranchArray nb_array,
 			 const char* name,
 			 PtExprArray arg_array) :
-  SptExpr(file_region, type),
-  mNbArray(nb_array),
-  mName(name),
-  mArgArray(arg_array)
+  SptExpr{file_region, type},
+  mNbArray{nb_array},
+  mName{name},
+  mArgArray{arg_array}
 {
 }
 
@@ -431,19 +514,60 @@ SptFuncCall::name() const
 
 // @brief 引数の数の取得
 // @return 引数の数
-int
+SizeType
 SptFuncCall::operand_num() const
 {
   return mArgArray.size();
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+SptFuncCall::operand0() const
+{
+  if ( operand_num() > 0 ) {
+    return mArgArray[0];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+SptFuncCall::operand1() const
+{
+  if ( operand_num() > 1 ) {
+    return mArgArray[1];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+SptFuncCall::operand2() const
+{
+  if ( operand_num() > 2 ) {
+    return mArgArray[2];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-SptFuncCall::operand(int pos) const
+SptFuncCall::operand(SizeType pos) const
 {
-  return mArgArray[pos];
+  if ( operand_num() > pos ) {
+    return mArgArray[pos];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 
@@ -468,14 +592,14 @@ SptPrimary::SptPrimary(const FileRegion& file_region,
 		       tVpiRangeMode mode,
 		       const PtExpr* left,
 		       const PtExpr* right) :
-  SptExpr(file_region, kPtPrimaryExpr),
-  mNbArray(nb_array),
-  mName(tail_name),
-  mConstIndex(const_index),
-  mIndexArray(index_array),
-  mMode(mode),
-  mLeftRange(left),
-  mRightRange(right)
+  SptExpr{file_region, kPtPrimaryExpr},
+  mNbArray{nb_array},
+  mName{tail_name},
+  mConstIndex{const_index},
+  mIndexArray{index_array},
+  mMode{mode},
+  mLeftRange{left},
+  mRightRange{right}
 {
 }
 
@@ -510,7 +634,7 @@ SptPrimary::is_const_index() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-int
+SizeType
 SptPrimary::index_num() const
 {
   return mIndexArray.size();
@@ -519,7 +643,7 @@ SptPrimary::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-SptPrimary::index(int pos) const
+SptPrimary::index(SizeType pos) const
 {
   return mIndexArray[pos];
 }
@@ -566,12 +690,12 @@ SptConstant::SptConstant(const FileRegion& file_region,
 			 unsigned int uvalue,
 			 const char* svalue,
 			 double rvalue) :
-  SptExpr(file_region, kPtConstExpr),
-  mConstType(const_type),
-  mSize(size),
-  mUintValue(uvalue),
-  mStrValue(svalue),
-  mRealValue(rvalue)
+  SptExpr{file_region, kPtConstExpr},
+  mConstType{const_type},
+  mSize{size},
+  mUintValue{uvalue},
+  mStrValue{svalue},
+  mRealValue{rvalue}
 {
 }
 

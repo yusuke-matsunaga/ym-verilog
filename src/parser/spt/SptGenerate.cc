@@ -21,8 +21,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 SptGenBody::SptGenBody(PtDeclHeadArray declhead_array,
 		       PtItemArray item_array) :
-  mDeclArray(declhead_array),
-  mItemArray(item_array)
+  mDeclArray{declhead_array},
+  mItemArray{item_array}
 {
 }
 
@@ -42,9 +42,9 @@ SptGenerate::SptGenerate(const FileRegion& file_region,
 			 const char* name,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array) :
-  SptItem(file_region, type),
-  mName(name),
-  mBody(declhead_array, item_array)
+  SptItem{file_region, type},
+  mName{name},
+  mBody{declhead_array, item_array}
 {
 }
 
@@ -86,10 +86,10 @@ SptGenIf::SptGenIf(const FileRegion& file_region,
 		   PtItemArray then_item_array,
 		   PtDeclHeadArray else_declhead_array,
 		   PtItemArray else_item_array) :
-  SptItem(file_region, kPtItem_GenIf),
-  mCond(cond),
-  mThenBody(then_declhead_array, then_item_array),
-  mElseBody(else_declhead_array, else_item_array)
+  SptItem{file_region, kPtItem_GenIf},
+  mCond{cond},
+  mThenBody{then_declhead_array, then_item_array},
+  mElseBody{else_declhead_array, else_item_array}
 {
 }
 
@@ -143,9 +143,9 @@ SptGenCaseItem::SptGenCaseItem(const FileRegion& file_region,
 			       PtExprArray label_array,
 			       PtDeclHeadArray declhead_array,
 			       PtItemArray item_array) :
-  mFileRegion(file_region),
-  mLabelArray(label_array),
-  mBody(declhead_array, item_array)
+  mFileRegion{file_region},
+  mLabelArray{label_array},
+  mBody{declhead_array, item_array}
 {
 }
 
@@ -161,21 +161,11 @@ SptGenCaseItem::file_region() const
   return mFileRegion;
 }
 
-// @brief ラベルの数の取得
-// @return ラベル数\n
-// 0 の時は default の意味
-int
-SptGenCaseItem::label_num() const
+// @brief ラベルのリストの取得
+PtExprArray
+SptGenCaseItem::label_list() const
 {
-  return mLabelArray.size();
-}
-
-// @brief ラベルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-const PtExpr*
-SptGenCaseItem::label(int pos) const
-{
-  return mLabelArray[pos];
+  return mLabelArray;
 }
 
 // @brief 宣言のリストの取得
@@ -201,9 +191,9 @@ SptGenCaseItem::item_array() const
 SptGenCase::SptGenCase(const FileRegion& file_region,
 		       const PtExpr* expr,
 		       PtGenCaseItemArray item_array) :
-  SptItem(file_region, kPtItem_GenCase),
-  mExpr(expr),
-  mCaseItemArray(item_array)
+  SptItem{file_region, kPtItem_GenCase},
+  mExpr{expr},
+  mCaseItemArray{item_array}
 {
 }
 
@@ -219,18 +209,11 @@ SptGenCase::expr() const
   return mExpr;
 }
 
-// case item の要素数を返す．
-int
-SptGenCase::size() const
+// case item のリストを返す．
+PtGenCaseItemArray
+SptGenCase::caseitem_list() const
 {
-  return mCaseItemArray.size();
-}
-
-// case item を返す．
-const PtGenCaseItem*
-SptGenCase::caseitem(int pos) const
-{
-  return mCaseItemArray[pos];
+  return mCaseItemArray;
 }
 
 
@@ -247,13 +230,13 @@ SptGenFor::SptGenFor(const FileRegion& file_region,
 		     const char* block_name,
 		     PtDeclHeadArray declhead_array,
 		     PtItemArray item_array) :
-  SptItem(file_region, kPtItem_GenFor),
-  mName(block_name),
-  mLoopVar(loop_var),
-  mInitExpr(init_expr),
-  mCond(cond),
-  mNextExpr(next_expr),
-  mBody(declhead_array, item_array)
+  SptItem{file_region, kPtItem_GenFor},
+  mName{block_name},
+  mLoopVar{loop_var},
+  mInitExpr{init_expr},
+  mCond{cond},
+  mNextExpr{next_expr},
+  mBody{declhead_array, item_array}
 {
 }
 

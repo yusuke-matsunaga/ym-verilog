@@ -80,24 +80,21 @@ VlDumperImpl::put_scope_sub(const VlMgr& mgr,
   vector<const VlNamedObj*> scope_list;
   if ( mgr.find_internalscope_list(scope, scope_list) ) {
     VlDumpHeader x(this, "vpiInternalScope", "ScopeList");
-    for (vector<const VlNamedObj*>::iterator p = scope_list.begin();
-	 p != scope_list.end(); ++ p) {
-      put_scope("vpiInternalScope", mgr, *p);
+    for ( auto obj: scope_list ) {
+      put_scope("vpiInternalScope", mgr, obj);
     }
   }
 
   vector<const VlTaskFunc*> task_list;
   if ( mgr.find_task_list(scope, task_list) ) {
-    for (vector<const VlTaskFunc*>::const_iterator p = task_list.begin();
-	 p != task_list.end(); ++ p) {
-      put_task("vpiTask", mgr, *p);
+    for ( auto task: task_list ) {
+      put_task("vpiTask", mgr, task);
     }
   }
   vector<const VlTaskFunc*> func_list;
   if ( mgr.find_function_list(scope, func_list) ) {
-    for (vector<const VlTaskFunc*>::const_iterator p = func_list.begin();
-	 p != func_list.end(); ++ p) {
-      put_function("vpiFunction", mgr, *p);
+    for ( auto func: func_list ) {
+      put_function("vpiFunction", mgr, func);
     }
   }
 
@@ -109,9 +106,7 @@ VlDumperImpl::put_scope_sub(const VlMgr& mgr,
   vector<const VlModule*> module_list;
   if ( mgr.find_module_list(scope, module_list) ) {
     // module instance 名前だけ
-    for (vector<const VlModule*>::iterator p = module_list.begin();
-	 p != module_list.end(); ++ p) {
-      const VlModule* module = *p;
+    for ( auto module: module_list ) {
       put("vpiModule", module->full_name());
     }
   }

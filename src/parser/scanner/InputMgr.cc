@@ -45,9 +45,8 @@ InputMgr::clear()
 {
   delete_file(mCurFile);
   mCurFile = nullptr;
-  for (vector<InputFile*>::iterator p = mFileStack.begin();
-       p != mFileStack.end(); ++ p) {
-    delete_file(*p);
+  for ( auto input_file: mFileStack ) {
+    delete_file(input_file);
   }
   mFileStack.clear();
 }
@@ -198,9 +197,8 @@ InputMgr::check_file(const char* name) const
   if ( cur_filename() == name ) {
     return true;
   }
-  for (vector<InputFile*>::const_iterator p = mFileStack.begin();
-       p != mFileStack.end(); ++ p) {
-    if ( (*p)->file_info().filename() == name ) {
+  for ( auto input_file: mFileStack ) {
+    if ( input_file->file_info().filename() == name ) {
       return true;
     }
   }

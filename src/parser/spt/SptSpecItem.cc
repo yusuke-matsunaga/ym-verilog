@@ -21,9 +21,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 SptSpecItem::SptSpecItem(const FileRegion& file_region,
 			 tVpiSpecItemType id,
 			 PtExprArray terminal_array) :
-  SptItem(file_region, kPtItem_SpecItem),
-  mId(id),
-  mTerminals(terminal_array)
+  SptItem{file_region, kPtItem_SpecItem},
+  mId{id},
+  mTerminals{terminal_array}
 {
 }
 
@@ -39,19 +39,11 @@ SptSpecItem::specitem_type() const
   return mId;
 }
 
-// ターミナルリストの要素数を返す．
-int
-SptSpecItem::size() const
+// @brief ターミナルリストの取得
+PtExprArray
+SptSpecItem::terminal_list() const
 {
-  return mTerminals.size();
-}
-
-// @brief ターミナルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtExpr*
-SptSpecItem::terminal(int pos) const
-{
-  return mTerminals[pos];
+  return mTerminals;
 }
 
 
@@ -64,10 +56,10 @@ SptSpecPath::SptSpecPath(const FileRegion& file_region,
 			 tVpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl) :
-  SptItem(file_region, kPtItem_SpecPath),
-  mId(id),
-  mExpr(expr),
-  mPathDecl(path_decl)
+  SptItem{file_region, kPtItem_SpecPath},
+  mId{id},
+  mExpr{expr},
+  mPathDecl{path_decl}
 {
 }
 
@@ -112,15 +104,15 @@ SptPathDecl::SptPathDecl(const FileRegion& file_region,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay) :
-  mFileRegion(file_region),
-  mEdge(edge),
-  mInputs(input_array),
-  mInputPol(input_pol),
-  mOp(op),
-  mOutputs(output_array),
-  mOutputPol(output_pol),
-  mExpr(expr),
-  mPathDelay(path_delay)
+  mFileRegion{file_region},
+  mEdge{edge},
+  mInputs{input_array},
+  mInputPol{input_pol},
+  mOp{op},
+  mOutputs{output_array},
+  mOutputPol{output_pol},
+  mExpr{expr},
+  mPathDelay{path_delay}
 {
 }
 
@@ -144,20 +136,11 @@ SptPathDecl::edge() const
   return mEdge;
 }
 
-// @brief 入力リストの要素数の取得
-// @return 入力リストの要素数
-int
-SptPathDecl::input_num() const
+// @brief 入力のリストの取得
+PtExprArray
+SptPathDecl::input_list() const
 {
-  return mInputs.size();
-}
-
-// @brief 入力の取得
-// @param[in] pos 位置番号 ( 0 <= pos < input_num() )
-const PtExpr*
-SptPathDecl::input(int pos) const
-{
-  return mInputs[pos];
+  return mInputs;
 }
 
 // 入力の極性を取り出す．
@@ -175,20 +158,11 @@ SptPathDecl::op() const
   return mOp;
 }
 
-// @brief 出力リストの要素数の取得
-// @return 出力リストの要素数
-int
-SptPathDecl::output_num() const
+// @brief 出力のリストの取得
+PtExprArray
+SptPathDecl::output_list() const
 {
-  return mOutputs.size();
-}
-
-// @brief 出力の取得
-// @param[in] pos 位置番号 ( 0 <= pos < output_num() )
-const PtExpr*
-SptPathDecl::output(int pos) const
-{
-  return mOutputs[pos];
+  return mOutputs;
 }
 
 // 出力の極性を取り出す．
@@ -222,37 +196,37 @@ SptPathDecl::path_delay() const
 // コンストラクタ
 SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mValues{value, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value;
-  for ( int i = 1; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mValues{value1, value2, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  for ( int i = 2; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
 			   const PtExpr* value3) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mValues{value1, value2, value3,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  mValues[2] = value3;
-  for ( int i = 3; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
@@ -260,18 +234,14 @@ SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value4,
 			   const PtExpr* value5,
 			   const PtExpr* value6) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mValues{value1, value2, value3,
+	  value4, value5, value6,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  mValues[2] = value3;
-  mValues[3] = value4;
-  mValues[4] = value5;
-  mValues[5] = value6;
-  for ( int i = 6; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
@@ -285,20 +255,12 @@ SptPathDelay::SptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value10,
 			   const PtExpr* value11,
 			   const PtExpr* value12) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mValues{value1, value2, value3,
+	  value4, value5, value6,
+	  value7, value8, value9,
+	  value10, value11, value12}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  mValues[2] = value3;
-  mValues[3] = value4;
-  mValues[4] = value5;
-  mValues[5] = value6;
-  mValues[6] = value7;
-  mValues[7] = value8;
-  mValues[8] = value9;
-  mValues[9] = value10;
-  mValues[10] = value11;
-  mValues[11] = value12;
 }
 
 // デストラクタ
@@ -316,7 +278,7 @@ SptPathDelay::file_region() const
 // 値を取り出す．
 // 0の場合もある．
 const PtExpr*
-SptPathDelay::value(int pos) const
+SptPathDelay::value(SizeType pos) const
 {
   return mValues[pos];
 }

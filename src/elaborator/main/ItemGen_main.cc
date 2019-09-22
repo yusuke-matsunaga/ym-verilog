@@ -221,9 +221,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 
   ElbEnv env;
   ElbNetLhsEnv env1(env);
-  for (ymuint i = 0; i < pt_header->size(); ++ i) {
-    const PtContAssign* pt_elem = pt_header->contassign(i);
-
+  for ( auto pt_elem: pt_header->contassign_list() ) {
     // 左辺式の生成
     const PtExpr* pt_lhs = pt_elem->lhs();
     ElbExpr* lhs = instantiate_lhs(parent, env1, pt_lhs);
@@ -334,13 +332,11 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
   }
 
   bool found = false;
-  for (ymuint i = 0; i < pt_gencase->size(); ++ i) {
-    const PtGenCaseItem* pt_caseitem = pt_gencase->caseitem(i);
+  for ( auto pt_caseitem: pt_gencase->caseitem_list() ) {
     // default(ラベルリストが空) なら常にマッチする．
-    ymuint n = pt_caseitem->label_num();
+    SizeType n = pt_caseitem->label_list().size();
     bool match = (n == 0);
-    for (ymuint i = 0; i < n; ++ i) {
-      const PtExpr* pt_expr = pt_caseitem->label(i);
+    for ( auto pt_expr: pt_caseitem->label_list() ) {
       BitVector label_val;
       if ( !evaluate_bitvector(parent, pt_expr, label_val, true) ) {
 	continue;

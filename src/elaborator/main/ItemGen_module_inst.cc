@@ -76,8 +76,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
       return;
     }
 
-    for ( int i = 0; i < pt_head->size(); ++ i ) {
-      const PtInst* pt_inst = pt_head->inst(i);
+    for ( auto pt_inst: pt_head->inst_list() ) {
       const char* name = pt_inst->name();
       if ( name == nullptr ) {
 	// 名無しのモジュールインスタンスはない
@@ -302,11 +301,11 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   const VlNamedObj* parent = module_array->parent();
   const FileRegion& fr = pt_inst->file_region();
 
-  int module_size = module_array->elem_num();
+  SizeType module_size = module_array->elem_num();
   ElbModule* module0 = module_array->_module(0);
-  int port_num = module0->port_num();
+  SizeType port_num = module0->port_num();
 
-  int n = pt_inst->port_num();
+  SizeType n = pt_inst->port_list().size();
   // ポートの割り当てを行う．
   // 例外: ポートを一つも取らないモジュールの場合
   // module_name instance_name ()
@@ -314,7 +313,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   // これは Verilog-HDL の仕様がアホ
   // () を取らない形を用意しておけば良かったのに．
   if ( port_num == 0 && n == 1 ) {
-    const PtConnection* con = pt_inst->port(0);
+    const PtConnection* con = pt_inst->port_list()[0];
     if ( /* con->attr_top() == nullptr &&*/
 	 con->name() == nullptr &&
 	 con->expr() == nullptr ) {
@@ -335,24 +334,24 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   // どうやら実際のポート数よりも少ないのはいいらしい
 
   // YACC の文法から一つでも named_con なら全部そう
-  bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
+  bool conn_by_name = (pt_inst->port_list()[0]->name() != nullptr);
   unordered_map<string, int> port_index;
   if ( conn_by_name ) {
     // ポート名とインデックスの辞書を作る．
-    int n = pt_module->port_num();
-    for ( int index = 0; index < n; ++ index ) {
-      const PtPort* pt_port = pt_module->port(index);
+    int index = 0;
+    for ( auto pt_port: pt_module->port_list() ) {
       const char* name = pt_port->ext_name();
       if ( name != nullptr ) {
-	port_index[name] = index;
+	port_index[string(name)] = index;
       }
+      ++ index;
     }
   }
 
   // ポートに接続する式を生成する．
   ElbEnv env;
-  for ( int i = 0; i < n; ++ i ) {
-    const PtConnection* pt_con = pt_inst->port(i);
+  int pos = 0;
+  for ( auto pt_con: pt_inst->port_list() ) {
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
       continue;
@@ -378,10 +377,11 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       ASSERT_COND ( index < port_num );
     }
     else {
-      // 順序に割り当ての場合は単純に i
-      index = i;
+      // 順序に割り当ての場合は単純に pos
+      index = pos;
       // 前にも書いたように YACC の文法で規定されているのでこれは常に真
       ASSERT_COND ( pt_con->name() == nullptr );
+      ++ pos;
     }
 
     // 割り当てるポートを取り出す．
@@ -409,7 +409,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 	continue;
       }
 
-      int expr_size = type.size();
+      SizeType expr_size = type.size();
       if ( expr_size == 0 ) {
 	// もともとサイズがなければ port_size に合わせる．
 	tmp->set_reqsize(VlValueType(false, true, port_size));
@@ -522,9 +522,9 @@ ItemGen::link_module(ElbModule* module,
 
   const FileRegion& fr = pt_inst->file_region();
 
-  int port_num = module->port_num();
+  SizeType port_num = module->port_num();
 
-  int n = pt_inst->port_num();
+  SizeType n = pt_inst->port_list().size();
   // ポートの割り当てを行う．
   // 例外: ポートを一つも取らないモジュールの場合
   // module_name instance_name ()
@@ -532,7 +532,7 @@ ItemGen::link_module(ElbModule* module,
   // これは Verilog-HDL の仕様がアホ
   // () を取らない形を用意しておけば良かったのに．
   if ( port_num == 0 && n == 1 ) {
-    const PtConnection* pt_con = pt_inst->port(0);
+    const PtConnection* pt_con = pt_inst->port_list()[0];
     if ( /* pt_con->attr_top() == nullptr &&*/
 	 pt_con->name() == nullptr &&
 	 pt_con->expr() == nullptr ) {
@@ -553,24 +553,24 @@ ItemGen::link_module(ElbModule* module,
   // どうやら実際のポート数よりも少ないのはいいらしい
 
   // YACC の文法から一つでも named_con なら全部そう
-  bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
+  bool conn_by_name = (pt_inst->port_list()[0]->name() != nullptr);
   unordered_map<string, int> port_index;
   if ( conn_by_name ) {
     // ポート名とインデックスの辞書を作る．
-    int n = pt_module->port_num();
-    for ( int index = 0; index < n; ++ index) {
-      const PtPort* pt_port = pt_module->port(index);
+    int index = 0;
+    for ( auto pt_port: pt_module->port_list() ) {
       const char* name = pt_port->ext_name();
       if ( name != nullptr ) {
-	port_index[name] = index;
+	port_index[string(name)] = index;
       }
+      ++ index;
     }
   }
 
   // ポートに接続する式を生成する．
   ElbEnv env;
-  for ( int i = 0; i < n; ++ i ) {
-    const PtConnection* pt_con = pt_inst->port(i);
+  SizeType pos = 0;
+  for ( auto pt_con: pt_inst->port_list() ) {
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
       continue;
@@ -596,10 +596,11 @@ ItemGen::link_module(ElbModule* module,
       ASSERT_COND( index < port_num );
     }
     else {
-      // 順序による割り当ての場合は単純に i
-      index = i;
+      // 順序による割り当ての場合は単純に pos
+      index = pos;
       // 前にも書いたように YACC の文法から下の仮定は常になりたつはず．
       ASSERT_COND( pt_con->name() == nullptr );
+      ++ pos;
     }
 
     const VlPort* port = module->port(index);

@@ -35,14 +35,14 @@ SptIOHead::SptIOHead(const FileRegion& file_region,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right) :
-  mFileRegion(file_region),
-  mType(type),
-  mAuxType(aux_type),
-  mNetType(net_type),
-  mVarType(var_type),
-  mSigned(sign),
-  mLeftRange(left),
-  mRightRange(right)
+  mFileRegion{file_region},
+  mType{type},
+  mAuxType{aux_type},
+  mNetType{net_type},
+  mVarType{var_type},
+  mSigned{sign},
+  mLeftRange{left},
+  mRightRange{right}
 {
 }
 
@@ -118,19 +118,11 @@ SptIOHead::right_range() const
   return mRightRange;
 }
 
-// @brief 要素数の取得
-int
-SptIOHead::item_num() const
+// @brief 要素のリストの取得
+PtIOItemArray
+SptIOHead::item_list() const
 {
-  return mItemArray.size();
-}
-
-// @brief 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-const PtIOItem*
-SptIOHead::item(int pos) const
-{
-  return mItemArray[pos];
+  return mItemArray;
 }
 
 // 要素リストの設定
@@ -153,9 +145,9 @@ SptIOHead::set_elem(PtIOItemArray elem_array)
 SptIOItem::SptIOItem(const FileRegion& file_region,
 		     const char* name,
 		     const PtExpr* init_value) :
-  mFileRegion(file_region),
-  mName(name),
-  mInitValue(init_value)
+  mFileRegion{file_region},
+  mName{name},
+  mInitValue{init_value}
 {
 }
 
@@ -216,16 +208,16 @@ SptDeclHead::SptDeclHead(const FileRegion& file_region,
 			 tVpiVsType vs_type,
 			 const PtStrength* strength,
 			 const PtDelay* delay) :
-  mFileRegion(file_region),
-  mType(type),
-  mSigned(sign),
-  mLeftRange(left),
-  mRightRange(right),
-  mVarType(var_type),
-  mNetType(net_type),
-  mVsType(vs_type),
-  mStrength(strength),
-  mDelay(delay)
+  mFileRegion{file_region},
+  mType{type},
+  mSigned{sign},
+  mLeftRange{left},
+  mRightRange{right},
+  mVarType{var_type},
+  mNetType{net_type},
+  mVsType{vs_type},
+  mStrength{strength},
+  mDelay{delay}
 {
 }
 
@@ -323,19 +315,11 @@ SptDeclHead::delay() const
   return mDelay;
 }
 
-// @brief 要素数の取得
-int
-SptDeclHead::item_num() const
+// @brief 要素のリストの取得
+PtDeclItemArray
+SptDeclHead::item_list() const
 {
-  return mItemArray.size();
-}
-
-// @brief 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-const PtDeclItem*
-SptDeclHead::item(int pos) const
-{
-  return mItemArray[pos];
+  return mItemArray;
 }
 
 // 要素リストの設定
@@ -362,10 +346,10 @@ SptDeclItem::SptDeclItem(const FileRegion& file_region,
 			 const char* name,
 			 PtRangeArray range_array,
 			 const PtExpr* init_value) :
-  mFileRegion(file_region),
-  mName(name),
-  mRangeArray(range_array),
-  mInitValue(init_value)
+  mFileRegion{file_region},
+  mName{name},
+  mRangeArray{range_array},
+  mInitValue{init_value}
 {
 }
 
@@ -398,12 +382,11 @@ SptDeclItem::dimension_list_size() const
   return mRangeArray.size();
 }
 
-// 範囲の取得
-// @return 先頭の要素
-const PtRange*
-SptDeclItem::range(int pos) const
+// 範囲のリストの取得
+PtRangeArray
+SptDeclItem::range_list() const
 {
-  return mRangeArray[pos];
+  return mRangeArray;
 }
 
 // 初期値の取得
@@ -425,9 +408,9 @@ SptDeclItem::init_value() const
 SptRange::SptRange(const FileRegion& file_region,
 		   const PtExpr* msb,
 		   const PtExpr* lsb) :
-  mFileRegion(file_region),
-  mMsb(msb),
-  mLsb(lsb)
+  mFileRegion{file_region},
+  mMsb{msb},
+  mLsb{lsb}
 {
 }
 

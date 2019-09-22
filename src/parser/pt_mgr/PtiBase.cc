@@ -10,6 +10,7 @@
 #include "PtiDecl.h"
 #include "PtiExpr.h"
 #include "ym/pt/PtMisc.h"
+#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

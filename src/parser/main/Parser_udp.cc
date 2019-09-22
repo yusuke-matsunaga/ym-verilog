@@ -79,8 +79,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
   // まず portdecl_list の各要素を名前をキーにした連想配列に格納する．
   // ついでに output の数を数える．
   unordered_map<string, const PtIOItem*> iomap;
-  for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    const PtIOHead* io = iohead_array[i];
+  for ( auto io: iohead_array ) {
     if ( io->type() == kPtIO_Output ) {
       if ( out_item ) {
 	// 複数の出力宣言があった．
@@ -94,16 +93,15 @@ Parser::new_Udp1995(const FileRegion& file_region,
       }
 
       // これは YACC の文法が正しくかけていれば成り立つはず．
-      ASSERT_COND(io->item_num() == 1 );
+      ASSERT_COND( io->item_list().size() == 1 );
 
-      out_item = io->item(0);
+      out_item = io->item_list()[0];
 
       if ( io->aux_type() == kVpiAuxReg ) {
 	is_seq = true;
       }
     }
-    for ( int j = 0; j < io->item_num(); ++ j ) {
-      const PtIOItem* elem = io->item(j);
+    for ( auto elem: io->item_list() ) {
       if ( iomap.count(elem->name()) > 0 ) {
 	// 二重登録
 	ostringstream buf;
@@ -121,9 +119,9 @@ Parser::new_Udp1995(const FileRegion& file_region,
   }
 
   // port_list に現れる名前が iolist 中にあるか調べる．
-  PtiPortArray port_array = get_port_array();
-  for ( int i = 0; i < port_array.size(); ++ i ) {
-    const PtiPort* port = port_array[i];
+  vector<PtiPort*> port_vector = get_port_vector();
+  bool first = true;
+  for ( auto port: port_vector ) {
     const char* port_name = port->ext_name();
     if ( iomap.count(port_name) == 0 ) {
       ostringstream buf;
@@ -136,7 +134,8 @@ Parser::new_Udp1995(const FileRegion& file_region,
       sane = false;
       break;
     }
-    if ( i == 0 ) {
+    if ( first ) {
+      first = false;
       const PtIOItem* ioelem = iomap.at(port_name);
       if ( out_item != ioelem ) {
 	// 最初の名前は output でなければならない．
@@ -186,8 +185,8 @@ Parser::new_Udp1995(const FileRegion& file_region,
     if ( reghead ) {
       is_seq = true;
       ASSERT_COND(reghead->type() == kPtDecl_Reg );
-      ASSERT_COND(reghead->item_num() == 1 );
-      const PtDeclItem* regitem = reghead->item(0);
+      ASSERT_COND(reghead->item_list().size() == 1 );
+      const PtDeclItem* regitem = reghead->item_list()[0];
       ASSERT_COND(regitem );
       if ( strcmp(regitem->name(), out_item->name()) != 0 ) {
 	// output と名前が違う
@@ -206,6 +205,8 @@ Parser::new_Udp1995(const FileRegion& file_region,
   }
 
   if ( sane ) {
+    PtPortArray port_array = new_PortArray(port_vector);
+
     new_Udp(file_region,
 	    udp_name,
 	    init_name,
@@ -238,8 +239,8 @@ Parser::new_Udp2001(const FileRegion& file_region,
   ASSERT_COND(iohead_array.size() > 0 );
   const PtIOHead* out_head = iohead_array[0];
   ASSERT_COND(out_head->type() == kPtIO_Output );
-  ASSERT_COND(out_head->item_num() == 1 );
-  const PtIOItem* out_item = out_head->item(0);
+  ASSERT_COND(out_head->item_list().size() == 1 );
+  const PtIOItem* out_item = out_head->item_list()[0];
 
   if ( out_head->aux_type() == kVpiAuxReg ) {
     is_seq = true;
@@ -247,7 +248,7 @@ Parser::new_Udp2001(const FileRegion& file_region,
   // 残りの要素は入力になっているはず．
 
   // iohead_array から port_array を生成する．
-  PtiPortArray port_array = new_PortArray(iohead_array);
+  PtPortArray port_array = new_PortArray(iohead_array);
 
   new_Udp(file_region,
 	  udp_name,
@@ -272,7 +273,7 @@ Parser::new_Udp(const FileRegion& file_region,
 		PtrList<const PtAttrInst>* ai_list,
 		bool is_seq,
 		const PtIOItem* out_item,
-		PtiPortArray port_array,
+		PtPortArray port_array,
 		PtIOHeadArray iohead_array)
 {
   const PtUdp* udp = nullptr;
@@ -433,14 +434,6 @@ PtUdpValueArray
 Parser::get_udp_value_array()
 {
   return mUdpValueList.to_array(mAlloc);
-}
-
-// @brief ポートリストを配列に変換する．
-inline
-PtiPortArray
-Parser::get_port_array()
-{
-  return mPortList.to_array(mAlloc);
 }
 
 // @brief IO宣言リストを配列に変換する．

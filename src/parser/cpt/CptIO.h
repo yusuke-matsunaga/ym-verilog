@@ -42,7 +42,6 @@ protected:
 	     bool sign);
 
   /// @brief デストラクタ
-  virtual
   ~CptIOHBase();
 
 
@@ -52,63 +51,48 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型の取得
-  virtual
   tPtIOType
-  type() const;
+  type() const override;
 
   /// @brief 補助的な型の取得
-  virtual
   tVpiAuxType
-  aux_type() const;
+  aux_type() const override;
 
   /// @brief 補助的なネット型の取得
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
   /// @brief 補助的な変数型の取得
-  virtual
   tVpiVarType
-  var_type() const;
+  var_type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号付き
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲のMSBの取得
   /// @retval 範囲のMSB
   /// @retval nullptr 範囲を持たないとき
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲のLSBの取得
   /// @retval 範囲のLSB
   /// @retval nullptr 範囲を持たないとき
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
-  /// @brief 要素数の取得
-  virtual
-  int
-  item_num() const;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-  virtual
-  const PtIOItem*
-  item(int pos) const;
+  /// @brief 要素のリストの取得
+  PtIOItemArray
+  item_list() const override;
 
 
 private:
@@ -118,9 +102,8 @@ private:
 
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト
-  virtual
   void
-  set_elem(PtIOItemArray elem_array);
+  set_elem(PtIOItemArray elem_array) override;
 
 
 private:
@@ -165,7 +148,6 @@ protected:
 	 bool sign);
 
   /// @brief デストラクタ
-  virtual
   ~CptIOH();
 
 };
@@ -198,7 +180,6 @@ protected:
 	  const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptIOHV();
 
 
@@ -208,14 +189,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲のMSBの取得
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲のLSBの取得
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -249,7 +228,6 @@ protected:
 	    const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~CptIOItem();
 
 
@@ -259,22 +237,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 初期値の取得
   /// @retval 初期値
   /// @retval nullptr 初期値を持たないとき
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
 
 private:
@@ -310,8 +285,8 @@ protected:
 	     const PtExpr* init_value);
 
   /// @brief デストラクタ
-  virtual
   ~CptIOItemI();
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -319,14 +294,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 初期値の取得
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
 
 private:

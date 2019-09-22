@@ -30,7 +30,6 @@ protected:
 	      PtExprArray terminal_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptSpecItem();
 
 
@@ -40,31 +39,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_SpecItem を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
   /// @brief specify block item の種類を返す．
-  virtual
   tVpiSpecItemType
-  specitem_type() const;
+  specitem_type() const override;
 
-  /// @brief ターミナルリストの要素数を返す．
-  virtual
-  int
-  size() const;
-
-  /// @brief ターミナルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtExpr*
-  terminal(int pos) const;
+  /// @brief ターミナルリストの取得
+  PtExprArray
+  terminal_list() const override;
 
 
 private:
@@ -101,7 +90,6 @@ protected:
 	      const PtPathDecl* path_decl);
 
   /// @brief デストラクタ
-  virtual
   ~CptSpecPath();
 
 
@@ -111,30 +99,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_SpecPath を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
   /// @brief specify block path の種類を返す．
-  virtual
   tVpiSpecPathType
-  specpath_type() const;
+  specpath_type() const override;
 
   /// @brief モジュールパスの式を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief パス記述を返す．
-  virtual
   const PtPathDecl*
-  path_decl() const;
+  path_decl() const override;
 
 
 private:
@@ -179,7 +162,6 @@ protected:
 	      const PtPathDelay* path_delay);
 
   /// @brief デストラクタ
-  virtual
   ~CptPathDecl();
 
 
@@ -189,67 +171,44 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief edge_descriptor を取り出す．
   /// @note 0の場合もある．
-  virtual
   int
-  edge() const;
+  edge() const override;
 
-  /// @brief 入力リストの要素数の取得
-  /// @return 入力リストの要素数
-  virtual
-  int
-  input_num() const;
-
-  /// @brief 入力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < input_num() )
-  virtual
-  const PtExpr*
-  input(int pos) const;
+  /// @brief 入力のリストの取得
+  PtExprArray
+  input_list() const override;
 
   /// @brief 入力の極性を取り出す．
   /// @note 0の場合もありうる．
-  virtual
   int
-  input_pol() const;
+  input_pol() const override;
 
   /// @brief パス記述子(?)を得る．vpiParallel か vpiFull
-  virtual
   int
-  op() const;
+  op() const override;
 
-  /// @brief 出力リストの要素数の取得
-  /// @return 出力リストの要素数
-  virtual
-  int
-  output_num() const;
-
-  /// @brief 出力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < output_num() )
-  virtual
-  const PtExpr*
-  output(int pos) const;
+  /// @brief 出力のリストの取得
+  PtExprArray
+  output_list() const override;
 
   /// @brief 出力の極性を取り出す．
   /// @note 0の場合もありうる．
-  virtual
   int
-  output_pol() const;
+  output_pol() const override;
 
   /// @brief 式を取り出す．
   /// @note nullptr の場合もありうる．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief path_delay_value を取り出す．
-  virtual
   const PtPathDelay*
-  path_delay() const;
+  path_delay() const override;
 
 
 private:
@@ -322,7 +281,6 @@ protected:
 	       const PtExpr* value12);
 
   /// @brief デストラクタ
-  virtual
   ~CptPathDelay();
 
 
@@ -332,15 +290,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 値を取り出す．
   /// @note 0の場合もある．
-  virtual
   const PtExpr*
-  value(int pos) const;
+  value(SizeType pos) const override;
 
 
 private:

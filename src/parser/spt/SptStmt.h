@@ -47,7 +47,6 @@ private:
 	  PtExprArray expr_array = PtExprArray());
 
   /// デストラクタ
-  virtual
   ~SptStmt();
 
 
@@ -57,111 +56,79 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// クラスの型の取得
-  virtual
   tPtStmtType
-  type() const;
+  type() const override;
 
   /// @brief ステートメントの種類を表す文字列の取得
   /// @return ステートメントの種類を表す文字列
-  virtual
   const char*
-  stmt_name() const;
+  stmt_name() const override;
 
   /// 階層ブランチの取得
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
   /// 名前の取得
-  virtual
   const char*
-  name() const;
+  name() const override;
 
-  /// @brief 引数の数の取得
-  /// @return 引数の数
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  int
-  arg_num() const;
-
-  /// @brief 引数の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-  /// @note kEnable/kSysEnable で意味のある関数
-  virtual
-  const PtExpr*
-  arg(int pos) const;
+  /// @brief 引数のリストの取得
+  PtExprArray
+  arg_list() const override;
 
   /// コントロールの取得
-  virtual
   const PtControl*
-  control() const;
+  control() const override;
 
   /// 本体のステートメントの取得
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
   /// 式の取得
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// 左辺式の取得
-  virtual
   const PtExpr*
-  lhs() const;
+  lhs() const override;
 
   /// 右辺式の取得
-  virtual
   const PtExpr*
-  rhs() const;
+  rhs() const override;
 
   /// イベントプライマリの取得
-  virtual
   const PtExpr*
-  primary() const;
+  primary() const override;
 
   /// 条件が成り立たなかったとき実行されるステートメントの取得
-  virtual
   const PtStmt*
-  else_body() const;
+  else_body() const override;
 
-  /// case item の要素数の取得
-  virtual
-  int
-  caseitem_num() const;
-
-  /// case item の取得
-  virtual
-  const PtCaseItem*
-  caseitem(int pos) const;
+  /// @brief case item のリストの取得
+  PtCaseItemArray
+  caseitem_list() const override;
 
   /// 初期化代入文の取得
-  virtual
   const PtStmt*
-  init_stmt() const;
+  init_stmt() const override;
 
   /// 繰り返し代入文の取得
-  virtual
   const PtStmt*
-  next_stmt() const;
+  next_stmt() const override;
 
   /// @brief 宣言ヘッダ配列の取得
   /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief 子供のステートメント配列の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
-  virtual
   PtStmtArray
-  stmt_array() const;
+  stmt_array() const override;
 
 
 private:
@@ -242,27 +209,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
-  /// @brief ラベルの数の取得
-  /// @retval ラベルの数 通常の case ラベルの場合
-  /// @retval 0 default の場合
-  virtual
-  int
-  label_num() const;
-
-  /// @brief ラベルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-  virtual
-  const PtExpr*
-  label(int pos) const;
+  /// @brief ラベルのリストの取得
+  PtExprArray
+  label_list() const override;
 
   /// 本体のステートメントの取得
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:

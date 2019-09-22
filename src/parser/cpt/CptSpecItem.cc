@@ -53,19 +53,11 @@ CptSpecItem::specitem_type() const
   return mId;
 }
 
-// ターミナルリストの要素数を返す．
-int
-CptSpecItem::size() const
+// @brief ターミナルリストの取得
+PtExprArray
+CptSpecItem::terminal_list() const
 {
-  return mTerminalArray.size();
-}
-
-// @brief ターミナルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtExpr*
-CptSpecItem::terminal(int pos) const
-{
-  return mTerminalArray[pos];
+  return mTerminalArray;
 }
 
 
@@ -172,20 +164,11 @@ CptPathDecl::edge() const
   return mEdge;
 }
 
-// @brief 入力リストの要素数の取得
-// @return 入力リストの要素数
-int
-CptPathDecl::input_num() const
+// @brief 入力のリストの取得
+PtExprArray
+CptPathDecl::input_list() const
 {
-  return mInputArray.size();
-}
-
-// @brief 入力の取得
-// @param[in] pos 位置番号 ( 0 <= pos < input_num() )
-const PtExpr*
-CptPathDecl::input(int pos) const
-{
-  return mInputArray[pos];
+  return mInputArray;
 }
 
 // 入力の極性を取り出す．
@@ -203,20 +186,11 @@ CptPathDecl::op() const
   return mOp;
 }
 
-// @brief 出力リストの要素数の取得
-// @return 出力リストの要素数
-int
-CptPathDecl::output_num() const
+// @brief 出力のリストの取得
+PtExprArray
+CptPathDecl::output_list() const
 {
-  return mOutputArray.size();
-}
-
-// @brief 出力の取得
-// @param[in] pos 位置番号 ( 0 <= pos < output_num() )
-const PtExpr*
-CptPathDecl::output(int pos) const
-{
-  return mOutputArray[pos];
+  return mOutputArray;
 }
 
 // 出力の極性を取り出す．
@@ -250,13 +224,14 @@ CptPathDecl::path_delay() const
 // コンストラクタ
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValues{value, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value;
-  for ( int i = 1; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2) :
@@ -272,15 +247,14 @@ CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
 			   const PtExpr* value3) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValues{value1, value2, value3,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  mValues[2] = value3;
-  for ( int i = 3; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
@@ -288,18 +262,14 @@ CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value4,
 			   const PtExpr* value5,
 			   const PtExpr* value6) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValues{value1, value2, value3,
+	  value4, value5, value6,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  mValues[2] = value3;
-  mValues[3] = value4;
-  mValues[4] = value5;
-  mValues[5] = value6;
-  for ( int i = 6; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
+
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
@@ -313,20 +283,12 @@ CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value10,
 			   const PtExpr* value11,
 			   const PtExpr* value12) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValues{value1, value2, value3,
+	  value4, value5, value6,
+	  value7, value8, value9,
+	  value10, value11, value12}
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  mValues[2] = value3;
-  mValues[3] = value4;
-  mValues[4] = value5;
-  mValues[5] = value6;
-  mValues[6] = value7;
-  mValues[7] = value8;
-  mValues[8] = value9;
-  mValues[9] = value10;
-  mValues[10] = value11;
-  mValues[11] = value12;
 }
 
 // デストラクタ
@@ -344,9 +306,14 @@ CptPathDelay::file_region() const
 // 値を取り出す．
 // 0の場合もある．
 const PtExpr*
-CptPathDelay::value(int pos) const
+CptPathDelay::value(SizeType pos) const
 {
-  return mValues[pos];
+  if ( 0 <= pos && pos < 12 ) {
+    return mValues[pos];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 

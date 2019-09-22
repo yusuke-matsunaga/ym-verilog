@@ -80,16 +80,10 @@ public:
   const PtExpr*
   right_range() const = 0;
 
-  /// @brief 要素数の取得
+  /// @brief 要素のリストの取得
   virtual
-  int
-  item_num() const = 0;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-  virtual
-  const PtIOItem*
-  item(int pos) const = 0;
+  PtIOItemArray
+  item_list() const = 0;
 
 };
 
@@ -209,17 +203,10 @@ public:
   const PtDelay*
   delay() const = 0;
 
-  /// @brief 要素数の取得
-  /// @return 要素数
+  /// @brief 要素のリストの取得
   virtual
-  int
-  item_num() const = 0;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-  virtual
-  const PtDeclItem*
-  item(int pos) const = 0;
+  PtDeclItemArray
+  item_list() const = 0;
 
 };
 
@@ -251,10 +238,10 @@ public:
   int
   dimension_list_size() const = 0;
 
-  /// @brief 範囲の取得
+  /// @brief 範囲のリストの取得
   virtual
-  const PtRange*
-  range(int pos) const = 0;
+  PtRangeArray
+  range_list() const = 0;
 
   /// @brief 初期値の取得
   /// @retval 初期値

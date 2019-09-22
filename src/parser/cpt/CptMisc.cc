@@ -39,22 +39,12 @@ CptControl::delay() const
   return nullptr;
 }
 
-// @brief イベントリストのサイズの取得
-// @retval イベントリストのサイズ event control/repeat control の場合
-// @retval 0 上記以外
-int
-CptControl::event_num() const
-{
-  return 0;
-}
-
-// @brief イベントリストの要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+// @brief イベントリストの取得
 // @note event control/repeat control の場合のみ意味を持つ
-const PtExpr*
-CptControl::event(int pos) const
+PtExprArray
+CptControl::event_list() const
 {
-  return nullptr;
+  return PtExprArray{};
 }
 
 // @brief 繰り返し数の取得
@@ -139,22 +129,12 @@ CptEventControl::type() const
   return kPtEventControl;
 }
 
-// @brief イベントリストのサイズの取得
-// @retval イベントリストのサイズ event control/repeat control の場合
-// @retval 0 上記以外
-int
-CptEventControl::event_num() const
-{
-  return mEventArray.size();
-}
-
-// @brief イベントリストの要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+// @brief イベントリストの取得
 // @note event control/repeat control の場合のみ意味を持つ
-const PtExpr*
-CptEventControl::event(int pos) const
+PtExprArray
+CptEventControl::event_list() const
 {
-  return mEventArray[pos];
+  return mEventArray;
 }
 
 
@@ -170,7 +150,7 @@ CptRepeatControl::CptRepeatControl(const FileRegion& file_region,
   mRepExpr(expr),
   mEventArray(event_array)
 {
-  ASSERT_COND(expr );
+  ASSERT_COND( expr );
 }
 
 // デストラクタ
@@ -199,22 +179,12 @@ CptRepeatControl::rep_expr() const
   return mRepExpr;
 }
 
-// @brief イベントリストのサイズの取得
-// @retval イベントリストのサイズ event control/repeat control の場合
-// @retval 0 上記以外
-int
-CptRepeatControl::event_num() const
-{
-  return mEventArray.size();
-}
-
-// @brief イベントリストの要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+// @brief イベントリストの取得
 // @note event control/repeat control の場合のみ意味を持つ
-const PtExpr*
-CptRepeatControl::event(int pos) const
+PtExprArray
+CptRepeatControl::event_list() const
 {
-  return mEventArray[pos];
+  return mEventArray;
 }
 
 
@@ -311,22 +281,17 @@ CptNamedCon::name() const
 CptStrength::CptStrength(const FileRegion& file_region,
 			 tVpiStrength value1,
 			 tVpiStrength value2) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, value2, kVpiNoStrength}
 {
-  mValue1 = value1;
-  mValue2 = value2;
-  mValue3 = kVpiNoStrength;
 }
 
 // charge strength 用のコンストラクタ
 CptStrength::CptStrength(const FileRegion& file_region,
 			 tVpiStrength value1) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{kVpiNoStrength, kVpiNoStrength, value1}
 {
-  // charge strength
-  mValue1 = kVpiNoStrength;
-  mValue2 = kVpiNoStrength;
-  mValue3 = value1;
 }
 
 // デストラクタ
@@ -345,21 +310,21 @@ CptStrength::file_region() const
 tVpiStrength
 CptStrength::drive0() const
 {
-  return mValue1;
+  return mValue[0];
 }
 
 // drive strength1 を返す．
 tVpiStrength
 CptStrength::drive1() const
 {
-  return mValue2;
+  return mValue[1];
 }
 
 // charge strength を返す．
 tVpiStrength
 CptStrength::charge() const
 {
-  return mValue3;
+  return mValue[2];
 }
 
 
@@ -370,22 +335,18 @@ CptStrength::charge() const
 // 一つの値をとるコンストラクタ
 CptDelay::CptDelay(const FileRegion& file_region,
 		   const PtExpr* value1) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, nullptr, nullptr}
 {
-  mValue[0] = value1;
-  mValue[1] = nullptr;
-  mValue[2] = nullptr;
 }
 
 // 二つの値をとるコンストラクタ
 CptDelay::CptDelay(const FileRegion& file_region,
 		   const PtExpr* value1,
 		   const PtExpr* value2) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, value2, nullptr}
 {
-  mValue[0] = value1;
-  mValue[1] = value2;
-  mValue[2] = nullptr;
 }
 
 // 三つの値をとるコンストラクタ
@@ -393,11 +354,9 @@ CptDelay::CptDelay(const FileRegion& file_region,
 		   const PtExpr* value1,
 		   const PtExpr* value2,
 		   const PtExpr* value3) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, value2, value3}
 {
-  mValue[0] = value1;
-  mValue[1] = value2;
-  mValue[2] = value3;
 }
 
 // デストラクタ
@@ -414,9 +373,9 @@ CptDelay::file_region() const
 
 // 値を取り出す．
 const PtExpr*
-CptDelay::value(int pos) const
+CptDelay::value(SizeType pos) const
 {
-  if ( pos < 3 ) {
+  if ( 0 <= pos && pos < 3 ) {
     return mValue[pos];
   }
   return nullptr;
@@ -512,20 +471,11 @@ CptAttrInst::~CptAttrInst()
 {
 }
 
-// @brief 要素数の取得
-// @return 要素数
-int
-CptAttrInst::attrspec_num() const
+// @brief 要素のリストの取得
+PtAttrSpecArray
+CptAttrInst::attrspec_list() const
 {
-  return mAttrSpecArray.size();
-}
-
-// @brief 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
-const PtAttrSpec*
-CptAttrInst::attrspec(int pos) const
-{
-  return mAttrSpecArray[pos];
+  return mAttrSpecArray;
 }
 
 

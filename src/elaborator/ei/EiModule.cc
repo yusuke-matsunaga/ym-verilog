@@ -16,6 +16,7 @@
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtDecl.h"
 #include "ym/pt/PtItem.h"
+#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -41,11 +42,11 @@ EiFactory::new_Module(const VlNamedObj* parent,
 					pt_head,
 					pt_inst);
 
-  ymuint port_num = pt_module->port_num();
+  SizeType port_num = pt_module->port_list().size();
   void* q = mAlloc.get_memory(sizeof(EiPort) * port_num);
   EiPort* port_array = new (q) EiPort[port_num];
 
-  ymuint io_num = pt_module->iodecl_num();
+  SizeType io_num = pt_module->iodecl_num();
   void* r = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (r) EiIODecl[io_num];
 
@@ -76,7 +77,7 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
   EiRangeImpl range;
   range.set(left, right, left_val, right_val);
 
-  ymuint n = range.size();
+  SizeType n = range.size();
   void* q = mAlloc.get_memory(sizeof(EiModule1) * n);
   EiModule1* array = new (q) EiModule1[n];
 
@@ -88,10 +89,10 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
 						      range,
 						      array);
 
-  ymuint port_num = pt_module->port_num();
-  ymuint io_num = pt_module->iodecl_num();
+  SizeType port_num = pt_module->port_list().size();
+  SizeType io_num = pt_module->iodecl_num();
 
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( int i = 0; i < n; ++ i ) {
     void* r = mAlloc.get_memory(sizeof(EiPort) * port_num);
     EiPort* port_array = new (r) EiPort[port_num];
 
@@ -183,7 +184,7 @@ EiModuleHead::def_name() const
 int
 EiModuleHead::port_num() const
 {
-  return mPtModule->port_num();
+  return mPtModule->port_list().size();
 }
 
 /// @brief 入出力宣言数を返す．

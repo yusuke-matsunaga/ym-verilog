@@ -30,7 +30,7 @@ ElbUdpDefn*
 EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 		       bool is_protected)
 {
-  int port_num = pt_udp->port_num();
+  SizeType port_num = pt_udp->port_list().size();
   void* q = mAlloc.get_memory(sizeof(EiUdpIO) * port_num);
   EiUdpIO* iodecl = new (q) EiUdpIO[port_num];
 

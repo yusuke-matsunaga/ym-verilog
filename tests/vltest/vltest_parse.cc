@@ -36,20 +36,18 @@ parse_mode(const vector<string>& filename_list,
   }
 
   VlTestLineWatcher watcher(watch_line);
-  list<VlLineWatcher*> watcher_list;
+  vector<VlLineWatcher*> watcher_list;
   if ( watch_line ) {
     watcher_list.push_back(&watcher);
   }
 
-  ymuint c = loop + 1;
-  for (ymuint i = 0; i < c; ++ i) {
+  int c = loop + 1;
+  for ( int i = 0; i < c; ++ i ) {
     try {
       StopWatch timer;
       timer.start();
       VlMgr vlmgr;
-      for (vector<string>::const_iterator p = filename_list.begin();
-	   p != filename_list.end(); ++ p) {
-	const string& name = *p;
+      for ( auto name: filename_list ) {
 	if ( verbose ) {
 	  cerr << "Reading " << name;
 	  cerr.flush();
@@ -66,8 +64,8 @@ parse_mode(const vector<string>& filename_list,
       }
 
       if ( dump_pt ) {
-	const list<const PtUdp*>& udp_list = vlmgr.pt_udp_list();
-	const list<const PtModule*>& module_list = vlmgr.pt_module_list();
+	const vector<const PtUdp*>& udp_list = vlmgr.pt_udp_list();
+	const vector<const PtModule*>& module_list = vlmgr.pt_module_list();
 	PtDumper dp(cout);
 	dp.enable_file_loc_mode();
 	dp.put(udp_list, module_list);

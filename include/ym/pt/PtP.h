@@ -169,26 +169,26 @@ class PtAttrSpec;
 template <typename T>
 class PtArray;
 
-typedef PtArray<const PtPort> PtPortArray;
-typedef PtArray<const PtUdpEntry> PtUdpEntryArray;
-typedef PtArray<const PtUdpValue> PtUdpValueArray;
-typedef PtArray<const PtIOHead> PtIOHeadArray;
-typedef PtArray<const PtIOItem> PtIOItemArray;
-typedef PtArray<const PtDeclHead> PtDeclHeadArray;
-typedef PtArray<const PtDeclItem> PtDeclItemArray;
-typedef PtArray<const PtItem> PtItemArray;
-typedef PtArray<const PtInst> PtInstArray;
-typedef PtArray<const PtDefParam> PtDefParamArray;
-typedef PtArray<const PtContAssign> PtContAssignArray;
-typedef PtArray<const PtGenCaseItem> PtGenCaseItemArray;
-typedef PtArray<const PtStmt> PtStmtArray;
-typedef PtArray<const PtCaseItem> PtCaseItemArray;
-typedef PtArray<const PtExpr> PtExprArray;
-typedef PtArray<const PtConnection> PtConnectionArray;
-typedef PtArray<const PtRange> PtRangeArray;
-typedef PtArray<const PtNameBranch> PtNameBranchArray;
-typedef PtArray<const PtAttrInst> PtAttrInstArray;
-typedef PtArray<const PtAttrSpec> PtAttrSpecArray;
+using PtAttrInstArray = PtArray<const PtAttrInst>;
+using PtAttrSpecArray = PtArray<const PtAttrSpec>;
+using PtCaseItemArray = PtArray<const PtCaseItem>;
+using PtConnectionArray = PtArray<const PtConnection>;
+using PtContAssignArray = PtArray<const PtContAssign>;
+using PtDeclHeadArray = PtArray<const PtDeclHead>;
+using PtDeclItemArray = PtArray<const PtDeclItem>;
+using PtDefParamArray = PtArray<const PtDefParam>;
+using PtExprArray = PtArray<const PtExpr>;
+using PtGenCaseItemArray = PtArray<const PtGenCaseItem>;
+using PtInstArray = PtArray<const PtInst>;
+using PtIOHeadArray = PtArray<const PtIOHead>;
+using PtIOItemArray = PtArray<const PtIOItem>;
+using PtItemArray = PtArray<const PtItem>;
+using PtNameBranchArray = PtArray<const PtNameBranch>;
+using PtRangeArray = PtArray<const PtRange>;
+using PtPortArray = PtArray<const PtPort>;
+using PtStmtArray = PtArray<const PtStmt>;
+using PtUdpEntryArray = PtArray<const PtUdpEntry>;
+using PtUdpValueArray = PtArray<const PtUdpValue>;
 
 END_NAMESPACE_YM_VERILOG
 

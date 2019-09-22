@@ -60,21 +60,21 @@ SptModule::SptModule(const FileRegion& file_region,
 		     const string& library,
 		     const string& cell,
 		     PtDeclHeadArray paramport_array,
-		     PtiPortArray port_array,
+		     PtPortArray port_array,
 		     PtIOHeadArray iohead_array,
 		     PtDeclHeadArray decl_array,
 		     PtItemArray item_array) :
-  mFileRegion(file_region),
-  mName(name),
-  mDefDecayTime(decay),
-  mConfig(config),
-  mLibrary(library),
-  mCell(cell),
-  mParamPortArray(paramport_array),
-  mPortArray(port_array),
-  mIOHeadArray(iohead_array),
-  mDeclHeadArray(decl_array),
-  mItemArray(item_array)
+  mFileRegion{file_region},
+  mName{name},
+  mDefDecayTime{decay},
+  mConfig{config},
+  mLibrary{library},
+  mCell{cell},
+  mParamPortArray{paramport_array},
+  mPortArray{port_array},
+  mIOHeadArray{iohead_array},
+  mDeclHeadArray{decl_array},
+  mItemArray{item_array}
 {
   mFlags =
     static_cast<ymuint32>(is_cell)
@@ -91,14 +91,12 @@ SptModule::SptModule(const FileRegion& file_region,
     | (static_cast<ymuint32>(suppress_faults) << 26)
     ;
 
-  int n = 0;
-  for ( int i = 0; i < mIOHeadArray.size(); ++ i ) {
-    n += mIOHeadArray[i]->item_num();
+  mIODeclNum = 0;
+  for ( auto head: mIOHeadArray ) {
+    mIODeclNum += head->item_list().size();
   }
-  mIODeclNum = n;
 
-  for ( int i = 0; i < mItemArray.size(); ++ i ) {
-    const PtItem* item = mItemArray[i];
+  for ( auto item: mItemArray ) {
     if ( item->type() == kPtItem_Func ) {
       mFuncDic[item->name()] = item;
     }
@@ -133,19 +131,11 @@ SptModule::paramport_array() const
   return mParamPortArray;
 }
 
-// @brief ポート数の取得
-// @return ポート数
-int
-SptModule::port_num() const
+// @brief ポートのリストの取得
+PtPortArray
+SptModule::port_list() const
 {
-  return mPortArray.size();
-}
-
-// ポートの取得
-const PtPort*
-SptModule::port(int pos) const
-{
-  return mPortArray[pos];
+  return mPortArray;
 }
 
 // @brief 入出力宣言ヘッダ配列の取得
@@ -156,7 +146,7 @@ SptModule::iohead_array() const
 }
 
 // @brief 入出力宣言の要素数の取得
-int
+SizeType
 SptModule::iodecl_num() const
 {
   return mIODeclNum;
@@ -372,10 +362,10 @@ SptPort::SptPort(const FileRegion& file_region,
 		 const PtExpr* portref,
 		 PtExprArray portref_array,
 		 const char* ext_name) :
-  mFileRegion(file_region),
-  mExtName(ext_name),
-  mPortRef(portref),
-  mPortRefArray(portref_array)
+  mFileRegion{file_region},
+  mExtName{ext_name},
+  mPortRef{portref},
+  mPortRefArray{portref_array}
 {
 }
 
@@ -495,7 +485,7 @@ SptFactory::new_Module(const FileRegion& file_region,
 		       const string& library,
 		       const string& cell,
 		       PtDeclHeadArray paramport_array,
-		       PtiPortArray port_array,
+		       PtPortArray port_array,
 		       PtIOHeadArray iohead_array,
 		       PtDeclHeadArray declhead_array,
 		       PtItemArray item_array)

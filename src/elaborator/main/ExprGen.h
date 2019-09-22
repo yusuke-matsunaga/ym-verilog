@@ -187,7 +187,7 @@ public:
   ElbDelay*
   instantiate_delay_sub(const VlNamedObj* parent,
 			const PtBase* pt_obj,
-			ymuint n,
+			SizeType n,
 			const PtExpr* expr_array[]);
 
 

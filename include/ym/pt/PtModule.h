@@ -128,16 +128,10 @@ public:
   PtDeclHeadArray
   paramport_array() const = 0;
 
-  /// @brief ポート数を取り出す．
+  /// @brief ポートのリストを取り出す．
   virtual
-  int
-  port_num() const = 0;
-
-  /// @brief ポートを取り出す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
-  virtual
-  const PtPort*
-  port(int pos) const = 0;
+  PtPortArray
+  port_list() const = 0;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual
@@ -147,7 +141,7 @@ public:
   /// @brief 入出力宣言の要素数の取得
   /// @note 個々のヘッダが持つ要素数の総和を計算する．
   virtual
-  int
+  SizeType
   iodecl_num() const = 0;
 
   /// @brief 宣言ヘッダ配列の取得

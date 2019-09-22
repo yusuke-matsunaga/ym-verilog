@@ -152,9 +152,8 @@ VlDumperImpl::put_modulearray_list(const char* label,
 {
   VlDumpHeader x(this, label, "ModuleArrayList");
 
-  for (vector<const VlModuleArray*>::const_iterator p = ma_list.begin();
-       p != ma_list.end(); ++ p) {
-    put_modulearray(label, mgr, *p);
+  for ( auto ma: ma_list ) {
+    put_modulearray(label, mgr, ma);
   }
 }
 

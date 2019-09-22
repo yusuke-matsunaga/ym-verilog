@@ -60,15 +60,30 @@ public:
   /// @brief オペランドの数の取得
   /// @return 子供の数
   virtual
-  int
+  SizeType
   operand_num() const = 0;
+
+  /// @brief 0番目のオペランドの取得
+  virtual
+  const PtExpr*
+  operand0() const = 0;
+
+  /// @brief 1番目のオペランドの取得
+  virtual
+  const PtExpr*
+  operand1() const = 0;
+
+  /// @brief 2番目のオペランドの取得
+  virtual
+  const PtExpr*
+  operand2() const = 0;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(int pos) const = 0;
+  operand(SizeType pos) const = 0;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
@@ -80,14 +95,14 @@ public:
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
   virtual
-  int
+  SizeType
   index_num() const = 0;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   virtual
   const PtExpr*
-  index(int pos) const = 0;
+  index(SizeType pos) const = 0;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
@@ -165,7 +180,6 @@ public:
   decompile() const = 0;
 
 };
-
 
 END_NAMESPACE_YM_VERILOG
 

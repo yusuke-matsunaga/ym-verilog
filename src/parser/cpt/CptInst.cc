@@ -54,19 +54,11 @@ CptGateH::prim_type() const
   return mPrimType;
 }
 
-// 要素数を返す．
-int
-CptGateH::size() const
+// @brief module/UDP/gate instance リストの取得
+PtInstArray
+CptGateH::inst_list() const
 {
-  return mInstArray.size();
-}
-
-// @brief module/UDP/gate instance 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtInst*
-CptGateH::inst(int pos) const
-{
-  return mInstArray[pos];
+  return mInstArray;
 }
 
 
@@ -200,19 +192,11 @@ CptMuH::name() const
   return mName;
 }
 
-// 要素数を取り出す．
-int
-CptMuH::size() const
+// @brief module/UDP/gate instance リストの取得
+PtInstArray
+CptMuH::inst_list() const
 {
-  return mInstArray.size();
-}
-
-// @brief module/UDP/gate instance 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < size() )
-const PtInst*
-CptMuH::inst(int pos) const
-{
-  return mInstArray[pos];
+  return mInstArray;
 }
 
 
@@ -384,20 +368,11 @@ CptInst::right_range() const
   return nullptr;
 }
 
-// @brief ポート数の取得
-// @return ポート数
-int
-CptInst::port_num() const
+// @brief ポートのリストの取得
+PtConnectionArray
+CptInst::port_list() const
 {
-  return mPortArray.size();
-}
-
-// @brief ポートの取得
-// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
-const PtConnection*
-CptInst::port(int pos) const
-{
-  return mPortArray[pos];
+  return mPortArray;
 }
 
 

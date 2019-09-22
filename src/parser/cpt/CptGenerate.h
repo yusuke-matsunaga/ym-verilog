@@ -71,7 +71,6 @@ protected:
 	     PtItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenBase();
 
 
@@ -81,19 +80,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief item 配列の取得
-  virtual
   PtItemArray
-  item_array() const;
+  item_array() const override;
 
 
 private:
@@ -126,7 +122,6 @@ protected:
 	      PtItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenerate();
 
 
@@ -137,9 +132,8 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_Generate を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 };
 
@@ -160,7 +154,6 @@ protected:
 	      PtItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenBlock();
 
 
@@ -171,9 +164,8 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_GenBlock を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 };
 
@@ -195,7 +187,6 @@ protected:
 	       PtItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenBlockN();
 
 
@@ -205,9 +196,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -240,7 +230,6 @@ protected:
 	   PtItemArray else_item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenIf();
 
 
@@ -250,40 +239,33 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_GenIf を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
   /// @brief 条件式を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  then_declhead_array() const;
+  then_declhead_array() const override;
 
   /// @brief 条件が成り立ったときに生成される item 配列の取得
-  virtual
   PtItemArray
-  then_item_array() const;
+  then_item_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  else_declhead_array() const;
+  else_declhead_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される item 配列の取得
-  virtual
   PtItemArray
-  else_item_array() const;
+  else_item_array() const override;
 
 
 private:
@@ -322,7 +304,6 @@ protected:
 	     PtGenCaseItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenCase();
 
 
@@ -332,15 +313,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_GenCase を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 
 public:
@@ -349,19 +328,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 比較式を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
-  /// @brief case item の要素数を返す．
-  virtual
-  int
-  size() const;
-
-  /// @brief case item を返す．
-  virtual
-  const PtGenCaseItem*
-  caseitem(int pos) const;
+  /// @brief case item のリストを返す．
+  PtGenCaseItemArray
+  caseitem_list() const override;
 
 
 private:
@@ -398,7 +370,6 @@ protected:
 		 PtItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenCaseItem();
 
 
@@ -408,32 +379,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
-  /// @brief ラベルの数の取得
-  /// @return ラベル数\n
-  /// 0 の時は default の意味
-  virtual
-  int
-  label_num() const;
-
-  /// @brief ラベルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-  virtual
-  const PtExpr*
-  label(int pos) const;
+  /// @brief ラベルのリストの取得
+  PtExprArray
+  label_list() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief item 配列の取得
-  virtual
   PtItemArray
-  item_array() const;
+  item_array() const override;
 
 
 private:
@@ -474,7 +433,6 @@ protected:
 	    PtItemArray item_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenFor();
 
 
@@ -484,50 +442,41 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_GenFor を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
   /// @brief 名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief item 配列の取得
-  virtual
   PtItemArray
-  item_array() const;
+  item_array() const override;
 
   /// @brief 繰り返し制御用の変数名を返す．
-  virtual
   const char*
-  loop_var() const;
+  loop_var() const override;
 
   /// @brief 初期化文の右辺を返す．
-  virtual
   const PtExpr*
-  init_expr() const;
+  init_expr() const override;
 
   /// @brief 繰り返し条件を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 増加文の右辺を返す．
-  virtual
   const PtExpr*
-  next_expr() const;
+  next_expr() const override;
 
 
 private:

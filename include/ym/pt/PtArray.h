@@ -10,6 +10,7 @@
 
 
 #include "ym/pt/PtP.h"
+#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -23,14 +24,28 @@ class PtArray
 {
 public:
 
+  // 反復子の型
+  using iterator = const T**;
+
+public:
+
   /// @brief 空のコンストラクタ
+  ///
+  /// 要素を持たない配列を表す．
   PtArray();
 
-  /// @brief コンストラクタ
-  /// @param[in] num 要素数
-  /// @param[in] array 配列本体
-  PtArray(int num,
-	  T** array);
+  /// @breif 内容を指定したコンストラクタ
+  /// @param[in] size サイズ
+  /// @param[in] body 配列本体
+  PtArray(SizeType size,
+	  T** body);
+
+  /// コピーコンストラクタ，コピー代入演算子はデフォルトでOK
+  PtArray(const PtArray& src) = default;
+  PtArray&
+  operator=(const PtArray& src) = default;
+
+  // ムーブ系は意味がないのでどうでもいい．
 
   /// @brief デストラクタ
   /// @note このクラスではメモリの開放は行わない．
@@ -41,13 +56,25 @@ public:
 
   /// @brief 要素数の取得
   /// @return 要素数
-  int
+  SizeType
   size() const;
 
   /// @brief 要素の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
   T*
-  operator[](int pos) const;
+  operator[](SizeType pos) const;
+
+  /// @brief 先頭の反復子を返す．
+  iterator
+  begin() const;
+
+  /// @brief 末尾の反復子を返す．
+  iterator
+  end() const;
+
+  /// @brief 配列本体の先頭アドレスを返す．
+  T**
+  _body() const;
 
 
 private:
@@ -56,7 +83,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  int mNum;
+  SizeType mNum;
 
   // ポインタ配列本体
   T** mArray;
@@ -72,20 +99,20 @@ private:
 template <typename T>
 inline
 PtArray<T>::PtArray() :
-  mNum(0),
-  mArray(nullptr)
+  mNum{0},
+  mArray{nullptr}
 {
 }
 
-// @brief コンストラクタ
-// @param[in] num 要素数
-// @param[in] array 配列本体
+// @breif 内容を指定したコンストラクタ
+// @param[in] size サイズ
+// @param[in] body 配列本体
 template <typename T>
 inline
-PtArray<T>::PtArray(int num,
-		    T** array) :
-  mNum(num),
-  mArray(array)
+PtArray<T>::PtArray(SizeType size,
+		    T** body) :
+  mNum{size},
+  mArray{body}
 {
 }
 
@@ -101,7 +128,7 @@ PtArray<T>::~PtArray()
 // @return 要素数
 template <typename T>
 inline
-int
+SizeType
 PtArray<T>::size() const
 {
   return mNum;
@@ -112,9 +139,38 @@ PtArray<T>::size() const
 template <typename T>
 inline
 T*
-PtArray<T>::operator[](int pos) const
+PtArray<T>::operator[](SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < size() );
+
   return mArray[pos];
+}
+
+// @brief 先頭の反復子を返す．
+template <typename T>
+inline
+typename PtArray<T>::iterator
+PtArray<T>::begin() const
+{
+  return &mArray[0];
+}
+
+// @brief 末尾の反復子を返す．
+template <typename T>
+inline
+typename PtArray<T>::iterator
+PtArray<T>::end() const
+{
+  return &mArray[mNum];
+}
+
+// @brief 配列本体の先頭アドレスを返す．
+template <typename T>
+inline
+T**
+PtArray<T>::_body() const
+{
+  return mArray;
 }
 
 END_NAMESPACE_YM_VERILOG

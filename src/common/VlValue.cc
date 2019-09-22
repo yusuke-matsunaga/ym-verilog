@@ -999,9 +999,7 @@ concat(const list<VlValue>& src_list)
 {
   vector<BitVector> bv_array;
   bv_array.reserve(src_list.size());
-  for (list<VlValue>::const_iterator p = src_list.begin();
-       p != src_list.end(); ++ p) {
-    const VlValue& v = *p;
+  for ( const auto& v: src_list ) {
     if ( !v.is_bitvector_conv() ) {
       return VlValue();
     }
@@ -1019,9 +1017,7 @@ concat(const vector<VlValue>& src_list)
 {
   vector<BitVector> bv_array;
   bv_array.reserve(src_list.size());
-  for (vector<VlValue>::const_iterator p = src_list.begin();
-       p != src_list.end(); ++ p) {
-    const VlValue& v = *p;
+  for ( const auto& v: src_list ) {
     if ( !v.is_bitvector_conv() ) {
       return VlValue();
     }
@@ -1039,13 +1035,13 @@ multi_concat(const list<VlValue>& src_list)
 {
   vector<BitVector> bv_array;
   bv_array.reserve(src_list.size());
-  list<VlValue>::const_iterator p = src_list.begin();
-  const VlValue& v0 = *p;
+  auto p = src_list.begin();
+  const auto& v0 = *p;
   if ( !v0.is_bitvector_conv() ) {
     return VlValue();
   }
   for (++ p; p != src_list.end(); ++ p) {
-    const VlValue& v = *p;
+    const auto& v = *p;
     if ( v.is_bitvector_conv() ) {
       return VlValue();
     }
@@ -1064,13 +1060,13 @@ multi_concat(const vector<VlValue>& src_list)
 {
   vector<BitVector> bv_array;
   bv_array.reserve(src_list.size());
-  vector<VlValue>::const_iterator p = src_list.begin();
-  const VlValue& v0 = *p;
+  auto p = src_list.begin();
+  const auto& v0 = *p;
   if ( !v0.is_bitvector_conv() ) {
     return VlValue();
   }
   for (++ p; p != src_list.end(); ++ p) {
-    const VlValue& v = *p;
+    const auto& v = *p;
     if ( v.is_bitvector_conv() ) {
       return VlValue();
     }

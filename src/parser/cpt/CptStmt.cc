@@ -77,7 +77,7 @@ CptStmt::stmt_name() const
 PtNameBranchArray
 CptStmt::namebranch_array() const
 {
-  return PtNameBranchArray();
+  return PtNameBranchArray{};
 }
 
 // @brief 名前の取得
@@ -90,22 +90,11 @@ CptStmt::name() const
   return nullptr;
 }
 
-// @brief 引数の数の取得
-// @return 引数の数
-// @note kEnable/kSysEnable で意味のある関数
-int
-CptStmt::arg_num() const
+// @brief 引数のリストの取得
+PtExprArray
+CptStmt::arg_list() const
 {
-  return 0;
-}
-
-// @brief 引数の取得
-// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-// @note kEnable/kSysEnable で意味のある関数
-const PtExpr*
-CptStmt::arg(int pos) const
-{
-  return nullptr;
+  return PtExprArray{};
 }
 
 // @brief コントロールの取得
@@ -178,23 +167,11 @@ CptStmt::else_body() const
   return nullptr;
 }
 
-// @brief case item の要素数の取得
-// @return case item の要素数
-// kCase/kCaseX/kCaseZ で意味のある関数
-// このクラスでは 0 を返す．
-int
-CptStmt::caseitem_num() const
+// @brief case item のリストの取得
+PtCaseItemArray
+CptStmt::caseitem_list() const
 {
-  return 0;
-}
-
-// @brief case item の取得
-// kCase/kCaseX/kCaseZ で意味のある関数
-// このクラスでは nullptr を返す．
-const PtCaseItem*
-CptStmt::caseitem(int /* pos */) const
-{
-  return nullptr;
+  return PtCaseItemArray{};
 }
 
 // @brief 初期化代入文の取得
@@ -221,7 +198,7 @@ CptStmt::next_stmt() const
 PtDeclHeadArray
 CptStmt::declhead_array() const
 {
-  return PtDeclHeadArray();
+  return PtDeclHeadArray{};
 }
 
 // @brief 子供のステートメント配列の取得
@@ -229,7 +206,7 @@ CptStmt::declhead_array() const
 PtStmtArray
 CptStmt::stmt_array() const
 {
-  return PtStmtArray();
+  return PtStmtArray{};
 }
 
 
@@ -319,22 +296,11 @@ CptEnableBase::name() const
   return mName;
 }
 
-// @brief 引数の数の取得
-// @return 引数の数
-// @note kEnable/kSysEnable で意味のある関数
-int
-CptEnableBase::arg_num() const
+// @brief 引数のリストの取得
+PtExprArray
+CptEnableBase::arg_list() const
 {
-  return mArgArray.size();
-}
-
-// @brief 引数の取得
-// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-// @note kEnable/kSysEnable で意味のある関数
-const PtExpr*
-CptEnableBase::arg(int pos) const
-{
-  return mArgArray[pos];
+  return mArgArray;
 }
 
 
@@ -427,8 +393,8 @@ CptCtrlStmt::CptCtrlStmt(const FileRegion& file_region,
   mDelay(delay),
   mBody(body)
 {
-  ASSERT_COND(delay );
-  ASSERT_COND(body );
+  ASSERT_COND( delay );
+  ASSERT_COND( body );
 }
 
 // デストラクタ
@@ -507,14 +473,14 @@ CptEcStmt::type() const
 
 // コンストラクタ
 CptWait::CptWait(const FileRegion& file_region,
-		 const PtExpr* cond,
+		 const PtExpr* expr,
 		 const PtStmt* body) :
   CptStmt(file_region),
-  mCond(cond),
+  mExpr(expr),
   mBody(body)
 {
-  ASSERT_COND(cond );
-  ASSERT_COND(body );
+  ASSERT_COND( expr );
+  ASSERT_COND( body );
 }
 
 // デストラクタ
@@ -531,9 +497,9 @@ CptWait::type() const
 
 // 条件を返す．
 const PtExpr*
-CptWait::cond() const
+CptWait::expr() const
 {
-  return mCond;
+  return mExpr;
 }
 
 // 実行すべき本体を返す．
@@ -581,7 +547,7 @@ CptAssign::CptAssign(const FileRegion& file_region,
   CptAssignBase(file_region, lhs),
   mRhs(rhs)
 {
-  ASSERT_COND(rhs );
+  ASSERT_COND( rhs );
 }
 
 // デストラクタ
@@ -616,7 +582,7 @@ CptAssignC::CptAssignC(const FileRegion& file_region,
   CptAssign(file_region, lhs, rhs),
   mControl(control)
 {
-  ASSERT_COND(control );
+  ASSERT_COND( control );
 }
 
 // デストラクタ
@@ -694,7 +660,7 @@ CptPcAssign::CptPcAssign(const FileRegion& file_region,
   CptAssignBase(file_region, lhs),
   mRhs(rhs)
 {
-  ASSERT_COND(rhs );
+  ASSERT_COND( rhs );
 }
 
 // デストラクタ
@@ -800,7 +766,7 @@ CptEventStmt::CptEventStmt(const FileRegion& file_region,
   CptStmt(file_region),
   mPrimary(event)
 {
-  ASSERT_COND(event );
+  ASSERT_COND( event );
 }
 
 // デストラクタ
@@ -858,7 +824,7 @@ CptIf::CptIf(const FileRegion& file_region,
   mCond(expr),
   mThen(then_body)
 {
-  ASSERT_COND(expr );
+  ASSERT_COND( expr );
 }
 
 // デストラクタ
@@ -900,7 +866,7 @@ CptIfElse::CptIfElse(const FileRegion& file_region,
   CptIf(file_region, expr, then_body),
   mElse(else_body)
 {
-  ASSERT_COND(expr );
+  ASSERT_COND( expr );
 }
 
 // デストラクタ
@@ -928,7 +894,7 @@ CptCase::CptCase(const FileRegion& file_region,
   mExpr(expr),
   mCaseItemArray(caseitem_array)
 {
-  ASSERT_COND(expr );
+  ASSERT_COND( expr );
 }
 
 // デストラクタ
@@ -950,18 +916,11 @@ CptCase::expr() const
   return mExpr;
 }
 
-// case item の要素数を返す．
-int
-CptCase::caseitem_num() const
+// @brief case item のリストの取得
+PtCaseItemArray
+CptCase::caseitem_list() const
 {
-  return mCaseItemArray.size();
-}
-
-// case item を返す．
-const PtCaseItem*
-CptCase::caseitem(int pos) const
-{
-  return mCaseItemArray[pos];
+  return mCaseItemArray;
 }
 
 
@@ -1027,7 +986,7 @@ CptCaseItem::CptCaseItem(const FileRegion& file_region,
   mLabelArray(label_array),
   mBody(body)
 {
-  ASSERT_COND(body );
+  ASSERT_COND( body );
 }
 
 // デストラクタ
@@ -1042,20 +1001,11 @@ CptCaseItem::file_region() const
   return mFileRegion;
 }
 
-// ラベルの数を得る．
-// 0 の時は '*' の意味
-int
-CptCaseItem::label_num() const
+// @brief ラベルのリストの取得
+PtExprArray
+CptCaseItem::label_list() const
 {
-  return mLabelArray.size();
-}
-
-// @brief ラベルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-const PtExpr*
-CptCaseItem::label(int pos) const
-{
-  return mLabelArray[pos];
+  return mLabelArray;
 }
 
 // 本体のステートメント得る．
@@ -1076,7 +1026,7 @@ CptLoopStmt::CptLoopStmt(const FileRegion& file_region,
   CptStmt(file_region),
   mBody(body)
 {
-  ASSERT_COND(body );
+  ASSERT_COND( body );
 }
 
 // デストラクタ
@@ -1127,7 +1077,7 @@ CptRepeat::CptRepeat(const FileRegion& file_region,
   CptLoopStmt(file_region, body),
   mExpr(expr)
 {
-  ASSERT_COND(expr );
+  ASSERT_COND( expr );
 }
 
 // デストラクタ
@@ -1156,9 +1106,9 @@ CptRepeat::expr() const
 
 // コンストラクタ
 CptWhile::CptWhile(const FileRegion& file_region,
-		   const PtExpr* cond,
+		   const PtExpr* expr,
 		   const PtStmt* body) :
-  CptRepeat(file_region, cond, body)
+  CptRepeat(file_region, expr, body)
 {
 }
 
@@ -1189,8 +1139,8 @@ CptFor::CptFor(const FileRegion& file_region,
   mInit(init),
   mNext(next)
 {
-  ASSERT_COND(init );
-  ASSERT_COND(next );
+  ASSERT_COND( init );
+  ASSERT_COND( next );
 }
 
 // デストラクタ

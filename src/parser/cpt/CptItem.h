@@ -29,7 +29,6 @@ protected:
   CptItem();
 
   /// @brief デストラクタ
-  virtual
   ~CptItem();
 
 
@@ -41,223 +40,177 @@ public:
   /// @brief プリミティブタイプの取得
   /// @return プリミティブタイプ
   /// @note このクラスでは kVpiAndPrim を返す．
-  virtual
   tVpiPrimType
-  prim_type() const;
+  prim_type() const override;
 
   /// @brief strength の取得
   /// @return 信号強度
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay の取得
   /// @return 遅延
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
   /// @brief パラメータ割り当てリストの取得
-  virtual
   PtConnectionArray
-  paramassign_array() const;
+  paramassign_array() const override;
 
-  /// @brief 要素数の取得
-  /// @return 要素数
-  /// @note このクラスでは 0 を返す．
-  virtual
-  int
-  size() const;
+  /// @brief defparam のリストの取得
+  PtDefParamArray
+  defparam_list() const override;
 
-  /// @brief defparam 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtDefParam*
-  defparam(int pos) const;
+  /// @brief continuous assign のリストの取得
+  PtContAssignArray
+  contassign_list() const override;
 
-  /// @brief continuous assign 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtContAssign*
-  contassign(int pos) const;
-
-  /// @brief module/UDP/gate instance 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtInst*
-  inst(int pos) const;
+  /// @brief module/UDP/gate instance リストの取得
+  PtInstArray
+  inst_list() const override;
 
   /// @brief automatic 情報の取得
   /// @retval true automatic 宣言された task/function
   /// @retval false 上記以外
-  virtual
   bool
-  automatic() const;
+  automatic() const override;
 
   /// @brief 名前の取得
   /// @return 名前
   /// @note このクラスでは nullptr を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief IO宣言の要素数の取得
-  virtual
   int
-  ioitem_num() const;
+  ioitem_num() const override;
 
   /// @brief IO宣言リストの配列の取得
-  virtual
   PtIOHeadArray
-  iohead_array() const;
+  iohead_array() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief item 配列の取得
-  virtual
   PtItemArray
-  item_array() const;
+  item_array() const override;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲の左側の式の取得
   /// @return 範囲の左側の式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲の右側の式の取得
   /// @return 範囲の右側の式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
   /// @brief 戻値のデータ型の取得
   /// @return 戻値のデータ型
   /// @note このクラスでは kVpiVarNone を返す．
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// @brief constant function の展開中の印をつける．
   /// @note このクラスではなにもしない．
-  virtual
   void
-  set_in_use() const;
+  set_in_use() const override;
 
   /// @brief constant function の展開中の印を消す．
   /// @note このクラスではなにもしない．
-  virtual
   void
-  clear_in_use() const;
+  clear_in_use() const override;
 
   /// @brief 使用中(constant function として展開中)のチェック
   /// @return 使用中の時 true を返す．
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_in_use() const;
+  is_in_use() const override;
 
   /// @brief specify block item の種類の取得
   /// @return specify block item の種類
   /// @note このクラスでは kVpiPulsestyleOnEvent を返す．
-  virtual
   tVpiSpecItemType
-  specitem_type() const;
+  specitem_type() const override;
 
   /// @brief specify block path の種類の取得
   /// @return specify block path の種類
   /// @note このクラスでは kVpiSpecPathNull を返す．
-  virtual
   tVpiSpecPathType
-  specpath_type() const;
+  specpath_type() const override;
 
-  /// @brief ターミナルの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtExpr*
-  terminal(int pos) const;
+  /// @brief ターミナルのリストの取得
+  PtExprArray
+  terminal_list() const override;
 
   /// @brief パス記述の取得
   /// @return パス記述
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtPathDecl*
-  path_decl() const;
+  path_decl() const override;
 
   /// @brief 条件式の取得
   /// @return 条件式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  then_declhead_array() const;
+  then_declhead_array() const override;
 
   /// @brief 条件が成り立ったときに生成される item 配列の取得
-  virtual
   PtItemArray
-  then_item_array() const;
+  then_item_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  else_declhead_array() const;
+  else_declhead_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される item 配列の取得
-  virtual
   PtItemArray
-  else_item_array() const;
+  else_item_array() const override;
 
-  /// @brief case item の取得
-  /// @note このクラスでは nullptr を返す．
-  virtual
-  const PtGenCaseItem*
-  caseitem(int pos) const;
+  /// @brief case item のリストの取得
+  PtGenCaseItemArray
+  caseitem_list() const override;
 
   /// @brief 繰り返し制御用の変数名の取得
   /// @return 繰り返し制御用の変数名
   /// @note このクラスでは nullptr を返す．
-  virtual
   const char*
-  loop_var() const;
+  loop_var() const override;
 
   /// @brief 初期化文の右辺の取得
   /// @return 初期化文の右辺
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  init_expr() const;
+  init_expr() const override;
 
   /// @brief 増加文の右辺の取得
   /// @return 増加文の右辺
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  next_expr() const;
+  next_expr() const override;
 
 };
 
@@ -277,7 +230,6 @@ protected:
 	       PtDefParamArray dp_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptDefParamH();
 
 
@@ -287,26 +239,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_DefParam を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
-  /// @brief 要素数を返す．
-  virtual
-  int
-  size() const;
-
-  /// @brief defparam 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtDefParam*
-  defparam(int pos) const;
+  /// @brief defparam リストの取得
+  PtDefParamArray
+  defparam_list() const override;
 
 
 private:
@@ -341,7 +284,6 @@ protected:
 	      const PtExpr* value);
 
   /// @brief デストラクタ
-  virtual
   ~CptDefParam();
 
 
@@ -352,25 +294,22 @@ public:
 
   /// @brief ファイル位置の取得
   /// @return ファイル位置
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 階層ブランチの取得
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
   /// @brief 末尾の名前の取得
   /// @return 末尾の名前
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief 値の取得
   /// @return 値を表す式
-  virtual
   const PtExpr*
-  expr() const;
+  expr() const override;
 
 
 private:
@@ -408,7 +347,6 @@ protected:
 		 PtContAssignArray ca_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptContAssignH();
 
 
@@ -418,26 +356,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_ContAssign を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
-  /// @brief 要素数を得る．
-  virtual
-  int
-  size() const;
-
-  /// @brief continuous assign 要素の取得
+  /// @brief continuous assign リストの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  virtual
-  const PtContAssign*
-  contassign(int pos) const;
+  PtContAssignArray
+  contassign_list() const override;
 
 
 private:
@@ -470,7 +400,6 @@ protected:
 		  PtContAssignArray ca_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptContAssignHS();
 
 
@@ -480,9 +409,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief strength を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
 
 private:
@@ -512,7 +440,6 @@ protected:
 		  PtContAssignArray ca_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptContAssignHD();
 
 
@@ -522,9 +449,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief delay を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -555,7 +481,6 @@ protected:
 		   PtContAssignArray ca_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptContAssignHSD();
 
 
@@ -565,14 +490,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief strength を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -604,7 +527,6 @@ protected:
 		const PtExpr* rhs);
 
   /// @brief デストラクタ
-  virtual
   ~CptContAssign();
 
 
@@ -614,19 +536,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を取り出す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 左辺式を取り出す．
-  virtual
   const PtExpr*
-  lhs() const;
+  lhs() const override;
 
   /// @brief 右辺式を取り出す．
-  virtual
   const PtExpr*
-  rhs() const;
+  rhs() const override;
 
 
 private:
@@ -658,7 +577,6 @@ protected:
 	     const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptProcess();
 
 
@@ -668,14 +586,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を取り出す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 本体のステートメントを返す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -707,7 +623,6 @@ protected:
 	     const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptInitial();
 
 
@@ -718,9 +633,8 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_Initial を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 };
 
@@ -740,7 +654,6 @@ protected:
 	    const PtStmt* body);
 
   /// @brief デストラクタ
-  virtual
   ~CptAlways();
 
 
@@ -751,9 +664,8 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_Always を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 };
 
@@ -775,7 +687,6 @@ protected:
 	const PtStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~CptTf();
 
 
@@ -785,39 +696,28 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 名前を取り出す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief automatic なら true
-  virtual
   bool
-  automatic() const;
-
-  /// @brief IO宣言の要素数の取得
-  virtual
-  int
-  ioitem_num() const;
+  automatic() const override;
 
   /// @brief IO宣言リストの配列の取得
-  virtual
   PtIOHeadArray
-  iohead_array() const;
+  iohead_array() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  virtual
   PtDeclHeadArray
-  declhead_array() const;
+  declhead_array() const override;
 
   /// @brief 本体を取り出す．
-  virtual
   const PtStmt*
-  body() const;
+  body() const override;
 
 
 private:
@@ -868,7 +768,6 @@ private:
 	  const PtStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~CptTask();
 
 
@@ -879,9 +778,8 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_Task を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 };
 
@@ -906,7 +804,6 @@ protected:
 	      const PtStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~CptFunction();
 
 
@@ -917,9 +814,8 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kPtItem_Function を返す．
-  virtual
   tPtItemType
-  type() const;
+  type() const override;
 
 
 public:
@@ -928,24 +824,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 符号の有無
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief constant function の展開中の印をつける．
-  virtual
   void
-  set_in_use() const;
+  set_in_use() const override;
 
   /// @brief constant function の展開中の印を消す．
-  virtual
   void
-  clear_in_use() const;
+  clear_in_use() const override;
 
   /// @brief 使用中(constant function として展開中)の時 true を返す．
-  virtual
   bool
-  is_in_use() const;
+  is_in_use() const override;
 
 
 private:
@@ -984,7 +876,6 @@ protected:
 	       const PtStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~CptSizedFunc();
 
 
@@ -994,14 +885,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲の MSB を得る．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲の LSB を得る．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -1039,7 +928,6 @@ protected:
 	       const PtStmt* stmt);
 
   /// @brief デストラクタ
-  virtual
   ~CptTypedFunc();
 
 
@@ -1049,9 +937,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 戻値の型を返す．
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
 
 private:

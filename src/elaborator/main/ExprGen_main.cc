@@ -56,7 +56,7 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
 	  pt_expr->op_type() == kVlNullOp ) {
-    pt_expr = pt_expr->operand(0);
+    pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
@@ -116,7 +116,7 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
 	  pt_expr->op_type() == kVlNullOp ) {
-    pt_expr = pt_expr->operand(0);
+    pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
@@ -126,7 +126,7 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
     case kVlNegedgeOp:
       { // これのみがイベント式の特徴
 	ASSERT_COND(pt_expr->operand_num() == 1 );
-	ElbExpr* opr0 = instantiate_expr(parent, env, pt_expr->operand(0));
+	ElbExpr* opr0 = instantiate_expr(parent, env, pt_expr->operand0());
 	if ( !opr0 ) {
 	  return nullptr;
 	}
@@ -194,7 +194,7 @@ ExprGen::instantiate_arg(const VlNamedObj* parent,
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
 	  pt_expr->op_type() == kVlNullOp ) {
-    pt_expr = pt_expr->operand(0);
+    pt_expr = pt_expr->operand0();
   }
 
   if ( pt_expr->type() == kPtPrimaryExpr ) {
@@ -221,10 +221,10 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
     // 左辺では concatination しか適当でない．
     if ( pt_expr->op_type() == kVlConcatOp ) {
       vector<ElbExpr*> elem_array;
-      ymuint opr_size = pt_expr->operand_num();
+      SizeType opr_size = pt_expr->operand_num();
       ElbExpr** opr_list = factory().new_ExprList(opr_size);
-      for (ymuint i = 0; i < opr_size; ++ i) {
-	ymuint pos = opr_size - i - 1;
+      for ( SizeType i = 0; i < opr_size; ++ i ) {
+	SizeType pos = opr_size - i - 1;
 	const PtExpr* pt_expr1 = pt_expr->operand(pos);
 	vector<ElbExpr*> tmp_array;
 	ElbExpr* expr1 = instantiate_lhs_sub(parent, env, pt_expr1, tmp_array);
@@ -234,9 +234,9 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
 	opr_list[pos] = expr1;
 	elem_array.insert(elem_array.end(), tmp_array.begin(), tmp_array.end());
       }
-      ymuint n = elem_array.size();
+      SizeType n = elem_array.size();
       ElbExpr** lhs_elem_array = factory().new_ExprList(n);
-      for (ymuint i = 0; i < n; ++ i) {
+      for ( SizeType i = 0; i < n; ++ i ) {
 	lhs_elem_array[i] = elem_array[i];
       }
       ElbExpr* expr = factory().new_Lhs(pt_expr, opr_size, opr_list,
@@ -298,10 +298,10 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
   case kPtOprExpr:
     // 左辺では concatination しか適当でない．
     if ( pt_expr->op_type() == kVlConcatOp ) {
-      ymuint opr_size = pt_expr->operand_num();
+      SizeType opr_size = pt_expr->operand_num();
       ElbExpr** opr_list = factory().new_ExprList(opr_size);
-      for (ymuint i = 0; i < opr_size; ++ i) {
-	ymuint pos = opr_size - i - 1;
+      for ( SizeType i = 0; i < opr_size; ++ i ) {
+	SizeType pos = opr_size - i - 1;
 	const PtExpr* pt_expr1 = pt_expr->operand(pos);
 	vector<ElbExpr*> tmp_array;
 	ElbExpr* expr1 = instantiate_lhs_sub(parent, env, pt_expr1, tmp_array);
@@ -458,7 +458,7 @@ ExprGen::evaluate_expr(const VlNamedObj* parent,
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
 	  pt_expr->op_type() == kVlNullOp ) {
-    pt_expr = pt_expr->operand(0);
+    pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
@@ -494,9 +494,9 @@ VlValue
 ExprGen::evaluate_const(const VlNamedObj* parent,
 			const PtExpr* pt_expr)
 {
-  ymuint size = pt_expr->const_size();
+  SizeType size = pt_expr->const_size();
   bool is_signed = false;
-  ymuint base = 0;
+  SizeType base = 0;
   switch ( pt_expr->const_type() ) {
   case kVpiIntConst:
     if ( pt_expr->const_str() == nullptr ) {
@@ -550,7 +550,7 @@ ElbDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtDelay* pt_delay)
 {
-  ymuint n = 0;
+  SizeType n = 0;
   const PtExpr* expr_array[3];
   for ( ; n < 3; ++ n) {
     const PtExpr* expr = pt_delay->value(n);
@@ -571,7 +571,7 @@ ElbDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtItem* pt_header)
 {
-  ymuint n = pt_header->paramassign_array().size();
+  SizeType n = pt_header->paramassign_array().size();
   ASSERT_COND( n == 1 );
 
   const PtExpr* expr_array[1];
@@ -590,7 +590,7 @@ ExprGen::instantiate_delay(const VlNamedObj* parent,
 ElbDelay*
 ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
 			       const PtBase* pt_obj,
-			       ymuint n,
+			       SizeType n,
 			       const PtExpr* expr_array[])
 {
   ASSERT_COND( n <= 3 );
@@ -598,7 +598,7 @@ ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
   // TODO : 環境の条件をチェック
   ElbEnv env;
   ElbExpr** expr_list = factory().new_ExprList(n);
-  for (ymuint i = 0; i < n; ++ i) {
+  for ( SizeType i = 0; i < n; ++ i ) {
     const PtExpr* pt_expr = expr_array[i];
     ElbExpr* expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {

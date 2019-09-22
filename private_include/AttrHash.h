@@ -55,7 +55,7 @@ public:
        bool def) const;
 
   /// @brief このオブジェクトが使用しているメモリ量を返す．
-  ymuint
+  SizeType
   allocated_size() const;
 
 
@@ -92,10 +92,10 @@ private:
 
   /// @brief テーブルの領域を確保する．
   void
-  alloc_table(ymuint size);
+  alloc_table(SizeType size);
 
   /// @brief ハッシュ値を計算する．
-  ymuint
+  SizeType
   hash_func(const VlObj* obj) const;
 
 
@@ -108,16 +108,16 @@ private:
   Alloc& mAlloc;
 
   // ハッシュ表のサイズ
-  ymuint32 mSize;
+  SizeType mSize;
 
   // ハッシュ表
   Cell** mTable;
 
   // ハッシュ表を拡大するしきい値
-  ymuint32 mLimit;
+  SizeType mLimit;
 
   // 要素数
-  ymuint32 mNum;
+  SizeType mNum;
 
 };
 

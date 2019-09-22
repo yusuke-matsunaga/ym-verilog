@@ -54,17 +54,38 @@ CptExpr::name() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 CptExpr::operand_num() const
 {
   return 0;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptExpr::operand0() const
+{
+  return nullptr;
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptExpr::operand1() const
+{
+  return nullptr;
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptExpr::operand2() const
+{
+  return nullptr;
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptExpr::operand(int pos) const
+CptExpr::operand(SizeType pos) const
 {
   return nullptr;
 }
@@ -81,7 +102,7 @@ CptExpr::is_const_index() const
 
 // @brief インデックスリストのサイズの取得
 // @return インデックスリストのサイズ
-int
+SizeType
 CptExpr::index_num() const
 {
   return 0;
@@ -90,7 +111,7 @@ CptExpr::index_num() const
 // @brief インデックスの取得
 // @param[in] pos 位置番号 ( 0 <= pos < index_num() )
 const PtExpr*
-CptExpr::index(int pos) const
+CptExpr::index(SizeType pos) const
 {
   return nullptr;
 }
@@ -241,7 +262,7 @@ CptOpr1::CptOpr1(const FileRegion& file_region,
   mFileRegion(file_region),
   mOpr(opr)
 {
-  ASSERT_COND(opr );
+  ASSERT_COND( opr );
 }
 
 // デストラクタ
@@ -262,7 +283,7 @@ CptOpr1::is_index_expr() const
 {
   // 算術演算はOKだけどめんどくさいので単項のマイナスのみOKとする．
   if ( op_type() == kVlNullOp || op_type() == kVlMinusOp ) {
-    return operand(0)->is_index_expr();
+    return operand0()->is_index_expr();
   }
   else {
     return false;
@@ -275,10 +296,10 @@ CptOpr1::index_value() const
 {
   switch ( op_type() ) {
   case kVlNullOp:
-    return operand(0)->index_value();
+    return operand0()->index_value();
 
   case kVlMinusOp:
-    return - operand(0)->index_value();
+    return - operand0()->index_value();
 
   default:
     break;
@@ -288,17 +309,38 @@ CptOpr1::index_value() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 CptOpr1::operand_num() const
 {
   return 1;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptOpr1::operand0() const
+{
+  return mOpr;
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptOpr1::operand1() const
+{
+  return nullptr;
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptOpr1::operand2() const
+{
+  return nullptr;
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptOpr1::operand(int pos) const
+CptOpr1::operand(SizeType pos) const
 {
   if ( pos == 0 ) {
     return mOpr;
@@ -317,12 +359,11 @@ CptOpr1::operand(int pos) const
 CptOpr2::CptOpr2(tVlOpType op_type,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2) :
-  CptOpr(op_type)
+  CptOpr(op_type),
+  mOpr{opr1, opr2}
 {
-  mOpr[0] = opr1;
-  mOpr[1] = opr2;
-  ASSERT_COND(opr1 );
-  ASSERT_COND(opr2 );
+  ASSERT_COND( opr1 );
+  ASSERT_COND( opr2 );
 }
 
 // デストラクタ
@@ -339,17 +380,38 @@ CptOpr2::file_region() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 CptOpr2::operand_num() const
 {
   return 2;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptOpr2::operand0() const
+{
+  return mOpr[0];
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptOpr2::operand1() const
+{
+  return mOpr[1];
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptOpr2::operand2() const
+{
+  return nullptr;
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptOpr2::operand(int pos) const
+CptOpr2::operand(SizeType pos) const
 {
   if ( pos < 2 ) {
     return mOpr[pos];
@@ -369,14 +431,12 @@ CptOpr3::CptOpr3(tVlOpType op_type,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2,
 		 const PtExpr* opr3) :
-  CptOpr(op_type)
+  CptOpr(op_type),
+  mOpr{opr1, opr2, opr3}
 {
-  mOpr[0] = opr1;
-  mOpr[1] = opr2;
-  mOpr[2] = opr3;
-  ASSERT_COND(opr1 );
-  ASSERT_COND(opr2 );
-  ASSERT_COND(opr3 );
+  ASSERT_COND( opr1 );
+  ASSERT_COND( opr2 );
+  ASSERT_COND( opr3 );
 }
 
 // デストラクタ
@@ -393,17 +453,38 @@ CptOpr3::file_region() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 CptOpr3::operand_num() const
 {
   return 3;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptOpr3::operand0() const
+{
+  return mOpr[0];
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptOpr3::operand1() const
+{
+  return mOpr[1];
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptOpr3::operand2() const
+{
+  return mOpr[2];
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptOpr3::operand(int pos) const
+CptOpr3::operand(SizeType pos) const
 {
   if ( pos < 3 ) {
     return mOpr[pos];
@@ -454,19 +535,60 @@ CptConcat::op_type() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 CptConcat::operand_num() const
 {
   return mExprArray.size();
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptConcat::operand0() const
+{
+  if ( operand_num() > 0 ) {
+    return mExprArray[0];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptConcat::operand1() const
+{
+  if ( operand_num() > 1 ) {
+    return mExprArray[1];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptConcat::operand2() const
+{
+  if ( operand_num() > 2 ) {
+    return mExprArray[2];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptConcat::operand(int pos) const
+CptConcat::operand(SizeType pos) const
 {
-  return mExprArray[pos];
+  if ( operand_num() > pos ) {
+    return mExprArray[pos];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 
@@ -501,14 +623,12 @@ CptMultiConcat::op_type() const
 // コンストラクタ
 CptMinTypMax::CptMinTypMax(const PtExpr* val0,
 			   const PtExpr* val1,
-			   const PtExpr* val2)
+			   const PtExpr* val2) :
+  mValue{val0, val1, val2}
 {
-  mValue[0] = val0;
-  mValue[1] = val1;
-  mValue[2] = val2;
-  ASSERT_COND(val0 );
-  ASSERT_COND(val1 );
-  ASSERT_COND(val2 );
+  ASSERT_COND( val0 );
+  ASSERT_COND( val1 );
+  ASSERT_COND( val2 );
 }
 
 // デストラクタ
@@ -538,10 +658,31 @@ CptMinTypMax::op_type() const
 }
 
 // 子供の数の取得
-int
+SizeType
 CptMinTypMax::operand_num() const
 {
   return 3;
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptMinTypMax::operand0() const
+{
+  return mValue[0];
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptMinTypMax::operand1() const
+{
+  return mValue[1];
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptMinTypMax::operand2() const
+{
+  return mValue[2];
 }
 
 // 値(式)を取出す．
@@ -549,7 +690,7 @@ CptMinTypMax::operand_num() const
 //     = 1 : Typ
 //     = 2 : Max
 const PtExpr*
-CptMinTypMax::operand(int idx) const
+CptMinTypMax::operand(SizeType idx) const
 {
   if ( idx < 3 ) {
     return mValue[idx];
@@ -595,19 +736,60 @@ CptFuncCallBase::name() const
 
 // @brief オペランドの数の取得
 // @return 子供の数
-int
+SizeType
 CptFuncCallBase::operand_num() const
 {
   return mArgArray.size();
+}
+
+// @brief 0番目のオペランドの取得
+const PtExpr*
+CptFuncCallBase::operand0() const
+{
+  if ( operand_num() > 0 ) {
+    return mArgArray[0];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 1番目のオペランドの取得
+const PtExpr*
+CptFuncCallBase::operand1() const
+{
+  if ( operand_num() > 1 ) {
+    return mArgArray[1];
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 2番目のオペランドの取得
+const PtExpr*
+CptFuncCallBase::operand2() const
+{
+  if ( operand_num() > 2 ) {
+    return mArgArray[2];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief オペランドの取得
 // @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
 // @return pos 番目のオペランド
 const PtExpr*
-CptFuncCallBase::operand(int pos) const
+CptFuncCallBase::operand(SizeType pos) const
 {
-  return mArgArray[pos];
+  if ( operand_num() > pos ) {
+    return mArgArray[pos];
+  }
+  else {
+    return nullptr;
+  }
 }
 
 

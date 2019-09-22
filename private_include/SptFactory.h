@@ -50,7 +50,7 @@ public:
   const PtUdp*
   new_CmbUdp(const FileRegion& file_region,
 	     const char* name,
-	     PtiPortArray port_array,
+	     PtPortArray port_array,
 	     PtIOHeadArray iohead_array,
 	     PtUdpEntryArray entry_array);
 
@@ -66,7 +66,7 @@ public:
   const PtUdp*
   new_SeqUdp(const FileRegion& file_region,
 	     const char* name,
-	     PtiPortArray port_array,
+	     PtPortArray port_array,
 	     PtIOHeadArray iohead_array,
 	     const PtExpr* init_value,
 	     PtUdpEntryArray entry_array);
@@ -169,7 +169,7 @@ public:
 	     const string& library,
 	     const string& cell,
 	     PtDeclHeadArray paramport_array,
-	     PtiPortArray port_array,
+	     PtPortArray port_array,
 	     PtIOHeadArray iodecl_array,
 	     PtDeclHeadArray decl_array,
 	     PtItemArray item_array);

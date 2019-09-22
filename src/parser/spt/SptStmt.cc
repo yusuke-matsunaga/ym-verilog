@@ -46,20 +46,20 @@ SptStmt::SptStmt(const FileRegion& file_region,
 		 PtDeclHeadArray decl_array,
 		 PtStmtArray stmt_array,
 		 PtExprArray arg_array) :
-  mFileRegion(file_region),
-  mType(type),
-  mNbArray(nb_array),
-  mName(name),
-  mControl(control),
-  mBody1(body1),
-  mBody2(body2),
-  mBody3(body3),
-  mExpr1(expr1),
-  mExpr2(expr2),
-  mCaseItemArray(caseitem_array),
-  mDeclArray(decl_array),
-  mStmtArray(stmt_array),
-  mArgArray(arg_array)
+  mFileRegion{file_region},
+  mType{type},
+  mNbArray{nb_array},
+  mName{name},
+  mControl{control},
+  mBody1{body1},
+  mBody2{body2},
+  mBody3{body3},
+  mExpr1{expr1},
+  mExpr2{expr2},
+  mCaseItemArray{caseitem_array},
+  mDeclArray{decl_array},
+  mStmtArray{stmt_array},
+  mArgArray{arg_array}
 {
 }
 
@@ -137,22 +137,11 @@ SptStmt::name() const
   return mName;
 }
 
-// @brief 引数の数の取得
-// @return 引数の数
-// @note kEnable/kSysEnable で意味のある関数
-int
-SptStmt::arg_num() const
+// @brief 引数のリストの取得
+PtExprArray
+SptStmt::arg_list() const
 {
-  return mArgArray.size();
-}
-
-// @brief 引数の取得
-// @param[in] pos 位置番号 ( 0 <= pos < arg_num() )
-// @note kEnable/kSysEnable で意味のある関数
-const PtExpr*
-SptStmt::arg(int pos) const
-{
-  return mArgArray[pos];
+  return mArgArray;
 }
 
 // コントロールの取得
@@ -218,21 +207,11 @@ SptStmt::else_body() const
   return mBody2;
 }
 
-// case item の要素数の取得
-// @return case item の要素数
-// kCase/kCaseX/kCaseZ で意味のある関数
-int
-SptStmt::caseitem_num() const
+// @brief case item のリストの取得
+PtCaseItemArray
+SptStmt::caseitem_list() const
 {
-  return mCaseItemArray.size();
-}
-
-// case item の取得
-// kCase/kCaseX/kCaseZ で意味のある関数
-const PtCaseItem*
-SptStmt::caseitem(int pos) const
-{
-  return mCaseItemArray[pos];
+  return mCaseItemArray;
 }
 
 // 初期化代入文の取得
@@ -278,11 +257,11 @@ SptStmt::stmt_array() const
 SptCaseItem::SptCaseItem(const FileRegion& file_region,
 			 PtExprArray label_array,
 			 const PtStmt* body) :
-  mFileRegion(file_region),
-  mLabelArray(label_array),
-  mBody(body)
+  mFileRegion{file_region},
+  mLabelArray{label_array},
+  mBody{body}
 {
-  ASSERT_COND(body );
+  ASSERT_COND( body );
 }
 
 // デストラクタ
@@ -297,21 +276,11 @@ SptCaseItem::file_region() const
   return mFileRegion;
 }
 
-// @brief ラベルの数の取得
-// @retval ラベルの数 通常の case ラベルの場合
-// @retval 0 default の場合
-int
-SptCaseItem::label_num() const
+// @brief ラベルのリストの取得
+PtExprArray
+SptCaseItem::label_list() const
 {
-  return mLabelArray.size();
-}
-
-// @brief ラベルの取得
-// @param[in] pos 位置番号 ( 0 <= pos < label_num() )
-const PtExpr*
-SptCaseItem::label(int pos) const
-{
-  return mLabelArray[pos];
+  return mLabelArray;
 }
 
 // 本体のステートメント得る．

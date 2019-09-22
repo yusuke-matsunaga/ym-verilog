@@ -13,6 +13,7 @@
 
 #include "ym/BitVector.h"
 #include "ym/pt/PtStmt.h"
+#include "ym/pt/PtArray.h"
 
 
 
@@ -165,7 +166,7 @@ EiFactory::new_CaseStmt(const VlNamedObj* parent,
 			const PtStmt* pt_stmt,
 			ElbExpr* expr)
 {
-  int caseitem_num = pt_stmt->caseitem_num();
+  int caseitem_num = pt_stmt->caseitem_list().size();
 
   void* q = mAlloc.get_memory(sizeof(EiCaseItem) * caseitem_num);
   EiCaseItem* array = new (q) EiCaseItem[caseitem_num];
@@ -647,7 +648,7 @@ EiCaseStmt::set_caseitem(int pos,
 {
   EiCaseItem& ci = mCaseItemList[pos];
   ci.mPtCaseItem = pt_caseitem;
-  ci.mExprNum = pt_caseitem->label_num();
+  ci.mExprNum = pt_caseitem->label_list().size();
   ci.mExprList = expr_array;
   ci.mBodyStmt = stmt;
 }

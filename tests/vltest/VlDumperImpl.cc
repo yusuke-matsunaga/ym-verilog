@@ -107,14 +107,12 @@ void
 VlDumperImpl::put(const VlMgr& mgr)
 {
   // UDP を出力する．
-  const list<const VlUdpDefn*>& udp_list = mgr.udp_list();
-  for (list<const VlUdpDefn*>::const_iterator p = udp_list.begin();
-       p != udp_list.end(); ++ p) {
-    put_udp_defn("UDP", mgr, *p);
+  for ( auto udp: mgr.udp_list() ) {
+    put_udp_defn("UDP", mgr, udp);
   }
 
   // トップモジュールから順にモジュールを出力する．
-  list<const VlModule*> tmp_list(mgr.topmodule_list());
+  vector<const VlModule*> tmp_list(mgr.topmodule_list());
   while ( !tmp_list.empty() ) {
     const VlModule* module = tmp_list.front();
     tmp_list.pop_front();
@@ -122,19 +120,15 @@ VlDumperImpl::put(const VlMgr& mgr)
 
     vector<const VlModule*> module_list;
     if ( mgr.find_module_list(module, module_list) ) {
-      for (vector<const VlModule*>::iterator p = module_list.begin();
-	   p != module_list.end(); ++ p) {
-	const VlModule* module1 = *p;
+      for ( auto module1: module_list ) {
 	tmp_list.push_back(module1);
       }
     }
     vector<const VlModuleArray*> modulearray_list;
     if ( mgr.find_modulearray_list(module, modulearray_list) ) {
-      for (vector<const VlModuleArray*>::iterator p = modulearray_list.begin();
-	   p != modulearray_list.end(); ++ p) {
-	const VlModuleArray* module_array = *p;
-	ymuint n = module_array->elem_num();
-	for (ymuint i = 0; i < n; ++ i) {
+      for ( auto module_array: modulearray_list ) {
+	SizeType n = module_array->elem_num();
+	for ( SizeType i = 0; i < n; ++ i ) {
 	  const VlModule* module1 = module_array->elem_by_offset(i);
 	  tmp_list.push_back(module1);
 	}
@@ -384,11 +378,9 @@ VlDumperImpl::put(const char* label,
 void
 VlDumperImpl::put_parent_file(const FileLoc& file_loc)
 {
-  list<FileLoc> file_list;
+  vector<FileLoc> file_list;
   file_loc.parent_loc_list(file_list);
-  for (list<FileLoc>::const_iterator p = file_list.begin();
-       p != file_list.end(); ++ p) {
-    const FileLoc& loc = *p;
+  for ( const auto& loc: file_list ) {
     VlDumpHeader x(this, "mParentFile", "IncFile", false);
     mStream << "name = " << loc.filename()
 	    << ", line " << loc.line();

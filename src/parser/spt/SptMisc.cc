@@ -30,10 +30,10 @@ SptControl::SptControl(const FileRegion& file_region,
 		       tPtCtrlType type,
 		       const PtExpr* expr,
 		       PtExprArray event_array) :
-  mFileRegion(file_region),
-  mType(type),
-  mExpr(expr),
-  mEventArray(event_array)
+  mFileRegion{file_region},
+  mType{type},
+  mExpr{expr},
+  mEventArray{event_array}
 {
 }
 
@@ -72,22 +72,12 @@ SptControl::delay() const
   }
 }
 
-// イベントリストのサイズの取得
-// @retval イベントリストのサイズ event control/repeat control の場合
-// @retval nullptr 上記以外
-int
-SptControl::event_num() const
-{
-  return mEventArray.size();
-}
-
-// @brief イベントリストの要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
+// @brief イベントリストの取得
 // @note event control/repeat control の場合のみ意味を持つ
-const PtExpr*
-SptControl::event(int pos) const
+PtExprArray
+SptControl::event_list() const
 {
-  return mEventArray[pos];
+  return mEventArray;
 }
 
 // 繰り返し数の取得
@@ -117,9 +107,9 @@ SptControl::rep_expr() const
 SptConnection::SptConnection(const FileRegion& file_region,
 			     const PtExpr* expr,
 			     const char* name) :
-  mFileRegion(file_region),
-  mName(name),
-  mExpr(expr)
+  mFileRegion{file_region},
+  mName{name},
+  mExpr{expr}
 {
 }
 
@@ -165,11 +155,11 @@ SptConnection::expr() const
 SptStrength::SptStrength(const FileRegion& file_region,
 			 tVpiStrength drive0,
 			 tVpiStrength drive1) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mDrive0{drive0},
+  mDrive1{drive1},
+  mCharge{kVpiNoStrength}
 {
-  mDrive0 = drive0;
-  mDrive1 = drive1;
-  mCharge = kVpiNoStrength;
 }
 
 // コンストラクタ (電荷の強度用)
@@ -177,11 +167,11 @@ SptStrength::SptStrength(const FileRegion& file_region,
 // @param charge 電荷の信号強度
 SptStrength::SptStrength(const FileRegion& file_region,
 			 tVpiStrength charge) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mDrive0{kVpiNoStrength},
+  mDrive1{kVpiNoStrength},
+  mCharge{charge}
 {
-  mDrive0 = kVpiNoStrength;
-  mDrive1 = kVpiNoStrength;
-  mCharge = charge;
 }
 
 // デストラクタ
@@ -231,11 +221,9 @@ SptStrength::charge() const
 // @param value1 遅延値
 SptDelay::SptDelay(const FileRegion& file_region,
 		   const PtExpr* value1) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, nullptr, nullptr}
 {
-  mValue[0] = value1;
-  mValue[1] = nullptr;
-  mValue[2] = nullptr;
 }
 
 // 二つの値をとるコンストラクタ
@@ -245,11 +233,9 @@ SptDelay::SptDelay(const FileRegion& file_region,
 SptDelay::SptDelay(const FileRegion& file_region,
 		   const PtExpr* value1,
 		   const PtExpr* value2) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, value2, nullptr}
 {
-  mValue[0] = value1;
-  mValue[1] = value2;
-  mValue[2] = nullptr;
 }
 
 // 三つの値をとるコンストラクタ
@@ -261,11 +247,9 @@ SptDelay::SptDelay(const FileRegion& file_region,
 		   const PtExpr* value1,
 		   const PtExpr* value2,
 		   const PtExpr* value3) :
-  mFileRegion(file_region)
+  mFileRegion(file_region),
+  mValue{value1, value2, value3}
 {
-  mValue[0] = value1;
-  mValue[1] = value2;
-  mValue[2] = value3;
 }
 
 // ファイル位置の取得
@@ -287,9 +271,9 @@ SptDelay::file_region() const
 // @return pos 番目の遅延を表す式
 // 該当する要素がなければ nullptr を返す．
 const PtExpr*
-SptDelay::value(int pos) const
+SptDelay::value(SizeType pos) const
 {
-  if ( pos < 3 ) {
+  if ( 0 <= pos && pos < 3 ) {
     return mValue[pos];
   }
   return nullptr;
@@ -303,8 +287,8 @@ SptDelay::value(int pos) const
 // 名前のみのコンストラクタ
 // @param name 名前
 SptNameBranch::SptNameBranch(const char* name) :
-  mName(name),
-  mIndex(0)
+  mName{name},
+  mIndex{0}
 {
 }
 
@@ -313,7 +297,7 @@ SptNameBranch::SptNameBranch(const char* name) :
 // @param index インデックス
 SptNameBranch::SptNameBranch(const char* name,
 			     int index) :
-  mName(name)
+  mName{name}
 {
   mIndex = (static_cast<unsigned int>(index) << 1) | 1;
 }
@@ -356,7 +340,7 @@ SptNameBranch::index() const
 // コンストラクタ
 // @param as_array attr_spec のリスト
 SptAttrInst::SptAttrInst(PtAttrSpecArray as_array) :
-  mAttrSpecArray(as_array)
+  mAttrSpecArray{as_array}
 {
 }
 
@@ -365,20 +349,11 @@ SptAttrInst::~SptAttrInst()
 {
 }
 
-// 要素数の取得
-// @return 要素数
-int
-SptAttrInst::attrspec_num() const
+// @brief 要素のリストの取得
+PtAttrSpecArray
+SptAttrInst::attrspec_list() const
 {
-  return mAttrSpecArray.size();
-}
-
-// @brief 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < attrspec_num() )
-const PtAttrSpec*
-SptAttrInst::attrspec(int pos) const
-{
-  return mAttrSpecArray[pos];
+  return mAttrSpecArray;
 }
 
 
@@ -393,9 +368,9 @@ SptAttrInst::attrspec(int pos) const
 SptAttrSpec::SptAttrSpec(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* expr) :
-  mFileRegion(file_region),
-  mName(name),
-  mExpr(expr)
+  mFileRegion{file_region},
+  mName{name},
+  mExpr{expr}
 {
 }
 

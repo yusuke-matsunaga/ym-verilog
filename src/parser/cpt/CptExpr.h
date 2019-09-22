@@ -29,7 +29,6 @@ protected:
   CptExpr();
 
   /// デストラクタ
-  virtual
   ~CptExpr();
 
 
@@ -41,136 +40,129 @@ public:
   /// @brief 演算子の種類の取得
   /// @return 演算子の種類
   /// @note このクラスでは vpiNullOp を返す．
-  virtual
   tVlOpType
-  op_type() const;
+  op_type() const override;
 
   /// @brief 階層ブランチの取得
   /// @note このクラスでは nullptr を返す．
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
   /// @brief 末尾の名前の取得
   /// @return 末尾の名前
   /// @note このクラスでは nullptr を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
   /// @retval false 上記以外
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_const_index() const;
+  is_const_index() const override;
 
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
-  virtual
-  int
-  index_num() const;
+  SizeType
+  index_num() const override;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
-  virtual
   const PtExpr*
-  index(int pos) const;
+  index(SizeType pos) const override;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
   /// @note このクラスでは kVpiNoRange を返す．
-  virtual
   tVpiRangeMode
-  range_mode() const;
+  range_mode() const override;
 
   /// @brief 範囲の左側の式の取得
   /// @return 範囲の左側の式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲の右側の式の取得
   /// @return 範囲の右側の式
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
   /// @brief 定数の種類の取得
   /// @return 定数の種類
   /// @note このクラスでは kVpiIntConst を返す．
-  virtual
   tVpiConstType
-  const_type() const;
+  const_type() const override;
 
   /// @brief 整数型の定数のサイズの取得
   /// @return サイズ\n
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   /// @note このクラスでは 0 を返す．
-  virtual
   int
-  const_size() const;
+  const_size() const override;
 
   /// @brief 整数型の値の取得
   /// @return 値
   /// @note このクラスでは 0 を返す．
-  virtual
   unsigned int
-  const_uint() const;
+  const_uint() const override;
 
   /// @brief 整数型および文字列型の定数の文字列表現の取得
   /// @return 値の文字列表現\n
   /// 整数型時のサイズと基数は含まない．
   /// @note このクラスでは nullptr を返す．
-  virtual
   const char*
-  const_str() const;
+  const_str() const override;
 
   /// @brief 実数型の値の取得
   /// @return 値
   /// @note このクラスでは 0.0 を返す．
-  virtual
   double
-  const_real() const;
+  const_real() const override;
 
   /// @brief インデックスとして使える式のチェック
   /// @retval true 階層名の添字として使える式
   /// @retval false 使えない式
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_index_expr() const;
+  is_index_expr() const override;
 
   /// @brief インデックスの値の取得
   /// @return 階層名の添字として使える式の時にその値を返す．
   /// @note このクラスでは const_uint() をキャストして返す．
-  virtual
   int
-  index_value() const;
+  index_value() const override;
 
   /// @brief simple primary のチェック
   /// @retval true index_list も range も持たないとき
   /// @retval false 上記以外
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_simple() const;
+  is_simple() const override;
 
 };
 
@@ -187,7 +179,6 @@ protected:
   CptOpr(tVlOpType op_type);
 
   // デストラクタ
-  virtual
   ~CptOpr();
 
 
@@ -198,14 +189,12 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kOpr を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
   // 演算子のトークン番号を得る．
-  virtual
   tVlOpType
-  op_type() const;
+  op_type() const override;
 
 
 private:
@@ -235,7 +224,6 @@ protected:
 	  const PtExpr* opr);
 
   // デストラクタ
-  virtual
   ~CptOpr1();
 
 
@@ -245,32 +233,39 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // 階層名の添字として使える式の時に true を返す．
-  virtual
   bool
-  is_index_expr() const;
+  is_index_expr() const override;
 
   // 階層名の添字として使える式の時にその値を返す．
-  virtual
   int
-  index_value() const;
+  index_value() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
 
 private:
@@ -303,7 +298,6 @@ protected:
 	  const PtExpr* opr2);
 
   // デストラクタ
-  virtual
   ~CptOpr2();
 
 
@@ -313,22 +307,31 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
 
 private:
@@ -359,7 +362,6 @@ protected:
 	  const PtExpr* opr3);
 
   // デストラクタ
-  virtual
   ~CptOpr3();
 
 
@@ -369,22 +371,31 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
 
 private:
@@ -422,32 +433,39 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // クラスの型を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
   ///演算子の種類の取得
-  virtual
   tVlOpType
-  op_type() const;
+  op_type() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
 
 private:
@@ -488,9 +506,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   ///演算子の種類の取得
-  virtual
   tVlOpType
-  op_type() const;
+  op_type() const override;
 
 };
 
@@ -511,7 +528,6 @@ private:
 	       const PtExpr* val2);
 
   // デストラクタ
-  virtual
   ~CptMinTypMax();
 
 
@@ -521,32 +537,39 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // クラスの型を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
   ///演算子の種類の取得
-  virtual
   tVlOpType
-  op_type() const;
+  op_type() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
 
 private:
@@ -585,27 +608,35 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // 末尾の名前を返す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
-  virtual
-  int
-  operand_num() const;
+  SizeType
+  operand_num() const override;
+
+  /// @brief 0番目のオペランドの取得
+  const PtExpr*
+  operand0() const override;
+
+  /// @brief 1番目のオペランドの取得
+  const PtExpr*
+  operand1() const override;
+
+  /// @brief 2番目のオペランドの取得
+  const PtExpr*
+  operand2() const override;
 
   /// @brief オペランドの取得
   /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
-  virtual
   const PtExpr*
-  operand(int pos) const;
+  operand(SizeType pos) const override;
 
 
 private:
@@ -651,9 +682,8 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kPtFunCallExpr を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
 };
 
@@ -684,9 +714,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -726,9 +755,8 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kPtSysFunCallExpr を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
 };
 
@@ -770,7 +798,6 @@ protected:
   CptPrimaryBase(const char* name);
 
   // デストラクタ
-  virtual
   ~CptPrimaryBase();
 
 
@@ -781,9 +808,8 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kPtPrimaryExpr を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
 
 public:
@@ -792,9 +818,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 末尾の名前を取り出す．
-  virtual
   const char*
-  name() const;
+  name() const override;
 
 
 private:
@@ -823,7 +848,6 @@ private:
 	     const char* name);
 
   // デストラクタ
-  virtual
   ~CptPrimary();
 
 
@@ -833,9 +857,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 public:
@@ -844,9 +867,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // index_list も range も持たないとき true を返す．
-  virtual
   bool
-  is_simple() const;
+  is_simple() const override;
 
 
 private:
@@ -876,7 +898,6 @@ protected:
 	      PtExprArray index_array);
 
   // デストラクタ
-  virtual
   ~CptPrimaryI();
 
 
@@ -886,26 +907,22 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief インデックスリストのサイズの取得
   /// @return インデックスリストのサイズ
-  virtual
-  int
-  index_num() const;
+  SizeType
+  index_num() const override;
 
   /// @brief インデックスの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
-  virtual
   const PtExpr*
-  index(int pos) const;
+  index(SizeType pos) const override;
 
   // index_list も range も持たないとき true を返す．
-  virtual
   bool
-  is_simple() const;
+  is_simple() const override;
 
 
 private:
@@ -938,7 +955,6 @@ protected:
 	       PtExprArray index_array);
 
   // デストラクタ
-  virtual
   ~CptPrimaryCI();
 
 
@@ -948,9 +964,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // インデックスもしくは範囲が定数にならなければならないとき true を返す．
-  virtual
   bool
-  is_const_index() const;
+  is_const_index() const override;
 
 };
 
@@ -973,7 +988,6 @@ protected:
 	      const PtExpr* right);
 
   // デストラクタ
-  virtual
   ~CptPrimaryR();
 
 
@@ -983,29 +997,24 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // 範囲指定モードの取得
-  virtual
   tVpiRangeMode
-  range_mode() const;
+  range_mode() const override;
 
   // range の MSB を取出す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   // range の LSB を取出す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
   // index_list も range も持たないとき true を返す．
-  virtual
   bool
-  is_simple() const;
+  is_simple() const override;
 
 
 private:
@@ -1046,7 +1055,6 @@ protected:
 	       const PtExpr* right);
 
   // デストラクタ
-  virtual
   ~CptPrimaryCR();
 
 
@@ -1056,9 +1064,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // インデックスもしくは範囲が定数にならなければならないとき true を返す．
-  virtual
   bool
-  is_const_index() const;
+  is_const_index() const override;
 
 };
 
@@ -1082,7 +1089,6 @@ protected:
 	       const PtExpr* right);
 
   // デストラクタ
-  virtual
   ~CptPrimaryIR();
 
 
@@ -1092,19 +1098,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 範囲指定モードの取得
-  virtual
   tVpiRangeMode
-  range_mode() const;
+  range_mode() const override;
 
   // range の MSB を取出す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   // range の LSB を取出す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -1140,7 +1143,6 @@ protected:
 	      const char* tail_name);
 
   // デストラクタ
-  virtual
   ~CptPrimaryH();
 
 
@@ -1150,14 +1152,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 階層ブランチの取得
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -1191,7 +1191,6 @@ protected:
 	       PtExprArray index_array);
 
   // デストラクタ
-  virtual
   ~CptPrimaryHI();
 
 
@@ -1201,9 +1200,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -1234,7 +1232,6 @@ protected:
 		PtExprArray index_array);
 
   // デストラクタ
-  virtual
   ~CptPrimaryHCI();
 
 
@@ -1244,9 +1241,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // インデックスもしくは範囲が定数にならなければならないとき true を返す．
-  virtual
   bool
-  is_const_index() const;
+  is_const_index() const override;
 
 };
 
@@ -1270,7 +1266,6 @@ protected:
 	       const PtExpr* right);
 
   // デストラクタ
-  virtual
   ~CptPrimaryHR();
 
 
@@ -1281,7 +1276,7 @@ public:
 
   /// @brief 階層ブランチの取得
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -1315,7 +1310,6 @@ protected:
 		const PtExpr* right);
 
   // デストラクタ
-  virtual
   ~CptPrimaryHIR();
 
 
@@ -1327,9 +1321,8 @@ public:
   /// @brief 階層ブランチの取得
   /// @note kDisable/kEnable/kSysEnable で意味のある関数
   /// @note このクラスでは nullptr を返す．
-  virtual
   PtNameBranchArray
-  namebranch_array() const;
+  namebranch_array() const override;
 
 
 private:
@@ -1355,7 +1348,6 @@ protected:
   CptConstant(const FileRegion& file_region);
 
   // デストラクタ
-  virtual
   ~CptConstant();
 
 
@@ -1365,15 +1357,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // ファイル位置を返す．
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   // クラスの型を返す．
   // このクラスの場合は kPtConstantExpr を返す．
-  virtual
   tPtExprType
-  type() const;
+  type() const override;
 
 
 private:
@@ -1402,7 +1392,6 @@ protected:
 		  unsigned int value);
 
   // デストラクタ
-  virtual
   ~CptIntConstant1();
 
 
@@ -1413,9 +1402,8 @@ public:
 
   // 階層名の添字として使える式の時に true を返す．
   // ここでは true を返す．
-  virtual
   bool
-  is_index_expr() const;
+  is_index_expr() const override;
 
 
 public:
@@ -1425,14 +1413,12 @@ public:
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
   // ここでは vpiIntConst を返す．
-  virtual
   tVpiConstType
-  const_type() const;
+  const_type() const override;
 
   // 整数型の値の取得
-  virtual
   unsigned int
-  const_uint() const;
+  const_uint() const override;
 
 
 private:
@@ -1462,7 +1448,6 @@ protected:
 		  const char* value);
 
   // デストラクタ
-  virtual
   ~CptIntConstant2();
 
 
@@ -1472,14 +1457,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-  virtual
   tVpiConstType
-  const_type() const;
+  const_type() const override;
 
   // 文字列型の値の取得
-  virtual
   const char*
-  const_str() const;
+  const_str() const override;
 
 
 private:
@@ -1513,7 +1496,6 @@ protected:
 		  const char* value);
 
   // デストラクタ
-  virtual
   ~CptIntConstant3();
 
 
@@ -1523,19 +1505,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-  virtual
   tVpiConstType
-  const_type() const;
+  const_type() const override;
 
   // 整数型の定数のサイズの取得
-  virtual
   int
-  const_size() const;
+  const_size() const override;
 
   // 文字列型の値の取得
-  virtual
   const char*
-  const_str() const;
+  const_str() const override;
 
 
 private:
@@ -1570,7 +1549,6 @@ protected:
 		  double value);
 
   // デストラクタ
-  virtual
   ~CptRealConstant();
 
 
@@ -1580,14 +1558,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiRealConst) を返す．
-  virtual
   tVpiConstType
-  const_type() const;
+  const_type() const override;
 
   // 実数型の値の取得
-  virtual
   double
-  const_real() const;
+  const_real() const override;
 
 
 private:
@@ -1616,7 +1592,6 @@ protected:
 		    const char* value);
 
   // デストラクタ
-  virtual
   ~CptStringConstant();
 
 
@@ -1626,14 +1601,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiStringConst) を返す．
-  virtual
   tVpiConstType
-  const_type() const;
+  const_type() const override;
 
   // 文字列型の値の取得
-  virtual
   const char*
-  const_str() const;
+  const_str() const override;
 
 
 private:

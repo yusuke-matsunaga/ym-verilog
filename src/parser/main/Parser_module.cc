@@ -67,7 +67,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 		       const char* module_name,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  PtiPortArray port_array = get_port_array();
+  vector<PtiPort*> port_vector = get_port_vector();
   PtDeclHeadArray paramport_array = get_paramport_array();
   PtIOHeadArray iohead_array = get_module_io_array();
   PtDeclHeadArray declhead_array = get_module_decl_array();
@@ -95,12 +95,11 @@ Parser::new_Module1995(const FileRegion& file_region,
   string library; // ?
   string cell;    // ?
 
-  // port_array をスキャンして中で用いられている名前を portref_dic
+  // port_vector をスキャンして中で用いられている名前を portref_dic
   // に登録する．
   unordered_set<string> portref_dic;
-  for ( int i = 0; i < port_array.size(); ++ i ) {
-    PtiPort* port = port_array[i];
-    int n = port->portref_size();
+  for ( auto port: port_vector ) {
+    SizeType n = port->portref_size();
     for ( int j = 0; j < n; ++ j ) {
       const PtExpr* portref = port->portref_elem(j);
       const char* name = portref->name();
@@ -112,8 +111,7 @@ Parser::new_Module1995(const FileRegion& file_region,
   // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
   // 持たない場合にはデフォルトタイプのネットを生成する．
   unordered_map<string, tVlDirection> iodecl_dirs;
-  for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    const PtIOHead* io_head = iohead_array[i];
+  for ( auto io_head: iohead_array ) {
     // 名前をキーにして方向を記録しておく
     tVlDirection dir = kVlNoDirection;
     switch ( io_head->type() ) {
@@ -123,8 +121,7 @@ Parser::new_Module1995(const FileRegion& file_region,
     default:
       ASSERT_NOT_REACHED;
     }
-    for ( int j = 0; j < io_head->item_num(); ++ j ) {
-      const PtIOItem* elem = io_head->item(j);
+    for ( auto elem: io_head->item_list() ) {
       const char* elem_name = elem->name();
 
       // まず未定義/多重定義のエラーをチェックする．
@@ -159,13 +156,12 @@ Parser::new_Module1995(const FileRegion& file_region,
   // 調べる．
   // 同時に名無しのポートがあるかどうかしらべる．
   bool named_port = true;
-  for ( int i = 0; i < port_array.size(); ++ i ) {
-    PtiPort* port = port_array[i];
+  for ( auto port: port_vector ) {
     if ( port->ext_name() == nullptr ) {
       // 1つでも名前を持たないポートがあったら名前での結合はできない．
       named_port = false;
     }
-    int n = port->portref_size();
+    SizeType n = port->portref_size();
     for ( int j = 0; j < n; ++ j ) {
       const PtExpr* portref = port->portref_elem(j);
       const char* name = portref->name();
@@ -185,6 +181,8 @@ Parser::new_Module1995(const FileRegion& file_region,
       }
     }
   }
+
+  PtPortArray port_array = new_PortArray(port_vector);
 
   const PtModule* module = mFactory.new_Module(file_region,
 					       module_name,
@@ -245,7 +243,7 @@ Parser::new_Module2001(const FileRegion& file_region,
   }
 
   // iohead_array からポートの配列を作る．
-  PtiPortArray port_array = new_PortArray(iohead_array);
+  PtPortArray port_array = new_PortArray(iohead_array);
 
   const PtModule* module = mFactory.new_Module(file_region,
 					       module_name,
@@ -264,12 +262,12 @@ Parser::new_Module2001(const FileRegion& file_region,
   reg_attrinst(module, ai_list);
 }
 
-// @brief ポートリストを配列に変換する．
+// @brief ポートリストをvectorに変換する．
 inline
-PtiPortArray
-Parser::get_port_array()
+vector<PtiPort*>
+Parser::get_port_vector()
 {
-  return mPortList.to_array(mAlloc);
+  return mPortList.to_vector();
 }
 
 // @brief IO宣言リストを配列に変換する．

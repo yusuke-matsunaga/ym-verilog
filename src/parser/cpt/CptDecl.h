@@ -32,7 +32,6 @@ protected:
   CptDeclHead(const FileRegion& file_region);
 
   /// デストラクタ
-  virtual
   ~CptDeclHead();
 
 
@@ -43,86 +42,69 @@ public:
 
   /// @brief ファイル位置の取得
   /// @return ファイル位置
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
   /// @note このクラスでは false を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲のMSBの取得
   /// @retval 範囲のMSB 範囲を持つとき
   /// @retval nullptr 範囲を持たないとき
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲のLSBの取得
   /// @retval 範囲のLSB 範囲を持つとき
   /// @retval nullptr 範囲を持たないとき
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
   /// @note このクラスでは kVpiVarNone を返す．
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
   /// @note このクラスでは kVpiNone を返す．
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
   /// @brief vectored|scalared 属性の取得
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
   /// @note このクラスでは kVpiVsNone を返す．
-  virtual
   tVpiVsType
-  vs_type() const;
+  vs_type() const override;
 
   /// @brief strength の取得
   /// @retval strength
   /// @retval nullptr strength の指定なし
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay の取得
   /// @retval delay
   /// @retval nullptr delay の指定なし
   /// @note このクラスでは nullptr を返す．
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
-  /// @brief 要素数の取得
-  /// @return 要素数
-  virtual
-  int
-  item_num() const;
-
-  /// @brief 要素の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-  virtual
-  const PtDeclItem*
-  item(int pos) const;
+  /// @brief 要素のリストの取得
+  PtDeclItemArray
+  item_list() const override;
 
 
 private:
@@ -132,9 +114,8 @@ private:
 
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト(配列)
-  virtual
   void
-  set_elem(PtDeclItemArray elem_array);
+  set_elem(PtDeclItemArray elem_array) override;
 
 
 private:
@@ -166,7 +147,6 @@ protected:
   CptParamH(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptParamH();
 
 
@@ -177,9 +157,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -199,7 +178,6 @@ protected:
   CptLocalParamH(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptLocalParamH();
 
 
@@ -210,9 +188,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -236,7 +213,6 @@ protected:
 	     const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptParamHV();
 
 
@@ -248,21 +224,18 @@ public:
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲のMSBの取得
   /// @return 範囲のMSB
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲のLSBの取得
   /// @return 範囲のLSB
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -298,7 +271,6 @@ protected:
 	      const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptParamHSV();
 
 
@@ -310,9 +282,8 @@ public:
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
 };
 
@@ -336,7 +307,6 @@ protected:
 		  const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptLocalParamHV();
 
 
@@ -347,9 +317,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -373,7 +342,6 @@ protected:
 		   const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptLocalParamHSV();
 
 
@@ -384,9 +352,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -408,7 +375,6 @@ protected:
 	     tVpiVarType var_type);
 
   /// @brief デストラクタ
-  virtual
   ~CptParamHT();
 
 
@@ -419,23 +385,20 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
 
 private:
@@ -466,7 +429,6 @@ protected:
 		  tVpiVarType var_type);
 
   /// @brief デストラクタ
-  virtual
   ~CptLocalParamHT();
 
 
@@ -477,9 +439,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -499,7 +460,6 @@ protected:
   CptRegH(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptRegH();
 
 
@@ -510,9 +470,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -532,7 +491,6 @@ protected:
   CptRegHS(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptRegHS();
 
 
@@ -543,9 +501,8 @@ public:
 
   /// @brief 符号の取得
   /// @return このクラスでは常に true を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
 };
 
@@ -579,21 +536,18 @@ public:
 
   /// @brief 符号の有無の取得
   /// @return このクラスでは常に false を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief 範囲のMSBの取得
   /// @return 範囲のMSB
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲のLSBの取得
   /// @return 範囲のLSB
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -639,9 +593,8 @@ public:
 
   /// @brief 符号の有無の取得
   /// @return このクラスでは常に true を返す．
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
 };
 
@@ -663,7 +616,6 @@ protected:
 	  tVpiVarType var_type);
 
   /// @brief デストラクタ
-  virtual
   ~CptVarH();
 
 
@@ -674,23 +626,20 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
   /// @retval false 符号なし
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  virtual
   tVpiVarType
-  data_type() const;
+  data_type() const override;
 
 
 private:
@@ -721,7 +670,6 @@ protected:
   CptGenvarH(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptGenvarH();
 
 
@@ -732,9 +680,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -758,7 +705,6 @@ protected:
 	  bool sign);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetH();
 
 
@@ -769,20 +715,17 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
   /// @brief net type を返す．(vpiWire など)
   /// @return net 型
-  virtual
   tVpiNetType
-  net_type() const;
+  net_type() const override;
 
   /// @brief 符号の有無の取得
-  virtual
   bool
-  is_signed() const;
+  is_signed() const override;
 
 
 protected:
@@ -817,7 +760,6 @@ protected:
 	   const PtStrength* strength);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHS();
 
 
@@ -828,9 +770,8 @@ public:
 
   /// @brief strength を返す．
   /// @return strength
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
 
 private:
@@ -865,7 +806,6 @@ protected:
 	   const PtDelay* delay);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHD();
 
 
@@ -876,9 +816,8 @@ public:
 
   /// @brief delay を返す．
   /// @return delay
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -915,7 +854,6 @@ protected:
 	    const PtDelay* delay);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHSD();
 
 
@@ -926,15 +864,13 @@ public:
 
   /// @brief strength を返す．
   /// @return strength
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay を返す．
   /// @return delay
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -976,7 +912,6 @@ protected:
 	   const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHV();
 
 
@@ -989,21 +924,18 @@ public:
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
-  virtual
   tVpiVsType
-  vs_type() const;
+  vs_type() const override;
 
   /// @brief 範囲のMSBを取り出す．
   /// @return 範囲のMSB
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲のLSBを取り出す．
   /// @return 範囲のLSB
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -1047,7 +979,6 @@ protected:
 	    const PtStrength* strength);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHVS();
 
 
@@ -1058,9 +989,8 @@ public:
 
   /// @brief strength を返す．
   /// @return strength
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
 
 private:
@@ -1101,7 +1031,6 @@ protected:
 	    const PtDelay* delay);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHVD();
 
 
@@ -1112,9 +1041,8 @@ public:
 
   /// @brief delay を返す．
   /// @return delay
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -1157,7 +1085,6 @@ protected:
 	     const PtDelay* delay);
 
   /// @brief デストラクタ
-  virtual
   ~CptNetHVSD();
 
 
@@ -1168,15 +1095,13 @@ public:
 
   /// @brief strength を返す．
   /// @return strength
-  virtual
   const PtStrength*
-  strength() const;
+  strength() const override;
 
   /// @brief delay を返す．
   /// @return delay
-  virtual
   const PtDelay*
-  delay() const;
+  delay() const override;
 
 
 private:
@@ -1208,7 +1133,6 @@ protected:
   CptEventH(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptEventH();
 
 
@@ -1219,9 +1143,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -1241,7 +1164,6 @@ protected:
   CptSpecParamH(const FileRegion& file_region);
 
   /// @brief デストラクタ
-  virtual
   ~CptSpecParamH();
 
 
@@ -1252,9 +1174,8 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  virtual
   tPtDeclType
-  type() const;
+  type() const override;
 
 };
 
@@ -1278,7 +1199,6 @@ protected:
 		 const PtExpr* right);
 
   /// @brief デストラクタ
-  virtual
   ~CptSpecParamHV();
 
 
@@ -1289,15 +1209,13 @@ public:
 
   /// @brief 範囲の MSB を返す．
   /// @return 範囲のMSB
-  virtual
   const PtExpr*
-  left_range() const;
+  left_range() const override;
 
   /// @brief 範囲の LSB を返す．
   /// @return 範囲のLSB
-  virtual
   const PtExpr*
-  right_range() const;
+  right_range() const override;
 
 
 private:
@@ -1329,7 +1247,6 @@ protected:
   CptDeclItemBase(const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~CptDeclItemBase();
 
 
@@ -1340,27 +1257,22 @@ public:
 
   /// @brief 名前を取り出す．
   /// @return 名前
-  virtual
   const char*
-  name() const;
+  name() const override;
 
   /// @brief dimension list のサイズを取り出す．
   /// @return ここでは常に 0 を返す．
-  virtual
   int
-  dimension_list_size() const;
+  dimension_list_size() const override;
 
-  /// 範囲の取得
-  /// @note ここでは常に nullptr を返す．
-  virtual
-  const PtRange*
-  range(int pos) const;
+  /// 範囲のリストの取得
+  PtRangeArray
+  range_list() const override;
 
   /// @brief 初期値を取り出す．
   /// @return ここでは常に nullptr を返す．
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
 
 private:
@@ -1391,7 +1303,6 @@ protected:
 	      const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~CptDeclItem();
 
 
@@ -1402,9 +1313,8 @@ public:
 
   /// @brief ファイル位置を返す．
   /// @return ファイル位置
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
 
 private:
@@ -1437,7 +1347,6 @@ protected:
 	       PtRangeArray range_array);
 
   /// @brief デストラクタ
-  virtual
   ~CptDeclItemR();
 
 
@@ -1448,20 +1357,17 @@ public:
 
   /// @brief ファイル位置を返す．
   /// @return ファイル位置
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief dimension list のサイズを取り出す．
   /// @return dimension list のサイズ
-  virtual
   int
-  dimension_list_size() const;
+  dimension_list_size() const override;
 
-  /// 範囲の取得
-  virtual
-  const PtRange*
-  range(int pos) const;
+  /// 範囲のリストの取得
+  PtRangeArray
+  range_list() const override;
 
 
 private:
@@ -1497,7 +1403,6 @@ protected:
 	       const PtExpr* init_value);
 
   /// @brief デストラクタ
-  virtual
   ~CptDeclItemI();
 
 
@@ -1508,16 +1413,14 @@ public:
 
   /// @brief ファイル位置を返す．
   /// @return ファイル位置
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 初期値を取り出す．
   /// @retval 初期値
   /// @retval nullptr 設定がない場合
-  virtual
   const PtExpr*
-  init_value() const;
+  init_value() const override;
 
 
 private:
@@ -1546,7 +1449,6 @@ public:
 	   const PtExpr* lsb);
 
   /// @brief デストラクタ
-  virtual
   ~CptRange();
 
 
@@ -1556,19 +1458,16 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// ファイル位置の取得
-  virtual
   FileRegion
-  file_region() const;
+  file_region() const override;
 
   /// @brief 範囲の MSB を取り出す．
-  virtual
   const PtExpr*
-  left() const;
+  left() const override;
 
   /// @brief 範囲の LSB を取り出す．
-  virtual
   const PtExpr*
-  right() const;
+  right() const override;
 
 
 private:

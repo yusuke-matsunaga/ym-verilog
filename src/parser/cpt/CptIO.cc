@@ -111,19 +111,11 @@ CptIOHBase::right_range() const
   return nullptr;
 }
 
-// @brief 要素数の取得
-int
-CptIOHBase::item_num() const
+// @brief 要素のリストの取得
+PtIOItemArray
+CptIOHBase::item_list() const
 {
-  return mItemArray.size();
-}
-
-// @brief 要素の取得
-// @param[in] pos 位置番号 ( 0 <= pos < item_num() )
-const PtIOItem*
-CptIOHBase::item(int pos) const
-{
-  return mItemArray[pos];
+  return mItemArray;
 }
 
 // @brief 要素リストの設定
@@ -271,7 +263,7 @@ CptIOItemI::CptIOItemI(const FileRegion& file_region,
   CptIOItem(file_region, name),
   mInitValue(init_value)
 {
-  ASSERT_COND(init_value );
+  ASSERT_COND( init_value );
 }
 
 // @brief デストラクタ
