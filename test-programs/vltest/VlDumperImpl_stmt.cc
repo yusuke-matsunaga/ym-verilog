@@ -155,10 +155,12 @@ VlDumperImpl::put_stmt(const char* label,
   case kVpiCase:
     put("vpiCaseType", stmt->case_type() );
     put_expr("vpiCondition", mgr, stmt->expr() );
-    for ( auto ci: stmt->caseitem_list() ) {
+    for ( int i = 0; i < stmt->caseitem_num(); ++ i ) {
+      auto ci = stmt->caseitem(i);
       VlDumpHeader x(this, "vpiCaseItem", "CaseItem");
       put("FileRegion", ci->file_region() );
-      for ( auto expr: ci->expr_list() ) {
+      for ( int i = 0; i < ci->expr_num(); ++ i ) {
+	auto expr = ci->expr(i);
 	put_expr("vpiExpr", mgr, expr);
       }
       put_stmt("vpiStmt", mgr, ci->body_stmt() );

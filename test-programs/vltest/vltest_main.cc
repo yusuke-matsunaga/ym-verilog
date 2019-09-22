@@ -8,9 +8,7 @@
 
 
 #include "ym/verilog.h"
-#include "ym/CellLibrary.h"
-#include "ym/CellDotlibReader.h"
-#include "ym/CellMislibReader.h"
+#include "ym/ClibCellLibrary.h"
 #include "ym/PoptMainApp.h"
 
 
@@ -43,7 +41,7 @@ void
 elaborate_mode(const vector<string>& filename_list,
 	       bool all_msg,
 	       const char* spath,
-	       const CellLibrary* cell_library,
+	       const ClibCellLibrary& cell_library,
 	       int watch_line,
 	       bool verbose,
 	       bool profile,
@@ -105,14 +103,14 @@ main(int argc,
 
   popt.set_other_option_help("[OPTIONS]* <file-name> ...");
 
-  tPoptStat popt_stat = popt.parse_options(argc, argv, 0);
-  if ( popt_stat == kPoptAbort ) {
+  auto popt_stat = popt.parse_options(argc, argv, 0);
+  if ( popt_stat == PoptStat::Abort ) {
     return -1;
   }
 
   // 残りの引数はすべてファイル名と見なす
   vector<string> filename_list;
-  ymuint n_files = popt.get_args(filename_list);
+  SizeType n_files = popt.get_args(filename_list);
 
   if ( n_files == 0 ) {
     popt.print_usage(stderr, 0);
@@ -285,20 +283,16 @@ main(int argc,
 #endif
 #endif
 
-  CellLibrary* cell_library = nullptr;
+  ClibCellLibrary cell_library;
   if ( liberty_name != nullptr ) {
-    CellDotlibReader reader;
-    cell_library = CellLibrary::new_obj();
-    if ( !reader.read(liberty_name, cell_library) ) {
-      cerr << "read failed" << endl;
+    if ( !cell_library.read_liberty(liberty_name) ) {
+      cerr << liberty_name << ": read failed" << endl;
       return 0;
     }
   }
   else if ( mislib_name != nullptr ) {
-    CellMislibReader reader;
-    cell_library = CellLibrary::new_obj();
-    if ( !reader.read(mislib_name, cell_library) ) {
-      cerr << "read failed" << endl;
+    if ( !cell_library.read_mislib(mislib_name) ) {
+      cerr << mislib_name << mislib_name << ": read failed" << endl;
       return 0;
     }
   }

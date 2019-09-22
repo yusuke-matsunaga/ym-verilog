@@ -15,6 +15,8 @@
 #include "ym/vl/VlModule.h"
 #include "ym/vl/VlUdp.h"
 
+#include <queue>
+
 
 BEGIN_NAMESPACE_YM_VERILOG
 
@@ -112,16 +114,19 @@ VlDumperImpl::put(const VlMgr& mgr)
   }
 
   // トップモジュールから順にモジュールを出力する．
-  vector<const VlModule*> tmp_list(mgr.topmodule_list());
-  while ( !tmp_list.empty() ) {
-    const VlModule* module = tmp_list.front();
-    tmp_list.pop_front();
+  std::queue<const VlModule*> tmp_queue;
+  for ( auto module: mgr.topmodule_list() ) {
+    tmp_queue.push(module);
+  }
+  while ( !tmp_queue.empty() ) {
+    const VlModule* module = tmp_queue.front();
+    tmp_queue.pop();
     put_module("MODULE", mgr, module);
 
     vector<const VlModule*> module_list;
     if ( mgr.find_module_list(module, module_list) ) {
       for ( auto module1: module_list ) {
-	tmp_list.push_back(module1);
+	tmp_queue.push(module1);
       }
     }
     vector<const VlModuleArray*> modulearray_list;
@@ -130,7 +135,7 @@ VlDumperImpl::put(const VlMgr& mgr)
 	SizeType n = module_array->elem_num();
 	for ( SizeType i = 0; i < n; ++ i ) {
 	  const VlModule* module1 = module_array->elem_by_offset(i);
-	  tmp_list.push_back(module1);
+	  tmp_queue.push(module1);
 	}
       }
     }

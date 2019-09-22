@@ -11,7 +11,7 @@
 #include "VlTestLineWatcher.h"
 
 #include "ym/MsgMgr.h"
-#include "ym/MsgHandler.h"
+#include "ym/StreamMsgHandler.h"
 
 #include "Lex.h"
 #include "print_token.h"
@@ -30,7 +30,7 @@ rawlex_mode(const vector<string>& filename_list,
 	    bool dump_token)
 {
   MsgHandler* handler = new StreamMsgHandler(&cerr);
-  MsgMgr::reg_handler(handler);
+  MsgMgr::attach_handler(handler);
 
   Lex lex;
 
