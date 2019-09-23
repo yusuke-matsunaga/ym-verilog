@@ -8,8 +8,8 @@
 
 
 #include "CptModule.h"
-#include "CptFactory.h"
-#include "PtiDecl.h"
+#include "parser/CptFactory.h"
+#include "parser/PtiDecl.h"
 #include "ym/pt/PtItem.h"
 
 

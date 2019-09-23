@@ -6,10 +6,10 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
+#include "parser/Parser.h"
 
-#include "PtiFactory.h"
-#include "PtiDecl.h"
+#include "parser/PtiFactory.h"
+#include "parser/PtiDecl.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -13,11 +13,9 @@
 #include "ym/MsgMgr.h"
 #include "ym/StreamMsgHandler.h"
 
-#include "Lex.h"
-#include "print_token.h"
-#include "LexModuleState.h"
-
-#include "parser_common.h"
+#include "scanner/Lex.h"
+#include "scanner/print_token.h"
+#include "scanner/common.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

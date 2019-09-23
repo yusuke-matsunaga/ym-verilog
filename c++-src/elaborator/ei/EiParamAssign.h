@@ -9,7 +9,8 @@
 /// All rights reserved.
 
 
-#include "ElbParamAssign.h"
+#include "elb/ElbParamAssign.h"
+
 #include "ym/VlValue.h"
 
 

@@ -9,8 +9,9 @@
 
 #include "EiFactory.h"
 #include "EiDeclArray.h"
-#include "ElbDelay.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbDelay.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtDecl.h"
 #include "ym/pt/PtItem.h"

@@ -14,11 +14,11 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "ElbStmt.h"
-#include "ElbTaskFunc.h"
-#include "ElbScope.h"
+#include "elb/ElbStmt.h"
+#include "elb/ElbTaskFunc.h"
+#include "elb/ElbScope.h"
 
-#include "ElbStub.h"
+#include "elb/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 

@@ -7,24 +7,24 @@
 /// All rights reserved.
 
 
-#include "ElbMgr.h"
+#include "elb/ElbMgr.h"
 
 #include "ym/pt/PtMisc.h"
 #include "ym/pt/PtArray.h"
 
-#include "ElbUdp.h"
-#include "ElbModule.h"
-#include "ElbTaskFunc.h"
-#include "ElbScope.h"
-#include "ElbGfRoot.h"
-#include "ElbDecl.h"
-#include "ElbParameter.h"
-#include "ElbParamAssign.h"
-#include "ElbPrimitive.h"
-#include "ElbContAssign.h"
-#include "ElbProcess.h"
-#include "ElbUserSystf.h"
-#include "ElbGenvar.h"
+#include "elb/ElbUdp.h"
+#include "elb/ElbModule.h"
+#include "elb/ElbTaskFunc.h"
+#include "elb/ElbScope.h"
+#include "elb/ElbGfRoot.h"
+#include "elb/ElbDecl.h"
+#include "elb/ElbParameter.h"
+#include "elb/ElbParamAssign.h"
+#include "elb/ElbPrimitive.h"
+#include "elb/ElbContAssign.h"
+#include "elb/ElbProcess.h"
+#include "elb/ElbUserSystf.h"
+#include "elb/ElbGenvar.h"
 
 
 #define dout cerr

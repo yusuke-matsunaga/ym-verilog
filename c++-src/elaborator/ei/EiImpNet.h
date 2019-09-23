@@ -9,7 +9,8 @@
 /// All rights reserved.
 
 
-#include "ElbDecl.h"
+#include "elb/ElbDecl.h"
+
 #include "ym/VlScalarVal.h"
 #include "ym/pt/PtP.h"
 

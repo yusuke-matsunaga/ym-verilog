@@ -6,9 +6,9 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
+#include "parser/Parser.h"
 
-#include "PtiFactory.h"
+#include "parser/PtiFactory.h"
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 

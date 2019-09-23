@@ -9,9 +9,9 @@
 
 #include "StdLexPlugin.h"
 #include "InputMgr.h"
-#include "RawLex.h"
 
-#include "parser_common.h"
+#include "scanner/RawLex.h"
+#include "scanner/common.h"
 
 #include "ym/MsgMgr.h"
 

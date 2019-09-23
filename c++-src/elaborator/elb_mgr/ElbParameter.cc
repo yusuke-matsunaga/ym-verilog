@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ElbParameter.h"
+#include "elb/ElbParameter.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

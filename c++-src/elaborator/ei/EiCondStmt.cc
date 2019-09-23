@@ -9,7 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiCondStmt.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbExpr.h"
 
 #include "ym/BitVector.h"
 #include "ym/pt/PtStmt.h"

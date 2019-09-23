@@ -9,8 +9,9 @@
 
 #include "EiFactory.h"
 #include "EiParamAssign.h"
-#include "ElbParameter.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbParameter.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtExpr.h"

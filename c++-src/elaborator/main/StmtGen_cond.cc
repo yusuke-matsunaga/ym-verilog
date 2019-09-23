@@ -9,8 +9,9 @@
 
 #include "StmtGen.h"
 #include "ElbEnv.h"
-#include "ElbStmt.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbStmt.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"

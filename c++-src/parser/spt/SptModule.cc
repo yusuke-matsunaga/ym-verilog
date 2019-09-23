@@ -8,7 +8,7 @@
 
 
 #include "SptModule.h"
-#include "SptFactory.h"
+#include "parser/SptFactory.h"
 
 #include "ym/pt/PtItem.h"
 

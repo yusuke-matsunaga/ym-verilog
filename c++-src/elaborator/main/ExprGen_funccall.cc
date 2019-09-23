@@ -17,10 +17,10 @@
 
 #include "ym/vl/VlModule.h"
 
-#include "ElbIODecl.h"
-#include "ElbDecl.h"
-#include "ElbExpr.h"
-#include "ElbTaskFunc.h"
+#include "elb/ElbIODecl.h"
+#include "elb/ElbDecl.h"
+#include "elb/ElbExpr.h"
+#include "elb/ElbTaskFunc.h"
 
 BEGIN_NONAMESPACE
 

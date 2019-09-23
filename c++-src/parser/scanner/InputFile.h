@@ -17,7 +17,7 @@
 #include "ym/FileInfo.h"
 #include "ym/StrBuff.h"
 
-#include "RawLex.h"
+#include "scanner/RawLex.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -10,7 +10,7 @@
 #include "ym/StopWatch.h"
 #include "ym/VlMgr.h"
 #include "VlTestLineWatcher.h"
-#include "PtDumper.h"
+#include "parser/PtDumper.h"
 
 #include "ym/MsgMgr.h"
 #include "ym/StreamMsgHandler.h"

@@ -8,12 +8,12 @@
 
 
 #include "LexMacroPlugin.h"
-#include "RawLex.h"
+#include "scanner/RawLex.h"
 #include "MacroSource.h"
 #include "TokenInfo.h"
 
-#include "parser_common.h"
-#include "print_token.h"
+#include "scanner/common.h"
+#include "scanner/print_token.h"
 
 #include "ym/MsgMgr.h"
 

@@ -7,13 +7,13 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
 #include "Parser_int.h"
 
-#include "PtiFactory.h"
-#include "PuHierName.h"
-#include "Lex.h"
-#include "PtMgr.h"
+#include "scanner/Lex.h"
+
+#include "parser/PtiFactory.h"
+#include "parser/PuHierName.h"
+#include "parser/PtMgr.h"
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtStmt.h"

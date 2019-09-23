@@ -7,13 +7,15 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
+#include "parser/Parser.h"
 
-#include "Lex.h"
-#include "LexModuleState.h"
-#include "PtMgr.h"
-#include "PtiFactory.h"
-#include "PtiDecl.h"
+#include "scanner/Lex.h"
+#include "scanner/LexModuleState.h"
+
+#include "parser/PtMgr.h"
+#include "parser/PtiFactory.h"
+#include "parser/PtiDecl.h"
+
 #include "ym/pt/PtUdp.h"
 #include "ym/pt/PtExpr.h"
 

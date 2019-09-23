@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "LexPlugin.h"
+#include "scanner/LexPlugin.h"
 
 /// 仕様書覚書
 ///

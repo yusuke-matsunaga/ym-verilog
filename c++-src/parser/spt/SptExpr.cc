@@ -8,7 +8,7 @@
 
 
 #include "SptExpr.h"
-#include "SptFactory.h"
+#include "parser/SptFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

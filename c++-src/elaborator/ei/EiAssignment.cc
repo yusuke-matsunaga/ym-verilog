@@ -9,8 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiAssignment.h"
-#include "ElbControl.h"
-#include "ElbExpr.h"
+#include "elb/ElbControl.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/BitVector.h"
 

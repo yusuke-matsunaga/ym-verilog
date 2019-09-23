@@ -9,17 +9,17 @@
 
 #include "ym/VlMgr.h"
 
-#include "Parser.h"
-#include "PtMgr.h"
-#include "PtiFactory.h"
+#include "parser/Parser.h"
+#include "parser/PtMgr.h"
+#include "parser/PtiFactory.h"
 
-#include "Elaborator.h"
+#include "elb/Elaborator.h"
 
-#include "ElbMgr.h"
-#include "ElbUdp.h"
-#include "ElbUserSystf.h"
-#include "ElbAttribute.h"
-#include "ElbFactory.h"
+#include "elb/ElbMgr.h"
+#include "elb/ElbUdp.h"
+#include "elb/ElbUserSystf.h"
+#include "elb/ElbAttribute.h"
+#include "elb/ElbFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

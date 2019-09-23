@@ -9,7 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiBitSelect.h"
-#include "ElbDecl.h"
+
+#include "elb/ElbDecl.h"
 
 #include "ym/BitVector.h"
 #include "ym/pt/PtExpr.h"

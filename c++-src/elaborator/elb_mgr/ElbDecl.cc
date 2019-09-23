@@ -7,9 +7,9 @@
 /// All rights reserved.
 
 
-#include "ElbDecl.h"
-#include "ElbGenvar.h"
-#include "ElbExpr.h"
+#include "elb/ElbDecl.h"
+#include "elb/ElbGenvar.h"
+#include "elb/ElbExpr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

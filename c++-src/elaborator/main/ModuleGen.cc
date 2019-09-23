@@ -9,7 +9,6 @@
 
 #include "ModuleGen.h"
 #include "ElbParamCon.h"
-#include "ElbStub.h"
 
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtPort.h"
@@ -19,11 +18,12 @@
 #include "ym/pt/PtMisc.h"
 #include "ym/pt/PtArray.h"
 
-#include "ElbModule.h"
-#include "ElbDecl.h"
-#include "ElbParameter.h"
-#include "ElbParamAssign.h"
-#include "ElbExpr.h"
+#include "elb/ElbModule.h"
+#include "elb/ElbDecl.h"
+#include "elb/ElbParameter.h"
+#include "elb/ElbParamAssign.h"
+#include "elb/ElbExpr.h"
+#include "elb/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 

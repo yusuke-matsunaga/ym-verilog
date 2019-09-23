@@ -16,10 +16,10 @@
 #include "ExprGen.h"
 #include "AttrGen.h"
 
-#include "ElbExpr.h"
+#include "elb/ElbExpr.h"
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtArray.h"
-#include "PtDumper.h"
+#include "parser/PtDumper.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

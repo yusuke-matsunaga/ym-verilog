@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "PtMgr.h"
+#include "parser/PtMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

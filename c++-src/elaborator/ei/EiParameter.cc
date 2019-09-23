@@ -9,7 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiParameter.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbExpr.h"
 
 #include "ym/BitVector.h"
 

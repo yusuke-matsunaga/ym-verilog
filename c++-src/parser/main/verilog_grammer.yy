@@ -15,10 +15,9 @@
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 
-#include "Parser.h"
-
-#include "PuHierName.h"
-#include "PtrList.h"
+#include "parser/Parser.h"
+#include "parser/PuHierName.h"
+#include "parser/PtrList.h"
 
 
 // より詳細なエラー情報を出力させる．

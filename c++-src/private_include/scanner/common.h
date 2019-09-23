@@ -10,13 +10,13 @@
 
 
 #include "ym/pt/PtP.h"
-#include "PtiFwd.h"
-#include "PtrList.h"
-#include "Parser.h"
+
+#include "parser/PtrList.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+class Parser;
 class PuHierName;
 
 #include "verilog_grammer.hh"

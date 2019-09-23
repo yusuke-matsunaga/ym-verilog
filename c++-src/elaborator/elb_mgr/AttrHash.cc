@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "AttrHash.h"
+#include "elb/AttrHash.h"
 #include "ym/vl/VlObj.h"
 
 

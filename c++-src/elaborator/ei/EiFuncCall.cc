@@ -9,8 +9,9 @@
 
 #include "EiFactory.h"
 #include "EiFuncCall.h"
-#include "ElbTaskFunc.h"
-#include "ElbUserSystf.h"
+
+#include "elb/ElbTaskFunc.h"
+#include "elb/ElbUserSystf.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -7,7 +7,8 @@
 /// All rights reserved.
 
 
-#include "Elaborator.h"
+#include "elb/Elaborator.h"
+
 #include "UdpGen.h"
 #include "ModuleGen.h"
 #include "DeclGen.h"
@@ -22,8 +23,8 @@
 
 #include "ym/ClibCellLibrary.h"
 
-#include "PtMgr.h"
-#include "ElbModule.h"
+#include "parser/PtMgr.h"
+#include "elb/ElbModule.h"
 
 #include "ym/MsgMgr.h"
 

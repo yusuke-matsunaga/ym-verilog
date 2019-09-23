@@ -7,12 +7,13 @@
 /// All rights reserved.
 
 
-#include "RawLex.h"
+#include "scanner/RawLex.h"
+#include "scanner/LexPlugin.h"
+#include "scanner/LexState.h"
+#include "scanner/LexPluginDict.h"
+#include "scanner/print_token.h"
+#include "scanner/common.h"
 
-#include "ym/VlLineWatcher.h"
-
-#include "LexPlugin.h"
-#include "LexState.h"
 #include "LexCondState.h"
 #include "LexCondPlugin.h"
 #include "LexMacroPlugin.h"
@@ -22,10 +23,9 @@
 #include "RsrvWordDic.h"
 #include "MacroSource.h"
 #include "TokenInfo.h"
-#include "LexPluginDict.h"
 
-#include "print_token.h"
-#include "parser_common.h"
+
+#include "ym/VlLineWatcher.h"
 
 #include "ym/MsgMgr.h"
 

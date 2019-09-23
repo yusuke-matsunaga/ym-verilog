@@ -14,7 +14,7 @@
 #include "ym/pt/PtArray.h"
 #include "ym/VlUdpVal.h"
 #include "ym/FileRegion.h"
-#include "PtiFwd.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

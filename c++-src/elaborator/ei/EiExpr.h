@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ElbExpr.h"
+#include "elb/ElbExpr.h"
 #include "ym/pt/PtP.h"
 
 

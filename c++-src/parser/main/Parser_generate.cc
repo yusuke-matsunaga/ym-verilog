@@ -6,10 +6,9 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
 #include "Parser_int.h"
+#include "parser/PtiFactory.h"
 
-#include "PtiFactory.h"
 #include "ym/pt/PtItem.h"
 
 #include "ym/MsgMgr.h"

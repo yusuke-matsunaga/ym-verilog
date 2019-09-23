@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "CfDict.h"
+#include "elb/CfDict.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -8,9 +8,8 @@
 
 
 #include "RsrvWordDic.h"
-#include "print_token.h"
-
-#include "parser_common.h"
+#include "scanner/print_token.h"
+#include "scanner/common.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "PtiExpr.h"
+#include "parser/PtiExpr.h"
 #include "ym/pt/PtArray.h"
 
 #include "ym/FileRegion.h"

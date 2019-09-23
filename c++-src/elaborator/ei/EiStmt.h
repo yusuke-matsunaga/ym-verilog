@@ -15,7 +15,7 @@
 // IEEE Std 1364-2001 26.6.37 Assign statement, deassign, force, release
 
 
-#include "ElbStmt.h"
+#include "elb/ElbStmt.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

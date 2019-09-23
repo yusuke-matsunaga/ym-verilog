@@ -7,18 +7,20 @@
 /// All rights reserved.
 
 
-#include "TagDict.h"
+#include "elb/TagDict.h"
 #include "TagDictCell.h"
+
 #include "ym/vl/VlObj.h"
-#include "ElbScope.h"
-#include "ElbModule.h"
-#include "ElbParamAssign.h"
-#include "ElbDecl.h"
-#include "ElbParameter.h"
-#include "ElbPrimitive.h"
-#include "ElbTaskFunc.h"
-#include "ElbContAssign.h"
-#include "ElbProcess.h"
+
+#include "elb/ElbScope.h"
+#include "elb/ElbModule.h"
+#include "elb/ElbParamAssign.h"
+#include "elb/ElbDecl.h"
+#include "elb/ElbParameter.h"
+#include "elb/ElbPrimitive.h"
+#include "elb/ElbTaskFunc.h"
+#include "elb/ElbContAssign.h"
+#include "elb/ElbProcess.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

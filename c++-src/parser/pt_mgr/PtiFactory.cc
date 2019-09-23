@@ -7,10 +7,10 @@
 /// All rights reserved.
 
 
-#include "PtiFactory.h"
+#include "parser/PtiFactory.h"
+#include "parser/CptFactory.h"
+#include "parser/SptFactory.h"
 #include "ym/pt/PtArray.h"
-#include "CptFactory.h"
-#include "SptFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

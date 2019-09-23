@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "LexState.h"
-#include "RawLex.h"
+#include "scanner/LexState.h"
+#include "scanner/RawLex.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

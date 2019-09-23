@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
+#include "parser/Parser.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

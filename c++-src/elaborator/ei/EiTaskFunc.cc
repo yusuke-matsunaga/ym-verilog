@@ -10,8 +10,9 @@
 #include "EiFactory.h"
 #include "EiTaskFunc.h"
 #include "EiIODecl.h"
-#include "ElbStmt.h"
-#include "ElbDecl.h"
+
+#include "elb/ElbStmt.h"
+#include "elb/ElbDecl.h"
 
 #include "ym/VlTime.h"
 #include "ym/BitVector.h"

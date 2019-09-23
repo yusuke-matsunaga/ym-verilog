@@ -17,8 +17,8 @@
 #include "ym/pt/PtArray.h"
 #include "ym/vl/VlExpr.h"
 
-#include "ElbUdp.h"
-#include "ElbExpr.h"
+#include "elb/ElbUdp.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
 

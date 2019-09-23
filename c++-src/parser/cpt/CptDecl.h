@@ -14,7 +14,7 @@
 
 #include "ym/FileRegion.h"
 
-#include "PtiDecl.h"
+#include "parser/PtiDecl.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

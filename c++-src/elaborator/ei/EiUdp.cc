@@ -9,7 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiUdp.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtUdp.h"
 #include "ym/pt/PtDecl.h"

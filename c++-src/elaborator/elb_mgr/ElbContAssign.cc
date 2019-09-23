@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ElbContAssign.h"
+#include "elb/ElbContAssign.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

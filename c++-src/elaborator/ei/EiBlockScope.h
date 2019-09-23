@@ -10,7 +10,7 @@
 
 
 #include "ym/pt/PtP.h"
-#include "ElbScope.h"
+#include "elb/ElbScope.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

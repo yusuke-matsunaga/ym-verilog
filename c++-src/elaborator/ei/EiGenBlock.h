@@ -9,8 +9,9 @@
 /// All rights reserved.
 
 
-#include "ElbScope.h"
-#include "ElbGfRoot.h"
+#include "elb/ElbScope.h"
+#include "elb/ElbGfRoot.h"
+
 #include "ym/pt/PtP.h"
 #include "ym/StrBuff.h"
 

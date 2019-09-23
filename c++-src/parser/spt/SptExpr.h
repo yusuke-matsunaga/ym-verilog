@@ -11,7 +11,7 @@
 
 #include "ym/FileRegion.h"
 
-#include "PtiExpr.h"
+#include "parser/PtiExpr.h"
 #include "ym/pt/PtArray.h"
 
 

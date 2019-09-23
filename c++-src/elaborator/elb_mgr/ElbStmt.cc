@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ElbStmt.h"
+#include "elb/ElbStmt.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

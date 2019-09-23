@@ -9,7 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiDelay.h"
-#include "ElbExpr.h"
+
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtBase.h"
 

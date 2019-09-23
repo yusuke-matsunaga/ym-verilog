@@ -9,7 +9,7 @@
 
 #include "EiFactory.h"
 #include "EiAttribute.h"
-#include "ElbExpr.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtMisc.h"
 

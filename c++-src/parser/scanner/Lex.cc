@@ -7,9 +7,9 @@
 /// All rights reserved.
 
 
-#include "Lex.h"
+#include "scanner/Lex.h"
+#include "scanner/LexModuleState.h"
 #include "LexModulePlugin.h"
-#include "LexModuleState.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

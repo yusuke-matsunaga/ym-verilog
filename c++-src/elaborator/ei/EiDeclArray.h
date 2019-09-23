@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ElbDecl.h"
+#include "elb/ElbDecl.h"
 #include "EiRange.h"
 
 #include "ym/BitVector.h"

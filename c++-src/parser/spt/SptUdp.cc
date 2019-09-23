@@ -8,9 +8,9 @@
 
 
 #include "SptUdp.h"
-#include "SptFactory.h"
+#include "parser/SptFactory.h"
 
-#include "PtiDecl.h"
+#include "parser/PtiDecl.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

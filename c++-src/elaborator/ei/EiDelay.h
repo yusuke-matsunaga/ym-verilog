@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ElbDelay.h"
+#include "elb/ElbDelay.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

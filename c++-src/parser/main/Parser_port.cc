@@ -6,9 +6,9 @@
 /// All rights reserved.
 
 
-#include "Parser.h"
-#include "PtiDecl.h"
-#include "PtiExpr.h"
+#include "parser/Parser.h"
+#include "parser/PtiDecl.h"
+#include "parser/PtiExpr.h"
 
 #include "ym/MsgMgr.h"
 

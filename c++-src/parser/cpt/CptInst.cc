@@ -8,7 +8,7 @@
 
 
 #include "CptInst.h"
-#include "CptFactory.h"
+#include "parser/CptFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

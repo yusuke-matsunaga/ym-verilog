@@ -13,7 +13,7 @@
 // IEEE Std 1364-2001 26.6.31 Repeat control
 
 
-#include "ElbControl.h"
+#include "elb/ElbControl.h"
 #include "ym/pt/PtP.h"
 
 

@@ -7,10 +7,9 @@
 /// All rights reserved.
 
 
-#include "LexPlugin.h"
-#include "RawLex.h"
-
-#include "parser_common.h"
+#include "scanner/LexPlugin.h"
+#include "scanner/RawLex.h"
+#include "scanner/common.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

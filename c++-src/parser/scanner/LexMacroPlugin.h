@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "LexPlugin.h"
+#include "scanner/LexPlugin.h"
 #include "TokenList.h"
 
 /// 仕様書覚書

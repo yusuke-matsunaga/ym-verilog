@@ -9,7 +9,8 @@
 /// All rights reserved.
 
 
-#include "ElbPort.h"
+#include "elb/ElbPort.h"
+
 #include "ym/pt/PtP.h"
 
 

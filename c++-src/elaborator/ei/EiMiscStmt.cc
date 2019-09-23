@@ -10,11 +10,11 @@
 #include "EiFactory.h"
 #include "EiMiscStmt.h"
 
-#include "ElbDecl.h"
-#include "ElbTaskFunc.h"
-#include "ElbUserSystf.h"
-#include "ElbControl.h"
-#include "ElbExpr.h"
+#include "elb/ElbDecl.h"
+#include "elb/ElbTaskFunc.h"
+#include "elb/ElbUserSystf.h"
+#include "elb/ElbControl.h"
+#include "elb/ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtArray.h"

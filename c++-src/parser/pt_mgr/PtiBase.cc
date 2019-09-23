@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "PtiDecl.h"
-#include "PtiExpr.h"
+#include "parser/PtiDecl.h"
+#include "parser/PtiExpr.h"
 #include "ym/pt/PtMisc.h"
 #include "ym/pt/PtArray.h"
 

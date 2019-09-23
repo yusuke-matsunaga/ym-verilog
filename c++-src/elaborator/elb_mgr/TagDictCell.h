@@ -11,7 +11,8 @@
 
 #include "ym/verilog.h"
 #include "ym/Alloc.h"
-#include "ElbFwd.h"
+
+#include "elb/ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

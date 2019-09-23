@@ -14,9 +14,9 @@
 #include "ym/pt/PtP.h"
 #include "ym/pt/PtArray.h"
 #include "ym/ClibCellLibrary.h"
-#include "Elaborator.h"
-#include "ElbMgr.h"
-#include "ElbFactory.h"
+#include "elb/Elaborator.h"
+#include "elb/ElbMgr.h"
+#include "elb/ElbFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ElbAttribute.h"
+#include "elb/ElbAttribute.h"
 #include "ym/pt/PtP.h"
 
 

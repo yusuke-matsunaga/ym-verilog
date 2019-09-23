@@ -8,7 +8,7 @@
 
 
 #include "CptItem.h"
-#include "CptFactory.h"
+#include "parser/CptFactory.h"
 
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
