@@ -54,16 +54,16 @@ EiProcess::~EiProcess()
 }
 
 // @brief クラスの型の取得
-tVpiObjType
+VpiObjType
 EiProcess::type() const
 {
   switch ( mPtItem->type() ) {
-  case kPtItem_Initial: return kVpiInitial;
-  case kPtItem_Always:  return kVpiAlways;
+  case kPtItem_Initial: return VpiObjType::Initial;
+  case kPtItem_Always:  return VpiObjType::Always;
   default: break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiInitial;
+  return VpiObjType::Initial;
 }
 
 // @brief ファイル位置を返す．

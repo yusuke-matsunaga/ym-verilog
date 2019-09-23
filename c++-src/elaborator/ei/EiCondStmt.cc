@@ -252,10 +252,10 @@ EiWhileStmt::~EiWhileStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiWhileStmt::type() const
 {
-  return kVpiWhile;
+  return VpiObjType::While;
 }
 
 
@@ -284,10 +284,10 @@ EiRepeatStmt::~EiRepeatStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiRepeatStmt::type() const
 {
-  return kVpiRepeat;
+  return VpiObjType::Repeat;
 }
 
 
@@ -316,10 +316,10 @@ EiWaitStmt::~EiWaitStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiWaitStmt::type() const
 {
-  return kVpiWait;
+  return VpiObjType::Wait;
 }
 
 
@@ -354,10 +354,10 @@ EiForStmt::~EiForStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiForStmt::type() const
 {
-  return kVpiFor;
+  return VpiObjType::For;
 }
 
 // 初期化文を返す．
@@ -399,10 +399,10 @@ EiForeverStmt::~EiForeverStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiForeverStmt::type() const
 {
-  return kVpiForever;
+  return VpiObjType::Forever;
 }
 
 // @brief 本体のステートメントを返す．
@@ -440,10 +440,10 @@ EiIfStmt::~EiIfStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiIfStmt::type() const
 {
-  return kVpiIf;
+  return VpiObjType::If;
 }
 
 // @brief 条件式を返す．
@@ -496,10 +496,10 @@ EiIfElseStmt::~EiIfElseStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiIfElseStmt::type() const
 {
-  return kVpiIfElse;
+  return VpiObjType::IfElse;
 }
 
 // @brief else ステートメントを返す．
@@ -528,10 +528,10 @@ EiCaseItem::~EiCaseItem()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiCaseItem::type() const
 {
-  return kVpiCaseItem;
+  return VpiObjType::CaseItem;
 }
 
 // @brief ファイル位置を返す．
@@ -542,7 +542,7 @@ EiCaseItem::file_region() const
 }
 
 // @brief 条件式のリストの要素数を返す．
-int
+SizeType
 EiCaseItem::expr_num() const
 {
   return mExprNum;
@@ -551,7 +551,7 @@ EiCaseItem::expr_num() const
 // @brief 条件式を返す．
 // @param[in] pos 位置番号
 const VlExpr*
-EiCaseItem::expr(int pos) const
+EiCaseItem::expr(SizeType pos) const
 {
   return mExprList[pos];
 }
@@ -594,24 +594,24 @@ EiCaseStmt::~EiCaseStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiCaseStmt::type() const
 {
-  return kVpiCase;
+  return VpiObjType::Case;
 }
 
 // @brief case type を返す．
-tVpiCaseType
+VpiCaseType
 EiCaseStmt::case_type() const
 {
   switch ( pt_stmt()->type() ) {
-  case kPtCaseStmt:  return kVpiCaseExact;
-  case kPtCaseXStmt: return kVpiCaseX;
-  case kPtCaseZStmt: return kVpiCaseZ;
+  case kPtCaseStmt:  return VpiCaseType::Exact;
+  case kPtCaseXStmt: return VpiCaseType::X;
+  case kPtCaseZStmt: return VpiCaseType::Z;
   default: break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiCaseExact;
+  return VpiCaseType::Exact;
 }
 
 // @brief 条件式を返す．
@@ -622,7 +622,7 @@ EiCaseStmt::expr() const
 }
 
 // @brief case item のリストの要素数を返す．
-int
+SizeType
 EiCaseStmt::caseitem_num() const
 {
   return mCaseItemNum;
@@ -631,7 +631,7 @@ EiCaseStmt::caseitem_num() const
 // @brief case item を返す．
 // @param[in] pos 位置番号
 const VlCaseItem*
-EiCaseStmt::caseitem(int pos) const
+EiCaseStmt::caseitem(SizeType pos) const
 {
   return &mCaseItemList[pos];
 }
@@ -641,7 +641,7 @@ EiCaseStmt::caseitem(int pos) const
 // @param[in] expr_array ラベルのリスト用配列
 // @param[in] stmt 本体のステートメント
 void
-EiCaseStmt::set_caseitem(int pos,
+EiCaseStmt::set_caseitem(SizeType pos,
 			 const PtCaseItem* pt_caseitem,
 			 ElbExpr** expr_array,
 			 ElbStmt* stmt)

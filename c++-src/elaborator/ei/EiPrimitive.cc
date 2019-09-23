@@ -217,7 +217,7 @@ EiPrimHead::parent() const
 }
 
 // @brief primitive type を返す．
-tVpiPrimType
+VpiPrimType
 EiPrimHead::prim_type() const
 {
   return mPtHead->prim_type();
@@ -229,35 +229,35 @@ EiPrimHead::def_name() const
 {
   const char* nm = nullptr;
   switch ( prim_type() ) {
-  case kVpiAndPrim:      nm = "and"; break;
-  case kVpiNandPrim:     nm = "nand"; break;
-  case kVpiNorPrim:      nm = "nor"; break;
-  case kVpiOrPrim:       nm = "or"; break;
-  case kVpiXorPrim:      nm = "xor"; break;
-  case kVpiXnorPrim:     nm = "xnor"; break;
-  case kVpiBufPrim:      nm = "buf"; break;
-  case kVpiNotPrim:      nm = "not"; break;
-  case kVpiBufif0Prim:   nm = "bufif0"; break;
-  case kVpiBufif1Prim:   nm = "bufif1"; break;
-  case kVpiNotif0Prim:   nm = "notif0"; break;
-  case kVpiNotif1Prim:   nm = "notif1"; break;
-  case kVpiNmosPrim:     nm = "nmos"; break;
-  case kVpiPmosPrim:     nm = "pmos"; break;
-  case kVpiCmosPrim:     nm = "cmos"; break;
-  case kVpiRnmosPrim:    nm = "rnmos"; break;
-  case kVpiRpmosPrim:    nm = "rpmos"; break;
-  case kVpiRcmosPrim:    nm = "rcmos"; break;
-  case kVpiRtranPrim:    nm = "rtran"; break;
-  case kVpiRtranif0Prim: nm = "rtranif0"; break;
-  case kVpiRtranif1Prim: nm = "rtranif1"; break;
-  case kVpiTranPrim:     nm = "tran"; break;
-  case kVpiTranif0Prim:  nm = "tranif0"; break;
-  case kVpiTranif1Prim:  nm = "tranif1"; break;
-  case kVpiPullupPrim:   nm = "pullup"; break;
-  case kVpiPulldownPrim: nm = "pulldown"; break;
-  case kVpiCellPrim:     nm = "cell"; break;
-  case kVpiSeqPrim:
-  case kVpiCombPrim:
+  case VpiPrimType::And:      nm = "and"; break;
+  case VpiPrimType::Nand:     nm = "nand"; break;
+  case VpiPrimType::Nor:      nm = "nor"; break;
+  case VpiPrimType::Or:       nm = "or"; break;
+  case VpiPrimType::Xor:      nm = "xor"; break;
+  case VpiPrimType::Xnor:     nm = "xnor"; break;
+  case VpiPrimType::Buf:      nm = "buf"; break;
+  case VpiPrimType::Not:      nm = "not"; break;
+  case VpiPrimType::Bufif0:   nm = "bufif0"; break;
+  case VpiPrimType::Bufif1:   nm = "bufif1"; break;
+  case VpiPrimType::Notif0:   nm = "notif0"; break;
+  case VpiPrimType::Notif1:   nm = "notif1"; break;
+  case VpiPrimType::Nmos:     nm = "nmos"; break;
+  case VpiPrimType::Pmos:     nm = "pmos"; break;
+  case VpiPrimType::Cmos:     nm = "cmos"; break;
+  case VpiPrimType::Rnmos:    nm = "rnmos"; break;
+  case VpiPrimType::Rpmos:    nm = "rpmos"; break;
+  case VpiPrimType::Rcmos:    nm = "rcmos"; break;
+  case VpiPrimType::Rtran:    nm = "rtran"; break;
+  case VpiPrimType::Rtranif0: nm = "rtranif0"; break;
+  case VpiPrimType::Rtranif1: nm = "rtranif1"; break;
+  case VpiPrimType::Tran:     nm = "tran"; break;
+  case VpiPrimType::Tranif0:  nm = "tranif0"; break;
+  case VpiPrimType::Tranif1:  nm = "tranif1"; break;
+  case VpiPrimType::Pullup:   nm = "pullup"; break;
+  case VpiPrimType::Pulldown: nm = "pulldown"; break;
+  case VpiPrimType::Cell:     nm = "cell"; break;
+  case VpiPrimType::Seq:
+  case VpiPrimType::Comb:
     ASSERT_NOT_REACHED;
     break;
   }
@@ -280,23 +280,23 @@ EiPrimHead::cell_id() const
 }
 
 // @brief 0 の強さを得る．
-tVpiStrength
+VpiStrength
 EiPrimHead::drive0() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->drive0();
   }
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief 1 の強さを得る．
-tVpiStrength
+VpiStrength
 EiPrimHead::drive1() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->drive1();
   }
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief 遅延式を得る．
@@ -369,7 +369,7 @@ EiPrimHeadU::~EiPrimHeadU()
 }
 
 // @brief primitive type を返す．
-tVpiPrimType
+VpiPrimType
 EiPrimHeadU::prim_type() const
 {
   return mUdp->prim_type();
@@ -447,10 +447,10 @@ EiPrimHeadC::~EiPrimHeadC()
 }
 
 // @brief primitive type を返す．
-tVpiPrimType
+VpiPrimType
 EiPrimHeadC::prim_type() const
 {
-  return kVpiCellPrim;
+  return VpiPrimType::Cell;
 }
 
 // @brief プリミティブの定義名を返す．
@@ -532,14 +532,14 @@ EiPrimArray::~EiPrimArray()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiPrimArray::type() const
 {
   if ( udp_defn() ) {
-    return kVpiUdpArray;
+    return VpiObjType::UdpArray;
   }
   else {
-    return kVpiPrimitiveArray;
+    return VpiObjType::PrimitiveArray;
   }
 }
 
@@ -565,7 +565,7 @@ EiPrimArray::name() const
 }
 
 // @brief primitive type を返す．
-tVpiPrimType
+VpiPrimType
 EiPrimArray::prim_type() const
 {
   return head()->prim_type();
@@ -593,14 +593,14 @@ EiPrimArray::cell_id() const
 }
 
 // @brief 0 の強さを得る．
-tVpiStrength
+VpiStrength
 EiPrimArray::drive0() const
 {
   return head()->drive0();
 }
 
 // @brief 1 の強さを得る．
-tVpiStrength
+VpiStrength
 EiPrimArray::drive1() const
 {
   return head()->drive1();
@@ -642,7 +642,7 @@ EiPrimArray::right_range_string() const
 }
 
 // @brief 要素数を返す．
-int
+SizeType
 EiPrimArray::elem_num() const
 {
   return mRange.size();
@@ -651,7 +651,7 @@ EiPrimArray::elem_num() const
 // @brief 要素のプリミティブを返す．
 // @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
 const VlPrimitive*
-EiPrimArray::elem_by_offset(int offset) const
+EiPrimArray::elem_by_offset(SizeType offset) const
 {
   return &mArray[offset];
 }
@@ -726,14 +726,14 @@ EiPrimitive::~EiPrimitive()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiPrimitive::type() const
 {
   if ( udp_defn() ) {
-    return kVpiUdp;
+    return VpiObjType::Udp;
   }
   else {
-    return kVpiGate;
+    return VpiObjType::Gate;
   }
 }
 
@@ -752,7 +752,7 @@ EiPrimitive::parent() const
 }
 
 // @brief primitive type を返す．
-tVpiPrimType
+VpiPrimType
 EiPrimitive::prim_type() const
 {
   return head()->prim_type();
@@ -780,14 +780,14 @@ EiPrimitive::cell_id() const
 }
 
 // @brief 0 の強さを得る．
-tVpiStrength
+VpiStrength
 EiPrimitive::drive0() const
 {
   return head()->drive0();
 }
 
 // @brief 1 の強さを得る．
-tVpiStrength
+VpiStrength
 EiPrimitive::drive1() const
 {
   return head()->drive1();
@@ -801,7 +801,7 @@ EiPrimitive::delay() const
 }
 
 // @brief ポート数を得る．
-int
+SizeType
 EiPrimitive::port_num() const
 {
   return pt_inst()->port_list().size();
@@ -810,7 +810,7 @@ EiPrimitive::port_num() const
 // @brief ポート端子を得る．
 // @param[in] pos 位置番号 (0 <= pos < port_num())
 const VlPrimTerm*
-EiPrimitive::prim_term(int pos) const
+EiPrimitive::prim_term(SizeType pos) const
 {
   return &mPortArray[pos];
 }
@@ -822,22 +822,22 @@ EiPrimitive::init_port(EiPrimTerm* term_array)
 {
   mPortArray = term_array;
 
-  int output_num;
-  int inout_num;
-  int input_num;
+  SizeType output_num;
+  SizeType inout_num;
+  SizeType input_num;
   int stat = get_port_size(prim_type(), port_num(),
 			   output_num, inout_num, input_num);
-  ASSERT_COND(stat == 0 );
+  ASSERT_COND( stat == 0 );
 
   int index = 0;
   for ( int i = 0; i < output_num; ++ i, ++ index ) {
-    mPortArray[index].set(this, index, kVlOutput);
+    mPortArray[index].set(this, index, VpiDir::Output);
   }
   for ( int i = 0; i < inout_num; ++ i, ++ index ) {
-    mPortArray[index].set(this, index, kVlInout);
+    mPortArray[index].set(this, index, VpiDir::Inout);
   }
   for ( int i = 0; i < input_num; ++ i, ++ index ) {
-    mPortArray[index].set(this, index, kVlInput);
+    mPortArray[index].set(this, index, VpiDir::Input);
   }
 }
 
@@ -850,15 +850,15 @@ EiPrimitive::init_port(EiPrimTerm* term_array,
 {
   mPortArray = term_array;
   for ( auto& pin: cell.pin_list() ) {
-    tVlDirection dir;
+    VpiDir dir;
     if ( pin.is_input() ) {
-      dir = kVlInput;
+      dir = VpiDir::Input;
     }
     else if ( pin.is_output() ) {
-      dir = kVlOutput;
+      dir = VpiDir::Output;
     }
     else if ( pin.is_inout() ) {
-      dir = kVlInout;
+      dir = VpiDir::Inout;
     }
     else {
       ASSERT_NOT_REACHED;
@@ -1031,10 +1031,10 @@ EiPrimTerm::~EiPrimTerm()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiPrimTerm::type() const
 {
-  return kVpiPrimTerm;
+  return VpiObjType::PrimTerm;
 }
 
 // @brief ファイル位置の取得
@@ -1052,14 +1052,14 @@ EiPrimTerm::primitive() const
 }
 
 // @brief 入出力の種類を返す．
-tVlDirection
+VpiDir
 EiPrimTerm::direction() const
 {
-  return static_cast<tVlDirection>( (mIndexDir & 7U) );
+  return static_cast<VpiDir>( (mIndexDir & 7U) );
 }
 
 // @brief 端子番号を返す．
-int
+SizeType
 EiPrimTerm::term_index() const
 {
   return (mIndexDir >> 3);
@@ -1076,7 +1076,7 @@ EiPrimTerm::expr() const
 void
 EiPrimTerm::set(ElbPrimitive* primitive,
 		int index,
-		tVlDirection dir)
+		VpiDir dir)
 {
   mPrimitive = primitive;
   mIndexDir = (index << 3) | static_cast<ymuint32>(dir);

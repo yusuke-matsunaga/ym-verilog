@@ -30,9 +30,9 @@ VlDumperImpl::put_primarray_list(const char* label,
   for ( auto primarray: primarray_list ) {
     const char* nm = nullptr;
     switch ( primarray->type() ) {
-    case kVpiGateArray:   nm = "GateArray"; break;
-    case kVpiSwitchArray: nm = "SwitchArray"; break;
-    case kVpiUdpArray:    nm = "UdpArray"; break;
+    case VpiObjType::GateArray:   nm = "GateArray"; break;
+    case VpiObjType::SwitchArray: nm = "SwitchArray"; break;
+    case VpiObjType::UdpArray:    nm = "UdpArray"; break;
     default: ASSERT_NOT_REACHED;
     }
     VlDumpHeader x(this, label, nm);
@@ -61,9 +61,9 @@ VlDumperImpl::put_primitive(const char* label,
 {
   const char* nm = nullptr;
   switch ( prim->type() ) {
-  case kVpiGate:   nm = "Gate"; break;
-  case kVpiSwitch: nm = "Switch"; break;
-  case kVpiUdp:    nm = "Udp"; break;
+  case VpiObjType::Gate:   nm = "Gate"; break;
+  case VpiObjType::Switch: nm = "Switch"; break;
+  case VpiObjType::Udp:    nm = "Udp"; break;
   default: ASSERT_NOT_REACHED;
   }
   VlDumpHeader x(this, label, nm);
@@ -90,7 +90,7 @@ VlDumperImpl::put_primitive(const char* label,
   put("vpiStrength1", prim->drive1() );
   put("vpiDelay", prim->delay() );
 
-  if ( prim->type() == kVpiUdp ) {
+  if ( prim->type() == VpiObjType::Udp ) {
     put("vpiUdpDefn", prim->udp_defn()->def_name() );
   }
 
@@ -305,9 +305,9 @@ VlDumperImpl::put_cont_assign_bit(const char* label,
   put_str("vpiScope", handle.get_handle(vpiScope), vpiFullName);
 
   put("vpiStrength0",
-      static_cast<tVpiStrength>(handle.get_int(vpiStrength0)));
+      static_cast<VpiStrength>(handle.get_int(vpiStrength0)));
   put("vpiStrength1",
-      static_cast<tVpiStrength>(handle.get_int(vpiStrength1)));
+      static_cast<VpiStrength>(handle.get_int(vpiStrength1)));
   put("vpiDelay", handle.get_handle(vpiDelay));
 
   put("vpiLhs", handle.get_handle(vpiLhs));

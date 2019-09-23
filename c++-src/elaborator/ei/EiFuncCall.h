@@ -30,7 +30,7 @@ protected:
   /// @param[in] arg_size 引数の数
   /// @param[in] arg_list 引数のリスト
   EiFcBase(const PtExpr* pt_expr,
-	   int arg_size,
+	   SizeType arg_size,
 	   ElbExpr** arg_list);
 
   /// @brief デストラクタ
@@ -43,13 +43,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 引数の数を返す．
-  int
+  SizeType
   argument_num() const override;
 
   /// @brief 引数の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
   ElbExpr*
-  argument(int pos) const override;
+  argument(SizeType pos) const override;
 
 
 public:
@@ -68,7 +68,7 @@ public:
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
   ElbExpr*
-  _operand(int pos) const override;
+  _operand(SizeType pos) const override;
 
 
 private:
@@ -77,7 +77,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 引数の数
-  int mArgNum;
+  SizeType mArgNum;
 
   // 引数の配列
   ElbExpr** mArgList;
@@ -103,7 +103,7 @@ private:
   /// @param[in] arg_list 引数のリスト
   EiFuncCall(const PtExpr* pt_expr,
 	     const ElbTaskFunc* func,
-	     int arg_size,
+	     SizeType arg_size,
 	     ElbExpr** arg_list);
 
   /// @brief デストラクタ
@@ -116,7 +116,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -172,7 +172,7 @@ private:
   /// @param[in] arg_list 引数のリスト
   EiSysFuncCall(const PtExpr* pt_expr,
 		const ElbUserSystf* user_systf,
-		int arg_size,
+		SizeType arg_size,
 		ElbExpr** arg_list);
 
   /// @brief デストラクタ
@@ -185,7 +185,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 

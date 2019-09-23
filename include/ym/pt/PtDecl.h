@@ -44,19 +44,19 @@ public:
   /// @brief 補助的な型の取得
   /// @return 補助的な型
   virtual
-  tVpiAuxType
+  VpiAuxType
   aux_type() const = 0;
 
   /// @brief 補助的なネット型の取得
   /// @return ネット型
   virtual
-  tVpiNetType
+  VpiNetType
   net_type() const = 0;
 
   /// @brief 補助的な変数型の取得
   /// @return 変数型
   virtual
-  tVpiVarType
+  VpiVarType
   var_type() const = 0;
 
   /// @brief 符号の取得
@@ -171,14 +171,14 @@ public:
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
   virtual
-  tVpiVarType
+  VpiVarType
   data_type() const = 0;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
   virtual
-  tVpiNetType
+  VpiNetType
   net_type() const = 0;
 
   /// @brief vectored|scalared 属性の取得
@@ -186,7 +186,7 @@ public:
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
   virtual
-  tVpiVsType
+  VpiVsType
   vs_type() const = 0;
 
   /// @brief strength の取得

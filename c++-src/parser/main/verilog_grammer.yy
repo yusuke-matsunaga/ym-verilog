@@ -102,13 +102,13 @@ fr_merge(const FileRegion fr_array[],
   unsigned long uinttype;
   const char* strtype;
 
-  tVpiVarType vartype;
-  tVpiNetType nettype;
-  tVpiPrimType primtype;
-  tVpiConstType consttype;
-  tVpiStrength strengthtype;
-  tVpiRangeMode rangemode;
-  tVpiVsType vstype;
+  VpiVarType vartype;
+  VpiNetType nettype;
+  VpiPrimType primtype;
+  VpiConstType consttype;
+  VpiStrength strengthtype;
+  VpiRangeMode rangemode;
+  VpiVsType vstype;
   char udpsymbol;
 
   PuHierName* hiername;
@@ -757,15 +757,15 @@ port_reference
 }
 | IDENTIFIER '[' expression ':' expression ']'
 {
-  parser.new_PortRef(@$, $1, kVpiConstRange, $3, $5);
+  parser.new_PortRef(@$, $1, VpiRangeMode::Const, $3, $5);
 }
 | IDENTIFIER '[' expression PLUSCOLON expression ']'
 {
-  parser.new_PortRef(@$, $1, kVpiPlusRange, $3, $5);
+  parser.new_PortRef(@$, $1, VpiRangeMode::Plus, $3, $5);
 }
 | IDENTIFIER '[' expression MINUSCOLON expression ']'
 {
-  parser.new_PortRef(@$, $1, kVpiMinusRange, $3, $5);
+  parser.new_PortRef(@$, $1, VpiRangeMode::Minus, $3, $5);
 }
 ;
 
@@ -865,11 +865,11 @@ portdecl_head
 }
 | OUTPUT INTEGER
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, kVpiVarInteger);
+  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Integer);
 }
 | OUTPUT TIME
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, kVpiVarTime);
+  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Time);
 }
 ;
 
@@ -1387,11 +1387,11 @@ output_declhead2
 }
 | OUTPUT INTEGER
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, kVpiVarInteger);
+  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Integer);
 }
 | OUTPUT TIME
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, kVpiVarTime);
+  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Time);
 }
 
 
@@ -1455,7 +1455,7 @@ integer_declaration
 integer_declhead
 : INTEGER
 {
-  $$ = parser.new_VarH(@$, kVpiVarInteger);
+  $$ = parser.new_VarH(@$, VpiVarType::Integer);
 }
 ;
 
@@ -1532,7 +1532,7 @@ net_declhead1
 }
 | net_type        sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, $1, kVpiVsNone, $2, $4, $6);
+  $$ = parser.new_NetH(@$, $1, VpiVsType::None, $2, $4, $6);
 }
 | net_type vstype sign '[' expression ':' expression ']'
 {
@@ -1540,7 +1540,7 @@ net_declhead1
 }
 | net_type        sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, $1, kVpiVsNone, $2, $4, $6, $8);
+  $$ = parser.new_NetH(@$, $1, VpiVsType::None, $2, $4, $6, $8);
 }
 | net_type vstype sign '[' expression ':' expression ']' delay3
 {
@@ -1549,28 +1549,28 @@ net_declhead1
 | TRIREG sign
 {
   // 1ビット
-  $$ = parser.new_NetH(@$, kVpiTriReg, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $2);
 }
 | TRIREG sign        delay3
 {
   // 1ビット
-  $$ = parser.new_NetH(@$, kVpiTriReg, $2, $3);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $2, $3);
 }
 | TRIREG        sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, kVpiVsNone, $2, $4, $6);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, VpiVsType::None, $2, $4, $6);
 }
 | TRIREG vstype sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, $2, $3, $5, $7);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $2, $3, $5, $7);
 }
 | TRIREG        sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, kVpiVsNone, $2, $4, $6, $8);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, VpiVsType::None, $2, $4, $6, $8);
 }
 | TRIREG vstype sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, $2, $3, $5, $7, $9);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $2, $3, $5, $7, $9);
 }
 ;
 
@@ -1581,28 +1581,28 @@ net_declhead2
 : TRIREG charge_strength sign
 {
   // 1ビット
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $2);
 }
 | TRIREG charge_strength sign         delay3
 {
   // 1ビット
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $2, $4);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $2, $4);
 }
 | TRIREG charge_strength        sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, kVpiVsNone, $3, $5, $7, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, VpiVsType::None, $3, $5, $7, $2);
 }
 | TRIREG charge_strength vstype sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $4, $6, $8, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $4, $6, $8, $2);
 }
 | TRIREG charge_strength        sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, kVpiVsNone, $3, $5, $7, $2, $9);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, VpiVsType::None, $3, $5, $7, $2, $9);
 }
 | TRIREG charge_strength vstype sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $4, $6, $8, $2, $10);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $4, $6, $8, $2, $10);
 }
 ;
 
@@ -1624,7 +1624,7 @@ net_declhead3
 }
 | net_type drive_strength        sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, $1, kVpiVsNone, $3, $5, $7, $2);
+  $$ = parser.new_NetH(@$, $1, VpiVsType::None, $3, $5, $7, $2);
 }
 | net_type drive_strength vstype sign '[' expression ':' expression ']'
 {
@@ -1632,7 +1632,7 @@ net_declhead3
 }
 | net_type drive_strength        sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, $1, kVpiVsNone, $3, $5, $7, $2, $9);
+  $$ = parser.new_NetH(@$, $1, VpiVsType::None, $3, $5, $7, $2, $9);
 }
 | net_type drive_strength vstype sign '[' expression ':' expression ']' delay3
 {
@@ -1642,28 +1642,28 @@ net_declhead3
 | TRIREG drive_strength sign
 {
   // 1ビット
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $2);
 }
 | TRIREG drive_strength sign        delay3
 {
   // 1ビット
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $2, $4);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $2, $4);
 }
 | TRIREG drive_strength        sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, kVpiVsNone, $3, $5, $7, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, VpiVsType::None, $3, $5, $7, $2);
 }
 | TRIREG drive_strength vstype sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $4, $6, $8, $2);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $4, $6, $8, $2);
 }
 | TRIREG drive_strength        sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, kVpiVsNone, $3, $5, $7, $2, $9);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, VpiVsType::None, $3, $5, $7, $2, $9);
 }
 | TRIREG drive_strength vstype sign '[' expression ':' expression ']' delay3
 {
-  $$ = parser.new_NetH(@$, kVpiTriReg, $3, $4, $6, $8, $2, $10);
+  $$ = parser.new_NetH(@$, VpiNetType::TriReg, $3, $4, $6, $8, $2, $10);
 }
 ;
 
@@ -1683,7 +1683,7 @@ real_declaration
 real_declhead
 : REAL
 {
-  $$ = parser.new_VarH(@$, kVpiVarReal);
+  $$ = parser.new_VarH(@$, VpiVarType::Real);
 }
 ;
 
@@ -1703,7 +1703,7 @@ realtime_declaration
 realtime_declhead
 : REALTIME
 {
-  $$ = parser.new_VarH(@$, kVpiVarRealtime);
+  $$ = parser.new_VarH(@$, VpiVarType::Realtime);
 }
 ;
 
@@ -1748,7 +1748,7 @@ time_declaration
 time_declhead
 : TIME
 {
-  $$ = parser.new_VarH(@$, kVpiVarTime);
+  $$ = parser.new_VarH(@$, VpiVarType::Time);
 }
 ;
 
@@ -1766,43 +1766,43 @@ time_declhead
 net_type
 : SUPPLY0
 {
-  $$ = kVpiSupply0;
+  $$ = VpiNetType::Supply0;
 }
 | SUPPLY1
 {
-  $$ = kVpiSupply1;
+  $$ = VpiNetType::Supply1;
 }
 | TRI
 {
-  $$ = kVpiTri;
+  $$ = VpiNetType::Tri;
 }
 | TRIAND
 {
-  $$ = kVpiTriAnd;
+  $$ = VpiNetType::TriAnd;
 }
 | TRIOR
 {
-  $$ = kVpiTriOr;
+  $$ = VpiNetType::TriOr;
 }
 | TRI0
 {
-  $$ = kVpiTri0;
+  $$ = VpiNetType::Tri0;
 }
 | TRI1
 {
-  $$ = kVpiTri1;
+  $$ = VpiNetType::Tri1;
 }
 | WIRE
 {
-  $$ = kVpiWire;
+  $$ = VpiNetType::Wire;
 }
 | WAND
 {
-  $$ = kVpiWand;
+  $$ = VpiNetType::Wand;
 }
 | WOR
 {
-  $$ = kVpiWor;
+  $$ = VpiNetType::Wor;
 }
 ;
 
@@ -1822,11 +1822,11 @@ sign
 vstype
 : VECTORED
 {
-  $$ = kVpiVectored;
+  $$ = VpiVsType::Vectored;
 }
 | SCALARED
 {
-  $$ = kVpiScalared;
+  $$ = VpiVsType::Scalared;
 }
 ;
 
@@ -1886,21 +1886,21 @@ drive_strength
 }
 | '(' strength0 ',' HIGHZ1 ')'
 {
-  $$ = parser.new_Strength(@$, $2, kVpiHiZ);
+  $$ = parser.new_Strength(@$, $2, VpiStrength::HiZ);
 }
 | '(' strength1 ',' HIGHZ0 ')'
 {
   // 順序を入れ替える．
-  $$ = parser.new_Strength(@$, kVpiHiZ, $2);
+  $$ = parser.new_Strength(@$, VpiStrength::HiZ, $2);
 }
 | '(' HIGHZ1    ',' strength0 ')'
 {
   // 順序を入れ替える．
-  $$ = parser.new_Strength(@$, $4, kVpiHiZ);
+  $$ = parser.new_Strength(@$, $4, VpiStrength::HiZ);
 }
 | '(' HIGHZ0    ',' strength1 ')'
 {
-  $$ = parser.new_Strength(@$, kVpiHiZ, $4);
+  $$ = parser.new_Strength(@$, VpiStrength::HiZ, $4);
 }
 ;
 
@@ -1908,19 +1908,19 @@ drive_strength
 strength0
 : SUPPLY0
 {
-  $$ = kVpiSupplyDrive;
+  $$ = VpiStrength::SupplyDrive;
 }
 | STRONG0
 {
-  $$ = kVpiStrongDrive;
+  $$ = VpiStrength::StrongDrive;
 }
 | PULL0
 {
-  $$ = kVpiPullDrive;
+  $$ = VpiStrength::PullDrive;
 }
 | WEAK0
 {
-  $$ = kVpiWeakDrive;
+  $$ = VpiStrength::WeakDrive;
 }
 ;
 
@@ -1928,19 +1928,19 @@ strength0
 strength1
 : SUPPLY1
 {
-  $$ = kVpiSupplyDrive;
+  $$ = VpiStrength::SupplyDrive;
 }
 | STRONG1
 {
-  $$ = kVpiStrongDrive;
+  $$ = VpiStrength::StrongDrive;
 }
 | PULL1
 {
-  $$ = kVpiPullDrive;
+  $$ = VpiStrength::PullDrive;
 }
 | WEAK1
 {
-  $$ = kVpiWeakDrive;
+  $$ = VpiStrength::WeakDrive;
 }
 ;
 
@@ -1948,15 +1948,15 @@ strength1
 charge_strength
 : '(' SMALL ')'
 {
-  $$ = parser.new_Strength(@$, kVpiSmallCharge);
+  $$ = parser.new_Strength(@$, VpiStrength::SmallCharge);
 }
 | '(' MEDIUM ')'
 {
-  $$ = parser.new_Strength(@$, kVpiMediumCharge);
+  $$ = parser.new_Strength(@$, VpiStrength::MediumCharge);
 }
 | '(' LARGE ')'
 {
-  $$ = parser.new_Strength(@$, kVpiLargeCharge);
+  $$ = parser.new_Strength(@$, VpiStrength::LargeCharge);
 }
 ;
 
@@ -2042,7 +2042,7 @@ delay_value
 }
 | '(' expression ')'
 {
-  $$ = parser.new_Opr(@$, kVlNullOp, $2, NULL);
+  $$ = parser.new_Opr(@$, VpiOpType::Null, $2, NULL);
 }
 ;
 /*
@@ -2472,19 +2472,19 @@ function_port_list
 data_type
 : INTEGER
 {
-  $$ = kVpiVarInteger;
+  $$ = VpiVarType::Integer;
 }
 | REAL
 {
-  $$ = kVpiVarReal;
+  $$ = VpiVarType::Real;
 }
 | REALTIME
 {
-  $$ = kVpiVarRealtime;
+  $$ = VpiVarType::Realtime;
 }
 | TIME
 {
-  $$ = kVpiVarTime;
+  $$ = VpiVarType::Time;
 }
 ;
 
@@ -2758,19 +2758,19 @@ tf_inout_declhead
 task_port_type
 : TIME
 {
-  $$ = kVpiVarTime;
+  $$ = VpiVarType::Time;
 }
 | REAL
 {
-  $$ = kVpiVarReal;
+  $$ = VpiVarType::Real;
 }
 | REALTIME
 {
-  $$ = kVpiVarRealtime;
+  $$ = VpiVarType::Realtime;
 }
 | INTEGER
 {
-  $$ = kVpiVarInteger;
+  $$ = VpiVarType::Integer;
 }
 ;
 
@@ -2977,19 +2977,19 @@ gate_instantiation
 }
 | PULLDOWN                                nzlist_of_pull_inst ';'
 {
-  $$ = parser.new_GateH(@$, kVpiPulldownPrim);
+  $$ = parser.new_GateH(@$, VpiPrimType::Pulldown);
 }
 | PULLDOWN pulldown_strength              nzlist_of_pull_inst ';'
 {
-  $$ = parser.new_GateH(@$, kVpiPulldownPrim, $2);
+  $$ = parser.new_GateH(@$, VpiPrimType::Pulldown, $2);
 }
 | PULLUP                                  nzlist_of_pull_inst ';'
 {
-  $$ = parser.new_GateH(@$, kVpiPullupPrim);
+  $$ = parser.new_GateH(@$, VpiPrimType::Pullup);
 }
 | PULLUP pullup_strength                  nzlist_of_pull_inst ';'
 {
-  $$ = parser.new_GateH(@$, kVpiPullupPrim, $2);
+  $$ = parser.new_GateH(@$, VpiPrimType::Pullup, $2);
 }
 ;
 
@@ -3329,11 +3329,11 @@ pullup_strength
 cmos_switchtype
 : CMOS
 {
-  $$ = kVpiCmosPrim;
+  $$ = VpiPrimType::Cmos;
 }
 | RCMOS
 {
-  $$ = kVpiRcmosPrim;
+  $$ = VpiPrimType::Rcmos;
 }
 ;
 
@@ -3341,19 +3341,19 @@ cmos_switchtype
 enable_gatetype
 : BUFIF0
 {
-  $$ = kVpiBufif0Prim;
+  $$ = VpiPrimType::Bufif0;
 }
 | BUFIF1
 {
-  $$ = kVpiBufif1Prim;
+  $$ = VpiPrimType::Bufif1;
 }
 | NOTIF0
 {
-  $$ = kVpiNotif0Prim;
+  $$ = VpiPrimType::Notif0;
 }
 | NOTIF1
 {
-  $$ = kVpiNotif1Prim;
+  $$ = VpiPrimType::Notif1;
 }
 ;
 
@@ -3361,19 +3361,19 @@ enable_gatetype
 mos_switchtype
 : NMOS
 {
-  $$ = kVpiNmosPrim;
+  $$ = VpiPrimType::Nmos;
 }
 | PMOS
 {
-  $$ = kVpiPmosPrim;
+  $$ = VpiPrimType::Pmos;
 }
 | RNMOS
 {
-  $$ = kVpiRnmosPrim;
+  $$ = VpiPrimType::Rnmos;
 }
 | RPMOS
 {
-  $$ = kVpiRpmosPrim;
+  $$ = VpiPrimType::Rpmos;
 }
 ;
 
@@ -3381,27 +3381,27 @@ mos_switchtype
 n_input_gatetype
 : AND
 {
-  $$ = kVpiAndPrim;
+  $$ = VpiPrimType::And;
 }
 | NAND
 {
-  $$ = kVpiNandPrim;
+  $$ = VpiPrimType::Nand;
 }
 | OR
 {
-  $$ = kVpiOrPrim;
+  $$ = VpiPrimType::Or;
 }
 | NOR
 {
-  $$ = kVpiNorPrim;
+  $$ = VpiPrimType::Nor;
 }
 | XOR
 {
-  $$ = kVpiXorPrim;
+  $$ = VpiPrimType::Xor;
 }
 | XNOR
 {
-  $$ = kVpiXnorPrim;
+  $$ = VpiPrimType::Xnor;
 }
 ;
 
@@ -3409,11 +3409,11 @@ n_input_gatetype
 n_output_gatetype
 : BUF
 {
-  $$ = kVpiBufPrim;
+  $$ = VpiPrimType::Buf;
 }
 | NOT
 {
-  $$ = kVpiNotPrim;
+  $$ = VpiPrimType::Not;
 }
 ;
 
@@ -3421,19 +3421,19 @@ n_output_gatetype
 pass_en_switchtype
 : TRANIF0
 {
-  $$ = kVpiTranif0Prim;
+  $$ = VpiPrimType::Tranif0;
 }
 | TRANIF1
 {
-  $$ = kVpiTranif1Prim;
+  $$ = VpiPrimType::Tranif1;
 }
 | RTRANIF0
 {
-  $$ = kVpiRtranif0Prim;
+  $$ = VpiPrimType::Rtranif0;
 }
 | RTRANIF1
 {
-  $$ = kVpiRtranif1Prim;
+  $$ = VpiPrimType::Rtranif1;
 }
 ;
 
@@ -3441,11 +3441,11 @@ pass_en_switchtype
 pass_switchtype
 : TRAN
 {
-  $$ = kVpiTranPrim;
+  $$ = VpiPrimType::Tran;
 }
 | RTRAN
 {
-  $$ = kVpiRtranPrim;
+  $$ = VpiPrimType::Rtran;
 }
 ;
 
@@ -4224,7 +4224,7 @@ init_val
     YYERROR;
   }
   else {
-    $$ = parser.new_IntConst(@$, 1, kVpiBinaryConst, $3);
+    $$ = parser.new_IntConst(@$, 1, VpiConstType::Binary, $3);
   }
 }
 | UNUM_INT wrong_base UNUMBER
@@ -4990,11 +4990,11 @@ event_primary
 }
 | POSEDGE expression
 {
-  $$ = parser.new_Opr(@$, kVlPosedgeOp, $2, NULL);
+  $$ = parser.new_Opr(@$, VpiOpType::Posedge, $2, NULL);
 }
 | NEGEDGE expression
 {
-  $$ = parser.new_Opr(@$, kVlNegedgeOp, $2, NULL);
+  $$ = parser.new_Opr(@$, VpiOpType::Negedge, $2, NULL);
 }
 ;
 
@@ -5298,31 +5298,31 @@ specify_item
 : specparam_declaration
 | PULSESTYLE_ONEVENT  nzlist_of_terminals ';'
 {
-  parser.new_SpecItem(@$, kVpiPulsestyleOnEvent, $2);
+  parser.new_SpecItem(@$, VpiSpecItemType::PulsestyleOnEvent, $2);
 }
 | PULSESTYLE_ONDETECT nzlist_of_terminals ';'
 {
-  parser.new_SpecItem(@$, kVpiPulsestyleOnDetect, $2);
+  parser.new_SpecItem(@$, VpiSpecItemType::PulsestyleOnDetect, $2);
 }
 | SHOWCANCELLED   nzlist_of_terminals ';'
 {
-  parser.new_SpecItem(@$, kVpiShowcancelled, $2);
+  parser.new_SpecItem(@$, VpiSpecItemType::Showcancelled, $2);
 }
 | NOSHOWCANCELLED nzlist_of_terminals ';'
 {
-  parser.new_SpecItem(@$, kVpiNoshowcancelled, $2);
+  parser.new_SpecItem(@$, VpiSpecItemType::Noshowcancelled, $2);
 }
 | path_declaration ';'
 {
-  parser.new_SpecPath(@$, kVpiSpecPathNull, NULL, $1);
+  parser.new_SpecPath(@$, VpiSpecPathType::Null, NULL, $1);
 }
 | IF '(' module_path_expression ')' path_declaration ';'
 {
-  parser.new_SpecPath(@$, kVpiSpecPathIf, $3, $5);
+  parser.new_SpecPath(@$, VpiSpecPathType::If, $3, $5);
 }
 | IFNONE simple_path_declaration ';'
 {
-  parser.new_SpecPath(@$, kVpiSpecPathIfnone, NULL, $2);
+  parser.new_SpecPath(@$, VpiSpecPathType::Ifnone, NULL, $2);
 }
 | system_timing_check
 {
@@ -5385,7 +5385,7 @@ simple_path_declaration
 {
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, 0,
-			   EQGT,
+			   VpiPathType::Parallel,
 			   $4, 0,
 			   NULL, $7);
 }
@@ -5394,7 +5394,7 @@ simple_path_declaration
 {
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, $3,
-			   EQGT,
+			   VpiPathType::Parallel,
 			   $5, 0,
 			   NULL, $8);
 }
@@ -5403,7 +5403,7 @@ simple_path_declaration
 {
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, 0,
-			   STARGT,
+			   VpiPathType::Full,
 			   $4, 0,
 			   NULL, $7);
 }
@@ -5412,7 +5412,7 @@ simple_path_declaration
 {
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, $3,
-			   STARGT,
+			   VpiPathType::Full,
 			   $5, 0,
 			   NULL, $8);
 }
@@ -5469,15 +5469,15 @@ specify_terminal
 }
 | IDENTIFIER '[' expression ':' expression ']'
 {
-  $$ = parser.new_CPrimary(@$, $1, kVpiConstRange, $3, $5);
+  $$ = parser.new_CPrimary(@$, $1, VpiRangeMode::Const, $3, $5);
 }
 | IDENTIFIER '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_CPrimary(@$, $1, kVpiPlusRange, $3, $5);
+  $$ = parser.new_CPrimary(@$, $1, VpiRangeMode::Plus, $3, $5);
 }
 | IDENTIFIER '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_CPrimary(@$, $1, kVpiMinusRange, $3, $5);
+  $$ = parser.new_CPrimary(@$, $1, VpiRangeMode::Minus, $3, $5);
 }
 ;
 
@@ -5609,7 +5609,7 @@ path_delay_expression
 // parallel_edge_sensitive_path_description や
 // full_edge_sensitive_path_description で '+'|'-'
 // の直後に':'が来る場合がある．
-// ところが連続した　"+:" や "-:" はそれぞれ PLUSCOLON，MINUSCOLON
+// ところが連続した "+:" や "-:" はそれぞれ PLUSCOLON，MINUSCOLON
 // というトークンになってしまう．
 // そのため，PLUSCOLON, MINUSCOLON を含んだ構文を追加する．
 // 具体的には pol_colon という非終端ノードを追加している．
@@ -5619,7 +5619,7 @@ edge_sensitive_path_declaration
 { // parallel_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, 0,
-			   kVpiPathParallel,
+			   VpiPathType::Parallel,
 			   $5, 0,
 			   $6, $10);
 }
@@ -5628,7 +5628,7 @@ edge_sensitive_path_declaration
 { // parallel_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, 0,
-			   kVpiPathParallel,
+			   VpiPathType::Parallel,
 			   $5, $6,
 			   $7, $11);
 }
@@ -5637,7 +5637,7 @@ edge_sensitive_path_declaration
 { // parallel_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, $2,
 			   $3, 0,
-			   kVpiPathParallel,
+			   VpiPathType::Parallel,
 			   $6, 0,
 			   $7, $11);
 }
@@ -5646,7 +5646,7 @@ edge_sensitive_path_declaration
 { // parallel_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, $2,
 			   $3, 0,
-			   kVpiPathParallel,
+			   VpiPathType::Parallel,
 			   $6, $7,
 			   $8, $12);
 }
@@ -5655,7 +5655,7 @@ edge_sensitive_path_declaration
 { // full_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, 0,
-			   kVpiPathFull,
+			   VpiPathType::Full,
 			   $5, 0,
 			   $6, $10);
 }
@@ -5664,7 +5664,7 @@ edge_sensitive_path_declaration
 { // full_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, 0,
 			   $2, 0,
-			   kVpiPathFull,
+			   VpiPathType::Full,
 			   $5, $6,
 			   $7, $11);
 }
@@ -5673,7 +5673,7 @@ edge_sensitive_path_declaration
 { // full_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, $2,
 			   $3, 0,
-			   kVpiPathFull,
+			   VpiPathType::Full,
 			   $6, 0,
 			   $7, $11);
 }
@@ -5682,7 +5682,7 @@ edge_sensitive_path_declaration
 { // full_edge_sensitive_path_description
   $$ = parser.new_PathDecl(@$, $2,
 			   $3, 0,
-			   kVpiPathFull,
+			   VpiPathType::Full,
 			   $6, $7,
 			   $8, $12);
 }
@@ -6204,7 +6204,7 @@ expression
 }
 | expr1 '?' ai_list expr1 ':' expression %prec COND
 {
-  $$ = parser.new_Opr(@$, kVlConditionOp, $1, $4, $6, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Condition, $1, $4, $6, $3);
 }
 ;
 
@@ -6215,139 +6215,139 @@ expr1
 }
 | '+' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlPlusOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::Plus, $3, $2);
 }
 | '-' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlMinusOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::Minus, $3, $2);
 }
 | '!' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlNotOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::Not, $3, $2);
 }
 | '~' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlBitNegOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::BitNeg, $3, $2);
 }
 | '&' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlUnaryAndOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::UnaryAnd, $3, $2);
 }
 | '|' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlUnaryOrOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::UnaryOr, $3, $2);
 }
 | '^' ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlUnaryXorOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::UnaryXor, $3, $2);
 }
 | TILDEAND ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlUnaryNandOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::UnaryNand, $3, $2);
 }
 | TILDEOR ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlUnaryNorOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::UnaryNor, $3, $2);
 }
 | TILDEXOR ai_list primary %prec UOP
 {
-  $$ = parser.new_Opr(@$, kVlUnaryXNorOp, $3, $2);
+  $$ = parser.new_Opr(@$, VpiOpType::UnaryXNor, $3, $2);
 }
 | expr1 STARSTAR ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlPowerOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Power, $1, $4, $3);
 }
 | expr1 '+' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlAddOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Add, $1, $4, $3);
 }
 | expr1 '-' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlSubOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Sub, $1, $4, $3);
 }
 | expr1 '*' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlMultOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Mult, $1, $4, $3);
 }
 | expr1 '/' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlDivOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Div, $1, $4, $3);
 }
 | expr1 '%' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlModOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Mod, $1, $4, $3);
 }
 | expr1 EQEQ ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlEqOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Eq, $1, $4, $3);
 }
 | expr1 NOTEQ ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlNeqOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Neq, $1, $4, $3);
 }
 | expr1 EQEQEQ ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlCaseEqOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::CaseEq, $1, $4, $3);
 }
 | expr1 NOTEQEQ ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlCaseNeqOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::CaseNeq, $1, $4, $3);
 }
 | expr1 ANDAND ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlLogAndOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::LogAnd, $1, $4, $3);
 }
 | expr1 OROR ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlLogOrOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::LogOr, $1, $4, $3);
 }
 | expr1 '<' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlLtOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Lt, $1, $4, $3);
 }
 | expr1 '>' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlGtOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Gt, $1, $4, $3);
 }
 | expr1 LTEQ ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlLeOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Le, $1, $4, $3);
 }
 | expr1 GTEQ ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlGeOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::Ge, $1, $4, $3);
 }
 | expr1 '&' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlBitAndOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::BitAnd, $1, $4, $3);
 }
 | expr1 '|' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlBitOrOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::BitOr, $1, $4, $3);
 }
 | expr1 '^' ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlBitXorOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::BitXor, $1, $4, $3);
 }
 | expr1 TILDEXOR ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlBitXNorOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::BitXNor, $1, $4, $3);
 }
 | expr1 LTLT ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlLShiftOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::LShift, $1, $4, $3);
 }
 | expr1 GTGT ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlRShiftOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::RShift, $1, $4, $3);
 }
 | expr1 LTLTLT ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlArithLShiftOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::ArithLShift, $1, $4, $3);
 }
 | expr1 GTGTGT ai_list expr1
 {
-  $$ = parser.new_Opr(@$, kVlArithRShiftOp, $1, $4, $3);
+  $$ = parser.new_Opr(@$, VpiOpType::ArithRShift, $1, $4, $3);
 }
 | STRING
 {
@@ -6465,51 +6465,51 @@ primary
 }
 | hierarchical_identifier                 '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiConstRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Const, $3, $5);
 }
 | IDENTIFIER                 '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiConstRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Const, $3, $5);
 }
 | hierarchical_identifier                 '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiPlusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Plus, $3, $5);
 }
 | IDENTIFIER                 '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiPlusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Plus, $3, $5);
 }
 | hierarchical_identifier                 '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiMinusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Minus, $3, $5);
 }
 | IDENTIFIER                 '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiMinusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Minus, $3, $5);
 }
 | hierarchical_identifier nzlist_of_index '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiConstRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Const, $4, $6);
 }
 | IDENTIFIER nzlist_of_index '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiConstRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Const, $4, $6);
 }
 | hierarchical_identifier nzlist_of_index '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiPlusRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Plus, $4, $6);
 }
 | IDENTIFIER nzlist_of_index '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiPlusRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Plus, $4, $6);
 }
 | hierarchical_identifier nzlist_of_index '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiMinusRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Minus, $4, $6);
 }
 | IDENTIFIER nzlist_of_index '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiMinusRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Minus, $4, $6);
 }
 | concatenation
 {
@@ -6530,12 +6530,12 @@ primary
 | '(' expression ')'
 {
   // 括弧の位置を保持するためのトリック
-  $$ = parser.new_Opr(@$, kVlNullOp, $2, NULL);
+  $$ = parser.new_Opr(@$, VpiOpType::Null, $2, NULL);
 }
 | '(' mintypmax_expression ')'
 {
   // 括弧の位置を保持するためのトリック
-  $$ = parser.new_Opr(@$, kVlNullOp, $2, NULL);
+  $$ = parser.new_Opr(@$, VpiOpType::Null, $2, NULL);
 }
 ;
 
@@ -6626,51 +6626,51 @@ lvalue
 }
 | hierarchical_identifier                 '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiConstRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Const, $3, $5);
 }
 | IDENTIFIER                 '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiConstRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Const, $3, $5);
 }
 | hierarchical_identifier                 '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiPlusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Plus, $3, $5);
 }
 | IDENTIFIER                 '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiPlusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Plus, $3, $5);
 }
 | hierarchical_identifier                 '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiMinusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Minus, $3, $5);
 }
 | IDENTIFIER                 '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, kVpiMinusRange, $3, $5);
+  $$ = parser.new_Primary(@$, $1, VpiRangeMode::Minus, $3, $5);
 }
 | hierarchical_identifier nzlist_of_index '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiConstRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Const, $4, $6);
 }
 | IDENTIFIER nzlist_of_index '[' expression ':' expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiConstRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Const, $4, $6);
 }
 | hierarchical_identifier nzlist_of_index '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiPlusRange,  $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Plus,  $4, $6);
 }
 | IDENTIFIER nzlist_of_index '[' expression PLUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiPlusRange,  $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Plus,  $4, $6);
 }
 | hierarchical_identifier nzlist_of_index '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiMinusRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Minus, $4, $6);
 }
 | IDENTIFIER nzlist_of_index '[' expression MINUSCOLON expression ']'
 {
-  $$ = parser.new_Primary(@$, $1, $2, kVpiMinusRange, $4, $6);
+  $$ = parser.new_Primary(@$, $1, $2, VpiRangeMode::Minus, $4, $6);
 }
 | '{' nzlist_of_lvalues '}'
 {
@@ -6778,35 +6778,35 @@ rnumber
 numbase
 : BASE_B
 {
-  $$ = kVpiBinaryConst;
+  $$ = VpiConstType::Binary;
 }
 | BASE_SB
 {
-  $$ = kVpiSignedBinaryConst;
+  $$ = VpiConstType::SignedBinary;
 }
 | BASE_O
 {
-  $$ = kVpiOctConst;
+  $$ = VpiConstType::Oct;
 }
 | BASE_SO
 {
-  $$ = kVpiSignedOctConst;
+  $$ = VpiConstType::SignedOct;
 }
 | BASE_D
 {
-  $$ = kVpiDecConst;
+  $$ = VpiConstType::Dec;
 }
 | BASE_SD
 {
-  $$ = kVpiSignedDecConst;
+  $$ = VpiConstType::SignedDec;
 }
 | BASE_H
 {
-  $$ = kVpiHexConst;
+  $$ = VpiConstType::Hex;
 }
 | BASE_SH
 {
-  $$ = kVpiSignedHexConst;
+  $$ = VpiConstType::SignedHex;
 }
 ;
 

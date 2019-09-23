@@ -30,9 +30,9 @@ private:
   /// コンストラクタ
   SptIOHead(const FileRegion& file_region,
 	    tPtIOType type,
-	    tVpiAuxType aux_type,
-	    tVpiNetType net_type,
-	    tVpiVarType var_type,
+	    VpiAuxType aux_type,
+	    VpiNetType net_type,
+	    VpiVarType var_type,
 	    bool sign,
 	    const PtExpr* left,
 	    const PtExpr* right);
@@ -55,15 +55,15 @@ public:
   type() const override;
 
   /// 補助的な型の取得
-  tVpiAuxType
+  VpiAuxType
   aux_type() const override;
 
   /// 補助的なネット型の取得
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// 補助的な変数型の取得
-  tVpiVarType
+  VpiVarType
   var_type() const override;
 
   /// 符号の取得
@@ -106,13 +106,13 @@ private:
   tPtIOType mType;
 
   // 補助的な型
-  tVpiAuxType mAuxType;
+  VpiAuxType mAuxType;
 
   // 補助的なネット型
-  tVpiNetType mNetType;
+  VpiNetType mNetType;
 
   // 補助的な変数型
-  tVpiVarType mVarType;
+  VpiVarType mVarType;
 
   // 符号の有無
   bool mSigned;
@@ -200,9 +200,9 @@ private:
 	      bool sign,
 	      const PtExpr* left,
 	      const PtExpr* right,
-	      tVpiVarType var_type,
-	      tVpiNetType net_type,
-	      tVpiVsType vs_type,
+	      VpiVarType var_type,
+	      VpiNetType net_type,
+	      VpiVsType vs_type,
 	      const PtStrength* strength,
 	      const PtDelay* delay);
 
@@ -236,15 +236,15 @@ public:
   right_range() const override;
 
   /// データ型の取得
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// net 型の取得
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// vectored|scalared 属性の取得
-  tVpiVsType
+  VpiVsType
   vs_type() const override;
 
   /// strength の取得
@@ -292,13 +292,13 @@ private:
   const PtExpr* mRightRange;
 
   // データ型
-  tVpiVarType mVarType;
+  VpiVarType mVarType;
 
   // net type
-  tVpiNetType mNetType;
+  VpiNetType mNetType;
 
   // vs_type
-  tVpiVsType mVsType;
+  VpiVsType mVsType;
 
   // strength
   const PtStrength* mStrength;

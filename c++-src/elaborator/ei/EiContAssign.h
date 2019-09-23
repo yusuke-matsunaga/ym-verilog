@@ -45,11 +45,11 @@ public:
   module() const override;
 
   /// @brief 0の強さを返す．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief 1の強さを返す．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief 遅延を表す式を返す．
@@ -143,7 +143,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置の取得
@@ -221,11 +221,11 @@ public:
   module() const override;
 
   /// @brief 0の強さを返す．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief 1の強さを返す．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief 遅延を表す式を返す．
@@ -283,11 +283,11 @@ public:
   module() const override;
 
   /// @brief 0の強さを返す．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief 1の強さを返す．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief 遅延を表す式を返す．

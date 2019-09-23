@@ -38,7 +38,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 方向を返す．
-  tVlDirection
+  VpiDir
   direction() const override;
 
   /// @brief 親のモジュールの取得
@@ -218,7 +218,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -236,7 +236,7 @@ public:
   name() const override;
 
   /// @brief 方向を返す．
-  tVlDirection
+  VpiDir
   direction() const override;
 
   /// @brief 符号の取得
@@ -270,7 +270,7 @@ public:
   right_range_string() const override;
 
   /// @brief ビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief 対応する宣言要素を返す．

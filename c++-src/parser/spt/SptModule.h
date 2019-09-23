@@ -35,9 +35,9 @@ private:
 	    bool is_protected,
 	    int time_unit,
 	    int time_precision,
-	    tVpiNetType net_type,
-	    tVpiUnconnDrive unconn,
-	    tVpiDefDelayMode delay,
+	    VpiNetType net_type,
+	    VpiUnconnDrive unconn,
+	    VpiDefDelayMode delay,
 	    int decay,
 	    bool explicit_name,
 	    bool portfaults,
@@ -89,15 +89,15 @@ public:
   time_precision() const override;
 
   /// default net type の取得
-  tVpiNetType
+  VpiNetType
   nettype() const override;
 
   /// unconnected drive の取得
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconn_drive() const override;
 
   /// default delay mode の取得
-  tVpiDefDelayMode
+  VpiDefDelayMode
   delay_mode() const override;
 
   /// default decay time の取得
@@ -284,7 +284,7 @@ public:
   portref_elem(int pos) const override;
 
   /// @brief 内部のポート結線の方向の取得
-  tVlDirection
+  VpiDir
   portref_dir(int pos) const override;
 
 
@@ -298,7 +298,7 @@ public:
   /// @param[in] dir 方向
   void
   _set_portref_dir(int pos,
-		   tVlDirection dir) override;
+		   VpiDir dir) override;
 
 
 private:
@@ -319,7 +319,7 @@ private:
   PtExprArray mPortRefArray;
 
   // portref の方向の配列
-  tVlDirection* mDirArray;
+  VpiDir* mDirArray;
 
 };
 

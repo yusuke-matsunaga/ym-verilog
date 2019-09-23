@@ -44,7 +44,7 @@ public:
   /// @brief プリミティブタイプの取得
   /// @return プリミティブタイプ
   virtual
-  tVpiPrimType
+  VpiPrimType
   prim_type() const = 0;
 
   /// @brief strength の取得
@@ -134,7 +134,7 @@ public:
   /// @brief 戻値のデータ型の取得
   /// @return 戻値のデータ型
   virtual
-  tVpiVarType
+  VpiVarType
   data_type() const = 0;
 
   /// @brief constant function の展開中の印をつける．
@@ -156,13 +156,13 @@ public:
   /// @brief specify block item の種類の取得
   /// @return specify block item の種類
   virtual
-  tVpiSpecItemType
+  VpiSpecItemType
   specitem_type() const = 0;
 
   /// @brief specify block path の種類の取得
   /// @return specify block path の種類
   virtual
-  tVpiSpecPathType
+  VpiSpecPathType
   specpath_type() const = 0;
 
   /// @brief ターミナルのリストの取得
@@ -429,7 +429,7 @@ public:
   /// @brief パス記述子(?)の取得
   /// @return vpiParallel か vpiFull
   virtual
-  int
+  VpiPathType
   op() const = 0;
 
   /// @brief 出力のリストの取得

@@ -148,11 +148,11 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
       const char* name = elem->name();
       const PtExpr* portref = mFactory.new_Primary(elem->file_region(), name);
       PtiPort* port = mFactory.new_Port(elem->file_region(), portref, name);
-      tVlDirection dir;
+      VpiDir dir;
       switch ( head->type() ) {
-      case kPtIO_Input:  dir = kVlInput; break;
-      case kPtIO_Output: dir = kVlOutput; break;
-      case kPtIO_Inout:  dir = kVlInout; break;
+      case kPtIO_Input:  dir = VpiDir::Input; break;
+      case kPtIO_Output: dir = VpiDir::Output; break;
+      case kPtIO_Inout:  dir = VpiDir::Inout; break;
       default: ASSERT_NOT_REACHED;
       }
       port->_set_portref_dir(0, dir);
@@ -202,7 +202,7 @@ Parser::new_PortRef(const FileRegion& fr,
 void
 Parser::new_PortRef(const FileRegion& fr,
 		    const char* name,
-		    tVpiRangeMode range_mode,
+		    VpiRangeMode range_mode,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {

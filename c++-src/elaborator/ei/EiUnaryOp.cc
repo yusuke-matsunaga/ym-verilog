@@ -25,40 +25,40 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] opr1 オペランド
 ElbExpr*
 EiFactory::new_UnaryOp(const PtExpr* pt_expr,
-		       tVlOpType op_type,
+		       VpiOpType op_type,
 		       ElbExpr* opr1)
 {
   ElbExpr* expr = nullptr;
   void* p;
   switch ( op_type ) {
-  case kVlPosedgeOp:
-  case kVlNegedgeOp:
+  case VpiOpType::Posedge:
+  case VpiOpType::Negedge:
     p = mAlloc.get_memory(sizeof(EiEventEdgeOp));
     expr = new (p) EiEventEdgeOp(pt_expr, opr1);
     break;
 
-  case kVlBitNegOp:
+  case VpiOpType::BitNeg:
     p = mAlloc.get_memory(sizeof(EiBitNegOp));
     expr = new (p) EiBitNegOp(pt_expr, opr1);
     break;
 
-  case kVlPlusOp:
-  case kVlMinusOp:
+  case VpiOpType::Plus:
+  case VpiOpType::Minus:
     p = mAlloc.get_memory(sizeof(EiUnaryArithOp));
     expr = new (p) EiUnaryArithOp(pt_expr, opr1);
     break;
 
-  case kVlUnaryAndOp:
-  case kVlUnaryNandOp:
-  case kVlUnaryOrOp:
-  case kVlUnaryNorOp:
-  case kVlUnaryXorOp:
-  case kVlUnaryXNorOp:
+  case VpiOpType::UnaryAnd:
+  case VpiOpType::UnaryNand:
+  case VpiOpType::UnaryOr:
+  case VpiOpType::UnaryNor:
+  case VpiOpType::UnaryXor:
+  case VpiOpType::UnaryXNor:
     p = mAlloc.get_memory(sizeof(EiReductionOp));
     expr = new (p) EiReductionOp(pt_expr, opr1);
     break;
 
-  case kVlNotOp:
+  case VpiOpType::Not:
     p = mAlloc.get_memory(sizeof(EiNotOp));
     expr = new (p) EiNotOp(pt_expr, opr1);
     break;
@@ -99,7 +99,7 @@ EiUnaryOp::is_const() const
 }
 
 // @brief オペランド数を返す．
-int
+SizeType
 EiUnaryOp::operand_num() const
 {
   return 1;
@@ -108,7 +108,7 @@ EiUnaryOp::operand_num() const
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 ElbExpr*
-EiUnaryOp::_operand(int pos) const
+EiUnaryOp::_operand(SizeType pos) const
 {
   return mOpr1;
 }

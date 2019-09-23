@@ -31,8 +31,8 @@ VlDumperImpl::put_process(const char* label,
 {
   const char* nm = nullptr;
   switch ( process->type() ) {
-  case kVpiInitial: nm = "Initial"; break;
-  case kVpiAlways:  nm = "Always"; break;
+  case VpiObjType::Initial: nm = "Initial"; break;
+  case VpiObjType::Always:  nm = "Always"; break;
   default: ASSERT_NOT_REACHED;
   }
   VlDumpHeader x(this, label, nm);
@@ -63,30 +63,30 @@ VlDumperImpl::put_stmt(const char* label,
 {
   const char* nm = nullptr;
   switch ( stmt->type() ) {
-  case kVpiBegin:           nm = "Begin"; break;
-  case kVpiFork:            nm = "Fork"; break;
-  case kVpiNamedBegin:      nm = "NamedBegin"; break;
-  case kVpiNamedFork:       nm = "NamedFork"; break;
-  case kVpiNullStmt:        nm = "NullStmt"; break;
-  case kVpiEventStmt:       nm = "EventStmt"; break;
-  case kVpiAssignment:      nm = "Assignment"; break;
-  case kVpiWhile:           nm = "While"; break;
-  case kVpiRepeat:          nm = "Repeat"; break;
-  case kVpiWait:            nm = "Wait"; break;
-  case kVpiFor:             nm = "For"; break;
-  case kVpiForever:         nm = "Forever"; break;
-  case kVpiIf:              nm = "If"; break;
-  case kVpiIfElse:          nm = "IfElse"; break;
-  case kVpiCase:            nm = "Case"; break;
-  case kVpiForce:           nm = "Force"; break;
-  case kVpiAssignStmt:      nm = "AssignStmt"; break;
-  case kVpiDeassign:        nm = "Deassign"; break;
-  case kVpiRelease:         nm = "Release"; break;
-  case kVpiTaskCall:        nm = "TaskCall"; break;
-  case kVpiSysTaskCall:     nm = "SysTaskCall"; break;
-  case kVpiDisable:         nm = "Disable"; break;
-  case kVpiDelayControl:    nm = "DelayControl"; break;
-  case kVpiEventControl:    nm = "EventControl"; break;
+  case VpiObjType::Begin:           nm = "Begin"; break;
+  case VpiObjType::Fork:            nm = "Fork"; break;
+  case VpiObjType::NamedBegin:      nm = "NamedBegin"; break;
+  case VpiObjType::NamedFork:       nm = "NamedFork"; break;
+  case VpiObjType::NullStmt:        nm = "NullStmt"; break;
+  case VpiObjType::EventStmt:       nm = "EventStmt"; break;
+  case VpiObjType::Assignment:      nm = "Assignment"; break;
+  case VpiObjType::While:           nm = "While"; break;
+  case VpiObjType::Repeat:          nm = "Repeat"; break;
+  case VpiObjType::Wait:            nm = "Wait"; break;
+  case VpiObjType::For:             nm = "For"; break;
+  case VpiObjType::Forever:         nm = "Forever"; break;
+  case VpiObjType::If:              nm = "If"; break;
+  case VpiObjType::IfElse:          nm = "IfElse"; break;
+  case VpiObjType::Case:            nm = "Case"; break;
+  case VpiObjType::Force:           nm = "Force"; break;
+  case VpiObjType::AssignStmt:      nm = "AssignStmt"; break;
+  case VpiObjType::Deassign:        nm = "Deassign"; break;
+  case VpiObjType::Release:         nm = "Release"; break;
+  case VpiObjType::TaskCall:        nm = "TaskCall"; break;
+  case VpiObjType::SysTaskCall:     nm = "SysTaskCall"; break;
+  case VpiObjType::Disable:         nm = "Disable"; break;
+  case VpiObjType::DelayControl:    nm = "DelayControl"; break;
+  case VpiObjType::EventControl:    nm = "EventControl"; break;
   default: assert_not_reached( __FILE__, __LINE__);
   }
 
@@ -96,63 +96,63 @@ VlDumperImpl::put_stmt(const char* label,
   put("vpiScope", stmt->parent()->full_name() );
 
   switch ( stmt->type() ) {
-  case kVpiNamedBegin:
-  case kVpiNamedFork:
+  case VpiObjType::NamedBegin:
+  case VpiObjType::NamedFork:
     // スコープとしての内容は別に出力されている．
-  case kVpiBegin:
-  case kVpiFork:
+  case VpiObjType::Begin:
+  case VpiObjType::Fork:
     put_child_stmt_list("vpiStmt", mgr, stmt);
     break;
 
-  case kVpiEventStmt:
+  case VpiObjType::EventStmt:
     put("vpiNamedEvent", stmt->named_event()->decompile());
     break;
 
-  case kVpiAssignment:
+  case VpiObjType::Assignment:
     put("vpiBlocking", stmt->is_blocking() );
     put_lhs("vpiLhs", mgr, stmt->lhs() );
     put_expr("vpiRhs", mgr, stmt->rhs() );
     put_control("control", mgr, stmt->control() );
     break;
 
-  case kVpiWhile:
+  case VpiObjType::While:
     put_expr("vpiCondition", mgr, stmt->expr() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;
 
-  case kVpiRepeat:
+  case VpiObjType::Repeat:
     put_expr("vpiCondition", mgr, stmt->expr() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;
 
-  case kVpiWait:
+  case VpiObjType::Wait:
     put_expr("vpiCondition", mgr, stmt->expr() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;
 
-  case kVpiFor:
+  case VpiObjType::For:
     put_stmt("vpiForInitStmt", mgr, stmt->init_stmt() );
     put_expr("vpiCondition", mgr, stmt->expr() );
     put_stmt("vpiForIncStmt", mgr, stmt->inc_stmt() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;
 
-  case kVpiForever:
+  case VpiObjType::Forever:
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;
 
-  case kVpiIf:
+  case VpiObjType::If:
     put_expr("vpiCondition", mgr, stmt->expr() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;
 
-  case kVpiIfElse:
+  case VpiObjType::IfElse:
     put_expr("vpiCondition", mgr, stmt->expr() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     put_stmt("vpiElseStmt", mgr, stmt->else_stmt() );
     break;
 
-  case kVpiCase:
+  case VpiObjType::Case:
     put("vpiCaseType", stmt->case_type() );
     put_expr("vpiCondition", mgr, stmt->expr() );
     for ( int i = 0; i < stmt->caseitem_num(); ++ i ) {
@@ -167,23 +167,23 @@ VlDumperImpl::put_stmt(const char* label,
     }
     break;
 
-  case kVpiAssignStmt:
-  case kVpiForce:
+  case VpiObjType::AssignStmt:
+  case VpiObjType::Force:
     put_lhs("vpiLhs", mgr, stmt->lhs() );
     put_expr("vpiRhs", mgr, stmt->rhs() );
     break;
 
-  case kVpiDeassign:
-  case kVpiRelease:
+  case VpiObjType::Deassign:
+  case VpiObjType::Release:
     put_lhs("vpiLhs", mgr, stmt->lhs() );
     break;
 
-  case kVpiTaskCall:
+  case VpiObjType::TaskCall:
     put("vpiTask", stmt->task()->full_name() );
     put_argument_list("vpiArgument", mgr, stmt);
     break;
 
-  case kVpiSysTaskCall:
+  case VpiObjType::SysTaskCall:
 #if 0
     put("vpiUserDefn", handle.get_bool(vpiUserDefn));
 #else
@@ -193,12 +193,12 @@ VlDumperImpl::put_stmt(const char* label,
     put_argument_list("vpiArgument", mgr, stmt);
     break;
 
-  case kVpiDisable:
+  case VpiObjType::Disable:
     put("vpiExpr", stmt->scope()->full_name() );
     break;
 
-  case kVpiDelayControl:
-  case kVpiEventControl:
+  case VpiObjType::DelayControl:
+  case VpiObjType::EventControl:
     put_control("control", mgr, stmt->control() );
     put_stmt("vpiStmt", mgr, stmt->body_stmt() );
     break;

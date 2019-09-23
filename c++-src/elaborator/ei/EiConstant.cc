@@ -25,49 +25,49 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbExpr*
 EiFactory::new_Constant(const PtExpr* pt_expr)
 {
-  tVpiConstType const_type = pt_expr->const_type();
-  int size = pt_expr->const_size();
+  VpiConstType const_type = pt_expr->const_type();
+  SizeType size = pt_expr->const_size();
   bool is_signed = false;
   int base = 0;
   switch ( const_type ) {
-  case kVpiIntConst:
+  case VpiConstType::Int:
     if ( pt_expr->const_str() == nullptr ) {
       void* p = mAlloc.get_memory(sizeof(EiIntConst));
       return new (p) EiIntConst(pt_expr, pt_expr->const_uint());
     }
     break;
 
-  case kVpiSignedBinaryConst:
+  case VpiConstType::SignedBinary:
     is_signed = true;
-  case kVpiBinaryConst:
+  case VpiConstType::Binary:
     base = 2;
     break;
 
-  case kVpiSignedOctConst:
+  case VpiConstType::SignedOct:
     is_signed = true;
-  case kVpiOctConst:
+  case VpiConstType::Oct:
     base = 8;
     break;
 
-  case kVpiSignedDecConst:
+  case VpiConstType::SignedDec:
     is_signed = true;
-  case kVpiDecConst:
+  case VpiConstType::Dec:
     base = 10;
     break;
 
-  case kVpiSignedHexConst:
+  case VpiConstType::SignedHex:
     is_signed = true;
-  case kVpiHexConst:
+  case VpiConstType::Hex:
     base = 16;
     break;
 
-  case kVpiRealConst:
+  case VpiConstType::Real:
     {
       void* p = mAlloc.get_memory(sizeof(EiRealConst));
       return new (p) EiRealConst(pt_expr, pt_expr->const_real());
     }
 
-  case kVpiStringConst:
+  case VpiConstType::String:
     {
       void* p = mAlloc.get_memory(sizeof(EiStringConst));
       return new (p) EiStringConst(pt_expr, pt_expr->const_str());
@@ -114,10 +114,10 @@ EiConstant::~EiConstant()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiConstant::type() const
 {
-  return kVpiConstant;
+  return VpiObjType::Constant;
 }
 
 // @brief 定数の時 true を返す．
@@ -142,7 +142,7 @@ EiConstant::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiConstant::_operand(int pos) const
+EiConstant::_operand(SizeType pos) const
 {
   return nullptr;
 }
@@ -176,10 +176,10 @@ EiIntConst::value_type() const
 
 // @brief 定数の型を返す．
 // @note 定数の時，意味を持つ．
-tVpiConstType
+VpiConstType
 EiIntConst::constant_type() const
 {
-  return kVpiIntConst;
+  return VpiConstType::Int;
 }
 
 // @brief 定数値を返す．
@@ -201,7 +201,7 @@ EiIntConst::constant_value() const
 // @param[in] const_type 定数型
 // @param[in] value 値
 EiBitVectorConst::EiBitVectorConst(const PtExpr* pt_expr,
-				   tVpiConstType const_type,
+				   VpiConstType const_type,
 				   const BitVector& value) :
   EiConstant(pt_expr),
   mConstType(const_type),
@@ -218,14 +218,14 @@ EiBitVectorConst::~EiBitVectorConst()
 VlValueType
 EiBitVectorConst::value_type() const
 {
-  int size = mValue.size();
+  SizeType size = mValue.size();
   bool sign = ( static_cast<int>(mConstType) & 8 ) == 8;
   return VlValueType(sign, true, size);
 }
 
 // @brief 定数の型を返す．
 // @note 定数の時，意味を持つ．
-tVpiConstType
+VpiConstType
 EiBitVectorConst::constant_type() const
 {
   return mConstType;
@@ -269,10 +269,10 @@ EiRealConst::value_type() const
 
 // @brief 定数の型を返す．
 // @note 定数の時，意味を持つ．
-tVpiConstType
+VpiConstType
 EiRealConst::constant_type() const
 {
-  return kVpiRealConst;
+  return VpiConstType::Real;
 }
 
 // @brief 定数値を返す．
@@ -308,16 +308,16 @@ EiStringConst::~EiStringConst()
 VlValueType
 EiStringConst::value_type() const
 {
-  int size = mValue.size();
+  SizeType size = mValue.size();
   return VlValueType(false, true, size);
 }
 
 // @brief 定数の型を返す．
 // @note 定数の時，意味を持つ．
-tVpiConstType
+VpiConstType
 EiStringConst::constant_type() const
 {
-  return kVpiStringConst;
+  return VpiConstType::String;
 }
 
 // @brief 定数値を返す．

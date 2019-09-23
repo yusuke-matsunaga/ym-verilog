@@ -111,7 +111,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
   ymuint index = 0;
   for (ymuint i = 0; i < pt_head_array.size(); ++ i) {
     const PtIOHead* pt_head = pt_head_array[i];
-    tVpiAuxType def_aux_type = pt_head->aux_type();
+    VpiAuxType def_aux_type = pt_head->aux_type();
     bool sign = pt_head->is_signed();
     const PtExpr* pt_left = pt_head->left_range();
     const PtExpr* pt_right = pt_head->right_range();
@@ -135,7 +135,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
       head = factory().new_ModIOHead(module, pt_head);
     }
     else {
-      if ( taskfunc->type() == kVpiTask ) {
+      if ( taskfunc->type() == VpiObjType::Task ) {
 	head = factory().new_TaskIOHead(taskfunc, pt_head);
       }
       else {
@@ -150,7 +150,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
       ElbDecl* decl = nullptr;
       if ( handle ) {
 	// 同名の要素が見つかった．
-	if ( def_aux_type != kVpiAuxNone ) {
+	if ( def_aux_type != VpiAuxType::None ) {
 	  // なのに IO 宣言の aux_type もある．
 	  ostringstream buf;
 	  buf << pt_item->name() << " : has an aux-type declaration"
@@ -166,11 +166,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	decl = handle->decl();
 	if ( decl ) {
 	  // 対象が宣言要素だった場合．
-	  tVpiObjType type = decl->type();
-	  if ( (module == nullptr || type != kVpiNet) &&
-	       type != kVpiReg &&
-	       type != kVpiIntegerVar &&
-	       type != kVpiTimeVar) {
+	  VpiObjType type = decl->type();
+	  if ( (module == nullptr || type != VpiObjType::Net) &&
+	       type != VpiObjType::Reg &&
+	       type != VpiObjType::IntegerVar &&
+	       type != VpiObjType::TimeVar) {
 	    // ちょっと論理式が分かりにくいが，上の式を否定すると，
 	    // - module かつネットは OK
 	    // - reg/integer/time は OK
@@ -275,12 +275,12 @@ DeclGen::instantiate_iodecl(ElbModule* module,
       }
       else {
 	// 同名の要素が見つからなかったので作る必要がある．
-	tVpiAuxType aux_type = def_aux_type;
-	if ( aux_type == kVpiAuxNone ) {
+	VpiAuxType aux_type = def_aux_type;
+	if ( aux_type == VpiAuxType::None ) {
 	  if ( module ) {
 	    // モジュール IO の場合は `default_net_type を参照する．
-	    tVpiNetType net_type = module->def_net_type();
-	    if ( net_type == kVpiNone ) {
+	    VpiNetType net_type = module->def_net_type();
+	    if ( net_type == VpiNetType::None ) {
 	      ostringstream buf;
 	      buf << pt_item->name() << " : Implicit declaration is inhibited "
 		  << " because default_nettype = \"none\".";
@@ -291,11 +291,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 			      buf.str());
 	      continue;
 	    }
-	    aux_type = kVpiAuxNet;
+	    aux_type = VpiAuxType::Net;
 	  }
 	  else {
 	    // task/function の場合，型指定が無い時は reg 型となる．
-	    aux_type = kVpiAuxReg;
+	    aux_type = VpiAuxType::Reg;
 	  }
 	}
 
@@ -329,7 +329,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	if ( module ) {
 	  if ( pt_init ) {
 	    // 初期値を持つ場合
-	    if ( aux_type == kVpiAuxNet ) {
+	    if ( aux_type == VpiAuxType::Net ) {
 	      // net 型の場合(ここに来るのは暗黙宣言のみ)は初期値を持てない．
 	      ostringstream buf;
 	      buf << pt_item->name()
@@ -355,9 +355,9 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	decl = factory().new_Decl(head, pt_item, init);
 	int tag = 0;
 	switch ( aux_type ) {
-	case kVpiAuxNet: tag = vpiNet; break;
-	case kVpiAuxReg: tag = vpiReg; break;
-	case kVpiAuxVar: tag = vpiVariables; break;
+	case VpiAuxType::Net: tag = vpiNet; break;
+	case VpiAuxType::Reg: tag = vpiReg; break;
+	case VpiAuxType::Var: tag = vpiVariables; break;
 	default:
 	  ASSERT_NOT_REACHED;
 	}
@@ -470,7 +470,7 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
 						  pt_item,
 						  is_local);
     ASSERT_COND(param );
-    reg_parameter(kVpiParameter, param);
+    reg_parameter(vpiParameter, param);
 
 #if 0
     // attribute instance の生成
@@ -743,7 +743,7 @@ void
 DeclGen::instantiate_var_head(const VlNamedObj* parent,
 			      const PtDeclHead* pt_head)
 {
-  ASSERT_COND(pt_head->data_type() != kVpiVarNone );
+  ASSERT_COND(pt_head->data_type() != VpiVarType::None );
 
   ElbDeclHead* var_head = factory().new_DeclHead(parent, pt_head);
 

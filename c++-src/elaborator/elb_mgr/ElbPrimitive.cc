@@ -68,40 +68,40 @@ ElbPrimitive::~ElbPrimitive()
 // @retval 0 port_size が範囲内に収まっている．
 // @retval -1 port_size が少なすぎる．
 int
-ElbPrimitive::get_port_size(tVpiPrimType type,
-			    int port_size,
-			    int& output_num,
-			    int& inout_num,
-			    int& input_num)
+ElbPrimitive::get_port_size(VpiPrimType type,
+			    SizeType port_size,
+			    SizeType& output_num,
+			    SizeType& inout_num,
+			    SizeType& input_num)
 {
-  int min_size = 0;
-  int max_size = port_size;
+  SizeType min_size = 0;
+  SizeType max_size = port_size;
 
   switch ( type ) {
-  case kVpiAndPrim:
-  case kVpiNandPrim:
-  case kVpiNorPrim:
-  case kVpiOrPrim:
-  case kVpiXorPrim:
-  case kVpiXnorPrim:
+  case VpiPrimType::And:
+  case VpiPrimType::Nand:
+  case VpiPrimType::Nor:
+  case VpiPrimType::Or:
+  case VpiPrimType::Xor:
+  case VpiPrimType::Xnor:
     min_size = 3;
     output_num = 1;
     inout_num = 0;
     input_num = port_size - 1;
     break;
 
-  case kVpiBufPrim:
-  case kVpiNotPrim:
+  case VpiPrimType::Buf:
+  case VpiPrimType::Not:
     min_size = 2;
     output_num = port_size - 1;
     inout_num = 0;
     input_num = 1;
     break;
 
-  case kVpiBufif0Prim:
-  case kVpiBufif1Prim:
-  case kVpiNotif0Prim:
-  case kVpiNotif1Prim:
+  case VpiPrimType::Bufif0:
+  case VpiPrimType::Bufif1:
+  case VpiPrimType::Notif0:
+  case VpiPrimType::Notif1:
     min_size = 3;
     max_size = 3;
     output_num = 1;
@@ -109,10 +109,10 @@ ElbPrimitive::get_port_size(tVpiPrimType type,
     input_num = 2;
     break;
 
-  case kVpiNmosPrim:
-  case kVpiPmosPrim:
-  case kVpiRnmosPrim:
-  case kVpiRpmosPrim:
+  case VpiPrimType::Nmos:
+  case VpiPrimType::Pmos:
+  case VpiPrimType::Rnmos:
+  case VpiPrimType::Rpmos:
     min_size = 3;
     max_size = 3;
     output_num = 1;
@@ -120,8 +120,8 @@ ElbPrimitive::get_port_size(tVpiPrimType type,
     input_num = 2;
     break;
 
-  case kVpiCmosPrim:
-  case kVpiRcmosPrim:
+  case VpiPrimType::Cmos:
+  case VpiPrimType::Rcmos:
     min_size = 4;
     max_size = 4;
     output_num = 1;
@@ -129,8 +129,8 @@ ElbPrimitive::get_port_size(tVpiPrimType type,
     input_num = 3;
     break;
 
-  case kVpiTranPrim:
-  case kVpiRtranPrim:
+  case VpiPrimType::Tran:
+  case VpiPrimType::Rtran:
     min_size = 2;
     max_size = 2;
     output_num = 0;
@@ -138,10 +138,10 @@ ElbPrimitive::get_port_size(tVpiPrimType type,
     input_num = 0;
     break;
 
-  case kVpiRtranif0Prim:
-  case kVpiRtranif1Prim:
-  case kVpiTranif0Prim:
-  case kVpiTranif1Prim:
+  case VpiPrimType::Rtranif0:
+  case VpiPrimType::Rtranif1:
+  case VpiPrimType::Tranif0:
+  case VpiPrimType::Tranif1:
     min_size = 3;
     max_size = 3;
     output_num = 0;
@@ -149,8 +149,8 @@ ElbPrimitive::get_port_size(tVpiPrimType type,
     input_num = 1;
     break;
 
-  case kVpiPullupPrim:
-  case kVpiPulldownPrim:
+  case VpiPrimType::Pullup:
+  case VpiPrimType::Pulldown:
     min_size = 1;
     max_size = 1;
     output_num = 1;

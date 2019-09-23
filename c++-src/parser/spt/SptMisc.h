@@ -150,12 +150,12 @@ private:
 
   /// コンストラクタ (0/1 の強度用)
   SptStrength(const FileRegion& file_region,
-	      tVpiStrength drive0,
-	      tVpiStrength drive1);
+	      VpiStrength drive0,
+	      VpiStrength drive1);
 
   /// コンストラクタ (電荷の強度用)
   SptStrength(const FileRegion& file_region,
-	      tVpiStrength charge);
+	      VpiStrength charge);
 
   /// デストラクタ
   ~SptStrength();
@@ -171,15 +171,15 @@ public:
   file_region() const override;
 
   /// drive strength0 の取得
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// drive strength1 の取得
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// charge strength の取得
-  tVpiStrength
+  VpiStrength
   charge() const override;
 
 
@@ -191,9 +191,8 @@ private:
   // ファイル位置
   FileRegion mFileRegion;
 
-  tVpiStrength mDrive0;
-  tVpiStrength mDrive1;
-  tVpiStrength mCharge;
+  // 値
+  VpiStrength mDrive[3];
 };
 
 

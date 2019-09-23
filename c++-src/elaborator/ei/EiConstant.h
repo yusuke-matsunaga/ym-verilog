@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -70,7 +70,7 @@ public:
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
   ElbExpr*
-  _operand(int pos) const override;
+  _operand(SizeType pos) const override;
 
 };
 
@@ -107,7 +107,7 @@ public:
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  tVpiConstType
+  VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
@@ -144,7 +144,7 @@ private:
   /// @param[in] const_type 定数型
   /// @param[in] value 値
   EiBitVectorConst(const PtExpr* pt_expr,
-		   tVpiConstType const_type,
+		   VpiConstType const_type,
 		   const BitVector& value);
 
   /// @brief デストラクタ
@@ -162,7 +162,7 @@ public:
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  tVpiConstType
+  VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
@@ -178,7 +178,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の型
-  tVpiConstType mConstType;
+  VpiConstType mConstType;
 
   // 値
   BitVector mValue;
@@ -218,7 +218,7 @@ public:
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  tVpiConstType
+  VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
@@ -271,7 +271,7 @@ public:
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
-  tVpiConstType
+  VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．

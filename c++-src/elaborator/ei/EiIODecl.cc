@@ -77,17 +77,17 @@ EiIOHead::~EiIOHead()
 }
 
 // @brief 方向を返す．
-tVlDirection
+VpiDir
 EiIOHead::direction() const
 {
   switch ( mPtHead->type() ) {
-  case kPtIO_Input:  return kVlInput;
-  case kPtIO_Output: return kVlOutput;
-  case kPtIO_Inout:  return kVlInout;
+  case kPtIO_Input:  return VpiDir::Input;
+  case kPtIO_Output: return VpiDir::Output;
+  case kPtIO_Inout:  return VpiDir::Inout;
   default: ASSERT_NOT_REACHED;
   }
   // ダミー
-  return kVlNoDirection;
+  return VpiDir::NoDirection;
 }
 
 // @brief 親のモジュールの取得
@@ -222,10 +222,10 @@ EiIODecl::init(ElbIOHead* head,
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiIODecl::type() const
 {
-  return kVpiIODecl;
+  return VpiObjType::IODecl;
 }
 
 // @brief ファイル位置の取得
@@ -243,7 +243,7 @@ EiIODecl::name() const
 }
 
 // @brief 方向を返す．
-tVlDirection
+VpiDir
 EiIODecl::direction() const
 {
   return mHead->direction();
@@ -298,7 +298,7 @@ EiIODecl::right_range_string() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiIODecl::bit_size() const
 {
   return mDecl->bit_size();

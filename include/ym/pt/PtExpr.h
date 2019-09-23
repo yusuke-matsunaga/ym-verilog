@@ -44,7 +44,7 @@ public:
   /// @brief 演算子の種類の取得
   /// @return 演算子の種類
   virtual
-  tVlOpType
+  VpiOpType
   op_type() const = 0;
 
   /// @brief 階層ブランチの取得
@@ -107,7 +107,7 @@ public:
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
   virtual
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const = 0;
 
   /// @brief 範囲の左側の式の取得
@@ -125,7 +125,7 @@ public:
   /// @brief 定数の種類の取得
   /// @return 定数の種類
   virtual
-  tVpiConstType
+  VpiConstType
   const_type() const = 0;
 
   /// @brief 整数型の定数のサイズの取得

@@ -45,18 +45,18 @@ public:
 
   /// @brief 次元数の取得
   virtual
-  int
+  SizeType
   dimension() const = 0;
 
   /// @brief 範囲の取得
   /// @param[in] pos 位置 ( 0 <= pos < dimension() )
   virtual
   const VlRange*
-  range(int pos) const = 0;
+  range(SizeType pos) const = 0;
 
   /// @brief 配列の要素数の取得
   virtual
-  int
+  SizeType
   array_size() const = 0;
 
   /// @brief 1次元配列の場合にインデックスからオフセットを計算する．

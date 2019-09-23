@@ -168,7 +168,7 @@ public:
   ElbDeclHead*
   new_DeclHead(const VlNamedObj* parent,
 	       const PtIOHead* pt_head,
-	       tVpiAuxType aux_type,
+	       VpiAuxType aux_type,
 	       const PtExpr* left,
 	       const PtExpr* right,
 	       int left_val,
@@ -181,7 +181,7 @@ public:
   ElbDeclHead*
   new_DeclHead(const VlNamedObj* parent,
 	       const PtIOHead* pt_head,
-	       tVpiAuxType aux_type) override;
+	       VpiAuxType aux_type) override;
 
   /// @brief 宣言要素のヘッダを生成する．(function の暗黙宣言用)
   /// @param[in] parent 親のスコープ
@@ -220,12 +220,12 @@ public:
   ElbDecl*
   new_ImpNet(const VlNamedObj* parent,
 	     const PtExpr* pt_expr,
-	     tVpiNetType net_type) override;
+	     VpiNetType net_type) override;
 
   /// @brief 範囲の配列を生成する．
   /// @param[in] dim_size 要素数
   ElbRange*
-  new_RangeArray(int dim_size) override;
+  new_RangeArray(SizeType dim_size) override;
 
   /// @brief 宣言要素の配列を生成する．
   /// @param[in] parent 親のスコープ
@@ -464,7 +464,7 @@ public:
   /// @brief ステートメントの配列を生成する．
   /// @param[in] stmt_num 要素数
   ElbStmt**
-  new_StmtList(int stmt_num) override;
+  new_StmtList(SizeType stmt_num) override;
 
   /// @brief 代入文を生成する．
   /// @param[in] parent 親のスコープ
@@ -760,7 +760,7 @@ public:
   /// @param[in] event_list イベントリストを表す配列
   ElbControl*
   new_EventControl(const PtControl* pt_control,
-		   int event_num,
+		   SizeType event_num,
 		   ElbExpr** event_list) override;
 
   /// @brief リピートコントロールを生成する．
@@ -771,13 +771,13 @@ public:
   ElbControl*
   new_RepeatControl(const PtControl* pt_control,
 		    ElbExpr* rep,
-		    int event_num,
+		    SizeType event_num,
 		    ElbExpr** event_list) override;
 
   /// @brief 式のポインタ配列を生成する．
   /// @param[in] elem_num 要素数
   ElbExpr**
-  new_ExprList(int elem_num) override;
+  new_ExprList(SizeType elem_num) override;
 
   /// @brief 単項演算子を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -785,7 +785,7 @@ public:
   /// @param[in] opr1 オペランド
   ElbExpr*
   new_UnaryOp(const PtExpr* pt_expr,
-	      tVlOpType op_type,
+	      VpiOpType op_type,
 	      ElbExpr* opr1) override;
 
   /// @brief 2項演算子を生成する．
@@ -795,7 +795,7 @@ public:
   /// @param[in] opr2 オペランド
   ElbExpr*
   new_BinaryOp(const PtExpr* pt_expr,
-	       tVlOpType op_type,
+	       VpiOpType op_type,
 	       ElbExpr* opr1,
 	       ElbExpr* opr2) override;
 
@@ -807,7 +807,7 @@ public:
   /// @param[in] opr3 オペランド
   ElbExpr*
   new_TernaryOp(const PtExpr* pt_expr,
-		tVlOpType op_type,
+		VpiOpType op_type,
 		ElbExpr* opr1,
 		ElbExpr* opr2,
 		ElbExpr* opr3) override;
@@ -818,7 +818,7 @@ public:
   /// @param[in] opr_list オペランドのリスト
   ElbExpr*
   new_ConcatOp(const PtExpr* pt_expr,
-	       int opr_size,
+	       SizeType opr_size,
 	       ElbExpr** opr_list) override;
 
   /// @brief 反復連結演算子を生成する．
@@ -829,9 +829,9 @@ public:
   /// @param[in] opr_list オペランドのリスト
   ElbExpr*
   new_MultiConcatOp(const PtExpr* pt_expr,
-		    int rep_num,
+		    SizeType rep_num,
 		    ElbExpr* rep_expr,
-		    int opr_size,
+		    SizeType opr_size,
 		    ElbExpr** opr_list) override;
 
   /// @brief プライマリ式を生成する．
@@ -973,7 +973,7 @@ public:
   ElbExpr*
   new_FuncCall(const PtExpr* pt_expr,
 	       const ElbTaskFunc* func,
-	       int arg_size,
+	       SizeType arg_size,
 	       ElbExpr** arg_list) override;
 
   /// @brief システム関数呼び出し式を生成する．
@@ -984,7 +984,7 @@ public:
   ElbExpr*
   new_SysFuncCall(const PtExpr* pt_obj,
 		  const ElbUserSystf* user_systf,
-		  int arg_size,
+		  SizeType arg_size,
 		  ElbExpr** arg_list) override;
 
   /// @brief システム関数/システムタスクの引数を生成する．
@@ -1009,9 +1009,9 @@ public:
   /// @param[in] lhs_elem_array 左辺の要素の配列
   ElbExpr*
   new_Lhs(const PtExpr* pt_expr,
-	  int opr_size,
+	  SizeType opr_size,
 	  ElbExpr** opr_array,
-	  int lhs_elem_num,
+	  SizeType lhs_elem_num,
 	  ElbExpr** lhs_elem_array) override;
 
   /// @brief 遅延値を生成する．
@@ -1020,13 +1020,13 @@ public:
   /// @param[in] expr_list 式の配列
   ElbDelay*
   new_Delay(const PtBase* pt_obj,
-	    int elem_num,
+	    SizeType elem_num,
 	    ElbExpr** expr_list) override;
 
   /// @brief attribute instance のリストを生成する．
   /// @param[in] n 要素数
   ElbAttrList*
-  new_AttrList(int n) override;
+  new_AttrList(SizeType n) override;
 
 
 private:

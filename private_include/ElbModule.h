@@ -111,7 +111,7 @@ public:
   init_port(int index,
 	    const PtPort* pt_port,
 	    ElbExpr* low_conn,
-	    tVlDirection dir) = 0;
+	    VpiDir dir) = 0;
 
   /// @brief ポートの high_conn を接続する．
   /// @param[in] index ポート番号

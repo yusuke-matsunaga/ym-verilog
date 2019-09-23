@@ -51,7 +51,7 @@ public:
   file_region() const override;
 
   /// @brief primitivie type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief 名前を返す．

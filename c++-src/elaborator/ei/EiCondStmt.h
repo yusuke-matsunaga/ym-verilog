@@ -120,7 +120,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -160,7 +160,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -200,7 +200,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -244,7 +244,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -308,7 +308,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -367,7 +367,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -444,7 +444,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -495,7 +495,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -509,13 +509,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 条件式のリストの要素数を返す．
-  int
+  SizeType
   expr_num() const override;
 
   /// @brief 条件式を返す．
   /// @param[in] pos 位置番号
   const VlExpr*
-  expr(int pos) const override;
+  expr(SizeType pos) const override;
 
   /// @brief 本体のステートメントを返す．
   const VlStmt*
@@ -531,7 +531,7 @@ private:
   const PtCaseItem* mPtCaseItem;
 
   // ラベルのリストの要素数
-  int mExprNum;
+  SizeType mExprNum;
 
   // ラベルのリスト
   ElbExpr** mExprList;
@@ -578,7 +578,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -588,7 +588,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief case type を返す．
-  tVpiCaseType
+  VpiCaseType
   case_type() const override;
 
   /// @brief 条件式を返す．
@@ -596,13 +596,13 @@ public:
   expr() const override;
 
   /// @brief case item のリストの要素数を返す．
-  int
+  SizeType
   caseitem_num() const override;
 
   /// @brief case item を返す．
   /// @param[in] pos 位置番号
   const VlCaseItem*
-  caseitem(int pos) const override;
+  caseitem(SizeType pos) const override;
 
 
 public:
@@ -616,7 +616,7 @@ public:
   /// @param[in] expr_array 条件式を納める配列
   /// @param[in] stmt 本体のステートメント
   void
-  set_caseitem(int pos,
+  set_caseitem(SizeType pos,
 	       const PtCaseItem* pt_caseitem,
 	       ElbExpr** expr_array,
 	       ElbStmt* stmt) override;
@@ -631,7 +631,7 @@ private:
   ElbExpr* mCondition;
 
   // case item の要素数
-  int mCaseItemNum;
+  SizeType mCaseItemNum;
 
   // case item のリスト
   EiCaseItem* mCaseItemList;

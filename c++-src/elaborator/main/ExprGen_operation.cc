@@ -28,7 +28,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr)
 {
-  tVlOpType op_type = pt_expr->op_type();
+  VpiOpType op_type = pt_expr->op_type();
   SizeType opr_size = pt_expr->operand_num();
 
   ElbExpr* opr0 = nullptr;
@@ -37,22 +37,22 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
   ElbExpr* expr = nullptr;
   bool real_check = false;
   switch ( op_type ) {
-  case kVlPosedgeOp:
-  case kVlNegedgeOp:
+  case VpiOpType::Posedge:
+  case VpiOpType::Negedge:
     ASSERT_COND(opr_size == 1 );
     error_illegal_edge_descriptor(pt_expr);
     return nullptr;
 
-  case kVlBitNegOp:
-  case kVlUnaryAndOp:
-  case kVlUnaryNandOp:
-  case kVlUnaryOrOp:
-  case kVlUnaryNorOp:
-  case kVlUnaryXorOp:
-  case kVlUnaryXNorOp: real_check = true;
-  case kVlPlusOp:
-  case kVlMinusOp:
-  case kVlNotOp:
+  case VpiOpType::BitNeg:
+  case VpiOpType::UnaryAnd:
+  case VpiOpType::UnaryNand:
+  case VpiOpType::UnaryOr:
+  case VpiOpType::UnaryNor:
+  case VpiOpType::UnaryXor:
+  case VpiOpType::UnaryXNor: real_check = true;
+  case VpiOpType::Plus:
+  case VpiOpType::Minus:
+  case VpiOpType::Not:
     ASSERT_COND(opr_size == 1 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     if ( !opr0 ) {
@@ -64,30 +64,30 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
     }
     return factory().new_UnaryOp(pt_expr, op_type, opr0);
 
-  case kVlBitAndOp:
-  case kVlBitOrOp:
-  case kVlBitXNorOp:
-  case kVlBitXorOp:
-  case kVlLShiftOp:
-  case kVlRShiftOp:
-  case kVlArithLShiftOp:
-  case kVlArithRShiftOp: real_check = true;
-  case kVlAddOp:
-  case kVlSubOp:
-  case kVlMultOp:
-  case kVlDivOp:
-  case kVlModOp:
-  case kVlPowerOp:
-  case kVlLogAndOp:
-  case kVlLogOrOp:
-  case kVlCaseEqOp:
-  case kVlCaseNeqOp:
-  case kVlEqOp:
-  case kVlNeqOp:
-  case kVlGeOp:
-  case kVlGtOp:
-  case kVlLeOp:
-  case kVlLtOp:
+  case VpiOpType::BitAnd:
+  case VpiOpType::BitOr:
+  case VpiOpType::BitXNor:
+  case VpiOpType::BitXor:
+  case VpiOpType::LShift:
+  case VpiOpType::RShift:
+  case VpiOpType::ArithLShift:
+  case VpiOpType::ArithRShift: real_check = true;
+  case VpiOpType::Add:
+  case VpiOpType::Sub:
+  case VpiOpType::Mult:
+  case VpiOpType::Div:
+  case VpiOpType::Mod:
+  case VpiOpType::Power:
+  case VpiOpType::LogAnd:
+  case VpiOpType::LogOr:
+  case VpiOpType::CaseEq:
+  case VpiOpType::CaseNeq:
+  case VpiOpType::Eq:
+  case VpiOpType::Neq:
+  case VpiOpType::Ge:
+  case VpiOpType::Gt:
+  case VpiOpType::Le:
+  case VpiOpType::Lt:
     ASSERT_COND(opr_size == 2 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     opr1 = instantiate_expr(parent, env, pt_expr->operand1());
@@ -107,8 +107,8 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
     expr = factory().new_BinaryOp(pt_expr, op_type, opr0, opr1);
     break;
 
-  case kVlConditionOp:
-  case kVlMinTypMaxOp:
+  case VpiOpType::Condition:
+  case VpiOpType::MinTypMax:
     ASSERT_COND(opr_size == 3 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     opr1 = instantiate_expr(parent, env, pt_expr->operand1());
@@ -119,7 +119,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
     expr = factory().new_TernaryOp(pt_expr, op_type, opr0, opr1, opr2);
     break;
 
-  case kVlConcatOp:
+  case VpiOpType::Concat:
     {
       ElbExpr** opr_list = factory().new_ExprList(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
@@ -140,7 +140,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
     }
     break;
 
-  case kVlMultiConcatOp:
+  case VpiOpType::MultiConcat:
     {
       const PtExpr* pt_expr0 = pt_expr->operand(0);
       int rep_num;
@@ -192,7 +192,7 @@ ExprGen::evaluate_opr(const VlNamedObj* parent,
 		      const PtExpr* pt_expr,
 		      bool put_error)
 {
-  tVlOpType op_type = pt_expr->op_type();
+  VpiOpType op_type = pt_expr->op_type();
   SizeType op_size = pt_expr->operand_num();
   vector<VlValue> val(3);
 
@@ -206,30 +206,30 @@ ExprGen::evaluate_opr(const VlNamedObj* parent,
 
   // 結果の型のチェックを行う．
   switch ( op_type ) {
-  case kVlPosedgeOp:
-  case kVlNegedgeOp:
+  case VpiOpType::Posedge:
+  case VpiOpType::Negedge:
     // この演算は使えない．
     error_illegal_edge_descriptor(pt_expr);
     return VlValue();
 
-  case kVlBitNegOp:
-  case kVlUnaryAndOp:
-  case kVlUnaryNandOp:
-  case kVlUnaryOrOp:
-  case kVlUnaryNorOp:
-  case kVlUnaryXorOp:
-  case kVlUnaryXNorOp:
-  case kVlBitAndOp:
-  case kVlBitOrOp:
-  case kVlBitXNorOp:
-  case kVlBitXorOp:
-  case kVlLShiftOp:
-  case kVlRShiftOp:
-  case kVlArithLShiftOp:
-  case kVlArithRShiftOp:
-  case kVlModOp:
-  case kVlConcatOp:
-  case kVlMultiConcatOp:
+  case VpiOpType::BitNeg:
+  case VpiOpType::UnaryAnd:
+  case VpiOpType::UnaryNand:
+  case VpiOpType::UnaryOr:
+  case VpiOpType::UnaryNor:
+  case VpiOpType::UnaryXor:
+  case VpiOpType::UnaryXNor:
+  case VpiOpType::BitAnd:
+  case VpiOpType::BitOr:
+  case VpiOpType::BitXNor:
+  case VpiOpType::BitXor:
+  case VpiOpType::LShift:
+  case VpiOpType::RShift:
+  case VpiOpType::ArithLShift:
+  case VpiOpType::ArithRShift:
+  case VpiOpType::Mod:
+  case VpiOpType::Concat:
+  case VpiOpType::MultiConcat:
     // この演算はビットベクタ型に変換できなければならない．
     for ( SizeType i = 0; i < op_size; ++ i ) {
       if ( !val[i].is_bitvector_conv() ) {
@@ -241,25 +241,25 @@ ExprGen::evaluate_opr(const VlNamedObj* parent,
     }
     break;
 
-  case kVlPlusOp:
-  case kVlMinusOp:
-  case kVlAddOp:
-  case kVlSubOp:
-  case kVlMultOp:
-  case kVlDivOp:
-  case kVlPowerOp:
-  case kVlCaseEqOp:
-  case kVlCaseNeqOp:
-  case kVlEqOp:
-  case kVlNeqOp:
-  case kVlGeOp:
-  case kVlGtOp:
-  case kVlLeOp:
-  case kVlLtOp:
-  case kVlLogAndOp:
-  case kVlLogOrOp:
-  case kVlConditionOp:
-  case kVlMinTypMaxOp:
+  case VpiOpType::Plus:
+  case VpiOpType::Minus:
+  case VpiOpType::Add:
+  case VpiOpType::Sub:
+  case VpiOpType::Mult:
+  case VpiOpType::Div:
+  case VpiOpType::Power:
+  case VpiOpType::CaseEq:
+  case VpiOpType::CaseNeq:
+  case VpiOpType::Eq:
+  case VpiOpType::Neq:
+  case VpiOpType::Ge:
+  case VpiOpType::Gt:
+  case VpiOpType::Le:
+  case VpiOpType::Lt:
+  case VpiOpType::LogAnd:
+  case VpiOpType::LogOr:
+  case VpiOpType::Condition:
+  case VpiOpType::MinTypMax:
     // この演算はどの型でもOK
     break;
 
@@ -270,120 +270,120 @@ ExprGen::evaluate_opr(const VlNamedObj* parent,
 
   // 二回目は値の評価を行う．
   switch ( op_type ) {
-  case kVlUnaryAndOp:
+  case VpiOpType::UnaryAnd:
     return reduction_and(val[0]);
 
-  case kVlUnaryNandOp:
+  case VpiOpType::UnaryNand:
     return reduction_nand(val[0]);
 
-  case kVlUnaryOrOp:
+  case VpiOpType::UnaryOr:
     return reduction_or(val[0]);
 
-  case kVlUnaryNorOp:
+  case VpiOpType::UnaryNor:
     return reduction_nor(val[0]);
 
-  case kVlUnaryXorOp:
+  case VpiOpType::UnaryXor:
     return reduction_xor(val[0]);
 
-  case kVlUnaryXNorOp:
+  case VpiOpType::UnaryXNor:
     return reduction_xor(val[0]);
 
-  case kVlPlusOp:
+  case VpiOpType::Plus:
     return val[0];
 
-  case kVlMinusOp:
+  case VpiOpType::Minus:
     return - val[0];
 
-  case kVlBitNegOp:
+  case VpiOpType::BitNeg:
     return bit_negate(val[0]);
 
-  case kVlBitAndOp:
+  case VpiOpType::BitAnd:
     return bit_and(val[0], val[1]);
 
-  case kVlBitOrOp:
+  case VpiOpType::BitOr:
     return bit_or(val[0], val[1]);
 
-  case kVlBitXNorOp:
+  case VpiOpType::BitXNor:
     return bit_xnor(val[0], val[1]);
 
-  case kVlBitXorOp:
+  case VpiOpType::BitXor:
     return bit_xor(val[0], val[1]);
 
-  case kVlLShiftOp:
+  case VpiOpType::LShift:
     return val[0] << val[1];
 
-  case kVlRShiftOp:
+  case VpiOpType::RShift:
     return val[0] >> val[1];
 
-  case kVlArithLShiftOp:
+  case VpiOpType::ArithLShift:
     return alshift(val[0], val[1]);
 
-  case kVlArithRShiftOp:
+  case VpiOpType::ArithRShift:
     return arshift(val[0], val[1]);
 
-  case kVlAddOp:
+  case VpiOpType::Add:
     return val[0] + val[1];
 
-  case kVlSubOp:
+  case VpiOpType::Sub:
     return val[0] - val[1];
 
-  case kVlMultOp:
+  case VpiOpType::Mult:
     return val[0] * val[1];
 
-  case kVlDivOp:
+  case VpiOpType::Div:
     return val[0] / val[1];
 
-  case kVlModOp:
+  case VpiOpType::Mod:
     return val[0] % val[1];
 
-  case kVlPowerOp:
+  case VpiOpType::Power:
     return power(val[0], val[1]);
 
-  case kVlNotOp:
+  case VpiOpType::Not:
     return log_not(val[0]);
 
-  case kVlLogAndOp:
+  case VpiOpType::LogAnd:
     return log_and(val[0], val[1]);
 
-  case kVlLogOrOp:
+  case VpiOpType::LogOr:
     return log_or(val[0], val[1]);
 
-  case kVlCaseEqOp:
+  case VpiOpType::CaseEq:
     return eq_with_x(val[0], val[1]);
 
-  case kVlCaseNeqOp:
+  case VpiOpType::CaseNeq:
     return log_not(eq_with_x(val[0], val[1]));
 
-  case kVlEqOp:
+  case VpiOpType::Eq:
     return eq(val[0], val[1]);
 
-  case kVlNeqOp:
+  case VpiOpType::Neq:
     return log_not(eq(val[0], val[1]));
 
-  case kVlGeOp:
+  case VpiOpType::Ge:
     return ge(val[0], val[1]);
 
-  case kVlGtOp:
+  case VpiOpType::Gt:
     return log_not(ge(val[1], val[0]));
 
-  case kVlLeOp:
+  case VpiOpType::Le:
     return ge(val[1], val[0]);
 
-  case kVlLtOp:
+  case VpiOpType::Lt:
     return log_not(ge(val[0], val[1]));
 
-  case kVlConditionOp:
+  case VpiOpType::Condition:
     return ite(val[0], val[1], val[2]);
 
-  case kVlMinTypMaxOp:
+  case VpiOpType::MinTypMax:
     // 本当はエラー
     ASSERT_NOT_REACHED;
     break;
 
-  case kVlConcatOp:
+  case VpiOpType::Concat:
     return concat(val);
 
-  case kVlMultiConcatOp:
+  case VpiOpType::MultiConcat:
     return multi_concat(val);
 
   default:

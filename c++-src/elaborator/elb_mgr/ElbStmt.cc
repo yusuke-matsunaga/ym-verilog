@@ -57,7 +57,7 @@ ElbStmt::user_systf() const
 // @brief 引数の数の取得
 // @note kEnable/kSysEnable で意味のある関数
 // @note このクラスでは 0 を返す．
-int
+SizeType
 ElbStmt::arg_num() const
 {
   return 0;
@@ -68,7 +68,7 @@ ElbStmt::arg_num() const
 // @note kEnable/kSysEnable で意味のある関数
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-ElbStmt::arg(int pos) const
+ElbStmt::arg(SizeType pos) const
 {
   return nullptr;
 }
@@ -147,17 +147,17 @@ ElbStmt::else_stmt() const
 // @return case type
 // @note kCase/kCaseX/kCaseZ で意味のある関数
 // @note このクラスでは kVpiCaseExact を返す．
-tVpiCaseType
+VpiCaseType
 ElbStmt::case_type() const
 {
-  return kVpiCaseExact;
+  return VpiCaseType::Exact;
 }
 
 // @brief case item の要素数の取得
 // @return case item の要素数
 // @note kCase/kCaseX/kCaseZ で意味のある関数
 // @note このクラスでは 0 を返す．
-int
+SizeType
 ElbStmt::caseitem_num() const
 {
   return 0;
@@ -168,7 +168,7 @@ ElbStmt::caseitem_num() const
 // @note kCase/kCaseX/kCaseZ で意味のある関数
 // @note このクラスでは nullptr を返す．
 const VlCaseItem*
-ElbStmt::caseitem(int pos) const
+ElbStmt::caseitem(SizeType pos) const
 {
   return nullptr;
 }
@@ -194,7 +194,7 @@ ElbStmt::inc_stmt() const
 // @brief 子供のステートメントの数の取得
 // @note kParBlock/kSeqBlock で意味のある関数
 // @note このクラスでは 0 を返す．
-int
+SizeType
 ElbStmt::child_stmt_num() const
 {
   return 0;
@@ -204,7 +204,7 @@ ElbStmt::child_stmt_num() const
 // @param[in] pos 位置番号 (0 <= pos < stmt_num())
 // @note kParBlock/kSeqBlock で意味のある関数
 const VlStmt*
-ElbStmt::child_stmt(int pos) const
+ElbStmt::child_stmt(SizeType pos) const
 {
   return _child_stmt(pos);
 }
@@ -216,7 +216,7 @@ ElbStmt::child_stmt(int pos) const
 // @param[in] stmt 本体のステートメント
 // @note このクラスでは何もしない．
 void
-ElbStmt::set_caseitem(int pos,
+ElbStmt::set_caseitem(SizeType pos,
 		      const PtCaseItem* pt_caseitem,
 		      ElbExpr** expr_array,
 		      ElbStmt* stmt)
@@ -226,7 +226,7 @@ ElbStmt::set_caseitem(int pos,
 // @brief 子供ののステートメントの取得
 // @note このクラスでは nullptr を返す．
 ElbStmt*
-ElbStmt::_child_stmt(int pos) const
+ElbStmt::_child_stmt(SizeType pos) const
 {
   return nullptr;
 }

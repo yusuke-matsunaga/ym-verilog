@@ -70,10 +70,10 @@ VlDumperImpl::put_scope_sub(const VlMgr& mgr,
   if ( mgr.find_declarray_list(scope, vpiVariables, declarray_list) ) {
     put_declarray_list("vpiVariables", mgr, declarray_list);
   }
-  if ( mgr.find_decl_list(scope, kVpiNamedEvent, decl_list) ) {
+  if ( mgr.find_decl_list(scope, vpiNamedEvent, decl_list) ) {
     put_decl_list("vpiNamedEvent", mgr, decl_list);
   }
-  if ( mgr.find_declarray_list(scope, kVpiNamedEventArray, declarray_list) ) {
+  if ( mgr.find_declarray_list(scope, vpiNamedEventArray, declarray_list) ) {
     put_declarray_list("vpiNamedEventArray", mgr, declarray_list);
   }
 

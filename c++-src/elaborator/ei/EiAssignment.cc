@@ -212,10 +212,10 @@ EiNbAssignment::~EiNbAssignment()
 }
 
 // @brief クラスの型の取得
-tVpiObjType
+VpiObjType
 EiNbAssignment::type() const
 {
-  return kVpiAssignment;
+  return VpiObjType::Assignment;
 }
 
 // @brief control を返す．nullptr の場合もありうる．
@@ -286,10 +286,10 @@ EiAssignStmt::~EiAssignStmt()
 }
 
 // @brief このクラスの型を返す．
-tVpiObjType
+VpiObjType
 EiAssignStmt::type() const
 {
-  return kVpiAssignStmt;
+  return VpiObjType::AssignStmt;
 }
 
 
@@ -318,10 +318,10 @@ EiForceStmt::~EiForceStmt()
 }
 
 // @brief このクラスの型を返す．
-tVpiObjType
+VpiObjType
 EiForceStmt::type() const
 {
-  return kVpiForce;
+  return VpiObjType::Force;
 }
 
 
@@ -379,10 +379,10 @@ EiDeassignStmt::~EiDeassignStmt()
 }
 
 // @brief このクラスの型を返す．
-tVpiObjType
+VpiObjType
 EiDeassignStmt::type() const
 {
-  return kVpiDeassign;
+  return VpiObjType::Deassign;
 }
 
 
@@ -409,10 +409,10 @@ EiReleaseStmt::~EiReleaseStmt()
 }
 
 // @brief このクラスの型を返す．
-tVpiObjType
+VpiObjType
 EiReleaseStmt::type() const
 {
-  return kVpiRelease;
+  return VpiObjType::Release;
 }
 
 END_NAMESPACE_YM_VERILOG

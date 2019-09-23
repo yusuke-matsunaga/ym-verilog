@@ -81,7 +81,7 @@ EiFactory::new_Task(const VlNamedObj* parent,
 		    const PtItem* pt_item)
 {
   // IO数を数え配列を初期化する．
-  int io_num = pt_item->ioitem_num();
+  SizeType io_num = pt_item->ioitem_num();
   void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
   EiIODecl* io_array = new (q) EiIODecl[io_num];
 
@@ -102,7 +102,7 @@ EiFactory::new_Task(const VlNamedObj* parent,
 // @param[in] io_array IO の配列
 EiTaskFunc::EiTaskFunc(const VlNamedObj* parent,
 		       const PtItem* pt_item,
-		       int io_num,
+		       SizeType io_num,
 		       EiIODecl* io_array):
   mParent(parent),
   mPtItem(pt_item),
@@ -146,7 +146,7 @@ EiTaskFunc::automatic() const
 }
 
 // @brief 入出力数を得る．
-int
+SizeType
 EiTaskFunc::io_num() const
 {
   return mIODeclNum;
@@ -155,7 +155,7 @@ EiTaskFunc::io_num() const
 // @brief 入出力を得る．
 // @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 const VlIODecl*
-EiTaskFunc::io(int pos) const
+EiTaskFunc::io(SizeType pos) const
 {
   return &mIODeclList[pos];
 }
@@ -174,7 +174,7 @@ EiTaskFunc::stmt() const
 // @param[in] pt_item パース木のIO宣言要素
 // @param[in] decl 対応する宣言要素
 void
-EiTaskFunc::init_iodecl(int pos,
+EiTaskFunc::init_iodecl(SizeType pos,
 			ElbIOHead* head,
 			const PtIOItem* pt_item,
 			ElbDecl* decl)
@@ -192,7 +192,7 @@ EiTaskFunc::set_stmt(ElbStmt* stmt)
 // @brief 入出力を得る．
 // @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 ElbIODecl*
-EiTaskFunc::_io(int pos) const
+EiTaskFunc::_io(SizeType pos) const
 {
   return &mIODeclList[pos];
 }
@@ -216,7 +216,7 @@ EiTaskFunc::_stmt() const
 // @param[in] io_array IO の配列
 EiTask::EiTask(const VlNamedObj* parent,
 	       const PtItem* pt_item,
-	       int io_num,
+	       SizeType io_num,
 	       EiIODecl* io_array) :
   EiTaskFunc(parent, pt_item, io_num, io_array)
 {
@@ -228,17 +228,17 @@ EiTask::~EiTask()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiTask::type() const
 {
-  return kVpiTask;
+  return VpiObjType::Task;
 }
 
 // @brief function type を返す．
-tVpiFuncType
+VpiFuncType
 EiTask::func_type() const
 {
-  return kVpiIntFunc;
+  return VpiFuncType::Int;
 }
 
 // @brief 符号付きの時 true を返す．
@@ -288,7 +288,7 @@ EiTask::right_range_string() const
 }
 
 // @brief 出力のビット幅を返す．
-int
+SizeType
 EiTask::bit_size() const
 {
   return 0;
@@ -322,7 +322,7 @@ EiTask::is_constant_function() const
 // @param[in] io_array IO の配列
 EiFunction::EiFunction(const VlNamedObj* parent,
 		       const PtItem* pt_item,
-		       int io_num,
+		       SizeType io_num,
 		       EiIODecl* io_array) :
   EiTaskFunc(parent, pt_item, io_num, io_array)
 {
@@ -334,37 +334,37 @@ EiFunction::~EiFunction()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiFunction::type() const
 {
-  return kVpiFunction;
+  return VpiObjType::Function;
 }
 
 // @brief function type を返す．
-tVpiFuncType
+VpiFuncType
 EiFunction::func_type() const
 {
   switch ( pt_item()->data_type() ) {
-  case kVpiVarNone:
-    return kVpiSizedFunc;
+  case VpiVarType::None:
+    return VpiFuncType::Sized;
 
-  case kVpiVarInteger:
-    return kVpiIntFunc;
+  case VpiVarType::Integer:
+    return VpiFuncType::Int;
 
-  case kVpiVarReal:
-    return kVpiRealFunc;
+  case VpiVarType::Real:
+    return VpiFuncType::Real;
 
-  case kVpiVarTime:
-    return kVpiTimeFunc;
+  case VpiVarType::Time:
+    return VpiFuncType::Time;
 
-  case kVpiVarRealtime:
-    return kVpiRealtimeFunc;
+  case VpiVarType::Realtime:
+    return VpiFuncType::Realtime;
 
   default:
     break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiIntFunc;
+  return VpiFuncType::Int;
 }
 
 // @brief 符号付きの時 true を返す．
@@ -414,21 +414,21 @@ EiFunction::right_range_string() const
 }
 
 // @brief 出力のビット幅を返す．
-int
+SizeType
 EiFunction::bit_size() const
 {
   switch ( pt_item()->data_type() ) {
-  case kVpiVarNone:
+  case VpiVarType::None:
     return 1;
 
-  case kVpiVarInteger:
+  case VpiVarType::Integer:
     return kVpiSizeInteger;
 
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return kVpiSizeReal;
 
-  case kVpiVarTime:
+  case VpiVarType::Time:
     return kVpiSizeTime;
 
   default:
@@ -470,7 +470,7 @@ EiFunction::is_constant_function() const
 // @param[in] right_val 範囲の LSB の値
 EiFunctionV::EiFunctionV(const VlNamedObj* parent,
 			 const PtItem* pt_item,
-			 int io_num,
+			 SizeType io_num,
 			 EiIODecl* io_array,
 			 const PtExpr* left,
 			 const PtExpr* right,
@@ -526,7 +526,7 @@ EiFunctionV::right_range_string() const
 }
 
 // @brief 出力のビット幅を返す．
-int
+SizeType
 EiFunctionV::bit_size() const
 {
   return mRange.size();

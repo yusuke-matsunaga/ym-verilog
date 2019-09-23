@@ -107,10 +107,10 @@ EiParamAssign::~EiParamAssign()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiParamAssign::type() const
 {
-  return kVpiParamAssign;
+  return VpiObjType::ParamAssign;
 }
 
 // @brief ファイル位置を返す．
@@ -220,10 +220,10 @@ EiDefParam::~EiDefParam()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiDefParam::type() const
 {
-  return kVpiDefParam;
+  return VpiObjType::DefParam;
 }
 
 // @brief ファイル位置を返す．

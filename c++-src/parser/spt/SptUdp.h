@@ -52,7 +52,7 @@ public:
   file_region() const override;
 
   // primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   // 名前を返す．

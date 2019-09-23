@@ -36,7 +36,7 @@ protected:
   /// @param[in] range_array 範囲の配列
   EiDeclArray(ElbDeclHead* head,
 	      const PtNamedBase* pt_item,
-	      int dim_size,
+	      SizeType dim_size,
 	      EiRange* range_array);
 
   /// @brief デストラクタ
@@ -49,7 +49,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -124,7 +124,7 @@ public:
   is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief オフセット値の取得
@@ -139,38 +139,38 @@ public:
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// @brief vectored|scalared 属性の取得
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
-  tVpiVsType
+  VpiVsType
   vs_type() const override;
 
   /// @brief drive0 strength の取得
   /// @retval 0 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief drive1 strength の取得
   /// @retval 1 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief charge strength の取得
   /// @retval 電荷の強度
   /// @retval kVpiNoStrength strength の指定なし
-  tVpiStrength
+  VpiStrength
   charge() const override;
 
   /// @brief delay の取得
@@ -188,16 +188,16 @@ public:
   is_multi_array() const override;
 
   /// @brief 配列型オブジェクトの場合の次元数の取得
-  int
+  SizeType
   dimension() const override;
 
   /// @brief 範囲の取得
   /// @param[in] pos 位置 ( 0 <= pos < dimension() )
   const VlRange*
-  range(int pos) const override;
+  range(SizeType pos) const override;
 
   /// @brief 配列の要素数の取得
-  int
+  SizeType
   array_size() const override;
 
   /// @brief 1次元配列の場合にインデックスからオフセットを計算する．
@@ -225,7 +225,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素の型を返す．
-  tVpiObjType
+  VpiObjType
   elem_type() const override;
 
 #if 0
@@ -271,7 +271,7 @@ private:
   /// @param[in] range_array 範囲の配列
   EiDeclArrayN(ElbDeclHead* head,
 	       const PtNamedBase* pt_item,
-	       int dim_size,
+	       SizeType dim_size,
 	       EiRange* range_array);
 
   /// @brief デストラクタ
@@ -389,7 +389,7 @@ private:
   /// @param[in] varray 値を納める配列
   EiDeclArrayS(ElbDeclHead* head,
 	       const PtNamedBase* pt_item,
-	       int dim_size,
+	       SizeType dim_size,
 	       EiRange* range_array,
 	       VlScalarVal* varray);
 
@@ -517,7 +517,7 @@ private:
   /// @param[in] varray 値を納める配列
   EiDeclArrayR(ElbDeclHead* head,
 	       const PtNamedBase* pt_item,
-	       int dim_size,
+	       SizeType dim_size,
 	       EiRange* range_array,
 	       double* varray);
 
@@ -645,7 +645,7 @@ private:
   /// @param[in] varray 値を納める配列
   EiDeclArrayV(ElbDeclHead* head,
 	       const PtNamedBase* pt_item,
-	       int dim_size,
+	       SizeType dim_size,
 	       EiRange* range_array,
 	       BitVector* varray);
 

@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief 範囲の配列を生成する．
 // @param[in] dim_size 要素数
 ElbRange*
-EiFactory::new_RangeArray(int dim_size)
+EiFactory::new_RangeArray(SizeType dim_size)
 {
   void* p = mAlloc.get_memory(sizeof(EiRange) * dim_size);
   EiRange* range_array = new (p) EiRange[dim_size];
@@ -58,10 +58,10 @@ EiRange::set(const ElbRangeSrc& src)
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiRange::type() const
 {
-  return kVpiRange;
+  return VpiObjType::Range;
 }
 
 // @brief ファイル位置を返す．
@@ -72,7 +72,7 @@ EiRange::file_region() const
 }
 
 // @brief 要素数(ビット幅)を返す．
-int
+SizeType
 EiRange::size() const
 {
   return calc_size(mLeftVal, mRightVal);
@@ -195,7 +195,7 @@ EiRangeImpl::set(const PtExpr* left,
 }
 
 // @brief サイズを返す．
-int
+SizeType
 EiRangeImpl::size() const
 {
   return EiRange::calc_size(mLeftVal, mRightVal);
@@ -282,7 +282,7 @@ EiRangeImpl::rindex(int roffset) const
 
 // @brief コンストラクタ
 // @brief dim_size 次元数
-EiRangeArray::EiRangeArray(int dim_size,
+EiRangeArray::EiRangeArray(SizeType dim_size,
 			   EiRange* array) :
   mDimSize(dim_size),
   mArray(array)

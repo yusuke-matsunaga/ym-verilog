@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief attribute instance のリストを生成する．
 // @param[in] n 要素数
 ElbAttrList*
-EiFactory::new_AttrList(int n)
+EiFactory::new_AttrList(SizeType n)
 {
   void* q = mAlloc.get_memory(sizeof(EiAttribute) * n);
   EiAttribute* array = new (q) EiAttribute[n];
@@ -50,10 +50,10 @@ EiAttribute::~EiAttribute()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiAttribute::type() const
 {
-  return kVpiAttribute;
+  return VpiObjType::Attribute;
 }
 
 // @brief ファイル位置を返す．
@@ -90,7 +90,7 @@ EiAttribute::expr() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-EiAttrList::EiAttrList(int n,
+EiAttrList::EiAttrList(SizeType n,
 		       EiAttribute* array) :
   mSize(n),
   mArray(array)
@@ -103,7 +103,7 @@ EiAttrList::~EiAttrList()
 }
 
 // @brief 要素数を返す．
-int
+SizeType
 EiAttrList::size() const
 {
   return mSize;
@@ -112,7 +112,7 @@ EiAttrList::size() const
 // @brief 内容を返す．
 // @param[in] pos 位置番号 (0 <= pos < size() )
 VlAttribute*
-EiAttrList::elem(int pos) const
+EiAttrList::elem(SizeType pos) const
 {
   return &mArray[pos];
 }
@@ -123,7 +123,7 @@ EiAttrList::elem(int pos) const
 // @param[in] expr 値を表す式
 // @param[in] def 定義側の属性のとき true とするフラグ
 void
-EiAttrList::set(int pos,
+EiAttrList::set(SizeType pos,
 		const PtAttrSpec* pt_as,
 		ElbExpr* expr,
 		bool def)

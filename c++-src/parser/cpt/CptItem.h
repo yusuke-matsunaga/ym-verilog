@@ -40,7 +40,7 @@ public:
   /// @brief プリミティブタイプの取得
   /// @return プリミティブタイプ
   /// @note このクラスでは kVpiAndPrim を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief strength の取得
@@ -127,7 +127,7 @@ public:
   /// @brief 戻値のデータ型の取得
   /// @return 戻値のデータ型
   /// @note このクラスでは kVpiVarNone を返す．
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief constant function の展開中の印をつける．
@@ -149,13 +149,13 @@ public:
   /// @brief specify block item の種類の取得
   /// @return specify block item の種類
   /// @note このクラスでは kVpiPulsestyleOnEvent を返す．
-  tVpiSpecItemType
+  VpiSpecItemType
   specitem_type() const override;
 
   /// @brief specify block path の種類の取得
   /// @return specify block path の種類
   /// @note このクラスでは kVpiSpecPathNull を返す．
-  tVpiSpecPathType
+  VpiSpecPathType
   specpath_type() const override;
 
   /// @brief ターミナルのリストの取得
@@ -922,7 +922,7 @@ protected:
 	       const char* name,
 	       bool automatic,
 	       bool sign,
-	       tVpiVarType dat_type,
+	       VpiVarType dat_type,
 	       PtIOHeadArray iohead_array,
 	       PtDeclHeadArray declhead_array,
 	       const PtStmt* stmt);
@@ -937,7 +937,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 戻値の型を返す．
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
 
@@ -947,7 +947,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 戻値の型
-  tVpiVarType mDataType;
+  VpiVarType mDataType;
 
 };
 

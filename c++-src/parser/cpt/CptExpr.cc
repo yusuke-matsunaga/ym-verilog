@@ -29,11 +29,11 @@ CptExpr::~CptExpr()
 
 // @brief 演算子の種類の取得
 // @return 演算子の種類
-// このクラスでは kVlNullOp を返す．
-tVlOpType
+// このクラスでは VpiOpType::Null を返す．
+VpiOpType
 CptExpr::op_type() const
 {
-  return kVlNullOp;
+  return VpiOpType::Null;
 }
 
 // @brief 階層ブランチの取得
@@ -119,10 +119,10 @@ CptExpr::index(SizeType pos) const
 // @brief 範囲指定モードの取得
 // @return 範囲指定モード
 // このクラスでは kVpiNoRange を返す．
-tVpiRangeMode
+VpiRangeMode
 CptExpr::range_mode() const
 {
-  return kVpiNoRange;
+  return VpiRangeMode::No;
 }
 
 // @brief 範囲の左側の式の取得
@@ -146,10 +146,10 @@ CptExpr::right_range() const
 // @brief 定数の種類の取得
 // @return 定数の種類
 // このクラスでは kVpiIntConst を返す．
-tVpiConstType
+VpiConstType
 CptExpr::const_type() const
 {
-  return kVpiIntConst; // ダミー
+  return VpiConstType::Int; // ダミー
 }
 
 // @brief 整数型の定数のサイズの取得
@@ -225,7 +225,7 @@ CptExpr::is_simple() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptOpr::CptOpr(tVlOpType op_type) :
+CptOpr::CptOpr(VpiOpType op_type) :
   mOpType(op_type)
 {
 }
@@ -243,7 +243,7 @@ CptOpr::type() const
 }
 
 // 演算子のトークン番号を得る．
-tVlOpType
+VpiOpType
 CptOpr::op_type() const
 {
   return mOpType;
@@ -256,7 +256,7 @@ CptOpr::op_type() const
 
 // コンストラクタ
 CptOpr1::CptOpr1(const FileRegion& file_region,
-		 tVlOpType op_type,
+		 VpiOpType op_type,
 		 const PtExpr* opr) :
   CptOpr(op_type),
   mFileRegion(file_region),
@@ -282,7 +282,7 @@ bool
 CptOpr1::is_index_expr() const
 {
   // 算術演算はOKだけどめんどくさいので単項のマイナスのみOKとする．
-  if ( op_type() == kVlNullOp || op_type() == kVlMinusOp ) {
+  if ( op_type() == VpiOpType::Null || op_type() == VpiOpType::Minus ) {
     return operand0()->is_index_expr();
   }
   else {
@@ -295,10 +295,10 @@ int
 CptOpr1::index_value() const
 {
   switch ( op_type() ) {
-  case kVlNullOp:
+  case VpiOpType::Null:
     return operand0()->index_value();
 
-  case kVlMinusOp:
+  case VpiOpType::Minus:
     return - operand0()->index_value();
 
   default:
@@ -356,7 +356,7 @@ CptOpr1::operand(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptOpr2::CptOpr2(tVlOpType op_type,
+CptOpr2::CptOpr2(VpiOpType op_type,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2) :
   CptOpr(op_type),
@@ -427,7 +427,7 @@ CptOpr2::operand(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptOpr3::CptOpr3(tVlOpType op_type,
+CptOpr3::CptOpr3(VpiOpType op_type,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2,
 		 const PtExpr* opr3) :
@@ -527,10 +527,10 @@ CptConcat::type() const
 }
 
 ///演算子の種類の取得
-tVlOpType
+VpiOpType
 CptConcat::op_type() const
 {
-  return kVlConcatOp;
+  return VpiOpType::Concat;
 }
 
 // @brief オペランドの数の取得
@@ -609,10 +609,10 @@ CptMultiConcat::~CptMultiConcat()
 }
 
 // 演算子の種類の取得
-tVlOpType
+VpiOpType
 CptMultiConcat::op_type() const
 {
-  return kVlMultiConcatOp;
+  return VpiOpType::MultiConcat;
 }
 
 
@@ -651,10 +651,10 @@ CptMinTypMax::type() const
 }
 
 // 演算子の種類の取得
-tVlOpType
+VpiOpType
 CptMinTypMax::op_type() const
 {
-  return kVlMinTypMaxOp;
+  return VpiOpType::MinTypMax;
 }
 
 // 子供の数の取得
@@ -918,10 +918,10 @@ CptIntConstant1::~CptIntConstant1()
 }
 
 // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-tVpiConstType
+VpiConstType
 CptIntConstant1::const_type() const
 {
-  return kVpiIntConst;
+  return VpiConstType::Int;
 }
 
 // 階層名の添字として使える式の時に true を返す．
@@ -945,7 +945,7 @@ CptIntConstant1::const_uint() const
 
 // コンストラクタ
 CptIntConstant2::CptIntConstant2(const FileRegion& file_region,
-				 tVpiConstType const_type,
+				 VpiConstType const_type,
 				 const char* value) :
   CptConstant(file_region),
   mConstType(const_type),
@@ -959,7 +959,7 @@ CptIntConstant2::~CptIntConstant2()
 }
 
 // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-tVpiConstType
+VpiConstType
 CptIntConstant2::const_type() const
 {
   return mConstType;
@@ -980,7 +980,7 @@ CptIntConstant2::const_str() const
 // コンストラクタ
 CptIntConstant3::CptIntConstant3(const FileRegion& file_region,
 				 int size,
-				 tVpiConstType const_type,
+				 VpiConstType const_type,
 				 const char* value) :
   CptConstant(file_region),
   mConstType(const_type),
@@ -995,7 +995,7 @@ CptIntConstant3::~CptIntConstant3()
 }
 
 // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-tVpiConstType
+VpiConstType
 CptIntConstant3::const_type() const
 {
   return mConstType;
@@ -1034,10 +1034,10 @@ CptRealConstant::~CptRealConstant()
 }
 
 // 定数の種類を表す型(vpiRealConst) を返す．
-tVpiConstType
+VpiConstType
 CptRealConstant::const_type() const
 {
-  return kVpiRealConst;
+  return VpiConstType::Real;
 }
 
 // 実数型の値の取得
@@ -1066,10 +1066,10 @@ CptStringConstant::~CptStringConstant()
 }
 
 // 定数の種類を表す型(vpiStringConst) を返す．
-tVpiConstType
+VpiConstType
 CptStringConstant::const_type() const
 {
-  return kVpiStringConst;
+  return VpiConstType::String;
 }
 
 // 値を表示用の文字列の形で得る．
@@ -1087,7 +1087,7 @@ CptStringConstant::const_str() const
 // 演算子を生成する．
 const PtExpr*
 CptFactory::new_Opr(const FileRegion& file_region,
-		    tVlOpType type,
+		    VpiOpType type,
 		    const PtExpr* opr)
 {
   ++ mNumOpr1;
@@ -1097,7 +1097,7 @@ CptFactory::new_Opr(const FileRegion& file_region,
 
 const PtExpr*
 CptFactory::new_Opr(const FileRegion& file_region,
-		    tVlOpType type,
+		    VpiOpType type,
 		    const PtExpr* opr1,
 		    const PtExpr* opr2)
 {
@@ -1109,7 +1109,7 @@ CptFactory::new_Opr(const FileRegion& file_region,
 
 const PtExpr*
 CptFactory::new_Opr(const FileRegion& file_region,
-		    tVlOpType type,
+		    VpiOpType type,
 		    const PtExpr* opr1,
 		    const PtExpr* opr2,
 		    const PtExpr* opr3)
@@ -1204,13 +1204,13 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 {
   ++ mNumIntConstant2;
   void* p = alloc().get_memory(sizeof(CptIntConstant2));
-  return new (p) CptIntConstant2(file_region, kVpiIntConst, value);
+  return new (p) CptIntConstant2(file_region, VpiConstType::Int, value);
 }
 
 // 定数を生成する．
 const PtExpr*
 CptFactory::new_IntConst(const FileRegion& file_region,
-			 tVpiConstType const_type,
+			 VpiConstType const_type,
 			 const char* value)
 {
   ++ mNumIntConstant2;
@@ -1222,7 +1222,7 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_IntConst(const FileRegion& file_region,
 			 int size,
-			 tVpiConstType const_type,
+			 VpiConstType const_type,
 			 const char* value)
 {
   ++ mNumIntConstant3;

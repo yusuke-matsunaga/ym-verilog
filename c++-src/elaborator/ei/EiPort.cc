@@ -42,7 +42,7 @@ EiPort::init(ElbModule* module,
 	     const PtPort* pt_port,
 	     int index,
 	     ElbExpr* low_conn,
-	     tVlDirection dir)
+	     VpiDir dir)
 {
   mModule = module;
   mPtPort = pt_port;
@@ -63,10 +63,10 @@ EiPort::set_high_conn(ElbExpr* high_conn,
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiPort::type() const
 {
-  return kVpiPort;
+  return VpiObjType::Port;
 }
 
 // @brief ファイル位置の取得
@@ -77,14 +77,14 @@ EiPort::file_region() const
 }
 
 // @brief 入出力の区別を得る．
-tVlDirection
+VpiDir
 EiPort::direction() const
 {
   return mDirection;
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiPort::bit_size() const
 {
   return mLowConn->bit_size();

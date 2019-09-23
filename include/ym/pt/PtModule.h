@@ -72,19 +72,19 @@ public:
   /// @brief default net type の取得
   /// @return default net type
   virtual
-  tVpiNetType
+  VpiNetType
   nettype() const = 0;
 
   /// @brief unconnected drive の取得
   /// @return unconnected drive
   virtual
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconn_drive() const = 0;
 
   /// @brief default delay mode の取得
   /// @return default delay mode
   virtual
-  tVpiDefDelayMode
+  VpiDefDelayMode
   delay_mode() const = 0;
 
   /// @brief default decay time の取得

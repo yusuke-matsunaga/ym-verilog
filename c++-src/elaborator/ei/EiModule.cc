@@ -236,21 +236,21 @@ EiModuleHead::time_precision() const
 }
 
 // @brief default net type を返す．
-tVpiNetType
+VpiNetType
 EiModuleHead::def_net_type() const
 {
   return mPtModule->nettype();
 }
 
 // @brief unconnected drive を返す．
-tVpiUnconnDrive
+VpiUnconnDrive
 EiModuleHead::unconn_drive() const
 {
   return mPtModule->unconn_drive();
 }
 
 // @brief default delay mode を返す．
-tVpiDefDelayMode
+VpiDefDelayMode
 EiModuleHead::def_delay_mode() const
 {
   return mPtModule->delay_mode();
@@ -313,10 +313,10 @@ EiModule::init(EiPort* port_array,
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiModule::type() const
 {
-  return kVpiParamAssign;
+  return VpiObjType::Module;
 }
 
 // @brief ファイル位置の取得
@@ -391,21 +391,21 @@ EiModule::time_precision() const
 }
 
 // @brief default net type を返す．
-tVpiNetType
+VpiNetType
 EiModule::def_net_type() const
 {
   return head().def_net_type();
 }
 
 // @brief unconnected drive を返す．
-tVpiUnconnDrive
+VpiUnconnDrive
 EiModule::unconn_drive() const
 {
   return head().unconn_drive();
 }
 
 // @brief default delay mode を返す．
-tVpiDefDelayMode
+VpiDefDelayMode
 EiModule::def_delay_mode() const
 {
   return head().def_delay_mode();
@@ -440,7 +440,7 @@ EiModule::cell() const
 }
 
 // @brief ポート数を返す．
-int
+SizeType
 EiModule::port_num() const
 {
   return head().port_num();
@@ -450,13 +450,13 @@ EiModule::port_num() const
 // @param[in] pos 取得するポートの位置 (0 <= pos < port_num())
 // @return pos 番目のポートを返す．
 const VlPort*
-EiModule::port(int pos) const
+EiModule::port(SizeType pos) const
 {
   return &mPortList[pos];
 }
 
 // @brief 入出力数を得る．
-int
+SizeType
 EiModule::io_num() const
 {
   return head().io_num();
@@ -465,7 +465,7 @@ EiModule::io_num() const
 // @brief 入出力の取得
 // @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 const VlIODecl*
-EiModule::io(int pos) const
+EiModule::io(SizeType pos) const
 {
   return &mIODeclList[pos];
 }
@@ -493,7 +493,7 @@ void
 EiModule::init_port(int index,
 		    const PtPort* pt_port,
 		    ElbExpr* low_conn,
-		    tVlDirection dir)
+		    VpiDir dir)
 {
   mPortList[index].init(this, pt_port, index, low_conn, dir);
 }
@@ -689,10 +689,10 @@ EiModuleArray::~EiModuleArray()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiModuleArray::type() const
 {
-  return kVpiModuleArray;
+  return VpiObjType::Module;
 }
 
 // @brief ファイル位置の取得
@@ -745,7 +745,7 @@ EiModuleArray::right_range_string() const
 }
 
 // @brief 要素数を返す．
-int
+SizeType
 EiModuleArray::elem_num() const
 {
   return mRange.size();
@@ -754,7 +754,7 @@ EiModuleArray::elem_num() const
 // @brief 要素を返す．
 // @param[in] offset 位置番号 (0 <= offset < elem_num())
 const VlModule*
-EiModuleArray::elem_by_offset(int offset) const
+EiModuleArray::elem_by_offset(SizeType offset) const
 {
   return &mArray[offset];
 }

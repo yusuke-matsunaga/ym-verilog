@@ -97,7 +97,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
 
       out_item = io->item_list()[0];
 
-      if ( io->aux_type() == kVpiAuxReg ) {
+      if ( io->aux_type() == VpiAuxType::Reg ) {
 	is_seq = true;
       }
     }
@@ -242,7 +242,7 @@ Parser::new_Udp2001(const FileRegion& file_region,
   ASSERT_COND(out_head->item_list().size() == 1 );
   const PtIOItem* out_item = out_head->item_list()[0];
 
-  if ( out_head->aux_type() == kVpiAuxReg ) {
+  if ( out_head->aux_type() == VpiAuxType::Reg ) {
     is_seq = true;
   }
   // 残りの要素は入力になっているはず．

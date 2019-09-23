@@ -40,7 +40,7 @@ public:
   /// @brief 演算子の種類の取得
   /// @return 演算子の種類
   /// @note このクラスでは vpiNullOp を返す．
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief 階層ブランチの取得
@@ -97,7 +97,7 @@ public:
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
   /// @note このクラスでは kVpiNoRange を返す．
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   /// @brief 範囲の左側の式の取得
@@ -115,7 +115,7 @@ public:
   /// @brief 定数の種類の取得
   /// @return 定数の種類
   /// @note このクラスでは kVpiIntConst を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   /// @brief 整数型の定数のサイズの取得
@@ -176,7 +176,7 @@ class CptOpr :
 protected:
 
   // コンストラクタ
-  CptOpr(tVlOpType op_type);
+  CptOpr(VpiOpType op_type);
 
   // デストラクタ
   ~CptOpr();
@@ -193,7 +193,7 @@ public:
   type() const override;
 
   // 演算子のトークン番号を得る．
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
 
@@ -203,7 +203,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 演算子を表すトークン番号
-  tVlOpType mOpType;
+  VpiOpType mOpType;
 
 };
 
@@ -220,7 +220,7 @@ protected:
 
   // コンストラクタ
   CptOpr1(const FileRegion& file_region,
-	  tVlOpType op_type,
+	  VpiOpType op_type,
 	  const PtExpr* opr);
 
   // デストラクタ
@@ -293,7 +293,7 @@ class CptOpr2 :
 protected:
 
   // コンストラクタ
-  CptOpr2(tVlOpType op_type,
+  CptOpr2(VpiOpType op_type,
 	  const PtExpr* opr1,
 	  const PtExpr* opr2);
 
@@ -356,7 +356,7 @@ class CptOpr3 :
 protected:
 
   // コンストラクタ
-  CptOpr3(tVlOpType op_type,
+  CptOpr3(VpiOpType op_type,
 	  const PtExpr* opr1,
 	  const PtExpr* opr2,
 	  const PtExpr* opr3);
@@ -441,7 +441,7 @@ public:
   type() const override;
 
   ///演算子の種類の取得
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief オペランドの数の取得
@@ -506,7 +506,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   ///演算子の種類の取得
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
 };
@@ -545,7 +545,7 @@ public:
   type() const override;
 
   ///演算子の種類の取得
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief オペランドの数の取得
@@ -983,7 +983,7 @@ protected:
   // コンストラクタ
   CptPrimaryR(const FileRegion& file_region,
 	      const char* name,
-	      tVpiRangeMode mode,
+	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right);
 
@@ -1001,7 +1001,7 @@ public:
   file_region() const override;
 
   // 範囲指定モードの取得
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   // range の MSB を取出す．
@@ -1026,7 +1026,7 @@ private:
   FileRegion mFileRegion;
 
   // 範囲のモード
-  tVpiRangeMode mMode;
+  VpiRangeMode mMode;
 
   // 範囲のMSB
   const PtExpr* mLeftRange;
@@ -1050,7 +1050,7 @@ protected:
   // コンストラクタ
   CptPrimaryCR(const FileRegion& file_region,
 	       const char* name,
-	       tVpiRangeMode mode,
+	       VpiRangeMode mode,
 	       const PtExpr* left,
 	       const PtExpr* right);
 
@@ -1084,7 +1084,7 @@ protected:
   CptPrimaryIR(const FileRegion& file_region,
 	       const char* name,
 	       PtExprArray index_array,
-	       tVpiRangeMode mode,
+	       VpiRangeMode mode,
 	       const PtExpr* left,
 	       const PtExpr* right);
 
@@ -1098,7 +1098,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 範囲指定モードの取得
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   // range の MSB を取出す．
@@ -1116,7 +1116,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 範囲のモード
-  tVpiRangeMode mMode;
+  VpiRangeMode mMode;
 
   // 範囲のMSB
   const PtExpr* mLeftRange;
@@ -1261,7 +1261,7 @@ protected:
   CptPrimaryHR(const FileRegion& file_region,
 	       PtNameBranchArray nb_array,
 	       const char* tail_name,
-	       tVpiRangeMode mode,
+	       VpiRangeMode mode,
 	       const PtExpr* left,
 	       const PtExpr* right);
 
@@ -1305,7 +1305,7 @@ protected:
 		PtNameBranchArray nb_array,
 		const char* tail_name,
 		PtExprArray index_array,
-		tVpiRangeMode mode,
+		VpiRangeMode mode,
 		const PtExpr* left,
 		const PtExpr* right);
 
@@ -1413,7 +1413,7 @@ public:
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
   // ここでは vpiIntConst を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   // 整数型の値の取得
@@ -1444,7 +1444,7 @@ protected:
 
   // コンストラクタ
   CptIntConstant2(const FileRegion& file_region,
-		  tVpiConstType const_type,
+		  VpiConstType const_type,
 		  const char* value);
 
   // デストラクタ
@@ -1457,7 +1457,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   // 文字列型の値の取得
@@ -1471,7 +1471,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類
-  tVpiConstType mConstType;
+  VpiConstType mConstType;
 
   // 値を表す文字列
   const char* mValue;
@@ -1492,7 +1492,7 @@ protected:
   // コンストラクタ
   CptIntConstant3(const FileRegion& file_region,
 		  int size,
-		  tVpiConstType const_type,
+		  VpiConstType const_type,
 		  const char* value);
 
   // デストラクタ
@@ -1505,7 +1505,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   // 整数型の定数のサイズの取得
@@ -1523,7 +1523,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類
-  tVpiConstType mConstType;
+  VpiConstType mConstType;
 
   // サイズ
   int mSize;
@@ -1558,7 +1558,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiRealConst) を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   // 実数型の値の取得
@@ -1601,7 +1601,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiStringConst) を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   // 文字列型の値の取得

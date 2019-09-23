@@ -38,9 +38,9 @@ VlDumperImpl::put_iodecl(const char* label,
 
   const char* nm = nullptr;
   switch ( iodecl->direction() ) {
-  case kVlInput:  nm = "Input"; break;
-  case kVlOutput: nm = "Output"; break;
-  case kVlInout:  nm = "Inout"; break;
+  case VpiDir::Input:  nm = "Input"; break;
+  case VpiDir::Output: nm = "Output"; break;
+  case VpiDir::Inout:  nm = "Inout"; break;
   default: ASSERT_NOT_REACHED;
   }
   VlDumpHeader x(this, label, nm);
@@ -98,15 +98,15 @@ VlDumperImpl::put_decl(const char* label,
 
   const char* nm = nullptr;
   switch ( decl->type() ) {
-  case kVpiNet:             nm = "Net"; break;
-  case kVpiReg:             nm = "Reg"; break;
-  case kVpiIntegerVar:      nm = "IntegerVar"; break;
-  case kVpiRealVar:         nm = "RealVar"; break;
-  case kVpiTimeVar:         nm = "TimeVar"; break;
-  case kVpiVarSelect:       nm = "VarSelect"; break;
-  case kVpiNamedEvent:      nm = "NamedEvent"; break;
-  case kVpiParameter:       nm = "Parameter"; break;
-  case kVpiSpecParam:       nm = "SpecParam"; break;
+  case VpiObjType::Net:             nm = "Net"; break;
+  case VpiObjType::Reg:             nm = "Reg"; break;
+  case VpiObjType::IntegerVar:      nm = "IntegerVar"; break;
+  case VpiObjType::RealVar:         nm = "RealVar"; break;
+  case VpiObjType::TimeVar:         nm = "TimeVar"; break;
+  case VpiObjType::VarSelect:       nm = "VarSelect"; break;
+  case VpiObjType::NamedEvent:      nm = "NamedEvent"; break;
+  case VpiObjType::Parameter:       nm = "Parameter"; break;
+  case VpiObjType::SpecParam:       nm = "SpecParam"; break;
   default: assert_not_reached( __FILE__, __LINE__ );
   }
   VlDumpHeader x(this, label, nm);
@@ -142,14 +142,14 @@ VlDumperImpl::put_decl(const char* label,
   put("vpiModule", decl->parent_module()->full_name() );
   put("vpiScope", decl->parent()->full_name() );
 
-  if ( decl->type() == kVpiNet ) {
+  if ( decl->type() == VpiObjType::Net ) {
     put("vpiStrength0", decl->drive0() );
     put("vpiStrength1", decl->drive1() );
     put("vpiChargeStrength",decl->charge() );
     put("vpiDelay", decl->delay() );
   }
 
-  if ( decl->type() == kVpiReg ) {
+  if ( decl->type() == VpiObjType::Reg ) {
 #if 0
     put("vpiExpr", handle.get_handle(vpiExpr));
 #else
@@ -157,9 +157,9 @@ VlDumperImpl::put_decl(const char* label,
 #endif
   }
 
-  if ( decl->type() == kVpiReg ||
-       decl->type() == kVpiIntegerVar ||
-       decl->type() == kVpiTimeVar ) {
+  if ( decl->type() == VpiObjType::Reg ||
+       decl->type() == VpiObjType::IntegerVar ||
+       decl->type() == VpiObjType::TimeVar ) {
 #if 0
     put("vpiPortInst", handle.get_iterate(vpiPortInst));
     put("vpiPorts", handle.get_iterate(vpiPorts));
@@ -171,7 +171,7 @@ VlDumperImpl::put_decl(const char* label,
   put("vpiLeftRange", decl->left_range_val());
   put("vpiRightRange", decl->right_range_val());
 
-  if ( decl->type() == kVpiNet ) {
+  if ( decl->type() == VpiObjType::Net ) {
 #if 0
     put("vpiDriver", handle.get_iterate(vpiDriver));
     put("vpiLocalDrver", handle.get_iterate(vpiLocalDriver));
@@ -192,7 +192,7 @@ VlDumperImpl::put_decl(const char* label,
 #warning "TODO: Net のもろもろ"
 #endif
   }
-  if ( decl->type() == kVpiReg ) {
+  if ( decl->type() == VpiObjType::Reg ) {
 #if 0
     put("vpiDriver", handle.get_iterate(vpiDriver));
     put("vpiLoad", handle.get_iterate(vpiLoad));
@@ -209,9 +209,9 @@ VlDumperImpl::put_decl(const char* label,
 #warning "TODO: Reg のもろもろ"
 #endif
   }
-  if ( decl->type() == kVpiIntegerVar ||
-       decl->type() == kVpiTimeVar ||
-       decl->type() == kVpiRealVar ) {
+  if ( decl->type() == VpiObjType::IntegerVar ||
+       decl->type() == VpiObjType::TimeVar ||
+       decl->type() == VpiObjType::RealVar ) {
 #if 0
   put("vpiUse", handle.get_iterate(vpiUse));
   put("vpiVarSelect", handle.get_iterate(vpiVarSelect));
@@ -220,8 +220,8 @@ VlDumperImpl::put_decl(const char* label,
 #warning "TODO: Variables の VarSelect"
 #endif
   }
-  if ( decl->type() == kVpiParameter ||
-       decl->type() == kVpiSpecParam ) {
+  if ( decl->type() == VpiObjType::Parameter ||
+       decl->type() == VpiObjType::SpecParam ) {
     put("vpiLocalParam", decl->is_local_param() );
     put("vpiConstType", decl->is_consttype() );
 #if 0
@@ -250,12 +250,12 @@ VlDumperImpl::put_declarray(const char* label,
 
   const char* nm = nullptr;
   switch ( decl->type() ) {
-  case kVpiNetArray:        nm = "NetArray"; break;
-  case kVpiRegArray:        nm = "RegArray"; break;
-  case kVpiIntegerVar:      nm = "IntegerVar"; break;
-  case kVpiRealVar:         nm = "RealVar"; break;
-  case kVpiTimeVar:         nm = "TimeVar"; break;
-  case kVpiNamedEventArray: nm = "NamedEventArray"; break;
+  case VpiObjType::NetArray:        nm = "NetArray"; break;
+  case VpiObjType::RegArray:        nm = "RegArray"; break;
+  case VpiObjType::IntegerVar:      nm = "IntegerVar"; break;
+  case VpiObjType::RealVar:         nm = "RealVar"; break;
+  case VpiObjType::TimeVar:         nm = "TimeVar"; break;
+  case VpiObjType::NamedEventArray: nm = "NamedEventArray"; break;
   default: assert_not_reached( __FILE__, __LINE__ );
   }
   VlDumpHeader x(this, label, nm);
@@ -298,14 +298,14 @@ VlDumperImpl::put_declarray(const char* label,
     put_range("vpiRange", mgr, decl->range(i) );
   }
 
-  if ( decl->type() == kVpiNetArray ) {
+  if ( decl->type() == VpiObjType::NetArray ) {
     put("vpiStrength0", decl->drive0() );
     put("vpiStrength1", decl->drive1() );
     put("vpiChargeStrength",decl->charge() );
     put("vpiDelay", decl->delay() );
   }
 
-  if ( decl->type() == kVpiRegArray ) {
+  if ( decl->type() == VpiObjType::RegArray ) {
 #if 0
     put("vpiExpr", handle.get_handle(vpiExpr));
 #else
@@ -313,9 +313,9 @@ VlDumperImpl::put_declarray(const char* label,
 #endif
   }
 
-  if ( decl->type() == kVpiReg ||
-       decl->type() == kVpiIntegerVar ||
-       decl->type() == kVpiTimeVar ) {
+  if ( decl->type() == VpiObjType::Reg ||
+       decl->type() == VpiObjType::IntegerVar ||
+       decl->type() == VpiObjType::TimeVar ) {
 #if 0
     put("vpiPortInst", handle.get_iterate(vpiPortInst));
     put("vpiPorts", handle.get_iterate(vpiPorts));
@@ -327,7 +327,7 @@ VlDumperImpl::put_declarray(const char* label,
   put("vpiLeftRange", decl->left_range_val());
   put("vpiRightRange", decl->right_range_val());
 
-  if ( decl->type() == kVpiNetArray ) {
+  if ( decl->type() == VpiObjType::NetArray ) {
 #if 0
     put("vpiDriver", handle.get_iterate(vpiDriver));
     put("vpiLocalDrver", handle.get_iterate(vpiLocalDriver));
@@ -348,7 +348,7 @@ VlDumperImpl::put_declarray(const char* label,
 #warning "TODO: Net のもろもろ"
 #endif
   }
-  if ( decl->type() == kVpiRegArray ) {
+  if ( decl->type() == VpiObjType::RegArray ) {
 #if 0
     put("vpiDriver", handle.get_iterate(vpiDriver));
     put("vpiLoad", handle.get_iterate(vpiLoad));
@@ -365,9 +365,9 @@ VlDumperImpl::put_declarray(const char* label,
 #warning "TODO: Reg のもろもろ"
 #endif
   }
-  if ( decl->type() == kVpiIntegerVar ||
-       decl->type() == kVpiTimeVar ||
-       decl->type() == kVpiRealVar ) {
+  if ( decl->type() == VpiObjType::IntegerVar ||
+       decl->type() == VpiObjType::TimeVar ||
+       decl->type() == VpiObjType::RealVar ) {
 #if 0
   put("vpiUse", handle.get_iterate(vpiUse));
   put("vpiVarSelect", handle.get_iterate(vpiVarSelect));
@@ -477,11 +477,11 @@ VlDumperImpl::put_net_bit(const char* label,
   put("vpiConstantSelect", handle.get_bool(vpiConstantSelect));
 
   put("vpiStrength0",
-      static_cast<tVpiStrength>(handle.get_int(vpiStrength0)));
+      static_cast<VpiStrength>(handle.get_int(vpiStrength0)));
   put("vpiStrength1",
-      static_cast<tVpiStrength>(handle.get_int(vpiStrength1)));
+      static_cast<VpiStrength>(handle.get_int(vpiStrength1)));
   put("vpiChargeStrength",
-      static_cast<tVpiStrength>(handle.get_int(vpiChargeStrength)));
+      static_cast<VpiStrength>(handle.get_int(vpiChargeStrength)));
 
   put("vpiIndex", handle.get_handle(vpiIndex));
   put("vpiIndex", handle.get_iterate(vpiIndex));
@@ -855,7 +855,7 @@ VlDumperImpl::put_parameter(const char* label,
 
   put("vpiLocalParam", handle.get_bool(vpiLocalParam));
   put("vpiConstType",
-      static_cast<tVpiConstType>(handle.get_int(vpiConstType)));
+      static_cast<VpiConstType>(handle.get_int(vpiConstType)));
   put("vpiSigned", handle.get_bool(vpiSigned));
   put("vpiSize", handle.get_int(vpiSize));
 
@@ -885,7 +885,7 @@ VlDumperImpl::put_spec_param(const char* label,
   put("vpiFullName", handle.get_str(vpiFullName));
 
   put("vpiConstType",
-      static_cast<tVpiConstType>(handle.get_int(vpiConstType)));
+      static_cast<VpiConstType>(handle.get_int(vpiConstType)));
   put("vpiSize", handle.get_int(vpiSize));
 
   put_str("vpiModule", handle.get_handle(vpiModule), vpiFullName);

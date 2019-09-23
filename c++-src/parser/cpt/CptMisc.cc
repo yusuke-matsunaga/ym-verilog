@@ -279,18 +279,18 @@ CptNamedCon::name() const
 
 // drive strength 用のコンストラクタ
 CptStrength::CptStrength(const FileRegion& file_region,
-			 tVpiStrength value1,
-			 tVpiStrength value2) :
+			 VpiStrength value1,
+			 VpiStrength value2) :
   mFileRegion(file_region),
-  mValue{value1, value2, kVpiNoStrength}
+  mValue{value1, value2, VpiStrength::NoStrength}
 {
 }
 
 // charge strength 用のコンストラクタ
 CptStrength::CptStrength(const FileRegion& file_region,
-			 tVpiStrength value1) :
+			 VpiStrength value1) :
   mFileRegion(file_region),
-  mValue{kVpiNoStrength, kVpiNoStrength, value1}
+  mValue{VpiStrength::NoStrength, VpiStrength::NoStrength, value1}
 {
 }
 
@@ -307,21 +307,21 @@ CptStrength::file_region() const
 }
 
 // drive strength0 を返す．
-tVpiStrength
+VpiStrength
 CptStrength::drive0() const
 {
   return mValue[0];
 }
 
 // drive strength1 を返す．
-tVpiStrength
+VpiStrength
 CptStrength::drive1() const
 {
   return mValue[1];
 }
 
 // charge strength を返す．
-tVpiStrength
+VpiStrength
 CptStrength::charge() const
 {
   return mValue[2];
@@ -592,8 +592,8 @@ CptFactory::new_NamedCon(const FileRegion& file_region,
 // strength を生成する．
 const PtStrength*
 CptFactory::new_Strength(const FileRegion& file_region,
-			 tVpiStrength value1,
-			 tVpiStrength value2)
+			 VpiStrength value1,
+			 VpiStrength value2)
 {
   ++ mNumStrength;
   void* p = alloc().get_memory(sizeof(CptStrength));
@@ -603,7 +603,7 @@ CptFactory::new_Strength(const FileRegion& file_region,
 // strength を生成する．
 const PtStrength*
 CptFactory::new_Strength(const FileRegion& file_region,
-			 tVpiStrength value1)
+			 VpiStrength value1)
 {
   ++ mNumStrength;
   void* p = alloc().get_memory(sizeof(CptStrength));

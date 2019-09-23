@@ -37,7 +37,7 @@ public:
 
   /// @brief primitive type を返す．
   virtual
-  tVpiPrimType
+  VpiPrimType
   prim_type() const = 0;
 
   /// @brief ポートのリストを取り出す．

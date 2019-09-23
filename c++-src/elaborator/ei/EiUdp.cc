@@ -34,15 +34,15 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
   void* q = mAlloc.get_memory(sizeof(EiUdpIO) * port_num);
   EiUdpIO* iodecl = new (q) EiUdpIO[port_num];
 
-  int table_size = pt_udp->table_array().size();
+  SizeType table_size = pt_udp->table_array().size();
   void* r = mAlloc.get_memory(sizeof(EiTableEntry) * table_size);
   EiTableEntry* table = new (r) EiTableEntry[table_size];
 
-  int row_size = port_num;
-  if ( pt_udp->prim_type() == kVpiSeqPrim ) {
+  SizeType row_size = port_num;
+  if ( pt_udp->prim_type() == VpiPrimType::Seq ) {
     ++ row_size;
   }
-  int vsize = row_size * table_size;
+  SizeType vsize = row_size * table_size;
   void* s = mAlloc.get_memory(sizeof(VlUdpVal) * vsize);
   VlUdpVal* val_array = new (s) VlUdpVal[vsize];
 
@@ -77,9 +77,9 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 // @param[in] val_array テーブル中の値を納める配列
 EiUdpDefn::EiUdpDefn(const PtUdp* pt_udp,
 		     bool is_protected,
-		     int io_num,
+		     SizeType io_num,
 		     EiUdpIO* io_array,
-		     int table_num,
+		     SizeType table_num,
 		     EiTableEntry* table,
 		     VlUdpVal* val_array) :
   mPtUdp(pt_udp),
@@ -100,10 +100,10 @@ EiUdpDefn::~EiUdpDefn()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiUdpDefn::type() const
 {
-  return kVpiUdpDefn;
+  return VpiObjType::UdpDefn;
 }
 
 // @brief ファイル位置を返す．
@@ -121,14 +121,14 @@ EiUdpDefn::def_name() const
 }
 
 // @brief primitive type を返す．
-tVpiPrimType
+VpiPrimType
 EiUdpDefn::prim_type() const
 {
   return mPtUdp->prim_type();
 }
 
 // @brief ポート数を返す．
-int
+SizeType
 EiUdpDefn::port_num() const
 {
   return mPortNum;
@@ -137,7 +137,7 @@ EiUdpDefn::port_num() const
 // @brief 入力の宣言要素を返す．
 // @param[in] pos 入力番号
 const VlIODecl*
-EiUdpDefn::input(int pos) const
+EiUdpDefn::input(SizeType pos) const
 {
   return &mIODeclList[pos];
 }
@@ -177,7 +177,7 @@ EiUdpDefn::init_val_string() const
 }
 
 // @brief table entry の行数を返す．
-int
+SizeType
 EiUdpDefn::table_size() const
 {
   return mTableEntrySize;
@@ -186,7 +186,7 @@ EiUdpDefn::table_size() const
 // @brief table entry を返す．
 // @param[in] pos 行番号
 const VlTableEntry*
-EiUdpDefn::table_entry(int pos) const
+EiUdpDefn::table_entry(SizeType pos) const
 {
   return &mTableEntryList[pos];
 }
@@ -197,7 +197,7 @@ EiUdpDefn::table_entry(int pos) const
 // @param[in] name 名前
 // @param[in] dir 向き
 void
-EiUdpDefn::set_io(int pos,
+EiUdpDefn::set_io(SizeType pos,
 		  const PtIOHead* pt_header,
 		  const PtIOItem* pt_item)
 {
@@ -220,7 +220,7 @@ EiUdpDefn::set_initial(const PtExpr* init_expr,
 // @param[in] pt_udp_entry パース木の一行分の定義
 // @param[in] vals シンボル値の配列
 void
-EiUdpDefn::set_tableentry(int pos,
+EiUdpDefn::set_tableentry(SizeType pos,
 			  const PtUdpEntry* pt_udp_entry,
 			  const vector<VlUdpVal>& vals)
 {
@@ -243,10 +243,10 @@ EiUdpIO::~EiUdpIO()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiUdpIO::type() const
 {
-  return kVpiIODecl;
+  return VpiObjType::IODecl;
 }
 
 // ファイル位置を返す．
@@ -264,16 +264,16 @@ EiUdpIO::name() const
 }
 
 // @brief 方向を返す．
-tVlDirection
+VpiDir
 EiUdpIO::direction() const
 {
   switch ( mPtHeader->type() ) {
-  case kPtIO_Input:  return kVlInput;
-  case kPtIO_Output: return kVlOutput;
+  case kPtIO_Input:  return VpiDir::Input;
+  case kPtIO_Output: return VpiDir::Output;
   default: ASSERT_NOT_REACHED;
   }
   // ダミー
-  return kVlNoDirection;
+  return VpiDir::NoDirection;
 }
 
 // @brief 符号の属性の取得
@@ -326,7 +326,7 @@ EiUdpIO::right_range_string() const
 
 // @brief サイズを返す．
 // このクラスは 1 を返す．
-int
+SizeType
 EiUdpIO::bit_size() const
 {
   return 1;
@@ -398,10 +398,10 @@ EiTableEntry::~EiTableEntry()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiTableEntry::type() const
 {
-  return kVpiTableEntry;
+  return VpiObjType::TableEntry;
 }
 
 // @brief ファイル位置を返す．
@@ -412,11 +412,11 @@ EiTableEntry::file_region() const
 }
 
 // @brief 一行の要素数を返す．
-int
+SizeType
 EiTableEntry::size() const
 {
-  int row_size = mUdp->port_num();
-  if ( mUdp->prim_type() == kVpiSeqPrim ) {
+  SizeType row_size = mUdp->port_num();
+  if ( mUdp->prim_type() == VpiPrimType::Seq ) {
     ++ row_size;
   }
   return row_size;
@@ -424,7 +424,7 @@ EiTableEntry::size() const
 
 // @brief pos 番目の位置の値を返す．
 VlUdpVal
-EiTableEntry::val(int pos) const
+EiTableEntry::val(SizeType pos) const
 {
   return mValArray[pos];
 }
@@ -435,7 +435,7 @@ EiTableEntry::str() const
 {
   int n = size();
   int in = n - 1; // 出力変数の分を減らす
-  if ( mUdp->prim_type() == vpiSeqPrim ) {
+  if ( mUdp->prim_type() == VpiPrimType::Seq ) {
     -- in; // さらに状態変数の分を減らす．
   }
   int in1 = in - 1;

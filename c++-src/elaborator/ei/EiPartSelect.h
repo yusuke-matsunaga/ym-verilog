@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -74,14 +74,14 @@ public:
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note それ以外では 0 を返す．
-  int
+  SizeType
   declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
   /// @note それ以外では nullptr を返す．
   const VlExpr*
-  declarray_index(int pos) const override;
+  declarray_index(SizeType pos) const override;
 
   /// @brief 親の式を返す．
   const VlExpr*
@@ -91,7 +91,7 @@ public:
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 1 を返す．
-  int
+  SizeType
   lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
@@ -99,7 +99,7 @@ public:
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは pos = 0 の時，自分自身を返す．
   const VlExpr*
-  lhs_elem(int pos) const override;
+  lhs_elem(SizeType pos) const override;
 
 
 public:
@@ -118,7 +118,7 @@ public:
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
   ElbExpr*
-  _operand(int pos) const override;
+  _operand(SizeType pos) const override;
 
 
 private:
@@ -174,7 +174,7 @@ public:
   is_constant_select() const override;
 
   /// @brief 範囲指定のモードを返す．
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   /// @brief 範囲の MSB の式を返す．
@@ -266,7 +266,7 @@ public:
   /// @brief 範囲のビット幅を返す．
   /// @note 可変範囲選択の時，意味を持つ．
   /// @note それ以外では 0 を返す．
-  int
+  SizeType
   range_width() const override;
 
 
@@ -282,7 +282,7 @@ private:
   const PtExpr* mRangeExpr;
 
   // 範囲の値
-  int mRangeVal;
+  SizeType mRangeVal;
 
 };
 
@@ -321,7 +321,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定のモードを返す．
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
 };
@@ -360,7 +360,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 範囲指定のモードを返す．
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
 };

@@ -50,7 +50,7 @@ public:
 
   /// @brief 演算子の種類の取得
   /// @return 演算子の種類
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief 階層ブランチの取得
@@ -106,7 +106,7 @@ public:
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
   /// @note このクラスでは kVpiNoRange を返す．
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   /// @brief 範囲の左側の式の取得
@@ -124,7 +124,7 @@ public:
   /// @brief 定数の種類の取得
   /// @return 定数の種類
   /// @note このクラスでは kVpiIntConst を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   /// @brief 整数型の定数のサイズの取得
@@ -200,7 +200,7 @@ private:
 
   /// コンストラクタ
   SptOpr1(const FileRegion& file_region,
-	  tVlOpType op_type,
+	  VpiOpType op_type,
 	  const PtExpr* opr1,
 	  const PtExpr* opr2 = nullptr,
 	  const PtExpr* opr3 = nullptr);
@@ -223,7 +223,7 @@ public:
   index_value() const override;
 
   /// 演算子の種類の取得
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief オペランドの数の取得
@@ -254,7 +254,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 演算子の種類
-  tVlOpType mOpType;
+  VpiOpType mOpType;
 
   // オペランド数
   SizeType mSize;
@@ -277,7 +277,7 @@ private:
 
   /// コンストラクタ
   SptOpr2(const FileRegion& file_region,
-	  tVlOpType op_type,
+	  VpiOpType op_type,
 	  PtExprArray opr_array);
 
   /// デストラクタ
@@ -298,7 +298,7 @@ public:
   index_value() const override;
 
   /// 演算子の種類の取得
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief オペランドの数の取得
@@ -329,7 +329,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 演算子の種類
-  tVlOpType mOpType;
+  VpiOpType mOpType;
 
   // オペランドのリスト
   PtExprArray mExprArray;
@@ -428,7 +428,7 @@ private:
 	     const char* tail_name,
 	     bool const_index,
 	     PtExprArray index_array = PtExprArray(),
-	     tVpiRangeMode mode = kVpiNoRange,
+	     VpiRangeMode mode = VpiRangeMode::No,
 	     const PtExpr* left = nullptr,
 	     const PtExpr* right = nullptr);
 
@@ -464,7 +464,7 @@ public:
   index(SizeType pos) const override;
 
   /// 範囲指定モードの取得
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   /// range の MSB を取出す．
@@ -494,7 +494,7 @@ private:
   PtExprArray mIndexArray;
 
   // 範囲のモード
-  tVpiRangeMode mMode;
+  VpiRangeMode mMode;
 
   // 範囲のMSB
   const PtExpr* mLeftRange;
@@ -517,8 +517,8 @@ private:
 
   /// コンストラクタ
   SptConstant(const FileRegion& file_region,
-	      tVpiConstType const_type,
-	      int size,
+	      VpiConstType const_type,
+	      SizeType size,
 	      unsigned int uvalue,
 	      const char* svalue,
 	      double rvalue);
@@ -537,7 +537,7 @@ public:
   is_index_expr() const override;
 
   /// 定数の種類を表す型を返す．
-  tVpiConstType
+  VpiConstType
   const_type() const override;
 
   // 整数型の定数のサイズの取得
@@ -563,11 +563,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の型
-  tVpiConstType mConstType;
+  VpiConstType mConstType;
 
   // サイズ
   // 0 の時は指定なし
-  int mSize;
+  SizeType mSize;
 
   // 整数の値
   unsigned int mUintValue;

@@ -173,8 +173,8 @@ Parser::new_NamedCon(const FileRegion& fr,
 // @return 生成された strength
 const PtStrength*
 Parser::new_Strength(const FileRegion& fr,
-		     tVpiStrength value0,
-		     tVpiStrength value1)
+		     VpiStrength value0,
+		     VpiStrength value1)
 {
   return mFactory.new_Strength(fr, value0, value1);
 }
@@ -185,7 +185,7 @@ Parser::new_Strength(const FileRegion& fr,
 // @return 生成された strength
 const PtStrength*
 Parser::new_Strength(const FileRegion& fr,
-		     tVpiStrength value)
+		     VpiStrength value)
 {
   return mFactory.new_Strength(fr, value);
 }

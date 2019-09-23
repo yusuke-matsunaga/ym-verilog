@@ -38,14 +38,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  int
+  SizeType
   elem_num() const = 0;
 
   /// @brief 値を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < elem_num() )
   virtual
   const VlExpr*
-  expr(int pos) const = 0;
+  expr(SizeType pos) const = 0;
 
   /// @brief Verilog-HDL の文字列を得る．
   virtual

@@ -36,9 +36,9 @@ protected:
   /// @param[in] sign 符号つきの時 true にするフラグ
   CptIOHBase(const FileRegion& file_region,
 	     tPtIOType type,
-	     tVpiAuxType aux_type,
-	     tVpiNetType net_type,
-	     tVpiVarType var_type,
+	     VpiAuxType aux_type,
+	     VpiNetType net_type,
+	     VpiVarType var_type,
 	     bool sign);
 
   /// @brief デストラクタ
@@ -59,15 +59,15 @@ public:
   type() const override;
 
   /// @brief 補助的な型の取得
-  tVpiAuxType
+  VpiAuxType
   aux_type() const override;
 
   /// @brief 補助的なネット型の取得
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// @brief 補助的な変数型の取得
-  tVpiVarType
+  VpiVarType
   var_type() const override;
 
   /// @brief 符号の取得
@@ -142,9 +142,9 @@ protected:
   /// @param[in] sign 符号の有無
   CptIOH(const FileRegion& file_region,
 	 tPtIOType type,
-	 tVpiAuxType aux_type,
-	 tVpiNetType net_type,
-	 tVpiVarType var_type,
+	 VpiAuxType aux_type,
+	 VpiNetType net_type,
+	 VpiVarType var_type,
 	 bool sign);
 
   /// @brief デストラクタ
@@ -173,8 +173,8 @@ protected:
   /// @param[in] right 範囲の右側の式
   CptIOHV(const FileRegion& file_region,
 	  tPtIOType type,
-	  tVpiAuxType aux_type,
-	  tVpiNetType net_type,
+	  VpiAuxType aux_type,
+	  VpiNetType net_type,
 	  bool sign,
 	  const PtExpr* left,
 	  const PtExpr* right);

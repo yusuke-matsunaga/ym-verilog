@@ -93,11 +93,11 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
       // 暗黙の1ビットネット宣言を行う．
       // ただし識別子に添字がついていたらだめ
       const VlModule* parent_module = parent->parent_module();
-      tVpiNetType def_nettype = parent_module->def_net_type();
+      VpiNetType def_nettype = parent_module->def_net_type();
       if ( pt_expr->is_simple() &&
 	   !has_hname &&
 	   isize == 0 &&
-	   def_nettype != kVpiNone ) {
+	   def_nettype != VpiNetType::None ) {
 	ElbDecl* decl = factory().new_ImpNet(parent, pt_expr, def_nettype);
 	reg_decl(vpiNet, decl);
 
@@ -188,7 +188,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 
   const VlDeclBase* decl_base = primary->decl_base();
   ASSERT_COND( decl_base != nullptr );
-  tVpiObjType decl_type = decl_base->type();
+  VpiObjType decl_type = decl_base->type();
 
   if ( !check_decl(env, pt_expr, decl_type, is_array,
 		   has_range_select | has_bit_select) ) {
@@ -226,7 +226,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
   if ( has_range_select ) {
     // 範囲指定付きの場合
     switch ( pt_expr->range_mode() ) {
-    case kVpiConstRange:
+    case VpiRangeMode::Const:
       {
 	const PtExpr* pt_left = pt_expr->left_range();
 	const PtExpr* pt_right = pt_expr->right_range();
@@ -269,7 +269,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 					index1_val, index2_val);
       }
 
-    case kVpiPlusRange:
+    case VpiRangeMode::Plus:
       {
 	const PtExpr* pt_base = pt_expr->left_range();
 	const PtExpr* pt_range = pt_expr->right_range();
@@ -319,7 +319,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	}
       }
 
-    case kVpiMinusRange:
+    case VpiRangeMode::Minus:
       {
 	const PtExpr* pt_base = pt_expr->left_range();
 	const PtExpr* pt_range = pt_expr->right_range();
@@ -369,7 +369,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	}
       }
 
-    case kVpiNoRange:
+    case VpiRangeMode::No:
       ASSERT_NOT_REACHED;
       break;
     }
@@ -423,8 +423,8 @@ ExprGen::instantiate_namedevent(const VlNamedObj* parent,
 
   const VlDeclBase* decl_base = primary->decl_base();
   ASSERT_COND( decl_base != nullptr );
-  tVpiObjType decl_type = decl_base->type();
-  if ( decl_type != kVpiNamedEvent ) {
+  VpiObjType decl_type = decl_base->type();
+  if ( decl_type != VpiObjType::NamedEvent ) {
     // 型が違う
     error_not_a_namedevent(pt_expr);
     return nullptr;
@@ -635,7 +635,7 @@ ExprGen::instantiate_primary_sub(ElbObjHandle* handle,
 bool
 ExprGen::check_decl(const ElbEnv& env,
 		    const PtExpr* pt_expr,
-		    tVpiObjType decl_type,
+		    VpiObjType decl_type,
 		    bool is_array,
 		    bool has_select)
 {
@@ -651,10 +651,10 @@ ExprGen::check_decl(const ElbEnv& env,
       error_select_in_pca(pt_expr);
       return false;
     }
-    if ( decl_type != kVpiReg &&
-	 decl_type != kVpiIntegerVar &&
-	 decl_type != kVpiRealVar &&
-	 decl_type != kVpiTimeVar) {
+    if ( decl_type != VpiObjType::Reg &&
+	 decl_type != VpiObjType::IntegerVar &&
+	 decl_type != VpiObjType::RealVar &&
+	 decl_type != VpiObjType::TimeVar) {
       // reg/変数以外はダメ
       error_illegal_object(pt_expr);
       return false;
@@ -672,31 +672,31 @@ ExprGen::check_decl(const ElbEnv& env,
       error_select_in_force(pt_expr);
       return false;
     }
-    if ( decl_type != kVpiNet &&
-	 decl_type != kVpiReg &&
-	 decl_type != kVpiIntegerVar &&
-	 decl_type != kVpiRealVar &&
-	 decl_type != kVpiTimeVar) {
+    if ( decl_type != VpiObjType::Net &&
+	 decl_type != VpiObjType::Reg &&
+	 decl_type != VpiObjType::IntegerVar &&
+	 decl_type != VpiObjType::RealVar &&
+	 decl_type != VpiObjType::TimeVar) {
       // net/reg/変数以外はダメ
       error_illegal_object(pt_expr);
       return false;
     }
   }
   else if ( env.is_net_lhs() ) {
-    if ( decl_type != kVpiNet &&
-	 (decl_type != kVpiNetArray || !is_array) ) {
+    if ( decl_type != VpiObjType::Net &&
+	 (decl_type != VpiObjType::NetArray || !is_array) ) {
       // net 以外はダメ
       error_illegal_object(pt_expr);
       return false;
     }
   }
   else if ( env.is_var_lhs() ) {
-    if ( decl_type != kVpiReg &&
-	 (decl_type != kVpiRegArray || !is_array) &&
-	 decl_type != kVpiIntegerVar &&
-	 decl_type != kVpiRealVar &&
-	 decl_type != kVpiTimeVar &&
-	 decl_type != kVpiVarSelect ) {
+    if ( decl_type != VpiObjType::Reg &&
+	 (decl_type != VpiObjType::RegArray || !is_array) &&
+	 decl_type != VpiObjType::IntegerVar &&
+	 decl_type != VpiObjType::RealVar &&
+	 decl_type != VpiObjType::TimeVar &&
+	 decl_type != VpiObjType::VarSelect ) {
       // reg/変数以外はダメ
       error_illegal_object(pt_expr);
       return false;
@@ -706,8 +706,8 @@ ExprGen::check_decl(const ElbEnv& env,
     // 右辺系の環境
     if ( env.is_constant() ) {
       // 定数式
-      if ( decl_type != kVpiParameter &&
-	   decl_type != kVpiSpecParam ) {
+      if ( decl_type != VpiObjType::Parameter &&
+	   decl_type != VpiObjType::SpecParam ) {
 	// 定数(parameter)でないのでダメ
 	error_illegal_object(pt_expr);
 	return false;
@@ -715,12 +715,12 @@ ExprGen::check_decl(const ElbEnv& env,
     }
 
     // あとは個別の型ごとにチェックする．
-    if ( decl_type == kVpiRealVar && has_select ) {
+    if ( decl_type == VpiObjType::RealVar && has_select ) {
       // real の部分選択は無効
       error_select_for_real(pt_expr);
       return false;
     }
-    if ( decl_type == kVpiNamedEvent && !env.is_event_expr() ) {
+    if ( decl_type == VpiObjType::NamedEvent && !env.is_event_expr() ) {
       // イベント式以外では名前つきイベントは使えない．
       error_illegal_object(pt_expr);
       return false;
@@ -858,7 +858,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 	return VlValue();
       }
       switch ( pt_expr->range_mode() ) {
-      case kVpiConstRange:
+      case VpiRangeMode::Const:
 	{
 	  bool big = (index1 >= index2);
 	  if ( big ^ param->is_big_endian() ) {
@@ -870,7 +870,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 	}
 	break;
 
-      case kVpiPlusRange:
+      case VpiRangeMode::Plus:
 	if ( param->is_big_endian() ) {
 	  int range = index2;
 	  index2 = index1;
@@ -881,7 +881,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 	}
 	break;
 
-      case kVpiMinusRange:
+      case VpiRangeMode::Minus:
 	if ( param->is_big_endian() ) {
 	  index2 = index1 - index2 + 1;
 	}
@@ -893,7 +893,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 	ASSERT_NOT_REACHED;
 	break;
 
-      case kVpiNoRange:
+      case VpiRangeMode::No:
 	ASSERT_NOT_REACHED;
 	break;
       }

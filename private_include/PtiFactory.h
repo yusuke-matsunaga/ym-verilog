@@ -168,9 +168,9 @@ public:
 	     bool is_protected,
 	     int time_unit,
 	     int time_precision,
-	     tVpiNetType net_type,
-	     tVpiUnconnDrive unconn,
-	     tVpiDefDelayMode delay,
+	     VpiNetType net_type,
+	     VpiUnconnDrive unconn,
+	     VpiDefDelayMode delay,
 	     int decay,
 	     bool explicit_name,
 	     bool portfaults,
@@ -258,7 +258,7 @@ public:
   PtiIOHead*
   new_NetIOHead(const FileRegion& fr,
 		tPtIOType type,
-		tVpiNetType net_type,
+		VpiNetType net_type,
 		bool sign) = 0;
 
   /// @brief IO 宣言のヘッダの生成 (変数型)
@@ -270,7 +270,7 @@ public:
   PtiIOHead*
   new_VarIOHead(const FileRegion& fr,
 		tPtIOType type,
-		tVpiVarType var_type) = 0;
+		VpiVarType var_type) = 0;
 
   /// @brief 範囲付きの IO 宣言のヘッダの生成
   /// @param[in] fr ファイル位置の情報
@@ -314,7 +314,7 @@ public:
   PtiIOHead*
   new_NetIOHead(const FileRegion& fr,
 		tPtIOType type,
-		tVpiNetType net_type,
+		VpiNetType net_type,
 		bool sign,
 		const PtExpr* left,
 		const PtExpr* right) = 0;
@@ -372,7 +372,7 @@ public:
   virtual
   PtiDeclHead*
   new_ParamH(const FileRegion& fr,
-	     tVpiVarType var_type) = 0;
+	     VpiVarType var_type) = 0;
 
   /// @brief local param 宣言のヘッダの生成 (型指定なし)
   /// @param[in] fr ファイル位置の情報
@@ -401,7 +401,7 @@ public:
   virtual
   PtiDeclHead*
   new_LocalParamH(const FileRegion& fr,
-		  tVpiVarType var_type) = 0;
+		  VpiVarType var_type) = 0;
 
   /// @brief specparam 宣言のヘッダの生成
   /// @param[in] fr ファイル位置の情報
@@ -442,7 +442,7 @@ public:
   virtual
   PtiDeclHead*
   new_VarH(const FileRegion& fr,
-	   tVpiVarType var_type) = 0;
+	   VpiVarType var_type) = 0;
 
   /// @brief 1ビット型 reg 宣言のヘッダの生成
   /// @param[in] fr ファイル位置の情報
@@ -474,7 +474,7 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
+	   VpiNetType type,
 	   bool sign) = 0;
 
   /// @brief 1ビット型 net 宣言のヘッダの生成 (strength あり)
@@ -486,7 +486,7 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
+	   VpiNetType type,
 	   bool sign,
 	   const PtStrength* strength) = 0;
 
@@ -499,7 +499,7 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
+	   VpiNetType type,
 	   bool sign,
 	   const PtDelay* delay) = 0;
 
@@ -513,7 +513,7 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
+	   VpiNetType type,
 	   bool sign,
 	   const PtStrength* strength,
 	   const PtDelay* delay) = 0;
@@ -529,8 +529,8 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
-	   tVpiVsType vstype,
+	   VpiNetType type,
+	   VpiVsType vstype,
 	   bool sign,
 	   const PtExpr* left,
 	   const PtExpr* right) = 0;
@@ -547,8 +547,8 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
-	   tVpiVsType vstype,
+	   VpiNetType type,
+	   VpiVsType vstype,
 	   bool sign,
 	   const PtExpr* left,
 	   const PtExpr* right,
@@ -566,8 +566,8 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
-	   tVpiVsType vstype,
+	   VpiNetType type,
+	   VpiVsType vstype,
 	   bool sign,
 	   const PtExpr* left,
 	   const PtExpr* right,
@@ -586,8 +586,8 @@ public:
   virtual
   PtiDeclHead*
   new_NetH(const FileRegion& fr,
-	   tVpiNetType type,
-	   tVpiVsType vstype,
+	   VpiNetType type,
+	   VpiVsType vstype,
 	   bool sign,
 	   const PtExpr* left,
 	   const PtExpr* right,
@@ -820,7 +820,7 @@ public:
 		const char* name,
 		bool automatic,
 		bool sign,
-		tVpiVarType func_type,
+		VpiVarType func_type,
 		PtIOHeadArray iodecl_array,
 		PtDeclHeadArray decl_array,
 		const PtStmt* stmt) = 0;
@@ -833,7 +833,7 @@ public:
   virtual
   const PtItem*
   new_GateH(const FileRegion& fr,
-	    tVpiPrimType type,
+	    VpiPrimType type,
 	    PtInstArray elem_array) = 0;
 
   /// @brief gate instance 文のヘッダの生成 (strength付き)
@@ -845,7 +845,7 @@ public:
   virtual
   const PtItem*
   new_GateH(const FileRegion& fr,
-	    tVpiPrimType type,
+	    VpiPrimType type,
 	    const PtStrength* strength,
 	    PtInstArray elem_array) = 0;
 
@@ -858,7 +858,7 @@ public:
   virtual
   const PtItem*
   new_GateH(const FileRegion& fr,
-	    tVpiPrimType type,
+	    VpiPrimType type,
 	    const PtDelay* delay,
 	    PtInstArray elem_array) = 0;
 
@@ -872,7 +872,7 @@ public:
   virtual
   const PtItem*
   new_GateH(const FileRegion& fr,
-	    tVpiPrimType type,
+	    VpiPrimType type,
 	    const PtStrength* strength,
 	    const PtDelay* delay,
 	    PtInstArray elem_array) = 0;
@@ -1240,7 +1240,7 @@ public:
   virtual
   const PtItem*
   new_SpecItem(const FileRegion& fr,
-	       tVpiSpecItemType id,
+	       VpiSpecItemType id,
 	       PtExprArray terminal_array) = 0;
 
   /// @brief path 仕様を生成する．
@@ -1252,7 +1252,7 @@ public:
   virtual
   const PtItem*
   new_SpecPath(const FileRegion& fr,
-	       tVpiSpecPathType id,
+	       VpiSpecPathType id,
 	       const PtExpr* expr,
 	       const PtPathDecl* path_decl) = 0;
 
@@ -1273,7 +1273,7 @@ public:
 	       int edge,
 	       PtExprArray input_array,
 	       int input_pol,
-	       int op,
+	       VpiPathType op,
 	       PtExprArray output_array,
 	       int output_pol,
 	       const PtExpr* expr,
@@ -1296,7 +1296,7 @@ public:
 	       int edge,
 	       PtExprArray input_array,
 	       int input_pol,
-	       int op,
+	       VpiPathType op,
 	       const PtExpr* output,
 	       int output_pol,
 	       const PtExpr* expr,
@@ -1753,7 +1753,7 @@ public:
   virtual
   const PtExpr*
   new_Opr(const FileRegion& fr,
-	  tVlOpType type,
+	  VpiOpType type,
 	  const PtExpr* opr) = 0;
 
   /// @brief 二項演算子の生成
@@ -1765,7 +1765,7 @@ public:
   virtual
   const PtExpr*
   new_Opr(const FileRegion& fr,
-	  tVlOpType type,
+	  VpiOpType type,
 	  const PtExpr* opr1,
 	  const PtExpr* opr2) = 0;
 
@@ -1779,7 +1779,7 @@ public:
   virtual
   const PtExpr*
   new_Opr(const FileRegion& fr,
-	  tVlOpType type,
+	  VpiOpType type,
 	  const PtExpr* opr1,
 	  const PtExpr* opr2,
 	  const PtExpr* opr3) = 0;
@@ -1846,7 +1846,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& fr,
 	      const char* name,
-	      tVpiRangeMode mode,
+	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) = 0;
 
@@ -1863,7 +1863,7 @@ public:
   new_Primary(const FileRegion& fr,
 	      const char* name,
 	      PtExprArray index_array,
-	      tVpiRangeMode mode,
+	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) = 0;
 
@@ -1904,7 +1904,7 @@ public:
   new_Primary(const FileRegion& fr,
 	      PtNameBranchArray nb_array,
 	      const char* tail_name,
-	      tVpiRangeMode mode,
+	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) = 0;
 
@@ -1923,7 +1923,7 @@ public:
 	      PtNameBranchArray nb_array,
 	      const char* tail_name,
 	      PtExprArray index_array,
-	      tVpiRangeMode mode,
+	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) = 0;
 
@@ -1960,7 +1960,7 @@ public:
   const PtExpr*
   new_CPrimary(const FileRegion& fr,
 	       const char* name,
-	       tVpiRangeMode mode,
+	       VpiRangeMode mode,
 	       const PtExpr* left,
 	       const PtExpr* right) = 0;
 
@@ -2038,7 +2038,7 @@ public:
   virtual
   const PtExpr*
   new_IntConst(const FileRegion& fr,
-	       tVpiConstType const_type,
+	       VpiConstType const_type,
 	       const char* value) = 0;
 
   /// @brief サイズと基底付き定数の生成
@@ -2051,7 +2051,7 @@ public:
   const PtExpr*
   new_IntConst(const FileRegion& fr,
 	       int size,
-	       tVpiConstType const_type,
+	       VpiConstType const_type,
 	       const char* value) = 0;
 
   /// @brief 実数型の定数の生成
@@ -2177,8 +2177,8 @@ public:
   virtual
   const PtStrength*
   new_Strength(const FileRegion& fr,
-	       tVpiStrength value0,
-	       tVpiStrength value1) = 0;
+	       VpiStrength value0,
+	       VpiStrength value1) = 0;
 
   /// @brief charge strength の生成
   /// @param[in] fr ファイル位置の情報
@@ -2187,7 +2187,7 @@ public:
   virtual
   const PtStrength*
   new_Strength(const FileRegion& fr,
-	       tVpiStrength value) = 0;
+	       VpiStrength value) = 0;
 
   /// @brief 遅延値の生成 (1つの値)
   /// @param[in] fr ファイル位置の情報

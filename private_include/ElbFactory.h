@@ -182,7 +182,7 @@ public:
   ElbDeclHead*
   new_DeclHead(const VlNamedObj* parent,
 	       const PtIOHead* pt_head,
-	       tVpiAuxType aux_type) = 0;
+	       VpiAuxType aux_type) = 0;
 
   /// @brief 宣言要素のヘッダを生成する．(IODecl 中の宣言用)
   /// @param[in] parent 親のスコープ
@@ -196,7 +196,7 @@ public:
   ElbDeclHead*
   new_DeclHead(const VlNamedObj* parent,
 	       const PtIOHead* pt_head,
-	       tVpiAuxType aux_type,
+	       VpiAuxType aux_type,
 	       const PtExpr* left,
 	       const PtExpr* right,
 	       int left_val,
@@ -242,13 +242,13 @@ public:
   ElbDecl*
   new_ImpNet(const VlNamedObj* parent,
 	     const PtExpr* pt_expr,
-	     tVpiNetType net_type) = 0;
+	     VpiNetType net_type) = 0;
 
   /// @brief 範囲の配列を生成する．
   /// @param[in] dim_size 要素数
   virtual
   ElbRange*
-  new_RangeArray(int dim_size) = 0;
+  new_RangeArray(SizeType dim_size) = 0;
 
   /// @brief 宣言要素の配列を生成する．
   /// @param[in] parent 親のスコープ
@@ -511,7 +511,7 @@ public:
   /// @param[in] stmt_num 要素数
   virtual
   ElbStmt**
-  new_StmtList(int stmt_num) = 0;
+  new_StmtList(SizeType stmt_num) = 0;
 
   /// @brief 代入文を生成する．
   /// @param[in] parent 親のスコープ
@@ -833,7 +833,7 @@ public:
   virtual
   ElbControl*
   new_EventControl(const PtControl* pt_control,
-		   int event_num,
+		   SizeType event_num,
 		   ElbExpr** event_list) = 0;
 
   /// @brief リピートコントロールを生成する．
@@ -845,14 +845,14 @@ public:
   ElbControl*
   new_RepeatControl(const PtControl* pt_control,
 		    ElbExpr* rep,
-		    int event_num,
+		    SizeType event_num,
 		    ElbExpr** event_list) = 0;
 
   /// @brief 式のポインタ配列を生成する．
   /// @param[in] elem_num 要素数
   virtual
   ElbExpr**
-  new_ExprList(int elem_num) = 0;
+  new_ExprList(SizeType elem_num) = 0;
 
   /// @brief 単項演算子を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -861,7 +861,7 @@ public:
   virtual
   ElbExpr*
   new_UnaryOp(const PtExpr* pt_expr,
-	      tVlOpType op_type,
+	      VpiOpType op_type,
 	      ElbExpr* opr1) = 0;
 
   /// @brief 2項演算子を生成する．
@@ -872,7 +872,7 @@ public:
   virtual
   ElbExpr*
   new_BinaryOp(const PtExpr* pt_expr,
-	       tVlOpType op_type,
+	       VpiOpType op_type,
 	       ElbExpr* opr1,
 	       ElbExpr* opr2) = 0;
 
@@ -885,7 +885,7 @@ public:
   virtual
   ElbExpr*
   new_TernaryOp(const PtExpr* pt_expr,
-		tVlOpType op_type,
+		VpiOpType op_type,
 		ElbExpr* opr1,
 		ElbExpr* opr2,
 		ElbExpr* opr3) = 0;
@@ -897,7 +897,7 @@ public:
   virtual
   ElbExpr*
   new_ConcatOp(const PtExpr* pt_expr,
-	       int opr_size,
+	       SizeType opr_size,
 	       ElbExpr** opr_list) = 0;
 
   /// @brief 反復連結演算子を生成する．
@@ -909,9 +909,9 @@ public:
   virtual
   ElbExpr*
   new_MultiConcatOp(const PtExpr* pt_expr,
-		    int rep_num,
+		    SizeType rep_num,
 		    ElbExpr* rep_expr,
-		    int opr_size,
+		    SizeType opr_size,
 		    ElbExpr** opr_list) = 0;
 
   /// @brief プライマリ式を生成する．
@@ -1067,7 +1067,7 @@ public:
   ElbExpr*
   new_FuncCall(const PtExpr* pt_expr,
 	       const ElbTaskFunc* func,
-	       int arg_size,
+	       SizeType arg_size,
 	       ElbExpr** arg_list) = 0;
 
   /// @brief システム関数呼び出し式を生成する．
@@ -1079,7 +1079,7 @@ public:
   ElbExpr*
   new_SysFuncCall(const PtExpr* pt_expr,
 		  const ElbUserSystf* user_systf,
-		  int arg_size,
+		  SizeType arg_size,
 		  ElbExpr** arg_list) = 0;
 
   /// @brief システム関数/システムタスクの引数を生成する．
@@ -1107,9 +1107,9 @@ public:
   virtual
   ElbExpr*
   new_Lhs(const PtExpr* pt_expr,
-	  int opr_size,
+	  SizeType opr_size,
 	  ElbExpr** opr_array,
-	  int lhs_elem_num,
+	  SizeType lhs_elem_num,
 	  ElbExpr** lhs_elem_array) = 0;
 
   /// @brief 遅延値を生成する．
@@ -1119,14 +1119,14 @@ public:
   virtual
   ElbDelay*
   new_Delay(const PtBase* pt_obj,
-	    int elem_num,
+	    SizeType elem_num,
 	    ElbExpr** expr_list) = 0;
 
   /// @brief attribute instance のリストを生成する．
   /// @param[in] n 要素数
   virtual
   ElbAttrList*
-  new_AttrList(int n) = 0;
+  new_AttrList(SizeType n) = 0;
 
 };
 

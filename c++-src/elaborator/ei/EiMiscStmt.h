@@ -50,7 +50,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -104,7 +104,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -143,13 +143,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 引数の数を返す．
-  int
+  SizeType
   arg_num() const override;
 
   /// @brief 引数の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
   const VlExpr*
-  arg(int pos) const override;
+  arg(SizeType pos) const override;
 
 
 private:
@@ -161,7 +161,7 @@ private:
   /// @param[in] pos 位置番号
   /// @param[in] arg 設定する引数
   void
-  set_argument(int pos,
+  set_argument(SizeType pos,
 	       ElbExpr* arg);
 
 
@@ -171,7 +171,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 引数の数
-  int mArgumentNum;
+  SizeType mArgumentNum;
 
   // 引数のリスト
   ElbExpr** mArgumentList;
@@ -214,7 +214,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -274,7 +274,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -331,7 +331,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -395,7 +395,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 

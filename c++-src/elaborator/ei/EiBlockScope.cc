@@ -52,17 +52,17 @@ EiBlockScope::~EiBlockScope()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiBlockScope::type() const
 {
   switch ( mPtStmt->type() ) {
-  case kPtNamedParBlockStmt: return kVpiNamedFork;
-  case kPtNamedSeqBlockStmt: return kVpiNamedBegin;
+  case kPtNamedParBlockStmt: return VpiObjType::NamedFork;
+  case kPtNamedSeqBlockStmt: return VpiObjType::NamedBegin;
   default:
     break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiScope;
+  return VpiObjType::Scope;
 }
 
 // @brief ファイル位置を返す．

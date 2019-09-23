@@ -344,12 +344,12 @@ private:
 
   /// @brief drive strength を表すコンストラクタ
   CptStrength(const FileRegion& file_region,
-	      tVpiStrength value1,
-	      tVpiStrength value2);
+	      VpiStrength value1,
+	      VpiStrength value2);
 
   /// @brief charge strength を表すコンストラクタ
   CptStrength(const FileRegion& file_region,
-	      tVpiStrength value1);
+	      VpiStrength value1);
 
   /// @brief デストラクタ
   ~CptStrength();
@@ -365,15 +365,15 @@ public:
   file_region() const override;
 
   /// @brief drive strength0 を返す．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief drive strength1 を返す．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief charge strength を返す．
-  tVpiStrength
+  VpiStrength
   charge() const override;
 
 
@@ -386,7 +386,7 @@ private:
   FileRegion mFileRegion;
 
   // 値の配列
-  tVpiStrength mValue[3];
+  VpiStrength mValue[3];
 
 };
 

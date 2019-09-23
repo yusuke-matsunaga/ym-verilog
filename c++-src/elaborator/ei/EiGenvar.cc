@@ -60,10 +60,10 @@ EiGenvar::~EiGenvar()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiGenvar::type() const
 {
-  return kVpiConstant;
+  return VpiObjType::Constant;
 }
 
 // @brief ファイル位置の取得

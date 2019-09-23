@@ -43,7 +43,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -114,7 +114,7 @@ public:
   is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief オフセット値の取得
@@ -129,38 +129,38 @@ public:
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// @brief vectored|scalared 属性の取得
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
-  tVpiVsType
+  VpiVsType
   vs_type() const override;
 
   /// @brief drive0 strength の取得
   /// @retval 0 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief drive1 strength の取得
   /// @retval 1 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief charge strength の取得
   /// @retval 電荷の強度
   /// @retval kVpiNoStrength strength の指定なし
-  tVpiStrength
+  VpiStrength
   charge() const override;
 
   /// @brief delay の取得

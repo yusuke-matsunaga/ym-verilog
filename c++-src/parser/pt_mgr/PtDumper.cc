@@ -260,7 +260,7 @@ PtDumper::put(const PtModule* m)
       else {
 	ASSERT_COND( pr->index_num() == 0 );
       }
-      if ( pr->range_mode() != kVpiNoRange ) {
+      if ( pr->range_mode() != VpiRangeMode::No ) {
 	put("mRangeMode", pr->range_mode());
 	put("mLeftRange", pr->left_range());
 	put("mRightRange", pr->right_range());
@@ -326,32 +326,32 @@ PtDumper::put(const char* label,
   switch ( decl->type() ) {
   case kPtDecl_Param:
     switch ( decl->data_type() ) {
-    case kVpiVarNone:            nm = "Parameter"; break;
-    case kVpiVarInteger:         nm = "Parameter(integer)";  break;
-    case kVpiVarReal:            nm = "Parameter(real)"; break;
-    case kVpiVarTime:            nm = "Parameter(time)"; break;
-    case kVpiVarRealtime:        nm = "Parameter(realtime)"; break;
+    case VpiVarType::None:            nm = "Parameter"; break;
+    case VpiVarType::Integer:         nm = "Parameter(integer)";  break;
+    case VpiVarType::Real:            nm = "Parameter(real)"; break;
+    case VpiVarType::Time:            nm = "Parameter(time)"; break;
+    case VpiVarType::Realtime:        nm = "Parameter(realtime)"; break;
     default: ASSERT_NOT_REACHED; break;
     }
     break;
   case kPtDecl_LocalParam:
     switch ( decl->data_type() ) {
-    case kVpiVarNone:            nm = "Localparam"; break;
-    case kVpiVarInteger:         nm = "Localparam(integer)";  break;
-    case kVpiVarReal:            nm = "Localparam(real)"; break;
-    case kVpiVarTime:            nm = "Localparam(time)"; break;
-    case kVpiVarRealtime:        nm = "Localparam(realtime)"; break;
+    case VpiVarType::None:            nm = "Localparam"; break;
+    case VpiVarType::Integer:         nm = "Localparam(integer)";  break;
+    case VpiVarType::Real:            nm = "Localparam(real)"; break;
+    case VpiVarType::Time:            nm = "Localparam(time)"; break;
+    case VpiVarType::Realtime:        nm = "Localparam(realtime)"; break;
     default: ASSERT_NOT_REACHED; break;
     }
     break;
   case kPtDecl_Reg:            nm = "Reg";        break;
   case kPtDecl_Var:
     switch ( decl->data_type() ) {
-    case kVpiVarInteger:         nm = "Integer";    break;
-    case kVpiVarReal:            nm = "Real";       break;
-    case kVpiVarTime:            nm = "Time";       break;
-    case kVpiVarRealtime:        nm = "Realtime";  break;
-    case kVpiVarNone: ASSERT_NOT_REACHED;
+    case VpiVarType::Integer:         nm = "Integer";    break;
+    case VpiVarType::Real:            nm = "Real";       break;
+    case VpiVarType::Time:            nm = "Time";       break;
+    case VpiVarType::Realtime:        nm = "Realtime";  break;
+    case VpiVarType::None: ASSERT_NOT_REACHED;
     default: ASSERT_NOT_REACHED; break;
     }
     break;
@@ -360,18 +360,18 @@ PtDumper::put(const char* label,
   case kPtDecl_SpecParam:      nm = "Specparam";  break;
   case kPtDecl_Net:
     switch ( decl->net_type() ) {
-    case kVpiSupply0:            nm = "Supply0"; break;
-    case kVpiSupply1:            nm = "Supply1"; break;
-    case kVpiTri:                nm = "Tri"; break;
-    case kVpiTriAnd:             nm = "Triand"; break;
-    case kVpiTriOr:              nm = "Trior"; break;
-    case kVpiTriReg:             nm = "Trireg"; break;
-    case kVpiTri0:               nm = "Tri0"; break;
-    case kVpiTri1:               nm = "Tri1"; break;
-    case kVpiWire:               nm = "Wire"; break;
-    case kVpiWand:               nm = "Wand"; break;
-    case kVpiWor:                nm = "Wor"; break;
-    case kVpiNone:               nm = "None"; break;
+    case VpiNetType::Supply0:          nm = "Supply0"; break;
+    case VpiNetType::Supply1:          nm = "Supply1"; break;
+    case VpiNetType::Tri:              nm = "Tri"; break;
+    case VpiNetType::TriAnd:           nm = "Triand"; break;
+    case VpiNetType::TriOr:            nm = "Trior"; break;
+    case VpiNetType::TriReg:           nm = "Trireg"; break;
+    case VpiNetType::Tri0:             nm = "Tri0"; break;
+    case VpiNetType::Tri1:             nm = "Tri1"; break;
+    case VpiNetType::Wire:             nm = "Wire"; break;
+    case VpiNetType::Wand:             nm = "Wand"; break;
+    case VpiNetType::Wor:              nm = "Wor"; break;
+    case VpiNetType::None:             nm = "None"; break;
     default: ASSERT_NOT_REACHED; break;
     }
     break;
@@ -426,11 +426,11 @@ PtDumper::put(const char* label,
   case kPtItem_Task:            nm = "Task"; break;
   case kPtItem_Func:
     switch ( item->data_type() ) {
-    case kVpiVarNone:            nm = "Function"; break;
-    case kVpiVarInteger:         nm = "Function(integer)"; break;
-    case kVpiVarReal:            nm = "Function(real)"; break;
-    case kVpiVarTime:            nm = "Function(time)"; break;
-    case kVpiVarRealtime:        nm = "Function(realtime)"; break;
+    case VpiVarType::None:            nm = "Function"; break;
+    case VpiVarType::Integer:         nm = "Function(integer)"; break;
+    case VpiVarType::Real:            nm = "Function(real)"; break;
+    case VpiVarType::Time:            nm = "Function(time)"; break;
+    case VpiVarType::Realtime:        nm = "Function(realtime)"; break;
     default: ASSERT_NOT_REACHED; break;
     }
     break;
@@ -438,10 +438,10 @@ PtDumper::put(const char* label,
   case kPtItem_MuInst:          nm = "MuHeader"; break;
   case kPtItem_SpecItem:
     switch ( item->specitem_type() ) {
-    case kVpiPulsestyleOnEvent:  nm = "Pulse_onevent"; break;
-    case kVpiPulsestyleOnDetect: nm = "Pulse_ondetect"; break;
-    case kVpiShowcancelled:      nm = "Showcancelled"; break;
-    case kVpiNoshowcancelled:    nm = "Noshowcancelld"; break;
+    case VpiSpecItemType::PulsestyleOnEvent:  nm = "Pulse_onevent"; break;
+    case VpiSpecItemType::PulsestyleOnDetect: nm = "Pulse_ondetect"; break;
+    case VpiSpecItemType::Showcancelled:      nm = "Showcancelled"; break;
+    case VpiSpecItemType::Noshowcancelled:    nm = "Noshowcancelld"; break;
     default: ASSERT_NOT_REACHED; break;
     }
   case kPtItem_SpecPath:        nm = "SpecPath"; break;
@@ -857,7 +857,7 @@ PtDumper::put(const char* label,
 
   switch ( expr->type() ) {
   case kPtOprExpr:
-    if ( expr->op_type() == kVlNullOp ) {
+    if ( expr->op_type() == VpiOpType::Null ) {
       // '(' expression ')' なので無視
       return put(label, expr->operand(0));
     }
@@ -1073,14 +1073,14 @@ PtDumper::put(const char* label,
 // @param[in] aux_type 補助的なデータ型
 void
 PtDumper::put(const char* label,
-	      tVpiAuxType aux_type)
+	      VpiAuxType aux_type)
 {
   PtHeader x(*this, label, "aux_type", false);
   switch ( aux_type ) {
-  case kVpiAuxNone: mStream << "none"; break;
-  case kVpiAuxNet:  mStream << "net"; break;
-  case kVpiAuxReg:  mStream << "reg"; break;
-  case kVpiAuxVar:  mStream << "var"; break;
+  case VpiAuxType::None: mStream << "none"; break;
+  case VpiAuxType::Net:  mStream << "net"; break;
+  case VpiAuxType::Reg:  mStream << "reg"; break;
+  case VpiAuxType::Var:  mStream << "var"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1090,22 +1090,22 @@ PtDumper::put(const char* label,
 // @param[in] net_type ネット型
 void
 PtDumper::put(const char* label,
-	      tVpiNetType net_type)
+	      VpiNetType net_type)
 {
   PtHeader x(*this, label, "net_type", false);
   switch ( net_type ) {
-  case kVpiSupply0: mStream << "supply0"; break;
-  case kVpiSupply1: mStream << "supply1"; break;
-  case kVpiTri:     mStream << "tri"; break;
-  case kVpiTriAnd:  mStream << "triand"; break;
-  case kVpiTriOr:   mStream << "trior"; break;
-  case kVpiTriReg:  mStream << "trireg"; break;
-  case kVpiTri0:    mStream << "tri0"; break;
-  case kVpiTri1:    mStream << "tri1"; break;
-  case kVpiWire:    mStream << "wire"; break;
-  case kVpiWand:    mStream << "wand"; break;
-  case kVpiWor:     mStream << "wor"; break;
-  case kVpiNone:    mStream << "none"; break;
+  case VpiNetType::Supply0: mStream << "supply0"; break;
+  case VpiNetType::Supply1: mStream << "supply1"; break;
+  case VpiNetType::Tri:     mStream << "tri"; break;
+  case VpiNetType::TriAnd:  mStream << "triand"; break;
+  case VpiNetType::TriOr:   mStream << "trior"; break;
+  case VpiNetType::TriReg:  mStream << "trireg"; break;
+  case VpiNetType::Tri0:    mStream << "tri0"; break;
+  case VpiNetType::Tri1:    mStream << "tri1"; break;
+  case VpiNetType::Wire:    mStream << "wire"; break;
+  case VpiNetType::Wand:    mStream << "wand"; break;
+  case VpiNetType::Wor:     mStream << "wor"; break;
+  case VpiNetType::None:    mStream << "none"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1115,15 +1115,15 @@ PtDumper::put(const char* label,
 // @param[in] var_type 変数型
 void
 PtDumper::put(const char* label,
-	      tVpiVarType var_type)
+	      VpiVarType var_type)
 {
   PtHeader x(*this, label, "var_type", false);
   switch ( var_type ) {
-  case kVpiVarInteger:  mStream << "integer"; break;
-  case kVpiVarReal:     mStream << "real"; break;
-  case kVpiVarTime:     mStream << "time"; break;
-  case kVpiVarRealtime: mStream << "realtime"; break;
-  case kVpiVarNone:     mStream << "none"; break;
+  case VpiVarType::Integer:  mStream << "integer"; break;
+  case VpiVarType::Real:     mStream << "real"; break;
+  case VpiVarType::Time:     mStream << "time"; break;
+  case VpiVarType::Realtime: mStream << "realtime"; break;
+  case VpiVarType::None:     mStream << "none"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1133,7 +1133,7 @@ PtDumper::put(const char* label,
 // @param[in] direction 方向
 void
 PtDumper::put(const char* label,
-	      tVlDirection direction)
+	      VpiDir direction)
 {
   PtHeader x(*this, label, "direction", false);
   mStream << direction;
@@ -1144,13 +1144,13 @@ PtDumper::put(const char* label,
 // @param[in] ud unconnected drive
 void
 PtDumper::put(const char* label,
-	      tVpiUnconnDrive ud)
+	      VpiUnconnDrive ud)
 {
   PtHeader x(*this, label, "unconn_drive", false);
   switch ( ud ) {
-  case kVpiHighZ: mStream << "high-Z"; break;
-  case kVpiPull1: mStream << "pull-1"; break;
-  case kVpiPull0: mStream << "pull-0"; break;
+  case VpiUnconnDrive::HighZ: mStream << "high-Z"; break;
+  case VpiUnconnDrive::Pull1: mStream << "pull-1"; break;
+  case VpiUnconnDrive::Pull0: mStream << "pull-0"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1160,16 +1160,16 @@ PtDumper::put(const char* label,
 // @param[in] delay_mode default delay mode
 void
 PtDumper::put(const char* label,
-	      tVpiDefDelayMode delay_mode)
+	      VpiDefDelayMode delay_mode)
 {
   PtHeader x(*this, label, "def_delay_mode", false);
   switch ( delay_mode ) {
-  case kVpiDelayModeNone:    mStream << "none"; break;
-  case kVpiDelayModePath:    mStream << "path"; break;
-  case kVpiDelayModeDistrib: mStream << "distrib"; break;
-  case kVpiDelayModeUnit:    mStream << "unit"; break;
-  case kVpiDelayModeZero:    mStream << "zero"; break;
-  case kVpiDelayModeMTM:     mStream << "min-typ-max"; break;
+  case VpiDefDelayMode::None:    mStream << "none"; break;
+  case VpiDefDelayMode::Path:    mStream << "path"; break;
+  case VpiDefDelayMode::Distrib: mStream << "distrib"; break;
+  case VpiDefDelayMode::Unit:    mStream << "unit"; break;
+  case VpiDefDelayMode::Zero:    mStream << "zero"; break;
+  case VpiDefDelayMode::MTM:     mStream << "min-typ-max"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1179,38 +1179,38 @@ PtDumper::put(const char* label,
 // @param[in] prim_type primitive 型
 void
 PtDumper::put(const char* label,
-	      tVpiPrimType prim_type)
+	      VpiPrimType prim_type)
 {
   PtHeader x(*this, label, "prim_type", false);
   switch ( prim_type ) {
-  case kVpiAndPrim:      mStream << "and"; break;
-  case kVpiNandPrim:     mStream << "nand"; break;
-  case kVpiNorPrim:      mStream << "nor"; break;
-  case kVpiOrPrim:       mStream << "or"; break;
-  case kVpiXorPrim:      mStream << "xor"; break;
-  case kVpiXnorPrim:     mStream << "xnor"; break;
-  case kVpiBufPrim:      mStream << "buf"; break;
-  case kVpiNotPrim:      mStream << "not"; break;
-  case kVpiBufif0Prim:   mStream << "bufif0"; break;
-  case kVpiBufif1Prim:   mStream << "bufif1"; break;
-  case kVpiNotif0Prim:   mStream << "notif0"; break;
-  case kVpiNotif1Prim:   mStream << "notif1"; break;
-  case kVpiNmosPrim:     mStream << "nmos"; break;
-  case kVpiPmosPrim:     mStream << "pmos"; break;
-  case kVpiCmosPrim:     mStream << "cmos"; break;
-  case kVpiRnmosPrim:    mStream << "rnmos"; break;
-  case kVpiRpmosPrim:    mStream << "rpmos"; break;
-  case kVpiRcmosPrim:    mStream << "rcmos"; break;
-  case kVpiRtranPrim:    mStream << "rtran"; break;
-  case kVpiRtranif0Prim: mStream << "rtranif0"; break;
-  case kVpiRtranif1Prim: mStream << "rtranif1"; break;
-  case kVpiTranPrim:     mStream << "tran"; break;
-  case kVpiTranif0Prim:  mStream << "tranif0"; break;
-  case kVpiTranif1Prim:  mStream << "tranif1"; break;
-  case kVpiPullupPrim:   mStream << "pullup"; break;
-  case kVpiPulldownPrim: mStream << "pulldown"; break;
-  case kVpiSeqPrim:      mStream << "seq"; break;
-  case kVpiCombPrim:     mStream << "comb"; break;
+  case VpiPrimType::And:      mStream << "and"; break;
+  case VpiPrimType::Nand:     mStream << "nand"; break;
+  case VpiPrimType::Nor:      mStream << "nor"; break;
+  case VpiPrimType::Or:       mStream << "or"; break;
+  case VpiPrimType::Xor:      mStream << "xor"; break;
+  case VpiPrimType::Xnor:     mStream << "xnor"; break;
+  case VpiPrimType::Buf:      mStream << "buf"; break;
+  case VpiPrimType::Not:      mStream << "not"; break;
+  case VpiPrimType::Bufif0:   mStream << "bufif0"; break;
+  case VpiPrimType::Bufif1:   mStream << "bufif1"; break;
+  case VpiPrimType::Notif0:   mStream << "notif0"; break;
+  case VpiPrimType::Notif1:   mStream << "notif1"; break;
+  case VpiPrimType::Nmos:     mStream << "nmos"; break;
+  case VpiPrimType::Pmos:     mStream << "pmos"; break;
+  case VpiPrimType::Cmos:     mStream << "cmos"; break;
+  case VpiPrimType::Rnmos:    mStream << "rnmos"; break;
+  case VpiPrimType::Rpmos:    mStream << "rpmos"; break;
+  case VpiPrimType::Rcmos:    mStream << "rcmos"; break;
+  case VpiPrimType::Rtran:    mStream << "rtran"; break;
+  case VpiPrimType::Rtranif0: mStream << "rtranif0"; break;
+  case VpiPrimType::Rtranif1: mStream << "rtranif1"; break;
+  case VpiPrimType::Tran:     mStream << "tran"; break;
+  case VpiPrimType::Tranif0:  mStream << "tranif0"; break;
+  case VpiPrimType::Tranif1:  mStream << "tranif1"; break;
+  case VpiPrimType::Pullup:   mStream << "pullup"; break;
+  case VpiPrimType::Pulldown: mStream << "pulldown"; break;
+  case VpiPrimType::Seq:      mStream << "seq"; break;
+  case VpiPrimType::Comb:     mStream << "comb"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1220,53 +1220,53 @@ PtDumper::put(const char* label,
 // @param[in] op_type 演算子型
 void
 PtDumper::put(const char* label,
-	      tVlOpType op_type)
+	      VpiOpType op_type)
 {
   PtHeader x(*this, label, "op_type", false);
   switch ( op_type ) {
-  case kVlMinusOp:       mStream << "minus"; break;
-  case kVlPlusOp:        mStream << "plus"; break;
-  case kVlNotOp:         mStream << "not"; break;
-  case kVlBitNegOp:      mStream << "bitneg"; break;
-  case kVlUnaryAndOp:    mStream << "unary and"; break;
-  case kVlUnaryNandOp:   mStream << "unary nand"; break;
-  case kVlUnaryOrOp:     mStream << "unary or"; break;
-  case kVlUnaryNorOp:    mStream << "unary nor"; break;
-  case kVlUnaryXorOp:    mStream << "unary xor"; break;
-  case kVlUnaryXNorOp:   mStream << "unary xnor"; break;
-  case kVlSubOp:         mStream << "sub"; break;
-  case kVlDivOp:         mStream << "div"; break;
-  case kVlModOp:         mStream << "mod"; break;
-  case kVlEqOp:          mStream << "eq"; break;
-  case kVlNeqOp:         mStream << "neq"; break;
-  case kVlCaseEqOp:      mStream << "caseeq"; break;
-  case kVlCaseNeqOp:     mStream << "caseneq"; break;
-  case kVlGtOp:          mStream << "gt"; break;
-  case kVlGeOp:          mStream << "ge"; break;
-  case kVlLtOp:          mStream << "lt"; break;
-  case kVlLeOp:          mStream << "le"; break;
-  case kVlLShiftOp:      mStream << "left shift"; break;
-  case kVlRShiftOp:      mStream << "right shift"; break;
-  case kVlAddOp:         mStream << "add"; break;
-  case kVlMultOp:        mStream << "mult"; break;
-  case kVlLogAndOp:      mStream << "logical and"; break;
-  case kVlLogOrOp:       mStream << "logical or"; break;
-  case kVlBitAndOp:      mStream << "bit and"; break;
-  case kVlBitOrOp:       mStream << "bit or"; break;
-  case kVlBitXorOp:      mStream << "bit xor"; break;
-  case kVlBitXNorOp:     mStream << "bit xnor"; break;
-  case kVlConditionOp:   mStream << "conditional"; break;
-  case kVlConcatOp:      mStream << "concat"; break;
-  case kVlMultiConcatOp: mStream << "multi concat"; break;
-  case kVlEventOrOp:     mStream << "event or"; break;
-  case kVlNullOp:        mStream << "null"; break;
-  case kVlListOp:        mStream << "list"; break;
-  case kVlMinTypMaxOp:   mStream << "min-typ-max"; break;
-  case kVlPosedgeOp:     mStream << "posedge"; break;
-  case kVlNegedgeOp:     mStream << "negedge"; break;
-  case kVlArithLShiftOp: mStream << "arithmetic left shift"; break;
-  case kVlArithRShiftOp: mStream << "arithmetic right shift"; break;
-  case kVlPowerOp:       mStream << "power"; break;
+  case VpiOpType::Minus:       mStream << "minus"; break;
+  case VpiOpType::Plus:        mStream << "plus"; break;
+  case VpiOpType::Not:         mStream << "not"; break;
+  case VpiOpType::BitNeg:      mStream << "bitneg"; break;
+  case VpiOpType::UnaryAnd:    mStream << "unary and"; break;
+  case VpiOpType::UnaryNand:   mStream << "unary nand"; break;
+  case VpiOpType::UnaryOr:     mStream << "unary or"; break;
+  case VpiOpType::UnaryNor:    mStream << "unary nor"; break;
+  case VpiOpType::UnaryXor:    mStream << "unary xor"; break;
+  case VpiOpType::UnaryXNor:   mStream << "unary xnor"; break;
+  case VpiOpType::Sub:         mStream << "sub"; break;
+  case VpiOpType::Div:         mStream << "div"; break;
+  case VpiOpType::Mod:         mStream << "mod"; break;
+  case VpiOpType::Eq:          mStream << "eq"; break;
+  case VpiOpType::Neq:         mStream << "neq"; break;
+  case VpiOpType::CaseEq:      mStream << "caseeq"; break;
+  case VpiOpType::CaseNeq:     mStream << "caseneq"; break;
+  case VpiOpType::Gt:          mStream << "gt"; break;
+  case VpiOpType::Ge:          mStream << "ge"; break;
+  case VpiOpType::Lt:          mStream << "lt"; break;
+  case VpiOpType::Le:          mStream << "le"; break;
+  case VpiOpType::LShift:      mStream << "left shift"; break;
+  case VpiOpType::RShift:      mStream << "right shift"; break;
+  case VpiOpType::Add:         mStream << "add"; break;
+  case VpiOpType::Mult:        mStream << "mult"; break;
+  case VpiOpType::LogAnd:      mStream << "logical and"; break;
+  case VpiOpType::LogOr:       mStream << "logical or"; break;
+  case VpiOpType::BitAnd:      mStream << "bit and"; break;
+  case VpiOpType::BitOr:       mStream << "bit or"; break;
+  case VpiOpType::BitXor:      mStream << "bit xor"; break;
+  case VpiOpType::BitXNor:     mStream << "bit xnor"; break;
+  case VpiOpType::Condition:   mStream << "conditional"; break;
+  case VpiOpType::Concat:      mStream << "concat"; break;
+  case VpiOpType::MultiConcat: mStream << "multi concat"; break;
+  case VpiOpType::EventOr:     mStream << "event or"; break;
+  case VpiOpType::Null:        mStream << "null"; break;
+  case VpiOpType::List:        mStream << "list"; break;
+  case VpiOpType::MinTypMax:   mStream << "min-typ-max"; break;
+  case VpiOpType::Posedge:     mStream << "posedge"; break;
+  case VpiOpType::Negedge:     mStream << "negedge"; break;
+  case VpiOpType::ArithLShift: mStream << "arithmetic left shift"; break;
+  case VpiOpType::ArithRShift: mStream << "arithmetic right shift"; break;
+  case VpiOpType::Power:       mStream << "power"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1276,21 +1276,21 @@ PtDumper::put(const char* label,
 // @param[in] const_type 定数型
 void
 PtDumper::put(const char* label,
-	      tVpiConstType const_type)
+	      VpiConstType const_type)
 {
   PtHeader x(*this, label, "const_type", false);
   switch ( const_type ) {
-  case kVpiDecConst:          mStream << "dec"; break;
-  case kVpiRealConst:         mStream << "real"; break;
-  case kVpiBinaryConst:       mStream << "binary"; break;
-  case kVpiOctConst:          mStream << "oct"; break;
-  case kVpiHexConst:          mStream << "hex"; break;
-  case kVpiStringConst:       mStream << "string"; break;
-  case kVpiIntConst:          mStream << "int"; break;
-  case kVpiSignedDecConst:    mStream << "signed dec"; break;
-  case kVpiSignedBinaryConst: mStream << "signed binary"; break;
-  case kVpiSignedOctConst:    mStream << "signed oct"; break;
-  case kVpiSignedHexConst:    mStream << "signed hex"; break;
+  case VpiConstType::Dec:          mStream << "dec"; break;
+  case VpiConstType::Real:         mStream << "real"; break;
+  case VpiConstType::Binary:       mStream << "binary"; break;
+  case VpiConstType::Oct:          mStream << "oct"; break;
+  case VpiConstType::Hex:          mStream << "hex"; break;
+  case VpiConstType::String:       mStream << "string"; break;
+  case VpiConstType::Int:          mStream << "int"; break;
+  case VpiConstType::SignedDec:    mStream << "signed dec"; break;
+  case VpiConstType::SignedBinary: mStream << "signed binary"; break;
+  case VpiConstType::SignedOct:    mStream << "signed oct"; break;
+  case VpiConstType::SignedHex:    mStream << "signed hex"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1300,19 +1300,19 @@ PtDumper::put(const char* label,
 // @param[in] strength strength
 void
 PtDumper::put(const char* label,
-	      tVpiStrength strength)
+	      VpiStrength strength)
 {
   PtHeader x(*this, label, "strength", false);
   switch ( strength ) {
-  case kVpiNoStrength:   mStream << "none"; break;
-  case kVpiSupplyDrive:  mStream << "supply"; break;
-  case kVpiStrongDrive:  mStream << "strong"; break;
-  case kVpiPullDrive:    mStream << "pull"; break;
-  case kVpiWeakDrive:    mStream << "weak"; break;
-  case kVpiLargeCharge:  mStream << "large"; break;
-  case kVpiMediumCharge: mStream << "medium"; break;
-  case kVpiSmallCharge:  mStream << "small"; break;
-  case kVpiHiZ:          mStream << "high-Z"; break;
+  case VpiStrength::NoStrength:   mStream << "none"; break;
+  case VpiStrength::SupplyDrive:  mStream << "supply"; break;
+  case VpiStrength::StrongDrive:  mStream << "strong"; break;
+  case VpiStrength::PullDrive:    mStream << "pull"; break;
+  case VpiStrength::WeakDrive:    mStream << "weak"; break;
+  case VpiStrength::LargeCharge:  mStream << "large"; break;
+  case VpiStrength::MediumCharge: mStream << "medium"; break;
+  case VpiStrength::SmallCharge:  mStream << "small"; break;
+  case VpiStrength::HiZ:          mStream << "high-Z"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1322,13 +1322,13 @@ PtDumper::put(const char* label,
 // @param[in] vs_type vectored/scalared 属性
 void
 PtDumper::put(const char* label,
-	      tVpiVsType vs_type)
+	      VpiVsType vs_type)
 {
   PtHeader x(*this, label, "vs_type", false);
   switch ( vs_type ) {
-  case kVpiVsNone:   mStream << "none"; break;
-  case kVpiVectored: mStream << "vectored"; break;
-  case kVpiScalared: mStream << "scalared"; break;
+  case VpiVsType::None:     mStream << "none"; break;
+  case VpiVsType::Vectored: mStream << "vectored"; break;
+  case VpiVsType::Scalared: mStream << "scalared"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1338,14 +1338,14 @@ PtDumper::put(const char* label,
 // @param[in] range_mode
 void
 PtDumper::put(const char* label,
-	      tVpiRangeMode range_mode)
+	      VpiRangeMode range_mode)
 {
   PtHeader x(*this, label, "range_mode", false);
   switch ( range_mode ) {
-  case kVpiNoRange:    mStream << "no range"; break;
-  case kVpiConstRange: mStream << "constant range"; break;
-  case kVpiPlusRange:  mStream << "plus range"; break;
-  case kVpiMinusRange: mStream << "minus range"; break;
+  case VpiRangeMode::No:    mStream << "no range"; break;
+  case VpiRangeMode::Const: mStream << "constant range"; break;
+  case VpiRangeMode::Plus:  mStream << "plus range"; break;
+  case VpiRangeMode::Minus: mStream << "minus range"; break;
   default: ASSERT_NOT_REACHED; break;
   }
 }
@@ -1501,13 +1501,13 @@ PtDumper::put(const char* label,
   PtHeader x(*this, label, "Strengh");
 
   put("mFileRegion", str->file_region());
-  if ( str->drive0() != kVpiNoStrength ) {
+  if ( str->drive0() != VpiStrength::NoStrength ) {
     put("mDrive0", str->drive0());
   }
-  if ( str->drive1() != kVpiNoStrength ) {
+  if ( str->drive1() != VpiStrength::NoStrength ) {
     put("mDrive1", str->drive1());
   }
-  if ( str->charge() != kVpiNoStrength ) {
+  if ( str->charge() != VpiStrength::NoStrength ) {
     put("mCharge", str->charge());
   }
 }

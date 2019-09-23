@@ -39,7 +39,7 @@ EiFactory::new_DelayControl(const PtControl* pt_control,
 // @param[in] event_list イベントリストを表す配列
 ElbControl*
 EiFactory::new_EventControl(const PtControl* pt_control,
-			    int event_num,
+			    SizeType event_num,
 			    ElbExpr** event_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiEventControl));
@@ -57,7 +57,7 @@ EiFactory::new_EventControl(const PtControl* pt_control,
 ElbControl*
 EiFactory::new_RepeatControl(const PtControl* pt_control,
 			     ElbExpr* rep,
-			     int event_num,
+			     SizeType event_num,
 			     ElbExpr** event_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiRepeatControl));
@@ -109,7 +109,7 @@ EiControl::expr() const
 
 // @brief イベント条件式の数を返す．
 // @note このクラスでは 0 を返す．
-int
+SizeType
 EiControl::event_num() const
 {
   return 0;
@@ -119,7 +119,7 @@ EiControl::event_num() const
 // @param[in] pos 位置番号 ( 0 <= pos < event_num() )
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiControl::event(int pos) const
+EiControl::event(SizeType pos) const
 {
   return nullptr;
 }
@@ -145,10 +145,10 @@ EiDelayControl::~EiDelayControl()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiDelayControl::type() const
 {
-  return kVpiDelayControl;
+  return VpiObjType::DelayControl;
 }
 
 // 遅延式を返す．
@@ -182,14 +182,14 @@ EiEventControl::~EiEventControl()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiEventControl::type() const
 {
-  return kVpiEventControl;
+  return VpiObjType::EventControl;
 }
 
 // @brief イベント条件式の数を返す．
-int
+SizeType
 EiEventControl::event_num() const
 {
   return mEventNum;
@@ -198,7 +198,7 @@ EiEventControl::event_num() const
 // @brief イベント条件式を返す．
 // @param[in] pos 位置番号 ( 0 <= pos < event_num() )
 const VlExpr*
-EiEventControl::event(int pos) const
+EiEventControl::event(SizeType pos) const
 {
   return mEventList[pos];
 }
@@ -228,10 +228,10 @@ EiRepeatControl::~EiRepeatControl()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiRepeatControl::type() const
 {
-  return kVpiRepeatControl;
+  return VpiObjType::RepeatControl;
 }
 
 // 繰り返し式を返す．

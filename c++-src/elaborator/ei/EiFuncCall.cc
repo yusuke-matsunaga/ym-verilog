@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbExpr*
 EiFactory::new_FuncCall(const PtExpr* pt_expr,
 			const ElbTaskFunc* func,
-			int arg_size,
+			SizeType arg_size,
 			ElbExpr** arg_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiFuncCall));
@@ -45,7 +45,7 @@ EiFactory::new_FuncCall(const PtExpr* pt_expr,
 ElbExpr*
 EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
 			   const ElbUserSystf* user_systf,
-			   int arg_size,
+			   SizeType arg_size,
 			   ElbExpr** arg_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiSysFuncCall));
@@ -65,7 +65,7 @@ EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
 // @param[in] arg_size 引数の数
 // @param[in] arg_list 引数のリスト
 EiFcBase::EiFcBase(const PtExpr* pt_expr,
-		   int arg_size,
+		   SizeType arg_size,
 		   ElbExpr** arg_list) :
   EiExprBase(pt_expr),
   mArgNum(arg_size),
@@ -79,7 +79,7 @@ EiFcBase::~EiFcBase()
 }
 
 // @brief 引数の数を返す．
-int
+SizeType
 EiFcBase::argument_num() const
 {
   return mArgNum;
@@ -88,7 +88,7 @@ EiFcBase::argument_num() const
 // @brief 引数の取得
 // @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
 ElbExpr*
-EiFcBase::argument(int pos) const
+EiFcBase::argument(SizeType pos) const
 {
   return mArgList[pos];
 }
@@ -107,7 +107,7 @@ EiFcBase::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiFcBase::_operand(int pos) const
+EiFcBase::_operand(SizeType pos) const
 {
   return nullptr;
 }
@@ -124,7 +124,7 @@ EiFcBase::_operand(int pos) const
 // @param[in] arg_list 引数のリスト
 EiFuncCall::EiFuncCall(const PtExpr* pt_expr,
 		       const ElbTaskFunc* func,
-		       int arg_size,
+		       SizeType arg_size,
 		       ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),
   mFunc(func)
@@ -137,10 +137,10 @@ EiFuncCall::~EiFuncCall()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiFuncCall::type() const
 {
-  return kVpiFuncCall;
+  return VpiObjType::FuncCall;
 }
 
 // @brief 式のタイプを返す．
@@ -148,19 +148,19 @@ VlValueType
 EiFuncCall::value_type() const
 {
   switch ( mFunc->func_type() ) {
-  case kVpiIntFunc:
+  case VpiFuncType::Int:
     return VlValueType::int_type();
 
-  case kVpiRealFunc:
+  case VpiFuncType::Real:
     return VlValueType::real_type();
 
-  case kVpiTimeFunc:
+  case VpiFuncType::Time:
     return VlValueType::time_type();
 
-  case kVpiSizedFunc:
+  case VpiFuncType::Sized:
     return VlValueType(false, true, mFunc->bit_size());
 
-  case kVpiSizedSignedFunc:
+  case VpiFuncType::SizedSigned:
     return VlValueType(true, true, mFunc->bit_size());
 
   default:
@@ -174,7 +174,7 @@ bool
 EiFuncCall::is_const() const
 {
   if ( mFunc->is_constant_function() ) {
-    int n = argument_num();
+    SizeType n = argument_num();
     for ( int i = 0; i < n; ++ i ) {
       if ( !argument(i)->is_const() ) {
 	return false;
@@ -193,7 +193,7 @@ EiFuncCall::is_funccall() const
 }
 
 // @brief 対象の関数を返す．
-// @note kVpiFuncCall の時，意味を持つ．
+// @note VpiFuncType::Call の時，意味を持つ．
 const VlTaskFunc*
 EiFuncCall::function() const
 {
@@ -212,7 +212,7 @@ EiFuncCall::function() const
 // @param[in] arg_list 引数のリスト
 EiSysFuncCall::EiSysFuncCall(const PtExpr* pt_expr,
 			     const ElbUserSystf* user_systf,
-			     int arg_size,
+			     SizeType arg_size,
 			     ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),
   mUserSystf(user_systf)
@@ -225,10 +225,10 @@ EiSysFuncCall::~EiSysFuncCall()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiSysFuncCall::type() const
 {
-  return kVpiSysFuncCall;
+  return VpiObjType::SysFuncCall;
 }
 
 // @brief 式のタイプを返す．
@@ -238,19 +238,19 @@ EiSysFuncCall::value_type() const
   ASSERT_COND( mUserSystf->system_function() );
 
   switch ( mUserSystf->function_type() ) {
-  case vpiIntFunc:
+  case VpiFuncType::Int:
     return VlValueType::int_type();
 
-  case vpiRealFunc:
+  case VpiFuncType::Real:
     return VlValueType::real_type();
 
-  case vpiTimeFunc:
+  case VpiFuncType::Time:
     return VlValueType::time_type();
 
-  case vpiSizedFunc:
+  case VpiFuncType::Sized:
     return VlValueType(false, true, mUserSystf->size());
 
-  case vpiSizedSignedFunc:
+  case VpiFuncType::SizedSigned:
     return VlValueType(true, true, mUserSystf->size());
 
   default:
@@ -275,7 +275,7 @@ EiSysFuncCall::is_sysfunccall() const
 }
 
 // @brief 対象のシステム関数を返す．
-// @note kVpiSysFuncCall の時，意味を持つ．
+// @note VpiFuncType::SysCall の時，意味を持つ．
 const VlUserSystf*
 EiSysFuncCall::user_systf() const
 {

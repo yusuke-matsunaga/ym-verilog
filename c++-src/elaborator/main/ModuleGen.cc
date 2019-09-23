@@ -125,7 +125,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
       for ( int i = 0; i < n; ++ i ) {
 	const PtConnection* pt_con = param_con->pt_con(i);
 	ElbObjHandle* handle = find_obj(module, pt_con->name());
-	if ( handle == nullptr || handle->type() != kVpiParameter ) {
+	if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
 	  ostringstream buf;
 	  buf << param_con->name(i) << " : No such parameter.";
 	  MsgMgr::put_msg(__FILE__, __LINE__,
@@ -236,7 +236,7 @@ ModuleGen::instantiate_port(ElbModule* module,
     SizeType n = pt_port->portref_size();
 
     ElbExpr* low_conn = nullptr;
-    tVlDirection dir = kVlNoDirection;
+    VpiDir dir = VpiDir::NoDirection;
 
     const PtExpr* pt_portref = pt_port->portref();
     if ( n == 1 ) {
@@ -258,12 +258,12 @@ ModuleGen::instantiate_port(ElbModule* module,
 	expr_list[i] = portexpr;
 	lhs_elem_array[n - i - 1] = portexpr;
 
-	tVlDirection dir1 = pt_port->portref_dir(i);
-	if ( dir == kVlNoDirection ) {
+	VpiDir dir1 = pt_port->portref_dir(i);
+	if ( dir == VpiDir::NoDirection ) {
 	  dir = dir1;
 	}
 	else if ( dir != dir1 ) {
-	  dir = kVlMixedIO;
+	  dir = VpiDir::MixedIO;
 	}
       }
 

@@ -79,7 +79,7 @@ public:
   ///  - kVpiSysTaskCall
   ///  - kVpiTaskCall
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   arg_num() const override;
 
   /// @brief 引数の取得
@@ -89,7 +89,7 @@ public:
   ///  - kVpiTaskCall
   /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  arg(int pos) const override;
+  arg(SizeType pos) const override;
 
   /// @brief control の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -177,7 +177,7 @@ public:
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   /// @note このクラスでは kVpiCaseExact を返す．
-  tVpiCaseType
+  VpiCaseType
   case_type() const override;
 
   /// @brief case item の要素数の取得
@@ -185,7 +185,7 @@ public:
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   caseitem_num() const override;
 
   /// @brief case item の取得
@@ -194,7 +194,7 @@ public:
   ///  - kVpiCase
   /// @note このクラスでは nullptr を返す．
   const VlCaseItem*
-  caseitem(int pos) const override;
+  caseitem(SizeType pos) const override;
 
   /// @brief 初期化代入文の取得
   /// @note この関数が意味を持つオブジェクトの型
@@ -217,7 +217,7 @@ public:
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   child_stmt_num() const override;
 
   /// @brief 子供のステートメントの取得
@@ -228,7 +228,7 @@ public:
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   const VlStmt*
-  child_stmt(int pos) const override;
+  child_stmt(SizeType pos) const override;
 
 
 public:
@@ -244,7 +244,7 @@ public:
   /// @note このクラスでは何もしない．
   virtual
   void
-  set_caseitem(int pos,
+  set_caseitem(SizeType pos,
 	       const PtCaseItem* pt_caseitem,
 	       ElbExpr** expr_array,
 	       ElbStmt* stmt);
@@ -253,7 +253,7 @@ public:
   /// @note このクラスでは nullptr を返す．
   virtual
   ElbStmt*
-  _child_stmt(int pos) const;
+  _child_stmt(SizeType pos) const;
 
 
 public:

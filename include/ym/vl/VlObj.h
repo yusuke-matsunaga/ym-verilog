@@ -35,7 +35,7 @@ public:
 
   /// @brief 型の取得
   virtual
-  tVpiObjType
+  VpiObjType
   type() const = 0;
 
   /// @brief ファイル位置の取得

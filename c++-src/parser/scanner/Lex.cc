@@ -33,10 +33,10 @@ Lex::Lex()
   new LpNounconnDrive(*this, "nounconnected_drive", mModuleState);
   new LpDecayTime(*this, "default_decay_time", mModuleState);
   new LpTriregStrength(*this, "default_trireg_strength", mModuleState);
-  new LpDelayMode(*this, "delay_mode_distribute", mModuleState, kVpiDelayModeDistrib);
-  new LpDelayMode(*this, "delay_mode_path", mModuleState, kVpiDelayModePath);
-  new LpDelayMode(*this, "delay_mode_unit", mModuleState, kVpiDelayModeUnit);
-  new LpDelayMode(*this, "delay_mode_zero", mModuleState, kVpiDelayModeZero);
+  new LpDelayMode(*this, "delay_mode_distribute", mModuleState, VpiDefDelayMode::Distrib);
+  new LpDelayMode(*this, "delay_mode_path", mModuleState, VpiDefDelayMode::Path);
+  new LpDelayMode(*this, "delay_mode_unit", mModuleState, VpiDefDelayMode::Unit);
+  new LpDelayMode(*this, "delay_mode_zero", mModuleState, VpiDefDelayMode::Zero);
 }
 
 // @brief デストラクタ

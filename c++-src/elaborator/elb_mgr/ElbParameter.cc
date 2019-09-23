@@ -75,47 +75,47 @@ ElbParameter::elem_by_offset(int offset) const
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+VpiNetType
 ElbParameter::net_type() const
 {
-  return kVpiNone;
+  return VpiNetType::None;
 }
 
 // @brief vectored|scalared 属性の取得
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 ElbParameter::vs_type() const
 {
-  return kVpiVsNone;
+  return VpiVsType::None;
 }
 
 // @brief drive0 strength の取得
 // @retval 0 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 ElbParameter::drive0() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief drive1 strength の取得
 // @retval 1 の強度
-// @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+// @retval VpiStrength::NoStrength strength の指定なし
+VpiStrength
 ElbParameter::drive1() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief charge strength の取得
 // @retval 電荷の強度
-// @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+// @retval VpiStrength::NoStrength strength の指定なし
+VpiStrength
 ElbParameter::charge() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief delay の取得

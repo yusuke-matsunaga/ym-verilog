@@ -35,8 +35,8 @@ EiFactory::new_Decl(ElbDeclHead* head,
   EiDecl* decl = nullptr;
 
   switch ( head->type() ) {
-  case kVpiReg:
-  case kVpiNet:
+  case VpiObjType::Reg:
+  case VpiObjType::Net:
     if ( head->bit_size() == 1 ) {
       if ( init ) {
 	void* p = mAlloc.get_memory(sizeof(EiDeclIS));
@@ -50,8 +50,8 @@ EiFactory::new_Decl(ElbDeclHead* head,
     }
     // わざと次に続く
 
-  case kVpiIntegerVar:
-  case kVpiTimeVar:
+  case VpiObjType::IntegerVar:
+  case VpiObjType::TimeVar:
     if ( init ) {
       void* p = mAlloc.get_memory(sizeof(EiDeclIV));
       decl = new (p) EiDeclIV(head, pt_item, init);
@@ -62,7 +62,7 @@ EiFactory::new_Decl(ElbDeclHead* head,
     }
     break;
 
-  case kVpiRealVar:
+  case VpiObjType::RealVar:
     if ( init ) {
       void* p = mAlloc.get_memory(sizeof(EiDeclIR));
       decl = new (p) EiDeclIR(head, pt_item, init);
@@ -73,7 +73,7 @@ EiFactory::new_Decl(ElbDeclHead* head,
     }
     break;
 
-  case kVpiNamedEvent:
+  case VpiObjType::NamedEvent:
     ASSERT_COND(init == nullptr );
     {
       void* p = mAlloc.get_memory(sizeof(EiDeclN));
@@ -81,8 +81,8 @@ EiFactory::new_Decl(ElbDeclHead* head,
     }
     break;
 
-  case kVpiParameter:
-  case kVpiSpecParam:
+  case VpiObjType::Parameter:
+  case VpiObjType::SpecParam:
   default:
     ASSERT_NOT_REACHED;
     break;
@@ -114,7 +114,7 @@ EiDecl::~EiDecl()
 
 // @brief 型の取得
 // @return vpi_user.h で定義された型 (vpiModule など)
-tVpiObjType
+VpiObjType
 EiDecl::type() const
 {
   return mHead->type();
@@ -147,22 +147,22 @@ VlValueType
 EiDecl::value_type() const
 {
   switch ( type() ) {
-  case kVpiNet:
-  case kVpiReg:
+  case VpiObjType::Net:
+  case VpiObjType::Reg:
     return VlValueType(is_signed(), true, bit_size());
 
-  case kVpiIntegerVar:
+  case VpiObjType::IntegerVar:
     return VlValueType::int_type();
 
-  case kVpiRealVar:
+  case VpiObjType::RealVar:
     return VlValueType::real_type();
 
-  case kVpiTimeVar:
+  case VpiObjType::TimeVar:
     return VlValueType::time_type();
 
-  case kVpiParameter:
-  case kVpiSpecParam:
-  case kVpiConstant:
+  case VpiObjType::Parameter:
+  case VpiObjType::SpecParam:
+  case VpiObjType::Constant:
     // ここにはこない
     ASSERT_NOT_REACHED;
     break;
@@ -238,7 +238,7 @@ EiDecl::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDecl::bit_size() const
 {
   return mHead->bit_size();
@@ -259,7 +259,7 @@ EiDecl::calc_bit_offset(int index,
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 EiDecl::data_type() const
 {
   return mHead->data_type();
@@ -268,7 +268,7 @@ EiDecl::data_type() const
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+VpiNetType
 EiDecl::net_type() const
 {
   return mHead->net_type();
@@ -278,7 +278,7 @@ EiDecl::net_type() const
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 EiDecl::vs_type() const
 {
   return mHead->vs_type();
@@ -287,7 +287,7 @@ EiDecl::vs_type() const
 // @brief drive0 strength の取得
 // @retval 0 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDecl::drive0() const
 {
   return mHead->drive0();
@@ -296,7 +296,7 @@ EiDecl::drive0() const
 // @brief drive1 strength の取得
 // @retval 1 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDecl::drive1() const
 {
   return mHead->drive1();
@@ -305,7 +305,7 @@ EiDecl::drive1() const
 // @brief charge strength の取得
 // @retval 電荷の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDecl::charge() const
 {
   return mHead->charge();

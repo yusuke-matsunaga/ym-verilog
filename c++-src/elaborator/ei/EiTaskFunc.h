@@ -35,7 +35,7 @@ protected:
   /// @param[in] io_array IO の配列
   EiTaskFunc(const VlNamedObj* parent,
 	     const PtItem* pt_item,
-	     int io_num,
+	     SizeType io_num,
 	     EiIODecl* io_array);
 
   /// @brief デストラクタ
@@ -76,13 +76,13 @@ public:
   automatic() const override;
 
   /// @brief 入出力数を得る．
-  int
+  SizeType
   io_num() const override;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   const VlIODecl*
-  io(int pos) const override;
+  io(SizeType pos) const override;
 
   /// @brief 本体のステートメントを得る．
   const VlStmt*
@@ -101,7 +101,7 @@ public:
   /// @param[in] pt_item パース木のIO宣言要素
   /// @param[in] decl 対応する宣言要素
   void
-  init_iodecl(int pos,
+  init_iodecl(SizeType pos,
   	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
 	      ElbDecl* decl) override;
@@ -113,7 +113,7 @@ public:
   /// @brief 入出力を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   ElbIODecl*
-  _io(int pos) const override;
+  _io(SizeType pos) const override;
 
   /// @brief 本体の ElbStmt を得る．
   ElbStmt*
@@ -142,7 +142,7 @@ private:
   const PtItem* mPtItem;
 
   // 入出力数
-  int mIODeclNum;
+  SizeType mIODeclNum;
 
   // 入出力のリスト
   EiIODecl* mIODeclList;
@@ -171,7 +171,7 @@ protected:
   /// @param[in] io_array IO の配列
   EiTask(const VlNamedObj* parent,
 	 const PtItem* pt_item,
-	 int io_num,
+	 SizeType io_num,
 	 EiIODecl* io_array);
 
   /// @brief デストラクタ
@@ -184,7 +184,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -194,7 +194,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief function type を返す．
-  tVpiFuncType
+  VpiFuncType
   func_type() const override;
 
   /// @brief 符号付きの時 true を返す．
@@ -226,7 +226,7 @@ public:
   right_range_string() const override;
 
   /// @brief 出力のビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
 
@@ -266,7 +266,7 @@ protected:
   /// @param[in] io_array IO の配列
   EiFunction(const VlNamedObj* parent,
 	     const PtItem* pt_item,
-	     int io_num,
+	     SizeType io_num,
 	     EiIODecl* io_array);
 
   /// @brief デストラクタ
@@ -279,7 +279,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -289,7 +289,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief function type を返す．
-  tVpiFuncType
+
+  VpiFuncType
   func_type() const override;
 
   /// @brief 符号付きの時 true を返す．
@@ -321,7 +322,7 @@ public:
   right_range_string() const override;
 
   /// @brief 出力のビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
 
@@ -374,7 +375,7 @@ protected:
   /// @param[in] right_val 範囲の LSB の値
   EiFunctionV(const VlNamedObj* parent,
 	      const PtItem* pt_item,
-	      int io_num,
+	      SizeType io_num,
 	      EiIODecl* io_array,
 	      const PtExpr* left,
 	      const PtExpr* right,
@@ -415,7 +416,7 @@ public:
   right_range_string() const override;
 
   /// @brief 出力のビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
 

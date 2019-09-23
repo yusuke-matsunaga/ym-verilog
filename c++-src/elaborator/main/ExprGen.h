@@ -296,7 +296,7 @@ private:
   bool
   check_decl(const ElbEnv& env,
 	     const PtExpr* pt_expr,
-	     tVpiObjType decl_type,
+	     VpiObjType decl_type,
 	     bool is_array,
 	     bool has_select);
 

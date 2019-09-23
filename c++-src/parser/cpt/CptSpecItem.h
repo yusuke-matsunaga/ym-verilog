@@ -26,7 +26,7 @@ protected:
 
   /// @brief コンストラクタ
   CptSpecItem(const FileRegion& file_region,
-	      tVpiSpecItemType id,
+	      VpiSpecItemType id,
 	      PtExprArray terminal_array);
 
   /// @brief デストラクタ
@@ -48,7 +48,7 @@ public:
   type() const override;
 
   /// @brief specify block item の種類を返す．
-  tVpiSpecItemType
+  VpiSpecItemType
   specitem_type() const override;
 
   /// @brief ターミナルリストの取得
@@ -65,7 +65,7 @@ private:
   FileRegion mFileRegion;
 
   // トークン番号
-  tVpiSpecItemType mId;
+  VpiSpecItemType mId;
 
   // ターミナルの配列
   PtExprArray mTerminalArray;
@@ -85,7 +85,7 @@ protected:
 
   /// @brief コンストラクタ
   CptSpecPath(const FileRegion& file_region,
-	      tVpiSpecPathType id,
+	      VpiSpecPathType id,
 	      const PtExpr* expr,
 	      const PtPathDecl* path_decl);
 
@@ -108,7 +108,7 @@ public:
   type() const override;
 
   /// @brief specify block path の種類を返す．
-  tVpiSpecPathType
+  VpiSpecPathType
   specpath_type() const override;
 
   /// @brief モジュールパスの式を返す．
@@ -129,7 +129,7 @@ private:
   FileRegion mFileRegion;
 
   // トークン番号
-  tVpiSpecPathType mId;
+  VpiSpecPathType mId;
 
   // モジュールパスの式
   const PtExpr* mExpr;
@@ -155,7 +155,7 @@ protected:
 	      int edge,
 	      PtExprArray input_array,
 	      int input_pol,
-	      int op,
+	      VpiPathType op,
 	      PtExprArray output_array,
 	      int output_pol,
 	      const PtExpr* expr,
@@ -189,7 +189,7 @@ public:
   input_pol() const override;
 
   /// @brief パス記述子(?)を得る．vpiParallel か vpiFull
-  int
+  VpiPathType
   op() const override;
 
   /// @brief 出力のリストの取得
@@ -222,7 +222,7 @@ private:
   int mEdge;
   PtExprArray mInputArray;
   int mInputPol;
-  int mOp;
+  VpiPathType mOp;
   PtExprArray mOutputArray;
   int mOutputPol;
   const PtExpr* mExpr;

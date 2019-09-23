@@ -26,7 +26,7 @@ protected:
 
   /// @brief コンストラクタ
   CptGateH(const FileRegion& file_region,
-	   tVpiPrimType prim_type,
+	   VpiPrimType prim_type,
 	   PtInstArray inst_array);
 
   /// @brief デストラクタ
@@ -48,7 +48,7 @@ public:
   type() const override;
 
   /// @brief プリミティブタイプを返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief module/UDP/gate instance リストの取得
@@ -65,7 +65,7 @@ private:
   FileRegion mFileRegion;
 
   // プリミティブタイプ
-  tVpiPrimType mPrimType;
+  VpiPrimType mPrimType;
 
   // 要素の配列
   PtInstArray mInstArray;
@@ -85,7 +85,7 @@ protected:
 
   /// @brief コンストラクタ
   CptGateHS(const FileRegion& file_region,
-	    tVpiPrimType prim_type,
+	    VpiPrimType prim_type,
 	    const PtStrength* strength,
 	    PtInstArray inst_array);
 
@@ -126,7 +126,7 @@ protected:
 
   /// @brief コンストラクタ
   CptGateHD(const FileRegion& file_region,
-	    tVpiPrimType prim_type,
+	    VpiPrimType prim_type,
 	    const PtDelay* delay,
 	    PtInstArray inst_array);
 
@@ -167,7 +167,7 @@ protected:
 
   /// @brief コンストラクタ
   CptGateHSD(const FileRegion& file_region,
-	     tVpiPrimType prim_type,
+	     VpiPrimType prim_type,
 	     const PtStrength* strength,
 	     const PtDelay* delay,
 	     PtInstArray inst_array);

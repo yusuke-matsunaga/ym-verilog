@@ -67,7 +67,7 @@ LexModuleState::cell_define() const
 
 // @brief net_type を設定する．
 void
-LexModuleState::set_default_nettype(tVpiNetType val,
+LexModuleState::set_default_nettype(VpiNetType val,
 				    const FileRegion& file_region)
 {
   mDefaultNetType = val;
@@ -85,7 +85,7 @@ LexModuleState::set_default_nettype(tVpiNetType val,
 }
 
 // @brief net_type を取得する．
-tVpiNetType
+VpiNetType
 LexModuleState::default_nettype() const
 {
   return mDefaultNetType;
@@ -143,7 +143,7 @@ LexModuleState::time_precision() const
 
 // @brief unconnected_drive の値を設定する．
 void
-LexModuleState::set_unconnected_drive(tVpiUnconnDrive val,
+LexModuleState::set_unconnected_drive(VpiUnconnDrive val,
 				      const FileRegion& file_region)
 {
   mUnconnDrive = val;
@@ -152,9 +152,9 @@ LexModuleState::set_unconnected_drive(tVpiUnconnDrive val,
     ostringstream buf;
     buf << "unconnected_drive is set to ";
     switch ( val ) {
-    case kVpiHighZ: buf << "none"; break;
-    case kVpiPull0: buf << "pull0"; break;
-    case kVpiPull1: buf << "pull1"; break;
+    case VpiUnconnDrive::HighZ: buf << "none"; break;
+    case VpiUnconnDrive::Pull0: buf << "pull0"; break;
+    case VpiUnconnDrive::Pull1: buf << "pull1"; break;
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    file_region,
@@ -165,7 +165,7 @@ LexModuleState::set_unconnected_drive(tVpiUnconnDrive val,
 }
 
 // @brief unconnected_drive の値を取得する．
-tVpiUnconnDrive
+VpiUnconnDrive
 LexModuleState::unconnected_drive() const
 {
   return mUnconnDrive;
@@ -229,7 +229,7 @@ LexModuleState::default_trireg_strength() const
 
 // @brief delay_mode の値を設定する．
 void
-LexModuleState::set_delay_mode(tVpiDefDelayMode val,
+LexModuleState::set_delay_mode(VpiDefDelayMode val,
 			       const FileRegion& file_region)
 {
   mDelayMode = val;
@@ -238,12 +238,12 @@ LexModuleState::set_delay_mode(tVpiDefDelayMode val,
     ostringstream buf;
     buf << "delay_mode is set to ";
     switch ( val ) {
-    case kVpiDelayModeDistrib: buf << "\"distributed\""; break;
-    case kVpiDelayModePath:    buf << "\"path\""; break;
-    case kVpiDelayModeUnit:    buf << "\"unit\""; break;
-    case kVpiDelayModeZero:    buf << "\"zero\""; break;
-    case kVpiDelayModeMTM:     buf << "\"MTM\""; break;
-    case kVpiDelayModeNone:    buf << "\"none\""; break;
+    case VpiDefDelayMode::Distrib: buf << "\"distributed\""; break;
+    case VpiDefDelayMode::Path:    buf << "\"path\""; break;
+    case VpiDefDelayMode::Unit:    buf << "\"unit\""; break;
+    case VpiDefDelayMode::Zero:    buf << "\"zero\""; break;
+    case VpiDefDelayMode::MTM:     buf << "\"MTM\""; break;
+    case VpiDefDelayMode::None:    buf << "\"none\""; break;
     }
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    file_region,
@@ -254,7 +254,7 @@ LexModuleState::set_delay_mode(tVpiDefDelayMode val,
 }
 
 // @brief delay_mode の値を取得する．
-tVpiDefDelayMode
+VpiDefDelayMode
 LexModuleState::delay_mode() const
 {
   return mDelayMode;
@@ -265,31 +265,31 @@ void
 LexModuleState::resetall(const FileRegion& file_region)
 {
   set_cell_define(false, file_region);
-  set_default_nettype(kVpiWire, file_region);
+  set_default_nettype(VpiNetType::Wire, file_region);
   set_time_unit(-16, file_region);
   set_time_precision(-16, file_region);
-  set_unconnected_drive(kVpiHighZ, file_region);
+  set_unconnected_drive(VpiUnconnDrive::HighZ, file_region);
   set_default_decay_time(-1, file_region);
   set_default_trireg_strength(0, file_region);
-  set_delay_mode(kVpiDelayModeNone, file_region);
+  set_delay_mode(VpiDefDelayMode::None, file_region);
 }
 
 const char*
-LexModuleState::nettype2str(tVpiNetType nettype)
+LexModuleState::nettype2str(VpiNetType nettype)
 {
   switch ( nettype ) {
-  case kVpiWire:    return "wire";
-  case kVpiTri:     return "tri";
-  case kVpiTri0:    return "tri0";
-  case kVpiTri1:    return "tri1";
-  case kVpiWand:    return "wand";
-  case kVpiTriAnd:  return "triand";
-  case kVpiWor:     return "wor";
-  case kVpiTriOr:   return "trior";
-  case kVpiTriReg:  return "trireg";
-  case kVpiSupply0: return "supply0";
-  case kVpiSupply1: return "supply1";
-  case kVpiNone:    return "none";
+  case VpiNetType::Wire:    return "wire";
+  case VpiNetType::Tri:     return "tri";
+  case VpiNetType::Tri0:    return "tri0";
+  case VpiNetType::Tri1:    return "tri1";
+  case VpiNetType::Wand:    return "wand";
+  case VpiNetType::TriAnd:  return "triand";
+  case VpiNetType::Wor:     return "wor";
+  case VpiNetType::TriOr:   return "trior";
+  case VpiNetType::TriReg:  return "trireg";
+  case VpiNetType::Supply0: return "supply0";
+  case VpiNetType::Supply1: return "supply1";
+  case VpiNetType::None:    return "none";
   }
   return "-- internal error : undefined nettype --";
 }

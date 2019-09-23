@@ -33,10 +33,10 @@ CptItem::~CptItem()
 // @brief プリミティブタイプの取得
 // @return プリミティブタイプ
 // このクラスでは kVpiAndPrim を返す．
-tVpiPrimType
+VpiPrimType
 CptItem::prim_type() const
 {
-  return kVpiAndPrim; // ダミー
+  return VpiPrimType::And; // ダミー
 }
 
 // @brief strength の取得
@@ -172,10 +172,10 @@ CptItem::right_range() const
 // @brief 戻値のデータ型の取得
 // @return 戻値のデータ型
 // このクラスでは kVpiVarNone を返す．
-tVpiVarType
+VpiVarType
 CptItem::data_type() const
 {
-  return kVpiVarNone;
+  return VpiVarType::None;
 }
 
 // @brief constant function の展開中の印をつける．
@@ -204,19 +204,19 @@ CptItem::is_in_use() const
 // @brief specify block item の種類の取得
 // @return specify block item の種類
 // このクラスでは kVpiPulsestyleOnEvent を返す．
-tVpiSpecItemType
+VpiSpecItemType
 CptItem::specitem_type() const
 {
-  return kVpiPulsestyleOnEvent; // ダミー
+  return VpiSpecItemType::PulsestyleOnEvent; // ダミー
 }
 
 // @brief specify block path の種類の取得
 // @retun specify block path の種類
 // このクラスでは kVpiSpecPathNull を返す．
-tVpiSpecPathType
+VpiSpecPathType
 CptItem::specpath_type() const
 {
-  return kVpiSpecPathNull; // ダミー
+  return VpiSpecPathType::Null; // ダミー
 }
 
 // @brief ターミナルのリストの取得
@@ -864,7 +864,7 @@ CptTypedFunc::CptTypedFunc(const FileRegion& file_region,
 			   const char* name,
 			   bool automatic,
 			   bool sign,
-			   tVpiVarType data_type,
+			   VpiVarType data_type,
 			   PtIOHeadArray iohead_array,
 			   PtDeclHeadArray declhead_array,
 			   const PtStmt* stmt) :
@@ -883,7 +883,7 @@ CptTypedFunc::~CptTypedFunc()
 }
 
 // 戻値の型を返す．
-tVpiVarType
+VpiVarType
 CptTypedFunc::data_type() const
 {
   return mDataType;
@@ -1065,7 +1065,7 @@ CptFactory::new_TypedFunc(const FileRegion& file_region,
 			  const char* name,
 			  bool automatic,
 			  bool sign,
-			  tVpiVarType func_type,
+			  VpiVarType func_type,
 			  PtIOHeadArray iohead_array,
 			  PtDeclHeadArray declhead_array,
 			  const PtStmt* stmt)

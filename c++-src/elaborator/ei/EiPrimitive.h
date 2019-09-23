@@ -51,7 +51,7 @@ public:
   parent() const override;
 
   /// @brief primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
@@ -68,11 +68,11 @@ public:
   cell_id() const override;
 
   /// @brief 0 の強さを得る．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief 1 の強さを得る．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief 遅延式を得る．
@@ -175,7 +175,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
@@ -275,7 +275,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
@@ -322,7 +322,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -346,7 +346,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
@@ -362,11 +362,11 @@ public:
   cell_id() const override;
 
   /// @brief 0 の強さを得る．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief 1 の強さを得る．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief 遅延式を得る．
@@ -374,13 +374,13 @@ public:
   delay() const override;
 
   /// @brief ポート数を得る．
-  int
+  SizeType
   port_num() const override;
 
   /// @brief ポート端子を得る．
   /// @param[in] pos 位置番号 (0 <= pos < port_num())
   const VlPrimTerm*
-  prim_term(int pos) const override;
+  prim_term(SizeType pos) const override;
 
 
 public:
@@ -642,7 +642,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -670,7 +670,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief プリミティブの定義名を返す．
@@ -686,11 +686,11 @@ public:
   cell_id() const override;
 
   /// @brief 0 の強さを得る．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief 1 の強さを得る．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief 遅延式を得る．
@@ -714,13 +714,13 @@ public:
   right_range_string() const override;
 
   /// @brief 要素数を返す．
-  int
+  SizeType
   elem_num() const override;
 
   /// @brief 要素のプリミティブを返す．
   /// @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
   const VlPrimitive*
-  elem_by_offset(int offset) const override;
+  elem_by_offset(SizeType offset) const override;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
@@ -795,7 +795,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -813,11 +813,11 @@ public:
   primitive() const override;
 
   /// @brief 入出力の種類を返す．
-  tVlDirection
+  VpiDir
   direction() const override;
 
   /// @brief 端子番号を返す．
-  int
+  SizeType
   term_index() const override;
 
   /// @brief 接続しているネットを表す式を返す．
@@ -834,7 +834,7 @@ public:
   void
   set(ElbPrimitive* primitive,
       int index,
-      tVlDirection dir) override;
+      VpiDir dir) override;
 
 
 private:

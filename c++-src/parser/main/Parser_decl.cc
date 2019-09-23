@@ -53,7 +53,7 @@ Parser::new_RegIOHead(const FileRegion& fr,
 PtiIOHead*
 Parser::new_NetIOHead(const FileRegion& fr,
 		      tPtIOType type,
-		      tVpiNetType net_type,
+		      VpiNetType net_type,
 		      bool sign)
 {
   return mFactory.new_NetIOHead(fr, type, net_type, sign);
@@ -67,7 +67,7 @@ Parser::new_NetIOHead(const FileRegion& fr,
 PtiIOHead*
 Parser::new_VarIOHead(const FileRegion& fr,
 		      tPtIOType type,
-		      tVpiVarType var_type)
+		      VpiVarType var_type)
 {
   return mFactory.new_VarIOHead(fr, type, var_type);
 }
@@ -117,7 +117,7 @@ Parser::new_RegIOHead(const FileRegion& fr,
 PtiIOHead*
 Parser::new_NetIOHead(const FileRegion& fr,
 		      tPtIOType type,
-		      tVpiNetType net_type,
+		      VpiNetType net_type,
 		      bool sign,
 		      const PtExpr* left,
 		      const PtExpr* right)
@@ -224,7 +224,7 @@ Parser::new_ParamH(const FileRegion& fr,
 // @param[in] var_type データ型
 PtiDeclHead*
 Parser::new_ParamH(const FileRegion& fr,
-		   tVpiVarType var_type)
+		   VpiVarType var_type)
 {
   return mFactory.new_ParamH(fr, var_type);
 }
@@ -284,7 +284,7 @@ Parser::new_LocalParamH(const FileRegion& fr,
 // @param[in] var_type データ型
 PtiDeclHead*
 Parser::new_LocalParamH(const FileRegion& fr,
-			tVpiVarType var_type)
+			VpiVarType var_type)
 {
   return mFactory.new_LocalParamH(fr, var_type);
 }
@@ -337,7 +337,7 @@ Parser::new_GenvarH(const FileRegion& fr)
 // @param[in] var_type データ型
 PtiDeclHead*
 Parser::new_VarH(const FileRegion& fr,
-		 tVpiVarType var_type)
+		 VpiVarType var_type)
 {
   return mFactory.new_VarH(fr, var_type);
 }
@@ -372,7 +372,7 @@ Parser::new_RegH(const FileRegion& fr,
 // @param[in] sign 符号の有無を表すフラグ
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
+		 VpiNetType type,
 		 bool sign)
 {
   return mFactory.new_NetH(fr, type, sign);
@@ -385,7 +385,7 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] strength 信号強度
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
+		 VpiNetType type,
 		 bool sign,
 		 const PtStrength* strength)
 {
@@ -399,7 +399,7 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] delay 遅延
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
+		 VpiNetType type,
 		 bool sign,
 		 const PtDelay* delay)
 {
@@ -414,7 +414,7 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] delay 遅延
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
+		 VpiNetType type,
 		 bool sign,
 		 const PtStrength* strength,
 		 const PtDelay* delay)
@@ -431,8 +431,8 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] right 範囲の右側の式
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
-		 tVpiVsType vstype,
+		 VpiNetType type,
+		 VpiVsType vstype,
 		 bool sign,
 		 const PtExpr* left,
 		 const PtExpr* right)
@@ -450,8 +450,8 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] strength 信号強度
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
-		 tVpiVsType vstype,
+		 VpiNetType type,
+		 VpiVsType vstype,
 		 bool sign,
 		 const PtExpr* left,
 		 const PtExpr* right,
@@ -470,8 +470,8 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] delay 遅延
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
-		 tVpiVsType vstype,
+		 VpiNetType type,
+		 VpiVsType vstype,
 		 bool sign,
 		 const PtExpr* left,
 		 const PtExpr* right,
@@ -491,8 +491,8 @@ Parser::new_NetH(const FileRegion& fr,
 // @param[in] delay 遅延
 PtiDeclHead*
 Parser::new_NetH(const FileRegion& fr,
-		 tVpiNetType type,
-		 tVpiVsType vstype,
+		 VpiNetType type,
+		 VpiVsType vstype,
 		 bool sign,
 		 const PtExpr* left,
 		 const PtExpr* right,

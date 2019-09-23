@@ -31,7 +31,7 @@ private:
   /// @param[in] pt_expr パース木のプライマリ式
   EiImpNet(const VlNamedObj* parent,
 	   const PtExpr* pt_expr,
-	   tVpiNetType net_type);
+	   VpiNetType net_type);
 
   /// @brief デストラクタ
   ~EiImpNet();
@@ -43,7 +43,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -116,7 +116,7 @@ public:
 
   /// @brief ビット幅を返す．
   /// @note このクラスは 1 を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief オフセット値の取得
@@ -132,14 +132,14 @@ public:
   /// @retval データ型 パラメータや変数の場合
   /// @retval kVpiVarNone 上記以外
   /// @note デフォルト値としてこのクラスでは kVpiVarNone を返す．
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
   /// @note デフォルト値としてこのクラスでは kVpiNone を返す．
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// @brief vectored|scalared 属性の取得
@@ -147,28 +147,28 @@ public:
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
   /// @note デフォルト値としてこのクラスでは kVpiVsNone を返す．
-  tVpiVsType
+  VpiVsType
   vs_type() const override;
 
   /// @brief drive0 strength の取得
   /// @retval 0 の強度
   /// @retval kVpiNoStrength strength の指定なし
   /// @note デフォルト値としてこのクラスでは kVpiNoStrength を返す．
-  tVpiStrength
+  VpiStrength
   drive0() const override;
 
   /// @brief drive1 strength の取得
   /// @retval 1 の強度
   /// @retval kVpiNoStrength strength の指定なし
   /// @note デフォルト値としてこのクラスでは kVpiNoStrength を返す．
-  tVpiStrength
+  VpiStrength
   drive1() const override;
 
   /// @brief charge strength の取得
   /// @retval 電荷の強度
   /// @retval kVpiNoStrength strength の指定なし
   /// @note デフォルト値としてこのクラスでは kVpiNoStrength を返す．
-  tVpiStrength
+  VpiStrength
   charge() const override;
 
   /// @brief delay の取得
@@ -271,7 +271,7 @@ private:
   const PtExpr* mPtExpr;
 
   // ネット型
-  tVpiNetType mNetType;
+  VpiNetType mNetType;
 
   // 値
   VlScalarVal mVal;

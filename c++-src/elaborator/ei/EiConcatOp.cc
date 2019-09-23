@@ -26,7 +26,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] opr_list オペランドのリスト
 ElbExpr*
 EiFactory::new_ConcatOp(const PtExpr* pt_expr,
-			int opr_size,
+			SizeType opr_size,
 			ElbExpr** opr_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiConcatOp));
@@ -43,9 +43,9 @@ EiFactory::new_ConcatOp(const PtExpr* pt_expr,
 // @param[in] opr_list オペランドのリスト
 ElbExpr*
 EiFactory::new_MultiConcatOp(const PtExpr* pt_expr,
-			     int rep_num,
+			     SizeType rep_num,
 			     ElbExpr* rep_expr,
-			     int opr_size,
+			     SizeType opr_size,
 			     ElbExpr** opr_list)
 {
   void* p = mAlloc.get_memory(sizeof(EiMultiConcatOp));
@@ -65,19 +65,19 @@ EiFactory::new_MultiConcatOp(const PtExpr* pt_expr,
 // @param[in] opr_size オペランド数
 // @param[in] opr_array オペランドを格納する配列
 EiConcatOp::EiConcatOp(const PtExpr* pt_expr,
-		       int opr_size,
+		       SizeType opr_size,
 		       ElbExpr** opr_array) :
   EiOperation(pt_expr),
   mOprNum(opr_size),
   mOprList(opr_array)
 {
-  int n = operand_num();
+  SizeType n = operand_num();
   mSize = 0;
-  for ( int i = 0; i < n; ++ i ) {
+  for ( SizeType i = 0; i < n; ++ i ) {
     ElbExpr* expr = _operand(i);
     VlValueType type1 = expr->value_type();
     ASSERT_COND( !type1.is_real_type() );
-    int size1 = type1.size();
+    SizeType size1 = type1.size();
     mSize += size1;
 
     // オペランドのサイズは self determined
@@ -102,7 +102,7 @@ EiConcatOp::value_type() const
 bool
 EiConcatOp::is_const() const
 {
-  for ( int i = 0; i < mOprNum; ++ i ) {
+  for ( SizeType i = 0; i < mOprNum; ++ i ) {
     if ( !mOprList[i]->is_const() ) {
       return false;
     }
@@ -120,7 +120,7 @@ EiConcatOp::_set_reqsize(const VlValueType& type)
 }
 
 // @brief オペランド数を返す．
-int
+SizeType
 EiConcatOp::operand_num() const
 {
   return mOprNum;
@@ -129,13 +129,13 @@ EiConcatOp::operand_num() const
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 ElbExpr*
-EiConcatOp::_operand(int pos) const
+EiConcatOp::_operand(SizeType pos) const
 {
   return mOprList[pos];
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiConcatOp::bit_size() const
 {
   return mSize;
@@ -153,9 +153,9 @@ EiConcatOp::bit_size() const
 // @param[in] opr_size オペランド数
 // @param[in] opr_array オペランドを格納する配列
 EiMultiConcatOp::EiMultiConcatOp(const PtExpr* pt_expr,
-				 int rep_num,
+				 SizeType rep_num,
 				 ElbExpr* rep_expr,
-				 int opr_size,
+				 SizeType opr_size,
 				 ElbExpr** opr_array) :
   EiConcatOp(pt_expr, opr_size, opr_array),
   mRepNum(rep_num),
@@ -176,7 +176,7 @@ EiMultiConcatOp::value_type() const
 }
 
 // @brief オペランド数を返す．
-int
+SizeType
 EiMultiConcatOp::operand_num() const
 {
   return EiConcatOp::operand_num() + 1;
@@ -184,7 +184,7 @@ EiMultiConcatOp::operand_num() const
 
 // @brief 繰り返し数を返す．
 // @note multiple concatenation の時のみ意味を持つ．
-int
+SizeType
 EiMultiConcatOp::rep_num() const
 {
   return mRepNum;
@@ -193,7 +193,7 @@ EiMultiConcatOp::rep_num() const
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 ElbExpr*
-EiMultiConcatOp::_operand(int pos) const
+EiMultiConcatOp::_operand(SizeType pos) const
 {
   if ( pos == 0 ) {
     return mRepExpr;

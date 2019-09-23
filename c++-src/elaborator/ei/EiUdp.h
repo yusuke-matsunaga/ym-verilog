@@ -44,9 +44,9 @@ private:
   /// @param[in] val_array テーブル中の値を納める配列
   EiUdpDefn(const PtUdp* pt_udp,
 	    bool is_protected,
-	    int io_num,
+	    SizeType io_num,
 	    EiUdpIO* io_array,
-	    int table_num,
+	    SizeType table_num,
 	    EiTableEntry* table,
 	    VlUdpVal* val_array);
 
@@ -60,7 +60,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -78,17 +78,17 @@ public:
   def_name() const override;
 
   /// @brief primitive type を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief ポート数を返す．
-  int
+  SizeType
   port_num() const override;
 
   /// @brief 入力の宣言要素を返す．
   /// @param[in] pos 入力番号 ( 0 <= pos < port_num() - 1 )
   const VlIODecl*
-  input(int pos) const override;
+  input(SizeType pos) const override;
 
   /// @brief 出力の宣言要素を返す．
   const VlIODecl*
@@ -108,13 +108,13 @@ public:
   init_val_string() const override;
 
   /// @brief table entry の行数を返す．
-  int
+  SizeType
   table_size() const override;
 
   /// @brief table entry を返す．
   /// @param[in] pos 行番号
   const VlTableEntry*
-  table_entry(int pos) const override;
+  table_entry(SizeType pos) const override;
 
 
 public:
@@ -128,7 +128,7 @@ public:
   /// @param[in] name 名前
   /// @param[in] dir 向き
   void
-  set_io(int pos,
+  set_io(SizeType pos,
 	 const PtIOHead* pt_header,
 	 const PtIOItem* pt_item) override;
 
@@ -144,7 +144,7 @@ public:
   /// @param[in] pt_udp_entry パース木の一行分の定義
   /// @param[in] vals シンボル値の配列
   void
-  set_tableentry(int pos,
+  set_tableentry(SizeType pos,
 		 const PtUdpEntry* pt_udp_entry,
 		 const vector<VlUdpVal>& vals) override;
 
@@ -158,7 +158,7 @@ private:
   const PtUdp* mPtUdp;
 
   // ポート数
-  int mPortNum;
+  SizeType mPortNum;
 
   // protect されているとき true にするフラグ
   bool mProtected;
@@ -173,7 +173,7 @@ private:
   VlScalarVal mInitVal;
 
   // table entry のサイズ
-  int mTableEntrySize;
+  SizeType mTableEntrySize;
 
   // table entry のリスト
   EiTableEntry* mTableEntryList;
@@ -208,7 +208,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -226,7 +226,7 @@ public:
   name() const override;
 
   /// @brief 方向を返す．
-  tVlDirection
+  VpiDir
   direction() const override;
 
   /// @brief 符号の属性の取得
@@ -261,7 +261,7 @@ public:
 
   /// @brief サイズを返す．
   /// このクラスは 1 を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief 対応する宣言要素を返す．
@@ -344,7 +344,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -358,12 +358,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 一行の要素数を返す．
-  int
+  SizeType
   size() const override;
 
   /// @brief pos 番目の位置の値を返す．
   VlUdpVal
-  val(int pos) const override;
+  val(SizeType pos) const override;
 
   /// @brief 一行文の内容を表す文字列をつくる．
   string

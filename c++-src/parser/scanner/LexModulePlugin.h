@@ -64,7 +64,6 @@ public:
 	       LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpCellDefine();
 
 
@@ -72,9 +71,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -107,7 +105,6 @@ public:
 		  LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpEndCellDefine();
 
 
@@ -115,9 +112,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -150,7 +146,6 @@ public:
 	    LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpNetType();
 
 
@@ -158,9 +153,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -193,7 +187,6 @@ public:
 	      LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpTimeScale();
 
 
@@ -201,9 +194,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -247,7 +239,6 @@ public:
 		LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpUnconnDrive();
 
 
@@ -255,9 +246,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -290,7 +280,6 @@ public:
 		  LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpNounconnDrive();
 
 
@@ -298,9 +287,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -333,7 +321,6 @@ public:
 	      LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpDecayTime();
 
 
@@ -341,9 +328,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -376,7 +362,6 @@ public:
 		   LexModuleState* state);
 
   /// @brief デストラクタ
-  virtual
   ~LpTriregStrength();
 
 
@@ -384,9 +369,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -418,10 +402,9 @@ public:
   LpDelayMode(RawLex& lex,
 	      const char* name,
 	      LexModuleState* state,
-	      tVpiDefDelayMode mode);
+	      VpiDefDelayMode mode);
 
   /// @brief デストラクタ
-  virtual
   ~LpDelayMode();
 
 
@@ -429,9 +412,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -443,7 +425,7 @@ private:
   LexModuleState* mState;
 
   // delay_mode
-  tVpiDefDelayMode mMode;
+  VpiDefDelayMode mMode;
 
 };
 

@@ -26,57 +26,57 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] opr1 オペランド
 ElbExpr*
 EiFactory::new_BinaryOp(const PtExpr* pt_expr,
-			tVlOpType op_type,
+			VpiOpType op_type,
 			ElbExpr* opr0,
 			ElbExpr* opr1)
 {
   ElbExpr* expr = nullptr;
   void* p;
   switch( op_type ) {
-  case kVlBitAndOp:
-  case kVlBitOrOp:
-  case kVlBitXNorOp:
-  case kVlBitXorOp:
+  case VpiOpType::BitAnd:
+  case VpiOpType::BitOr:
+  case VpiOpType::BitXNor:
+  case VpiOpType::BitXor:
     p = mAlloc.get_memory(sizeof(EiBinaryBitOp));
     expr = new (p) EiBinaryBitOp(pt_expr, opr0, opr1);
     break;
 
-  case kVlAddOp:
-  case kVlSubOp:
-  case kVlMultOp:
-  case kVlDivOp:
-  case kVlModOp:
+  case VpiOpType::Add:
+  case VpiOpType::Sub:
+  case VpiOpType::Mult:
+  case VpiOpType::Div:
+  case VpiOpType::Mod:
     p = mAlloc.get_memory(sizeof(EiBinaryArithOp));
     expr = new (p) EiBinaryArithOp(pt_expr, opr0, opr1);
     break;
 
-  case kVlPowerOp:
+  case VpiOpType::Power:
     p = mAlloc.get_memory(sizeof(EiPowerOp));
     expr = new (p) EiPowerOp(pt_expr, opr0, opr1);
     break;
 
-  case kVlLShiftOp:
-  case kVlRShiftOp:
-  case kVlArithLShiftOp:
-  case kVlArithRShiftOp:
+  case VpiOpType::LShift:
+  case VpiOpType::RShift:
+  case VpiOpType::ArithLShift:
+  case VpiOpType::ArithRShift:
     p = mAlloc.get_memory(sizeof(EiShiftOp));
     expr = new (p) EiShiftOp(pt_expr, opr0, opr1);
     break;
 
-  case kVlLogAndOp:
-  case kVlLogOrOp:
+  case VpiOpType::LogAnd:
+  case VpiOpType::LogOr:
     p = mAlloc.get_memory(sizeof(EiBinaryLogOp));
     expr = new (p) EiBinaryLogOp(pt_expr, opr0, opr1);
     break;
 
-  case kVlCaseEqOp:
-  case kVlCaseNeqOp:
-  case kVlEqOp:
-  case kVlNeqOp:
-  case kVlGeOp:
-  case kVlGtOp:
-  case kVlLeOp:
-  case kVlLtOp:
+  case VpiOpType::CaseEq:
+  case VpiOpType::CaseNeq:
+  case VpiOpType::Eq:
+  case VpiOpType::Neq:
+  case VpiOpType::Ge:
+  case VpiOpType::Gt:
+  case VpiOpType::Le:
+  case VpiOpType::Lt:
     p = mAlloc.get_memory(sizeof(EiCompareOp));
     expr = new (p) EiCompareOp(pt_expr, opr0, opr1);
     break;
@@ -120,7 +120,7 @@ EiBinaryOp::is_const() const
 }
 
 // @brief オペランド数を返す．
-int
+SizeType
 EiBinaryOp::operand_num() const
 {
   return 2;
@@ -129,8 +129,10 @@ EiBinaryOp::operand_num() const
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 ElbExpr*
-EiBinaryOp::_operand(int pos) const
+EiBinaryOp::_operand(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < 2 );
+
   return mOpr[pos];
 }
 

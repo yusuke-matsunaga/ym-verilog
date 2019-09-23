@@ -125,7 +125,7 @@ EiExpr::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note このクラスでは 0 を返す．
-int
+SizeType
 EiExpr::declarray_dimension() const
 {
   return 0;
@@ -135,7 +135,7 @@ EiExpr::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::declarray_index(int pos) const
+EiExpr::declarray_index(SizeType pos) const
 {
   return nullptr;
 }
@@ -185,10 +185,10 @@ EiExpr::index_val() const
 }
 
 // @brief 範囲指定のモードを返す．
-tVpiRangeMode
+VpiRangeMode
 EiExpr::range_mode() const
 {
-  return kVpiNoRange;
+  return VpiRangeMode::No;
 }
 
 // @brief 範囲の MSB を返す．
@@ -239,7 +239,7 @@ EiExpr::base() const
 // @brief 範囲のビット幅を返す．
 // @note 可変範囲選択の時，意味を持つ．
 // @note それ以外では 0 を返す．
-int
+SizeType
 EiExpr::range_width() const
 {
   return 0;
@@ -257,16 +257,16 @@ EiExpr::parent_expr() const
 // @brief 演算子のタイプを返す．
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは kVlNullOp を返す．
-tVlOpType
+VpiOpType
 EiExpr::op_type() const
 {
-  return kVlNullOp;
+  return VpiOpType::Null;
 }
 
 // @brief オペランド数を返す．
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは 0 を返す．
-int
+SizeType
 EiExpr::operand_num() const
 {
   return 0;
@@ -276,14 +276,14 @@ EiExpr::operand_num() const
 // @param[in] pos 位置番号
 // @note 演算子の時，意味を持つ．
 const VlExpr*
-EiExpr::operand(int pos) const
+EiExpr::operand(SizeType pos) const
 {
   return _operand(pos);
 }
 
 // @brief 繰り返し数を返す．
 // @note multiple concatenation の時のみ意味を持つ．
-int
+SizeType
 EiExpr::rep_num() const
 {
   return 0;
@@ -292,11 +292,11 @@ EiExpr::rep_num() const
 // @brief 定数の型を返す．
 // @note 定数の時，意味を持つ．
 // @note このクラスでは動作は不定
-tVpiConstType
+VpiConstType
 EiExpr::constant_type() const
 {
   // とは言っても何か返さなければならない．
-  return kVpiDecConst;
+  return VpiConstType::Dec;
 }
 
 // @brief 定数値を返す．
@@ -329,7 +329,7 @@ EiExpr::user_systf() const
 // @brief 引数の数を返す．
 // @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
 // @note このクラスでは 0 を返す．
-int
+SizeType
 EiExpr::argument_num() const
 {
   return 0;
@@ -340,7 +340,7 @@ EiExpr::argument_num() const
 // @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::argument(int pos) const
+EiExpr::argument(SizeType pos) const
 {
   return nullptr;
 }
@@ -349,7 +349,7 @@ EiExpr::argument(int pos) const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 0 を返す．
-int
+SizeType
 EiExpr::lhs_elem_num() const
 {
   return 0;
@@ -360,7 +360,7 @@ EiExpr::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::lhs_elem(int pos) const
+EiExpr::lhs_elem(SizeType pos) const
 {
   return nullptr;
 }
@@ -414,10 +414,10 @@ EiOperation::~EiOperation()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiOperation::type() const
 {
-  return kVpiOperation;
+  return VpiObjType::Operation;
 }
 
 // @brief 演算子の時に true を返す．
@@ -428,7 +428,7 @@ EiOperation::is_operation() const
 }
 
 // @brief 演算子のタイプを返す．
-tVlOpType
+VpiOpType
 EiOperation::op_type() const
 {
   return pt_expr()->op_type();

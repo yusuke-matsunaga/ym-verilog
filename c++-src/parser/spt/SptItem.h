@@ -49,7 +49,7 @@ public:
   /// @brief プリミティブタイプの取得
   /// @return プリミティブタイプ
   /// @note このクラスでは kVpiAndPrim を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   /// @brief strength の取得
@@ -137,7 +137,7 @@ public:
   /// @brief 戻値のデータ型の取得
   /// @return 戻値のデータ型
   /// @note このクラスでは kVpiVarNone を返す．
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief constant function の展開中の印をつける．
@@ -159,13 +159,13 @@ public:
   /// @brief specify block item の種類の取得
   /// @return specify block item の種類
   /// @note このクラスでは kVpiPulsestyleOnEvent を返す．
-  tVpiSpecItemType
+  VpiSpecItemType
   specitem_type() const override;
 
   /// @brief specify block path の種類の取得
   /// @return specify block path の種類
   /// @note このクラスでは kVpiSpecPathNull を返す．
-  tVpiSpecPathType
+  VpiSpecPathType
   specpath_type() const override;
 
   /// @brief ターミナルのリストの取得
@@ -517,7 +517,7 @@ private:
 	bool sign,
 	const PtExpr* left,
 	const PtExpr* right,
-	tVpiVarType var_type,
+	VpiVarType var_type,
 	PtIOHeadArray iohead_array,
 	PtDeclHeadArray declhead_array,
 	const PtStmt* stmt);
@@ -568,7 +568,7 @@ public:
   right_range() const override;
 
   // データ型の取得
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   // constant function の展開中の印をつける．
@@ -605,7 +605,7 @@ private:
   const PtExpr* mRightRange;
 
   // データ型
-  tVpiVarType mDataType;
+  VpiVarType mDataType;
 
   // IO宣言の要素数
   int mIOItemNum;
@@ -638,7 +638,7 @@ private:
 
   // コンストラクタ
   SptGateH(const FileRegion& file_region,
-	   tVpiPrimType prim_type,
+	   VpiPrimType prim_type,
 	   const PtStrength* strength,
 	   const PtDelay* delay,
 	   PtInstArray elem_array);
@@ -653,7 +653,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // プリミティブタイプ(vpiAndPrim など)を返す．
-  tVpiPrimType
+  VpiPrimType
   prim_type() const override;
 
   // strength を返す．
@@ -675,7 +675,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // プリミティブタイプ
-  tVpiPrimType mPrimType;
+  VpiPrimType mPrimType;
 
   // strength
   const PtStrength* mStrength;
@@ -1191,7 +1191,7 @@ private:
 
   // コンストラクタ
   SptSpecItem(const FileRegion& file_region,
-	      tVpiSpecItemType id,
+	      VpiSpecItemType id,
 	      PtExprArray terminal_array);
 
   // デストラクタ
@@ -1204,7 +1204,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // specify block item の種類を返す．
-  tVpiSpecItemType
+  VpiSpecItemType
   specitem_type() const override;
 
   /// @brief ターミナルリストの取得
@@ -1218,7 +1218,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // トークン番号
-  tVpiSpecItemType mId;
+  VpiSpecItemType mId;
 
   // ターミナルリスト
   PtExprArray mTerminals;
@@ -1238,7 +1238,7 @@ private:
 
   // コンストラクタ
   SptSpecPath(const FileRegion& file_region,
-	      tVpiSpecPathType id,
+	      VpiSpecPathType id,
 	      const PtExpr* expr,
 	      const PtPathDecl* path_decl);
 
@@ -1252,7 +1252,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // specify block path の種類を返す．
-  tVpiSpecPathType
+  VpiSpecPathType
   specpath_type() const override;
 
   // モジュールパスの式を返す．
@@ -1270,7 +1270,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // トークン番号
-  tVpiSpecPathType mId;
+  VpiSpecPathType mId;
 
   // モジュールパスの式
   const PtExpr* mExpr;
@@ -1296,7 +1296,7 @@ private:
 	      int edge,
 	      PtExprArray input_array,
 	      int input_pol,
-	      int op,
+	      VpiPathType op,
 	      PtExprArray output_array,
 	      int output_pol,
 	      const PtExpr* expr,
@@ -1330,7 +1330,7 @@ public:
   input_pol() const override;
 
   // パス記述子(?)を得る．vpiParallel か vpiFull
-  int
+  VpiPathType
   op() const override;
 
   /// @brief 出力のリストの取得
@@ -1363,7 +1363,7 @@ private:
   int mEdge;
   PtExprArray mInputs;
   int mInputPol;
-  int mOp;
+  VpiPathType mOp;
   PtExprArray mOutputs;
   int mOutputPol;
   const PtExpr* mExpr;

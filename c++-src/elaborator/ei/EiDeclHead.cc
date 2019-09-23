@@ -86,7 +86,7 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 ElbDeclHead*
 EiFactory::new_DeclHead(const VlNamedObj* parent,
 			const PtIOHead* pt_head,
-			tVpiAuxType aux_type,
+			VpiAuxType aux_type,
 			const PtExpr* left,
 			const PtExpr* right,
 			int left_val,
@@ -108,7 +108,7 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 ElbDeclHead*
 EiFactory::new_DeclHead(const VlNamedObj* parent,
 			const PtIOHead* pt_head,
-			tVpiAuxType aux_type)
+			VpiAuxType aux_type)
 {
   void* p = mAlloc.get_memory(sizeof(EiDeclHeadPt2));
   EiDeclHead* head = new (p) EiDeclHeadPt2(parent, pt_head, aux_type);
@@ -197,40 +197,40 @@ EiDeclHeadPt::~EiDeclHeadPt()
 
 // @brief 型の取得
 // @return vpi_user.h で定義された型 (vpiModule など)
-tVpiObjType
+VpiObjType
 EiDeclHeadPt::type() const
 {
   switch ( mPtHead->type() ) {
   case kPtDecl_Param:
   case kPtDecl_LocalParam:
-    return kVpiParameter;
+    return VpiObjType::Parameter;
 
   case kPtDecl_Reg:
-    return kVpiReg;
+    return VpiObjType::Reg;
 
   case kPtDecl_Var:
     switch ( mPtHead->data_type() ) {
-    case kVpiVarInteger:  return kVpiIntegerVar;
-    case kVpiVarReal:     return kVpiRealVar;
-    case kVpiVarTime:     return kVpiTimeVar;
+    case VpiVarType::Integer:  return VpiObjType::IntegerVar;
+    case VpiVarType::Real:     return VpiObjType::RealVar;
+    case VpiVarType::Time:     return VpiObjType::TimeVar;
     default: break;
     }
     break;
 
   case kPtDecl_Net:
-    return kVpiNet;
+    return VpiObjType::Net;
 
   case kPtDecl_Event:
-    return kVpiNamedEvent;
+    return VpiObjType::NamedEvent;
 
   case kPtDecl_SpecParam:
-    return kVpiSpecParam;
+    return VpiObjType::SpecParam;
 
   default:
     break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiParameter;
+  return VpiObjType::Parameter;
 }
 
 // @brief 符号の取得
@@ -296,7 +296,7 @@ EiDeclHeadPt::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclHeadPt::bit_size() const
 {
   switch ( mPtHead->type() ) {
@@ -309,13 +309,13 @@ EiDeclHeadPt::bit_size() const
   case kPtDecl_LocalParam:
   case kPtDecl_Var:
     switch ( mPtHead->data_type() ) {
-    case kVpiVarInteger:
+    case VpiVarType::Integer:
       return kVpiSizeInteger;
 
-    case kVpiVarReal:
+    case VpiVarType::Real:
       return kVpiSizeReal;
 
-    case kVpiVarTime:
+    case VpiVarType::Time:
       return kVpiSizeTime;
 
     default:
@@ -361,11 +361,11 @@ EiDeclHeadPt::calc_bit_offset(int index,
   case kPtDecl_LocalParam:
   case kPtDecl_Var:
     switch ( mPtHead->data_type() ) {
-    case kVpiVarReal:
+    case VpiVarType::Real:
       // 実数タイプの部分ビット指定は無効
       return false;
 
-    case kVpiVarTime:
+    case VpiVarType::Time:
       if ( index >= 0 && index < static_cast<int>(kVpiSizeTime) ) {
 	offset = index;
 	return true;
@@ -373,7 +373,7 @@ EiDeclHeadPt::calc_bit_offset(int index,
       // 範囲外は無効
       return false;
 
-    case kVpiVarInteger:
+    case VpiVarType::Integer:
     default:
       // int とみなす．
       if ( index >= 0 && index < static_cast<int>(kVpiSizeInteger) ) {
@@ -410,7 +410,7 @@ EiDeclHeadPt::calc_bit_offset(int index,
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 EiDeclHeadPt::data_type() const
 {
   return mPtHead->data_type();
@@ -419,7 +419,7 @@ EiDeclHeadPt::data_type() const
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+VpiNetType
 EiDeclHeadPt::net_type() const
 {
   return mPtHead->net_type();
@@ -429,7 +429,7 @@ EiDeclHeadPt::net_type() const
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 EiDeclHeadPt::vs_type() const
 {
   return mPtHead->vs_type();
@@ -438,42 +438,42 @@ EiDeclHeadPt::vs_type() const
 // @brief drive0 strength の取得
 // @retval 0 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDeclHeadPt::drive0() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->drive0();
   }
   else {
-    return kVpiNoStrength;
+    return VpiStrength::NoStrength;
   }
 }
 
 // @brief drive1 strength の取得
 // @retval 1 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDeclHeadPt::drive1() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->drive1();
   }
   else {
-    return kVpiNoStrength;
+    return VpiStrength::NoStrength;
   }
 }
 
 // @brief charge strength の取得
 // @retval 電荷の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDeclHeadPt::charge() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->charge();
   }
   else {
-    return kVpiNoStrength;
+    return VpiStrength::NoStrength;
   }
 }
 
@@ -594,7 +594,7 @@ EiDeclHeadPtV::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclHeadPtV::bit_size() const
 {
   return mRange.size();
@@ -667,7 +667,7 @@ EiDeclHeadPtVD::set_delay(ElbDelay* delay)
 // @param[in] aux_type 補助的なデータ型
 EiDeclHeadPt2::EiDeclHeadPt2(const VlNamedObj* parent,
 			     const PtIOHead* pt_header,
-			     tVpiAuxType aux_type) :
+			     VpiAuxType aux_type) :
   EiDeclHead(parent),
   mPtHead(pt_header),
   mAuxType(aux_type)
@@ -680,17 +680,17 @@ EiDeclHeadPt2::~EiDeclHeadPt2()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiDeclHeadPt2::type() const
 {
   switch ( mAuxType ) {
-  case kVpiAuxNet: return kVpiNet;
-  case kVpiAuxReg: return kVpiReg;
-  case kVpiAuxVar:
+  case VpiAuxType::Net: return VpiObjType::Net;
+  case VpiAuxType::Reg: return VpiObjType::Reg;
+  case VpiAuxType::Var:
     switch ( mPtHead->var_type() ) {
-    case kVpiVarInteger:  return kVpiIntegerVar;
-    case kVpiVarReal:     return kVpiRealVar;
-    case kVpiVarTime:     return kVpiTimeVar;
+    case VpiVarType::Integer:  return VpiObjType::IntegerVar;
+    case VpiVarType::Real:     return VpiObjType::RealVar;
+    case VpiVarType::Time:     return VpiObjType::TimeVar;
     default: break;
     }
     break;
@@ -699,7 +699,7 @@ EiDeclHeadPt2::type() const
     break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiNet;
+  return VpiObjType::Net;
 }
 
 // @brief 符号の取得
@@ -765,17 +765,17 @@ EiDeclHeadPt2::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclHeadPt2::bit_size() const
 {
   switch ( mAuxType ) {
-  case kVpiAuxNet: return 1;
-  case kVpiAuxReg: return 1;
-  case kVpiAuxVar:
+  case VpiAuxType::Net: return 1;
+  case VpiAuxType::Reg: return 1;
+  case VpiAuxType::Var:
     switch ( mPtHead->var_type() ) {
-    case kVpiVarInteger:  return kVpiSizeInteger;
-    case kVpiVarReal:     return kVpiSizeReal;
-    case kVpiVarTime:     return kVpiSizeTime;
+    case VpiVarType::Integer:  return kVpiSizeInteger;
+    case VpiVarType::Real:     return kVpiSizeReal;
+    case VpiVarType::Time:     return kVpiSizeTime;
     default: break;
     }
     break;
@@ -797,8 +797,8 @@ EiDeclHeadPt2::calc_bit_offset(int index,
 			       int& offset) const
 {
   switch ( mAuxType ) {
-  case kVpiAuxNet:
-  case kVpiAuxReg:
+  case VpiAuxType::Net:
+  case VpiAuxType::Reg:
     // 範囲指定なしは1ビットとみなす．
     if ( index == 0 ) {
       offset = 0;
@@ -807,9 +807,9 @@ EiDeclHeadPt2::calc_bit_offset(int index,
     // 0 以外は無効
     return false;
 
-  case kVpiAuxVar:
+  case VpiAuxType::Var:
     switch ( mPtHead->var_type() ) {
-    case kVpiVarInteger:
+    case VpiVarType::Integer:
       if ( index >= 0 && index < static_cast<int>(kVpiSizeInteger) ) {
 	offset = index;
 	return true;
@@ -817,11 +817,11 @@ EiDeclHeadPt2::calc_bit_offset(int index,
       // 範囲外は無効
       return false;
 
-    case kVpiVarReal:
+    case VpiVarType::Real:
       // 実数の部分指定は無効
       return false;
 
-    case kVpiVarTime:
+    case VpiVarType::Time:
       if ( index >= 0 && index < static_cast<int>(kVpiSizeTime) ) {
 	return index;
       }
@@ -842,8 +842,8 @@ EiDeclHeadPt2::calc_bit_offset(int index,
 
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
-tVpiVarType
+// @retval VpiVarType::None 上記以外
+VpiVarType
 EiDeclHeadPt2::data_type() const
 {
   return mPtHead->var_type();
@@ -851,8 +851,8 @@ EiDeclHeadPt2::data_type() const
 
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+// @retval VpiObjType::None net 型の要素でない場合
+VpiNetType
 EiDeclHeadPt2::net_type() const
 {
   return mPtHead->net_type();
@@ -873,7 +873,7 @@ EiDeclHeadPt2::net_type() const
 // @param[in] right_val 範囲の右側の値
 EiDeclHeadPt2V::EiDeclHeadPt2V(const VlNamedObj* parent,
 			       const PtIOHead* pt_header,
-			       tVpiAuxType aux_type,
+			       VpiAuxType aux_type,
 			       const PtExpr* left,
 			       const PtExpr* right,
 			       int left_val,
@@ -942,7 +942,7 @@ EiDeclHeadPt2V::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclHeadPt2V::bit_size() const
 {
   return mRange.size();
@@ -981,19 +981,19 @@ EiDeclHeadPt3::~EiDeclHeadPt3()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiDeclHeadPt3::type() const
 {
   switch ( data_type() ) {
-  case kVpiVarNone:     return kVpiReg;
-  case kVpiVarInteger:  return kVpiIntegerVar;
-  case kVpiVarReal:     return kVpiRealVar;
-  case kVpiVarTime:     return kVpiTimeVar;
+  case VpiVarType::None:     return VpiObjType::Reg;
+  case VpiVarType::Integer:  return VpiObjType::IntegerVar;
+  case VpiVarType::Real:     return VpiObjType::RealVar;
+  case VpiVarType::Time:     return VpiObjType::TimeVar;
   default:
     break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiReg;
+  return VpiObjType::Reg;
 }
 
 // @brief 符号の取得
@@ -1059,14 +1059,14 @@ EiDeclHeadPt3::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclHeadPt3::bit_size() const
 {
   switch ( data_type() ) {
-  case kVpiVarNone:     return 1;
-  case kVpiVarInteger:  return kVpiSizeInteger;
-  case kVpiVarReal:     return kVpiSizeReal;
-  case kVpiVarTime:     return kVpiSizeTime;
+  case VpiVarType::None:     return 1;
+  case VpiVarType::Integer:  return kVpiSizeInteger;
+  case VpiVarType::Real:     return kVpiSizeReal;
+  case VpiVarType::Time:     return kVpiSizeTime;
 
   default:
     break;
@@ -1085,7 +1085,7 @@ EiDeclHeadPt3::calc_bit_offset(int index,
 			       int& offset) const
 {
   switch ( data_type() ) {
-  case kVpiVarNone:
+  case VpiVarType::None:
     // 指定なしは1ビットとみなす．
     if ( index == 0 ) {
       offset = 0;
@@ -1093,7 +1093,7 @@ EiDeclHeadPt3::calc_bit_offset(int index,
     }
     return false;
 
-  case kVpiVarInteger:
+  case VpiVarType::Integer:
     if ( index >= 0 && index < static_cast<int>(kVpiSizeInteger) ) {
       offset = index;
       return true;
@@ -1101,11 +1101,11 @@ EiDeclHeadPt3::calc_bit_offset(int index,
     // 範囲外は無効
     return false;
 
-  case kVpiVarReal:
+  case VpiVarType::Real:
     // 実数の部分指定は無効
     return false;
 
-  case kVpiVarTime:
+  case VpiVarType::Time:
     if ( index >= 0 && index < static_cast<int>(kVpiSizeTime) ) {
       offset = index;
       return true;
@@ -1122,8 +1122,8 @@ EiDeclHeadPt3::calc_bit_offset(int index,
 
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
-tVpiVarType
+// @retval VpiVarType::None 上記以外
+VpiVarType
 EiDeclHeadPt3::data_type() const
 {
   return mPtItem->data_type();
@@ -1131,11 +1131,12 @@ EiDeclHeadPt3::data_type() const
 
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+// @retval VpiNetType::None net 型の要素でない場合
+VpiNetType
 EiDeclHeadPt3::net_type() const
 {
-  return kVpiNone;
+
+  return VpiNetType::None;
 }
 
 
@@ -1220,7 +1221,7 @@ EiDeclHeadPt3V::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclHeadPt3V::bit_size() const
 {
   return mRange.size();

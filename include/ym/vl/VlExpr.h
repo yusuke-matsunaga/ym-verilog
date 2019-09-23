@@ -55,7 +55,7 @@ public:
   /// @brief 式のビット幅を返す．
   /// @note value_type().size() を同じ
   virtual
-  int
+  SizeType
   bit_size() const = 0;
 
   /// @brief 定数式の時 true を返す．
@@ -121,7 +121,7 @@ public:
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note それ以外では 0 を返す．
   virtual
-  int
+  SizeType
   declarray_dimension() const = 0;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
@@ -129,7 +129,7 @@ public:
   /// @note それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  declarray_index(int pos) const = 0;
+  declarray_index(SizeType pos) const = 0;
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
@@ -178,7 +178,7 @@ public:
   /// @retval kVpiMinusRange -: の可動範囲
   /// @note is_partselect() == true の時のみ意味を持つ．
   virtual
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const = 0;
 
   /// @brief 範囲の MSB の式を返す．
@@ -218,21 +218,21 @@ public:
   /// @note 可変範囲選択の時，意味を持つ．
   /// @note それ以外では値は不定
   virtual
-  int
+  SizeType
   range_width() const = 0;
 
   /// @brief 演算子の型を返す．
   /// @note kVpiOperation の時，意味を持つ．
   /// @note それ以外では動作は不定
   virtual
-  tVlOpType
+  VpiOpType
   op_type() const = 0;
 
   /// @brief オペランド数を返す．
   /// @note kVpiOperation の時，意味を持つ．
   /// @note それ以外では 0 を返す．
   virtual
-  int
+  SizeType
   operand_num() const = 0;
 
   /// @brief オペランドを返す．
@@ -241,20 +241,20 @@ public:
   /// @note それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  operand(int pos) const = 0;
+  operand(SizeType pos) const = 0;
 
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．
   /// @note multiple concatenation の時は operand(0) と等しい．
   virtual
-  int
+  SizeType
   rep_num() const = 0;
 
   /// @brief 定数型を返す．
   /// @note kVpiConstant の時，意味を持つ．
   /// @note それ以外では動作は不定
   virtual
-  tVpiConstType
+  VpiConstType
   constant_type() const = 0;
 
   /// @brief 定数値を返す．
@@ -281,7 +281,7 @@ public:
   /// @brief 引数の数を返す．
   /// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
   virtual
-  int
+  SizeType
   argument_num() const = 0;
 
   /// @brief 引数を返す．
@@ -290,13 +290,13 @@ public:
   /// @note それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  argument(int pos) const = 0;
+  argument(SizeType pos) const = 0;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   virtual
-  int
+  SizeType
   lhs_elem_num() const = 0;
 
   /// @brief 左辺式の要素の取得
@@ -304,7 +304,7 @@ public:
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   virtual
   const VlExpr*
-  lhs_elem(int pos) const = 0;
+  lhs_elem(SizeType pos) const = 0;
 
 };
 

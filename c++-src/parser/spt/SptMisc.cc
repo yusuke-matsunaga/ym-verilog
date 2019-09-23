@@ -153,12 +153,10 @@ SptConnection::expr() const
 // @param drive0 0 の信号強度
 // @param drive1 1 の信号強度
 SptStrength::SptStrength(const FileRegion& file_region,
-			 tVpiStrength drive0,
-			 tVpiStrength drive1) :
+			 VpiStrength drive0,
+			 VpiStrength drive1) :
   mFileRegion{file_region},
-  mDrive0{drive0},
-  mDrive1{drive1},
-  mCharge{kVpiNoStrength}
+  mDrive{drive0, drive1, VpiStrength::NoStrength}
 {
 }
 
@@ -166,11 +164,9 @@ SptStrength::SptStrength(const FileRegion& file_region,
 // @param file_region ファイル位置の情報
 // @param charge 電荷の信号強度
 SptStrength::SptStrength(const FileRegion& file_region,
-			 tVpiStrength charge) :
+			 VpiStrength charge) :
   mFileRegion{file_region},
-  mDrive0{kVpiNoStrength},
-  mDrive1{kVpiNoStrength},
-  mCharge{charge}
+  mDrive{VpiStrength::NoStrength, VpiStrength::NoStrength, charge}
 {
 }
 
@@ -189,26 +185,26 @@ SptStrength::file_region() const
 
 // drive strength0 の取得
 // @return 0 の強度
-tVpiStrength
+VpiStrength
 SptStrength::drive0() const
 {
-  return mDrive0;
+  return mDrive[0];
 }
 
 // drive strength1 の取得
 // @return 1 の強度
-tVpiStrength
+VpiStrength
 SptStrength::drive1() const
 {
-  return mDrive1;
+  return mDrive[1];
 }
 
 // charge strength の取得
 // @return 電荷の強度
-tVpiStrength
+VpiStrength
 SptStrength::charge() const
 {
-  return mCharge;
+  return mDrive[2];
 }
 
 
@@ -497,8 +493,8 @@ SptFactory::new_NamedCon(const FileRegion& file_region,
 // @return 生成された strength
 const PtStrength*
 SptFactory::new_Strength(const FileRegion& file_region,
-			 tVpiStrength value0,
-			 tVpiStrength value1)
+			 VpiStrength value0,
+			 VpiStrength value1)
 {
   void* p = alloc().get_memory(sizeof(SptStrength));
   return new (p) SptStrength(file_region, value0, value1);
@@ -510,7 +506,7 @@ SptFactory::new_Strength(const FileRegion& file_region,
 // @return 生成された strength
 const PtStrength*
 SptFactory::new_Strength(const FileRegion& file_region,
-			 tVpiStrength value)
+			 VpiStrength value)
 {
   void* p = alloc().get_memory(sizeof(SptStrength));
   return new (p) SptStrength(file_region, value);

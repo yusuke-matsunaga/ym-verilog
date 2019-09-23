@@ -42,7 +42,7 @@ public:
   /// @param[in] val 値
   /// @note val が 0 の時のみ 0 に，それ以外は 1 にする．
   explicit
-  VlScalarVal(ymuint val);
+  VlScalarVal(unsigned int val);
 
   /// @brief 実数値からの変換コンストラクタ
   /// @param[in] val 値
@@ -275,7 +275,7 @@ VlScalarVal::VlScalarVal(int val)
 // @param[in] val 値
 // @note val が 0 の時のみ 0 に，それ以外は 1 にする．
 inline
-VlScalarVal::VlScalarVal(ymuint val)
+VlScalarVal::VlScalarVal(unsigned int val)
 {
   if ( val == 0U ) {
     mData = kScalar0;

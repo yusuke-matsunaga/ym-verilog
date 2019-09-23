@@ -85,15 +85,15 @@ EiBitSelect::~EiBitSelect()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiBitSelect::type() const
 {
   switch ( parent_expr()->type() ) {
-  case kVpiNet: return kVpiNetBit;
-  case kVpiReg: return kVpiRegBit;
+  case VpiObjType::Net: return VpiObjType::NetBit;
+  case VpiObjType::Reg: return VpiObjType::RegBit;
   default: break;
   }
-  return kVpiBitSelect;
+  return VpiObjType::BitSelect;
 }
 
 // @brief 式のタイプを返す．
@@ -144,7 +144,7 @@ EiBitSelect::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note それ以外では 0 を返す．
-int
+SizeType
 EiBitSelect::declarray_dimension() const
 {
   return parent_expr()->declarray_dimension();
@@ -154,7 +154,7 @@ EiBitSelect::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note それ以外では nullptr を返す．
 const VlExpr*
-EiBitSelect::declarray_index(int pos) const
+EiBitSelect::declarray_index(SizeType pos) const
 {
   return parent_expr()->declarray_index(pos);
 }
@@ -170,7 +170,7 @@ EiBitSelect::parent_expr() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-int
+SizeType
 EiBitSelect::lhs_elem_num() const
 {
   return 1;
@@ -181,9 +181,10 @@ EiBitSelect::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiBitSelect::lhs_elem(int pos) const
+EiBitSelect::lhs_elem(SizeType pos) const
 {
   ASSERT_COND( pos == 0 );
+
   return this;
 }
 
@@ -200,7 +201,7 @@ EiBitSelect::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiBitSelect::_operand(int pos) const
+EiBitSelect::_operand(SizeType pos) const
 {
   return nullptr;
 }

@@ -148,7 +148,7 @@ EiPrimaryBase::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiPrimaryBase::_operand(int pos) const
+EiPrimaryBase::_operand(SizeType pos) const
 {
   return nullptr;
 }
@@ -174,7 +174,7 @@ EiPrimary::~EiPrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiPrimary::type() const
 {
   return mObj->type();
@@ -215,7 +215,7 @@ EiPrimary::decl_obj() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-int
+SizeType
 EiPrimary::lhs_elem_num() const
 {
   return 1;
@@ -226,7 +226,7 @@ EiPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiPrimary::lhs_elem(int pos) const
+EiPrimary::lhs_elem(SizeType pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -253,7 +253,7 @@ EiDeclPrimary::~EiDeclPrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiDeclPrimary::type() const
 {
   return mObj->type();
@@ -308,7 +308,7 @@ EiDeclPrimary::decompile() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-int
+SizeType
 EiDeclPrimary::lhs_elem_num() const
 {
   return 1;
@@ -319,7 +319,7 @@ EiDeclPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiDeclPrimary::lhs_elem(int pos) const
+EiDeclPrimary::lhs_elem(SizeType pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -339,7 +339,7 @@ EiDeclPrimary::_set_reqsize(const VlValueType& type)
 // @note 演算子の時，意味を持つ．
 // @note このクラスでは nullptr を返す．
 ElbExpr*
-EiDeclPrimary::_operand(int pos) const
+EiDeclPrimary::_operand(SizeType pos) const
 {
   return nullptr;
 }
@@ -372,7 +372,7 @@ EiParamPrimary::~EiParamPrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiParamPrimary::type() const
 {
   return mObj->type();
@@ -445,7 +445,7 @@ EiArrayElemPrimary::~EiArrayElemPrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiArrayElemPrimary::type() const
 {
   return mObj->type();
@@ -485,7 +485,7 @@ EiArrayElemPrimary::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note それ以外では 0 を返す．
-int
+SizeType
 EiArrayElemPrimary::declarray_dimension() const
 {
   return mDim;
@@ -495,7 +495,7 @@ EiArrayElemPrimary::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note それ以外では nullptr を返す．
 const VlExpr*
-EiArrayElemPrimary::declarray_index(int pos) const
+EiArrayElemPrimary::declarray_index(SizeType pos) const
 {
   return mIndexList[pos];
 }
@@ -504,7 +504,7 @@ EiArrayElemPrimary::declarray_index(int pos) const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-int
+SizeType
 EiArrayElemPrimary::lhs_elem_num() const
 {
   return 1;
@@ -515,7 +515,7 @@ EiArrayElemPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiArrayElemPrimary::lhs_elem(int pos) const
+EiArrayElemPrimary::lhs_elem(SizeType pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -545,7 +545,7 @@ EiConstArrayElemPrimary::~EiConstArrayElemPrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiConstArrayElemPrimary::type() const
 {
   return mObj->type();
@@ -594,7 +594,7 @@ EiConstArrayElemPrimary::declarray_obj() const
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
 // @note それ以外では 0 を返す．
-int
+SizeType
 EiConstArrayElemPrimary::declarray_dimension() const
 {
   return 0;
@@ -604,7 +604,7 @@ EiConstArrayElemPrimary::declarray_dimension() const
 // @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
 // @note それ以外では nullptr を返す．
 const VlExpr*
-EiConstArrayElemPrimary::declarray_index(int pos) const
+EiConstArrayElemPrimary::declarray_index(SizeType pos) const
 {
   return nullptr;
 }
@@ -621,7 +621,7 @@ EiConstArrayElemPrimary::declarray_offset() const
 // @note 通常は1だが，連結演算子の場合はその子供の数となる．
 // @note ただし，連結演算の入れ子はすべて平坦化して考える．
 // @note このクラスでは 1 を返す．
-int
+SizeType
 EiConstArrayElemPrimary::lhs_elem_num() const
 {
   return 1;
@@ -632,7 +632,7 @@ EiConstArrayElemPrimary::lhs_elem_num() const
 // @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
 // @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiConstArrayElemPrimary::lhs_elem(int pos) const
+EiConstArrayElemPrimary::lhs_elem(SizeType pos) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -659,7 +659,7 @@ EiScopePrimary::~EiScopePrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiScopePrimary::type() const
 {
   return mObj->type();
@@ -708,7 +708,7 @@ EiPrimitivePrimary::~EiPrimitivePrimary()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiPrimitivePrimary::type() const
 {
   return mObj->type();

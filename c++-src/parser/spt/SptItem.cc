@@ -50,11 +50,11 @@ SptItem::type() const
 
 // @brief プリミティブタイプの取得
 // @return プリミティブタイプ
-// このクラスでは kVpiAndPrim を返す．
-tVpiPrimType
+// このクラスでは VpiPrimType::And を返す．
+VpiPrimType
 SptItem::prim_type() const
 {
-  return kVpiAndPrim; // ダミー
+  return VpiPrimType::And; // ダミー
 }
 
 // @brief strength の取得
@@ -189,11 +189,11 @@ SptItem::right_range() const
 
 // @brief 戻値のデータ型の取得
 // @return 戻値のデータ型
-// このクラスでは kVpiVarNone を返す．
-tVpiVarType
+// このクラスでは VpiVarType::None を返す．
+VpiVarType
 SptItem::data_type() const
 {
-  return kVpiVarNone;
+  return VpiVarType::None;
 }
 
 // @brief constant function の展開中の印をつける．
@@ -221,20 +221,20 @@ SptItem::is_in_use() const
 
 // @brief specify block item の種類の取得
 // @return specify block item の種類
-// このクラスでは kVpiPulsestyleOnEvent を返す．
-tVpiSpecItemType
+// このクラスでは PulsestyleOnEvent を返す．
+VpiSpecItemType
 SptItem::specitem_type() const
 {
-  return kVpiPulsestyleOnEvent; // ダミー
+  return VpiSpecItemType::PulsestyleOnEvent; // ダミー
 }
 
 // @brief specify block path の種類の取得
 // @retun specify block path の種類
-// このクラスでは kVpiSpecPathNull を返す．
-tVpiSpecPathType
+// このクラスでは Null を返す．
+VpiSpecPathType
 SptItem::specpath_type() const
 {
-  return kVpiSpecPathNull; // ダミー
+  return VpiSpecPathType::Null; // ダミー
 }
 
 // @brief ターミナルのリストの取得
@@ -561,7 +561,7 @@ SptTf::SptTf(const FileRegion& file_region,
 	     bool sign,
 	     const PtExpr* left,
 	     const PtExpr* right,
-	     tVpiVarType data_type,
+	     VpiVarType data_type,
 	     PtIOHeadArray iohead_array,
 	     PtDeclHeadArray declhead_array,
 	     const PtStmt* stmt) :
@@ -661,8 +661,8 @@ SptTf::right_range() const
 
 // データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
-tVpiVarType
+// @retval VpiVarType::None 上記以外
+VpiVarType
 SptTf::data_type() const
 {
   return mDataType;
@@ -702,7 +702,7 @@ SptTf::is_in_use() const
 // @param delay 遅延
 // @param elem_list 要素のリスト
 SptGateH::SptGateH(const FileRegion& file_region,
-		   tVpiPrimType prim_type,
+		   VpiPrimType prim_type,
 		   const PtStrength* strength,
 		   const PtDelay* delay,
 		   PtInstArray elem_array) :
@@ -721,7 +721,7 @@ SptGateH::~SptGateH()
 
 // プリミティブタイプの取得
 // @return プリミティブタイプ
-tVpiPrimType
+VpiPrimType
 SptGateH::prim_type() const
 {
   return mPrimType;
@@ -1056,7 +1056,7 @@ SptFactory::new_Task(const FileRegion& file_region,
 		       kPtItem_Task,
 		       name, automatic,
 		       false, nullptr, nullptr,
-		       kVpiVarNone,
+		       VpiVarType::None,
 		       iohead_array,
 		       declhead_array,
 		       stmt);
@@ -1087,7 +1087,7 @@ SptFactory::new_Function(const FileRegion& file_region,
 		       kPtItem_Func,
 		       name, automatic,
 		       sign, nullptr, nullptr,
-		       kVpiVarNone,
+		       VpiVarType::None,
 		       iohead_array,
 		       declhead_array,
 		       stmt);
@@ -1122,7 +1122,7 @@ SptFactory::new_SizedFunc(const FileRegion& file_region,
 		       kPtItem_Func,
 		       name, automatic,
 		       sign, left, right,
-		       kVpiVarNone,
+		       VpiVarType::None,
 		       iohead_array,
 		       declhead_array,
 		       stmt);
@@ -1145,7 +1145,7 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 			  const char* name,
 			  bool automatic,
 			  bool sign,
-			  tVpiVarType func_type,
+			  VpiVarType func_type,
 			  PtIOHeadArray iohead_array,
 			  PtDeclHeadArray declhead_array,
 			  const PtStmt* stmt)
@@ -1168,7 +1168,7 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 // @return 生成された gate instance 文のヘッダ
 const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      PtInstArray elem_array)
 {
   void* p = alloc().get_memory(sizeof(SptGateH));
@@ -1186,7 +1186,7 @@ SptFactory::new_GateH(const FileRegion& file_region,
 // @return 生成された gate instance 文のヘッダ
 const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      const PtStrength* strength,
 		      PtInstArray elem_array)
 {
@@ -1205,7 +1205,7 @@ SptFactory::new_GateH(const FileRegion& file_region,
 // @return 生成された gate instance 文のヘッダ
 const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      const PtDelay* delay,
 		      PtInstArray elem_array)
 {
@@ -1225,7 +1225,7 @@ SptFactory::new_GateH(const FileRegion& file_region,
 // @return 生成された gate instance 文のヘッダ
 const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      const PtStrength* strength,
 		      const PtDelay* delay,
 		      PtInstArray elem_array)

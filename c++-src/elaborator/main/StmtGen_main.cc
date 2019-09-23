@@ -369,10 +369,10 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
     return nullptr;
   }
 
-  tVpiObjType type = handle->type();
-  if ( type != kVpiNamedBegin &&
-       type != kVpiNamedFork &&
-       type != kVpiTask ) {
+  VpiObjType type = handle->type();
+  if ( type != VpiObjType::NamedBegin &&
+       type != VpiObjType::NamedFork &&
+       type != VpiObjType::Task ) {
     ostringstream buf;
     buf << handle->full_name()
 	<< " : Not a named block, nor a task.";
@@ -418,7 +418,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 		    buf.str());
     return nullptr;
   }
-  if ( cell->type() != kVpiTask ) {
+  if ( cell->type() != VpiObjType::Task ) {
     ostringstream buf;
     buf << expand_full_name(nb_array, name) << " : Not a task.";
     MsgMgr::put_msg(__FILE__, __LINE__,

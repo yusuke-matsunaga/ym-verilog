@@ -574,9 +574,9 @@ TagDict::find_decl_list(const VlNamedObj* parent,
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    if ( tag == kVpiParameter || tag == kVpiSpecParam ) {
-      for (const ElbParameter* obj = cell->parameter();
-	   obj; obj = obj->next()) {
+    if ( tag == vpiParameter || tag == vpiSpecParam ) {
+      for ( const ElbParameter* obj = cell->parameter();
+	    obj; obj = obj->next() ) {
 	obj_list.push_back(obj);
       }
     }

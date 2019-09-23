@@ -78,9 +78,9 @@ Parser::new_Module1995(const FileRegion& file_region,
   bool is_protected = false; // これどうやって決めるの？
   int time_u = state->time_unit();
   int time_p = state->time_precision();
-  tVpiNetType nettype = state->default_nettype();
-  tVpiUnconnDrive unconn = state->unconnected_drive();
-  tVpiDefDelayMode delay = state->delay_mode();
+  VpiNetType nettype = state->default_nettype();
+  VpiUnconnDrive unconn = state->unconnected_drive();
+  VpiDefDelayMode delay = state->delay_mode();
   int decay = state->default_decay_time();
 
 #if 0 // VERIFAULT
@@ -110,14 +110,14 @@ Parser::new_Module1995(const FileRegion& file_region,
   // 入出力ポート宣言に現れる名前を iodecl_names に入れる．
   // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
   // 持たない場合にはデフォルトタイプのネットを生成する．
-  unordered_map<string, tVlDirection> iodecl_dirs;
+  unordered_map<string, VpiDir> iodecl_dirs;
   for ( auto io_head: iohead_array ) {
     // 名前をキーにして方向を記録しておく
-    tVlDirection dir = kVlNoDirection;
+    VpiDir dir = VpiDir::NoDirection;
     switch ( io_head->type() ) {
-    case kPtIO_Input:  dir = kVlInput; break;
-    case kPtIO_Output: dir = kVlOutput; break;
-    case kPtIO_Inout:  dir = kVlInout; break;
+    case kPtIO_Input:  dir = VpiDir::Input; break;
+    case kPtIO_Output: dir = VpiDir::Output; break;
+    case kPtIO_Inout:  dir = VpiDir::Inout; break;
     default:
       ASSERT_NOT_REACHED;
     }
@@ -176,7 +176,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 			buf.str());
       }
       else {
-	tVlDirection dir = iodecl_dirs.at(name);
+	VpiDir dir = iodecl_dirs.at(name);
 	port->_set_portref_dir(j, dir);
       }
     }
@@ -221,9 +221,9 @@ Parser::new_Module2001(const FileRegion& file_region,
   bool is_protected = false; // これどうやって決めるの？
   int time_u = state->time_unit();
   int time_p = state->time_precision();
-  tVpiNetType nettype = state->default_nettype();
-  tVpiUnconnDrive unconn = state->unconnected_drive();
-  tVpiDefDelayMode delay = state->delay_mode();
+  VpiNetType nettype = state->default_nettype();
+  VpiUnconnDrive unconn = state->unconnected_drive();
+  VpiDefDelayMode delay = state->delay_mode();
   int decay = state->default_decay_time();
 
 #if 0 // VERIFAULT

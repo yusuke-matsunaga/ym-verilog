@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] opr2 オペランド
 ElbExpr*
 EiFactory::new_TernaryOp(const PtExpr* pt_expr,
-			 tVlOpType op_type,
+			 VpiOpType op_type,
 			 ElbExpr* opr0,
 			 ElbExpr* opr1,
 			 ElbExpr* opr2)
@@ -35,12 +35,12 @@ EiFactory::new_TernaryOp(const PtExpr* pt_expr,
   ElbExpr* expr = nullptr;
   void* p;
   switch ( op_type ) {
-  case kVlConditionOp:
+  case VpiOpType::Condition:
     p = mAlloc.get_memory(sizeof(EiConditionOp));
     expr = new (p) EiConditionOp(pt_expr, opr0, opr1, opr2);
     break;
 
-  case kVlMinTypMaxOp:
+  case VpiOpType::MinTypMax:
     p = mAlloc.get_memory(sizeof(EiMinTypMaxOp));
     expr = new (p) EiMinTypMaxOp(pt_expr, opr0, opr1, opr2);
     break;
@@ -66,11 +66,9 @@ EiTernaryOp::EiTernaryOp(const PtExpr* pt_expr,
 			 ElbExpr* opr1,
 			 ElbExpr* opr2,
 			 ElbExpr* opr3) :
-  EiOperation(pt_expr)
+  EiOperation(pt_expr),
+  mOpr{opr1, opr2, opr3}
 {
-  mOpr[0] = opr1;
-  mOpr[1] = opr2;
-  mOpr[2] = opr3;
 }
 
 // @brief デストラクタ
@@ -89,7 +87,7 @@ EiTernaryOp::is_const() const
 }
 
 // @brief オペランド数を返す．
-int
+SizeType
 EiTernaryOp::operand_num() const
 {
   return 3;
@@ -98,7 +96,7 @@ EiTernaryOp::operand_num() const
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 ElbExpr*
-EiTernaryOp::_operand(int pos) const
+EiTernaryOp::_operand(SizeType pos) const
 {
   return mOpr[pos];
 }

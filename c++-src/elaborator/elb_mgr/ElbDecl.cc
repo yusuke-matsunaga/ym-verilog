@@ -32,20 +32,20 @@ ElbDeclHead::~ElbDeclHead()
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
 // @note このクラスでは kVpiVarNone を返す．
-tVpiVarType
+VpiVarType
 ElbDeclHead::data_type() const
 {
-  return kVpiVarNone;
+  return VpiVarType::None;
 }
 
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
 // @note このクラスでは kVpiNone を返す．
-tVpiNetType
+VpiNetType
 ElbDeclHead::net_type() const
 {
-  return kVpiNone;
+  return VpiNetType::None;
 }
 
 // @brief vectored|scalared 属性の取得
@@ -53,40 +53,40 @@ ElbDeclHead::net_type() const
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
 // @note このクラスでは kVpiNsNone を返す．
-tVpiVsType
+VpiVsType
 ElbDeclHead::vs_type() const
 {
-  return kVpiVsNone;
+  return VpiVsType::None;
 }
 
 // @brief drive0 strength の取得
 // @retval 0 の強度
 // @retval kVpiNoStrength strength の指定なし
 // @note このクラスでは kVpiNoStrength を返す．
-tVpiStrength
+VpiStrength
 ElbDeclHead::drive0() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief drive1 strength の取得
 // @retval 1 の強度
 // @retval kVpiNoStrength strength の指定なし
 // @note このクラスでは kVpiNoStrength を返す．
-tVpiStrength
+VpiStrength
 ElbDeclHead::drive1() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief charge strength の取得
 // @retval 電荷の強度
 // @retval kVpiNoStrength strength の指定なし
 // @note このクラスでは kVpiNoStrength を返す．
-tVpiStrength
+VpiStrength
 ElbDeclHead::charge() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief delay の取得

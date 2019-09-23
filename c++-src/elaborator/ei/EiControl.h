@@ -63,14 +63,14 @@ public:
 
   /// @brief イベント条件式の数を返す．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   event_num() const override;
 
   /// @brief イベント条件式を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
   /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  event(int pos) const override;
+  event(SizeType pos) const override;
 
 
 private:
@@ -114,7 +114,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -171,7 +171,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -181,13 +181,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief イベント条件式の数を返す．
-  int
+  SizeType
   event_num() const override;
 
   /// @brief イベント条件式を返す．
   /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
   const VlExpr*
-  event(int pos) const override;
+  event(SizeType pos) const override;
 
 
 private:
@@ -196,7 +196,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // イベントリストの要素数
-  int mEventNum;
+  SizeType mEventNum;
 
   // イベントリスト
   ElbExpr** mEventList;
@@ -236,7 +236,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 

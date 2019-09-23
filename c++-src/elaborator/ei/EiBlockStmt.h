@@ -38,7 +38,7 @@ protected:
   EiBlockStmt(const VlNamedObj* parent,
 	      ElbProcess* process,
 	      const PtStmt* pt_stmt,
-	      int stmt_num,
+	      SizeType stmt_num,
 	      ElbStmt** array);
 
   /// @brief デストラクタ
@@ -51,7 +51,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 子供のステートメントのリストの要素数を返す．
-  int
+  SizeType
   child_stmt_num() const override;
 
 
@@ -63,7 +63,7 @@ public:
   /// @brief 子供のステートメントを返す．
   /// @param[in] pos 位置番号
   ElbStmt*
-  _child_stmt(int pos) const override;
+  _child_stmt(SizeType pos) const override;
 
 
 private:
@@ -72,7 +72,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ステートメント数
-  int mStmtNum;
+  SizeType mStmtNum;
 
   // ステートメントのリスト
   ElbStmt** mStmtList;
@@ -101,7 +101,7 @@ private:
   EiBegin(const VlNamedObj* parent,
 	  ElbProcess* process,
 	  const PtStmt* pt_stmt,
-	  int stmt_num,
+	  SizeType stmt_num,
 	  ElbStmt** array);
 
   /// @brief デストラクタ
@@ -114,7 +114,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -141,7 +141,7 @@ private:
   EiFork(const VlNamedObj* parent,
 	 ElbProcess* process,
 	 const PtStmt* pt_stmt,
-	 int stmt_num,
+	 SizeType stmt_num,
 	 ElbStmt** array);
 
   /// @brief デストラクタ
@@ -154,7 +154,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -179,7 +179,7 @@ protected:
   /// @param[in] array ステートメントのリスト用配列
   EiNamedBlockStmt(const VlNamedObj* block,
 		   ElbProcess* process,
-		   int stmt_num,
+		   SizeType stmt_num,
 		   ElbStmt** array);
 
   /// @brief デストラクタ
@@ -210,7 +210,7 @@ public:
   scope() const override;
 
   /// @brief 子供ののステートメントのリストの要素数を返す．
-  int
+  SizeType
   child_stmt_num() const override;
 
 
@@ -222,7 +222,7 @@ public:
   /// @brief 子供のステートメントを返す．
   /// @param[in] pos 位置番号
   ElbStmt*
-  _child_stmt(int pos) const override;
+  _child_stmt(SizeType pos) const override;
 
 
 private:
@@ -237,7 +237,7 @@ private:
   ElbProcess* mProcess;
 
   // ステートメント数
-  int mStmtNum;
+  SizeType mStmtNum;
 
   // ステートメントのリスト
   ElbStmt** mStmtList;
@@ -264,7 +264,7 @@ private:
   /// @param[in] array ステートメントのリスト用配列
   EiNamedBegin(const VlNamedObj* block,
 	       ElbProcess* process,
-	       int stmt_num,
+	       SizeType stmt_num,
 	       ElbStmt** array);
 
   /// @brief デストラクタ
@@ -277,7 +277,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };
@@ -302,7 +302,7 @@ private:
   /// @param[in] array ステートメントのリスト用配列
   EiNamedFork(const VlNamedObj* block,
 	      ElbProcess* process,
-	      int stmt_num,
+	      SizeType stmt_num,
 	      ElbStmt** array);
 
   /// @brief デストラクタ
@@ -315,7 +315,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 };

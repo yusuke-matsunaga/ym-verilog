@@ -37,7 +37,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
 
@@ -51,7 +51,7 @@ public:
   is_operation() const override;
 
   /// @brief 演算子のタイプを返す．
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
 };

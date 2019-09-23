@@ -78,10 +78,10 @@ EiGenBlock::~EiGenBlock()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiGenBlock::type() const
 {
-  return kVpiScope;
+  return VpiObjType::Scope;
 }
 
 // @brief ファイル位置の取得
@@ -126,10 +126,10 @@ EiGfRoot::~EiGfRoot()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiGfRoot::type() const
 {
-  return kVpiScope;
+  return VpiObjType::Scope;
 }
 
 // @brief ファイル位置の取得

@@ -40,7 +40,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -95,7 +95,7 @@ class EiAttrList :
 private:
 
   /// @brief コンストラクタ
-  EiAttrList(int n,
+  EiAttrList(SizeType n,
 	     EiAttribute* array);
 
   /// @brief デストラクタ
@@ -108,13 +108,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数を返す．
-  int
+  SizeType
   size() const override;
 
   /// @brief 内容を返す．
   /// @param[in] pos 位置番号 (0 <= pos < size() )
   VlAttribute*
-  elem(int pos) const override;
+  elem(SizeType pos) const override;
 
 
 public:
@@ -128,7 +128,7 @@ public:
   /// @param[in] expr 値を表す式
   /// @param[in] def 定義側の属性のとき true とするフラグ
   void
-  set(int pos,
+  set(SizeType pos,
       const PtAttrSpec* pt_as,
       ElbExpr* expr,
       bool def) override;
@@ -140,7 +140,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素数
-  int mSize;
+  SizeType mSize;
 
   // 要素の配列
   EiAttribute* mArray;

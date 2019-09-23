@@ -125,7 +125,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
       error_no_such_function(pt_expr);
       return nullptr;
     }
-    if ( handle->type() != kVpiFunction ) {
+    if ( handle->type() != VpiObjType::Function ) {
       error_not_a_function(pt_expr);
       return nullptr;
     }

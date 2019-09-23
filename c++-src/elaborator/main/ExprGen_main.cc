@@ -55,7 +55,7 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
-	  pt_expr->op_type() == kVlNullOp ) {
+	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
@@ -115,15 +115,15 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
-	  pt_expr->op_type() == kVlNullOp ) {
+	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
   case kPtOprExpr:
     switch ( pt_expr->op_type() ) {
-    case kVlPosedgeOp:
-    case kVlNegedgeOp:
+    case VpiOpType::Posedge:
+    case VpiOpType::Negedge:
       { // これのみがイベント式の特徴
 	ASSERT_COND(pt_expr->operand_num() == 1 );
 	ElbExpr* opr0 = instantiate_expr(parent, env, pt_expr->operand0());
@@ -193,7 +193,7 @@ ExprGen::instantiate_arg(const VlNamedObj* parent,
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
-	  pt_expr->op_type() == kVlNullOp ) {
+	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
@@ -219,7 +219,7 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
   switch ( pt_expr->type() ) {
   case kPtOprExpr:
     // 左辺では concatination しか適当でない．
-    if ( pt_expr->op_type() == kVlConcatOp ) {
+    if ( pt_expr->op_type() == VpiOpType::Concat ) {
       vector<ElbExpr*> elem_array;
       SizeType opr_size = pt_expr->operand_num();
       ElbExpr** opr_list = factory().new_ExprList(opr_size);
@@ -297,7 +297,7 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
   switch ( pt_expr->type() ) {
   case kPtOprExpr:
     // 左辺では concatination しか適当でない．
-    if ( pt_expr->op_type() == kVlConcatOp ) {
+    if ( pt_expr->op_type() == VpiOpType::Concat ) {
       SizeType opr_size = pt_expr->operand_num();
       ElbExpr** opr_list = factory().new_ExprList(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
@@ -457,7 +457,7 @@ ExprGen::evaluate_expr(const VlNamedObj* parent,
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == kPtOprExpr &&
-	  pt_expr->op_type() == kVlNullOp ) {
+	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
@@ -498,40 +498,40 @@ ExprGen::evaluate_const(const VlNamedObj* parent,
   bool is_signed = false;
   SizeType base = 0;
   switch ( pt_expr->const_type() ) {
-  case kVpiIntConst:
+  case VpiConstType::Int:
     if ( pt_expr->const_str() == nullptr ) {
       return VlValue(static_cast<int>(pt_expr->const_uint()));
     }
     break;
 
-  case kVpiRealConst:
+  case VpiConstType::Real:
     return VlValue(pt_expr->const_real());
 
-  case kVpiSignedBinaryConst:
+  case VpiConstType::SignedBinary:
     is_signed = true;
-  case kVpiBinaryConst:
+  case VpiConstType::Binary:
     base = 2;
     break;
 
-  case kVpiSignedOctConst:
+  case VpiConstType::SignedOct:
     is_signed = true;
-  case kVpiOctConst:
+  case VpiConstType::Oct:
     base = 8;
     break;
 
-  case kVpiSignedDecConst:
+  case VpiConstType::SignedDec:
     is_signed = true;
-  case kVpiDecConst:
+  case VpiConstType::Dec:
     base = 10;
     break;
 
-  case kVpiSignedHexConst:
+  case VpiConstType::SignedHex:
     is_signed = true;
-  case kVpiHexConst:
+  case VpiConstType::Hex:
     base = 16;
     break;
 
-  case kVpiStringConst:
+  case VpiConstType::String:
     return VlValue(BitVector(pt_expr->const_str()));
 
   default:

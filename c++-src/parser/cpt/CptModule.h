@@ -38,9 +38,9 @@ private:
 	    bool is_protected,
 	    int time_unit,
 	    int time_precision,
-	    tVpiNetType net_type,
-	    tVpiUnconnDrive unconn,
-	    tVpiDefDelayMode delay,
+	    VpiNetType net_type,
+	    VpiUnconnDrive unconn,
+	    VpiDefDelayMode delay,
 	    int decay,
 	    bool explicit_name,
 	    bool portfaults,
@@ -92,15 +92,15 @@ public:
   time_precision() const override;
 
   /// @brief default net type の取得
-  tVpiNetType
+  VpiNetType
   nettype() const override;
 
   /// @brief unconnected drive の取得
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconn_drive() const override;
 
   /// @brief default delay mode の取得
-  tVpiDefDelayMode
+  VpiDefDelayMode
   delay_mode() const override;
 
   /// @brief default decay time の取得
@@ -290,7 +290,7 @@ public:
 
   /// @brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  tVlDirection
+  VpiDir
   portref_dir(int pos) const override;
 
 
@@ -304,7 +304,7 @@ public:
   /// @param[in] dir 方向
   void
   _set_portref_dir(int pos,
-		   tVlDirection dir) override;
+		   VpiDir dir) override;
 
 
 private:
@@ -360,7 +360,7 @@ public:
 
   ///@brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  tVlDirection
+  VpiDir
   portref_dir(int pos) const override;
 
 
@@ -374,7 +374,7 @@ public:
   /// @param[in] dir 方向
   void
   _set_portref_dir(int pos,
-		   tVlDirection dir) override;
+		   VpiDir dir) override;
 
 
 private:
@@ -386,7 +386,7 @@ private:
   const PtExpr* mPortRef;
 
   // 方向
-  tVlDirection mDir;
+  VpiDir mDir;
 
 };
 
@@ -405,7 +405,7 @@ private:
   CptPort2(const FileRegion& file_region,
 	   const PtExpr* portref,
 	   PtExprArray portref_array,
-	   tVlDirection* dir_array,
+	   VpiDir* dir_array,
 	   const char* ext_name);
 
   /// @brief デストラクタ
@@ -428,7 +428,7 @@ public:
 
   ///@brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  tVlDirection
+  VpiDir
   portref_dir(int pos) const override;
 
 
@@ -442,7 +442,7 @@ public:
   /// @param[in] dir 方向
   void
   _set_portref_dir(int pos,
-		   tVlDirection dir) override;
+		   VpiDir dir) override;
 
 
 private:
@@ -457,7 +457,7 @@ private:
   PtExprArray mPortRefArray;
 
   // 方向の配列
-  tVlDirection* mDirArray;
+  VpiDir* mDirArray;
 
 };
 

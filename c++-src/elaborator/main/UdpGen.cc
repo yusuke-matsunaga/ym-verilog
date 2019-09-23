@@ -66,7 +66,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   SizeType io_size = pt_udp->port_list().size();
 
   SizeType isize = io_size - 1;
-  tVpiPrimType ptype = pt_udp->prim_type();
+  VpiPrimType ptype = pt_udp->prim_type();
   bool is_protected = true; // 何これ?
 
   ElbUdpDefn* udp = factory().new_UdpDefn(pt_udp, is_protected);
@@ -108,7 +108,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   }
   if ( pt_init_value ) {
     // このチェックはパース時に済んでいるはずなので念のため．
-    ASSERT_COND(ptype == kVpiSeqPrim );
+    ASSERT_COND(ptype == VpiPrimType::Seq );
 
     const FileRegion& ifr = pt_init_value->file_region();
 
@@ -128,7 +128,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   // テーブルの中身を作る．
   // 似た様なことをしているが単純にするために組合わせ回路と順序回路を
   // 分ける．
-  if ( ptype == kVpiCombPrim ) {
+  if ( ptype == VpiPrimType::Comb ) {
     // 組合わせ回路
 
     // 一行のサイズは入出力数と一致する．

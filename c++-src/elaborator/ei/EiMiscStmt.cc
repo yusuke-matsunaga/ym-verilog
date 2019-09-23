@@ -164,10 +164,10 @@ EiEventStmt::~EiEventStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiEventStmt::type() const
 {
-  return kVpiEventStmt;
+  return VpiObjType::EventStmt;
 }
 
 // @brief named event を返す．
@@ -199,10 +199,10 @@ EiNullStmt::~EiNullStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiNullStmt::type() const
 {
-  return kVpiNullStmt;
+  return VpiObjType::NullStmt;
 }
 
 
@@ -233,7 +233,7 @@ EiTcBase::~EiTcBase()
 }
 
 // @brief 引数の数を返す．
-int
+SizeType
 EiTcBase::arg_num() const
 {
   return mArgumentNum;
@@ -241,7 +241,7 @@ EiTcBase::arg_num() const
 
 // @brief 引数の取得
 const VlExpr*
-EiTcBase::arg(int pos) const
+EiTcBase::arg(SizeType pos) const
 {
   return mArgumentList[pos];
 }
@@ -250,7 +250,7 @@ EiTcBase::arg(int pos) const
 // @param[in] pos 位置番号
 // @param[in] arg 設定する引数
 void
-EiTcBase::set_argument(int pos,
+EiTcBase::set_argument(SizeType pos,
 		       ElbExpr* arg)
 {
   mArgumentList[pos] = arg;
@@ -285,10 +285,10 @@ EiTaskCall::~EiTaskCall()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiTaskCall::type() const
 {
-  return kVpiTaskCall;
+  return VpiObjType::TaskCall;
 }
 
 // @brief task の実体を返す．
@@ -327,10 +327,10 @@ EiSysTaskCall::~EiSysTaskCall()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiSysTaskCall::type() const
 {
-  return kVpiSysTaskCall;
+  return VpiObjType::SysTaskCall;
 }
 
 // @brief user systf クラスへのポインタを返す．
@@ -365,10 +365,10 @@ EiDisableStmt::~EiDisableStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiDisableStmt::type() const
 {
-  return kVpiDisable;
+  return VpiObjType::Disable;
 }
 
 // @brief expr を返す．
@@ -410,7 +410,7 @@ EiCtrlStmt::~EiCtrlStmt()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiCtrlStmt::type() const
 {
   return mControl->type();

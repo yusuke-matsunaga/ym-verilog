@@ -108,15 +108,15 @@ public:
   time_precision() const;
 
   /// @brief default net type を返す．
-  tVpiNetType
+  VpiNetType
   def_net_type() const;
 
   /// @brief unconnected drive を返す．
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconn_drive() const;
 
   /// @brief default delay mode を返す．
-  tVpiDefDelayMode
+  VpiDefDelayMode
   def_delay_mode() const;
 
   /// @brief default decay time を返す．
@@ -185,7 +185,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -245,15 +245,15 @@ public:
   time_precision() const override;
 
   /// @brief default net type を返す．
-  tVpiNetType
+  VpiNetType
   def_net_type() const override;
 
   /// @brief unconnected drive を返す．
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconn_drive() const override;
 
   /// @brief default delay mode を返す．
-  tVpiDefDelayMode
+  VpiDefDelayMode
   def_delay_mode() const override;
 
   /// @brief default decay time を返す．
@@ -273,23 +273,23 @@ public:
   cell() const override;
 
   /// @brief ポート数を返す．
-  int
+  SizeType
   port_num() const override;
 
   /// @brief ポートの取得
   /// @param[in] pos 取得するポートの位置 (0 <= pos < port_num())
   /// @return pos 番目のポートを返す．
   const VlPort*
-  port(int pos) const override;
+  port(SizeType pos) const override;
 
   /// @brief 入出力数を得る．
-  int
+  SizeType
   io_num() const override;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   const VlIODecl*
-  io(int pos) const override;
+  io(SizeType pos) const override;
 
 
 public:
@@ -318,7 +318,7 @@ public:
   init_port(int index,
 	    const PtPort* pt_port,
 	    ElbExpr* low_conn,
-	    tVlDirection dir) override;
+	    VpiDir dir) override;
 
   /// @brief ポートの high_conn を接続する．
   /// @param[in] index ポート番号
@@ -571,7 +571,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -615,13 +615,13 @@ public:
   right_range_string() const override;
 
   /// @brief 要素数を返す．
-  int
+  SizeType
   elem_num() const override;
 
   /// @brief 要素を返す．
   /// @param[in] offset 位置番号 (0 <= offset < elem_num())
   const VlModule*
-  elem_by_offset(int offset) const override;
+  elem_by_offset(SizeType offset) const override;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス

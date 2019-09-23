@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // コンストラクタ
 SptSpecItem::SptSpecItem(const FileRegion& file_region,
-			 tVpiSpecItemType id,
+			 VpiSpecItemType id,
 			 PtExprArray terminal_array) :
   SptItem{file_region, kPtItem_SpecItem},
   mId{id},
@@ -33,7 +33,7 @@ SptSpecItem::~SptSpecItem()
 }
 
 // specify block item の種類の取得
-tVpiSpecItemType
+VpiSpecItemType
 SptSpecItem::specitem_type() const
 {
   return mId;
@@ -53,7 +53,7 @@ SptSpecItem::terminal_list() const
 
 // コンストラクタ
 SptSpecPath::SptSpecPath(const FileRegion& file_region,
-			 tVpiSpecPathType id,
+			 VpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl) :
   SptItem{file_region, kPtItem_SpecPath},
@@ -69,7 +69,7 @@ SptSpecPath::~SptSpecPath()
 }
 
 // specify block path の種類の取得
-tVpiSpecPathType
+VpiSpecPathType
 SptSpecPath::specpath_type() const
 {
   return mId;
@@ -99,7 +99,7 @@ SptPathDecl::SptPathDecl(const FileRegion& file_region,
 			 int edge,
 			 PtExprArray input_array,
 			 int input_pol,
-			 int op,
+			 VpiPathType op,
 			 PtExprArray output_array,
 			 int output_pol,
 			 const PtExpr* expr,
@@ -152,7 +152,7 @@ SptPathDecl::input_pol() const
 }
 
 // パス記述子(?)を得る．vpiParallel か vpiFull
-int
+VpiPathType
 SptPathDecl::op() const
 {
   return mOp;
@@ -295,7 +295,7 @@ SptPathDelay::value(SizeType pos) const
 // @return 生成された specify block item
 const PtItem*
 SptFactory::new_SpecItem(const FileRegion& file_region,
-			 tVpiSpecItemType id,
+			 VpiSpecItemType id,
 			 PtExprArray terminal_array)
 {
   void* p = alloc().get_memory(sizeof(SptSpecItem));
@@ -310,7 +310,7 @@ SptFactory::new_SpecItem(const FileRegion& file_region,
 // @return 生成された spec path
 const PtItem*
 SptFactory::new_SpecPath(const FileRegion& file_region,
-			 tVpiSpecPathType id,
+			 VpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl)
 {
@@ -334,7 +334,7 @@ SptFactory::new_PathDecl(const FileRegion& file_region,
 			 int edge,
 			 PtExprArray input_array,
 			 int input_pol,
-			 int op,
+			 VpiPathType op,
 			 PtExprArray output_array,
 			 int output_pol,
 			 const PtExpr* expr,

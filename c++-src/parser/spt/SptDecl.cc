@@ -25,13 +25,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param left 範囲の左側の式
 // @param right 範囲の右側の式
 // net_type と var_type は両方同時に指定されることはない．
-// 少なくとも一つは kVpiNone(net_type) か kVpiVarNone(var_type)
+// 少なくとも一つは kVpiNone(net_type) か VpiVarType::None(var_type)
 // になっていなければならない．
 SptIOHead::SptIOHead(const FileRegion& file_region,
 		     tPtIOType type,
-		     tVpiAuxType aux_type,
-		     tVpiNetType net_type,
-		     tVpiVarType var_type,
+		     VpiAuxType aux_type,
+		     VpiNetType net_type,
+		     VpiVarType var_type,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right) :
@@ -69,7 +69,7 @@ SptIOHead::type() const
 
 // 補助的な型の取得
 // @return 補助的な型
-tVpiAuxType
+VpiAuxType
 SptIOHead::aux_type() const
 {
   return mAuxType;
@@ -77,7 +77,7 @@ SptIOHead::aux_type() const
 
 // 補助的なネット型の取得
 // @return ネット型
-tVpiNetType
+VpiNetType
 SptIOHead::net_type() const
 {
   return mNetType;
@@ -85,7 +85,7 @@ SptIOHead::net_type() const
 
 // 補助的な変数型の取得
 // @return 変数型
-tVpiVarType
+VpiVarType
 SptIOHead::var_type() const
 {
   return mVarType;
@@ -203,9 +203,9 @@ SptDeclHead::SptDeclHead(const FileRegion& file_region,
 			 bool sign,
 			 const PtExpr* left,
 			 const PtExpr* right,
-			 tVpiVarType var_type,
-			 tVpiNetType net_type,
-			 tVpiVsType vs_type,
+			 VpiVarType var_type,
+			 VpiNetType net_type,
+			 VpiVsType vs_type,
 			 const PtStrength* strength,
 			 const PtDelay* delay) :
   mFileRegion{file_region},
@@ -271,8 +271,8 @@ SptDeclHead::right_range() const
 
 // データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
-tVpiVarType
+// @retval VpiVarType::None 上記以外
+VpiVarType
 SptDeclHead::data_type() const
 {
   return mVarType;
@@ -281,7 +281,7 @@ SptDeclHead::data_type() const
 // net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+VpiNetType
 SptDeclHead::net_type() const
 {
   return mNetType;
@@ -291,7 +291,7 @@ SptDeclHead::net_type() const
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 SptDeclHead::vs_type() const
 {
   return mVsType;
@@ -457,8 +457,8 @@ SptFactory::new_IOHead(const FileRegion& file_region,
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxNone,
-			   kVpiNone, kVpiVarNone,
+			   type, VpiAuxType::None, VpiNetType::None,
+			   VpiVarType::None,
 			   sign, nullptr, nullptr);
 }
 
@@ -474,8 +474,8 @@ SptFactory::new_RegIOHead(const FileRegion& file_region,
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxReg,
-			   kVpiNone, kVpiVarNone,
+			   type, VpiAuxType::Reg, VpiNetType::None,
+			   VpiVarType::None,
 			   sign, nullptr, nullptr);
 }
 
@@ -488,13 +488,13 @@ SptFactory::new_RegIOHead(const FileRegion& file_region,
 PtiIOHead*
 SptFactory::new_NetIOHead(const FileRegion& file_region,
 			  tPtIOType type,
-			  tVpiNetType net_type,
+			  VpiNetType net_type,
 			  bool sign)
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxNet,
-			   net_type, kVpiVarNone,
+			   type, VpiAuxType::Net, net_type,
+			   VpiVarType::None,
 			   sign, nullptr, nullptr);
 }
 
@@ -506,12 +506,12 @@ SptFactory::new_NetIOHead(const FileRegion& file_region,
 PtiIOHead*
 SptFactory::new_VarIOHead(const FileRegion& file_region,
 			  tPtIOType type,
-			  tVpiVarType var_type)
+			  VpiVarType var_type)
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxVar,
-			   kVpiNone, var_type,
+			   type, VpiAuxType::Var, VpiNetType::None,
+			   var_type,
 			   false, nullptr, nullptr);
 }
 
@@ -531,8 +531,8 @@ SptFactory::new_IOHead(const FileRegion& file_region,
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxNone,
-			   kVpiNone, kVpiVarNone,
+			   type, VpiAuxType::None, VpiNetType::None,
+			   VpiVarType::None,
 			   sign, left, right);
 }
 
@@ -552,8 +552,8 @@ SptFactory::new_RegIOHead(const FileRegion& file_region,
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxReg,
-			   kVpiNone, kVpiVarNone,
+			   type, VpiAuxType::Reg, VpiNetType::None,
+			   VpiVarType::None,
 			   sign, left, right);
 }
 
@@ -568,15 +568,15 @@ SptFactory::new_RegIOHead(const FileRegion& file_region,
 PtiIOHead*
 SptFactory::new_NetIOHead(const FileRegion& file_region,
 			  tPtIOType type,
-			  tVpiNetType net_type,
+			  VpiNetType net_type,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right)
 {
   void* p = alloc().get_memory(sizeof(SptIOHead));
   return new (p) SptIOHead(file_region,
-			   type, kVpiAuxNet,
-			   net_type, kVpiVarNone,
+			   type, VpiAuxType::Net, net_type,
+			   VpiVarType::None,
 			   sign, left, right);
 }
 
@@ -621,7 +621,7 @@ SptFactory::new_ParamH(const FileRegion& file_region)
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Param,
 			     false, nullptr, nullptr,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -641,7 +641,7 @@ SptFactory::new_ParamH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Param,
 			     sign, left, right,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -651,13 +651,13 @@ SptFactory::new_ParamH(const FileRegion& file_region,
 // @return 生成されたパラメータ
 PtiDeclHead*
 SptFactory::new_ParamH(const FileRegion& file_region,
-		       tVpiVarType var_type)
+		       VpiVarType var_type)
 {
   void* p = alloc().get_memory(sizeof(SptDeclHead));
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Param,
 			     false, nullptr, nullptr,
-			     var_type, kVpiNone, kVpiVsNone,
+			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -671,7 +671,7 @@ SptFactory::new_LocalParamH(const FileRegion& file_region)
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_LocalParam,
 			     false, nullptr, nullptr,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -691,7 +691,7 @@ SptFactory::new_LocalParamH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_LocalParam,
 			     sign, left, right,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -701,13 +701,13 @@ SptFactory::new_LocalParamH(const FileRegion& file_region,
 // @return 生成された localparam
 PtiDeclHead*
 SptFactory::new_LocalParamH(const FileRegion& file_region,
-			    tVpiVarType var_type)
+			    VpiVarType var_type)
 {
   void* p = alloc().get_memory(sizeof(SptDeclHead));
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_LocalParam,
 			     false, nullptr, nullptr,
-			     var_type, kVpiNone, kVpiVsNone,
+			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -721,7 +721,7 @@ SptFactory::new_SpecParamH(const FileRegion& file_region)
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_SpecParam,
 			     false, nullptr, nullptr,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -739,7 +739,7 @@ SptFactory::new_SpecParamH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_SpecParam,
 			     false, left, right,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -753,7 +753,7 @@ SptFactory::new_EventH(const FileRegion& file_region)
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Event,
 			     false, nullptr, nullptr,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -767,7 +767,7 @@ SptFactory::new_GenvarH(const FileRegion& file_region)
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Genvar,
 			     false, nullptr, nullptr,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -777,14 +777,14 @@ SptFactory::new_GenvarH(const FileRegion& file_region)
 // @return 生成された変数
 PtiDeclHead*
 SptFactory::new_VarH(const FileRegion& file_region,
-		     tVpiVarType var_type)
+		     VpiVarType var_type)
 {
   void* p = alloc().get_memory(sizeof(SptDeclHead));
   bool sign = false;
   switch ( var_type ) {
-  case kVpiVarInteger:
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Integer:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     sign = true;
   default:
     break;
@@ -792,7 +792,7 @@ SptFactory::new_VarH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Var,
 			     sign, nullptr, nullptr,
-			     var_type, kVpiNone, kVpiVsNone,
+			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -808,7 +808,7 @@ SptFactory::new_RegH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Reg,
 			     sign, nullptr, nullptr,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -828,7 +828,7 @@ SptFactory::new_RegH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Reg,
 			     sign, left, right,
-			     kVpiVarNone, kVpiNone, kVpiVsNone,
+			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -839,14 +839,14 @@ SptFactory::new_RegH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign)
 {
   void* p = alloc().get_memory(sizeof(SptDeclHead));
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, nullptr, nullptr,
-			     kVpiVarNone, type, kVpiVsNone,
+			     VpiVarType::None, type, VpiVsType::None,
 			     nullptr, nullptr);
 }
 
@@ -858,7 +858,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign,
 		     const PtStrength* strength)
 {
@@ -866,7 +866,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, nullptr, nullptr,
-			     kVpiVarNone, type, kVpiVsNone,
+			     VpiVarType::None, type, VpiVsType::None,
 			     strength, nullptr);
 }
 
@@ -878,7 +878,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign,
 		     const PtDelay* delay)
 {
@@ -886,7 +886,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, nullptr, nullptr,
-			     kVpiVarNone, type, kVpiVsNone,
+			     VpiVarType::None, type, VpiVsType::None,
 			     nullptr, delay);
 }
 
@@ -899,7 +899,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign,
 		     const PtStrength* strength,
 		     const PtDelay* delay)
@@ -908,7 +908,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, nullptr, nullptr,
-			     kVpiVarNone, type, kVpiVsNone,
+			     VpiVarType::None, type, VpiVsType::None,
 			     strength, delay);
 }
 
@@ -923,8 +923,8 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right)
@@ -933,7 +933,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, left, right,
-			     kVpiVarNone, type, vstype,
+			     VpiVarType::None, type, vstype,
 			     nullptr, nullptr);
 }
 
@@ -948,8 +948,8 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -959,7 +959,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, left, right,
-			     kVpiVarNone, type, vstype,
+			     VpiVarType::None, type, vstype,
 			     strength, nullptr);
 }
 
@@ -974,8 +974,8 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -985,7 +985,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, left, right,
-			     kVpiVarNone, type, vstype,
+			     VpiVarType::None, type, vstype,
 			     nullptr, delay);
 }
 
@@ -1001,8 +1001,8 @@ SptFactory::new_NetH(const FileRegion& file_region,
 // @return 生成されたネット
 PtiDeclHead*
 SptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -1013,7 +1013,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
   return new (p) SptDeclHead(file_region,
 			     kPtDecl_Net,
 			     sign, left, right,
-			     kVpiVarNone, type, vstype,
+			     VpiVarType::None, type, vstype,
 			     strength, delay);
 }
 

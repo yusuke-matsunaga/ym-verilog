@@ -61,7 +61,7 @@ public:
   /// @param[in] def 定義側の属性のとき true とするフラグ
   virtual
   void
-  set(int pos,
+  set(SizeType pos,
       const PtAttrSpec* pt_as,
       ElbExpr* expr,
       bool def) = 0;

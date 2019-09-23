@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -53,11 +53,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力の区別を得る．
-  tVlDirection
+  VpiDir
   direction() const override;
 
   /// @brief ビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief 名前による接続を持つとき true を返す．
@@ -105,7 +105,7 @@ public:
        const PtPort* pt_port,
        int index,
        ElbExpr* low_conn,
-       tVlDirection dir);
+       VpiDir dir);
 
   /// @brief high_conn を接続する．
   void
@@ -134,7 +134,7 @@ private:
   ElbExpr* mLowConn;
 
   // 向き
-  tVlDirection mDirection;
+  VpiDir mDirection;
 
   // 名前による結合の時 true となるフラグ
   bool mConnByName;

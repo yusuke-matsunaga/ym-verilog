@@ -36,18 +36,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力の区別を得る．
-  /// @retval kVlInput 入力
-  /// @retval kVlOutput 出力
-  /// @retval kVlInout 入出力
-  /// @retval kVlMixedIO ビットごとに異なる混合タイプ
-  /// @retval kVlNoDirection 方向の属性なし．
+  /// @retval VpiDir::Input 入力
+  /// @retval VpiDir::Output 出力
+  /// @retval VpiDir::Inout 入出力
+  /// @retval VpiDir::MixedIO ビットごとに異なる混合タイプ
+  /// @retval VpiDir::NoDirection 方向の属性なし．
   virtual
-  tVlDirection
+  VpiDir
   direction() const = 0;
 
   /// @brief ビット幅を返す．
   virtual
-  int
+  SizeType
   bit_size() const = 0;
 
   /// @brief 名前による接続を持つとき true を返す．

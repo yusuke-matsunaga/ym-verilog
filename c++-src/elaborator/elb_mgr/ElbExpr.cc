@@ -42,7 +42,7 @@ ElbExpr::req_type() const
 }
 
 // @brief 式のビット幅を返す．
-int
+SizeType
 ElbExpr::bit_size() const
 {
   return value_type().size();

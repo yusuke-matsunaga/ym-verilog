@@ -45,7 +45,7 @@ public:
   obj() = 0;
 
   /// @brief オブジェクトの型を返す．
-  tVpiObjType
+  VpiObjType
   type();
 
   /// @brief ファイル位置の取得

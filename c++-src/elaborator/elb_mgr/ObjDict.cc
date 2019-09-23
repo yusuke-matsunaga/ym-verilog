@@ -38,7 +38,7 @@ ElbObjHandle::~ElbObjHandle()
 }
 
 // @brief オブジェクトの型を返す．
-tVpiObjType
+VpiObjType
 ElbObjHandle::type()
 {
   return obj()->type();

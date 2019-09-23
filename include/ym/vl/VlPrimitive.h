@@ -30,7 +30,7 @@ public:
 
   /// @brief primitive type を返す．
   virtual
-  tVpiPrimType
+  VpiPrimType
   prim_type() const = 0;
 
   /// @brief プリミティブの定義名を返す．
@@ -50,12 +50,12 @@ public:
 
   /// @brief 0 の強さを得る．
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const = 0;
 
   /// @brief 1 の強さを得る．
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const = 0;
 
   /// @brief 遅延式を得る．
@@ -85,14 +85,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  int
+  SizeType
   elem_num() const = 0;
 
   /// @brief 要素のプリミティブを返す．
   /// @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
   virtual
   const VlPrimitive*
-  elem_by_offset(int offset) const = 0;
+  elem_by_offset(SizeType offset) const = 0;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
@@ -117,7 +117,7 @@ public:
 
   /// @brief primitive type を返す．
   virtual
-  tVpiPrimType
+  VpiPrimType
   prim_type() const = 0;
 
   /// @brief プリミティブの定義名を返す．
@@ -138,12 +138,12 @@ public:
 
   /// @brief 0 の強さを得る．
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const = 0;
 
   /// @brief 1 の強さを得る．
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const = 0;
 
   /// @brief 遅延式を得る．
@@ -153,14 +153,14 @@ public:
 
   /// @brief ポート数を得る．
   virtual
-  int
+  SizeType
   port_num() const = 0;
 
   /// @brief ポート端子を得る．
   /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
   virtual
   const VlPrimTerm*
-  prim_term(int pos) const = 0;
+  prim_term(SizeType pos) const = 0;
 
 };
 
@@ -192,12 +192,12 @@ public:
 
   /// @brief 入出力の種類を返す．
   virtual
-  tVlDirection
+  VpiDir
   direction() const = 0;
 
   /// @brief 端子番号を返す．
   virtual
-  int
+  SizeType
   term_index() const = 0;
 
   /// @brief 接続しているネットを表す式を返す．

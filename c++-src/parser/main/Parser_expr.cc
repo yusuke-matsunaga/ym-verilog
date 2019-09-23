@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @return 生成された演算子
 const PtExpr*
 Parser::new_Opr(const FileRegion& fr,
-		tVlOpType type,
+		VpiOpType type,
 		const PtExpr* opr,
 		PtrList<const PtAttrInst>* ai_list)
 {
@@ -38,7 +38,7 @@ Parser::new_Opr(const FileRegion& fr,
 // @return 生成された演算子
 const PtExpr*
 Parser::new_Opr(const FileRegion& fr,
-		tVlOpType type,
+		VpiOpType type,
 		const PtExpr* opr1,
 		const PtExpr* opr2,
 		PtrList<const PtAttrInst>* ai_list)
@@ -57,7 +57,7 @@ Parser::new_Opr(const FileRegion& fr,
 // @return 生成された演算子
 const PtExpr*
 Parser::new_Opr(const FileRegion& fr,
-		tVlOpType type,
+		VpiOpType type,
 		const PtExpr* opr1,
 		const PtExpr* opr2,
 		const PtExpr* opr3,
@@ -141,7 +141,7 @@ Parser::new_Primary(const FileRegion& fr,
 const PtExpr*
 Parser::new_Primary(const FileRegion& fr,
 		    const char* name,
-		    tVpiRangeMode mode,
+		    VpiRangeMode mode,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
@@ -160,7 +160,7 @@ const PtExpr*
 Parser::new_Primary(const FileRegion& fr,
 		    const char* name,
 		    PtrList<const PtExpr>* index_list,
-		    tVpiRangeMode mode,
+		    VpiRangeMode mode,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
@@ -206,7 +206,7 @@ Parser::new_Primary(const FileRegion& fr,
 const PtExpr*
 Parser::new_Primary(const FileRegion& fr,
 		    PuHierName* hname,
-		    tVpiRangeMode mode,
+		    VpiRangeMode mode,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
@@ -227,7 +227,7 @@ const PtExpr*
 Parser::new_Primary(const FileRegion& fr,
 		    PuHierName* hname,
 		    PtrList<const PtExpr>* index_list,
-		    tVpiRangeMode mode,
+		    VpiRangeMode mode,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
@@ -273,7 +273,7 @@ Parser::new_CPrimary(const FileRegion& fr,
 const PtExpr*
 Parser::new_CPrimary(const FileRegion& fr,
 		     const char* name,
-		     tVpiRangeMode mode,
+		     VpiRangeMode mode,
 		     const PtExpr* left,
 		     const PtExpr* right)
 {
@@ -349,7 +349,7 @@ Parser::new_SysFuncCall(const FileRegion& fr,
 // @return 生成された定数
 const PtExpr*
 Parser::new_IntConst(const FileRegion& fr,
-		     ymuint value)
+		     unsigned int value)
 {
   return mFactory.new_IntConst(fr, value);
 }
@@ -372,7 +372,7 @@ Parser::new_IntConst(const FileRegion& fr,
 // @return 生成された定数
 const PtExpr*
 Parser::new_IntConst(const FileRegion& fr,
-		     tVpiConstType const_type,
+		     VpiConstType const_type,
 		     const char* value)
 {
   return mFactory.new_IntConst(fr, const_type, value);
@@ -386,8 +386,8 @@ Parser::new_IntConst(const FileRegion& fr,
 // @return 生成された定数
 const PtExpr*
 Parser::new_IntConst(const FileRegion& fr,
-		     ymuint size,
-		     tVpiConstType const_type,
+		     SizeType size,
+		     VpiConstType const_type,
 		     const char* value)
 {
   return mFactory.new_IntConst(fr, size, const_type, value);

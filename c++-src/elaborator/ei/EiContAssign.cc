@@ -106,23 +106,23 @@ EiCaHead::module() const
 }
 
 // @brief 0の強さを返す．
-tVpiStrength
+VpiStrength
 EiCaHead::drive0() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->drive0();
   }
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief 1の強さを返す．
-tVpiStrength
+VpiStrength
 EiCaHead::drive1() const
 {
   if ( mPtHead->strength() ) {
     return mPtHead->strength()->drive0();
   }
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief 遅延を表す式を返す．
@@ -186,10 +186,10 @@ EiContAssign::~EiContAssign()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiContAssign::type() const
 {
-  return kVpiContAssign;
+  return VpiObjType::ContAssign;
 }
 
 // @brief ファイル位置を返す．
@@ -252,14 +252,14 @@ EiContAssign1::module() const
 }
 
 // @brief 0の強さを返す．
-tVpiStrength
+VpiStrength
 EiContAssign1::drive0() const
 {
   return mHead->drive0();
 }
 
 // @brief 1の強さを返す．
-tVpiStrength
+VpiStrength
 EiContAssign1::drive1() const
 {
   return mHead->drive1();
@@ -311,17 +311,17 @@ EiContAssign2::module() const
 }
 
 // @brief 0の強さを返す．
-tVpiStrength
+VpiStrength
 EiContAssign2::drive0() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief 1の強さを返す．
-tVpiStrength
+VpiStrength
 EiContAssign2::drive1() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief 遅延を表す式を返す．

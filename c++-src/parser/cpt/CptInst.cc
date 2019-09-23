@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // コンストラクタ
 CptGateH::CptGateH(const FileRegion& file_region,
-		   tVpiPrimType prim_type,
+		   VpiPrimType prim_type,
 		   PtInstArray inst_array) :
   mFileRegion(file_region),
   mPrimType(prim_type),
@@ -48,7 +48,7 @@ CptGateH::type() const
 }
 
 // プリミティブタイプ(vpiAndPrim など)を返す．
-tVpiPrimType
+VpiPrimType
 CptGateH::prim_type() const
 {
   return mPrimType;
@@ -68,7 +68,7 @@ CptGateH::inst_list() const
 
 // コンストラクタ
 CptGateHS::CptGateHS(const FileRegion& file_region,
-		     tVpiPrimType prim_type,
+		     VpiPrimType prim_type,
 		     const PtStrength* strength,
 		     PtInstArray inst_array) :
   CptGateH(file_region, prim_type, inst_array),
@@ -95,7 +95,7 @@ CptGateHS::strength() const
 
 // コンストラクタ
 CptGateHD::CptGateHD(const FileRegion& file_region,
-		     tVpiPrimType prim_type,
+		     VpiPrimType prim_type,
 		     const PtDelay* delay,
 		     PtInstArray inst_array) :
   CptGateH(file_region, prim_type, inst_array),
@@ -122,7 +122,7 @@ CptGateHD::delay() const
 
 // コンストラクタ
 CptGateHSD::CptGateHSD(const FileRegion& file_region,
-		       tVpiPrimType prim_type,
+		       VpiPrimType prim_type,
 		       const PtStrength* strength,
 		       const PtDelay* delay,
 		       PtInstArray inst_array) :
@@ -445,7 +445,7 @@ CptInstR::right_range() const
 // gate instance 文のヘッダを生成する．
 const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      PtInstArray inst_array)
 {
   ++ mNumGateH;
@@ -456,7 +456,7 @@ CptFactory::new_GateH(const FileRegion& file_region,
 // gate instance 文のヘッダを生成する．
 const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      const PtStrength* strength,
 		      PtInstArray inst_array)
 {
@@ -468,7 +468,7 @@ CptFactory::new_GateH(const FileRegion& file_region,
 // gate instance 文のヘッダを生成する．
 const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      const PtDelay* delay,
 		      PtInstArray inst_array)
 {
@@ -480,7 +480,7 @@ CptFactory::new_GateH(const FileRegion& file_region,
 // gate instance 文のヘッダを生成する．
 const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
-		      tVpiPrimType type,
+		      VpiPrimType type,
 		      const PtStrength* strength,
 		      const PtDelay* delay,
 		      PtInstArray inst_array)

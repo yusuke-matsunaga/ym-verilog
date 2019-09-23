@@ -61,7 +61,7 @@ public:
   /// @brief 内部ポート結線の方向の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
-  tVlDirection
+  VpiDir
   portref_dir(int pos) const = 0;
 
 };

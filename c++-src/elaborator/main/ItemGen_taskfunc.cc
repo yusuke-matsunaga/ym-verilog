@@ -138,7 +138,7 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
   // 入出力の生成
   instantiate_iodecl(nullptr, taskfunc, pt_item->iohead_array());
 
-  if ( taskfunc->type() == kVpiFunction ) {
+  if ( taskfunc->type() == VpiObjType::Function ) {
     // 関数名と同名の変数の生成
     int left_val = taskfunc->left_range_val();
     int right_val = taskfunc->right_range_val();
@@ -155,7 +155,7 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
 
     ElbDecl* decl = factory().new_Decl(head, pt_item);
     int tag = vpiVariables;
-    if ( pt_item->data_type() == kVpiVarNone ) {
+    if ( pt_item->data_type() == VpiVarType::None ) {
       tag = vpiReg;
     }
     reg_decl(tag, decl);
@@ -258,7 +258,7 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
   // 関数名と同名の変数の生成
   ElbDecl* decl = factory().new_Decl(head, pt_function);
   int tag = vpiVariables;
-  if ( pt_function->data_type() == kVpiVarNone ) {
+  if ( pt_function->data_type() == VpiVarType::None ) {
     tag = vpiReg;
   }
   reg_decl(tag, decl);

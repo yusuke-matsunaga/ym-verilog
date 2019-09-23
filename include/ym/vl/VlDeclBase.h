@@ -88,7 +88,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  int
+  SizeType
   bit_size() const = 0;
 
   /// @brief オフセット値の取得
@@ -108,14 +108,14 @@ public:
   /// @retval kVpiVarRealTime realtime型
   /// @retval kVpiVarNone 上記以外
   virtual
-  tVpiVarType
+  VpiVarType
   data_type() const = 0;
 
   /// @brief net 型の取得
   /// @retval net型 net型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
   virtual
-  tVpiNetType
+  VpiNetType
   net_type() const = 0;
 
   /// @brief vectored|scalared 属性の取得
@@ -123,28 +123,28 @@ public:
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
   virtual
-  tVpiVsType
+  VpiVsType
   vs_type() const = 0;
 
   /// @brief drive0 strength の取得
   /// @retval 0 の強度
   /// @retval kVpiNoStrength strength の指定なし
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const = 0;
 
   /// @brief drive1 strength の取得
   /// @retval 1 の強度
   /// @retval kVpiNoStrength strength の指定なし
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const = 0;
 
   /// @brief charge strength の取得
   /// @retval 電荷の強度
   /// @retval kVpiNoStrength strength の指定なし
   virtual
-  tVpiStrength
+  VpiStrength
   charge() const = 0;
 
   /// @brief delay の取得

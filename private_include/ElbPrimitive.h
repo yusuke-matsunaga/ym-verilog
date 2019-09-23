@@ -44,7 +44,7 @@ public:
 
   /// @brief primitive type を返す．
   virtual
-  tVpiPrimType
+  VpiPrimType
   prim_type() const = 0;
 
   /// @brief プリミティブの定義名を返す．
@@ -64,12 +64,12 @@ public:
 
   /// @brief 0 の強さを得る．
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const = 0;
 
   /// @brief 1 の強さを得る．
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const = 0;
 
   /// @brief 遅延式を得る．
@@ -209,11 +209,11 @@ public:
   /// @retval -1 port_size が少なすぎる．
   static
   int
-  get_port_size(tVpiPrimType type,
-		int port_size,
-		int& output_num,
-		int& inout_num,
-		int& input_num);
+  get_port_size(VpiPrimType type,
+		SizeType port_size,
+		SizeType& output_num,
+		SizeType& inout_num,
+		SizeType& input_num);
 
 
 private:
@@ -254,7 +254,7 @@ public:
   void
   set(ElbPrimitive* primitive,
       int index,
-      tVlDirection dir) = 0;
+      VpiDir dir) = 0;
 
 };
 

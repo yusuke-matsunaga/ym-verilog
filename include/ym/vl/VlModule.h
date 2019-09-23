@@ -56,14 +56,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  int
+  SizeType
   elem_num() const = 0;
 
   /// @brief 要素を返す．
   /// @param[in] offset 位置番号 (0 <= offset < elem_num())
   virtual
   const VlModule*
-  elem_by_offset(int offset) const = 0;
+  elem_by_offset(SizeType offset) const = 0;
 
   /// @brief 要素を返す．
   /// @param[in] index インデックス
@@ -150,17 +150,17 @@ public:
 
   /// @brief default net type を返す．
   virtual
-  tVpiNetType
+  VpiNetType
   def_net_type() const = 0;
 
   /// @brief unconnected drive を返す．
   virtual
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconn_drive() const = 0;
 
   /// @brief default delay mode を返す．
   virtual
-  tVpiDefDelayMode
+  VpiDefDelayMode
   def_delay_mode() const = 0;
 
   /// @brief default decay time を返す．
@@ -202,7 +202,7 @@ public:
 
   /// @brief ポート数を返す．
   virtual
-  int
+  SizeType
   port_num() const = 0;
 
   /// @brief ポートの取得
@@ -210,18 +210,18 @@ public:
   /// @return pos 番目のポートを返す．
   virtual
   const VlPort*
-  port(int pos) const = 0;
+  port(SizeType pos) const = 0;
 
   /// @brief 入出力数を得る．
   virtual
-  int
+  SizeType
   io_num() const = 0;
 
   /// @brief 入出力の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   virtual
   const VlIODecl*
-  io(int pos) const = 0;
+  io(SizeType pos) const = 0;
 
 };
 

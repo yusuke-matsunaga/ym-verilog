@@ -42,13 +42,12 @@ public:
 
   /// @brief 入出力の初期設定を行う．
   /// @param[in] pos 位置番号
-  /// @param[in] pos 位置番号
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木のIO宣言要素
   /// @param[in] decl 対応する宣言要素
   virtual
   void
-  init_iodecl(int pos,
+  init_iodecl(SizeType pos,
   	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
 	      ElbDecl* decl) = 0;
@@ -62,7 +61,7 @@ public:
   /// @param[in] pos 位置番号 (0 <= pos < io_num())
   virtual
   ElbIODecl*
-  _io(int pos) const = 0;
+  _io(SizeType pos) const = 0;
 
   /// @brief 本体の ElbStmt を得る．
   virtual

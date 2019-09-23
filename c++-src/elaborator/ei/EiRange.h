@@ -39,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -53,7 +53,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数(ビット幅)を返す．
-  int
+  SizeType
   size() const override;
 
   /// @brief MSB の値を返す．
@@ -134,7 +134,7 @@ public:
   /// @param[in] left 範囲の MSB
   /// @param[in] right 範囲の LSB
   static
-  int
+  SizeType
   calc_size(int left,
 	    int right);
 
@@ -263,7 +263,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数(ビット幅)を返す．
-  int
+  SizeType
   size() const;
 
   /// @brief MSB の値を返す．
@@ -358,7 +358,7 @@ public:
 
   /// @brief コンストラクタ
   /// @brief dim_size 次元数
-  EiRangeArray(int dim_size,
+  EiRangeArray(SizeType dim_size,
 	       EiRange* array);
 
   // デストラクタ
@@ -371,18 +371,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 次元数を得る．
-  int
+  SizeType
   size() const;
 
   /// @brief 要素数を計算する
   /// @return サイズを返す．
-  int
+  SizeType
   elem_size() const;
 
   /// @brief pos 番めの範囲を返す．
   /// @param[in] pos 位置番号
   EiRange*
-  range(int pos) const;
+  range(SizeType pos) const;
 
   /// @brief アドレス(オフセット)からインデックスのリストを作る．
   /// @param[in] offset オフセット
@@ -407,13 +407,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 次元数
-  int mDimSize;
+  SizeType mDimSize;
 
   // 範囲の配列
   EiRange* mArray;
 
   // 要素数
-  int mElemSize;
+  SizeType mElemSize;
 
 };
 
@@ -424,11 +424,11 @@ private:
 
 // @brief サイズを返す．
 inline
-int
+SizeType
 EiRange::calc_size(int left,
 		   int right)
 {
-  int ans = 0;
+  SizeType ans = 0;
   if ( left >= right ) {
     ans = left - right + 1;
   }
@@ -560,7 +560,7 @@ EiRangeImpl::is_little_endian() const
 
 // @brief 次元数を得る．
 inline
-int
+SizeType
 EiRangeArray::size() const
 {
   return mDimSize;
@@ -569,7 +569,7 @@ EiRangeArray::size() const
 // @brief 要素数を計算する
 // @return サイズを返す．
 inline
-int
+SizeType
 EiRangeArray::elem_size() const
 {
   return mElemSize;
@@ -579,7 +579,7 @@ EiRangeArray::elem_size() const
 // @param[in] pos 位置番号
 inline
 EiRange*
-EiRangeArray::range(int pos) const
+EiRangeArray::range(SizeType pos) const
 {
   return &mArray[pos];
 }

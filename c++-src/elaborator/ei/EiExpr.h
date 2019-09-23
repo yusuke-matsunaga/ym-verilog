@@ -98,14 +98,14 @@ public:
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
  /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
   /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  declarray_index(int pos) const override;
+  declarray_index(SizeType pos) const override;
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
@@ -140,7 +140,7 @@ public:
   index_val() const override;
 
   /// @brief 範囲指定のモードを返す．
-  tVpiRangeMode
+  VpiRangeMode
   range_mode() const override;
 
   /// @brief 範囲の MSB を返す．
@@ -176,19 +176,19 @@ public:
   /// @brief 範囲のビット幅を返す．
   /// @note 可変範囲選択の時，意味を持つ．
   /// @note それ以外では 0 を返す．
-  int
+  SizeType
   range_width() const override;
 
   /// @brief 演算子のタイプを返す．
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは kVlNullOp を返す．
-  tVlOpType
+  VpiOpType
   op_type() const override;
 
   /// @brief オペランド数を返す．
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   operand_num() const override;
 
   /// @brief オペランドを返す．
@@ -196,17 +196,17 @@ public:
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  operand(int pos) const override;
+  operand(SizeType pos) const override;
 
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．
-  int
+  SizeType
   rep_num() const override;
 
   /// @brief 定数の型を返す．
   /// @note 定数の時，意味を持つ．
   /// @note このクラスでは動作は不定
-  tVpiConstType
+  VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
@@ -230,7 +230,7 @@ public:
   /// @brief 引数の数を返す．
   /// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   argument_num() const override;
 
   /// @brief 引数を返す．
@@ -238,13 +238,13 @@ public:
   /// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  argument(int pos) const override;
+  argument(SizeType pos) const override;
 
   /// @brief 左辺式の要素数の取得
   /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
   /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
@@ -252,7 +252,7 @@ public:
   /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  lhs_elem(int pos) const override;
+  lhs_elem(SizeType pos) const override;
 
 
 private:

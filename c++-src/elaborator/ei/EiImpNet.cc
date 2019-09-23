@@ -24,7 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbDecl*
 EiFactory::new_ImpNet(const VlNamedObj* parent,
 		      const PtExpr* pt_expr,
-		      tVpiNetType net_type)
+		      VpiNetType net_type)
 {
   void* p = mAlloc.get_memory(sizeof(EiImpNet));
   EiImpNet* decl = new (p) EiImpNet(parent, pt_expr, net_type);
@@ -41,7 +41,7 @@ EiFactory::new_ImpNet(const VlNamedObj* parent,
 // @param[in] pt_expr パース木のプライマリ式
 EiImpNet::EiImpNet(const VlNamedObj* parent,
 		   const PtExpr* pt_expr,
-		   tVpiNetType net_type) :
+		   VpiNetType net_type) :
   mParent(parent),
   mPtExpr(pt_expr),
   mNetType(net_type)
@@ -54,10 +54,10 @@ EiImpNet::~EiImpNet()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiImpNet::type() const
 {
-  return kVpiNet;
+  return VpiObjType::Net;
 }
 
 // @brief ファイル位置の取得
@@ -153,7 +153,7 @@ EiImpNet::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiImpNet::bit_size() const
 {
   return 1;
@@ -180,16 +180,16 @@ EiImpNet::calc_bit_offset(int index,
 // @brief データ型の取得
 // @retval データ型 パラメータや変数の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 EiImpNet::data_type() const
 {
-  return kVpiVarNone;
+  return VpiVarType::None;
 }
 
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+VpiNetType
 EiImpNet::net_type() const
 {
   return mNetType;
@@ -199,37 +199,37 @@ EiImpNet::net_type() const
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 EiImpNet::vs_type() const
 {
-  return kVpiVsNone;
+  return VpiVsType::None;
 }
 
 // @brief drive0 strength の取得
 // @retval 0 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiImpNet::drive0() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief drive1 strength の取得
 // @retval 1 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiImpNet::drive1() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief charge strength の取得
 // @retval 電荷の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiImpNet::charge() const
 {
-  return kVpiNoStrength;
+  return VpiStrength::NoStrength;
 }
 
 // @brief delay の取得

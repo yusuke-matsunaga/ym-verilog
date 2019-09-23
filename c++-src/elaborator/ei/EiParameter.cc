@@ -71,8 +71,8 @@ EiFactory::new_Parameter(ElbParamHead* head,
   EiParameter* param = nullptr;
 
   switch ( head->type() ) {
-  case kVpiParameter:
-  case kVpiSpecParam:
+  case VpiObjType::Parameter:
+  case VpiObjType::SpecParam:
     if ( is_local ) {
       void* p = mAlloc.get_memory(sizeof(EiLocalParam));
       param = new (p) EiLocalParam(head, pt_item);
@@ -112,22 +112,22 @@ EiParamHead::~EiParamHead()
 }
 
 // @brief 型の取得
-tVpiObjType
+VpiObjType
 EiParamHead::type() const
 {
   switch ( mPtHead->type() ) {
   case kPtDecl_Param:
   case kPtDecl_LocalParam:
-    return kVpiParameter;
+    return VpiObjType::Parameter;
 
   case kPtDecl_SpecParam:
-    return kVpiSpecParam;
+    return VpiObjType::SpecParam;
 
   default:
     ASSERT_NOT_REACHED;
     break;
   }
-  return kVpiParameter;
+  return VpiObjType::Parameter;
 }
 
 // @brief このオブジェクトの属しているスコープを返す．
@@ -145,7 +145,7 @@ EiParamHead::parent() const
 bool
 EiParamHead::is_signed(const VlValue& val) const
 {
-  if ( mPtHead->data_type() == kVpiVarNone ) {
+  if ( mPtHead->data_type() == VpiVarType::None ) {
     return val.is_signed();
   }
   else {
@@ -166,14 +166,14 @@ int
 EiParamHead::left_range_val() const
 {
   switch ( mPtHead->data_type() ) {
-  case kVpiVarInteger:
+  case VpiVarType::Integer:
     return kVpiSizeInteger - 1;
 
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return 0;
 
-  case kVpiVarTime:
+  case VpiVarType::Time:
     return kVpiSizeTime - 1;
 
   default:
@@ -224,21 +224,21 @@ EiParamHead::is_little_endian() const
 // @brief ビット幅を返す．
 // @param[in] val 値
 // @note ヘッダに型指定がない時は値から情報を得る．
-int
+SizeType
 EiParamHead::bit_size(const VlValue& val) const
 {
   switch ( mPtHead->data_type() ) {
-  case kVpiVarInteger:
+  case VpiVarType::Integer:
     return kVpiSizeInteger;
 
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return kVpiSizeReal;
 
-  case kVpiVarTime:
+  case VpiVarType::Time:
     return kVpiSizeTime;
 
-  case kVpiVarNone:
+  case VpiVarType::None:
     return val.bit_size();
 
   default:
@@ -261,25 +261,25 @@ EiParamHead::calc_bit_offset(int index,
 			     const VlValue& val) const
 {
   switch ( mPtHead->data_type() ) {
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return false;
 
-  case kVpiVarTime:
+  case VpiVarType::Time:
     if ( index >= 0 && index < static_cast<int>(kVpiSizeTime) ) {
       offset = index;
       return true;
     }
     return false;
 
-  case kVpiVarInteger:
+  case VpiVarType::Integer:
     if ( index >= 0 && index < static_cast<int>(kVpiSizeInteger) ) {
       offset = index;
       return true;
     }
     return false;
 
-  case kVpiVarNone:
+  case VpiVarType::None:
     if ( index >= 0 && index < static_cast<int>(val.bit_size()) ) {
       offset = index;
       return true;
@@ -300,17 +300,17 @@ VlValueType
 EiParamHead::value_type(const VlValue& val) const
 {
   switch ( mPtHead->data_type() ) {
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return VlValueType::real_type();
 
-  case kVpiVarTime:
+  case VpiVarType::Time:
     return VlValueType::time_type();
 
-  case kVpiVarInteger:
+  case VpiVarType::Integer:
     return VlValueType::int_type();
 
-  case kVpiVarNone:
+  case VpiVarType::None:
     return val.value_type();
 
   default:
@@ -321,7 +321,7 @@ EiParamHead::value_type(const VlValue& val) const
 }
 
 // @brief データ型の取得
-tVpiVarType
+VpiVarType
 EiParamHead::data_type() const
 {
   return mPtHead->data_type();
@@ -429,7 +429,7 @@ EiParamHeadV::is_little_endian() const
 // @brief ビット幅を返す．
 // @param[in] val 値
 // @note ヘッダに型指定がない時は値から情報を得る．
-int
+SizeType
 EiParamHeadV::bit_size(const VlValue& val) const
 {
   return mRange.size();
@@ -482,7 +482,7 @@ EiParameter::~EiParameter()
 
 // @brief 型の取得
 // @return vpi_user.h で定義された型 (vpiModule など)
-tVpiObjType
+VpiObjType
 EiParameter::type() const
 {
   return mHead->type();
@@ -602,7 +602,7 @@ EiParameter::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiParameter::bit_size() const
 {
   return mHead->bit_size(mValue);
@@ -623,7 +623,7 @@ EiParameter::calc_bit_offset(int index,
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 EiParameter::data_type() const
 {
   return mHead->data_type();

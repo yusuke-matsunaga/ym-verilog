@@ -51,7 +51,7 @@ public:
 
   /// @brief system function の型を返す．
   virtual
-  tVpiFuncType
+  VpiFuncType
   function_type() const = 0;
 
   /// @brief compile 時のコールバック関数
@@ -66,7 +66,7 @@ public:
 
   /// @brief SizedFunc の場合にサイズを返す．
   virtual
-  int
+  SizeType
   size() const = 0;
 
 };

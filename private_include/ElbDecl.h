@@ -40,7 +40,7 @@ public:
 
   /// @brief 型の取得
   virtual
-  tVpiObjType
+  VpiObjType
   type() const = 0;
 
   /// @brief このオブジェクトの属しているスコープを返す．
@@ -96,7 +96,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  int
+  SizeType
   bit_size() const = 0;
 
   /// @brief オフセット値の取得
@@ -114,7 +114,7 @@ public:
   /// @retval kVpiVarNone 上記以外
   /// @note このクラスでは kVpiVarNone を返す．
   virtual
-  tVpiVarType
+  VpiVarType
   data_type() const;
 
   /// @brief net 型の取得
@@ -122,7 +122,7 @@ public:
   /// @retval kVpiNone net 型の要素でない場合
   /// @note このクラスでは kVpiNone を返す．
   virtual
-  tVpiNetType
+  VpiNetType
   net_type() const;
 
   /// @brief vectored|scalared 属性の取得
@@ -131,7 +131,7 @@ public:
   /// @retval kVpiScalared scalared 指定あり
   /// @note このクラスでは kVpiNsNone を返す．
   virtual
-  tVpiVsType
+  VpiVsType
   vs_type() const;
 
   /// @brief drive0 strength の取得
@@ -139,7 +139,7 @@ public:
   /// @retval kVpiNoStrength strength の指定なし
   /// @note このクラスでは kVpiNoStrength を返す．
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const;
 
   /// @brief drive1 strength の取得
@@ -147,7 +147,7 @@ public:
   /// @retval kVpiNoStrength strength の指定なし
   /// @note このクラスでは kVpiNoStrength を返す．
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const;
 
   /// @brief charge strength の取得
@@ -155,7 +155,7 @@ public:
   /// @retval kVpiNoStrength strength の指定なし
   /// @note このクラスでは kVpiNoStrength を返す．
   virtual
-  tVpiStrength
+  VpiStrength
   charge() const;
 
   /// @brief delay の取得
@@ -364,7 +364,7 @@ public:
 
   /// @brief 要素の型を返す．
   virtual
-  tVpiObjType
+  VpiObjType
   elem_type() const = 0;
 
   /// @brief スカラー値を返す．

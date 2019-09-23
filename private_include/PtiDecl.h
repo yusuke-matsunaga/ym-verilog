@@ -34,7 +34,7 @@ public:
   virtual
   void
   _set_portref_dir(int pos,
-		   tVlDirection dir) = 0;
+		   VpiDir dir) = 0;
 
 };
 

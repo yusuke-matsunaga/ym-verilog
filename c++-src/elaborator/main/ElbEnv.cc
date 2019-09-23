@@ -244,7 +244,7 @@ ElbConstantFunctionEnv::ElbConstantFunctionEnv(const VlNamedObj* func)
 // @param[in] taskfunc タスクか関数のオブジェクト
 ElbTfEnv::ElbTfEnv(const VlNamedObj* taskfunc)
 {
-  if ( taskfunc->type() == kVpiFunction ) {
+  if ( taskfunc->type() == VpiObjType::Function ) {
     set_function();
   }
 }

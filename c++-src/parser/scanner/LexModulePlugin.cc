@@ -166,22 +166,22 @@ LpNetType::parse()
   FileRegion file_region = cur_token_loc();
 
   int id = get_nospace_token();
-  tVpiNetType val = kVpiNone;
+  VpiNetType val = VpiNetType::None;
   switch ( id ) {
-  case WIRE:   val = kVpiWire; break;
-  case TRI:    val = kVpiTri; break;
-  case TRI0:   val = kVpiTri0; break;
-  case TRI1:   val = kVpiTri1; break;
-  case WAND:   val = kVpiWand; break;
-  case TRIAND: val = kVpiTriAnd; break;
-  case WOR:    val = kVpiWor; break;
-  case TRIOR:  val = kVpiTriOr; break;
-  case TRIREG: val = kVpiTriReg; break;
+  case WIRE:   val = VpiNetType::Wire; break;
+  case TRI:    val = VpiNetType::Tri; break;
+  case TRI0:   val = VpiNetType::Tri0; break;
+  case TRI1:   val = VpiNetType::Tri1; break;
+  case WAND:   val = VpiNetType::Wand; break;
+  case TRIAND: val = VpiNetType::TriAnd; break;
+  case WOR:    val = VpiNetType::Wor; break;
+  case TRIOR:  val = VpiNetType::TriOr; break;
+  case TRIREG: val = VpiNetType::TriReg; break;
   case IDENTIFIER:
     // "none" は Verilog-HDL の予約語ではない．
     // `default_nettype の後に来たときだけ特別な意味を持つ．
     if ( strcmp(cur_string(), "none") == 0 ) {
-      val = kVpiNone;
+      val = VpiNetType::None;
       break;
     }
     // わざと default に続く
@@ -418,10 +418,10 @@ LpUnconnDrive::parse()
   }
 
   FileRegion loc = cur_token_loc();
-  tVpiUnconnDrive ud = kVpiHighZ;
+  auto ud = VpiUnconnDrive::HighZ;
   switch ( get_nospace_token() ) {
-  case PULL0: ud = kVpiPull0; break;
-  case PULL1: ud = kVpiPull1; break;
+  case PULL0: ud = VpiUnconnDrive::Pull0; break;
+  case PULL1: ud = VpiUnconnDrive::Pull1; break;
   default:
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    loc,
@@ -498,7 +498,7 @@ LpNounconnDrive::parse()
     return false;
   }
 
-  mState->set_unconnected_drive(kVpiHighZ, loc);
+  mState->set_unconnected_drive(VpiUnconnDrive::HighZ, loc);
 
   return true;
 }
@@ -671,7 +671,7 @@ LpTriregStrength::parse()
 LpDelayMode::LpDelayMode(RawLex& lex,
 			 const char* name,
 			 LexModuleState* state,
-			 tVpiDefDelayMode mode) :
+			 VpiDefDelayMode mode) :
   LexPlugin(lex, name),
   mState(state),
   mMode(mode)

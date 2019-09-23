@@ -72,20 +72,20 @@ CptDeclHead::right_range() const
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
 // @note このクラスでは kVpiVarNone を返す．
-tVpiVarType
+VpiVarType
 CptDeclHead::data_type() const
 {
-  return kVpiVarNone;
+  return VpiVarType::None;
 }
 
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
 // @note このクラスでは kVpiNone を返す．
-tVpiNetType
+VpiNetType
 CptDeclHead::net_type() const
 {
-  return kVpiNone;
+  return VpiNetType::None;
 }
 
 // @brief vectored|scalared 属性の取得
@@ -93,10 +93,10 @@ CptDeclHead::net_type() const
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
 // @note このクラスでは kVpiVsNone を返す．
-tVpiVsType
+VpiVsType
 CptDeclHead::vs_type() const
 {
-  return kVpiVsNone;
+  return VpiVsType::None;
 }
 
 // @brief strength の取得
@@ -329,7 +329,7 @@ CptLocalParamHSV::type() const
 // @param file_region ファイル位置の情報
 // @param var_type データ型
 CptParamHT::CptParamHT(const FileRegion& file_region,
-		       tVpiVarType var_type) :
+		       VpiVarType var_type) :
   CptDeclHead(file_region),
   mVarType(var_type)
 {
@@ -354,9 +354,9 @@ bool
 CptParamHT::is_signed() const
 {
   switch ( data_type() ) {
-  case kVpiVarInteger:
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Integer:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return true;
   default:
     return false;
@@ -366,7 +366,7 @@ CptParamHT::is_signed() const
 // データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 CptParamHT::data_type() const
 {
   return mVarType;
@@ -381,7 +381,7 @@ CptParamHT::data_type() const
 // @param file_region ファイル位置の情報
 // @param var_type データ型
 CptLocalParamHT::CptLocalParamHT(const FileRegion& file_region,
-				 tVpiVarType var_type) :
+				 VpiVarType var_type) :
   CptParamHT(file_region, var_type)
 {
 }
@@ -529,7 +529,7 @@ CptRegHSV::is_signed() const
 // @param file_region ファイル位置の情報
 // @param var_type データ型
 CptVarH::CptVarH(const FileRegion& file_region,
-		 tVpiVarType var_type) :
+		 VpiVarType var_type) :
   CptDeclHead(file_region),
   mVarType(var_type)
 {
@@ -554,9 +554,9 @@ bool
 CptVarH::is_signed() const
 {
   switch ( data_type() ) {
-  case kVpiVarInteger:
-  case kVpiVarReal:
-  case kVpiVarRealtime:
+  case VpiVarType::Integer:
+  case VpiVarType::Real:
+  case VpiVarType::Realtime:
     return true;
   default:
     return false;
@@ -566,7 +566,7 @@ CptVarH::is_signed() const
 // データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 CptVarH::data_type() const
 {
   return mVarType;
@@ -605,7 +605,7 @@ CptGenvarH::type() const
 // @param file_region ファイル位置の情報
 // @param net_type net の型
 CptNetH::CptNetH(const FileRegion& file_region,
-		 tVpiNetType net_type,
+		 VpiNetType net_type,
 		 bool sign) :
   CptDeclHead(file_region)
 {
@@ -626,10 +626,10 @@ CptNetH::type() const
 }
 
 // net 型の取得
-tVpiNetType
+VpiNetType
 CptNetH::net_type() const
 {
-  return static_cast<tVpiNetType>((mFlags >> 1) & 15);
+  return static_cast<VpiNetType>((mFlags >> 1) & 15);
 }
 
 // 符号の有無の取得
@@ -649,7 +649,7 @@ CptNetH::is_signed() const
 // @param net_type net の型
 // @param strength 信号強度
 CptNetHS::CptNetHS(const FileRegion& file_region,
-		   tVpiNetType net_type,
+		   VpiNetType net_type,
 		   bool sign,
 		   const PtStrength* strength) :
   CptNetH(file_region, net_type, sign),
@@ -679,7 +679,7 @@ CptNetHS::strength() const
 // @param net_type net の型
 // @param delay 遅延
 CptNetHD::CptNetHD(const FileRegion& file_region,
-		   tVpiNetType net_type,
+		   VpiNetType net_type,
 		   bool sign,
 		   const PtDelay* delay) :
   CptNetH(file_region, net_type, sign),
@@ -710,7 +710,7 @@ CptNetHD::delay() const
 // @param strength 信号強度
 // @param delay 遅延
 CptNetHSD::CptNetHSD(const FileRegion& file_region,
-		     tVpiNetType net_type,
+		     VpiNetType net_type,
 		     bool sign,
 		     const PtStrength* strength,
 		     const PtDelay* delay) :
@@ -752,8 +752,8 @@ CptNetHSD::delay() const
 // @param left 範囲の左側の式
 // @param right 範囲の右側の式
 CptNetHV::CptNetHV(const FileRegion& file_region,
-		   tVpiNetType net_type,
-		   tVpiVsType vstype,
+		   VpiNetType net_type,
+		   VpiVsType vstype,
 		   bool sign,
 		   const PtExpr* left,
 		   const PtExpr* right) :
@@ -773,10 +773,10 @@ CptNetHV::~CptNetHV()
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 CptNetHV::vs_type() const
 {
-  return static_cast<tVpiVsType>(mFlags >> 5);
+  return static_cast<VpiVsType>(mFlags >> 5);
 }
 
 // 範囲のMSBの取得
@@ -807,8 +807,8 @@ CptNetHV::right_range() const
 // @param right 範囲の右側の式
 // @param strength 信号強度
 CptNetHVS::CptNetHVS(const FileRegion& file_region,
-		     tVpiNetType net_type,
-		     tVpiVsType vstype,
+		     VpiNetType net_type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -845,8 +845,8 @@ CptNetHVS::strength() const
 // @param right 範囲の右側の式
 // @param delay 遅延
 CptNetHVD::CptNetHVD(const FileRegion& file_region,
-		     tVpiNetType net_type,
-		     tVpiVsType vstype,
+		     VpiNetType net_type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -884,8 +884,8 @@ CptNetHVD::delay() const
 // @param strength 信号強度
 // @param delay 遅延
 CptNetHVSD::CptNetHVSD(const FileRegion& file_region,
-		       tVpiNetType net_type,
-		       tVpiVsType vstype,
+		       VpiNetType net_type,
+		       VpiVsType vstype,
 		       bool sign,
 		       const PtExpr* left,
 		       const PtExpr* right,
@@ -1236,7 +1236,7 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 // 組み込み型パラメータ宣言のヘッダの生成
 PtiDeclHead*
 CptFactory::new_ParamH(const FileRegion& file_region,
-		       tVpiVarType var_type)
+		       VpiVarType var_type)
 {
   ++ mNumParamHT;
   void* p = alloc().get_memory(sizeof(CptParamHT));
@@ -1273,7 +1273,7 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 // 組み込み型 local param 宣言のヘッダの生成
 PtiDeclHead*
 CptFactory::new_LocalParamH(const FileRegion& file_region,
-			    tVpiVarType var_type)
+			    VpiVarType var_type)
 {
   ++ mNumLocalParamHT;
   void* p = alloc().get_memory(sizeof(CptLocalParamHT));
@@ -1321,7 +1321,7 @@ CptFactory::new_GenvarH(const FileRegion& file_region)
 // 変数宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_VarH(const FileRegion& file_region,
-		     tVpiVarType var_type)
+		     VpiVarType var_type)
 {
   ++ mNumVarH;
   void* p = alloc().get_memory(sizeof(CptVarH));
@@ -1365,7 +1365,7 @@ CptFactory::new_RegH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign)
 {
   ++ mNumNetH;
@@ -1377,7 +1377,7 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign,
 		     const PtStrength* strength)
 {
@@ -1390,7 +1390,7 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign,
 		     const PtDelay* delay)
 {
@@ -1404,7 +1404,7 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
+		     VpiNetType type,
 		     bool sign,
 		     const PtStrength* strength,
 		     const PtDelay* delay)
@@ -1419,8 +1419,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right)
@@ -1434,8 +1434,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -1451,8 +1451,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,
@@ -1468,8 +1468,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 // net 宣言のヘッダを生成する．
 PtiDeclHead*
 CptFactory::new_NetH(const FileRegion& file_region,
-		     tVpiNetType type,
-		     tVpiVsType vstype,
+		     VpiNetType type,
+		     VpiVsType vstype,
 		     bool sign,
 		     const PtExpr* left,
 		     const PtExpr* right,

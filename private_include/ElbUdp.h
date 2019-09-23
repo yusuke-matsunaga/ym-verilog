@@ -43,7 +43,7 @@ public:
   /// @param[in] dir 向き
   virtual
   void
-  set_io(int pos,
+  set_io(SizeType pos,
 	 const PtIOHead* pt_header,
 	 const PtIOItem* pt_item) = 0;
 
@@ -61,7 +61,7 @@ public:
   /// @param[in] vals シンボル値の配列
   virtual
   void
-  set_tableentry(int pos,
+  set_tableentry(SizeType pos,
 		 const PtUdpEntry* pt_udp_entry,
 		 const vector<VlUdpVal>& vals) = 0;
 

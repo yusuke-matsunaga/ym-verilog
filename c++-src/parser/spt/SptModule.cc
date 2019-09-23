@@ -49,9 +49,9 @@ SptModule::SptModule(const FileRegion& file_region,
 		     bool is_protected,
 		     int time_unit,
 		     int time_precision,
-		     tVpiNetType net_type,
-		     tVpiUnconnDrive unconn,
-		     tVpiDefDelayMode delay,
+		     VpiNetType net_type,
+		     VpiUnconnDrive unconn,
+		     VpiDefDelayMode delay,
 		     int decay,
 		     bool explicit_name,
 		     bool portfaults,
@@ -212,26 +212,26 @@ SptModule::time_precision() const
 
 // default net type の取得
 // @return default net type
-tVpiNetType
+VpiNetType
 SptModule::nettype() const
 {
-  return static_cast<tVpiNetType>((mFlags >> 12) & 0xf);
+  return static_cast<VpiNetType>((mFlags >> 12) & 0xf);
 }
 
 // unconnected drive の取得
 // @return unconnected drive
-tVpiUnconnDrive
+VpiUnconnDrive
 SptModule::unconn_drive() const
 {
-  return static_cast<tVpiUnconnDrive>((mFlags >> 16) & 0x3);
+  return static_cast<VpiUnconnDrive>((mFlags >> 16) & 0x3);
 }
 
 // default delay mode の取得
 // @return default delay mode
-tVpiDefDelayMode
+VpiDefDelayMode
 SptModule::delay_mode() const
 {
-  return static_cast<tVpiDefDelayMode>((mFlags >> 18) & 0x7);
+  return static_cast<VpiDefDelayMode>((mFlags >> 18) & 0x7);
 }
 
 // default decay time の取得
@@ -415,7 +415,7 @@ SptPort::portref_elem(int pos) const
 }
 
 // @brief 内部のポート結線の報告の取得
-tVlDirection
+VpiDir
 SptPort::portref_dir(int pos) const
 {
   return mDirArray[pos];
@@ -426,7 +426,7 @@ SptPort::portref_dir(int pos) const
 // @param[in] dir 方向
 void
 SptPort::_set_portref_dir(int pos,
-			  tVlDirection dir)
+			  VpiDir dir)
 {
   mDirArray[pos] = dir;
 }
@@ -474,9 +474,9 @@ SptFactory::new_Module(const FileRegion& file_region,
 		       bool is_protected,
 		       int time_unit,
 		       int time_precision,
-		       tVpiNetType net_type,
-		       tVpiUnconnDrive unconn,
-		       tVpiDefDelayMode delay,
+		       VpiNetType net_type,
+		       VpiUnconnDrive unconn,
+		       VpiDefDelayMode delay,
 		       int decay,
 		       bool explicit_name,
 		       bool portfaults,

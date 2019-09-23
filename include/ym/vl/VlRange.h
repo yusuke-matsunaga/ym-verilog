@@ -37,7 +37,7 @@ public:
 
   /// @brief 要素数(ビット幅)を返す．
   virtual
-  int
+  SizeType
   size() const = 0;
 
   /// @brief MSB の値を返す．

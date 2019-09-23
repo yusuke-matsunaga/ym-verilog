@@ -34,7 +34,7 @@ public:
 
   /// @brief 方向を返す．
   virtual
-  tVlDirection
+  VpiDir
   direction() const = 0;
 
   /// @brief 親のモジュールの取得

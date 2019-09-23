@@ -44,7 +44,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief このオブジェクトの属しているスコープを返す．
@@ -94,7 +94,7 @@ public:
   /// @brief ビット幅を返す．
   /// @param[in] val 値
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  int
+  SizeType
   bit_size(const VlValue& val) const override;
 
   /// @brief オフセット値の取得
@@ -116,7 +116,7 @@ public:
   value_type(const VlValue& val) const override;
 
   /// @brief データ型の取得
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
 
@@ -221,7 +221,7 @@ public:
   /// @brief ビット幅を返す．
   /// @param[in] val 値
   /// @note ヘッダに型指定がない時は値から情報を得る．
-  int
+  SizeType
   bit_size(const VlValue& val) const override;
 
   /// @brief オフセット値の取得
@@ -281,7 +281,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
-  tVpiObjType
+  VpiObjType
   type() const override;
 
   /// @brief ファイル位置を返す．
@@ -352,7 +352,7 @@ public:
   is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
   /// @brief オフセット値の取得
@@ -367,7 +367,7 @@ public:
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief localparam のときに true 返す．

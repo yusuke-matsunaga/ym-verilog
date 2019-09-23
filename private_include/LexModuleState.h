@@ -44,7 +44,7 @@ public:
 
   /// @brief net_type を設定する．
   void
-  set_default_nettype(tVpiNetType val,
+  set_default_nettype(VpiNetType val,
 		      const FileRegion& file_region);
 
   /// @brief time_unit の設定
@@ -59,7 +59,7 @@ public:
 
   /// @brief unconnected_drive の値を設定する．
   void
-  set_unconnected_drive(tVpiUnconnDrive val,
+  set_unconnected_drive(VpiUnconnDrive val,
 			const FileRegion& file_region);
 
   /// @brief decay_time の値を設定する．
@@ -74,7 +74,7 @@ public:
 
   /// @brief delay_mode の値を設定する．
   void
-  set_delay_mode(tVpiDefDelayMode val,
+  set_delay_mode(VpiDefDelayMode val,
 		 const FileRegion& file_region);
 
 
@@ -90,7 +90,7 @@ public:
   cell_define() const;
 
   /// @brief net_type を取得する．
-  tVpiNetType
+  VpiNetType
   default_nettype() const;
 
   /// @brief time_unit の取得
@@ -102,7 +102,7 @@ public:
   time_precision() const;
 
   /// @brief unconnected_drive の値を取得する．
-  tVpiUnconnDrive
+  VpiUnconnDrive
   unconnected_drive() const;
 
   /// @brief decay_time の値を取得する．
@@ -114,7 +114,7 @@ public:
   default_trireg_strength() const;
 
   /// @brief delay_mode の値を取得する．
-  tVpiDefDelayMode
+  VpiDefDelayMode
   delay_mode() const;
 
 
@@ -137,7 +137,7 @@ private:
   /// @brief nettype の値から対応する文字列を取得する
   static
   const char*
-  nettype2str(tVpiNetType nettype);
+  nettype2str(VpiNetType nettype);
 
   /// @brief time unit を表す整数から文字列を得る．
   /// @param[in] id time unit を表す整数値(2 〜 -15)
@@ -157,7 +157,7 @@ private:
   bool mCellDefine;
 
   // default_nettype の値
-  tVpiNetType mDefaultNetType;
+  VpiNetType mDefaultNetType;
 
   // 現在の time unit の値
   // 正常な値は 2 〜 -15
@@ -170,7 +170,7 @@ private:
   int mTimePrecision;
 
   // unconnected_drive の値
-  tVpiUnconnDrive mUnconnDrive;
+  VpiUnconnDrive mUnconnDrive;
 
   // decay_time の値
   int mDecayTime;
@@ -179,7 +179,7 @@ private:
   int mTriregStrength;
 
   // delay_mode の値
-  tVpiDefDelayMode mDelayMode;
+  VpiDefDelayMode mDelayMode;
 
 };
 

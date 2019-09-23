@@ -42,7 +42,7 @@ public:
   req_type() const override;
 
   /// @brief 式のビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
 
@@ -74,7 +74,7 @@ public:
   /// @note 演算子の時，意味を持つ．
   virtual
   ElbExpr*
-  _operand(int pos) const = 0;
+  _operand(SizeType pos) const = 0;
 
 
 public:

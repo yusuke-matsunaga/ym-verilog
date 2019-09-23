@@ -51,10 +51,10 @@ SptExpr::type() const
 // @brief 演算子の種類の取得
 // @return 演算子の種類
 // このクラスでは vpiNullOp を返す．
-tVlOpType
+VpiOpType
 SptExpr::op_type() const
 {
-  return kVlNullOp;
+  return VpiOpType::Null;
 }
 
 // @brief 階層ブランチの取得
@@ -142,10 +142,10 @@ SptExpr::index(SizeType pos) const
 // @brief 範囲指定モードの取得
 // @return 範囲指定モード
 // このクラスでは kVpiNoRange を返す．
-tVpiRangeMode
+VpiRangeMode
 SptExpr::range_mode() const
 {
-  return kVpiNoRange;
+  return VpiRangeMode::No;
 }
 
 // @brief 範囲の左側の式の取得
@@ -168,11 +168,11 @@ SptExpr::right_range() const
 
 // @brief 定数の種類の取得
 // @return 定数の種類
-// このクラスでは kVpiIntConst を返す．
-tVpiConstType
+// このクラスでは VpiConstType::Int を返す．
+VpiConstType
 SptExpr::const_type() const
 {
-  return kVpiIntConst; // ダミー
+  return VpiConstType::Int; // ダミー
 }
 
 // @brief 整数型の定数のサイズの取得
@@ -257,7 +257,7 @@ SptExpr::is_simple() const
 // @param[in] op_type 演算子の種類
 // @param[in] opr_list　オペランドのリスト
 SptOpr1::SptOpr1(const FileRegion& file_region,
-		 tVlOpType op_type,
+		 VpiOpType op_type,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2,
 		 const PtExpr* opr3) :
@@ -285,7 +285,7 @@ SptOpr1::~SptOpr1()
 
 // @brief 演算子の種類の取得
 // @return 演算子の種類
-tVlOpType
+VpiOpType
 SptOpr1::op_type() const
 {
   return mOpType;
@@ -298,7 +298,7 @@ bool
 SptOpr1::is_index_expr() const
 {
   // 算術演算なら本当はOKだけどめんどくさいので単項のマイナスのみOKとする．
-  if ( mOpType == kVlMinusOp || mOpType == kVlNullOp ) {
+  if ( mOpType == VpiOpType::Minus || mOpType == VpiOpType::Null ) {
     return operand(0)->is_index_expr();
   }
   else {
@@ -312,10 +312,10 @@ int
 SptOpr1::index_value() const
 {
   switch ( mOpType ) {
-  case kVlNullOp:
+  case VpiOpType::Null:
     return operand0()->index_value();
 
-  case kVlMinusOp:
+  case VpiOpType::Minus:
     return - operand0()->index_value();
 
   default:
@@ -372,7 +372,7 @@ SptOpr1::operand(SizeType pos) const
 // @param[in] op_type 演算子の種類
 // @param[in] opr_array オペランドのリスト
 SptOpr2::SptOpr2(const FileRegion& file_region,
-		 tVlOpType op_type,
+		 VpiOpType op_type,
 		 PtExprArray opr_array) :
   SptExpr{file_region, kPtOprExpr},
   mOpType{op_type},
@@ -387,7 +387,7 @@ SptOpr2::~SptOpr2()
 
 // @brief 演算子の種類の取得
 // @return 演算子の種類
-tVlOpType
+VpiOpType
 SptOpr2::op_type() const
 {
   return mOpType;
@@ -589,7 +589,7 @@ SptPrimary::SptPrimary(const FileRegion& file_region,
 		       const char* tail_name,
 		       bool const_index,
 		       PtExprArray index_array,
-		       tVpiRangeMode mode,
+		       VpiRangeMode mode,
 		       const PtExpr* left,
 		       const PtExpr* right) :
   SptExpr{file_region, kPtPrimaryExpr},
@@ -650,7 +650,7 @@ SptPrimary::index(SizeType pos) const
 
 // @brief 範囲指定モードの取得
 // @return 範囲指定モード
-tVpiRangeMode
+VpiRangeMode
 SptPrimary::range_mode() const
 {
   return mMode;
@@ -685,8 +685,8 @@ SptPrimary::right_range() const
 // @param[in] svalue 値の文字列表現
 // @param[in] rvalue 実数型の時の値
 SptConstant::SptConstant(const FileRegion& file_region,
-			 tVpiConstType const_type,
-			 int size,
+			 VpiConstType const_type,
+			 SizeType size,
 			 unsigned int uvalue,
 			 const char* svalue,
 			 double rvalue) :
@@ -743,12 +743,12 @@ bool
 SptConstant::is_index_expr() const
 {
   // ただの整数の場合のみが使える．
-  return const_type() == kVpiIntConst && const_str() == nullptr;
+  return const_type() == VpiConstType::Int && const_str() == nullptr;
 }
 
 // @brief 定数の種類の取得
 // @return 定数の種類
-tVpiConstType
+VpiConstType
 SptConstant::const_type() const
 {
   return mConstType;
@@ -766,7 +766,7 @@ SptConstant::const_type() const
 // @return 生成された演算子
 const PtExpr*
 SptFactory::new_Opr(const FileRegion& file_region,
-		    tVlOpType type,
+		    VpiOpType type,
 		    const PtExpr* opr)
 {
   void* p = alloc().get_memory(sizeof(SptOpr1));
@@ -782,7 +782,7 @@ SptFactory::new_Opr(const FileRegion& file_region,
 // @return 生成された演算子
 const PtExpr*
 SptFactory::new_Opr(const FileRegion& file_region,
-		    tVlOpType type,
+		    VpiOpType type,
 		    const PtExpr* opr1,
 		    const PtExpr* opr2)
 {
@@ -800,7 +800,7 @@ SptFactory::new_Opr(const FileRegion& file_region,
 // @return 生成された演算子
 const PtExpr*
 SptFactory::new_Opr(const FileRegion& file_region,
-		    tVlOpType type,
+		    VpiOpType type,
 		    const PtExpr* opr1,
 		    const PtExpr* opr2,
 		    const PtExpr* opr3)
@@ -819,7 +819,7 @@ SptFactory::new_Concat(const FileRegion& file_region,
 		       PtExprArray expr_array)
 {
   void* p = alloc().get_memory(sizeof(SptOpr2));
-  return new (p) SptOpr2(file_region, kVlConcatOp, expr_array);
+  return new (p) SptOpr2(file_region, VpiOpType::Concat, expr_array);
 }
 
 // @brief multi-concatination 演算子の生成
@@ -831,7 +831,7 @@ SptFactory::new_MultiConcat(const FileRegion& file_region,
 			    PtExprArray expr_array)
 {
   void* p = alloc().get_memory(sizeof(SptOpr2));
-  return new (p) SptOpr2(file_region, kVlMultiConcatOp, expr_array);
+  return new (p) SptOpr2(file_region, VpiOpType::MultiConcat, expr_array);
 }
 
 // @brief min/typ/max delay 演算子の生成
@@ -847,7 +847,7 @@ SptFactory::new_MinTypMax(const FileRegion& file_region,
 			  const PtExpr* val2)
 {
   void* p = alloc().get_memory(sizeof(SptOpr1));
-  return new (p) SptOpr1(file_region, kVlMinTypMaxOp,
+  return new (p) SptOpr1(file_region, VpiOpType::MinTypMax,
 			 val0, val1, val2);
 }
 
@@ -894,7 +894,7 @@ SptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -919,7 +919,7 @@ const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
 			PtExprArray index_array,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -981,7 +981,7 @@ const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			PtNameBranchArray nb_array,
 			const char* tail_name,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -1008,7 +1008,7 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			PtNameBranchArray nb_array,
 			const char* tail_name,
 			PtExprArray index_array,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -1049,7 +1049,7 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_CPrimary(const FileRegion& file_region,
 			 const char* name,
-			 tVpiRangeMode mode,
+			 VpiRangeMode mode,
 			 const PtExpr* left,
 			 const PtExpr* right)
 {
@@ -1141,7 +1141,7 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 			 unsigned int value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, kVpiIntConst,
+  return new (p) SptConstant(file_region, VpiConstType::Int,
 			     0, value, nullptr, 0.0);
 }
 
@@ -1154,7 +1154,7 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, kVpiIntConst,
+  return new (p) SptConstant(file_region, VpiConstType::Int,
 			     0, 0, value, 0.0);
 }
 
@@ -1165,7 +1165,7 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 // @return 生成された定数
 const PtExpr*
 SptFactory::new_IntConst(const FileRegion& file_region,
-			 tVpiConstType const_type,
+			 VpiConstType const_type,
 			 const char* value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
@@ -1182,7 +1182,7 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_IntConst(const FileRegion& file_region,
 			 int size,
-			 tVpiConstType const_type,
+			 VpiConstType const_type,
 			 const char* value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
@@ -1199,7 +1199,7 @@ SptFactory::new_RealConst(const FileRegion& file_region,
 			  double value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, kVpiRealConst,
+  return new (p) SptConstant(file_region, VpiConstType::Real,
 			     0, 0, nullptr, value);
 }
 
@@ -1212,7 +1212,7 @@ SptFactory::new_StringConst(const FileRegion& file_region,
 			    const char* value)
 {
   void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, kVpiStringConst,
+  return new (p) SptConstant(file_region, VpiConstType::String,
 			     0, 0, value, 0.0);
 }
 

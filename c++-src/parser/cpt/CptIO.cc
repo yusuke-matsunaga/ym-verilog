@@ -28,9 +28,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] sign 符号つきの時 true にするフラグ
 CptIOHBase::CptIOHBase(const FileRegion& file_region,
 		       tPtIOType type,
-		       tVpiAuxType aux_type,
-		       tVpiNetType net_type,
-		       tVpiVarType var_type,
+		       VpiAuxType aux_type,
+		       VpiNetType net_type,
+		       VpiVarType var_type,
 		       bool sign) :
   mFileRegion(file_region)
 {
@@ -62,24 +62,24 @@ CptIOHBase::type() const
 }
 
 // @brief 補助的な型の取得
-tVpiAuxType
+VpiAuxType
 CptIOHBase::aux_type() const
 {
-  return static_cast<tVpiAuxType>((mAttr >> 8) & 0xff);
+  return static_cast<VpiAuxType>((mAttr >> 8) & 0xff);
 }
 
 // @bief 補助的なネット型の取得
-tVpiNetType
+VpiNetType
 CptIOHBase::net_type() const
 {
-  return static_cast<tVpiNetType>((mAttr >> 16) & 0xff);
+  return static_cast<VpiNetType>((mAttr >> 16) & 0xff);
 }
 
 // @brief 補助的な変数型の取得
-tVpiVarType
+VpiVarType
 CptIOHBase::var_type() const
 {
-  return static_cast<tVpiVarType>((mAttr >> 24) & 0xff);
+  return static_cast<VpiVarType>((mAttr >> 24) & 0xff);
 }
 
 // @brief 符号の取得
@@ -140,9 +140,9 @@ CptIOHBase::set_elem(PtIOItemArray elem_array)
 // @param[in] sign 符号の有無
 CptIOH::CptIOH(const FileRegion& file_region,
 	       tPtIOType type,
-	       tVpiAuxType aux_type,
-	       tVpiNetType net_type,
-	       tVpiVarType var_type,
+	       VpiAuxType aux_type,
+	       VpiNetType net_type,
+	       VpiVarType var_type,
 	       bool sign) :
   CptIOHBase(file_region,
 	     type, aux_type,
@@ -171,14 +171,14 @@ CptIOH::~CptIOH()
 // @param[in] right 範囲の右側の式
 CptIOHV::CptIOHV(const FileRegion& file_region,
 		 tPtIOType type,
-		 tVpiAuxType aux_type,
-		 tVpiNetType net_type,
+		 VpiAuxType aux_type,
+		 VpiNetType net_type,
 		 bool sign,
 		 const PtExpr* left,
 		 const PtExpr* right) :
   CptIOHBase(file_region,
 	     type, aux_type,
-	     net_type, kVpiVarNone,
+	     net_type, VpiVarType::None,
 	     sign),
   mLeftRange(left),
   mRightRange(right)
@@ -303,8 +303,8 @@ CptFactory::new_IOHead(const FileRegion& file_region,
   ++ mNumIOH;
   void* p = alloc().get_memory(sizeof(CptIOH));
   return new (p) CptIOH(file_region,
-			type, kVpiAuxNone,
-			kVpiNone, kVpiVarNone, sign);
+			type, VpiAuxType::None,
+			VpiNetType::None, VpiVarType::None, sign);
 }
 
 // @brief IO 宣言のヘッダの生成 (reg 型)
@@ -320,8 +320,8 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
   ++ mNumIOH;
   void* p = alloc().get_memory(sizeof(CptIOH));
   return new (p) CptIOH(file_region,
-			type, kVpiAuxReg,
-			kVpiNone, kVpiVarNone, sign);
+			type, VpiAuxType::Reg,
+			VpiNetType::None, VpiVarType::None, sign);
 }
 
 // @brief IO 宣言のヘッダの生成 (ネット型)
@@ -333,14 +333,14 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 PtiIOHead*
 CptFactory::new_NetIOHead(const FileRegion& file_region,
 			  tPtIOType type,
-			  tVpiNetType net_type,
+			  VpiNetType net_type,
 			  bool sign)
 {
   ++ mNumIOH;
   void* p = alloc().get_memory(sizeof(CptIOH));
   return new (p) CptIOH(file_region,
-			type, kVpiAuxNet,
-			net_type, kVpiVarNone, sign);
+			type, VpiAuxType::Net,
+			net_type, VpiVarType::None, sign);
 }
 
 // @brief IO 宣言のヘッダの生成 (変数型)
@@ -351,13 +351,13 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
 PtiIOHead*
 CptFactory::new_VarIOHead(const FileRegion& file_region,
 			  tPtIOType type,
-			  tVpiVarType var_type)
+			  VpiVarType var_type)
 {
   ++ mNumIOH;
   void* p = alloc().get_memory(sizeof(CptIOH));
-  return new (p) CptIOH(file_region,
-			type, kVpiAuxVar,
-			kVpiNone, var_type, false);
+  return new (p) CptIOH(file_region, type,
+			VpiAuxType::Var, VpiNetType::None,
+			var_type, false);
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成
@@ -376,8 +376,8 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 {
   ++ mNumIOHV;
   void* p = alloc().get_memory(sizeof(CptIOHV));
-  return new (p) CptIOHV(file_region,
-			 type, kVpiAuxNone, kVpiNone,
+  return new (p) CptIOHV(file_region, type,
+			 VpiAuxType::None, VpiNetType::None,
 			 sign, left, right);
 }
 
@@ -398,7 +398,7 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
   ++ mNumIOHV;
   void* p = alloc().get_memory(sizeof(CptIOHV));
   return new (p) CptIOHV(file_region,
-			 type, kVpiAuxReg, kVpiNone,
+			 type, VpiAuxType::Reg, VpiNetType::None,
 			 sign, left, right);
 }
 
@@ -413,7 +413,7 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 PtiIOHead*
 CptFactory::new_NetIOHead(const FileRegion& file_region,
 			  tPtIOType type,
-			  tVpiNetType net_type,
+			  VpiNetType net_type,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right)
@@ -421,7 +421,7 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
   ++ mNumIOHV;
   void* p = alloc().get_memory(sizeof(CptIOHV));
   return new (p) CptIOHV(file_region,
-			 type, kVpiAuxNet, net_type,
+			 type, VpiAuxType::Net, net_type,
 			 sign, left, right);
 }
 

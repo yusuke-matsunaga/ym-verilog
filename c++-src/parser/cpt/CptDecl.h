@@ -70,14 +70,14 @@ public:
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
   /// @note このクラスでは kVpiVarNone を返す．
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
   /// @note このクラスでは kVpiNone を返す．
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// @brief vectored|scalared 属性の取得
@@ -85,7 +85,7 @@ public:
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
   /// @note このクラスでは kVpiVsNone を返す．
-  tVpiVsType
+  VpiVsType
   vs_type() const override;
 
   /// @brief strength の取得
@@ -372,7 +372,7 @@ protected:
   /// @param[in] file_region ファイル位置の情報
   /// @param[in] var_type データ型
   CptParamHT(const FileRegion& file_region,
-	     tVpiVarType var_type);
+	     VpiVarType var_type);
 
   /// @brief デストラクタ
   ~CptParamHT();
@@ -397,7 +397,7 @@ public:
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
 
@@ -407,7 +407,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // データ型
-  tVpiVarType mVarType;
+  VpiVarType mVarType;
 
 };
 
@@ -426,7 +426,7 @@ protected:
   /// @param[in] file_region ファイル位置の情報
   /// @param[in] var_type データ型
   CptLocalParamHT(const FileRegion& file_region,
-		  tVpiVarType var_type);
+		  VpiVarType var_type);
 
   /// @brief デストラクタ
   ~CptLocalParamHT();
@@ -613,7 +613,7 @@ protected:
   /// @param[in] file_region ファイル位置の情報
   /// @param[in] var_type データ型
   CptVarH(const FileRegion& file_region,
-	  tVpiVarType var_type);
+	  VpiVarType var_type);
 
   /// @brief デストラクタ
   ~CptVarH();
@@ -638,7 +638,7 @@ public:
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
-  tVpiVarType
+  VpiVarType
   data_type() const override;
 
 
@@ -648,7 +648,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // データ型
-  tVpiVarType
+  VpiVarType
   mVarType;
 
 };
@@ -701,7 +701,7 @@ protected:
   /// @param[in] net_type net の型
   /// @param[in] sign 符号付きのとき true となるフラグ
   CptNetH(const FileRegion& file_region,
-	  tVpiNetType net_type,
+	  VpiNetType net_type,
 	  bool sign);
 
   /// @brief デストラクタ
@@ -720,7 +720,7 @@ public:
 
   /// @brief net type を返す．(vpiWire など)
   /// @return net 型
-  tVpiNetType
+  VpiNetType
   net_type() const override;
 
   /// @brief 符号の有無の取得
@@ -755,7 +755,7 @@ protected:
   /// @param[in] sign 符号付きのとき true となるフラグ
   /// @param[in] strength 信号強度
   CptNetHS(const FileRegion& file_region,
-	   tVpiNetType net_type,
+	   VpiNetType net_type,
 	   bool sign,
 	   const PtStrength* strength);
 
@@ -801,7 +801,7 @@ protected:
   /// @param[in] sign 符号付きのとき true となるフラグ
   /// @param[in] delay 遅延
   CptNetHD(const FileRegion& file_region,
-	   tVpiNetType net_type,
+	   VpiNetType net_type,
 	   bool sign,
 	   const PtDelay* delay);
 
@@ -848,7 +848,7 @@ protected:
   /// @param[in] sign 符号付きのとき true となるフラグ
   /// @param[in] delay 遅延
   CptNetHSD(const FileRegion& file_region,
-	    tVpiNetType net_type,
+	    VpiNetType net_type,
 	    bool sign,
 	    const PtStrength* strength,
 	    const PtDelay* delay);
@@ -905,8 +905,8 @@ protected:
   /// @param[in] left 範囲の左側の式
   /// @param[in] right 範囲の右側の式
   CptNetHV(const FileRegion& file_region,
-	   tVpiNetType net_type,
-	   tVpiVsType vstype,
+	   VpiNetType net_type,
+	   VpiVsType vstype,
 	   bool sign,
 	   const PtExpr* left,
 	   const PtExpr* right);
@@ -924,7 +924,7 @@ public:
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
-  tVpiVsType
+  VpiVsType
   vs_type() const override;
 
   /// @brief 範囲のMSBを取り出す．
@@ -971,8 +971,8 @@ protected:
   /// @param[in] right 範囲の右側の式
   /// @param[in] strength 信号強度
   CptNetHVS(const FileRegion& file_region,
-	    tVpiNetType net_type,
-	    tVpiVsType vstype,
+	    VpiNetType net_type,
+	    VpiVsType vstype,
 	    bool sign,
 	    const PtExpr* left,
 	    const PtExpr* right,
@@ -1023,8 +1023,8 @@ protected:
   /// @param[in] right 範囲の右側の式
   /// @param[in] delay 遅延
   CptNetHVD(const FileRegion& file_region,
-	    tVpiNetType net_type,
-	    tVpiVsType vstype,
+	    VpiNetType net_type,
+	    VpiVsType vstype,
 	    bool sign,
 	    const PtExpr* left,
 	    const PtExpr* right,
@@ -1076,8 +1076,8 @@ protected:
   /// @param[in] strength 信号強度
   /// @param[in] delay 遅延
   CptNetHVSD(const FileRegion& file_region,
-	     tVpiNetType net_type,
-	     tVpiVsType vstype,
+	     VpiNetType net_type,
+	     VpiVsType vstype,
 	     bool sign,
 	     const PtExpr* left,
 	     const PtExpr* right,

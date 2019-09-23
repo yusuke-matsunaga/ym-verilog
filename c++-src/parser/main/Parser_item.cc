@@ -291,7 +291,7 @@ Parser::new_TypedFunc(const FileRegion& fr,
 		      const char* name,
 		      bool automatic,
 		      bool sign,
-		      tVpiVarType func_type,
+		      VpiVarType func_type,
 		      const PtStmt* stmt)
 {
   return mFactory.new_TypedFunc(fr, name, automatic,
@@ -312,7 +312,7 @@ Parser::new_TypedFunc(const FileRegion& fr,
 // @param[in] terminal_list 端子のリスト
 void
 Parser::new_SpecItem(const FileRegion& fr,
-		     tVpiSpecItemType id,
+		     VpiSpecItemType id,
 		     PtrList<const PtExpr>* terminal_list)
 {
   const PtItem* item = mFactory.new_SpecItem(fr, id, to_array(terminal_list));
@@ -326,7 +326,7 @@ Parser::new_SpecItem(const FileRegion& fr,
 // @param[in] path_decl パス記述
 void
 Parser::new_SpecPath(const FileRegion& fr,
-		     tVpiSpecPathType id,
+		     VpiSpecPathType id,
 		     const PtExpr* expr,
 		     const PtPathDecl* path_decl)
 {
@@ -349,7 +349,7 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     int edge,
 		     PtrList<const PtExpr>* input_list,
 		     int input_pol,
-		     int op,
+		     VpiPathType op,
 		     PtrList<const PtExpr>* output_list,
 		     int output_pol,
 		     const PtExpr* expr,
@@ -377,7 +377,7 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     int edge,
 		     PtrList<const PtExpr>* input_list,
 		     int input_pol,
-		     int op,
+		     VpiPathType op,
 		     const PtExpr* output,
 		     int output_pol,
 		     const PtExpr* expr,

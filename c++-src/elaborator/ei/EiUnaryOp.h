@@ -68,7 +68,7 @@ public:
   is_const() const override;
 
   /// @brief オペランド数を返す．
-  int
+  SizeType
   operand_num() const override;
 
 
@@ -80,7 +80,7 @@ public:
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   ElbExpr*
-  _operand(int pos) const override;
+  _operand(SizeType pos) const override;
 
 
 protected:

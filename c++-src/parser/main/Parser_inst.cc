@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] type primitive の型
 const PtItem*
 Parser::new_GateH(const FileRegion& fr,
-		  tVpiPrimType type)
+		  VpiPrimType type)
 {
   return mFactory.new_GateH(fr, type, get_inst_array());
 }
@@ -34,7 +34,7 @@ Parser::new_GateH(const FileRegion& fr,
 // @param[in] strength 信号強度
 const PtItem*
 Parser::new_GateH(const FileRegion& fr,
-		  tVpiPrimType type,
+		  VpiPrimType type,
 		  const PtStrength* strength)
 {
   return mFactory.new_GateH(fr, type, strength, get_inst_array());
@@ -46,7 +46,7 @@ Parser::new_GateH(const FileRegion& fr,
 // @param[in] delay 遅延値
 const PtItem*
 Parser::new_GateH(const FileRegion& fr,
-		  tVpiPrimType type,
+		  VpiPrimType type,
 		  const PtDelay* delay)
 {
   return mFactory.new_GateH(fr, type, delay, get_inst_array());
@@ -59,7 +59,7 @@ Parser::new_GateH(const FileRegion& fr,
 // @param[in] delay 遅延値
 const PtItem*
 Parser::new_GateH(const FileRegion& fr,
-		  tVpiPrimType type,
+		  VpiPrimType type,
 		  const PtStrength* strength,
 		  const PtDelay* delay)
 {

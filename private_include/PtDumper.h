@@ -178,84 +178,84 @@ private:
   /// @param[in] aux_type 補助的なデータ型
   void
   put(const char* label,
-      tVpiAuxType aux_type);
+      VpiAuxType aux_type);
 
   /// @brief ネット型の出力
   /// @param[in] label ラベル
   /// @param[in] net_type ネット型
   void
   put(const char* label,
-      tVpiNetType net_type);
+      VpiNetType net_type);
 
   /// @brief 変数型の出力
   /// @param[in] label ラベル
   /// @param[in] var_type 変数型
   void
   put(const char* label,
-      tVpiVarType var_type);
+      VpiVarType var_type);
 
   /// @brief 方向の出力
   /// @param[in] label ラベル
   /// @param[in] direction 方向
   void
   put(const char* label,
-      tVlDirection direction);
+      VpiDir direction);
 
   /// @brief unconnected drive の出力
   /// @param[in] label ラベル
   /// @param[in] ud unconnected drive
   void
   put(const char* label,
-      tVpiUnconnDrive ud);
+      VpiUnconnDrive ud);
 
   /// @brief default delay mode の出力
   /// @param[in] label ラベル
   /// @param[in] delay_mode default delay mode
   void
   put(const char* label,
-      tVpiDefDelayMode delay_mode);
+      VpiDefDelayMode delay_mode);
 
   /// @brief primitive型の出力
   /// @param[in] label ラベル
   /// @param[in] prim_type primitive 型
   void
   put(const char* label,
-      tVpiPrimType prim_type);
+      VpiPrimType prim_type);
 
   /// @brief 演算子型の出力
   /// @param[in] label ラベル
   /// @param[in] op_type 演算子型
   void
   put(const char* label,
-      tVlOpType op_type);
+      VpiOpType op_type);
 
   /// @brief 定数型の出力
   /// @param[in] label ラベル
   /// @param[in] const_type 定数型
   void
   put(const char* label,
-      tVpiConstType const_type);
+      VpiConstType const_type);
 
   /// @brief strength の出力
   /// @param[in] label ラベル
   /// @param[in] strength strength
   void
   put(const char* label,
-      tVpiStrength strength);
+      VpiStrength strength);
 
   /// @brief vectored/scalared 属性の出力
   /// @param[in] label ラベル
   /// @param[in] vs_type vectored/scalared 属性
   void
   put(const char* label,
-      tVpiVsType vs_type);
+      VpiVsType vs_type);
 
   /// @brief 範囲指定モードの出力
   /// @param[in] label ラベル
   /// @param[in] range_mode
   void
   put(const char* label,
-      tVpiRangeMode range_mode);
+      VpiRangeMode range_mode);
 
   /// @brief FileLoc の情報を出力する．
   /// @param[in] label ラベル

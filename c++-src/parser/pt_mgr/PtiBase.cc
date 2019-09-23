@@ -129,10 +129,10 @@ decompile_opr(const PtExpr* expr,
 
   string ans;
 
-  tVlOpType optype = expr->op_type();
+  VpiOpType optype = expr->op_type();
   // parent_optype の優先順位が自分の優先順位よりも高ければ括弧が必要
   bool need_par = false;
-  int pri = pri_table[optype];
+  int pri = pri_table[static_cast<int>(optype)];
   if ( ppri > pri ) {
     need_par = true;
     ans += "(";
@@ -140,69 +140,70 @@ decompile_opr(const PtExpr* expr,
 
   switch ( optype ) {
     // 空
-  case kVlNullOp:
+  case VpiOpType::Null:
     ans += decompile_impl(expr->operand(0), 0);
     break;
 
     // 単項演算子
-  case kVlMinusOp:
-  case kVlNotOp:
-  case kVlBitNegOp:
-  case kVlPlusOp:
-  case kVlUnaryAndOp:
-  case kVlUnaryNandOp:
-  case kVlUnaryNorOp:
-  case kVlUnaryOrOp:
-  case kVlUnaryXNorOp:
-  case kVlUnaryXorOp:
-  case kVlPosedgeOp:
-  case kVlNegedgeOp:
-    ans += sym_table[optype] + decompile_impl(expr->operand(0), pri);
+  case VpiOpType::Minus:
+  case VpiOpType::Not:
+  case VpiOpType::BitNeg:
+  case VpiOpType::Plus:
+  case VpiOpType::UnaryAnd:
+  case VpiOpType::UnaryNand:
+  case VpiOpType::UnaryNor:
+  case VpiOpType::UnaryOr:
+  case VpiOpType::UnaryXNor:
+  case VpiOpType::UnaryXor:
+  case VpiOpType::Posedge:
+  case VpiOpType::Negedge:
+    ans += sym_table[static_cast<int>(optype)] + decompile_impl(expr->operand(0), pri);
     break;
 
     // 二項演算子
-  case kVlAddOp:
-  case kVlArithLShiftOp:
-  case kVlArithRShiftOp:
-  case kVlBitAndOp:
-  case kVlBitOrOp:
-  case kVlBitXNorOp:
-  case kVlBitXorOp:
-  case kVlCaseEqOp:
-  case kVlCaseNeqOp:
-  case kVlDivOp:
-  case kVlEqOp:
-  case kVlGeOp:
-  case kVlGtOp:
-  case kVlLShiftOp:
-  case kVlLeOp:
-  case kVlLogAndOp:
-  case kVlLogOrOp:
-  case kVlLtOp:
-  case kVlModOp:
-  case kVlMultOp:
-  case kVlNeqOp:
-  case kVlPowerOp:
-  case kVlRShiftOp:
-  case kVlSubOp:
-    ans += decompile_impl(expr->operand(0), pri) + sym_table[optype] +
+  case VpiOpType::Add:
+  case VpiOpType::ArithLShift:
+  case VpiOpType::ArithRShift:
+  case VpiOpType::BitAnd:
+  case VpiOpType::BitOr:
+  case VpiOpType::BitXNor:
+  case VpiOpType::BitXor:
+  case VpiOpType::CaseEq:
+  case VpiOpType::CaseNeq:
+  case VpiOpType::Div:
+  case VpiOpType::Eq:
+  case VpiOpType::Ge:
+  case VpiOpType::Gt:
+  case VpiOpType::LShift:
+  case VpiOpType::Le:
+  case VpiOpType::LogAnd:
+  case VpiOpType::LogOr:
+  case VpiOpType::Lt:
+  case VpiOpType::Mod:
+  case VpiOpType::Mult:
+  case VpiOpType::Neq:
+  case VpiOpType::Power:
+  case VpiOpType::RShift:
+  case VpiOpType::Sub:
+    ans += decompile_impl(expr->operand(0), pri) +
+      sym_table[static_cast<int>(optype)] +
       decompile_impl(expr->operand(1), pri);
     break;
 
     // 三項演算子
-  case kVlConditionOp:
+  case VpiOpType::Condition:
     ans += decompile_impl(expr->operand(0), pri) + "?" +
       decompile_impl(expr->operand(1), pri) + ":" +
       decompile_impl(expr->operand(2), pri);
     break;
 
-  case kVlMinTypMaxOp:
+  case VpiOpType::MinTypMax:
     ans += decompile_impl(expr->operand(0), pri) + ":" +
       decompile_impl(expr->operand(1), pri) + ":" +
       decompile_impl(expr->operand(2), pri);
     break;
 
-  case kVlConcatOp:
+  case VpiOpType::Concat:
     {
       ans += "{";
       const char* delim = "";
@@ -215,7 +216,7 @@ decompile_opr(const PtExpr* expr,
     }
     break;
 
-  case kVlMultiConcatOp:
+  case VpiOpType::MultiConcat:
     {
       ans = "{";
       ans += expr->operand(0)->decompile() + "{";
@@ -257,41 +258,41 @@ decompile_impl(const PtExpr* expr,
       }
 
       switch ( expr->const_type() ) {
-      case kVpiRealConst:
+      case VpiConstType::Real:
 	buf << expr->const_real();
 	return buf.str();
 
-      case kVpiStringConst:
+      case VpiConstType::String:
 	return expr->const_str();
 
-      case kVpiIntConst:
+      case VpiConstType::Int:
 	if ( expr->const_str() == nullptr ) {
 	  buf << expr->const_uint();
 	  return buf.str();
 	}
 	break;
 
-      case kVpiSignedBinaryConst:
+      case VpiConstType::SignedBinary:
 	buf << "s";
-      case kVpiBinaryConst:
+      case VpiConstType::Binary:
 	buf << "b";
 	break;
 
-      case kVpiSignedOctConst:
+      case VpiConstType::SignedOct:
 	buf << "s";
-      case kVpiOctConst:
+      case VpiConstType::Oct:
 	buf << "b";
 	break;
 
-      case kVpiSignedDecConst:
+      case VpiConstType::SignedDec:
 	buf << "s";
-      case kVpiDecConst:
+      case VpiConstType::Dec:
 	buf << "d";
 	break;
 
-      case kVpiSignedHexConst:
+      case VpiConstType::SignedHex:
 	buf << "s";
-      case kVpiHexConst:
+      case VpiConstType::Hex:
 	buf << "h";
 	break;
       }
@@ -321,13 +322,13 @@ decompile_impl(const PtExpr* expr,
       for (ymuint i = 0; i < n; ++ i) {
 	ans += "[" + expr->index(i)->decompile() + "]";
       }
-      if ( expr->range_mode() != kVpiNoRange ) {
+      if ( expr->range_mode() != VpiRangeMode::No ) {
 	const char* delim = nullptr;
 	switch ( expr->range_mode() ) {
-	case kVpiConstRange: delim = ":"; break;
-	case kVpiPlusRange:  delim = "+:"; break;
-	case kVpiMinusRange: delim = "-:"; break;
-	case kVpiNoRange: ASSERT_NOT_REACHED;
+	case VpiRangeMode::Const: delim = ":"; break;
+	case VpiRangeMode::Plus:  delim = "+:"; break;
+	case VpiRangeMode::Minus: delim = "-:"; break;
+	case VpiRangeMode::No:    ASSERT_NOT_REACHED;
 	}
 	ans += "[" + expr->left_range()->decompile() + delim +
 	  expr->right_range()->decompile() + "]";

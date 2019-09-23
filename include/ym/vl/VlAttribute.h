@@ -24,7 +24,6 @@ class VlAttribute :
 protected:
 
   /// @brief デストラクタ
-  virtual
   ~VlAttribute() { }
 
 
@@ -71,14 +70,14 @@ public:
 
   /// @brief 要素数を返す．
   virtual
-  int
+  SizeType
   size() const = 0;
 
   /// @brief 内容を返す．
   /// @param[in] pos 位置番号 (0 <= pos < size() )
   virtual
   VlAttribute*
-  elem(int pos) const = 0;
+  elem(SizeType pos) const = 0;
 
 };
 

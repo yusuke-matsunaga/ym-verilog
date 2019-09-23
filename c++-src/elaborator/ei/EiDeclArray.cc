@@ -33,11 +33,11 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
 			 const PtNamedBase* pt_item,
 			 const vector<ElbRangeSrc>& range_src)
 {
-  int dim_size = range_src.size();
+  SizeType dim_size = range_src.size();
   void* q = mAlloc.get_memory(sizeof(EiRange) * dim_size);
   EiRange* range_array = new (q) EiRange[dim_size];
-  int elem_size = 1;
-  for ( int i = 0; i < dim_size; ++ i ) {
+  SizeType elem_size = 1;
+  for ( SizeType i = 0; i < dim_size; ++ i ) {
     range_array[i].set(range_src[i]);
     elem_size *= range_array[i].size();
   }
@@ -46,8 +46,8 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
   void* p = nullptr;
   void* r = nullptr;
   switch ( head->type() ) {
-  case kVpiReg:
-  case kVpiNet:
+  case VpiObjType::Reg:
+  case VpiObjType::Net:
     if ( head->bit_size() == 1 ) {
       r = mAlloc.get_memory(sizeof(VlScalarVal) * elem_size);
       VlScalarVal* varray = new (r) VlScalarVal[elem_size];
@@ -58,8 +58,8 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
     }
     // わざと次に続く．
 
-  case kVpiIntegerVar:
-  case kVpiTimeVar:
+  case VpiObjType::IntegerVar:
+  case VpiObjType::TimeVar:
     {
       r = mAlloc.get_memory(sizeof(BitVector) * elem_size);
       BitVector* varray = new (r) BitVector[elem_size];
@@ -69,7 +69,7 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
     }
     break;
 
-  case kVpiRealVar:
+  case VpiObjType::RealVar:
     {
       r = mAlloc.get_memory(sizeof(double) * elem_size);
       double* varray = new (r) double[elem_size];
@@ -79,13 +79,13 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
     }
     break;
 
-  case kVpiNamedEvent:
+  case VpiObjType::NamedEvent:
     p = mAlloc.get_memory(sizeof(EiDeclArrayN));
     decl = new (p) EiDeclArrayN(head, pt_item, dim_size, range_array);
     break;
 
-  case kVpiParameter:
-  case kVpiSpecParam:
+  case VpiObjType::Parameter:
+  case VpiObjType::SpecParam:
   default:
     ASSERT_NOT_REACHED;
     break;
@@ -107,7 +107,7 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
 // @param[in] range_array 範囲の配列
 EiDeclArray::EiDeclArray(ElbDeclHead* head,
 			 const PtNamedBase* pt_item,
-			 int dim_size,
+			 SizeType dim_size,
 			 EiRange* range_array) :
   mHead(head),
   mPtItem(pt_item),
@@ -122,24 +122,24 @@ EiDeclArray::~EiDeclArray()
 
 // @brief 型の取得
 // @return vpi_user.h で定義された型 (vpiModule など)
-tVpiObjType
+VpiObjType
 EiDeclArray::type() const
 {
   switch ( mHead->type() ) {
-  case kVpiNet:        return kVpiNetArray;
-  case kVpiReg:        return kVpiRegArray;
-  case kVpiNamedEvent: return kVpiNamedEventArray;
-  case kVpiIntegerVar: return kVpiIntegerVar;
-  case kVpiRealVar:    return kVpiRealVar;
-  case kVpiTimeVar:    return kVpiTimeVar;
+  case VpiObjType::Net:        return VpiObjType::NetArray;
+  case VpiObjType::Reg:        return VpiObjType::RegArray;
+  case VpiObjType::NamedEvent: return VpiObjType::NamedEventArray;
+  case VpiObjType::IntegerVar: return VpiObjType::IntegerVar;
+  case VpiObjType::RealVar:    return VpiObjType::RealVar;
+  case VpiObjType::TimeVar:    return VpiObjType::TimeVar;
   default: break;
   }
   ASSERT_NOT_REACHED;
-  return kVpiNetArray;
+  return VpiObjType::NetArray;
 }
 
 // @brief 要素の型を返す．
-tVpiObjType
+VpiObjType
 EiDeclArray::elem_type() const
 {
   return mHead->type();
@@ -237,7 +237,7 @@ EiDeclArray::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-int
+SizeType
 EiDeclArray::bit_size() const
 {
   return mHead->bit_size();
@@ -258,7 +258,7 @@ EiDeclArray::calc_bit_offset(int index,
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
-tVpiVarType
+VpiVarType
 EiDeclArray::data_type() const
 {
   return mHead->data_type();
@@ -267,7 +267,7 @@ EiDeclArray::data_type() const
 // @brief net 型の取得
 // @retval net 型 net 型の要素の場合
 // @retval kVpiNone net 型の要素でない場合
-tVpiNetType
+VpiNetType
 EiDeclArray::net_type() const
 {
   return mHead->net_type();
@@ -277,7 +277,7 @@ EiDeclArray::net_type() const
 // @retval kVpiVsNone vectored|scalared 指定なし
 // @retval kVpiVectored vectored 指定あり
 // @retval kVpiScalared scalared 指定あり
-tVpiVsType
+VpiVsType
 EiDeclArray::vs_type() const
 {
   return mHead->vs_type();
@@ -286,7 +286,7 @@ EiDeclArray::vs_type() const
 // @brief drive0 strength の取得
 // @retval 0 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDeclArray::drive0() const
 {
   return mHead->drive0();
@@ -295,7 +295,7 @@ EiDeclArray::drive0() const
 // @brief drive1 strength の取得
 // @retval 1 の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDeclArray::drive1() const
 {
   return mHead->drive1();
@@ -304,7 +304,7 @@ EiDeclArray::drive1() const
 // @brief charge strength の取得
 // @retval 電荷の強度
 // @retval kVpiNoStrength strength の指定なし
-tVpiStrength
+VpiStrength
 EiDeclArray::charge() const
 {
   return mHead->charge();
@@ -334,7 +334,7 @@ EiDeclArray::is_multi_array() const
 }
 
 // @brief 配列型オブジェクトの場合の次元数の取得
-int
+SizeType
 EiDeclArray::dimension() const
 {
   return mRangeList.size();
@@ -343,13 +343,13 @@ EiDeclArray::dimension() const
 // @brief 範囲の取得
 // @param[in] pos 位置 ( 0 <= pos < dimension() )
 const VlRange*
-EiDeclArray::range(int pos) const
+EiDeclArray::range(SizeType pos) const
 {
   return mRangeList.range(pos);
 }
 
 // @brief 配列の要素数の取得
-int
+SizeType
 EiDeclArray::array_size() const
 {
   return mRangeList.elem_size();
@@ -395,7 +395,7 @@ EiDeclArray::calc_array_offset(const vector<int>& index_list,
 // @param[in] range_array 範囲の配列
 EiDeclArrayN::EiDeclArrayN(ElbDeclHead* head,
 			   const PtNamedBase* pt_item,
-			   int dim_size,
+			   SizeType dim_size,
 			   EiRange* range_array) :
   EiDeclArray(head, pt_item, dim_size, range_array)
 {
@@ -538,7 +538,7 @@ EiDeclArrayN::set_partselect(int offset,
 // @param[in] varray 値を納める配列
 EiDeclArrayS::EiDeclArrayS(ElbDeclHead* head,
 			   const PtNamedBase* pt_item,
-			   int dim_size,
+			   SizeType dim_size,
 			   EiRange* range_array,
 			   VlScalarVal* varray) :
   EiDeclArray(head, pt_item, dim_size, range_array),
@@ -704,7 +704,7 @@ EiDeclArrayS::set_partselect(int offset,
 // @param[in] varray 値を納める配列
 EiDeclArrayR::EiDeclArrayR(ElbDeclHead* head,
 			   const PtNamedBase* pt_item,
-			   int dim_size,
+			   SizeType dim_size,
 			   EiRange* range_array,
 			   double* varray) :
   EiDeclArray(head, pt_item, dim_size, range_array),
@@ -846,7 +846,7 @@ EiDeclArrayR::set_partselect(int offset,
 // @param[in] varray 値を納める配列
 EiDeclArrayV::EiDeclArrayV(ElbDeclHead* head,
 			   const PtNamedBase* pt_item,
-			   int dim_size,
+			   SizeType dim_size,
 			   EiRange* range_array,
 			   BitVector* varray) :
   EiDeclArray(head, pt_item, dim_size, range_array),

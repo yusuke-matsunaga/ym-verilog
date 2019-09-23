@@ -342,35 +342,42 @@ public:
   /// @param[in] direction 向き
   void
   put(const char* label,
-      tVlDirection direction);
+      VpiDir direction);
+
+  /// @brief case type を出力する関数
+  /// @param[in] label ラベル
+  /// @param[in] case_type CASE文の型
+  void
+  put(const char* label,
+      VpiCaseType case_type);
 
   /// @brief const type を出力する関数
   /// @param[in] label ラベル
   /// @param[in] const_type 定数の型
   void
   put(const char* label,
-      tVpiConstType const_type);
+      VpiConstType const_type);
 
   /// @brief prim type を出力する関数
   /// @param[in] label ラベル
   /// @param[in] prim_type プリミティブの型
   void
   put(const char* label,
-      tVpiPrimType prim_type);
+      VpiPrimType prim_type);
 
   /// @brief func type の出力
   /// @param[in] label ラベル
   /// @param[in] func_type
   void
   put(const char* label,
-      tVpiFuncType func_type);
+      VpiFuncType func_type);
 
   /// @brief op type の出力
   /// @param[in] label ラベル
   /// @param[in] op_type 演算子の種類
   void
   put(const char* label,
-      tVlOpType op_type);
+      VpiOpType op_type);
 
   /// @brief strength を出力する関数
   /// @param[in] label ラベル
@@ -378,7 +385,7 @@ public:
   /// @param[in] put_on_null true の時, 空でも出力する．
   void
   put(const char* label,
-      tVpiStrength str,
+      VpiStrength str,
       bool put_on_null = true);
 
   /// @brief unconnected drive の出力
@@ -386,21 +393,21 @@ public:
   /// @param[in] ud unconnected drive
   void
   put(const char* label,
-      tVpiUnconnDrive ud);
+      VpiUnconnDrive ud);
 
   /// @brief default delay mode の出力
   /// @param[in] label ラベル
   /// @param[in] delay_mode default delay mode
   void
   put(const char* label,
-      tVpiDefDelayMode delay_mode);
+      VpiDefDelayMode delay_mode);
 
   /// @brief ネット型の出力
   /// @param[in] label ラベル
   /// @param[in] net_type ネット型
   void
   put(const char* label,
-      tVpiNetType net_type);
+      VpiNetType net_type);
 
   /// @brief ブール値の出力
   /// @param[in] label ラベル
@@ -421,7 +428,14 @@ public:
   /// @param[in] d 整数値
   void
   put(const char* label,
-      ymuint d);
+      unsigned int d);
+
+  /// @brief 整数値の出力
+  /// @param[in] label ラベル
+  /// @param[in] d 整数値
+  void
+  put(const char* label,
+      SizeType d);
 
   /// @brief スカラー値の出力
   /// @param[in] label ラベル

@@ -43,12 +43,12 @@ public:
 
   /// @brief 0の強さを返す．
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const = 0;
 
   /// @brief 1の強さを返す．
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const = 0;
 
   /// @brief 遅延を表す式を返す．

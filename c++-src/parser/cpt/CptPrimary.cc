@@ -158,7 +158,7 @@ CptPrimaryCI::is_const_index() const
 // コンストラクタ
 CptPrimaryR::CptPrimaryR(const FileRegion& file_region,
 			 const char* name,
-			 tVpiRangeMode mode,
+			 VpiRangeMode mode,
 			 const PtExpr* left,
 			 const PtExpr* right) :
   CptPrimaryBase(name),
@@ -182,7 +182,7 @@ CptPrimaryR::file_region() const
 }
 
 // 範囲指定モードの取得
-tVpiRangeMode
+VpiRangeMode
 CptPrimaryR::range_mode() const
 {
   return mMode;
@@ -217,7 +217,7 @@ CptPrimaryR::is_simple() const
 // コンストラクタ
 CptPrimaryCR::CptPrimaryCR(const FileRegion& file_region,
 			   const char* name,
-			   tVpiRangeMode mode,
+			   VpiRangeMode mode,
 			   const PtExpr* left,
 			   const PtExpr* right) :
   CptPrimaryR(file_region, name, mode, left, right)
@@ -245,7 +245,7 @@ CptPrimaryCR::is_const_index() const
 CptPrimaryIR::CptPrimaryIR(const FileRegion& file_region,
 			   const char* name,
 			   PtExprArray index_array,
-			   tVpiRangeMode mode,
+			   VpiRangeMode mode,
 			   const PtExpr* left,
 			   const PtExpr* right) :
   CptPrimaryI(file_region, name, index_array),
@@ -261,7 +261,7 @@ CptPrimaryIR::~CptPrimaryIR()
 }
 
 // 範囲指定モード
-tVpiRangeMode
+VpiRangeMode
 CptPrimaryIR::range_mode() const
 {
   return mMode;
@@ -377,7 +377,7 @@ CptPrimaryHCI::is_const_index() const
 CptPrimaryHR::CptPrimaryHR(const FileRegion& file_region,
 			   PtNameBranchArray nb_array,
 			   const char* tail_name,
-			   tVpiRangeMode mode,
+			   VpiRangeMode mode,
 			   const PtExpr* left,
 			   const PtExpr* right) :
   CptPrimaryR(file_region, tail_name, mode, left, right),
@@ -407,7 +407,7 @@ CptPrimaryHIR::CptPrimaryHIR(const FileRegion& file_region,
 			     PtNameBranchArray nb_array,
 			     const char* tail_name,
 			     PtExprArray index_array,
-			     tVpiRangeMode mode,
+			     VpiRangeMode mode,
 			     const PtExpr* left,
 			     const PtExpr* right) :
   CptPrimaryIR(file_region, tail_name, index_array, mode, left, right),
@@ -457,7 +457,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -471,7 +471,7 @@ const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
 			PtExprArray index_array,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -508,7 +508,7 @@ const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
 			PtNameBranchArray nb_array,
 			const char* tail_name,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -523,7 +523,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtNameBranchArray nb_array,
 			const char* tail_name,
 			PtExprArray index_array,
-			tVpiRangeMode mode,
+			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
@@ -548,7 +548,7 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_CPrimary(const FileRegion& file_region,
 			 const char* name,
-			 tVpiRangeMode mode,
+			 VpiRangeMode mode,
 			 const PtExpr* left,
 			 const PtExpr* right)
 {

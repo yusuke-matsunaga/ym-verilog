@@ -40,11 +40,11 @@ public:
   name() const = 0;
 
   /// @brief 方向を返す．
-  /// @retval kVlInput 入力
-  /// @retval kVlOutput 出力
-  /// @retval kVlInout 入出力
+  /// @retval VpiDir::Input 入力
+  /// @retval VpiDir::Output 出力
+  /// @retval VpiDir::Inout 入出力
   virtual
-  tVlDirection
+  VpiDir
   direction() const = 0;
 
   /// @brief 符号の取得
@@ -85,7 +85,7 @@ public:
 
   /// @brief ビット幅を返す．
   virtual
-  int
+  SizeType
   bit_size() const = 0;
 
   /// @brief 対応する宣言要素返す．

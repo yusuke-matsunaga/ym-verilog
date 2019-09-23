@@ -125,19 +125,19 @@ public:
   /// @brief drive strength0 の取得
   /// @return 0 の強度
   virtual
-  tVpiStrength
+  VpiStrength
   drive0() const = 0;
 
   /// @brief drive strength1 の取得
   /// @return 1 の強度
   virtual
-  tVpiStrength
+  VpiStrength
   drive1() const = 0;
 
   /// @brief charge strength の取得
   /// @return 電荷の強度
   virtual
-  tVpiStrength
+  VpiStrength
   charge() const = 0;
 
 };

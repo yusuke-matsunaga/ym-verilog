@@ -68,9 +68,9 @@ ItemGen::instantiate_gateheader(const VlNamedObj* parent,
   for ( auto pt_inst: pt_head->inst_list() ) {
     const FileRegion& fr = pt_inst->file_region();
     SizeType port_num = pt_inst->port_list().size();
-    int output_num;
-    int inout_num;
-    int input_num;
+    SizeType output_num;
+    SizeType inout_num;
+    SizeType input_num;
     switch ( ElbPrimitive::get_port_size(pt_head->prim_type(), port_num,
 					 output_num, inout_num, input_num) ) {
     case -1:
@@ -406,7 +406,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
     const VlPrimTerm* term = prim->prim_term(index);
     ++ index;
     ElbExpr* tmp = nullptr;
-    if ( term->direction() == kVlInput ) {
+    if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
     }
@@ -486,7 +486,7 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
     const VlPrimTerm* term = primitive->prim_term(index);
     ++ index;
     ElbExpr* tmp = nullptr;
-    if ( term->direction() == kVlInput ) {
+    if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
     }
@@ -585,7 +585,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
 
     const VlPrimTerm* term = prim->prim_term(index);
     ElbExpr* tmp = nullptr;
-    if ( term->direction() == kVlInput ) {
+    if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
     }
@@ -689,7 +689,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
 
     const VlPrimTerm* term = primitive->prim_term(index);
     ElbExpr* tmp = nullptr;
-    if ( term->direction() == kVlInput ) {
+    if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
     }

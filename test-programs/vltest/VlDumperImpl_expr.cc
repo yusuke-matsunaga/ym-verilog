@@ -41,10 +41,10 @@ VlDumperImpl::put_expr(const char* label,
 
   const char* nm = nullptr;
   switch ( expr->type() ) {
-  case kVpiOperation:              nm = "Operation"; break;
-  case kVpiConstant:               nm = "Constant"; break;
-  case kVpiFuncCall:               nm = "FuncCall"; break;
-  case kVpiSysFuncCall:            nm = "SysFuncCall"; break;
+  case VpiObjType::Operation:              nm = "Operation"; break;
+  case VpiObjType::Constant:               nm = "Constant"; break;
+  case VpiObjType::FuncCall:               nm = "FuncCall"; break;
+  case VpiObjType::SysFuncCall:            nm = "SysFuncCall"; break;
   default:
     if ( expr->is_primary() ) {
       nm = "Reference";
@@ -62,26 +62,26 @@ VlDumperImpl::put_expr(const char* label,
   put("FileRegion", expr->file_region());
 
   switch ( expr->type() ) {
-  case kVpiOperation:
+  case VpiObjType::Operation:
     put("vpiOpType", expr->op_type());
     for (ymuint i = 0; i < expr->operand_num(); ++ i) {
       put_expr("vpiOperand", mgr, expr->operand(i));
     }
     break;
 
-  case kVpiConstant:
+  case VpiObjType::Constant:
     put("vpiConstType", expr->constant_type());
     put("vpiDecompile", expr->decompile()); // <= 手抜き
     break;
 
-  case kVpiFuncCall:
+  case VpiObjType::FuncCall:
     put("vpiFunction", expr->function()->full_name());
     for (ymuint i = 0; i < expr->argument_num(); ++ i) {
       put_expr("vpiArgument", mgr, expr->argument(i));
     }
     break;
 
-  case kVpiSysFuncCall:
+  case VpiObjType::SysFuncCall:
     put("vpiUserSysTf", expr->user_systf()->name());
     for (ymuint i = 0; i < expr->argument_num(); ++ i) {
       put_expr("vpiArgument", mgr, expr->argument(i));
@@ -103,9 +103,9 @@ VlDumperImpl::put_expr(const char* label,
       put_primary(mgr, expr);
       const char* rm_str = nullptr;
       switch ( expr->range_mode() ) {
-      case kVpiConstRange: rm_str = "constant_range"; break;
-      case kVpiPlusRange:  rm_str = "plus_range"; break;
-      case kVpiMinusRange:  rm_str = "minus_range"; break;
+      case VpiRangeMode::Const: rm_str = "constant_range"; break;
+      case VpiRangeMode::Plus:  rm_str = "plus_range"; break;
+      case VpiRangeMode::Minus:  rm_str = "minus_range"; break;
       default: ASSERT_NOT_REACHED;
       }
       put("range_mode", rm_str);

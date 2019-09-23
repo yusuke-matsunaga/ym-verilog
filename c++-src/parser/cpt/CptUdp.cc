@@ -50,14 +50,14 @@ CptUdp::file_region() const
 }
 
 // primitivie type を返す．
-tVpiPrimType
+VpiPrimType
 CptUdp::prim_type() const
 {
   if ( mSeq ) {
-    return kVpiSeqPrim;
+    return VpiPrimType::Seq;
   }
   else {
-    return kVpiCombPrim;
+    return VpiPrimType::Comb;
   }
 }
 

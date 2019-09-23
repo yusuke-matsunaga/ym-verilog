@@ -62,94 +62,94 @@ BEGIN_NAMESPACE_YM
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiObjType {
-  kVpiAlways          = vpiAlways,
-  kVpiAssignStmt      = vpiAssignStmt,
-  kVpiAssignment      = vpiAssignment,
-  kVpiBegin           = vpiBegin,
-  kVpiCase            = vpiCase,
-  kVpiCaseItem        = vpiCaseItem,
-  kVpiConstant        = vpiConstant,
-  kVpiContAssign      = vpiContAssign,
-  kVpiDeassign        = vpiDeassign,
-  kVpiDefParam        = vpiDefParam,
-  kVpiDelayControl    = vpiDelayControl,
-  kVpiDisable         = vpiDisable,
-  kVpiEventControl    = vpiEventControl,
-  kVpiEventStmt       = vpiEventStmt,
-  kVpiFor             = vpiFor,
-  kVpiForce           = vpiForce,
-  kVpiForever         = vpiForever,
-  kVpiFork            = vpiFork,
-  kVpiFuncCall        = vpiFuncCall,
-  kVpiFunction        = vpiFunction,
-  kVpiGate            = vpiGate,
-  kVpiIf              = vpiIf,
-  kVpiIfElse          = vpiIfElse,
-  kVpiInitial         = vpiInitial,
-  kVpiIntegerVar      = vpiIntegerVar,
-  kVpiInterModPath    = vpiInterModPath,
-  kVpiIterator        = vpiIterator,
-  kVpiIODecl          = vpiIODecl,
-  kVpiMemory          = vpiMemory,
-  kVpiMemoryWord      = vpiMemoryWord,
-  kVpiModPath         = vpiModPath,
-  kVpiModule          = vpiModule,
-  kVpiNamedBegin      = vpiNamedBegin,
-  kVpiNamedEvent      = vpiNamedEvent,
-  kVpiNamedFork       = vpiNamedFork,
-  kVpiNet             = vpiNet,
-  kVpiNetBit          = vpiNetBit,
-  kVpiNullStmt        = vpiNullStmt,
-  kVpiOperation       = vpiOperation,
-  kVpiParamAssign     = vpiParamAssign,
-  kVpiParameter       = vpiParameter,
-  kVpiPartSelect      = vpiPartSelect,
-  kVpiPathTerm        = vpiPathTerm,
-  kVpiPort            = vpiPort,
-  kVpiPortBit         = vpiPortBit,
-  kVpiPrimTerm        = vpiPrimTerm,
-  kVpiRealVar         = vpiRealVar,
-  kVpiReg             = vpiReg,
-  kVpiRegBit          = vpiRegBit,
-  kVpiRelease         = vpiRelease,
-  kVpiRepeat          = vpiRepeat,
-  kVpiRepeatControl   = vpiRepeatControl,
-  kVpiSchedEvent      = vpiSchedEvent,
-  kVpiSpecParam       = vpiSpecParam,
-  kVpiSwitch          = vpiSwitch,
-  kVpiSysFuncCall     = vpiSysFuncCall,
-  kVpiSysTaskCall     = vpiSysTaskCall,
-  kVpiTableEntry      = vpiTableEntry,
-  kVpiTask            = vpiTask,
-  kVpiTaskCall        = vpiTaskCall,
-  kVpiTchk            = vpiTchk,
-  kVpiTchkTerm        = vpiTchkTerm,
-  kVpiTimeVar         = vpiTimeVar,
-  kVpiTimeQueue       = vpiTimeQueue,
-  kVpiUdp             = vpiUdp,
-  kVpiUdpDefn         = vpiUdpDefn,
-  kVpiUserSystf       = vpiUserSystf,
-  kVpiVarSelect       = vpiVarSelect,
-  kVpiWait            = vpiWait,
-  kVpiWhile           = vpiWhile,
-  kVpiAttribute       = vpiAttribute,
-  kVpiBitSelect       = vpiBitSelect,
-  kVpiCallback        = vpiCallback,
-  kVpiDelayTerm       = vpiDelayTerm,
-  kVpiDelayDevice     = vpiDelayDevice,
-  kVpiFrame           = vpiFrame,
-  kVpiGateArray       = vpiGateArray,
-  kVpiModuleArray     = vpiModuleArray,
-  kVpiPrimitiveArray  = vpiPrimitiveArray,
-  kVpiNetArray        = vpiNetArray,
-  kVpiRange           = vpiRange,
-  kVpiRegArray        = vpiRegArray,
-  kVpiSwitchArray     = vpiSwitchArray,
-  kVpiUdpArray        = vpiUdpArray,
-  kVpiContAssignBit   = vpiContAssignBit,
-  kVpiNamedEventArray = vpiNamedEventArray,
-  kVpiScope           = vpiScope
+enum class VpiObjType {
+  Always          = vpiAlways,
+  AssignStmt      = vpiAssignStmt,
+  Assignment      = vpiAssignment,
+  Begin           = vpiBegin,
+  Case            = vpiCase,
+  CaseItem        = vpiCaseItem,
+  Constant        = vpiConstant,
+  ContAssign      = vpiContAssign,
+  Deassign        = vpiDeassign,
+  DefParam        = vpiDefParam,
+  DelayControl    = vpiDelayControl,
+  Disable         = vpiDisable,
+  EventControl    = vpiEventControl,
+  EventStmt       = vpiEventStmt,
+  For             = vpiFor,
+  Force           = vpiForce,
+  Forever         = vpiForever,
+  Fork            = vpiFork,
+  FuncCall        = vpiFuncCall,
+  Function        = vpiFunction,
+  Gate            = vpiGate,
+  If              = vpiIf,
+  IfElse          = vpiIfElse,
+  Initial         = vpiInitial,
+  IntegerVar      = vpiIntegerVar,
+  InterModPath    = vpiInterModPath,
+  Iterator        = vpiIterator,
+  IODecl          = vpiIODecl,
+  Memory          = vpiMemory,
+  MemoryWord      = vpiMemoryWord,
+  ModPath         = vpiModPath,
+  Module          = vpiModule,
+  NamedBegin      = vpiNamedBegin,
+  NamedEvent      = vpiNamedEvent,
+  NamedFork       = vpiNamedFork,
+  Net             = vpiNet,
+  NetBit          = vpiNetBit,
+  NullStmt        = vpiNullStmt,
+  Operation       = vpiOperation,
+  ParamAssign     = vpiParamAssign,
+  Parameter       = vpiParameter,
+  PartSelect      = vpiPartSelect,
+  PathTerm        = vpiPathTerm,
+  Port            = vpiPort,
+  PortBit         = vpiPortBit,
+  PrimTerm        = vpiPrimTerm,
+  RealVar         = vpiRealVar,
+  Reg             = vpiReg,
+  RegBit          = vpiRegBit,
+  Release         = vpiRelease,
+  Repeat          = vpiRepeat,
+  RepeatControl   = vpiRepeatControl,
+  SchedEvent      = vpiSchedEvent,
+  SpecParam       = vpiSpecParam,
+  Switch          = vpiSwitch,
+  SysFuncCall     = vpiSysFuncCall,
+  SysTaskCall     = vpiSysTaskCall,
+  TableEntry      = vpiTableEntry,
+  Task            = vpiTask,
+  TaskCall        = vpiTaskCall,
+  Tchk            = vpiTchk,
+  TchkTerm        = vpiTchkTerm,
+  TimeVar         = vpiTimeVar,
+  TimeQueue       = vpiTimeQueue,
+  Udp             = vpiUdp,
+  UdpDefn         = vpiUdpDefn,
+  UserSystf       = vpiUserSystf,
+  VarSelect       = vpiVarSelect,
+  Wait            = vpiWait,
+  While           = vpiWhile,
+  Attribute       = vpiAttribute,
+  BitSelect       = vpiBitSelect,
+  Callback        = vpiCallback,
+  DelayTerm       = vpiDelayTerm,
+  DelayDevice     = vpiDelayDevice,
+  Frame           = vpiFrame,
+  GateArray       = vpiGateArray,
+  ModuleArray     = vpiModuleArray,
+  PrimitiveArray  = vpiPrimitiveArray,
+  NetArray        = vpiNetArray,
+  Range           = vpiRange,
+  RegArray        = vpiRegArray,
+  SwitchArray     = vpiSwitchArray,
+  UdpArray        = vpiUdpArray,
+  ContAssignBit   = vpiContAssignBit,
+  NamedEventArray = vpiNamedEventArray,
+  Scope           = vpiScope
 };
 
 
@@ -158,10 +158,10 @@ enum tVpiObjType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiUnconnDrive {
-  kVpiHighZ = vpiHighZ,
-  kVpiPull1 = vpiPull1,
-  kVpiPull0 = vpiPull0
+enum class VpiUnconnDrive {
+  HighZ = vpiHighZ,
+  Pull1 = vpiPull1,
+  Pull0 = vpiPull0
 };
 
 
@@ -170,13 +170,13 @@ enum tVpiUnconnDrive {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiDefDelayMode {
-  kVpiDelayModeNone    = vpiDelayModeNone,
-  kVpiDelayModePath    = vpiDelayModePath,
-  kVpiDelayModeDistrib = vpiDelayModeDistrib,
-  kVpiDelayModeUnit    = vpiDelayModeUnit,
-  kVpiDelayModeZero    = vpiDelayModeZero,
-  kVpiDelayModeMTM     = vpiDelayModeMTM
+enum class VpiDefDelayMode {
+  None    = vpiDelayModeNone,
+  Path    = vpiDelayModePath,
+  Distrib = vpiDelayModeDistrib,
+  Unit    = vpiDelayModeUnit,
+  Zero    = vpiDelayModeZero,
+  MTM     = vpiDelayModeMTM
 };
 
 
@@ -185,18 +185,18 @@ enum tVpiDefDelayMode {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVlDirection {
-  kVlInput       = vpiInput,
-  kVlOutput      = vpiOutput,
-  kVlInout       = vpiInout,
-  kVlMixedIO     = vpiMixedIO,
-  kVlNoDirection = vpiNoDirection
+enum class VpiDir {
+  Input       = vpiInput,
+  Output      = vpiOutput,
+  Inout       = vpiInout,
+  MixedIO     = vpiMixedIO,
+  NoDirection = vpiNoDirection
 };
 
-/// @brief tVlDirection のストリーム出力
+/// @brief VpiDir のストリーム出力
 ostream&
 operator<<(ostream& s,
-	   tVlDirection dir);
+	   VpiDir dir);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -204,19 +204,19 @@ operator<<(ostream& s,
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiNetType {
-  kVpiWire     = vpiWire,
-  kVpiWand     = vpiWand,
-  kVpiWor      = vpiWor,
-  kVpiTri      = vpiTri,
-  kVpiTri0     = vpiTri0,
-  kVpiTri1     = vpiTri1,
-  kVpiTriReg   = vpiTriReg,
-  kVpiTriAnd   = vpiTriAnd,
-  kVpiTriOr    = vpiTriOr,
-  kVpiSupply1  = vpiSupply1,
-  kVpiSupply0  = vpiSupply0,
-  kVpiNone     = vpiNone
+enum class VpiNetType {
+  Wire     = vpiWire,
+  Wand     = vpiWand,
+  Wor      = vpiWor,
+  Tri      = vpiTri,
+  Tri0     = vpiTri0,
+  Tri1     = vpiTri1,
+  TriReg   = vpiTriReg,
+  TriAnd   = vpiTriAnd,
+  TriOr    = vpiTriOr,
+  Supply1  = vpiSupply1,
+  Supply0  = vpiSupply0,
+  None     = vpiNone
 };
 
 
@@ -225,38 +225,38 @@ enum tVpiNetType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiPrimType {
-  kVpiAndPrim       = vpiAndPrim,
-  kVpiNandPrim      = vpiNandPrim,
-  kVpiNorPrim       = vpiNorPrim,
-  kVpiOrPrim        = vpiOrPrim,
-  kVpiXorPrim       = vpiXorPrim,
-  kVpiXnorPrim      = vpiXnorPrim,
-  kVpiBufPrim       = vpiBufPrim,
-  kVpiNotPrim       = vpiNotPrim,
-  kVpiBufif0Prim    = vpiBufif0Prim,
-  kVpiBufif1Prim    = vpiBufif1Prim,
-  kVpiNotif0Prim    = vpiNotif0Prim,
-  kVpiNotif1Prim    = vpiNotif1Prim,
-  kVpiNmosPrim      = vpiNmosPrim,
-  kVpiPmosPrim      = vpiPmosPrim,
-  kVpiCmosPrim      = vpiCmosPrim,
-  kVpiRnmosPrim     = vpiRnmosPrim,
-  kVpiRpmosPrim     = vpiRpmosPrim,
-  kVpiRcmosPrim     = vpiRcmosPrim,
-  kVpiRtranPrim     = vpiRtranPrim,
-  kVpiRtranif0Prim  = vpiRtranif0Prim,
-  kVpiRtranif1Prim  = vpiRtranif1Prim,
-  kVpiTranPrim      = vpiTranPrim,
-  kVpiTranif0Prim   = vpiTranif0Prim,
-  kVpiTranif1Prim   = vpiTranif1Prim,
-  kVpiPullupPrim    = vpiPullupPrim,
-  kVpiPulldownPrim  = vpiPulldownPrim,
-  kVpiSeqPrim       = vpiSeqPrim,
-  kVpiCombPrim      = vpiCombPrim,
+enum class VpiPrimType {
+  And       = vpiAndPrim,
+  Nand      = vpiNandPrim,
+  Nor       = vpiNorPrim,
+  Or        = vpiOrPrim,
+  Xor       = vpiXorPrim,
+  Xnor      = vpiXnorPrim,
+  Buf       = vpiBufPrim,
+  Not       = vpiNotPrim,
+  Bufif0    = vpiBufif0Prim,
+  Bufif1    = vpiBufif1Prim,
+  Notif0    = vpiNotif0Prim,
+  Notif1    = vpiNotif1Prim,
+  Nmos      = vpiNmosPrim,
+  Pmos      = vpiPmosPrim,
+  Cmos      = vpiCmosPrim,
+  Rnmos     = vpiRnmosPrim,
+  Rpmos     = vpiRpmosPrim,
+  Rcmos     = vpiRcmosPrim,
+  Rtran     = vpiRtranPrim,
+  Rtranif0  = vpiRtranif0Prim,
+  Rtranif1  = vpiRtranif1Prim,
+  Tran      = vpiTranPrim,
+  Tranif0   = vpiTranif0Prim,
+  Tranif1   = vpiTranif1Prim,
+  Pullup    = vpiPullupPrim,
+  Pulldown  = vpiPulldownPrim,
+  Seq       = vpiSeqPrim,
+  Comb      = vpiCombPrim,
   // この値だけ vpi_user.h にはない
   // 値の重複に注意すること．
-  kVpiCellPrim      = 29
+  Cell      = 29
 };
 
 
@@ -265,10 +265,10 @@ enum tVpiPrimType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiPolarity {
-  kVpiPositive = vpiPositive,
-  kVpiNegative = vpiNegative,
-  kVpiUnknown  = vpiUnknown
+enum class VpiPolarity {
+  Positive = vpiPositive,
+  Negative = vpiNegative,
+  Unknown  = vpiUnknown
 };
 
 
@@ -277,17 +277,17 @@ enum tVpiPolarity {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiEdge {
-  kVpiNoEdge  = vpiNoEdge,
-  kVpiEdge01  = vpiEdge01,
-  kVpiEdge10  = vpiEdge10,
-  kVpiEdge0x  = vpiEdge0x,
-  kVpiEdgex1  = vpiEdgex1,
-  kVpiEdge1x  = vpiEdge1x,
-  kVpiEdgex0  = vpiEdgex0,
-  kVpiPosedge = vpiPosedge, // = (kVpiEdgex1 | kVpiEdge01 | kVpiEdge0x)
-  kVpiNegedge = vpiNegedge, // = (kVpiEdgex0 | kVpiEdge10 | kVpiEdge1x)
-  kVpiAnyEdge = vpiAnyEdge  // = (kVpiPosedge | kVpiNegedge)
+enum class VpiEdge {
+  NoEdge  = vpiNoEdge,
+  Edge01  = vpiEdge01,
+  Edge10  = vpiEdge10,
+  Edge0x  = vpiEdge0x,
+  Edgex1  = vpiEdgex1,
+  Edge1x  = vpiEdge1x,
+  Edgex0  = vpiEdgex0,
+  Posedge = vpiPosedge, // = (kVpiEdgex1 | kVpiEdge01 | kVpiEdge0x)
+  Negedge = vpiNegedge, // = (kVpiEdgex0 | kVpiEdge10 | kVpiEdge1x)
+  AnyEdge = vpiAnyEdge  // = (kVpiPosedge | kVpiNegedge)
 };
 
 
@@ -296,9 +296,9 @@ enum tVpiEdge {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiPathType {
-  kVpiPathFull     = vpiPathFull,
-  kVpiPathParallel = vpiPathParallel
+enum class VpiPathType {
+  Full     = vpiPathFull,
+  Parallel = vpiPathParallel
 };
 
 
@@ -307,19 +307,19 @@ enum tVpiPathType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiTchkType {
-  kVpiSetup      = vpiSetup,
-  kVpiHold       = vpiHold,
-  kVpiPeriod     = vpiPeriod,
-  kVpiWidth      = vpiWidth,
-  kVpiSkew       = vpiSkew,
-  kVpiRecovery   = vpiRecovery,
-  kVpiNoChange   = vpiNoChange,
-  kVpiSetupHold  = vpiSetupHold,
-  kVpiFullskew   = vpiFullskew,
-  kVpiRecrem     = vpiRecrem,
-  kVpiRemoval    = vpiRemoval,
-  kVpiTimeskew   = vpiTimeskew
+enum class VpiTchkType {
+  Setup      = vpiSetup,
+  Hold       = vpiHold,
+  Period     = vpiPeriod,
+  Width      = vpiWidth,
+  Skew       = vpiSkew,
+  Recovery   = vpiRecovery,
+  NoChange   = vpiNoChange,
+  SetupHold  = vpiSetupHold,
+  Fullskew   = vpiFullskew,
+  Recrem     = vpiRecrem,
+  Removal    = vpiRemoval,
+  Timeskew   = vpiTimeskew
 };
 
 
@@ -328,50 +328,50 @@ enum tVpiTchkType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVlOpType {
-  kVlMinusOp        = vpiMinusOp,
-  kVlPlusOp         = vpiPlusOp,
-  kVlNotOp          = vpiNotOp,
-  kVlBitNegOp       = vpiBitNegOp,
-  kVlUnaryAndOp     = vpiUnaryAndOp,
-  kVlUnaryNandOp    = vpiUnaryNandOp,
-  kVlUnaryOrOp      = vpiUnaryOrOp,
-  kVlUnaryNorOp     = vpiUnaryNorOp,
-  kVlUnaryXorOp     = vpiUnaryXorOp,
-  kVlUnaryXNorOp    = vpiUnaryXNorOp,
-  kVlSubOp          = vpiSubOp,
-  kVlDivOp          = vpiDivOp,
-  kVlModOp          = vpiModOp,
-  kVlEqOp           = vpiEqOp,
-  kVlNeqOp          = vpiNeqOp,
-  kVlCaseEqOp       = vpiCaseEqOp,
-  kVlCaseNeqOp      = vpiCaseNeqOp,
-  kVlGtOp           = vpiGtOp,
-  kVlGeOp           = vpiGeOp,
-  kVlLtOp           = vpiLtOp,
-  kVlLeOp           = vpiLeOp,
-  kVlLShiftOp       = vpiLShiftOp,
-  kVlRShiftOp       = vpiRShiftOp,
-  kVlAddOp          = vpiAddOp,
-  kVlMultOp         = vpiMultOp,
-  kVlLogAndOp       = vpiLogAndOp,
-  kVlLogOrOp        = vpiLogOrOp,
-  kVlBitAndOp       = vpiBitAndOp,
-  kVlBitOrOp        = vpiBitOrOp,
-  kVlBitXorOp       = vpiBitXorOp,
-  kVlBitXNorOp      = vpiBitXNorOp,
-  kVlConditionOp    = vpiConditionOp,
-  kVlConcatOp       = vpiConcatOp,
-  kVlMultiConcatOp  = vpiMultiConcatOp,
-  kVlEventOrOp      = vpiEventOrOp,
-  kVlNullOp         = vpiNullOp,
-  kVlListOp         = vpiListOp,
-  kVlMinTypMaxOp    = vpiMinTypMaxOp,
-  kVlPosedgeOp      = vpiPosedgeOp,
-  kVlNegedgeOp      = vpiNegedgeOp,
-  kVlArithLShiftOp  = vpiArithLShiftOp,
-  kVlArithRShiftOp  = vpiArithRShiftOp,
-  kVlPowerOp        = vpiPowerOp
+enum class VpiOpType {
+  Minus        = vpiMinusOp,
+  Plus         = vpiPlusOp,
+  Not          = vpiNotOp,
+  BitNeg       = vpiBitNegOp,
+  UnaryAnd     = vpiUnaryAndOp,
+  UnaryNand    = vpiUnaryNandOp,
+  UnaryOr      = vpiUnaryOrOp,
+  UnaryNor     = vpiUnaryNorOp,
+  UnaryXor     = vpiUnaryXorOp,
+  UnaryXNor    = vpiUnaryXNorOp,
+  Sub          = vpiSubOp,
+  Div          = vpiDivOp,
+  Mod          = vpiModOp,
+  Eq           = vpiEqOp,
+  Neq          = vpiNeqOp,
+  CaseEq       = vpiCaseEqOp,
+  CaseNeq      = vpiCaseNeqOp,
+  Gt           = vpiGtOp,
+  Ge           = vpiGeOp,
+  Lt           = vpiLtOp,
+  Le           = vpiLeOp,
+  LShift       = vpiLShiftOp,
+  RShift       = vpiRShiftOp,
+  Add          = vpiAddOp,
+  Mult         = vpiMultOp,
+  LogAnd       = vpiLogAndOp,
+  LogOr        = vpiLogOrOp,
+  BitAnd       = vpiBitAndOp,
+  BitOr        = vpiBitOrOp,
+  BitXor       = vpiBitXorOp,
+  BitXNor      = vpiBitXNorOp,
+  Condition    = vpiConditionOp,
+  Concat       = vpiConcatOp,
+  MultiConcat  = vpiMultiConcatOp,
+  EventOr      = vpiEventOrOp,
+  Null         = vpiNullOp,
+  List         = vpiListOp,
+  MinTypMax    = vpiMinTypMaxOp,
+  Posedge      = vpiPosedgeOp,
+  Negedge      = vpiNegedgeOp,
+  ArithLShift  = vpiArithLShiftOp,
+  ArithRShift  = vpiArithRShiftOp,
+  Power        = vpiPowerOp
 };
 
 
@@ -381,18 +381,18 @@ enum tVlOpType {
 /// vpi_user.h の定義値として使える．
 /// ただし kVpiSignedXXXXX はない．
 //////////////////////////////////////////////////////////////////////
-enum tVpiConstType {
-  kVpiDecConst          = vpiDecConst,
-  kVpiRealConst         = vpiRealConst,
-  kVpiBinaryConst       = vpiBinaryConst,
-  kVpiOctConst          = vpiOctConst,
-  kVpiHexConst          = vpiHexConst,
-  kVpiStringConst       = vpiStringConst,
-  kVpiIntConst          = vpiIntConst,
-  kVpiSignedDecConst    = kVpiDecConst    | 8,
-  kVpiSignedBinaryConst = kVpiBinaryConst | 8,
-  kVpiSignedOctConst    = kVpiOctConst    | 8,
-  kVpiSignedHexConst    = kVpiHexConst    | 8
+enum class VpiConstType {
+  Dec          = vpiDecConst,
+  Real         = vpiRealConst,
+  Binary       = vpiBinaryConst,
+  Oct          = vpiOctConst,
+  Hex          = vpiHexConst,
+  String       = vpiStringConst,
+  Int          = vpiIntConst,
+  SignedDec    = vpiDecConst    | 8,
+  SignedBinary = vpiBinaryConst | 8,
+  SignedOct    = vpiOctConst    | 8,
+  SignedHex    = vpiHexConst    | 8
 };
 
 
@@ -401,10 +401,10 @@ enum tVpiConstType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiCaseType {
-  kVpiCaseExact = vpiCaseExact,
-  kVpiCaseX     = vpiCaseX,
-  kVpiCaseZ     = vpiCaseZ
+enum class VpiCaseType {
+  Exact = vpiCaseExact,
+  X     = vpiCaseX,
+  Z     = vpiCaseZ
 };
 
 
@@ -414,17 +414,17 @@ enum tVpiCaseType {
 /// vpi_user.h の定義値として使える．
 /// ただし kVpiRealtimeFunc はない．
 //////////////////////////////////////////////////////////////////////
-enum tVpiFuncType {
-  kVpiIntFunc         = vpiIntFunc,
-  kVpiRealFunc        = vpiRealFunc,
-  kVpiTimeFunc        = vpiTimeFunc,
-  kVpiSizedFunc       = vpiSizedFunc,
-  kVpiSizedSignedFunc = vpiSizedSignedFunc,
-  kVpiRealtimeFunc    = 6,
-  kVpiSysFuncInt      = vpiSysFuncInt,
-  kVpiSysFuncReal     = vpiSysFuncReal,
-  kVpiSysFuncTime     = vpiSysFuncTime,
-  kVpiSysSizedFunc    = vpiSysFuncSized
+enum class VpiFuncType {
+  Int         = vpiIntFunc,
+  Real        = vpiRealFunc,
+  Time        = vpiTimeFunc,
+  Sized       = vpiSizedFunc,
+  SizedSigned = vpiSizedSignedFunc,
+  Realtime    = 6,
+  SysInt      = vpiSysFuncInt,
+  SysReal     = vpiSysFuncReal,
+  SysTime     = vpiSysFuncTime,
+  SysSized    = vpiSysFuncSized
 };
 
 
@@ -433,102 +433,102 @@ enum tVpiFuncType {
 /// @note この列挙型の値を強制的に int にキャストしても
 /// vpi_user.h の定義値として使える．
 //////////////////////////////////////////////////////////////////////
-enum tVpiDelayType {
-  kVpiModPathDelay      = vpiModPathDelay,
-  kVpiInterModPathDelay = vpiInterModPathDelay,
-  kVpiMIPDelay          = vpiMIPDelay
+enum class VpiDelayType {
+  ModPath      = vpiModPathDelay,
+  InterModPath = vpiInterModPathDelay,
+  MIP          = vpiMIPDelay
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief strength の値
 //////////////////////////////////////////////////////////////////////
-enum tVpiStrength {
-  kVpiNoStrength   = 0,
-  kVpiSupplyDrive  = 1,
-  kVpiStrongDrive  = 2,
-  kVpiPullDrive    = 3,
-  kVpiWeakDrive    = 4,
-  kVpiLargeCharge  = 5,
-  kVpiMediumCharge = 6,
-  kVpiSmallCharge  = 7,
-  kVpiHiZ          = 8
+enum class VpiStrength {
+  NoStrength   = 0,
+  SupplyDrive  = 1,
+  StrongDrive  = 2,
+  PullDrive    = 3,
+  WeakDrive    = 4,
+  LargeCharge  = 5,
+  MediumCharge = 6,
+  SmallCharge  = 7,
+  HiZ          = 8
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief 変数のデータ型
 //////////////////////////////////////////////////////////////////////
-enum tVpiVarType {
-  kVpiVarNone     = 0,
-  kVpiVarInteger  = 1,
-  kVpiVarReal     = 2,
-  kVpiVarTime     = 3,
-  kVpiVarRealtime = 4
+enum class VpiVarType {
+  None     = 0,
+  Integer  = 1,
+  Real     = 2,
+  Time     = 3,
+  Realtime = 4
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief 範囲指定のモード
 //////////////////////////////////////////////////////////////////////
-enum tVpiRangeMode {
+enum class VpiRangeMode {
   /// @brief 範囲指定なし
-  kVpiNoRange    = 0,
+  No    = 0,
   /// @brief 固定
-  kVpiConstRange = 1, // [ a : b ]
+  Const = 1, // [ a : b ]
   /// @brief 可変(プラス)
-  kVpiPlusRange  = 2, // [ a +: b ]
+  Plus  = 2, // [ a +: b ]
   /// @brief 可変(マイナス)
-  kVpiMinusRange = 3  // [ a -: b ]
+  Minus = 3  // [ a -: b ]
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief IO宣言で用いられる補助的な型
 //////////////////////////////////////////////////////////////////////
-enum tVpiAuxType {
+enum class VpiAuxType {
   /// @brief 型無し
-  kVpiAuxNone = 0,
+  None = 0,
   /// @brief net 型
-  kVpiAuxNet  = 1,
+  Net  = 1,
   /// @brief reg 型
-  kVpiAuxReg  = 2,
+  Reg  = 2,
   /// @brief 変数型
-  kVpiAuxVar  = 3
+  Var  = 3
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief vectored/scalared 指定の値
 //////////////////////////////////////////////////////////////////////
-enum tVpiVsType {
+enum class VpiVsType {
   /// @brief 指定なし
-  kVpiVsNone   = 0,
+  None     = 0,
   /// @brief ベクター型
-  kVpiVectored = 1,
+  Vectored = 1,
   /// @brief スカラー型
-  kVpiScalared = 2
+  Scalared = 2
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief specify block item の種類
 //////////////////////////////////////////////////////////////////////
-enum tVpiSpecItemType {
-  kVpiPulsestyleOnEvent  = 0,
-  kVpiPulsestyleOnDetect = 1,
-  kVpiShowcancelled      = 2,
-  kVpiNoshowcancelled    = 3
+enum class VpiSpecItemType {
+  PulsestyleOnEvent  = 0,
+  PulsestyleOnDetect = 1,
+  Showcancelled      = 2,
+  Noshowcancelled    = 3
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @brief specify block path の種類
 //////////////////////////////////////////////////////////////////////
-enum tVpiSpecPathType {
-  kVpiSpecPathNull   = 0,
-  kVpiSpecPathIf     = 1,
-  kVpiSpecPathIfnone = 2
+enum class VpiSpecPathType {
+  Null   = 0,
+  If     = 1,
+  Ifnone = 2
 };
 
 /// @}
@@ -537,18 +537,18 @@ enum tVpiSpecPathType {
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
-// @brief tVlDirection のストリーム出力
+// @brief VpiDir のストリーム出力
 inline
 ostream&
 operator<<(ostream& s,
-	   tVlDirection dir)
+	   VpiDir dir)
 {
   switch ( dir ) {
-  case kVlInput:       s << "Input"; break;
-  case kVlOutput:      s << "Output"; break;
-  case kVlInout:       s << "Inout"; break;
-  case kVlMixedIO:     s << "Mixed IO"; break;
-  case kVlNoDirection: s << "No Direction"; break;
+  case VpiDir::Input:       s << "Input"; break;
+  case VpiDir::Output:      s << "Output"; break;
+  case VpiDir::Inout:       s << "Inout"; break;
+  case VpiDir::MixedIO:     s << "Mixed IO"; break;
+  case VpiDir::NoDirection: s << "No Direction"; break;
   }
   return s;
 }

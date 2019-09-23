@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // コンストラクタ
 CptSpecItem::CptSpecItem(const FileRegion& file_region,
-			 tVpiSpecItemType id,
+			 VpiSpecItemType id,
 			 PtExprArray terminal_array) :
   mFileRegion(file_region),
   mId(id),
@@ -47,7 +47,7 @@ CptSpecItem::type() const
 }
 
 // トークン番号を返す．??? たぶん変更される．
-tVpiSpecItemType
+VpiSpecItemType
 CptSpecItem::specitem_type() const
 {
   return mId;
@@ -67,7 +67,7 @@ CptSpecItem::terminal_list() const
 
 // コンストラクタ
 CptSpecPath::CptSpecPath(const FileRegion& file_region,
-			 tVpiSpecPathType id,
+			 VpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl) :
   mFileRegion(file_region),
@@ -97,7 +97,7 @@ CptSpecPath::type() const
 }
 
 // トークン番号を返す．??? たぶん変更される．
-tVpiSpecPathType
+VpiSpecPathType
 CptSpecPath::specpath_type() const
 {
   return mId;
@@ -127,7 +127,7 @@ CptPathDecl::CptPathDecl(const FileRegion& file_region,
 			 int edge,
 			 PtExprArray input_array,
 			 int input_pol,
-			 int op,
+			 VpiPathType op,
 			 PtExprArray output_array,
 			 int output_pol,
 			 const PtExpr* expr,
@@ -180,7 +180,7 @@ CptPathDecl::input_pol() const
 }
 
 // パス記述子(?)を得る．vpiParallel か vpiFull
-int
+VpiPathType
 CptPathDecl::op() const
 {
   return mOp;
@@ -324,7 +324,7 @@ CptPathDelay::value(SizeType pos) const
 // specify block item を生成する．
 const PtItem*
 CptFactory::new_SpecItem(const FileRegion& file_region,
-			 tVpiSpecItemType id,
+			 VpiSpecItemType id,
 			 PtExprArray terminal_array)
 {
   ++ mNumSpecItem;
@@ -335,7 +335,7 @@ CptFactory::new_SpecItem(const FileRegion& file_region,
 // path 仕様を生成する．
 const PtItem*
 CptFactory::new_SpecPath(const FileRegion& file_region,
-			 tVpiSpecPathType id,
+			 VpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl)
 {
@@ -350,7 +350,7 @@ CptFactory::new_PathDecl(const FileRegion& file_region,
 			 int edge,
 			 PtExprArray input_array,
 			 int input_pol,
-			 int op,
+			 VpiPathType op,
 			 PtExprArray output_array,
 			 int output_pol,
 			 const PtExpr* expr,

@@ -30,7 +30,7 @@ protected:
   /// @param[in] opr_size オペランド数
   /// @param[in] opr_array オペランドを格納する配列
   EiConcatOp(const PtExpr* pt_expr,
-	     int opr_size,
+	     SizeType opr_size,
 	     ElbExpr** opr_array);
 
   /// @brief デストラクタ
@@ -52,7 +52,7 @@ public:
   is_const() const override;
 
   /// @brief オペランド数を返す．
-  int
+  SizeType
   operand_num() const override;
 
 
@@ -75,7 +75,7 @@ public:
 
   /// @brief オペランドを返す．
   ElbExpr*
-  _operand(int pos) const override;
+  _operand(SizeType pos) const override;
 
 
 protected:
@@ -84,7 +84,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ビット幅を返す．
-  int
+  SizeType
   bit_size() const override;
 
 
@@ -94,13 +94,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // オペランド数
-  int mOprNum;
+  SizeType mOprNum;
 
   // オペランドの配列
   ElbExpr** mOprList;
 
   // 結果のビット幅
-  int mSize;
+  SizeType mSize;
 
 };
 
@@ -124,9 +124,9 @@ private:
   /// @param[in] opr_array オペランドを格納する配列
   /// @note は opr_size は繰り返し数のオペランドは含まない．
   EiMultiConcatOp(const PtExpr* pt_expr,
-		  int rep_num,
+		  SizeType rep_num,
 		  ElbExpr* rep_expr,
-		  int opr_size,
+		  SizeType opr_size,
 		  ElbExpr** opr_array);
 
   /// @brief デストラクタ
@@ -143,12 +143,12 @@ public:
   value_type() const override;
 
   /// @brief オペランド数を返す．
-  int
+  SizeType
   operand_num() const override;
 
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．
-  int
+  SizeType
   rep_num() const override;
 
 
@@ -160,7 +160,7 @@ public:
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   ElbExpr*
-  _operand(int pos) const override;
+  _operand(SizeType pos) const override;
 
 
 private:
@@ -169,7 +169,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 繰り返し数
-  int mRepNum;
+  SizeType mRepNum;
 
   // 繰り返し数を表す式
   ElbExpr* mRepExpr;
