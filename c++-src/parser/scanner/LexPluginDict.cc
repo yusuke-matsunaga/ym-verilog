@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "scanner/LexPluginDict.h"
-#include "scanner/LexPlugin.h"
+#include "LexPluginDict.h"
+#include "LexPlugin.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

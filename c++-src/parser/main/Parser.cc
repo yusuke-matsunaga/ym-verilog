@@ -8,17 +8,15 @@
 
 
 #include "Parser_int.h"
-
 #include "scanner/Lex.h"
-
 #include "parser/PtiFactory.h"
-#include "parser/PuHierName.h"
 #include "parser/PtMgr.h"
+#include "parser/PuHierName.h"
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtStmt.h"
-
 #include "ym/MsgMgr.h"
+
 
 
 const int debug = 0;

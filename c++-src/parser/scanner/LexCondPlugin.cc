@@ -9,9 +9,9 @@
 
 #include "LexCondPlugin.h"
 #include "LexCondState.h"
+#include "common.h"
 
 #include "scanner/RawLex.h"
-#include "scanner/common.h"
 
 #include "ym/MsgMgr.h"
 

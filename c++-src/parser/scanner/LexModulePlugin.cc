@@ -8,8 +8,8 @@
 
 
 #include "LexModulePlugin.h"
-#include "scanner/LexModuleState.h"
-#include "scanner/common.h"
+#include "LexModuleState.h"
+#include "common.h"
 
 #include "ym/MsgMgr.h"
 

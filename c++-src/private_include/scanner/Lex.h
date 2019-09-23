@@ -35,10 +35,43 @@ public:
 
 
 public:
+  //////////////////////////////////////////////////////////////////////
+  // 状態取得用のメンバ関数
+  //////////////////////////////////////////////////////////////////////
 
-  /// @brief モジュールの状態を取得する．
-  LexModuleState*
-  module_state();
+  /// @brief cell_define の状態を取得する
+  /// @retval true cell_define されている
+  /// @retval false cell_define されていない
+  bool
+  cell_define() const;
+
+  /// @brief net_type を取得する．
+  VpiNetType
+  default_nettype() const;
+
+  /// @brief time_unit の取得
+  int
+  time_unit() const;
+
+  /// @brief time_precision の取得
+  int
+  time_precision() const;
+
+  /// @brief unconnected_drive の値を取得する．
+  VpiUnconnDrive
+  unconnected_drive() const;
+
+  /// @brief decay_time の値を取得する．
+  int
+  default_decay_time() const;
+
+  /// @brief trireg_strength の値を取得する．
+  int
+  default_trireg_strength() const;
+
+  /// @brief delay_mode の値を取得する．
+  VpiDefDelayMode
+  delay_mode() const;
 
 
 private:

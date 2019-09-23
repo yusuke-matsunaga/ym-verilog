@@ -11,8 +11,8 @@
 /// All rights reserved.
 
 
-#include "PtiFwd.h"
-#include "PtrList.h"
+#include "parser/PtiFwd.h"
+#include "parser/PtrList.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

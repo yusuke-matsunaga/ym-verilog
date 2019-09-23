@@ -8,10 +8,7 @@
 
 
 #include "parser/Parser.h"
-
 #include "scanner/Lex.h"
-#include "scanner/LexModuleState.h"
-
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
 #include "parser/PtiDecl.h"

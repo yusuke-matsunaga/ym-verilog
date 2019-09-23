@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "scanner/LexState.h"
+#include "LexState.h"
 #include "scanner/RawLex.h"
 
 

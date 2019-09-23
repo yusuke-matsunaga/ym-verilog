@@ -11,7 +11,7 @@
 
 #include "ym/verilog.h"
 #include "ym/FileRegion.h"
-#include "RawLex.h"
+#include "scanner/RawLex.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

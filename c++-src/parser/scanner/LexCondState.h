@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "scanner/LexState.h"
+#include "LexState.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

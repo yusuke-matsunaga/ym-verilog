@@ -8,22 +8,20 @@
 
 
 #include "scanner/RawLex.h"
-#include "scanner/LexPlugin.h"
-#include "scanner/LexState.h"
-#include "scanner/LexPluginDict.h"
-#include "scanner/print_token.h"
-#include "scanner/common.h"
+#include "LexPluginDict.h"
 
+#include "LexPlugin.h"
+#include "LexState.h"
 #include "LexCondState.h"
 #include "LexCondPlugin.h"
 #include "LexMacroPlugin.h"
 #include "StdLexPlugin.h"
-
 #include "InputMgr.h"
 #include "RsrvWordDic.h"
 #include "MacroSource.h"
 #include "TokenInfo.h"
-
+#include "common.h"
+#include "print_token.h"
 
 #include "ym/VlLineWatcher.h"
 
@@ -38,9 +36,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
 RawLex::RawLex() :
-  mInputMgr(new InputMgr(*this)),
-  mDic(RsrvWordDic::the_dic()),
-  mDebug(false)
+  mInputMgr{new InputMgr(*this)},
+  mDic{RsrvWordDic::the_dic()},
+  mPluginDict{new LexPluginDict},
+  mDebug{false}
 {
   mCondState = new LexCondState(*this);
   new LpIfdef(*this, "ifdef", mCondState);
@@ -49,8 +48,8 @@ RawLex::RawLex() :
   new LpElsif(*this, "elsif", mCondState);
   new LpEndif(*this, "endif", mCondState);
 
-  new LpInclude(*this, "include", mInputMgr);
-  new LpLine(*this, "line", mInputMgr);
+  new LpInclude(*this, "include", mInputMgr.get());
+  new LpLine(*this, "line", mInputMgr.get());
 
   new LpDefine(*this, "define");
   new LpUndef(*this, "undef");
@@ -66,11 +65,6 @@ RawLex::~RawLex()
   clear();
 
   // LexPlugin は LexPluginDict のデストラクタで削除される．
-
-  for ( auto state: mStates ) {
-    delete state;
-  }
-  delete mInputMgr;
 }
 
 // @brief 初期状態に戻す．
@@ -144,7 +138,7 @@ RawLex::get_token()
 	{
 	  // 先頭の '`' をスキップする．
 	  const char* macroname = cur_string() + 1;
-	  LexPlugin* plugin = mPluginDict.find_plugin(macroname);
+	  LexPlugin* plugin = mPluginDict->find_plugin(macroname);
 	  if ( plugin == nullptr ) {
 	    ostringstream buf;
 	    buf << "macro `" << macroname << " is not defined.";
@@ -233,7 +227,7 @@ RawLex::get_token()
 	{
 	  // 先頭の '`' をスキップする．
 	  const char* macroname = cur_string() + 1;
-	  LexPlugin* plugin = mPluginDict.find_plugin(macroname);
+	  LexPlugin* plugin = mPluginDict->find_plugin(macroname);
 	  if ( plugin && plugin->is_cond_plugin() ) {
 	    if ( !plugin->parse() ) {
 	      goto error;
@@ -387,7 +381,7 @@ void
 RawLex::add_plugin(const char* name,
 		   LexPlugin* plugin)
 {
-  mPluginDict.reg_plugin(plugin);
+  mPluginDict->reg_plugin(plugin);
 }
 
 // @brief プラグインの削除
@@ -397,7 +391,7 @@ RawLex::add_plugin(const char* name,
 bool
 RawLex::erase_plugin(const char* name)
 {
-  return mPluginDict.unreg_plugin(name);
+  return mPluginDict->unreg_plugin(name);
 }
 
 // @brief プラグインを登録できるか調べる．
@@ -407,7 +401,7 @@ RawLex::erase_plugin(const char* name)
 bool
 RawLex::check_pluginname(const char* name)
 {
-  return mPluginDict.check_name(name);
+  return mPluginDict->check_name(name);
 }
 
 // @brief 内部状態の追加
@@ -415,7 +409,7 @@ RawLex::check_pluginname(const char* name)
 void
 RawLex::add_state(LexState* state)
 {
-  mStates.push_back(state);
+  mStates.push_back(unique_ptr<LexState>{state});
 }
 
 
@@ -447,7 +441,7 @@ RawLex::debug()
 void
 RawLex::resetall(const FileRegion& file_region)
 {
-  for ( auto state: mStates ) {
+  for ( auto& state: mStates ) {
     state->resetall(file_region);
   }
 }
@@ -458,7 +452,7 @@ RawLex::resetall(const FileRegion& file_region)
 bool
 RawLex::is_macro_defined(const char* name) const
 {
-  LexPlugin* plugin = mPluginDict.find_plugin(name);
+  LexPlugin* plugin = mPluginDict->find_plugin(name);
   if ( plugin == nullptr ) {
     return false;
   }

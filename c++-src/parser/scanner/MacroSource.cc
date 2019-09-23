@@ -10,8 +10,7 @@
 #include "MacroSource.h"
 #include "TokenList.h"
 #include "TokenInfo.h"
-
-#include "scanner/print_token.h"
+#include "print_token.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

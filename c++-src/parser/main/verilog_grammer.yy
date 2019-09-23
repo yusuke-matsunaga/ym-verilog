@@ -16,8 +16,8 @@
 #include "ym/pt/PtExpr.h"
 
 #include "parser/Parser.h"
-#include "parser/PuHierName.h"
 #include "parser/PtrList.h"
+#include "parser/PuHierName.h"
 
 
 // より詳細なエラー情報を出力させる．

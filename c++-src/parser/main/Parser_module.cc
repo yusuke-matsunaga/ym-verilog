@@ -10,7 +10,6 @@
 #include "parser/Parser.h"
 
 #include "scanner/Lex.h"
-#include "scanner/LexModuleState.h"
 
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
@@ -74,19 +73,18 @@ Parser::new_Module1995(const FileRegion& file_region,
   PtDeclHeadArray declhead_array = get_module_decl_array();
   PtItemArray item_array = get_module_item_array();
 
-  LexModuleState* state = lex().module_state();
-  bool is_cell = state->cell_define();
+  bool is_cell = lex().cell_define();
   bool is_protected = false; // これどうやって決めるの？
-  int time_u = state->time_unit();
-  int time_p = state->time_precision();
-  VpiNetType nettype = state->default_nettype();
-  VpiUnconnDrive unconn = state->unconnected_drive();
-  VpiDefDelayMode delay = state->delay_mode();
-  int decay = state->default_decay_time();
+  int time_u = lex().time_unit();
+  int time_p = lex().time_precision();
+  VpiNetType nettype = lex().default_nettype();
+  VpiUnconnDrive unconn = lex().unconnected_drive();
+  VpiDefDelayMode delay = lex().delay_mode();
+  int decay = lex().default_decay_time();
 
 #if 0 // VERIFAULT
-  bool portfaults = state->portfaults();
-  bool suppress_faults = state->suppress_faults();
+  bool portfaults = lex().portfaults();
+  bool suppress_faults = lex().suppress_faults();
 #else
   bool portfaults = false;
   bool suppress_faults = false;
@@ -217,19 +215,18 @@ Parser::new_Module2001(const FileRegion& file_region,
   PtDeclHeadArray declhead_array = get_module_decl_array();
   PtItemArray item_array = get_module_item_array();
 
-  LexModuleState* state = lex().module_state();
-  bool is_cell = state->cell_define();
+  bool is_cell = lex().cell_define();
   bool is_protected = false; // これどうやって決めるの？
-  int time_u = state->time_unit();
-  int time_p = state->time_precision();
-  VpiNetType nettype = state->default_nettype();
-  VpiUnconnDrive unconn = state->unconnected_drive();
-  VpiDefDelayMode delay = state->delay_mode();
-  int decay = state->default_decay_time();
+  int time_u = lex().time_unit();
+  int time_p = lex().time_precision();
+  VpiNetType nettype = lex().default_nettype();
+  VpiUnconnDrive unconn = lex().unconnected_drive();
+  VpiDefDelayMode delay = lex().delay_mode();
+  int decay = lex().default_decay_time();
 
 #if 0 // VERIFAULT
-  bool portfaults = state->portfaults();
-  bool suppress_faults = state->suppress_faults();
+  bool portfaults = lex().portfaults();
+  bool suppress_faults = lex().suppress_faults();
 #else
   bool portfaults = false;
   bool suppress_faults = false;

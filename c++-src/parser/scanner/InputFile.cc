@@ -12,7 +12,7 @@
 
 #include "ym/MsgMgr.h"
 
-#include "scanner/common.h"
+#include "common.h"
 
 
 // ファイル末尾に改行がなくても warning としない時に 1

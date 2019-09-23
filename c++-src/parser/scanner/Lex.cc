@@ -8,7 +8,7 @@
 
 
 #include "scanner/Lex.h"
-#include "scanner/LexModuleState.h"
+#include "LexModuleState.h"
 #include "LexModulePlugin.h"
 
 
@@ -44,11 +44,62 @@ Lex::~Lex()
 {
 }
 
-// @brief モジュールの状態を取得する．
-LexModuleState*
-Lex::module_state()
+// @brief cell_define の状態を取得する
+// @retval true cell_define されている
+// @retval false cell_define されていない
+bool
+Lex::cell_define() const
 {
-  return mModuleState;
+  return mModuleState->cell_define();
+}
+
+// @brief net_type を取得する．
+VpiNetType
+Lex::default_nettype() const
+{
+  return mModuleState->default_nettype();
+}
+
+// @brief time_unit の取得
+int
+Lex::time_unit() const
+{
+  return mModuleState->time_unit();
+}
+
+// @brief time_precision の取得
+int
+Lex::time_precision() const
+{
+  return mModuleState->time_precision();
+}
+
+// @brief unconnected_drive の値を取得する．
+VpiUnconnDrive
+Lex::unconnected_drive() const
+{
+  return mModuleState->unconnected_drive();
+}
+
+// @brief decay_time の値を取得する．
+int
+Lex::default_decay_time() const
+{
+  return mModuleState->default_decay_time();
+}
+
+// @brief trireg_strength の値を取得する．
+int
+Lex::default_trireg_strength() const
+{
+  return mModuleState->default_trireg_strength();
+}
+
+// @brief delay_mode の値を取得する．
+VpiDefDelayMode
+Lex::delay_mode() const
+{
+  return mModuleState->delay_mode();
 }
 
 END_NAMESPACE_YM_VERILOG

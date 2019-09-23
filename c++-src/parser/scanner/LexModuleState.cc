@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "scanner/LexModuleState.h"
+#include "LexModuleState.h"
 
 #include "ym/MsgMgr.h"
 

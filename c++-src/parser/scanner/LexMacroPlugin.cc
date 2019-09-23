@@ -11,9 +11,8 @@
 #include "scanner/RawLex.h"
 #include "MacroSource.h"
 #include "TokenInfo.h"
-
-#include "scanner/common.h"
-#include "scanner/print_token.h"
+#include "common.h"
+#include "print_token.h"
 
 #include "ym/MsgMgr.h"
 

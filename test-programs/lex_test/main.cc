@@ -8,31 +8,24 @@
 
 
 #include "ym/verilog.h"
-#include "ym/ClibCellLibrary.h"
 #include "ym/PoptMainApp.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 void
-parse_mode(const vector<string>& filename_list,
-	   const char* spath,
-	   int watch_line,
-	   bool verbose,
-	   bool profile,
-	   int loop,
-	   bool dump_pt);
-
+rawlex_mode(const vector<string>& filename_list,
+	    const char* spath,
+	    int watch_line,
+	    bool verbose,
+	    bool dump_token);
 void
-elaborate_mode(const vector<string>& filename_list,
-	       bool all_msg,
-	       const char* spath,
-	       const ClibCellLibrary& cell_library,
-	       int watch_line,
-	       bool verbose,
-	       bool profile,
-	       int loop,
-	       bool dump_vpi);
+lex_mode(const vector<string>& filename_list,
+	 const char* spath,
+	 int watch_line,
+	 bool verbose,
+	 int loop,
+	 bool dump_token);
 
 END_NAMESPACE_YM_VERILOG
 
@@ -52,36 +45,29 @@ main(int argc,
   const char* spath = nullptr;
   int watch_line = 0;
   int loop = 0;
-  int use_cpt = false;
   int profile = 0;
-  const char* liberty_name = nullptr;
-  const char* mislib_name = nullptr;
 
   PoptMainApp popt;
 
   PoptNone popt_verbose("verbose", 'v', "enable verbose mode");
-  PoptNone popt_yacc("yacc", '3', "enable yacc mode");
-  PoptNone popt_elab("elaborate", '4', "enable elaborate mode");
+  PoptNone popt_rawlex("rawlex", '1', "enable rawlex mode");
+  PoptNone popt_lex("lex", '2', "enable lex mode");
   PoptNone popt_dump("dump", 'd', "set dump-flag");
   PoptNone popt_allmsg("all-msg", 'a', "display all kind of messages");
   PoptStr popt_path("search-path", 'p', "set search path", "\"path list \"");
   PoptInt popt_loop("loop", 'l', "loop test", "loop count");
   PoptInt popt_watch("watch-line", 'w', "enable line watcher", "line number");
   PoptNone popt_prof("profile", 'q', "show memory profile");
-  PoptStr popt_dotlib("liberty", 0, "specify liberty library", "\"file name\"");
-  PoptStr popt_mislib("mislib", 0, "specify mislib library", "\"file name\"");
 
   popt.add_option(&popt_verbose);
-  popt.add_option(&popt_yacc);
-  popt.add_option(&popt_elab);
+  popt.add_option(&popt_rawlex);
+  popt.add_option(&popt_lex);
   popt.add_option(&popt_dump);
   popt.add_option(&popt_allmsg);
   popt.add_option(&popt_path);
   popt.add_option(&popt_loop);
   popt.add_option(&popt_watch);
   popt.add_option(&popt_prof);
-  popt.add_option(&popt_dotlib);
-  popt.add_option(&popt_mislib);
 
   popt.set_other_option_help("[OPTIONS]* <file-name> ...");
 
@@ -102,11 +88,11 @@ main(int argc,
   if ( popt_verbose.is_specified() ) {
     verbose = true;
   }
-  if ( popt_yacc.is_specified() ) {
-    mode = 3;
+  if ( popt_rawlex.is_specified() ) {
+    mode = 1;
   }
-  if ( popt_elab.is_specified() ) {
-    mode = 4;
+  if ( popt_lex.is_specified() ) {
+    mode = 2;
   }
   if ( popt_dump.is_specified() ) {
     dump = 1;
@@ -125,12 +111,6 @@ main(int argc,
   }
   if ( popt_prof.is_specified() ) {
     profile = 1;
-  }
-  if ( popt_dotlib.is_specified() ) {
-    liberty_name = popt_dotlib.val().c_str();
-  }
-  if ( popt_mislib.is_specified() ) {
-    mislib_name = popt_mislib.val().c_str();
   }
 
 #if 0
@@ -259,42 +239,24 @@ main(int argc,
 #endif
 #endif
 
-  ClibCellLibrary cell_library;
-  if ( liberty_name != nullptr ) {
-    if ( !cell_library.read_liberty(liberty_name) ) {
-      cerr << liberty_name << ": read failed" << endl;
-      return 0;
-    }
-  }
-  else if ( mislib_name != nullptr ) {
-    if ( !cell_library.read_mislib(mislib_name) ) {
-      cerr << mislib_name << mislib_name << ": read failed" << endl;
-      return 0;
-    }
-  }
-
   switch ( mode ) {
-  case 3:
-    parse_mode(filename_list,
-	       spath,
-	       watch_line,
-	       verbose,
-	       profile,
-	       loop,
-	       dump);
+  case 1:
+    rawlex_mode(filename_list,
+		spath,
+		watch_line,
+		verbose,
+		dump);
     break;
 
-  case 4:
-    elaborate_mode(filename_list,
-		   all_msg,
-		   spath,
-		   cell_library,
-		   watch_line,
-		   verbose,
-		   profile,
-		   loop,
-		   dump);
+  case 2:
+    lex_mode(filename_list,
+	     spath,
+	     watch_line,
+	     verbose,
+	     loop,
+	     dump);
     break;
   }
+
   return 0;
 }

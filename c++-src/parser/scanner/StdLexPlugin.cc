@@ -11,7 +11,7 @@
 #include "InputMgr.h"
 
 #include "scanner/RawLex.h"
-#include "scanner/common.h"
+#include "common.h"
 
 #include "ym/MsgMgr.h"
 

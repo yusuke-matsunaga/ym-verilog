@@ -15,8 +15,6 @@
 #include "ym/FileRegion.h"
 #include "ym/Binder.h"
 
-#include "LexPluginDict.h"
-
 
 BEGIN_NAMESPACE_YM_VERILOG
 
@@ -273,7 +271,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 入力ファイルを管理するオブジェクト
-  InputMgr* mInputMgr;
+  unique_ptr<InputMgr> mInputMgr;
 
   // 予約語辞書の参照
   const RsrvWordDic& mDic;
@@ -300,10 +298,10 @@ private:
   T1BindMgr<int> mWatcherMgr;
 
   // プラグイン用の辞書
-  LexPluginDict mPluginDict;
+  unique_ptr<LexPluginDict> mPluginDict;
 
   // 内部状態用のリスト
-  list<LexState*> mStates;
+  vector<unique_ptr<LexState>> mStates;
 
   // コンテキスト
   tContext mContext;

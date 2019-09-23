@@ -9,6 +9,7 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories (
+  ${PROJECT_SOURCE_DIR}/ym-verilog/c++-src/parser/scanner
   ../include
   )
 
@@ -28,38 +29,26 @@ include_directories (
 #  ソースファイルの設定
 # ===================================================================
 
-set ( vltest_SOURCES
-  VlDumper.cc
-  VlDumperImpl.cc
-  VlDumperImpl_decl.cc
-  VlDumperImpl_expr.cc
-  VlDumperImpl_item.cc
-  VlDumperImpl_module.cc
-  VlDumperImpl_scope.cc
-  VlDumperImpl_stmt.cc
-  vltest_elaborate.cc
-  vltest_main.cc
-  vltest_parse.cc
-  ../common/VlTestLineWatcher.cc
-  )
-
 
 # ===================================================================
 #  テスト用のターゲットの設定
 # ===================================================================
 
-add_executable ( vltest
-  ${vltest_SOURCES}
+add_executable ( lex_test
+  main.cc
+  rawlex_mode.cc
+  lex_mode.cc
+  ../common/VlTestLineWatcher.cc
   $<TARGET_OBJECTS:ym_verilog_obj_ad>
   $<TARGET_OBJECTS:ym_cell_obj_ad>
   $<TARGET_OBJECTS:ym_logic_obj_ad>
   $<TARGET_OBJECTS:ym_base_obj_ad>
   )
 
-target_compile_options ( vltest
+target_compile_options ( lex_test
   PRIVATE "-g"
   )
 
-target_link_libraries ( vltest
+target_link_libraries ( lex_test
   ${YM_LIB_DEPENDS}
   )
