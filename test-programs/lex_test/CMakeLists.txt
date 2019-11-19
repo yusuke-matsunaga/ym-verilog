@@ -39,10 +39,10 @@ add_executable ( lex_test
   rawlex_mode.cc
   lex_mode.cc
   ../common/VlTestLineWatcher.cc
-  $<TARGET_OBJECTS:ym_verilog_obj_ad>
-  $<TARGET_OBJECTS:ym_cell_obj_ad>
-  $<TARGET_OBJECTS:ym_logic_obj_ad>
-  $<TARGET_OBJECTS:ym_base_obj_ad>
+  $<TARGET_OBJECTS:ym_verilog_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_base_obj_d>
   )
 
 target_compile_options ( lex_test
