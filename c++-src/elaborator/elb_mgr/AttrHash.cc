@@ -18,12 +18,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリ確保用のアロケータ
-AttrHash::AttrHash(Alloc& alloc) :
-  mAlloc(alloc),
+AttrHash::AttrHash() :
   mNum(0)
 {
-  alloc_table(1024);
 }
 
 // @brief デストラクタ

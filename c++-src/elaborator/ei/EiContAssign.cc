@@ -35,12 +35,10 @@ EiFactory::new_CaHead(const VlModule* module,
 {
   EiCaHead* head = nullptr;
   if ( delay ) {
-    void* p = mAlloc.get_memory(sizeof(EiCaHeadD));
-    head = new (p) EiCaHeadD(module, pt_head, delay);
+    head = new EiCaHeadD(module, pt_head, delay);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiCaHead));
-    head = new (p) EiCaHead(module, pt_head);
+    head = new EiCaHead(module, pt_head);
   }
   return head;
 }
@@ -56,8 +54,7 @@ EiFactory::new_ContAssign(ElbCaHead* head,
 			  ElbExpr* lhs,
 			  ElbExpr* rhs)
 {
-  void* p = mAlloc.get_memory(sizeof(EiContAssign1));
-  EiContAssign* cont_assign = new (p) EiContAssign1(head, pt_obj, lhs, rhs);
+  EiContAssign* cont_assign = new EiContAssign1(head, pt_obj, lhs, rhs);
 
   return cont_assign;
 }
@@ -73,8 +70,7 @@ EiFactory::new_ContAssign(const VlModule* module,
 			  ElbExpr* lhs,
 			  ElbExpr* rhs)
 {
-  void* p = mAlloc.get_memory(sizeof(EiContAssign2));
-  EiContAssign* cont_assign = new (p) EiContAssign2(module, pt_obj, lhs, rhs);
+  EiContAssign* cont_assign = new EiContAssign2(module, pt_obj, lhs, rhs);
 
   return cont_assign;
 }

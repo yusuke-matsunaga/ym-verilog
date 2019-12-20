@@ -14,7 +14,6 @@
 #include "ym/vl/VlFwd.h"
 #include "ym/ClibCellLibrary.h"
 #include "ym/File.h"
-#include "ym/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -256,9 +255,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ここで生成するオブジェクト用のアロケータ
-  SimpleAlloc mAlloc;
 
   // Pt オブジェクトを管理するクラス
   unique_ptr<PtMgr> mPtMgr;

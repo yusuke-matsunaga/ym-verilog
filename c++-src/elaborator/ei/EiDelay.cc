@@ -30,8 +30,7 @@ EiFactory::new_Delay(const PtBase* pt_obj,
 		     SizeType elem_num,
 		     ElbExpr** expr_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiDelay));
-  EiDelay* delay = new (p) EiDelay(pt_obj, elem_num, expr_list);
+  EiDelay* delay = new EiDelay(pt_obj, elem_num, expr_list);
 
   return delay;
 }

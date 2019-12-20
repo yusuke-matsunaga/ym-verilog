@@ -25,8 +25,7 @@ ElbScope*
 EiFactory::new_GenBlock(const VlNamedObj* parent,
 			const PtItem* pt_item)
 {
-  void* p = mAlloc.get_memory(sizeof(EiGenBlock));
-  EiGenBlock* scope = new (p) EiGenBlock(parent, pt_item);
+  EiGenBlock* scope = new EiGenBlock(parent, pt_item);
 
   return scope;
 }
@@ -36,8 +35,7 @@ ElbGfRoot*
 EiFactory::new_GfRoot(const VlNamedObj* parent,
 		      const PtItem* pt_item)
 {
-  void* p = mAlloc.get_memory(sizeof(EiGfRoot));
-  EiGfRoot* gfroot = new (p) EiGfRoot(parent, pt_item);
+  EiGfRoot* gfroot = new EiGfRoot(parent, pt_item);
 
   return gfroot;
 }
@@ -51,8 +49,7 @@ EiFactory::new_GfBlock(const VlNamedObj* parent,
 		       const PtItem* pt_item,
 		       int gvi)
 {
-  void* p = mAlloc.get_memory(sizeof(EiGfBlock));
-  EiGfBlock* scope = new (p) EiGfBlock(parent, pt_item, gvi);
+  EiGfBlock* scope = new EiGfBlock(parent, pt_item, gvi);
 
   return scope;
 }

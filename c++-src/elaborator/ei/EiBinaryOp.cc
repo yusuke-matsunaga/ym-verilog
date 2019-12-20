@@ -37,8 +37,7 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
   case VpiOpType::BitOr:
   case VpiOpType::BitXNor:
   case VpiOpType::BitXor:
-    p = mAlloc.get_memory(sizeof(EiBinaryBitOp));
-    expr = new (p) EiBinaryBitOp(pt_expr, opr0, opr1);
+    expr = new EiBinaryBitOp(pt_expr, opr0, opr1);
     break;
 
   case VpiOpType::Add:
@@ -46,27 +45,23 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
   case VpiOpType::Mult:
   case VpiOpType::Div:
   case VpiOpType::Mod:
-    p = mAlloc.get_memory(sizeof(EiBinaryArithOp));
-    expr = new (p) EiBinaryArithOp(pt_expr, opr0, opr1);
+    expr = new EiBinaryArithOp(pt_expr, opr0, opr1);
     break;
 
   case VpiOpType::Power:
-    p = mAlloc.get_memory(sizeof(EiPowerOp));
-    expr = new (p) EiPowerOp(pt_expr, opr0, opr1);
+    expr = new EiPowerOp(pt_expr, opr0, opr1);
     break;
 
   case VpiOpType::LShift:
   case VpiOpType::RShift:
   case VpiOpType::ArithLShift:
   case VpiOpType::ArithRShift:
-    p = mAlloc.get_memory(sizeof(EiShiftOp));
-    expr = new (p) EiShiftOp(pt_expr, opr0, opr1);
+    expr = new EiShiftOp(pt_expr, opr0, opr1);
     break;
 
   case VpiOpType::LogAnd:
   case VpiOpType::LogOr:
-    p = mAlloc.get_memory(sizeof(EiBinaryLogOp));
-    expr = new (p) EiBinaryLogOp(pt_expr, opr0, opr1);
+    expr = new EiBinaryLogOp(pt_expr, opr0, opr1);
     break;
 
   case VpiOpType::CaseEq:
@@ -77,8 +72,7 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
   case VpiOpType::Gt:
   case VpiOpType::Le:
   case VpiOpType::Lt:
-    p = mAlloc.get_memory(sizeof(EiCompareOp));
-    expr = new (p) EiCompareOp(pt_expr, opr0, opr1);
+    expr = new EiCompareOp(pt_expr, opr0, opr1);
     break;
 
   default:

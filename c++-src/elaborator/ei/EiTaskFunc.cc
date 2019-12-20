@@ -46,12 +46,9 @@ EiFactory::new_Function(const VlNamedObj* parent,
 
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
-  EiIODecl* io_array = new (q) EiIODecl[io_num];
-
-  void* p = mAlloc.get_memory(sizeof(EiFunctionV));
-  EiFunction* func = new (p) EiFunctionV(parent, pt_item, io_num, io_array,
-					 left, right, left_val, right_val);
+  EiIODecl* io_array = new EiIODecl[io_num];
+  EiFunction* func = new EiFunctionV(parent, pt_item, io_num, io_array,
+				     left, right, left_val, right_val);
 
   return func;
 }
@@ -65,11 +62,8 @@ EiFactory::new_Function(const VlNamedObj* parent,
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
-  EiIODecl* io_array = new (q) EiIODecl[io_num];
-
-  void* p = mAlloc.get_memory(sizeof(EiFunction));
-  EiFunction* func = new (p) EiFunction(parent, pt_item, io_num, io_array);
+  EiIODecl* io_array = new EiIODecl[io_num];
+  EiFunction* func = new EiFunction(parent, pt_item, io_num, io_array);
 
   return func;
 }
@@ -83,11 +77,8 @@ EiFactory::new_Task(const VlNamedObj* parent,
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  void* q = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
-  EiIODecl* io_array = new (q) EiIODecl[io_num];
-
-  void* p = mAlloc.get_memory(sizeof(EiTask));
-  EiTask* task = new (p) EiTask(parent, pt_item, io_num, io_array);
+  EiIODecl* io_array = new EiIODecl[io_num];
+  EiTask* task = new EiTask(parent, pt_item, io_num, io_array);
   return task;
 }
 

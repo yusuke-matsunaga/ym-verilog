@@ -29,23 +29,19 @@ EiFactory::new_UnaryOp(const PtExpr* pt_expr,
 		       ElbExpr* opr1)
 {
   ElbExpr* expr = nullptr;
-  void* p;
   switch ( op_type ) {
   case VpiOpType::Posedge:
   case VpiOpType::Negedge:
-    p = mAlloc.get_memory(sizeof(EiEventEdgeOp));
-    expr = new (p) EiEventEdgeOp(pt_expr, opr1);
+    expr = new EiEventEdgeOp(pt_expr, opr1);
     break;
 
   case VpiOpType::BitNeg:
-    p = mAlloc.get_memory(sizeof(EiBitNegOp));
-    expr = new (p) EiBitNegOp(pt_expr, opr1);
+    expr = new EiBitNegOp(pt_expr, opr1);
     break;
 
   case VpiOpType::Plus:
   case VpiOpType::Minus:
-    p = mAlloc.get_memory(sizeof(EiUnaryArithOp));
-    expr = new (p) EiUnaryArithOp(pt_expr, opr1);
+    expr = new EiUnaryArithOp(pt_expr, opr1);
     break;
 
   case VpiOpType::UnaryAnd:
@@ -54,13 +50,11 @@ EiFactory::new_UnaryOp(const PtExpr* pt_expr,
   case VpiOpType::UnaryNor:
   case VpiOpType::UnaryXor:
   case VpiOpType::UnaryXNor:
-    p = mAlloc.get_memory(sizeof(EiReductionOp));
-    expr = new (p) EiReductionOp(pt_expr, opr1);
+    expr = new EiReductionOp(pt_expr, opr1);
     break;
 
   case VpiOpType::Not:
-    p = mAlloc.get_memory(sizeof(EiNotOp));
-    expr = new (p) EiNotOp(pt_expr, opr1);
+    expr = new EiNotOp(pt_expr, opr1);
     break;
 
   default:

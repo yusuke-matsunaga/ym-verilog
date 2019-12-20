@@ -28,8 +28,7 @@ ElbControl*
 EiFactory::new_DelayControl(const PtControl* pt_control,
 			    ElbExpr* delay)
 {
-  void* p = mAlloc.get_memory(sizeof(EiDelayControl));
-  EiDelayControl* control = new (p) EiDelayControl(pt_control, delay);
+  EiDelayControl* control = new EiDelayControl(pt_control, delay);
 
   return control;
 }
@@ -43,9 +42,8 @@ EiFactory::new_EventControl(const PtControl* pt_control,
 			    SizeType event_num,
 			    ElbExpr** event_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiEventControl));
-  EiEventControl* control = new (p) EiEventControl(pt_control,
-						   event_num, event_list);
+  EiEventControl* control = new EiEventControl(pt_control,
+					       event_num, event_list);
 
   return control;
 }
@@ -61,9 +59,8 @@ EiFactory::new_RepeatControl(const PtControl* pt_control,
 			     SizeType event_num,
 			     ElbExpr** event_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiRepeatControl));
-  EiRepeatControl* control = new (p) EiRepeatControl(pt_control, rep,
-						     event_num, event_list);
+  EiRepeatControl* control = new EiRepeatControl(pt_control, rep,
+						 event_num, event_list);
 
   return control;
 }

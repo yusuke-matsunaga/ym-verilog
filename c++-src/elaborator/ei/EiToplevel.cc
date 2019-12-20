@@ -24,8 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 const VlNamedObj*
 EiFactory::new_Toplevel()
 {
-  void* p = mAlloc.get_memory(sizeof(EiToplevel));
-  EiToplevel* toplevel = new (p) EiToplevel();
+  EiToplevel* toplevel = new EiToplevel();
 
   return toplevel;
 }

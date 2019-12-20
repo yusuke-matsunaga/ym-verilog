@@ -32,8 +32,7 @@ EiFactory::new_Constant(const PtExpr* pt_expr)
   switch ( const_type ) {
   case VpiConstType::Int:
     if ( pt_expr->const_str() == nullptr ) {
-      void* p = mAlloc.get_memory(sizeof(EiIntConst));
-      return new (p) EiIntConst(pt_expr, pt_expr->const_uint());
+      return new EiIntConst(pt_expr, pt_expr->const_uint());
     }
     break;
 
@@ -62,16 +61,10 @@ EiFactory::new_Constant(const PtExpr* pt_expr)
     break;
 
   case VpiConstType::Real:
-    {
-      void* p = mAlloc.get_memory(sizeof(EiRealConst));
-      return new (p) EiRealConst(pt_expr, pt_expr->const_real());
-    }
+    return new EiRealConst(pt_expr, pt_expr->const_real());
 
   case VpiConstType::String:
-    {
-      void* p = mAlloc.get_memory(sizeof(EiStringConst));
-      return new (p) EiStringConst(pt_expr, pt_expr->const_str());
-    }
+    return new EiStringConst(pt_expr, pt_expr->const_str());
 
   default:
     ASSERT_NOT_REACHED;
@@ -79,10 +72,9 @@ EiFactory::new_Constant(const PtExpr* pt_expr)
   }
 
   // ここに来たということはビットベクタ型
-  void* p = mAlloc.get_memory(sizeof(EiBitVectorConst));
-  return new (p) EiBitVectorConst(pt_expr, const_type,
-				  BitVector(size, is_signed, base,
-					    pt_expr->const_str()));
+  return new EiBitVectorConst(pt_expr, const_type,
+			      BitVector(size, is_signed, base,
+					pt_expr->const_str()));
 }
 
 // @brief genvar 起因の定数式を生成する．
@@ -92,8 +84,7 @@ ElbExpr*
 EiFactory::new_GenvarConstant(const PtExpr* pt_primary,
 			      int val)
 {
-  void* p = mAlloc.get_memory(sizeof(EiIntConst));
-  return new (p) EiIntConst(pt_primary, val);
+  return new EiIntConst(pt_primary, val);
 }
 
 

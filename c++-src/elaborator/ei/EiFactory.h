@@ -10,7 +10,6 @@
 
 
 #include "elb/ElbFactory.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -24,8 +23,7 @@ class EiFactory :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のアロケータ
-  EiFactory(Alloc& alloc);
+  EiFactory();
 
   /// @brief デストラクタ
   ~EiFactory() override;
@@ -1033,9 +1031,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリアロケータ
-  Alloc& mAlloc;
 
   ymuint32 mUdpDefnNum;
   ymuint32 mModuleArrayNum;

@@ -28,8 +28,7 @@ EiFactory::new_Genvar(const VlNamedObj* parent,
 		      const PtDeclItem* pt_item,
 		      int val)
 {
-  void* p = mAlloc.get_memory(sizeof(EiGenvar));
-  EiGenvar* genvar = new (p) EiGenvar(parent, pt_item, val);
+  EiGenvar* genvar = new EiGenvar(parent, pt_item, val);
 
   return genvar;
 }

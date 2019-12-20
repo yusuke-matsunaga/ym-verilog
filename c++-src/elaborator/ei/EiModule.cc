@@ -36,19 +36,16 @@ EiFactory::new_Module(const VlNamedObj* parent,
 		      const PtItem* pt_head,
 		      const PtInst* pt_inst)
 {
-  void* p = mAlloc.get_memory(sizeof(EiModule2));
-  EiModule2* module = new (p) EiModule2(parent,
-					pt_module,
-					pt_head,
-					pt_inst);
+  EiModule2* module = new EiModule2(parent,
+				    pt_module,
+				    pt_head,
+				    pt_inst);
 
   SizeType port_num = pt_module->port_list().size();
-  void* q = mAlloc.get_memory(sizeof(EiPort) * port_num);
-  EiPort* port_array = new (q) EiPort[port_num];
+  EiPort* port_array = new EiPort[port_num];
 
   SizeType io_num = pt_module->iodecl_num();
-  void* r = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
-  EiIODecl* io_array = new (r) EiIODecl[io_num];
+  EiIODecl* io_array = new EiIODecl[io_num];
 
   module->init(port_array, io_array);
 
@@ -78,26 +75,20 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
   range.set(left, right, left_val, right_val);
 
   SizeType n = range.size();
-  void* q = mAlloc.get_memory(sizeof(EiModule1) * n);
-  EiModule1* array = new (q) EiModule1[n];
-
-  void* p = mAlloc.get_memory(sizeof(EiModuleArray));
-  EiModuleArray* module_array = new (p) EiModuleArray(parent,
-						      pt_module,
-						      pt_head,
-						      pt_inst,
-						      range,
-						      array);
+  EiModule1* array = new EiModule1[n];
+  EiModuleArray* module_array = new EiModuleArray(parent,
+						  pt_module,
+						  pt_head,
+						  pt_inst,
+						  range,
+						  array);
 
   SizeType port_num = pt_module->port_list().size();
   SizeType io_num = pt_module->iodecl_num();
 
   for ( int i = 0; i < n; ++ i ) {
-    void* r = mAlloc.get_memory(sizeof(EiPort) * port_num);
-    EiPort* port_array = new (r) EiPort[port_num];
-
-    void* s = mAlloc.get_memory(sizeof(EiIODecl) * io_num);
-    EiIODecl* io_array = new (s) EiIODecl[io_num];
+    EiPort* port_array = new EiPort[port_num];
+    EiIODecl* io_array = new EiIODecl[io_num];
 
     int index = module_array->mRange.index(i);
     array[i].init(port_array, io_array,

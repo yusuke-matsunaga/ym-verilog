@@ -11,8 +11,6 @@
 
 #include "ym/verilog.h"
 #include "ym/FileRegion.h"
-#include "ym/Alloc.h"
-#include "ym/UnitAlloc.h"
 
 #include "ym/vl/VlFwd.h"
 #include "ElbFwd.h"
@@ -563,8 +561,7 @@ class ObjDict
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のアロケータ
-  ObjDict(Alloc& alloc);
+  ObjDict();
 
   /// @brief デストラクタ
   ~ObjDict();
@@ -655,9 +652,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ElbObjHandle の確保用のアロケータ
-  UnitAlloc mAlloc;
 
   // ハッシュ表のサイズ
   ymuint32 mSize;

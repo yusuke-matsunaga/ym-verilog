@@ -40,12 +40,10 @@ EiFactory::new_PrimHead(const VlNamedObj* parent,
 {
   EiPrimHead* head = nullptr;
   if ( has_delay ) {
-    void* p = mAlloc.get_memory(sizeof(EiPrimHeadD));
-    head = new (p) EiPrimHeadD(parent, pt_header);
+    head = new EiPrimHeadD(parent, pt_header);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiPrimHead));
-    head = new (p) EiPrimHead(parent, pt_header);
+    head = new EiPrimHead(parent, pt_header);
   }
   return head;
 }
@@ -63,12 +61,10 @@ EiFactory::new_UdpHead(const VlNamedObj* parent,
 {
   EiPrimHead* head = nullptr;
   if ( has_delay ) {
-    void* p = mAlloc.get_memory(sizeof(EiPrimHeadUD));
-    head = new (p) EiPrimHeadUD(parent, pt_header, udp);
+    head = new EiPrimHeadUD(parent, pt_header, udp);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiPrimHeadU));
-    head = new (p) EiPrimHeadU(parent, pt_header, udp);
+    head = new EiPrimHeadU(parent, pt_header, udp);
   }
   return head;
 }
@@ -82,9 +78,7 @@ EiFactory::new_CellHead(const VlNamedObj* parent,
 			const PtItem* pt_header,
 			int cell_id)
 {
-  EiPrimHead* head = nullptr;
-  void* p = mAlloc.get_memory(sizeof(EiPrimHeadC));
-  head = new (p) EiPrimHeadC(parent, pt_header, cell_id);
+  auto head = new EiPrimHeadC(parent, pt_header, cell_id);
   return head;
 }
 
@@ -96,11 +90,8 @@ EiFactory::new_Primitive(ElbPrimHead* head,
 			 const PtInst* pt_inst)
 {
   SizeType port_num = pt_inst->port_list().size();
-  void* q = mAlloc.get_memory(sizeof(EiPrimTerm) * port_num);
-  EiPrimTerm* term_array = new (q) EiPrimTerm[port_num];
-
-  void* p = mAlloc.get_memory(sizeof(EiPrimitive2));
-  EiPrimitive* prim = new (p) EiPrimitive2(head, pt_inst, term_array);
+  EiPrimTerm* term_array = new EiPrimTerm[port_num];
+  EiPrimitive* prim = new EiPrimitive2(head, pt_inst, term_array);
 
   return prim;
 }
@@ -123,16 +114,12 @@ EiFactory::new_PrimitiveArray(ElbPrimHead* head,
   EiRangeImpl range;
   range.set(left, right, left_val, right_val);
   SizeType n = range.size();
-  void* q = mAlloc.get_memory(sizeof(EiPrimitive1) * n);
-  EiPrimitive1* array = new (q) EiPrimitive1[n];
+  EiPrimitive1* array = new EiPrimitive1[n];
 
   SizeType nt = n * pt_inst->port_list().size();
-  void* r = mAlloc.get_memory(sizeof(EiPrimTerm) * nt);
-  EiPrimTerm* term_array = new (r) EiPrimTerm[nt];
-
-  void* p = mAlloc.get_memory(sizeof(EiPrimArray));
-  EiPrimArray* prim_array = new (p) EiPrimArray(head, pt_inst, range,
-						array, term_array);
+  EiPrimTerm* term_array = new EiPrimTerm[nt];
+  EiPrimArray* prim_array = new EiPrimArray(head, pt_inst, range,
+					    array, term_array);
 
   return prim_array;
 }
@@ -147,11 +134,8 @@ EiFactory::new_CellPrimitive(ElbPrimHead* head,
 			     const PtInst* pt_inst)
 {
   SizeType port_num = pt_inst->port_list().size();
-  void* q = mAlloc.get_memory(sizeof(EiPrimTerm) * port_num);
-  EiPrimTerm* term_array = new (q) EiPrimTerm[port_num];
-
-  void* p = mAlloc.get_memory(sizeof(EiPrimitive2));
-  EiPrimitive* prim = new (p) EiPrimitive2(head, cell, pt_inst, term_array);
+  EiPrimTerm* term_array = new EiPrimTerm[port_num];
+  EiPrimitive* prim = new EiPrimitive2(head, cell, pt_inst, term_array);
 
   return prim;
 }
@@ -176,16 +160,12 @@ EiFactory::new_CellPrimitiveArray(ElbPrimHead* head,
   EiRangeImpl range;
   range.set(left, right, left_val, right_val);
   SizeType n = range.size();
-  void* q = mAlloc.get_memory(sizeof(EiPrimitive1) * n);
-  EiPrimitive1* array = new (q) EiPrimitive1[n];
+  EiPrimitive1* array = new EiPrimitive1[n];
 
   SizeType nt = n * pt_inst->port_list().size();
-  void* r = mAlloc.get_memory(sizeof(EiPrimTerm) * nt);
-  EiPrimTerm* term_array = new (r) EiPrimTerm[nt];
-
-  void* p = mAlloc.get_memory(sizeof(EiPrimArray));
-  EiPrimArray* prim_array = new (p) EiPrimArray(head, cell, pt_inst, range,
-						array, term_array);
+  EiPrimTerm* term_array = new EiPrimTerm[nt];
+  EiPrimArray* prim_array = new EiPrimArray(head, cell, pt_inst, range,
+					    array, term_array);
 
   return prim_array;
 }

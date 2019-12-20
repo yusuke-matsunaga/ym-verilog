@@ -10,7 +10,6 @@
 
 
 #include "PtiFwd.h"
-#include "ym/Alloc.h"
 #include "ym/pt/PtArray.h"
 
 
@@ -101,9 +100,8 @@ public:
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc アロケータ
   /// @note 空のリストを作る
-  PtrList(Alloc& alloc);
+  PtrList();
 
   /// @brief デストラクタ
   ~PtrList();
@@ -152,10 +150,9 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を配列にコピーする．
-  /// @param[in] alloc 配列用のメモリアロケータ
   /// @note この処理の後ではリストは空になる．
   PtArray<T2>
-  to_array(Alloc& alloc);
+  to_array();
 
   /// @brief 内容をvectorにコピーする．
   /// @note この処理の後ではリストは空になる．
@@ -167,9 +164,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリ確保用のアロケータ
-  Alloc& mAlloc;
 
   // 先頭の要素
   Cell* mTop;
@@ -269,13 +263,11 @@ PtrListIterator<T>::operator++()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc アロケータ
 // @note 空のリストを作る
 template <typename T1,
 	  typename T2>
 inline
-PtrList<T1, T2>::PtrList(Alloc& alloc) :
-  mAlloc(alloc),
+PtrList<T1, T2>::PtrList() :
   mTop(nullptr),
   mEnd(nullptr),
   mNum(0)
@@ -298,9 +290,9 @@ inline
 void
 PtrList<T1, T2>::clear()
 {
-  for (Cell* cell = mTop; cell; ) {
-    Cell* next = cell->mLink;
-    mAlloc.put_memory(sizeof(Cell), static_cast<void*>(cell));
+  for ( auto cell = mTop; cell; ) {
+    auto next = cell->mLink;
+    delete cell;
     cell = next;
   }
   mTop = nullptr;
@@ -316,8 +308,7 @@ inline
 void
 PtrList<T1, T2>::push_back(T1* elem)
 {
-  void* p = mAlloc.get_memory(sizeof(Cell));
-  Cell* cell = new (p) Cell;
+  Cell* cell = new Cell;
   cell->mPtr = elem;
   cell->mLink = nullptr;
   if ( mEnd ) {
@@ -408,11 +399,10 @@ template <typename T1,
 	  typename T2>
 inline
 PtArray<T2>
-PtrList<T1, T2>::to_array(Alloc& alloc)
+PtrList<T1, T2>::to_array()
 {
   SizeType n = mNum;
-  void* p = alloc.get_memory(sizeof(T2*) * n);
-  T2** array = new (p) T2*[n];
+  T2** array = new T2*[n];
   SizeType i = 0;
   for ( Cell* cell = mTop; cell; cell = cell->mLink, ++ i ) {
     array[i] = cell->mPtr;

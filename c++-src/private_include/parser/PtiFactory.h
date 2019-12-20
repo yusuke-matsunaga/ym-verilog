@@ -11,7 +11,6 @@
 
 #include "ym/pt/PtDecl.h"
 #include "PtiFwd.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -32,12 +31,10 @@ public:
   /// @param[in] alloc メモリアロケータ
   static
   PtiFactory*
-  make_obj(const string& type,
-	   Alloc& alloc);
+  make_obj(const string& type);
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリアロケータ
-  PtiFactory(Alloc& alloc);
+  PtiFactory();
 
   /// @brief デストラクタ
   virtual
@@ -2330,18 +2327,10 @@ protected:
   alloc_array(int size);
 
 
-  /// @brief メモリアロケータを得る．
-  Alloc&
-  alloc();
-
-
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリアロケータ
-  Alloc& mAlloc;
 
 };
 
@@ -2357,8 +2346,7 @@ inline
 T*
 PtiFactory::alloc_array(int size)
 {
-  void* p = mAlloc.get_memory(sizeof(T) * size);
-  return new (p) T[size];
+  return new T[size];
 }
 
 END_NAMESPACE_YM_VERILOG

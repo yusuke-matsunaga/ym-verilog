@@ -18,9 +18,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief オブジェクトを生成する関数
 ElbFactory*
-ElbFactory::new_obj(Alloc& alloc)
+ElbFactory::new_obj()
 {
-  return new EiFactory(alloc);
+  return new EiFactory();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -28,9 +28,7 @@ ElbFactory::new_obj(Alloc& alloc)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリ確保用のアロケータ
-EiFactory::EiFactory(Alloc& alloc) :
-  mAlloc(alloc)
+EiFactory::EiFactory()
 {
 }
 
@@ -50,8 +48,7 @@ EiFactory::dump_prof(ostream& s)
 ElbStmt**
 EiFactory::new_StmtList(SizeType stmt_num)
 {
-  void* q = mAlloc.get_memory(sizeof(ElbStmt*) * stmt_num);
-  ElbStmt** array = new (q) ElbStmt*[stmt_num];
+  ElbStmt** array = new ElbStmt*[stmt_num];
 
   return array;
 }
@@ -61,8 +58,7 @@ EiFactory::new_StmtList(SizeType stmt_num)
 ElbExpr**
 EiFactory::new_ExprList(SizeType elem_num)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbExpr*) * elem_num);
-  ElbExpr** expr_array = new (p) ElbExpr*[elem_num];
+  ElbExpr** expr_array = new ElbExpr*[elem_num];
 
   return expr_array;
 }

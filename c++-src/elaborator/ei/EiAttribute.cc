@@ -25,11 +25,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbAttrList*
 EiFactory::new_AttrList(SizeType n)
 {
-  void* q = mAlloc.get_memory(sizeof(EiAttribute) * n);
-  EiAttribute* array = new (q) EiAttribute[n];
-
-  void* p = mAlloc.get_memory(sizeof(EiAttrList));
-  EiAttrList* attr_list = new (p) EiAttrList(n, array);
+  EiAttribute* array = new EiAttribute[n];
+  EiAttrList* attr_list = new EiAttrList(n, array);
 
   return attr_list;
 }

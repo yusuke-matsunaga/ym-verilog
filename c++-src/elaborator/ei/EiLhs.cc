@@ -30,9 +30,8 @@ EiFactory::new_Lhs(const PtExpr* pt_expr,
 		   SizeType lhs_elem_num,
 		   ElbExpr** lhs_elem_array)
 {
-  void* p = mAlloc.get_memory(sizeof(EiLhs));
-  return new (p) EiLhs(pt_expr, opr_size, opr_array,
-		       lhs_elem_num, lhs_elem_array);
+  return new EiLhs(pt_expr, opr_size, opr_array,
+		   lhs_elem_num, lhs_elem_array);
 }
 
 

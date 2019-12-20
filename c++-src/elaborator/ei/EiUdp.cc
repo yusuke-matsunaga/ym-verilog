@@ -32,26 +32,21 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 		       bool is_protected)
 {
   SizeType port_num = pt_udp->port_list().size();
-  void* q = mAlloc.get_memory(sizeof(EiUdpIO) * port_num);
-  EiUdpIO* iodecl = new (q) EiUdpIO[port_num];
-
+  EiUdpIO* iodecl = new EiUdpIO[port_num];
   SizeType table_size = pt_udp->table_array().size();
-  void* r = mAlloc.get_memory(sizeof(EiTableEntry) * table_size);
-  EiTableEntry* table = new (r) EiTableEntry[table_size];
+  EiTableEntry* table = new EiTableEntry[table_size];
 
   SizeType row_size = port_num;
   if ( pt_udp->prim_type() == VpiPrimType::Seq ) {
     ++ row_size;
   }
   SizeType vsize = row_size * table_size;
-  void* s = mAlloc.get_memory(sizeof(VlUdpVal) * vsize);
-  VlUdpVal* val_array = new (s) VlUdpVal[vsize];
+  VlUdpVal* val_array = new VlUdpVal[vsize];
 
-  void* p = mAlloc.get_memory(sizeof(EiUdpDefn));
-  EiUdpDefn* udp = new (p) EiUdpDefn(pt_udp, is_protected,
-				     port_num, iodecl,
-				     table_size, table,
-				     val_array);
+  EiUdpDefn* udp = new EiUdpDefn(pt_udp, is_protected,
+				 port_num, iodecl,
+				 table_size, table,
+				 val_array);
   for ( int i = 0; i < port_num; ++ i ) {
     iodecl[i].mUdp = udp;
   }

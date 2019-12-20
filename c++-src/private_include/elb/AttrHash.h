@@ -10,7 +10,6 @@
 
 
 #include "ym/verilog.h"
-#include "ym/Alloc.h"
 #include "ElbFwd.h"
 
 
@@ -25,8 +24,7 @@ class AttrHash
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のアロケータ
-  AttrHash(Alloc& alloc);
+  AttrHash();
 
   /// @brief デストラクタ
   ~AttrHash();
@@ -103,9 +101,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // Cell の確保用アロケータ
-  Alloc& mAlloc;
 
   // ハッシュ表のサイズ
   SizeType mSize;

@@ -37,9 +37,8 @@ EiFactory::new_EventStmt(const VlNamedObj* parent,
 			 const PtStmt* pt_stmt,
 			 ElbExpr* named_event)
 {
-  void* p = mAlloc.get_memory(sizeof(EiEventStmt));
-  ElbStmt* stmt = new (p) EiEventStmt(parent, process, pt_stmt,
-				      named_event);
+  ElbStmt* stmt = new EiEventStmt(parent, process, pt_stmt,
+				  named_event);
 
   return stmt;
 }
@@ -53,8 +52,7 @@ EiFactory::new_NullStmt(const VlNamedObj* parent,
 			ElbProcess* process,
 			const PtStmt* pt_stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiNullStmt));
-  ElbStmt* stmt = new (p) EiNullStmt(parent, process, pt_stmt);
+  ElbStmt* stmt = new EiNullStmt(parent, process, pt_stmt);
 
   return stmt;
 }
@@ -73,9 +71,8 @@ EiFactory::new_TaskCall(const VlNamedObj* parent,
 			ElbExpr** arg_array)
 {
   int n = pt_stmt->arg_list().size();
-  void* p = mAlloc.get_memory(sizeof(EiTaskCall));
-  EiTaskCall* stmt = new (p) EiTaskCall(parent, process, pt_stmt,
-					task, n, arg_array);
+  EiTaskCall* stmt = new EiTaskCall(parent, process, pt_stmt,
+				    task, n, arg_array);
 
   return stmt;
 }
@@ -94,9 +91,8 @@ EiFactory::new_SysTaskCall(const VlNamedObj* parent,
 			   ElbExpr** arg_array)
 {
   int n = pt_stmt->arg_list().size();
-  void* p = mAlloc.get_memory(sizeof(EiSysTaskCall));
-  EiSysTaskCall* stmt = new (p) EiSysTaskCall(parent, process, pt_stmt,
-					      user_systf, n, arg_array);
+  EiSysTaskCall* stmt = new EiSysTaskCall(parent, process, pt_stmt,
+					  user_systf, n, arg_array);
 
   return stmt;
 }
@@ -112,9 +108,8 @@ EiFactory::new_DisableStmt(const VlNamedObj* parent,
 			   const PtStmt* pt_stmt,
 			   const VlNamedObj* target)
 {
-  void* p = mAlloc.get_memory(sizeof(EiDisableStmt));
-  ElbStmt* stmt = new (p) EiDisableStmt(parent, process, pt_stmt,
-					target);
+  ElbStmt* stmt = new EiDisableStmt(parent, process, pt_stmt,
+				    target);
 
   return stmt;
 }
@@ -132,9 +127,8 @@ EiFactory::new_CtrlStmt(const VlNamedObj* parent,
 			ElbControl* control,
 			ElbStmt* stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiCtrlStmt));
-  ElbStmt* stmt1 = new (p) EiCtrlStmt(parent, process, pt_stmt,
-				      control, stmt);
+  ElbStmt* stmt1 = new EiCtrlStmt(parent, process, pt_stmt,
+				  control, stmt);
 
   return stmt1;
 }

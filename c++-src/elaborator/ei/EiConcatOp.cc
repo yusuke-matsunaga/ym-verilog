@@ -29,8 +29,7 @@ EiFactory::new_ConcatOp(const PtExpr* pt_expr,
 			SizeType opr_size,
 			ElbExpr** opr_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiConcatOp));
-  EiConcatOp* op = new (p) EiConcatOp(pt_expr, opr_size, opr_list);
+  EiConcatOp* op = new EiConcatOp(pt_expr, opr_size, opr_list);
 
   return op;
 }
@@ -48,9 +47,8 @@ EiFactory::new_MultiConcatOp(const PtExpr* pt_expr,
 			     SizeType opr_size,
 			     ElbExpr** opr_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiMultiConcatOp));
-  EiMultiConcatOp* op = new (p) EiMultiConcatOp(pt_expr, rep_num, rep_expr,
-						opr_size, opr_list);
+  EiMultiConcatOp* op = new EiMultiConcatOp(pt_expr, rep_num, rep_expr,
+					    opr_size, opr_list);
 
   return op;
 }

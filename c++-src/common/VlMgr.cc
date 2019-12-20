@@ -26,11 +26,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
 VlMgr::VlMgr() :
-  mAlloc(4096),
   mPtMgr{new PtMgr},
-  mPtiFactory{PtiFactory::make_obj("cpt", mAlloc)},
-  mElbMgr{new ElbMgr(mAlloc)},
-  mElbFactory{ElbFactory::new_obj(mAlloc)}
+  mPtiFactory{PtiFactory::make_obj("cpt")},
+  mElbMgr{new ElbMgr()},
+  mElbFactory{ElbFactory::new_obj()}
 {
 }
 
@@ -45,7 +44,6 @@ VlMgr::clear()
 {
   mPtMgr->clear();
   mElbMgr->clear();
-  mAlloc.destroy();
 }
 
 // @brief ファイルを読み込む．
@@ -59,7 +57,7 @@ VlMgr::read_file(const string& filename,
 		 const SearchPathList& searchpath,
 		 const vector<VlLineWatcher*> watcher_list)
 {
-  Parser parser(*mPtMgr, mAlloc, *mPtiFactory);
+  Parser parser(*mPtMgr, *mPtiFactory);
 
   return parser.read_file(filename, searchpath, watcher_list);
 }
@@ -313,13 +311,6 @@ VlMgr::find_attr(const VlObj* obj,
 		 bool def) const
 {
   return mElbMgr->find_attr(obj, def);
-}
-
-// @brief このオブジェクトが確保したメモリの総量を返す．
-ymuint
-VlMgr::allocated_size() const
-{
-  return mAlloc.allocated_size();
 }
 
 END_NAMESPACE_YM_VERILOG

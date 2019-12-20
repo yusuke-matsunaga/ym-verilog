@@ -40,16 +40,14 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 
   EiDeclHead* head = nullptr;
   if ( delay ) {
-    void* p = mAlloc.get_memory(sizeof(EiDeclHeadPtVD));
-    head = new (p) EiDeclHeadPtVD(parent, pt_head,
-				  left, right,
-				  left_val, right_val);
+    head = new EiDeclHeadPtVD(parent, pt_head,
+			      left, right,
+			      left_val, right_val);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiDeclHeadPtV));
-    head = new (p) EiDeclHeadPtV(parent, pt_head,
-				 left, right,
-				 left_val, right_val);
+    head = new EiDeclHeadPtV(parent, pt_head,
+			     left, right,
+			     left_val, right_val);
   }
   return head;
 }
@@ -65,12 +63,10 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 {
   EiDeclHead* head = nullptr;
   if ( delay ) {
-    void* p = mAlloc.get_memory(sizeof(EiDeclHeadPtD));
-    head = new (p) EiDeclHeadPtD(parent, pt_head);
+    head = new EiDeclHeadPtD(parent, pt_head);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiDeclHeadPt));
-    head = new (p) EiDeclHeadPt(parent, pt_head);
+    head = new EiDeclHeadPt(parent, pt_head);
   }
   return head;
 }
@@ -94,10 +90,9 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
-  void* p = mAlloc.get_memory(sizeof(EiDeclHeadPt2V));
-  EiDeclHead* head = new (p) EiDeclHeadPt2V(parent, pt_head, aux_type,
-					    left, right,
-					    left_val, right_val);
+  EiDeclHead* head = new EiDeclHeadPt2V(parent, pt_head, aux_type,
+					left, right,
+					left_val, right_val);
   return head;
 }
 
@@ -110,8 +105,7 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 			const PtIOHead* pt_head,
 			VpiAuxType aux_type)
 {
-  void* p = mAlloc.get_memory(sizeof(EiDeclHeadPt2));
-  EiDeclHead* head = new (p) EiDeclHeadPt2(parent, pt_head, aux_type);
+  EiDeclHead* head = new EiDeclHeadPt2(parent, pt_head, aux_type);
   return head;
 }
 
@@ -132,10 +126,9 @@ EiFactory::new_DeclHead(const VlNamedObj* parent,
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
-  void* p = mAlloc.get_memory(sizeof(EiDeclHeadPt3V));
-  EiDeclHead* head = new (p) EiDeclHeadPt3V(parent, pt_item,
-					    left, right,
-					    left_val, right_val);
+  EiDeclHead* head = new EiDeclHeadPt3V(parent, pt_item,
+					left, right,
+					left_val, right_val);
   return head;
 }
 
@@ -146,8 +139,7 @@ ElbDeclHead*
 EiFactory::new_DeclHead(const VlNamedObj* parent,
 			const PtItem* pt_item)
 {
-  void* p = mAlloc.get_memory(sizeof(EiDeclHeadPt3));
-  EiDeclHead* head = new (p) EiDeclHeadPt3(parent, pt_item);
+  EiDeclHead* head = new EiDeclHeadPt3(parent, pt_item);
   return head;
 }
 

@@ -26,8 +26,7 @@ EiFactory::new_ImpNet(const VlNamedObj* parent,
 		      const PtExpr* pt_expr,
 		      VpiNetType net_type)
 {
-  void* p = mAlloc.get_memory(sizeof(EiImpNet));
-  EiImpNet* decl = new (p) EiImpNet(parent, pt_expr, net_type);
+  EiImpNet* decl = new EiImpNet(parent, pt_expr, net_type);
 
   return decl;
 }

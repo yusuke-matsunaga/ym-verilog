@@ -40,14 +40,12 @@ EiFactory::new_Assignment(const VlNamedObj* parent,
 {
   ElbStmt* stmt = nullptr;
   if ( block ) {
-    void* p = mAlloc.get_memory(sizeof(EiAssignment));
-    stmt = new (p) EiAssignment(parent, process, pt_stmt,
-				lhs, rhs, control);
+    stmt = new EiAssignment(parent, process, pt_stmt,
+			    lhs, rhs, control);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiNbAssignment));
-    stmt = new (p) EiNbAssignment(parent, process, pt_stmt,
-				  lhs, rhs, control);
+    stmt = new EiNbAssignment(parent, process, pt_stmt,
+			      lhs, rhs, control);
   }
   return stmt;
 }
@@ -65,9 +63,8 @@ EiFactory::new_AssignStmt(const VlNamedObj* parent,
 			  ElbExpr* lhs,
 			  ElbExpr* rhs)
 {
-  void* p = mAlloc.get_memory(sizeof(EiAssignStmt));
-  ElbStmt* stmt = new (p) EiAssignStmt(parent, process, pt_stmt,
-				      lhs, rhs);
+  ElbStmt* stmt = new EiAssignStmt(parent, process, pt_stmt,
+				   lhs, rhs);
 
   return stmt;
 }
@@ -83,9 +80,8 @@ EiFactory::new_DeassignStmt(const VlNamedObj* parent,
 			    const PtStmt* pt_stmt,
 			    ElbExpr* lhs)
 {
-  void* p = mAlloc.get_memory(sizeof(EiAssignStmt));
-  ElbStmt* stmt = new (p) EiDeassignStmt(parent, process, pt_stmt,
-					lhs);
+  ElbStmt* stmt = new EiDeassignStmt(parent, process, pt_stmt,
+				     lhs);
 
   return stmt;
 }
@@ -103,9 +99,8 @@ EiFactory::new_ForceStmt(const VlNamedObj* parent,
 			 ElbExpr* lhs,
 			 ElbExpr* rhs)
 {
-  void* p = mAlloc.get_memory(sizeof(EiForceStmt));
-  ElbStmt* stmt = new (p) EiForceStmt(parent, process, pt_stmt,
-				     lhs, rhs);
+  ElbStmt* stmt = new EiForceStmt(parent, process, pt_stmt,
+				  lhs, rhs);
 
   return stmt;
 }
@@ -121,9 +116,8 @@ EiFactory::new_ReleaseStmt(const VlNamedObj* parent,
 			   const PtStmt* pt_stmt,
 			   ElbExpr* lhs)
 {
-  void* p = mAlloc.get_memory(sizeof(EiReleaseStmt));
-  ElbStmt* stmt = new (p) EiReleaseStmt(parent, process, pt_stmt,
-				       lhs);
+  ElbStmt* stmt = new EiReleaseStmt(parent, process, pt_stmt,
+				    lhs);
 
   return stmt;
 }

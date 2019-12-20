@@ -11,9 +11,6 @@
 
 #include "ym/pt/PtP.h"
 #include "ym/File.h"
-#include "ym/Alloc.h"
-#include "ym/FragAlloc.h"
-#include "ym/UnitAlloc.h"
 #include "PtiFwd.h"
 #include "PtiFactory.h"
 #include "PtiDecl.h"
@@ -40,10 +37,8 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
-  /// @param[in] alloc メモリアロケータ
   /// @param[in] ptifactory パース木の要素を生成するファクトリクラス
   Parser(PtMgr& ptmgr,
-	 Alloc& alloc,
 	 PtiFactory& ptifactory);
 
   /// @brief デストラクタ
@@ -2363,20 +2358,11 @@ private:
   // パース木を保持するクラス
   PtMgr& mPtMgr;
 
-  // 本体のメモリアロケータ(配列確保用)
-  Alloc& mAlloc;
-
   // パース木の要素の生成を行うクラス
   PtiFactory& mFactory;
 
   // 字句解析を行うオブジェクト
   unique_ptr<Lex> mLex;
-
-  // PuList<> のメモリ確保用オブジェクト
-  FragAlloc mTmpAlloc;
-
-  // PtrList 用のアロケータ
-  UnitAlloc mCellAlloc;
 
 
 public:
@@ -2496,8 +2482,7 @@ inline
 PtrList<T, T>*
 Parser::new_list()
 {
-  void* p = mTmpAlloc.get_memory(sizeof(PtrList<T, T>));
-  return new (p) PtrList<T, T>(mCellAlloc);
+  return new PtrList<T, T>();
 }
 
 template <typename T>
@@ -2506,10 +2491,9 @@ PtArray<T>
 Parser::to_array(PtrList<T, T>* list)
 {
   if ( list ) {
-    PtArray<T> array = list->to_array(mAlloc);
+    PtArray<T> array = list->to_array();
 
-    list->~PtrList<T, T>();
-    mTmpAlloc.put_memory(sizeof(PtrList<T, T>), list);
+    delete list;
 
     return array;
   }

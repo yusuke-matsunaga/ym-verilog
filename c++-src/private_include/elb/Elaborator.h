@@ -14,8 +14,6 @@
 #include "ym/vl/VlFwd.h"
 #include "ym/ClibCellLibrary.h"
 
-#include "ym/SimpleAlloc.h"
-
 #include "CfDict.h"
 #include "AttrDict.h"
 #include "ElbStub.h"
@@ -186,9 +184,6 @@ private:
 
   // セルライブラリ
   ClibCellLibrary mCellLibrary;
-
-  // ElbStub 用のメモリアロケータ
-  SimpleAlloc mAlloc;
 
   // UDP 生成用のオブジェクト
   UdpGen* mUdpGen;

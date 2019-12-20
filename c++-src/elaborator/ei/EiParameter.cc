@@ -31,8 +31,7 @@ ElbParamHead*
 EiFactory::new_ParamHead(const VlNamedObj* parent,
 			 const PtDeclHead* pt_head)
 {
-  void* p = mAlloc.get_memory(sizeof(EiParamHead));
-  EiParamHead* head = new (p) EiParamHead(parent, pt_head);
+  EiParamHead* head = new EiParamHead(parent, pt_head);
   return head;
 }
 
@@ -52,10 +51,9 @@ EiFactory::new_ParamHead(const VlNamedObj* parent,
   ASSERT_COND( left != nullptr );
   ASSERT_COND( right != nullptr );
 
-  void* p = mAlloc.get_memory(sizeof(EiParamHeadV));
-  EiParamHead* head = new (p) EiParamHeadV(parent, pt_head,
-					   left, right,
-					   left_val, right_val);
+  EiParamHead* head = new EiParamHeadV(parent, pt_head,
+				       left, right,
+				       left_val, right_val);
   return head;
 }
 
@@ -75,12 +73,10 @@ EiFactory::new_Parameter(ElbParamHead* head,
   case VpiObjType::Parameter:
   case VpiObjType::SpecParam:
     if ( is_local ) {
-      void* p = mAlloc.get_memory(sizeof(EiLocalParam));
-      param = new (p) EiLocalParam(head, pt_item);
+      param = new EiLocalParam(head, pt_item);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(EiParameter));
-      param = new (p) EiParameter(head, pt_item);
+      param = new EiParameter(head, pt_item);
     }
     break;
 

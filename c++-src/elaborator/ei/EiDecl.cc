@@ -40,12 +40,10 @@ EiFactory::new_Decl(ElbDeclHead* head,
   case VpiObjType::Net:
     if ( head->bit_size() == 1 ) {
       if ( init ) {
-	void* p = mAlloc.get_memory(sizeof(EiDeclIS));
-	decl = new (p) EiDeclIS(head, pt_item, init);
+	decl = new EiDeclIS(head, pt_item, init);
       }
       else {
-	void* p = mAlloc.get_memory(sizeof(EiDeclS));
-	decl = new (p) EiDeclS(head, pt_item);
+	decl = new EiDeclS(head, pt_item);
       }
       break;
     }
@@ -54,32 +52,25 @@ EiFactory::new_Decl(ElbDeclHead* head,
   case VpiObjType::IntegerVar:
   case VpiObjType::TimeVar:
     if ( init ) {
-      void* p = mAlloc.get_memory(sizeof(EiDeclIV));
-      decl = new (p) EiDeclIV(head, pt_item, init);
+      decl = new EiDeclIV(head, pt_item, init);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(EiDeclV));
-      decl = new (p) EiDeclV(head, pt_item);
+      decl = new EiDeclV(head, pt_item);
     }
     break;
 
   case VpiObjType::RealVar:
     if ( init ) {
-      void* p = mAlloc.get_memory(sizeof(EiDeclIR));
-      decl = new (p) EiDeclIR(head, pt_item, init);
+      decl = new EiDeclIR(head, pt_item, init);
     }
     else {
-      void* p = mAlloc.get_memory(sizeof(EiDeclR));
-      decl = new (p) EiDeclR(head, pt_item);
+      decl = new EiDeclR(head, pt_item);
     }
     break;
 
   case VpiObjType::NamedEvent:
     ASSERT_COND(init == nullptr );
-    {
-      void* p = mAlloc.get_memory(sizeof(EiDeclN));
-      decl = new (p) EiDeclN(head, pt_item);
-    }
+    decl = new EiDeclN(head, pt_item);
     break;
 
   case VpiObjType::Parameter:

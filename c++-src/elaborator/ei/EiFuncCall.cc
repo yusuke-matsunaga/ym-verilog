@@ -31,9 +31,8 @@ EiFactory::new_FuncCall(const PtExpr* pt_expr,
 			SizeType arg_size,
 			ElbExpr** arg_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiFuncCall));
-  EiFuncCall* expr = new (p) EiFuncCall(pt_expr, func,
-					arg_size, arg_list);
+  EiFuncCall* expr = new EiFuncCall(pt_expr, func,
+				    arg_size, arg_list);
 
   return expr;
 }
@@ -49,9 +48,8 @@ EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
 			   SizeType arg_size,
 			   ElbExpr** arg_list)
 {
-  void* p = mAlloc.get_memory(sizeof(EiSysFuncCall));
-  EiSysFuncCall* expr = new (p) EiSysFuncCall(pt_expr, user_systf,
-					      arg_size, arg_list);
+  EiSysFuncCall* expr = new EiSysFuncCall(pt_expr, user_systf,
+					  arg_size, arg_list);
 
   return expr;
 }

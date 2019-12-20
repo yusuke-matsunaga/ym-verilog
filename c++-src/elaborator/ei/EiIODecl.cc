@@ -31,8 +31,7 @@ ElbIOHead*
 EiFactory::new_ModIOHead(ElbModule* module,
 			 const PtIOHead* pt_header)
 {
-  void* p = mAlloc.get_memory(sizeof(EiModIOHead));
-  EiIOHead* head = new (p) EiModIOHead(module, pt_header);
+  EiIOHead* head = new EiModIOHead(module, pt_header);
   return head;
 }
 
@@ -43,8 +42,7 @@ ElbIOHead*
 EiFactory::new_TaskIOHead(ElbTaskFunc* task,
 			  const PtIOHead* pt_header)
 {
-  void* p = mAlloc.get_memory(sizeof(EiTaskIOHead));
-  EiIOHead* head = new (p) EiTaskIOHead(task, pt_header);
+  EiIOHead* head = new EiTaskIOHead(task, pt_header);
   return head;
 }
 
@@ -55,8 +53,7 @@ ElbIOHead*
 EiFactory::new_FunctionIOHead(ElbTaskFunc* func,
 			      const PtIOHead* pt_header)
 {
-  void* p = mAlloc.get_memory(sizeof(EiFunctionIOHead));
-  EiIOHead* head = new (p) EiFunctionIOHead(func, pt_header);
+  EiIOHead* head = new EiFunctionIOHead(func, pt_header);
   return head;
 }
 

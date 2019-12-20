@@ -10,7 +10,6 @@
 
 
 #include "ym/verilog.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -27,8 +26,7 @@ class ModuleHash
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のオブジェクト
-  ModuleHash(Alloc& alloc);
+  ModuleHash();
 
   /// @brief デストラクタ
   ~ModuleHash();
@@ -101,9 +99,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // Cell の確保用アロケータ
-  Alloc& mAlloc;
 
   // ハッシュ表のサイズ
   ymuint32 mSize;

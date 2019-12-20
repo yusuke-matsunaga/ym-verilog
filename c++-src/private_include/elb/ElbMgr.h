@@ -11,7 +11,6 @@
 
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
-#include "ym/Alloc.h"
 
 #include "TagDict.h"
 #include "ObjDict.h"
@@ -35,8 +34,7 @@ class ElbMgr
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のオブジェクト
-  ElbMgr(Alloc& alloc);
+  ElbMgr();
 
   /// @brief デストラクタ
   virtual
@@ -360,10 +358,6 @@ public:
   // その他の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief アロケータを取り出す．
-  Alloc&
-  allocator();
-
   /// @brief このオブジェクトが確保したメモリの総量を返す．
   ymuint
   allocated_size() const;
@@ -386,9 +380,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリ確保用のアロケータ
-  Alloc& mAlloc;
 
   // UDP のリスト
   vector<const VlUdpDefn*> mUdpList;
@@ -614,14 +605,6 @@ ElbMgr::find_attr(const VlObj* obj,
 		  bool def) const
 {
   return mAttrHash.find(obj, def);
-}
-
-// @brief アロケータを取り出す．
-inline
-Alloc&
-ElbMgr::allocator()
-{
-  return mAlloc;
 }
 
 END_NAMESPACE_YM_VERILOG

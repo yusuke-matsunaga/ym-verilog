@@ -10,7 +10,6 @@
 
 
 #include "ym/verilog.h"
-#include "ym/Alloc.h"
 #include "ElbFwd.h"
 
 
@@ -27,8 +26,7 @@ class TagDict
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のオブジェクト
-  TagDict(Alloc& alloc);
+  TagDict();
 
   /// @brief デストラクタ
   ~TagDict();
@@ -281,9 +279,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // Cell の確保用アロケータ
-  Alloc& mAlloc;
 
   // ハッシュ表のサイズ
   ymuint32 mSize;

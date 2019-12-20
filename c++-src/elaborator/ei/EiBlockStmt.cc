@@ -33,9 +33,8 @@ EiFactory::new_Begin(const VlNamedObj* parent,
 		     ElbStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_array().size();
-  void* p = mAlloc.get_memory(sizeof(EiBegin));
-  EiBegin* stmt = new (p) EiBegin(parent, process, pt_stmt,
-				  stmt_num, stmt_list);
+  EiBegin* stmt = new EiBegin(parent, process, pt_stmt,
+			      stmt_num, stmt_list);
 
   return stmt;
 }
@@ -52,9 +51,8 @@ EiFactory::new_Fork(const VlNamedObj* parent,
 		    ElbStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_array().size();
-  void* p = mAlloc.get_memory(sizeof(EiFork));
-  EiFork* stmt = new (p) EiFork(parent, process, pt_stmt,
-				stmt_num, stmt_list);
+  EiFork* stmt = new EiFork(parent, process, pt_stmt,
+			    stmt_num, stmt_list);
 
   return stmt;
 }
@@ -71,9 +69,8 @@ EiFactory::new_NamedBegin(const VlNamedObj* block,
 			  ElbStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_array().size();
-  void* p = mAlloc.get_memory(sizeof(EiNamedBegin));
-  EiNamedBegin* stmt = new (p) EiNamedBegin(block, process,
-					    stmt_num, stmt_list);
+  EiNamedBegin* stmt = new EiNamedBegin(block, process,
+					stmt_num, stmt_list);
 
   return stmt;
 }
@@ -90,9 +87,8 @@ EiFactory::new_NamedFork(const VlNamedObj* block,
 			 ElbStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_array().size();
-  void* p = mAlloc.get_memory(sizeof(EiNamedFork));
-  EiNamedFork* stmt = new (p) EiNamedFork(block, process,
-					  stmt_num, stmt_list);
+  EiNamedFork* stmt = new EiNamedFork(block, process,
+				      stmt_num, stmt_list);
 
   return stmt;
 }

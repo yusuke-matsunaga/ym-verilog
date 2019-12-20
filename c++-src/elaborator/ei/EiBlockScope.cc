@@ -25,8 +25,7 @@ ElbScope*
 EiFactory::new_StmtScope(const VlNamedObj* parent,
 			 const PtStmt* pt_stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiBlockScope));
-  EiBlockScope* scope = new (p) EiBlockScope(parent, pt_stmt);
+  EiBlockScope* scope = new EiBlockScope(parent, pt_stmt);
 
   return scope;
 }

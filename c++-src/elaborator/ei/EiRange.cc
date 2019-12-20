@@ -24,8 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbRange*
 EiFactory::new_RangeArray(SizeType dim_size)
 {
-  void* p = mAlloc.get_memory(sizeof(EiRange) * dim_size);
-  EiRange* range_array = new (p) EiRange[dim_size];
+  EiRange* range_array = new EiRange[dim_size];
 
   return range_array;
 }

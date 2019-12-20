@@ -11,7 +11,6 @@
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
-#include "ym/Alloc.h"
 #include "ym/clib.h"
 #include "ElbFwd.h"
 
@@ -29,7 +28,7 @@ public:
   /// @brief オブジェクトを生成する関数
   static
   ElbFactory*
-  new_obj(Alloc& alloc);
+  new_obj();
 
   /// @brief デストラクタ
   virtual
@@ -53,7 +52,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief トップレベルのスコープを生成する
-  /// @param[in] alloc アロケータ
   virtual
   const VlNamedObj*
   new_Toplevel() = 0;

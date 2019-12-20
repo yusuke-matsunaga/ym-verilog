@@ -31,8 +31,7 @@ ElbExpr*
 EiFactory::new_Primary(const PtExpr* pt_expr,
 		       ElbDecl* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(EiPrimary));
-  return new (p) EiPrimary(pt_expr, obj);
+  return new EiPrimary(pt_expr, obj);
 }
 
 // @brief プライマリ式を生成する．
@@ -42,8 +41,7 @@ ElbExpr*
 EiFactory::new_Primary(const PtDeclItem* pt_item,
 		       ElbDecl* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(EiDeclPrimary));
-  return new (p) EiDeclPrimary(pt_item, obj);
+  return new EiDeclPrimary(pt_item, obj);
 }
 
 // @brief プライマリ式を生成する．
@@ -53,8 +51,7 @@ ElbExpr*
 EiFactory::new_Primary(const PtExpr* pt_expr,
 		       ElbParameter* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(EiParamPrimary));
-  return new (p) EiParamPrimary(pt_expr, obj);
+  return new EiParamPrimary(pt_expr, obj);
 }
 
 // @brief プライマリ式を生成する(配列要素版)．
@@ -66,14 +63,12 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 		       ElbDeclArray* obj,
 		       const vector<ElbExpr*>& index_list)
 {
-  int n = index_list.size();
-  void* q = mAlloc.get_memory(sizeof(ElbExpr*) * n);
-  ElbExpr** index_array = new (q) ElbExpr*[n];
+  SizeType n = index_list.size();
+  ElbExpr** index_array = new ElbExpr*[n];
   for ( int i = 0; i < n; ++ i ) {
     index_array[i] = index_list[i];
   }
-  void* p = mAlloc.get_memory(sizeof(EiArrayElemPrimary));
-  return new (p) EiArrayElemPrimary(pt_expr, obj, n, index_array);
+  return new EiArrayElemPrimary(pt_expr, obj, n, index_array);
 }
 
 // @brief プライマリ式を生成する(固定インデックスの配列要素版)．
@@ -85,8 +80,7 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 		       ElbDeclArray* obj,
 		       int offset)
 {
-  void* p = mAlloc.get_memory(sizeof(EiConstArrayElemPrimary));
-  return new (p) EiConstArrayElemPrimary(pt_expr, obj, offset);
+  return new EiConstArrayElemPrimary(pt_expr, obj, offset);
 }
 
 // @brief システム関数/システムタスクの引数を生成する．
@@ -96,8 +90,7 @@ ElbExpr*
 EiFactory::new_ArgHandle(const PtExpr* pt_expr,
 			 const VlNamedObj* arg)
 {
-  void* p = mAlloc.get_memory(sizeof(EiScopePrimary));
-  return new (p) EiScopePrimary(pt_expr, arg);
+  return new EiScopePrimary(pt_expr, arg);
 }
 
 // @brief システム関数/システムタスクの引数を生成する．
@@ -107,8 +100,7 @@ ElbExpr*
 EiFactory::new_ArgHandle(const PtExpr* pt_expr,
 			 ElbPrimitive* arg)
 {
-  void* p = mAlloc.get_memory(sizeof(EiPrimitivePrimary));
-  return new (p) EiPrimitivePrimary(pt_expr, arg);
+  return new EiPrimitivePrimary(pt_expr, arg);
 }
 
 

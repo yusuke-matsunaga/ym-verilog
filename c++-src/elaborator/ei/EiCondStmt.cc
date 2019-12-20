@@ -37,9 +37,8 @@ EiFactory::new_WhileStmt(const VlNamedObj* parent,
 			 ElbExpr* cond,
 			 ElbStmt* stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiWhileStmt));
-  ElbStmt* stmt1 = new (p) EiWhileStmt(parent, process, pt_stmt,
-				       cond, stmt);
+  ElbStmt* stmt1 = new EiWhileStmt(parent, process, pt_stmt,
+				   cond, stmt);
 
   return stmt1;
 }
@@ -57,9 +56,8 @@ EiFactory::new_RepeatStmt(const VlNamedObj* parent,
 			  ElbExpr* cond,
 			  ElbStmt* stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiRepeatStmt));
-  ElbStmt* stmt1 = new (p) EiRepeatStmt(parent, process, pt_stmt,
-					cond, stmt);
+  ElbStmt* stmt1 = new EiRepeatStmt(parent, process, pt_stmt,
+				    cond, stmt);
 
   return stmt1;
 }
@@ -77,9 +75,8 @@ EiFactory::new_WaitStmt(const VlNamedObj* parent,
 			ElbExpr* cond,
 			ElbStmt* stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiWaitStmt));
-  ElbStmt* stmt1 = new (p) EiWaitStmt(parent, process, pt_stmt,
-				      cond, stmt);
+  ElbStmt* stmt1 = new EiWaitStmt(parent, process, pt_stmt,
+				  cond, stmt);
 
   return stmt1;
 }
@@ -101,9 +98,8 @@ EiFactory::new_ForStmt(const VlNamedObj* parent,
 		       ElbStmt* inc_stmt,
 		       ElbStmt* stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiForStmt));
-  ElbStmt* stmt1 = new (p) EiForStmt(parent, process, pt_stmt,
-				     cond, init_stmt, inc_stmt, stmt);
+  ElbStmt* stmt1 = new EiForStmt(parent, process, pt_stmt,
+				 cond, init_stmt, inc_stmt, stmt);
 
   return stmt1;
 }
@@ -119,9 +115,8 @@ EiFactory::new_ForeverStmt(const VlNamedObj* parent,
 			   const PtStmt* pt_stmt,
 			   ElbStmt* stmt)
 {
-  void* p = mAlloc.get_memory(sizeof(EiForeverStmt));
-  ElbStmt* stmt1 = new (p) EiForeverStmt(parent, process, pt_stmt,
-					 stmt);
+  ElbStmt* stmt1 = new EiForeverStmt(parent, process, pt_stmt,
+				     stmt);
 
   return stmt1;
 }
@@ -144,13 +139,11 @@ EiFactory::new_IfStmt(const VlNamedObj* parent,
 {
   ElbStmt* stmt1;
   if ( else_stmt ) {
-    void* p = mAlloc.get_memory(sizeof(EiIfElseStmt));
-    stmt1 = new (p) EiIfElseStmt(parent, process, pt_stmt,
+    stmt1 = new EiIfElseStmt(parent, process, pt_stmt,
 				 cond, stmt, else_stmt);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(EiIfStmt));
-    stmt1 = new (p) EiIfStmt(parent, process, pt_stmt,
+    stmt1 = new EiIfStmt(parent, process, pt_stmt,
 			     cond, stmt);
   }
   return stmt1;
@@ -169,13 +162,10 @@ EiFactory::new_CaseStmt(const VlNamedObj* parent,
 {
   int caseitem_num = pt_stmt->caseitem_list().size();
 
-  void* q = mAlloc.get_memory(sizeof(EiCaseItem) * caseitem_num);
-  EiCaseItem* array = new (q) EiCaseItem[caseitem_num];
-
-  void* p = mAlloc.get_memory(sizeof(EiCaseStmt));
-  EiCaseStmt* stmt1 = new (p) EiCaseStmt(parent, process, pt_stmt,
-					 expr,
-					 caseitem_num, array);
+  EiCaseItem* array = new EiCaseItem[caseitem_num];
+  EiCaseStmt* stmt1 = new EiCaseStmt(parent, process, pt_stmt,
+				     expr,
+				     caseitem_num, array);
 
   return stmt1;
 }

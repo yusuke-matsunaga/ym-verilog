@@ -35,8 +35,7 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
 			 const vector<ElbRangeSrc>& range_src)
 {
   SizeType dim_size = range_src.size();
-  void* q = mAlloc.get_memory(sizeof(EiRange) * dim_size);
-  EiRange* range_array = new (q) EiRange[dim_size];
+  EiRange* range_array = new EiRange[dim_size];
   SizeType elem_size = 1;
   for ( SizeType i = 0; i < dim_size; ++ i ) {
     range_array[i].set(range_src[i]);
@@ -50,11 +49,9 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
   case VpiObjType::Reg:
   case VpiObjType::Net:
     if ( head->bit_size() == 1 ) {
-      r = mAlloc.get_memory(sizeof(VlScalarVal) * elem_size);
-      VlScalarVal* varray = new (r) VlScalarVal[elem_size];
-      p = mAlloc.get_memory(sizeof(EiDeclArrayS));
-      decl = new (p) EiDeclArrayS(head, pt_item, dim_size, range_array,
-				  varray);
+      VlScalarVal* varray = new VlScalarVal[elem_size];
+      decl = new EiDeclArrayS(head, pt_item, dim_size, range_array,
+			      varray);
       break;
     }
     // わざと次に続く．
@@ -62,27 +59,22 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
   case VpiObjType::IntegerVar:
   case VpiObjType::TimeVar:
     {
-      r = mAlloc.get_memory(sizeof(BitVector) * elem_size);
-      BitVector* varray = new (r) BitVector[elem_size];
-      p = mAlloc.get_memory(sizeof(EiDeclArrayV));
-      decl = new (p) EiDeclArrayV(head, pt_item, dim_size, range_array,
-				  varray);
+      BitVector* varray = new BitVector[elem_size];
+      decl = new EiDeclArrayV(head, pt_item, dim_size, range_array,
+			      varray);
     }
     break;
 
   case VpiObjType::RealVar:
     {
-      r = mAlloc.get_memory(sizeof(double) * elem_size);
-      double* varray = new (r) double[elem_size];
-      p = mAlloc.get_memory(sizeof(EiDeclArrayR));
-      decl = new (p) EiDeclArrayR(head, pt_item, dim_size, range_array,
-				  varray);
+      double* varray = new double[elem_size];
+      decl = new EiDeclArrayR(head, pt_item, dim_size, range_array,
+			      varray);
     }
     break;
 
   case VpiObjType::NamedEvent:
-    p = mAlloc.get_memory(sizeof(EiDeclArrayN));
-    decl = new (p) EiDeclArrayN(head, pt_item, dim_size, range_array);
+    decl = new EiDeclArrayN(head, pt_item, dim_size, range_array);
     break;
 
   case VpiObjType::Parameter:

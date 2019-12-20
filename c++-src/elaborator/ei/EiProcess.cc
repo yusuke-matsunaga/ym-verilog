@@ -28,8 +28,7 @@ ElbProcess*
 EiFactory::new_Process(const VlNamedObj* parent,
 		       const PtItem* pt_item)
 {
-  void* p = mAlloc.get_memory(sizeof(EiProcess));
-  EiProcess* process = new (p) EiProcess(parent, pt_item);
+  EiProcess* process = new EiProcess(parent, pt_item);
 
   return process;
 }

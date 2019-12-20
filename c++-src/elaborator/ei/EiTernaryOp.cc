@@ -33,16 +33,13 @@ EiFactory::new_TernaryOp(const PtExpr* pt_expr,
 			 ElbExpr* opr2)
 {
   ElbExpr* expr = nullptr;
-  void* p;
   switch ( op_type ) {
   case VpiOpType::Condition:
-    p = mAlloc.get_memory(sizeof(EiConditionOp));
-    expr = new (p) EiConditionOp(pt_expr, opr0, opr1, opr2);
+    expr = new EiConditionOp(pt_expr, opr0, opr1, opr2);
     break;
 
   case VpiOpType::MinTypMax:
-    p = mAlloc.get_memory(sizeof(EiMinTypMaxOp));
-    expr = new (p) EiMinTypMaxOp(pt_expr, opr0, opr1, opr2);
+    expr = new EiMinTypMaxOp(pt_expr, opr0, opr1, opr2);
     break;
 
   default:
