@@ -10,6 +10,7 @@
 
 
 #include "ym/verilog.h"
+#include "HierName.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -26,10 +27,10 @@ class ModuleHash
 public:
 
   /// @brief コンストラクタ
-  ModuleHash();
+  ModuleHash() = default;
 
   /// @brief デストラクタ
-  ~ModuleHash();
+  ~ModuleHash() = default;
 
 
 public:
@@ -53,46 +54,11 @@ public:
   find(const VlNamedObj* parent,
        const char* name) const;
 
-  /// @brief このオブジェクトが使用しているメモリ量を返す．
-  ymuint
-  allocated_size() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief テーブルの領域を確保する．
-  void
-  alloc_table(ymuint size);
-
-  /// @brief ハッシュ値を計算する．
-  ymuint
-  hash_func(const VlNamedObj* parent,
-	    const char* name) const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で使用されるデータ構造
-  //////////////////////////////////////////////////////////////////////
-
-  struct Cell
-  {
-    // 親のスコープ
-    const VlNamedObj* mParent;
-
-    // モジュールの定義名
-    const char* mName;
-
-    // モジュール
-    const VlModule* mModule;
-
-    // 次の要素を指すリンク
-    Cell* mLink;
-
-  };
 
 
 private:
@@ -100,17 +66,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  ymuint32 mSize;
-
-  // ハッシュ表
-  Cell** mTable;
-
-  // ハッシュ表を拡大するしきい値
-  ymuint32 mLimit;
-
-  // 要素数
-  ymuint32 mNum;
+  // HierName をキーにして const VlModule* を納めるハッシュ表
+  unordered_map<HierName, const VlModule*, HierNameHash> mHash;
 
 };
 

@@ -438,8 +438,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name)
 {
   ++ mNumPrimary;
-  void* p = alloc().get_memory(sizeof(CptPrimary));
-  return new (p) CptPrimary(file_region, name);
+  auto obj = new CptPrimary(file_region, name);
+  return obj;
 }
 
 // primary を生成する．
@@ -449,8 +449,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtExprArray index_array)
 {
   ++ mNumPrimaryI;
-  void* p = alloc().get_memory(sizeof(CptPrimaryI));
-  return new (p) CptPrimaryI(file_region, name, index_array);
+  auto obj = new CptPrimaryI(file_region, name, index_array);
+  return obj;
 }
 
 // primary を生成する．
@@ -462,8 +462,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryR;
-  void* p = alloc().get_memory(sizeof(CptPrimaryR));
-  return new (p) CptPrimaryR(file_region, name, mode, left, right);
+  auto obj = new CptPrimaryR(file_region, name, mode, left, right);
+  return obj;
 }
 
 // primary を生成する．
@@ -476,8 +476,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryIR;
-  void* p = alloc().get_memory(sizeof(CptPrimaryIR));
-  return new (p) CptPrimaryIR(file_region, name, index_array, mode, left, right);
+  auto obj = new CptPrimaryIR(file_region, name, index_array, mode, left, right);
+  return obj;
 }
 
 // primary を生成する．
@@ -487,8 +487,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const char* tail_name)
 {
   ++ mNumPrimaryH;
-  void* p = alloc().get_memory(sizeof(CptPrimaryH));
-  return new (p) CptPrimaryH(file_region, nb_array, tail_name);
+  auto obj = new CptPrimaryH(file_region, nb_array, tail_name);
+  return obj;
 }
 
 // primary を生成する．
@@ -499,8 +499,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtExprArray index_array)
 {
   ++ mNumPrimaryHI;
-  void* p = alloc().get_memory(sizeof(CptPrimaryHI));
-  return new (p) CptPrimaryHI(file_region, nb_array, tail_name, index_array);
+  auto obj = new CptPrimaryHI(file_region, nb_array, tail_name, index_array);
+  return obj;
 }
 
 // primary を生成する．
@@ -513,8 +513,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHR;
-  void* p = alloc().get_memory(sizeof(CptPrimaryHR));
-  return new (p) CptPrimaryHR(file_region, nb_array, tail_name, mode, left, right);
+  auto obj = new CptPrimaryHR(file_region, nb_array, tail_name, mode, left, right);
+  return obj;
 }
 
 // primary を生成する．
@@ -528,9 +528,9 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHIR;
-  void* p = alloc().get_memory(sizeof(CptPrimaryHIR));
-  return new (p) CptPrimaryHIR(file_region, nb_array, tail_name,
+  auto obj = new CptPrimaryHIR(file_region, nb_array, tail_name,
 			       index_array, mode, left, right);
+  return obj;
 }
 
 // primary を生成する．
@@ -540,8 +540,8 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 PtExprArray index_array)
 {
   ++ mNumPrimaryCI;
-  void* p = alloc().get_memory(sizeof(CptPrimaryCI));
-  return new (p) CptPrimaryCI(file_region, name, index_array);
+  auto obj = new CptPrimaryCI(file_region, name, index_array);
+  return obj;
 }
 
 // primary を生成する．
@@ -553,8 +553,8 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 const PtExpr* right)
 {
   ++ mNumPrimaryCR;
-  void* p = alloc().get_memory(sizeof(CptPrimaryCR));
-  return new (p) CptPrimaryCR(file_region, name, mode, left, right);
+  auto obj = new CptPrimaryCR(file_region, name, mode, left, right);
+  return obj;
 }
 
 // primary を生成する．
@@ -565,8 +565,8 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 PtExprArray index_array)
 {
   ++ mNumPrimaryHCI;
-  void* p = alloc().get_memory(sizeof(CptPrimaryHCI));
-  return new (p) CptPrimaryHCI(file_region, nb_array, tail_name, index_array);
+  auto obj = new CptPrimaryHCI(file_region, nb_array, tail_name, index_array);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

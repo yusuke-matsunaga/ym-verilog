@@ -10,7 +10,6 @@
 
 
 #include "PtiFactory.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -24,8 +23,7 @@ class SptFactory :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のアロケータ
-  SptFactory(Alloc& alloc);
+  SptFactory();
 
   /// @brief デストラクタ
   /// @note このオブジェクトが生成したすべての Pt オブジェクトを破壊する．

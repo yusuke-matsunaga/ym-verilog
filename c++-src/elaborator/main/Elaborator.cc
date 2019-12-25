@@ -40,8 +40,8 @@ Elaborator::Elaborator(ElbMgr& elb_mgr,
 		       const ClibCellLibrary& cell_library) :
   mMgr(elb_mgr),
   mFactory(elb_factory),
-  mCellLibrary(cell_library),
-  mAlloc(4096)
+  mCellLibrary(cell_library)
+
 {
   mAllowEmptyIORange = true;
 
@@ -229,7 +229,6 @@ Elaborator::operator()(const PtMgr& pt_mgr)
   mPhase1StubList2.clear();
   mPhase2StubList.clear();
   mPhase3StubList.clear();
-  mAlloc.destroy();
 
   return nerr;
 }

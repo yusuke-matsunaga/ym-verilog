@@ -1340,8 +1340,8 @@ CptFactory::new_Disable(const FileRegion& file_region,
 			const char* name)
 {
   ++ mNumDisable;
-  void* p = alloc().get_memory(sizeof(CptDisable));
-  return new (p) CptDisable(file_region, name);
+  auto obj = new CptDisable(file_region, name);
+  return obj;
 }
 
 const PtStmt*
@@ -1350,8 +1350,8 @@ CptFactory::new_Disable(const FileRegion& file_region,
 			const char* tail_name)
 {
   ++ mNumDisableH;
-  void* p = alloc().get_memory(sizeof(CptDisableH));
-  return new (p) CptDisableH(file_region, nb_array, tail_name);
+  auto obj = new CptDisableH(file_region, nb_array, tail_name);
+  return obj;
 }
 
 // enable 文を生成する．
@@ -1361,8 +1361,8 @@ CptFactory::new_Enable(const FileRegion& file_region,
 		       PtExprArray arg_array)
 {
   ++ mNumEnable;
-  void* p = alloc().get_memory(sizeof(CptEnable));
-  return new (p) CptEnable(file_region, name, arg_array);
+  auto obj = new CptEnable(file_region, name, arg_array);
+  return obj;
 }
 
 const PtStmt*
@@ -1372,8 +1372,8 @@ CptFactory::new_Enable(const FileRegion& file_region,
 		       PtExprArray arg_array)
 {
   ++ mNumEnableH;
-  void* p = alloc().get_memory(sizeof(CptEnableH));
-  return new (p) CptEnableH(file_region, nb_array, tail_name, arg_array);
+  auto obj = new CptEnableH(file_region, nb_array, tail_name, arg_array);
+  return obj;
 }
 
 // system task enable 文を生成する．
@@ -1383,8 +1383,8 @@ CptFactory::new_SysEnable(const FileRegion& file_region,
 			  PtExprArray arg_array)
 {
   ++ mNumSysEnable;
-  void* p = alloc().get_memory(sizeof(CptSysEnable));
-  return new (p) CptSysEnable(file_region, task_name, arg_array);
+  auto obj = new CptSysEnable(file_region, task_name, arg_array);
+  return obj;
 }
 
 // delay control 文を生成する．
@@ -1394,8 +1394,8 @@ CptFactory::new_DcStmt(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumDcStmt;
-  void* p = alloc().get_memory(sizeof(CptDcStmt));
-  return new (p) CptDcStmt(file_region, delay, body);
+  auto obj = new CptDcStmt(file_region, delay, body);
+  return obj;
 }
 
 // event control 文を生成する．
@@ -1405,8 +1405,8 @@ CptFactory::new_EcStmt(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumEcStmt;
-  void* p = alloc().get_memory(sizeof(CptEcStmt));
-  return new (p) CptEcStmt(file_region, event, body);
+  auto obj = new CptEcStmt(file_region, event, body);
+  return obj;
 }
 
 // wait 文を生成する．
@@ -1416,8 +1416,8 @@ CptFactory::new_Wait(const FileRegion& file_region,
 		     const PtStmt* body)
 {
   ++ mNumWait;
-  void* p = alloc().get_memory(sizeof(CptWait));
-  return new (p) CptWait(file_region, cond, body);
+  auto obj = new CptWait(file_region, cond, body);
+  return obj;
 }
 
 // assign 文を生成する．
@@ -1427,8 +1427,8 @@ CptFactory::new_Assign(const FileRegion& file_region,
 		       const PtExpr* rhs)
 {
   ++ mNumAssign;
-  void* p = alloc().get_memory(sizeof(CptAssign));
-  return new (p) CptAssign(file_region, lhs, rhs);
+  auto obj = new CptAssign(file_region, lhs, rhs);
+  return obj;
 }
 
 // assign 文を生成する．
@@ -1439,8 +1439,8 @@ CptFactory::new_Assign(const FileRegion& file_region,
 		       const PtControl* control)
 {
   ++ mNumAssignC;
-  void* p = alloc().get_memory(sizeof(CptAssignC));
-  return new (p) CptAssignC(file_region, lhs, rhs, control);
+  auto obj = new CptAssignC(file_region, lhs, rhs, control);
+  return obj;
 }
 
 // nonblocking assign 文を生成する．
@@ -1450,8 +1450,8 @@ CptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtExpr* rhs)
 {
   ++ mNumNbAssign;
-  void* p = alloc().get_memory(sizeof(CptNbAssign));
-  return new (p) CptNbAssign(file_region, lhs, rhs);
+  auto obj = new CptNbAssign(file_region, lhs, rhs);
+  return obj;
 }
 
 // nonblocking assign 文を生成する．
@@ -1462,8 +1462,8 @@ CptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtControl* control)
 {
   ++ mNumNbAssignC;
-  void* p = alloc().get_memory(sizeof(CptNbAssignC));
-  return new (p) CptNbAssignC(file_region, lhs, rhs, control);
+  auto obj = new CptNbAssignC(file_region, lhs, rhs, control);
+  return obj;
 }
 
 // event 文を生成する．
@@ -1472,8 +1472,8 @@ CptFactory::new_EventStmt(const FileRegion& file_region,
 			  const PtExpr* event)
 {
   ++ mNumEventStmt;
-  void* p = alloc().get_memory(sizeof(CptEventStmt));
-  return new (p) CptEventStmt(file_region, event);
+  auto obj = new CptEventStmt(file_region, event);
+  return obj;
 }
 
 // null 文を生成する．
@@ -1481,8 +1481,8 @@ const PtStmt*
 CptFactory::new_NullStmt(const FileRegion& file_region)
 {
   ++ mNumNullStmt;
-  void* p = alloc().get_memory(sizeof(CptNullStmt));
-  return new (p) CptNullStmt(file_region);
+  auto obj = new CptNullStmt(file_region);
+  return obj;
 }
 
 // if 文を生成する．
@@ -1492,8 +1492,8 @@ CptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* then_body)
 {
   ++ mNumIf;
-  void* p = alloc().get_memory(sizeof(CptIf));
-  return new (p) CptIf(file_region, expr, then_body);
+  auto obj = new CptIf(file_region, expr, then_body);
+  return obj;
 }
 
 // if 文を生成する．
@@ -1504,8 +1504,8 @@ CptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* else_body)
 {
   ++ mNumIf;
-  void* p = alloc().get_memory(sizeof(CptIfElse));
-  return new (p) CptIfElse(file_region, expr, then_body, else_body);
+  auto obj = new CptIfElse(file_region, expr, then_body, else_body);
+  return obj;
 }
 
 // case 文を生成する．
@@ -1515,8 +1515,8 @@ CptFactory::new_Case(const FileRegion& file_region,
 		     PtCaseItemArray caseitem_array)
 {
   ++ mNumCase;
-  void* p = alloc().get_memory(sizeof(CptCase));
-  return new (p) CptCase(file_region, expr, caseitem_array);
+  auto obj = new CptCase(file_region, expr, caseitem_array);
+  return obj;
 }
 
 // casex 文を生成する．
@@ -1526,8 +1526,8 @@ CptFactory::new_CaseX(const FileRegion& file_region,
 		      PtCaseItemArray caseitem_array)
 {
   ++ mNumCaseX;
-  void* p = alloc().get_memory(sizeof(CptCaseX));
-  return new (p) CptCaseX(file_region, expr, caseitem_array);
+  auto obj = new CptCaseX(file_region, expr, caseitem_array);
+  return obj;
 }
 
 // casez 文を生成する．
@@ -1537,8 +1537,8 @@ CptFactory::new_CaseZ(const FileRegion& file_region,
 		      PtCaseItemArray caseitem_array)
 {
   ++ mNumCaseZ;
-  void* p = alloc().get_memory(sizeof(CptCaseZ));
-  return new (p) CptCaseZ(file_region, expr, caseitem_array);
+  auto obj = new CptCaseZ(file_region, expr, caseitem_array);
+  return obj;
 }
 
 // case item を生成する．
@@ -1548,8 +1548,8 @@ CptFactory::new_CaseItem(const FileRegion& file_region,
 			 const PtStmt* body)
 {
   ++ mNumCaseItem;
-  void* p = alloc().get_memory(sizeof(CptCaseItem));
-  return new (p) CptCaseItem(file_region, label_array, body);
+  auto obj = new CptCaseItem(file_region, label_array, body);
+  return obj;
 }
 
 // forever 文を生成する．
@@ -1558,8 +1558,8 @@ CptFactory::new_Forever(const FileRegion& file_region,
 			const PtStmt* body)
 {
   ++ mNumForever;
-  void* p = alloc().get_memory(sizeof(CptForever));
-  return new (p) CptForever(file_region, body);
+  auto obj = new CptForever(file_region, body);
+  return obj;
 }
 
 // repeat 文を生成する．
@@ -1569,8 +1569,8 @@ CptFactory::new_Repeat(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumRepeat;
-  void* p = alloc().get_memory(sizeof(CptRepeat));
-  return new (p) CptRepeat(file_region, expr, body);
+  auto obj = new CptRepeat(file_region, expr, body);
+  return obj;
 }
 
 // while 文を生成する．
@@ -1580,8 +1580,8 @@ CptFactory::new_While(const FileRegion& file_region,
 		      const PtStmt* body)
 {
   ++ mNumWhile;
-  void* p = alloc().get_memory(sizeof(CptWhile));
-  return new (p) CptWhile(file_region, cond, body);
+  auto obj = new CptWhile(file_region, cond, body);
+  return obj;
 }
 
 // for 文を生成する．
@@ -1593,8 +1593,8 @@ CptFactory::new_For(const FileRegion& file_region,
 		    const PtStmt* body)
 {
   ++ mNumFor;
-  void* p = alloc().get_memory(sizeof(CptFor));
-  return new (p) CptFor(file_region, init, cond, next, body);
+  auto obj = new CptFor(file_region, init, cond, next, body);
+  return obj;
 }
 
 // procedural continuous assignment 文を生成する．
@@ -1604,8 +1604,8 @@ CptFactory::new_PcAssign(const FileRegion& file_region,
 			 const PtExpr* rhs)
 {
   ++ mNumPcAssign;
-  void* p = alloc().get_memory(sizeof(CptPcAssign));
-  return new (p) CptPcAssign(file_region, lhs, rhs);
+  auto obj = new CptPcAssign(file_region, lhs, rhs);
+  return obj;
 }
 
 // deassign 文を生成する．
@@ -1614,8 +1614,8 @@ CptFactory::new_Deassign(const FileRegion& file_region,
 			 const PtExpr* lhs)
 {
   ++ mNumDeassign;
-  void* p = alloc().get_memory(sizeof(CptDeassign));
-  return new (p) CptDeassign(file_region, lhs);
+  auto obj = new CptDeassign(file_region, lhs);
+  return obj;
 }
 
 // force 文を生成する．
@@ -1625,8 +1625,8 @@ CptFactory::new_Force(const FileRegion& file_region,
 		      const PtExpr* rhs)
 {
   ++ mNumForce;
-  void* p = alloc().get_memory(sizeof(CptForce));
-  return new (p) CptForce(file_region, lhs, rhs);
+  auto obj = new CptForce(file_region, lhs, rhs);
+  return obj;
 }
 
 // release 文を生成する．
@@ -1635,8 +1635,8 @@ CptFactory::new_Release(const FileRegion& file_region,
 			const PtExpr* lhs)
 {
   ++ mNumRelease;
-  void* p = alloc().get_memory(sizeof(CptRelease));
-  return new (p) CptRelease(file_region, lhs);
+  auto obj = new CptRelease(file_region, lhs);
+  return obj;
 }
 
 // par block を生成する．
@@ -1645,8 +1645,8 @@ CptFactory::new_ParBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
   ++ mNumParBlock;
-  void* p = alloc().get_memory(sizeof(CptParBlock));
-  return new (p) CptParBlock(file_region, stmt_array);
+  auto obj = new CptParBlock(file_region, stmt_array);
+  return obj;
 }
 
 // par block を生成する．
@@ -1657,8 +1657,8 @@ CptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      PtStmtArray stmt_array)
 {
   ++ mNumParBlockN;
-  void* p = alloc().get_memory(sizeof(CptParBlockN));
-  return new (p) CptParBlockN(file_region, name, declhead_array, stmt_array);
+  auto obj = new CptParBlockN(file_region, name, declhead_array, stmt_array);
+  return obj;
 }
 
 // seq block を生成する．
@@ -1667,8 +1667,8 @@ CptFactory::new_SeqBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
   ++ mNumSeqBlock;
-  void* p = alloc().get_memory(sizeof(CptSeqBlock));
-  return new (p) CptSeqBlock(file_region, stmt_array);
+  auto obj = new CptSeqBlock(file_region, stmt_array);
+  return obj;
 }
 
 // seq block を生成する．
@@ -1679,8 +1679,8 @@ CptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      PtStmtArray stmt_array)
 {
   ++ mNumSeqBlockN;
-  void* p = alloc().get_memory(sizeof(CptSeqBlockN));
-  return new (p) CptSeqBlockN(file_region, name, declhead_array, stmt_array);
+  auto obj = new CptSeqBlockN(file_region, name, declhead_array, stmt_array);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

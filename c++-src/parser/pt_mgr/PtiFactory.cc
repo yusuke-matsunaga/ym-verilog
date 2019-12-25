@@ -17,21 +17,17 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief PtiFactory の実装クラスのオブジェクトを作る関数
 // @param[in] type 実装クラスを指定する文字列
-// @param[in] alloc メモリアロケータ
 PtiFactory*
-PtiFactory::make_obj(const string& type,
-		     Alloc& alloc)
+PtiFactory::make_obj(const string& type)
 {
   if ( type == "spt" ) {
-    return new SptFactory(alloc);
+    return new SptFactory();
   }
-  return new CptFactory(alloc);
+  return new CptFactory();
 }
 
 // @brief コンストラクタ
-// @param[in] alloc メモリアロケータ
-PtiFactory::PtiFactory(Alloc& alloc) :
-  mAlloc(alloc)
+PtiFactory::PtiFactory()
 {
 }
 
@@ -371,13 +367,6 @@ PtiFactory::ConArray(const PtExpr* expr1,
   array[2] = new_OrderedCon(expr3);
   array[3] = new_OrderedCon(expr4);
   return PtConnectionArray(4, array);
-}
-
-// @brief メモリアロケータを得る．
-Alloc&
-PtiFactory::alloc()
-{
-  return mAlloc;
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -900,8 +900,8 @@ CptFactory::new_DefParamH(const FileRegion& file_region,
 			  PtDefParamArray elem_array)
 {
   ++ mNumDefParamH;
-  void* p = alloc().get_memory(sizeof(CptDefParamH));
-  return new (p) CptDefParamH(file_region, elem_array);
+  auto obj = new CptDefParamH(file_region, elem_array);
+  return obj;
 }
 
 // defparam 文の要素を生成する．
@@ -911,8 +911,8 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 			 const PtExpr* value)
 {
   ++ mNumDefParam;
-  void* p = alloc().get_memory(sizeof(CptDefParam));
-  return new (p) CptDefParam(file_region, PtNameBranchArray(), name, value);
+  auto obj = new CptDefParam(file_region, PtNameBranchArray(), name, value);
+  return obj;
 }
 
 const PtDefParam*
@@ -922,8 +922,8 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 			 const PtExpr* value)
 {
   ++ mNumDefParam;
-  void* p = alloc().get_memory(sizeof(CptDefParam));
-  return new (p) CptDefParam(file_region, nb_array, tail_name, value);
+  auto obj = new CptDefParam(file_region, nb_array, tail_name, value);
+  return obj;
 }
 
 // continuous assign 文のヘッダを生成する．
@@ -932,8 +932,8 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignH;
-  void* p = alloc().get_memory(sizeof(CptContAssignH));
-  return new (p) CptContAssignH(file_region, elem_array);
+  auto obj = new CptContAssignH(file_region, elem_array);
+  return obj;
 }
 
 // continuous assign 文のヘッダを生成する．
@@ -943,8 +943,8 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignHS;
-  void* p = alloc().get_memory(sizeof(CptContAssignHS));
-  return new (p) CptContAssignHS(file_region, strength, elem_array);
+  auto obj = new CptContAssignHS(file_region, strength, elem_array);
+  return obj;
 }
 
 // continuous assign 文のヘッダを生成する．
@@ -954,8 +954,8 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignHD;
-  void* p = alloc().get_memory(sizeof(CptContAssignHD));
-  return new (p) CptContAssignHD(file_region, delay, elem_array);
+  auto obj = new CptContAssignHD(file_region, delay, elem_array);
+  return obj;
 }
 
 // continuous assign 文のヘッダを生成する．
@@ -966,8 +966,8 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignHSD;
-  void* p = alloc().get_memory(sizeof(CptContAssignHSD));
-  return new (p) CptContAssignHSD(file_region, strength, delay, elem_array);
+  auto obj = new CptContAssignHSD(file_region, strength, delay, elem_array);
+  return obj;
 }
 
 // continuous assign 文の要素を生成する．
@@ -978,8 +978,8 @@ CptFactory::new_ContAssign(const FileRegion& file_region,
 {
   ++ mNumContAssign;
   // 実は file_region は不要
-  void* p = alloc().get_memory(sizeof(CptContAssign));
-  return new (p) CptContAssign(lhs, rhs);
+  auto obj = new CptContAssign(lhs, rhs);
+  return obj;
 }
 
 // initial 文を生成する．
@@ -988,8 +988,8 @@ CptFactory::new_Initial(const FileRegion& file_region,
 			const PtStmt* body)
 {
   ++ mNumInitial;
-  void* p = alloc().get_memory(sizeof(CptInitial));
-  return new (p) CptInitial(file_region, body);
+  auto obj = new CptInitial(file_region, body);
+  return obj;
 }
 
 // always 文を生成する．
@@ -998,8 +998,8 @@ CptFactory::new_Always(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumAlways;
-  void* p = alloc().get_memory(sizeof(CptAlways));
-  return new (p) CptAlways(file_region, body);
+  auto obj = new CptAlways(file_region, body);
+  return obj;
 }
 
 // task 文を生成する．
@@ -1012,11 +1012,11 @@ CptFactory::new_Task(const FileRegion& file_region,
 		     const PtStmt* stmt)
 {
   ++ mNumTask;
-  void* p = alloc().get_memory(sizeof(CptTask));
-  return new (p) CptTask(file_region, name, automatic,
+  auto obj = new CptTask(file_region, name, automatic,
 			 iohead_array,
 			 declhead_array,
 			 stmt);
+  return obj;
 }
 
 // function 文を生成する．
@@ -1030,11 +1030,11 @@ CptFactory::new_Function(const FileRegion& file_region,
 			 const PtStmt* stmt)
 {
   ++ mNumFunction;
-  void* p = alloc().get_memory(sizeof(CptFunction));
-  return new (p) CptFunction(file_region, name, automatic, sign,
+  auto obj = new CptFunction(file_region, name, automatic, sign,
 			     iohead_array,
 			     declhead_array,
 			     stmt);
+  return obj;
 }
 
 // ビットベクタ型 function の生成
@@ -1050,13 +1050,13 @@ CptFactory::new_SizedFunc(const FileRegion& file_region,
 			  const PtStmt* stmt)
 {
   ++ mNumSizedFunc;
-  void* p = alloc().get_memory(sizeof(CptSizedFunc));
-  return new (p) CptSizedFunc(file_region,
+  auto obj = new CptSizedFunc(file_region,
 			      name, automatic,
 			      sign, left, right,
 			      iohead_array,
 			      declhead_array,
 			      stmt);
+  return obj;
 }
 
 // 組み込み型 function の生成
@@ -1071,13 +1071,13 @@ CptFactory::new_TypedFunc(const FileRegion& file_region,
 			  const PtStmt* stmt)
 {
   ++ mNumTypedFunc;
-  void* p = alloc().get_memory(sizeof(CptTypedFunc));
-  return new (p) CptTypedFunc(file_region, name,
+  auto obj = new CptTypedFunc(file_region, name,
 			      automatic, sign,
 			      func_type,
 			      iohead_array,
 			      declhead_array,
 			      stmt);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

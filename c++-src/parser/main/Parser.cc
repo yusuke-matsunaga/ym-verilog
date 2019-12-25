@@ -39,29 +39,10 @@ const int check_memory_leak = 0;
 // @param[in] alloc メモリアロケータ
 // @param[in] ptifactory パース木の要素を生成するファクトリクラス
 Parser::Parser(PtMgr& ptmgr,
-	       Alloc& alloc,
 	       PtiFactory& ptifactory) :
   mPtMgr(ptmgr),
-  mAlloc(alloc),
   mFactory(ptifactory),
-  mLex{new Lex},
-  mTmpAlloc(4096),
-  mCellAlloc(sizeof(PtrList<void>::Cell), 1024),
-  mPortList(mCellAlloc),
-  mPortRefList(mCellAlloc),
-  mParamPortHeadList(mCellAlloc),
-  mModuleIOHeadList(mCellAlloc),
-  mTfIOHeadList(mCellAlloc),
-  mModuleDeclHeadList(mCellAlloc),
-  mTfDeclHeadList(mCellAlloc),
-  mModuleItemList(mCellAlloc),
-  mIOItemList(mCellAlloc),
-  mDeclItemList(mCellAlloc),
-  mUdpEntryList(mCellAlloc),
-  mUdpValueList(mCellAlloc),
-  mDefParamList(mCellAlloc),
-  mContAssignList(mCellAlloc),
-  mInstList(mCellAlloc)
+  mLex{new Lex}
 {
 }
 
@@ -102,15 +83,6 @@ Parser::read_file(const string& filename,
 
   int stat = yyparse(*this);
 
-  if ( check_memory_leak ) {
-    dout << endl
-	 << "Parser::mAlloc.allocated_size() = "
-	 << mTmpAlloc.allocated_size() << endl
-	 << "                     used_size()      = "
-	 << mTmpAlloc.used_size() << endl
-	 << "                     max_used_size()  = "
-	 << mTmpAlloc.max_used_size() << endl;
-  }
   return (stat == 0);
 }
 
@@ -272,16 +244,15 @@ Parser::ExprArray(const PtExpr* pre_expr,
 		  PtrList<const PtExpr>* expr_list_p)
 {
   SizeType n = expr_list_p->size();
-  void* p = mAlloc.get_memory(sizeof(const PtExpr*) * (n + 1));
-  const PtExpr** array = new (p) const PtExpr*[n + 1];
+  const PtExpr** array = new const PtExpr*[n + 1];
   array[0] = pre_expr;
   int i = 1;
   for ( auto expr: *expr_list_p ) {
     array[i] = expr;
+    ++ i;
   }
 
-  expr_list_p->~PtrList<const PtExpr>();
-  mTmpAlloc.put_memory(sizeof(PtrList<const PtExpr>), expr_list_p);
+  delete expr_list_p;
 
   return PtExprArray(n + 1, array);
 }
@@ -294,8 +265,7 @@ Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
   const PtNameBranch* nb = mFactory.new_NameBranch(head_name);
-  void* p = mTmpAlloc.get_memory(sizeof(PuHierName));
-  return new (p) PuHierName(mCellAlloc, nb, name);
+  return new PuHierName(nb, name);
 }
 
 // @brief 階層名の生成
@@ -308,8 +278,7 @@ Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
   const PtNameBranch* nb = mFactory.new_NameBranch(head_name, index);
-  void* p = mTmpAlloc.get_memory(sizeof(PuHierName));
-  return new (p) PuHierName(mCellAlloc, nb, name);
+  return new PuHierName(nb, name);
 }
 
 // @brief 階層名の追加
@@ -346,14 +315,9 @@ Parser::extract_HierName(PuHierName* hname,
 			 PtNameBranchArray& nb_array)
 {
   const char* ans = hname->mTailName;
-  nb_array = hname->mNbList.to_array(mAlloc);
+  nb_array = hname->mNbList.to_array();
 
-  hname->~PuHierName();
-  mTmpAlloc.put_memory(sizeof(PuHierName), hname);
-  if ( debug ) {
-    dout << "delete_HierName (" << sizeof(PuHierName) << ")" << endl;
-    dout << "  used_size() = " << mTmpAlloc.used_size() << endl << endl;
-  }
+  delete hname;
 
   return ans;
 }

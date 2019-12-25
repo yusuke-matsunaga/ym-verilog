@@ -386,7 +386,7 @@ inline
 PtUdpEntryArray
 Parser::get_udp_entry_array()
 {
-  return mUdpEntryList.to_array(mAlloc);
+  return mUdpEntryList.to_array();
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
@@ -432,7 +432,7 @@ inline
 PtUdpValueArray
 Parser::get_udp_value_array()
 {
-  return mUdpValueList.to_array(mAlloc);
+  return mUdpValueList.to_array();
 }
 
 // @brief IO宣言リストを配列に変換する．
@@ -440,7 +440,7 @@ inline
 PtIOHeadArray
 Parser::get_module_io_array()
 {
-  return mModuleIOHeadList.to_array(mAlloc);
+  return mModuleIOHeadList.to_array();
 }
 
 // @brief module 用の宣言リストを配列に変換する．
@@ -448,7 +448,7 @@ inline
 PtDeclHeadArray
 Parser::get_module_decl_array()
 {
-  return mModuleDeclHeadList.to_array(mAlloc);
+  return mModuleDeclHeadList.to_array();
 }
 
 END_NAMESPACE_YM_VERILOG

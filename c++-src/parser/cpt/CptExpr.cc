@@ -1091,8 +1091,8 @@ CptFactory::new_Opr(const FileRegion& file_region,
 		    const PtExpr* opr)
 {
   ++ mNumOpr1;
-  void* p = alloc().get_memory(sizeof(CptOpr1));
-  return new (p) CptOpr1(file_region, type, opr);
+  auto obj = new CptOpr1(file_region, type, opr);
+  return obj;
 }
 
 const PtExpr*
@@ -1103,8 +1103,8 @@ CptFactory::new_Opr(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumOpr2;
-  void* p = alloc().get_memory(sizeof(CptOpr2));
-  return new (p) CptOpr2(type, opr1, opr2);
+  auto obj = new CptOpr2(type, opr1, opr2);
+  return obj;
 }
 
 const PtExpr*
@@ -1116,8 +1116,8 @@ CptFactory::new_Opr(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumOpr3;
-  void* p = alloc().get_memory(sizeof(CptOpr3));
-  return new (p) CptOpr3(type, opr1, opr2, opr3);
+  auto obj = new CptOpr3(type, opr1, opr2, opr3);
+  return obj;
 }
 
 // concatination を生成する．
@@ -1126,8 +1126,8 @@ CptFactory::new_Concat(const FileRegion& file_region,
 		       PtExprArray expr_array)
 {
   ++ mNumConcat;
-  void* p = alloc().get_memory(sizeof(CptConcat));
-  return new (p) CptConcat(file_region, expr_array);
+  auto obj = new CptConcat(file_region, expr_array);
+  return obj;
 }
 
 // multiple concatenation を生成する．
@@ -1136,8 +1136,8 @@ CptFactory::new_MultiConcat(const FileRegion& file_region,
 			    PtExprArray expr_array)
 {
   ++ mNumMultiConcat;
-  void* p = alloc().get_memory(sizeof(CptMultiConcat));
-  return new (p) CptMultiConcat(file_region, expr_array);
+  auto obj = new CptMultiConcat(file_region, expr_array);
+  return obj;
 }
 
 // multiple concatenation を生成する．
@@ -1149,8 +1149,8 @@ CptFactory::new_MinTypMax(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumMinTypMax3;
-  void* p = alloc().get_memory(sizeof(CptMinTypMax));
-  return new (p) CptMinTypMax(val0, val1, val2);
+  auto obj = new CptMinTypMax(val0, val1, val2);
+  return obj;
 }
 
 // function call を生成する．
@@ -1160,8 +1160,8 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PtExprArray arg_array)
 {
   ++ mNumFuncCall;
-  void* p = alloc().get_memory(sizeof(CptFuncCall));
-  return new (p) CptFuncCall(file_region, name, arg_array);
+  auto obj = new CptFuncCall(file_region, name, arg_array);
+  return obj;
 }
 
 // function call を生成する．
@@ -1172,8 +1172,8 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PtExprArray arg_array)
 {
   ++ mNumFuncCallH;
-  void* p = alloc().get_memory(sizeof(CptFuncCallH));
-  return new (p) CptFuncCallH(file_region, nb_array, tail_name, arg_array);
+  auto obj = new CptFuncCallH(file_region, nb_array, tail_name, arg_array);
+  return obj;
 }
 
 // system function call を生成する．
@@ -1183,8 +1183,8 @@ CptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    PtExprArray arg_array)
 {
   ++ mNumSysFuncCall;
-  void* p = alloc().get_memory(sizeof(CptSysFuncCall));
-  return new (p) CptSysFuncCall(file_region, name, arg_array);
+  auto obj = new CptSysFuncCall(file_region, name, arg_array);
+  return obj;
 }
 
 // 定数を生成する．
@@ -1193,8 +1193,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 unsigned int value)
 {
   ++ mNumIntConstant1;
-  void* p = alloc().get_memory(sizeof(CptIntConstant1));
-  return new (p) CptIntConstant1(file_region, value);
+  auto obj = new CptIntConstant1(file_region, value);
+  return obj;
 }
 
 // 定数を生成する．
@@ -1203,8 +1203,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant2;
-  void* p = alloc().get_memory(sizeof(CptIntConstant2));
-  return new (p) CptIntConstant2(file_region, VpiConstType::Int, value);
+  auto obj = new CptIntConstant2(file_region, VpiConstType::Int, value);
+  return obj;
 }
 
 // 定数を生成する．
@@ -1214,8 +1214,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant2;
-  void* p = alloc().get_memory(sizeof(CptIntConstant2));
-  return new (p) CptIntConstant2(file_region, const_type, value);
+  auto obj = new CptIntConstant2(file_region, const_type, value);
+  return obj;
 }
 
 // 定数を生成する．
@@ -1226,8 +1226,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant3;
-  void* p = alloc().get_memory(sizeof(CptIntConstant3));
-  return new (p) CptIntConstant3(file_region, size, const_type, value);
+  auto obj = new CptIntConstant3(file_region, size, const_type, value);
+  return obj;
 }
 
 // 定数を生成する．
@@ -1236,8 +1236,8 @@ CptFactory::new_RealConst(const FileRegion& file_region,
 			  double value)
 {
   ++ mNumRealConstant;
-  void* p = alloc().get_memory(sizeof(CptRealConstant));
-  return new (p) CptRealConstant(file_region, value);
+  auto obj = new CptRealConstant(file_region, value);
+  return obj;
 }
 
 // 定数を生成する．
@@ -1246,8 +1246,8 @@ CptFactory::new_StringConst(const FileRegion& file_region,
 			    const char* value)
 {
   ++ mNumStringConstant;
-  void* p = alloc().get_memory(sizeof(CptStringConstant));
-  return new (p) CptStringConstant(file_region, value);
+  auto obj = new CptStringConstant(file_region, value);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

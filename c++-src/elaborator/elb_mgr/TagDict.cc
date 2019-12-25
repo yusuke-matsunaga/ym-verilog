@@ -30,28 +30,21 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリ確保用のオブジェクト
-TagDict::TagDict(Alloc& alloc) :
-  mAlloc(alloc),
-  mNum(0)
+TagDict::TagDict()
 {
-  alloc_table(1024);
 }
 
 // @brief デストラクタ
 TagDict::~TagDict()
 {
-  delete [] mTable;
 }
 
 // @brief 内容を空にする
 void
 TagDict::clear()
 {
-  for (ymuint i = 0; i < mSize; ++ i) {
-    mTable[i] = nullptr;
-  }
-  mNum = 0;
+  mHash.clear();
+  mCellList.clear();
 }
 
 // @brief Cell を登録する．
@@ -63,28 +56,9 @@ TagDict::put_cell(const VlNamedObj* parent,
 		  int tag,
 		  TagDictCell* cell)
 {
-  if ( mNum >= mLimit ) {
-    // テーブルを拡張する．
-    ymuint old_size = mSize;
-    TagDictCell** old_table = mTable;
-    alloc_table(old_size << 1);
-    for (ymuint i = 0; i < old_size; ++ i) {
-      for (TagDictCell* cell = old_table[i]; cell; ) {
-	TagDictCell* next = cell->mLink;
-	ymuint pos = hash_func(cell->mParent, cell->mTag);
-	cell->mLink = mTable[pos];
-	mTable[pos] = cell;
-	cell = next;
-      }
-    }
-    delete [] old_table;
-  }
-  ymuint pos = hash_func(parent, tag);
-  cell->mParent = parent;
-  cell->mTag = tag;
-  cell->mLink = mTable[pos];
-  mTable[pos] = cell;
-  ++ mNum;
+  Key key{parent, tag};
+  mHash.emplace(key, cell);
+  mCellList.push_back(unique_ptr<TagDictCell>{cell});
 }
 
 // @brief タグから該当する Cell を探す．
@@ -94,40 +68,11 @@ TagDictCell*
 TagDict::find_cell(const VlNamedObj* parent,
 		   int tag) const
 {
-  ymuint pos = hash_func(parent, tag);
-  for (TagDictCell* cell = mTable[pos]; cell; cell = cell->mLink) {
-    if ( cell->mParent == parent && cell->mTag == tag ) {
-      return cell;
-    }
+  Key key{parent, tag};
+  if ( mHash.count(key) > 0 ) {
+    return mHash.at(key);
   }
   return nullptr;
-}
-
-// @brief このオブジェクトが使用しているメモリ量を返す．
-ymuint
-TagDict::allocated_size() const
-{
-  return sizeof(TagDictCell*) * mSize;
-}
-
-// @brief テーブルの領域を確保する．
-void
-TagDict::alloc_table(ymuint size)
-{
-  mSize = size;
-  mLimit = static_cast<ymuint>(mSize * 1.8);
-  mTable = new TagDictCell*[mSize];
-  for (ymuint i = 0; i < mSize; ++ i) {
-    mTable[i] = nullptr;
-  }
-}
-
-// @brief ハッシュ値を計算する．
-ymuint
-TagDict::hash_func(const VlNamedObj* parent,
-		   int tag) const
-{
-  return ((reinterpret_cast<ympuint>(parent) * tag) >> 8) % mSize;
 }
 
 
@@ -358,19 +303,16 @@ public:
   CellScope(ElbScope* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_internalscope(ElbScope* obj);
+  add_internalscope(ElbScope* obj) override;
 
   /// @brief 要素の先頭を得る．
-  virtual
   const ElbScope*
-  internalscope();
+  internalscope() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -385,15 +327,15 @@ private:
   ElbScope* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellScope::CellScope(ElbScope* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -414,7 +356,7 @@ CellScope::internalscope()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellScope::num()
 {
   return mNum;
@@ -425,16 +367,15 @@ CellScope::num()
 void
 TagDict::add_internalscope(ElbScope* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiInternalScope);
+  auto cell = find_cell(parent, vpiInternalScope);
   if ( cell ) {
     cell->add_internalscope(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellScope));
-    TagDictCell* cell = new (p) CellScope(obj);
+    auto cell = new CellScope(obj);
     put_cell(parent, vpiInternalScope, cell);
   }
 }
@@ -449,12 +390,11 @@ TagDict::find_internalscope_list(const VlNamedObj* parent,
 				 vector<const VlNamedObj*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiInternalScope);
+  auto cell = find_cell(parent, vpiInternalScope);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbScope* obj = cell->internalscope();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->internalscope(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -475,19 +415,16 @@ public:
   CellDecl(ElbDecl* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_decl(ElbDecl* obj);
+  add_decl(ElbDecl* obj) override;
 
   /// @brief 宣言要素の先頭を得る．
-  virtual
   ElbDecl*
-  decl();
+  decl() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -502,15 +439,15 @@ private:
   ElbDecl* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellDecl::CellDecl(ElbDecl* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -531,7 +468,7 @@ CellDecl::decl()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellDecl::num()
 {
   return mNum;
@@ -544,16 +481,15 @@ void
 TagDict::add_decl(int tag,
 		  ElbDecl* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, tag);
+  auto cell = find_cell(parent, tag);
   if ( cell ) {
     cell->add_decl(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellDecl));
-    TagDictCell* cell = new (p) CellDecl(obj);
+    auto cell = new CellDecl(obj);
     put_cell(parent, tag, cell);
   }
 }
@@ -572,19 +508,17 @@ TagDict::find_decl_list(const VlNamedObj* parent,
 			vector<const VlDecl*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, tag);
+  auto cell = find_cell(parent, tag);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
     if ( tag == vpiParameter || tag == vpiSpecParam ) {
-      for ( const ElbParameter* obj = cell->parameter();
-	    obj; obj = obj->next() ) {
+      for ( auto obj = cell->parameter(); obj; obj = obj->next() ) {
 	obj_list.push_back(obj);
       }
     }
     else {
-      for (const ElbDecl* obj = cell->decl();
-	   obj; obj = obj->next()) {
+      for ( auto obj = cell->decl(); obj; obj = obj->next()) {
 	obj_list.push_back(obj);
       }
     }
@@ -606,19 +540,16 @@ public:
   CellDeclArray(ElbDeclArray* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_declarray(ElbDeclArray* obj);
+  add_declarray(ElbDeclArray* obj) override;
 
   /// @brief 宣言要素の先頭を得る．
-  virtual
   ElbDeclArray*
-  declarray();
+  declarray() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -633,15 +564,15 @@ private:
   ElbDeclArray* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellDeclArray::CellDeclArray(ElbDeclArray* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -662,7 +593,7 @@ CellDeclArray::declarray()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellDeclArray::num()
 {
   return mNum;
@@ -675,16 +606,15 @@ void
 TagDict::add_declarray(int tag,
 		       ElbDeclArray* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, tag);
+  auto cell = find_cell(parent, tag);
   if ( cell ) {
     cell->add_declarray(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellDeclArray));
-    TagDictCell* cell = new (p) CellDeclArray(obj);
+    auto cell = new CellDeclArray(obj);
     put_cell(parent, tag, cell);
   }
 }
@@ -703,12 +633,11 @@ TagDict::find_declarray_list(const VlNamedObj* parent,
 			     vector<const VlDeclArray*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, tag);
+  auto cell = find_cell(parent, tag);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbDeclArray* obj = cell->declarray();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->declarray(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -729,19 +658,16 @@ public:
   CellParam(ElbParameter* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_parameter(ElbParameter* obj);
+  add_parameter(ElbParameter* obj) override;
 
   /// @brief 宣言要素の先頭を得る．
-  virtual
   ElbParameter*
-  parameter();
+  parameter() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -756,15 +682,15 @@ private:
   ElbParameter* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellParam::CellParam(ElbParameter* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -785,7 +711,7 @@ CellParam::parameter()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellParam::num()
 {
   return mNum;
@@ -798,16 +724,15 @@ void
 TagDict::add_parameter(int tag,
 		       ElbParameter* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, tag);
+  auto cell = find_cell(parent, tag);
   if ( cell ) {
     cell->add_parameter(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellParam));
-    TagDictCell* cell = new (p) CellParam(obj);
+    auto cell = new CellParam(obj);
     put_cell(parent, tag, cell);
   }
 }
@@ -825,19 +750,16 @@ public:
   CellDefParam(ElbDefParam* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_defparam(ElbDefParam* obj);
+  add_defparam(ElbDefParam* obj) override;
 
   /// @brief defparam の先頭を得る．
-  virtual
   ElbDefParam*
-  defparam();
+  defparam() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -852,15 +774,15 @@ private:
   ElbDefParam* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellDefParam::CellDefParam(ElbDefParam* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -881,7 +803,7 @@ CellDefParam::defparam()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellDefParam::num()
 {
   return mNum;
@@ -892,16 +814,15 @@ CellDefParam::num()
 void
 TagDict::add_defparam(ElbDefParam* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiDefParam);
+  auto cell = find_cell(parent, vpiDefParam);
   if ( cell ) {
     cell->add_defparam(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellDefParam));
-    TagDictCell* cell = new (p) CellDefParam(obj);
+    auto cell = new CellDefParam(obj);
     put_cell(parent, vpiDefParam, cell);
   }
 }
@@ -916,12 +837,11 @@ TagDict::find_defparam_list(const VlNamedObj* parent,
 			    vector<const VlDefParam*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiDefParam);
+  auto cell = find_cell(parent, vpiDefParam);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbDefParam* obj = cell->defparam();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->defparam(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -942,19 +862,16 @@ public:
   CellParamAssign(ElbParamAssign* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_paramassign(ElbParamAssign* obj);
+  add_paramassign(ElbParamAssign* obj) override;
 
   /// @brief param assign の先頭を得る．
-  virtual
   ElbParamAssign*
-  paramassign();
+  paramassign() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -969,15 +886,15 @@ private:
   ElbParamAssign* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellParamAssign::CellParamAssign(ElbParamAssign* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -998,7 +915,7 @@ CellParamAssign::paramassign()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellParamAssign::num()
 {
   return mNum;
@@ -1009,16 +926,15 @@ CellParamAssign::num()
 void
 TagDict::add_paramassign(ElbParamAssign* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiParamAssign);
+  auto cell = find_cell(parent, vpiParamAssign);
   if ( cell ) {
     cell->add_paramassign(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellParamAssign));
-    TagDictCell* cell = new (p) CellParamAssign(obj);
+    auto cell = new CellParamAssign(obj);
     put_cell(parent, vpiParamAssign, cell);
   }
 }
@@ -1033,12 +949,11 @@ TagDict::find_paramassign_list(const VlNamedObj* parent,
 			       vector<const VlParamAssign*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiParamAssign);
+  auto cell = find_cell(parent, vpiParamAssign);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbParamAssign* obj = cell->paramassign();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->paramassign(); obj; obj = obj->next() ) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1059,19 +974,16 @@ public:
   CellModuleArray(ElbModuleArray* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_modulearray(ElbModuleArray* obj);
+  add_modulearray(ElbModuleArray* obj) override;
 
   /// @brief module array の先頭を得る．
-  virtual
   ElbModuleArray*
-  modulearray();
+  modulearray() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1086,15 +998,15 @@ private:
   ElbModuleArray* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellModuleArray::CellModuleArray(ElbModuleArray* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1115,7 +1027,7 @@ CellModuleArray::modulearray()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellModuleArray::num()
 {
   return mNum;
@@ -1126,16 +1038,15 @@ CellModuleArray::num()
 void
 TagDict::add_modulearray(ElbModuleArray* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiModuleArray);
+  auto cell = find_cell(parent, vpiModuleArray);
   if ( cell ) {
     cell->add_modulearray(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellModuleArray));
-    TagDictCell* cell = new (p) CellModuleArray(obj);
+    auto cell = new CellModuleArray(obj);
     put_cell(parent, vpiModuleArray, cell);
   }
 }
@@ -1150,12 +1061,11 @@ TagDict::find_modulearray_list(const VlNamedObj* parent,
 			       vector<const VlModuleArray*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiModuleArray);
+  auto cell = find_cell(parent, vpiModuleArray);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbModuleArray* obj = cell->modulearray();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->modulearray(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1176,19 +1086,16 @@ public:
   CellModule(ElbModule* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_module(ElbModule* obj);
+  add_module(ElbModule* obj) override;
 
   /// @brief module の先頭を得る．
-  virtual
   ElbModule*
-  module();
+  module() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1203,15 +1110,15 @@ private:
   ElbModule* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellModule::CellModule(ElbModule* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1232,7 +1139,7 @@ CellModule::module()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellModule::num()
 {
   return mNum;
@@ -1243,16 +1150,15 @@ CellModule::num()
 void
 TagDict::add_module(ElbModule* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiModule);
+  auto cell = find_cell(parent, vpiModule);
   if ( cell ) {
     cell->add_module(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellModule));
-    TagDictCell* cell = new (p) CellModule(obj);
+    auto cell = new CellModule(obj);
     put_cell(parent, vpiModule, cell);
   }
 }
@@ -1267,12 +1173,11 @@ TagDict::find_module_list(const VlNamedObj* parent,
 			  vector<const VlModule*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiModule);
+  auto cell = find_cell(parent, vpiModule);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbModule* obj = cell->module();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->module(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1293,19 +1198,16 @@ public:
   CellPrimArray(ElbPrimArray* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_primarray(ElbPrimArray* obj);
+  add_primarray(ElbPrimArray* obj) override;
 
   /// @brief primitive array の先頭を得る．
-  virtual
   ElbPrimArray*
-  primarray();
+  primarray() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1320,15 +1222,15 @@ private:
   ElbPrimArray* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellPrimArray::CellPrimArray(ElbPrimArray* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1349,7 +1251,7 @@ CellPrimArray::primarray()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellPrimArray::num()
 {
   return mNum;
@@ -1361,16 +1263,15 @@ CellPrimArray::num()
 void
 TagDict::add_primarray(ElbPrimArray* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiPrimitiveArray);
+  auto cell = find_cell(parent, vpiPrimitiveArray);
   if ( cell ) {
     cell->add_primarray(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellPrimArray));
-    TagDictCell* cell = new (p) CellPrimArray(obj);
+    auto cell = new CellPrimArray(obj);
     put_cell(parent, vpiPrimitiveArray, cell);
   }
 }
@@ -1385,12 +1286,11 @@ TagDict::find_primarray_list(const VlNamedObj* parent,
 			     vector<const VlPrimArray*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiPrimitiveArray);
+  auto cell = find_cell(parent, vpiPrimitiveArray);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbPrimArray* obj = cell->primarray();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->primarray(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1411,19 +1311,16 @@ public:
   CellPrimitive(ElbPrimitive* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_primitive(ElbPrimitive* obj);
+  add_primitive(ElbPrimitive* obj) override;
 
   /// @brief primitive の先頭を得る．
-  virtual
   ElbPrimitive*
-  primitive();
+  primitive() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1438,15 +1335,15 @@ private:
   ElbPrimitive* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellPrimitive::CellPrimitive(ElbPrimitive* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1467,7 +1364,7 @@ CellPrimitive::primitive()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellPrimitive::num()
 {
   return mNum;
@@ -1478,16 +1375,15 @@ CellPrimitive::num()
 void
 TagDict::add_primitive(ElbPrimitive* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiPrimitive);
+  auto cell = find_cell(parent, vpiPrimitive);
   if ( cell ) {
     cell->add_primitive(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellPrimitive));
-    TagDictCell* cell = new (p) CellPrimitive(obj);
+    auto cell = new CellPrimitive(obj);
     put_cell(parent, vpiPrimitive, cell);
   }
 }
@@ -1502,12 +1398,11 @@ TagDict::find_primitive_list(const VlNamedObj* parent,
 			     vector<const VlPrimitive*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiPrimitive);
+  auto cell = find_cell(parent, vpiPrimitive);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbPrimitive* obj = cell->primitive();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->primitive(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1528,19 +1423,16 @@ public:
   CellTask(ElbTaskFunc* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_task(ElbTaskFunc* obj);
+  add_task(ElbTaskFunc* obj) override;
 
   /// @brief 要素の先頭を得る．
-  virtual
   ElbTaskFunc*
-  task();
+  task() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1555,15 +1447,15 @@ private:
   ElbTaskFunc* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellTask::CellTask(ElbTaskFunc* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1584,7 +1476,7 @@ CellTask::task()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellTask::num()
 {
   return mNum;
@@ -1595,16 +1487,15 @@ CellTask::num()
 void
 TagDict::add_task(ElbTaskFunc* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiTask);
+  auto cell = find_cell(parent, vpiTask);
   if ( cell ) {
     cell->add_task(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellTask));
-    TagDictCell* cell = new (p) CellTask(obj);
+    auto cell = new CellTask(obj);
     put_cell(parent, vpiTask, cell);
   }
 }
@@ -1619,12 +1510,11 @@ TagDict::find_task_list(const VlNamedObj* parent,
 			vector<const VlTaskFunc*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiTask);
+  auto cell = find_cell(parent, vpiTask);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbTaskFunc* obj = cell->task();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->task();obj; obj = obj->next() ) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1645,19 +1535,16 @@ public:
   CellFunction(ElbTaskFunc* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_function(ElbTaskFunc* obj);
+  add_function(ElbTaskFunc* obj) override;
 
   /// @brief 要素の先頭を得る．
-  virtual
   ElbTaskFunc*
-  function();
+  function() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1672,15 +1559,15 @@ private:
   ElbTaskFunc* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellFunction::CellFunction(ElbTaskFunc* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1701,7 +1588,7 @@ CellFunction::function()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellFunction::num()
 {
   return mNum;
@@ -1712,16 +1599,15 @@ CellFunction::num()
 void
 TagDict::add_function(ElbTaskFunc* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiFunction);
+  auto cell = find_cell(parent, vpiFunction);
   if ( cell ) {
     cell->add_function(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellFunction));
-    TagDictCell* cell = new (p) CellFunction(obj);
+    auto cell = new CellFunction(obj);
     put_cell(parent, vpiFunction, cell);
   }
 }
@@ -1736,12 +1622,11 @@ TagDict::find_function_list(const VlNamedObj* parent,
 			    vector<const VlTaskFunc*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiFunction);
+  auto cell = find_cell(parent, vpiFunction);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbTaskFunc* obj = cell->function();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->function(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1762,19 +1647,16 @@ public:
   CellContAssign(ElbContAssign* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_contassign(ElbContAssign* obj);
+  add_contassign(ElbContAssign* obj) override;
 
   /// @brief 要素の先頭を得る．
-  virtual
   ElbContAssign*
-  contassign();
+  contassign() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1789,15 +1671,15 @@ private:
   ElbContAssign* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellContAssign::CellContAssign(ElbContAssign* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1818,7 +1700,7 @@ CellContAssign::contassign()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellContAssign::num()
 {
   return mNum;
@@ -1829,16 +1711,15 @@ CellContAssign::num()
 void
 TagDict::add_contassign(ElbContAssign* obj)
 {
-  const VlNamedObj* parent = obj->module();
+  auto parent = obj->module();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiContAssign);
+  auto cell = find_cell(parent, vpiContAssign);
   if ( cell ) {
     cell->add_contassign(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellContAssign));
-    TagDictCell* cell = new (p) CellContAssign(obj);
+    auto cell = new CellContAssign(obj);
     put_cell(parent, vpiContAssign, cell);
   }
 }
@@ -1853,12 +1734,11 @@ TagDict::find_contassign_list(const VlNamedObj* parent,
 			      vector<const VlContAssign*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiContAssign);
+  auto cell = find_cell(parent, vpiContAssign);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbContAssign* obj = cell->contassign();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->contassign(); obj; obj = obj->next() ) {
       obj_list.push_back(obj);
     }
     return true;
@@ -1879,19 +1759,16 @@ public:
   CellProcess(ElbProcess* obj);
 
   /// @brief 要素の追加
-  virtual
   void
-  add_process(ElbProcess* obj);
+  add_process(ElbProcess* obj) override;
 
   /// @brief 要素の先頭を得る．
-  virtual
   ElbProcess*
-  process();
+  process() override;
 
   /// @brief 要素数の取得
-  virtual
-  ymuint
-  num();
+  int
+  num() override;
 
 
 private:
@@ -1906,15 +1783,15 @@ private:
   ElbProcess* mTail;
 
   // 要素数
-  ymuint32 mNum;
+  int mNum;
 
 };
 
 // @brief コンストラクタ
 CellProcess::CellProcess(ElbProcess* obj) :
-  mTop(obj),
-  mTail(obj),
-  mNum(1)
+  mTop{obj},
+  mTail{obj},
+  mNum{1}
 {
 }
 
@@ -1935,7 +1812,7 @@ CellProcess::process()
 }
 
 // @brief 要素数の取得
-ymuint
+int
 CellProcess::num()
 {
   return mNum;
@@ -1946,16 +1823,15 @@ CellProcess::num()
 void
 TagDict::add_process(ElbProcess* obj)
 {
-  const VlNamedObj* parent = obj->parent();
+  auto parent = obj->parent();
 
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiProcess);
+  auto cell = find_cell(parent, vpiProcess);
   if ( cell ) {
     cell->add_process(obj);
   }
   else {
-    void* p = mAlloc.get_memory(sizeof(CellProcess));
-    TagDictCell* cell = new (p) CellProcess(obj);
+    auto cell = new CellProcess(obj);
     put_cell(parent, vpiProcess, cell);
   }
 }
@@ -1970,12 +1846,11 @@ TagDict::find_process_list(const VlNamedObj* parent,
 			   vector<const VlProcess*>& obj_list) const
 {
   // 該当の Cell が存在するか調べる．
-  TagDictCell* cell = find_cell(parent, vpiProcess);
+  auto cell = find_cell(parent, vpiProcess);
   if ( cell ) {
     obj_list.clear();
     obj_list.reserve(cell->num());
-    for (const ElbProcess* obj = cell->process();
-	 obj; obj = obj->next()) {
+    for ( auto obj = cell->process(); obj; obj = obj->next()) {
       obj_list.push_back(obj);
     }
     return true;

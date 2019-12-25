@@ -10,7 +10,6 @@
 
 
 #include "ym/verilog.h"
-#include "ym/Alloc.h"
 
 #include "elb/ElbFwd.h"
 
@@ -23,9 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 class TagDictCell
 {
-  friend class TagDict;
-
-private:
+public:
 
   /// @brief  宣言要素を追加する．
   virtual
@@ -169,7 +166,7 @@ private:
 
   /// @brief  要素数を得る．
   virtual
-  ymuint
+  int
   num() = 0;
 
 
@@ -183,9 +180,6 @@ private:
 
   // タグの値
   int mTag;
-
-  // ハッシュ上の次の要素を指すポインタ
-  TagDictCell* mLink;
 
 };
 

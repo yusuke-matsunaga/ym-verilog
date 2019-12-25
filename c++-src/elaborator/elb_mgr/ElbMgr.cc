@@ -44,13 +44,7 @@ const ymuint debug = debug_all;
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
-// @param[in] alloc メモリ確保用のオブジェクト
-ElbMgr::ElbMgr(Alloc& alloc) :
-  mAlloc(alloc),
-  mObjDict(alloc),
-  mTagDict(alloc),
-  mModInstDict(alloc),
-  mAttrHash(alloc)
+ElbMgr::ElbMgr()
 {
 }
 
@@ -552,16 +546,6 @@ ElbMgr::find_scope_up(const VlNamedObj* base_scope,
   }
 
   return cur_scope;
-}
-
-// @brief このオブジェクトが確保したメモリの総量を返す．
-ymuint
-ElbMgr::allocated_size() const
-{
-  return mTagDict.allocated_size()
-    + mObjDict.allocated_size()
-    + mModInstDict.allocated_size()
-    + mAttrHash.allocated_size();
 }
 
 END_NAMESPACE_YM_VERILOG

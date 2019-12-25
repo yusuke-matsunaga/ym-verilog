@@ -449,8 +449,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateH;
-  void* p = alloc().get_memory(sizeof(CptGateH));
-  return new (p) CptGateH(file_region, type, inst_array);
+  auto obj = new CptGateH(file_region, type, inst_array);
+  return obj;
 }
 
 // gate instance 文のヘッダを生成する．
@@ -461,8 +461,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHS;
-  void* p = alloc().get_memory(sizeof(CptGateHS));
-  return new (p) CptGateHS(file_region, type, strength, inst_array);
+  auto obj = new CptGateHS(file_region, type, strength, inst_array);
+  return obj;
 }
 
 // gate instance 文のヘッダを生成する．
@@ -473,8 +473,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHD;
-  void* p = alloc().get_memory(sizeof(CptGateHD));
-  return new (p) CptGateHD(file_region, type, delay, inst_array);
+  auto obj = new CptGateHD(file_region, type, delay, inst_array);
+  return obj;
 }
 
 // gate instance 文のヘッダを生成する．
@@ -486,9 +486,9 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHSD;
-  void* p = alloc().get_memory(sizeof(CptGateHSD));
-  return new (p) CptGateHSD(file_region,
+  auto obj = new CptGateHSD(file_region,
 			    type, strength, delay, inst_array);
+  return obj;
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
@@ -498,9 +498,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuH;
-  void* p = alloc().get_memory(sizeof(CptMuH));
-  return new (p) CptMuH(file_region, def_name,
+  auto obj = new CptMuH(file_region, def_name,
 			inst_array);
+  return obj;
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
@@ -511,9 +511,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHS;
-  void* p = alloc().get_memory(sizeof(CptMuHS));
-  return new (p) CptMuHS(file_region, def_name,
+  auto obj = new CptMuHS(file_region, def_name,
 			 strength, inst_array);
+  return obj;
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
@@ -524,9 +524,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHD;
-  void* p = alloc().get_memory(sizeof(CptMuHD));
-  return new (p) CptMuHD(file_region, def_name,
+  auto obj = new CptMuHD(file_region, def_name,
 			 delay, inst_array);
+  return obj;
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
@@ -538,9 +538,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHSD;
-  void* p = alloc().get_memory(sizeof(CptMuHSD));
-  return new (p) CptMuHSD(file_region, def_name,
+  auto obj = new CptMuHSD(file_region, def_name,
 			  strength, delay, inst_array);
+  return obj;
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
@@ -551,9 +551,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHP;
-  void* p = alloc().get_memory(sizeof(CptMuHP));
-  return new (p) CptMuHP(file_region, def_name,
+  auto obj = new CptMuHP(file_region, def_name,
 			 con_array, inst_array);
+  return obj;
 }
 
 // module instance/UDP instance の要素を生成する．
@@ -562,8 +562,8 @@ CptFactory::new_Inst(const FileRegion& file_region,
 		     PtConnectionArray con_array)
 {
   ++ mNumInst;
-  void* p = alloc().get_memory(sizeof(CptInst));
-  return new (p) CptInst(file_region, con_array);
+  auto obj = new CptInst(file_region, con_array);
+  return obj;
 }
 
 // module instance/UDP instance の要素を生成する．
@@ -573,8 +573,8 @@ CptFactory::new_InstN(const FileRegion& file_region,
 		      PtConnectionArray con_array)
 {
   ++ mNumInstN;
-  void* p = alloc().get_memory(sizeof(CptInstN));
-  return new (p) CptInstN(file_region, name, con_array);
+  auto obj = new CptInstN(file_region, name, con_array);
+  return obj;
 }
 
 // module instance/UDP instance の要素を生成する．
@@ -586,8 +586,8 @@ CptFactory::new_InstV(const FileRegion& file_region,
 		      PtConnectionArray con_array)
 {
   ++ mNumInstR;
-  void* p = alloc().get_memory(sizeof(CptInstR));
-  return new (p) CptInstR(file_region, name, left, right, con_array);
+  auto obj = new CptInstR(file_region, name, left, right, con_array);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

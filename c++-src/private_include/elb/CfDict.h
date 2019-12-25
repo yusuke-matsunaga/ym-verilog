@@ -12,6 +12,7 @@
 #include "ym/verilog.h"
 
 #include "ElbFwd.h"
+#include "HierName.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -25,10 +26,10 @@ class CfDict
 public:
 
   /// @brief コンストラクタ
-  CfDict();
+  CfDict() = default;
 
   /// @brief デストラクタ
-  ~CfDict();
+  ~CfDict() = default;
 
 
 public:
@@ -56,24 +57,11 @@ public:
   void
   clear();
 
-  /// @brief このオブジェクトが使用しているメモリ量を返す．
-  ymuint
-  allocated_size() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief テーブルの領域を確保する．
-  void
-  alloc_table(ymuint size);
-
-  /// @brief ハッシュ値を計算する．
-  ymuint
-  hash_func(const VlNamedObj* scope,
-	    const char* name) const;
 
 
 private:
@@ -81,39 +69,14 @@ private:
   // 内部で使用するデータ構造
   //////////////////////////////////////////////////////////////////////
 
-  struct Cell
-  {
-    // 親のスコープ
-    const VlNamedObj* mScope;
-
-    // 名前
-    const char* mName;
-
-    // 対象の関数
-    ElbTaskFunc* mFunc;
-
-    // 次の要素を指すリンク
-    Cell* mLink;
-
-  };
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  ymuint32 mSize;
-
-  // ハッシュ表
-  Cell** mTable;
-
-  // ハッシュ表を拡大するしきい値
-  ymuint32 mLimit;
-
-  // 要素数
-  ymuint32 mNum;
+  // HierName をキーにしたハッシュ表
+  unordered_map<HierName, ElbTaskFunc*, HierNameHash> mHash;
 
 };
 

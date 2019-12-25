@@ -11,9 +11,9 @@
 
 #include "ym/verilog.h"
 #include "ym/FileRegion.h"
-
 #include "ym/vl/VlFwd.h"
 #include "ElbFwd.h"
+#include "HierName.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -23,9 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 class ElbObjHandle
 {
-  friend class ObjDict;
-
-protected:
+public:
 
   /// @brief コンストラクタ
   ElbObjHandle();
@@ -121,9 +119,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 次の要素を指すリンク
-  ElbObjHandle* mLink;
-
 };
 
 
@@ -133,9 +128,7 @@ private:
 class ElbTaskFuncHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbTaskFuncHandle(ElbTaskFunc* obj);
@@ -148,14 +141,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbTaskFunc を返す．
-  virtual
   ElbTaskFunc*
-  taskfunc();
+  taskfunc() override;
 
 
 private:
@@ -175,9 +166,7 @@ private:
 class ElbDeclHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbDeclHandle(ElbDecl* obj);
@@ -190,14 +179,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbDecl を返す．
-  virtual
   ElbDecl*
-  decl();
+  decl() override;
 
 
 private:
@@ -217,9 +204,7 @@ private:
 class ElbDeclArrayHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbDeclArrayHandle(ElbDeclArray* obj);
@@ -232,14 +217,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbDeclArray を返す．
-  virtual
   ElbDeclArray*
-  declarray();
+  declarray() override;
 
 
 private:
@@ -259,9 +242,7 @@ private:
 class ElbParamHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbParamHandle(ElbParameter* obj);
@@ -274,14 +255,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbParameterを返す．
-  virtual
   ElbParameter*
-  parameter();
+  parameter() override;
 
 
 private:
@@ -301,9 +280,7 @@ private:
 class ElbModuleArrayHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbModuleArrayHandle(ElbModuleArray* obj);
@@ -316,19 +293,16 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief 配列要素を返す．
-  virtual
   const VlNamedObj*
-  array_elem(int index);
+  array_elem(int index) override;
 
   /// @brief ElbModuleArray を返す．
-  virtual
   ElbModuleArray*
-  module_array();
+  module_array() override;
 
 
 private:
@@ -348,9 +322,7 @@ private:
 class ElbPrimArrayHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbPrimArrayHandle(ElbPrimArray* obj);
@@ -363,14 +335,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbPrimArray を返す．
-  virtual
   ElbPrimArray*
-  prim_array();
+  prim_array() override;
 
 
 private:
@@ -390,9 +360,7 @@ private:
 class ElbPrimitiveHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbPrimitiveHandle(ElbPrimitive* obj);
@@ -405,14 +373,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbPrimitive を返す．
-  virtual
   ElbPrimitive*
-  primitive();
+  primitive() override;
 
 
 private:
@@ -432,9 +398,7 @@ private:
 class ElbScopeHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbScopeHandle(const VlNamedObj* obj);
@@ -447,9 +411,8 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
 
 private:
@@ -469,9 +432,7 @@ private:
 class ElbGfRootHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbGfRootHandle(ElbGfRoot* obj);
@@ -484,19 +445,16 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief 配列要素を返す．
-  virtual
   const VlNamedObj*
-  array_elem(int index);
+  array_elem(int index) override;
 
   /// @brief ElbGfRoot を返す．
-  virtual
   ElbGfRoot*
-  gfroot();
+  gfroot() override;
 
 
 private:
@@ -516,9 +474,7 @@ private:
 class ElbGenvarHandle :
   public ElbObjHandle
 {
-  friend class ObjDict;
-
-private:
+public:
 
   /// @brief コンストラクタ
   ElbGenvarHandle(ElbGenvar* obj);
@@ -531,14 +487,12 @@ private:
 public:
 
   /// @brief VlNamedObj を返す．
-  virtual
   const VlNamedObj*
-  obj();
+  obj() override;
 
   /// @brief ElbGenvar を返す．
-  virtual
   ElbGenvar*
-  genvar();
+  genvar() override;
 
 
 private:
@@ -561,10 +515,10 @@ class ObjDict
 public:
 
   /// @brief コンストラクタ
-  ObjDict();
+  ObjDict() = default;
 
   /// @brief デストラクタ
-  ~ObjDict();
+  ~ObjDict() = default;
 
 
 public:
@@ -622,10 +576,6 @@ public:
   find(const VlNamedObj* parent,
        const char* name) const;
 
-  /// @brief このオブジェクトが使用しているメモリ量を返す．
-  ymuint
-  allocated_size() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -638,14 +588,11 @@ private:
 	     const char* name,
 	     ElbObjHandle* handle);
 
-  /// @brief テーブルの領域を確保する．
-  void
-  alloc_table(ymuint size);
 
-  /// @brief ハッシュ値を計算する．
-  ymuint
-  hash_func(const VlNamedObj* parent,
-	    const char* name) const;
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で使用されるデータ構造
+  //////////////////////////////////////////////////////////////////////
 
 
 private:
@@ -653,17 +600,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  ymuint32 mSize;
+  // HierName をキーにして ElbObjHandle を納めるハッシュ表
+  unordered_map<HierName, ElbObjHandle*, HierNameHash> mHash;
 
-  // ハッシュ表
-  ElbObjHandle** mTable;
-
-  // ハッシュ表を拡大するしきい値
-  ymuint32 mLimit;
-
-  // 要素数
-  ymuint32 mNum;
+  // ElbObjHandle のリスト
+  vector<unique_ptr<ElbObjHandle>> mHandleList;
 
 };
 

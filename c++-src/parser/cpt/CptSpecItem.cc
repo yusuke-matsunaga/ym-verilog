@@ -328,8 +328,8 @@ CptFactory::new_SpecItem(const FileRegion& file_region,
 			 PtExprArray terminal_array)
 {
   ++ mNumSpecItem;
-  void* p = alloc().get_memory(sizeof(CptSpecItem));
-  return new (p) CptSpecItem(file_region, id, terminal_array);
+  auto obj = new CptSpecItem(file_region, id, terminal_array);
+  return obj;
 }
 
 // path 仕様を生成する．
@@ -340,8 +340,8 @@ CptFactory::new_SpecPath(const FileRegion& file_region,
 			 const PtPathDecl* path_decl)
 {
   ++ mNumSpecPath;
-  void* p = alloc().get_memory(sizeof(CptSpecPath));
-  return new (p) CptSpecPath(file_region, id, expr, path_decl);
+  auto obj = new CptSpecPath(file_region, id, expr, path_decl);
+  return obj;
 }
 
 // path 記述を生成する．
@@ -357,10 +357,10 @@ CptFactory::new_PathDecl(const FileRegion& file_region,
 			 const PtPathDelay* path_delay)
 {
   ++ mNumPathDecl;
-  void* p = alloc().get_memory(sizeof(CptPathDecl));
-  return new (p) CptPathDecl(file_region, edge, input_array, input_pol,
+  auto obj = new CptPathDecl(file_region, edge, input_array, input_pol,
 			     op, output_array, output_pol,
 			     expr, path_delay);
+  return obj;
 }
 
 // path delay value を生成する．
@@ -369,8 +369,8 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value)
 {
   ++ mNumPathDelay;
-  void* p = alloc().get_memory(sizeof(CptPathDelay));
-  return new (p) CptPathDelay(file_region, value);
+  auto obj = new CptPathDelay(file_region, value);
+  return obj;
 }
 
 // path delay value を生成する．
@@ -380,8 +380,8 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value2)
 {
   ++ mNumPathDelay;
-  void* p = alloc().get_memory(sizeof(CptPathDelay));
-  return new (p) CptPathDelay(file_region, value1, value2);
+  auto obj = new CptPathDelay(file_region, value1, value2);
+  return obj;
 }
 
 // path delay value を生成する．
@@ -392,8 +392,8 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value3)
 {
   ++ mNumPathDelay;
-  void* p = alloc().get_memory(sizeof(CptPathDelay));
-  return new (p) CptPathDelay(file_region, value1, value2, value3);
+  auto obj = new CptPathDelay(file_region, value1, value2, value3);
+  return obj;
 }
 
 // path delay value を生成する．
@@ -407,9 +407,9 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value6)
 {
   ++ mNumPathDelay;
-  void* p = alloc().get_memory(sizeof(CptPathDelay));
-  return new (p) CptPathDelay(file_region, value1, value2, value3,
+  auto obj = new CptPathDelay(file_region, value1, value2, value3,
 			      value4, value5, value6);
+  return obj;
 }
 
 // path delay value を生成する．
@@ -429,11 +429,11 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value12)
 {
   ++ mNumPathDelay;
-  void* p = alloc().get_memory(sizeof(CptPathDelay));
-  return new (p) CptPathDelay(file_region, value1, value2, value3,
+  auto obj = new CptPathDelay(file_region, value1, value2, value3,
 			      value4, value5, value6,
 			      value7, value8, value9,
 			      value10, value11, value12);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

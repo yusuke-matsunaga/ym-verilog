@@ -71,7 +71,7 @@ inline
 PtDefParamArray
 Parser::get_defparam_array()
 {
-  return mDefParamList.to_array(mAlloc);
+  return mDefParamList.to_array();
 }
 
 
@@ -152,7 +152,7 @@ inline
 PtContAssignArray
 Parser::get_contassign_array()
 {
-  return mContAssignList.to_array(mAlloc);
+  return mContAssignList.to_array();
 }
 
 
@@ -492,7 +492,7 @@ inline
 PtIOHeadArray
 Parser::get_tf_io_array()
 {
-  return mTfIOHeadList.to_array(mAlloc);
+  return mTfIOHeadList.to_array();
 }
 
 // @brief task/function 用の宣言リストを配列に変換する．
@@ -500,7 +500,7 @@ inline
 PtDeclHeadArray
 Parser::get_tf_decl_array()
 {
-  return mTfDeclHeadList.to_array(mAlloc);
+  return mTfDeclHeadList.to_array();
 }
 
 END_NAMESPACE_YM_VERILOG

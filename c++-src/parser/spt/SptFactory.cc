@@ -17,8 +17,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-SptFactory::SptFactory(Alloc& alloc) :
-  PtiFactory(alloc)
+SptFactory::SptFactory()
 {
 }
 
@@ -32,7 +31,7 @@ const char*
 SptFactory::new_string(const char* str)
 {
   SizeType len = strlen(str) + 1;
-  char* dst = static_cast<char*>(alloc().get_memory(len));
+  char* dst = new char[len];
   strcpy(dst, str);
   return dst;
 }

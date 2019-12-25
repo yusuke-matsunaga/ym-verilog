@@ -24,10 +24,10 @@ class AttrHash
 public:
 
   /// @brief コンストラクタ
-  AttrHash();
+  AttrHash() = default;
 
   /// @brief デストラクタ
-  ~AttrHash();
+  ~AttrHash() = default;
 
 
 public:
@@ -52,10 +52,6 @@ public:
   find(const VlObj* obj,
        bool def) const;
 
-  /// @brief このオブジェクトが使用しているメモリ量を返す．
-  SizeType
-  allocated_size() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -64,14 +60,8 @@ private:
 
   struct Cell
   {
-    // 対象のオブジェクト
-    const VlObj* mObj;
-
     // 対応する属性リスト
     ElbAttrList* mAttrList[2];
-
-    // ハッシュ上の次の要素を指すポインタ
-    Cell* mLink;
 
   };
 
@@ -88,31 +78,14 @@ private:
   Cell*
   find_cell(const VlObj* obj) const;
 
-  /// @brief テーブルの領域を確保する．
-  void
-  alloc_table(SizeType size);
-
-  /// @brief ハッシュ値を計算する．
-  SizeType
-  hash_func(const VlObj* obj) const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  SizeType mSize;
-
-  // ハッシュ表
-  Cell** mTable;
-
-  // ハッシュ表を拡大するしきい値
-  SizeType mLimit;
-
-  // 要素数
-  SizeType mNum;
+  // const VlObj* をキーにして Cell を納めるハッシュ表
+  unordered_map<const VlObj*, Cell> mHash;
 
 };
 

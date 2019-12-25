@@ -44,7 +44,7 @@ Parser::new_Port1(const FileRegion& file_region)
     add_port( mFactory.new_Port(file_region, portref, name) );
   }
   else {
-    PtExprArray portref_array = mPortRefList.to_array(mAlloc);
+    PtExprArray portref_array = mPortRefList.to_array();
     const PtExpr* portref = mFactory.new_Concat(file_region, portref_array);
     add_port( mFactory.new_Port(file_region, portref, portref_array, nullptr) );
   }
@@ -72,7 +72,7 @@ Parser::new_Port3(const FileRegion& file_region,
     mPortRefList.clear();
   }
   else {
-    PtExprArray portref_array = mPortRefList.to_array(mAlloc);
+    PtExprArray portref_array = mPortRefList.to_array();
     const PtExpr* portref = mFactory.new_Concat(file_region, portref_array);
     add_port( mFactory.new_Port(file_region, portref, portref_array, name) );
   }
@@ -120,8 +120,7 @@ PtPortArray
 Parser::new_PortArray(const vector<PtiPort*>& port_vector)
 {
   SizeType num = port_vector.size();
-  void* p = mAlloc.get_memory(sizeof(PtPort*) * num);
-  const PtPort** body = new (p) const PtPort*[num];
+  const PtPort** body = new const PtPort*[num];
   for ( SizeType i = 0; i < num; ++ i ) {
     body[i] = port_vector[i];
   }
@@ -138,8 +137,7 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
   }
 
   // port_array を確保する．
-  void* p = mAlloc.get_memory(sizeof(PtPort*) * num);
-  const PtPort** array = new (p) const PtPort*[num];
+  const PtPort** array = new const PtPort*[num];
 
   // ポートを生成し arary に格納する．
   SizeType i = 0;
@@ -187,7 +185,7 @@ Parser::new_PortRef(const FileRegion& fr,
 		    const char* name,
 		    const PtExpr* index)
 {
-  PtrList<const PtExpr> index_list(mCellAlloc);
+  PtrList<const PtExpr> index_list;
   index_list.push_back(index);
   PtExprArray index_array = to_array(&index_list);
   add_portref( mFactory.new_Primary(fr, name, index_array) );

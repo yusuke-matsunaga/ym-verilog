@@ -301,10 +301,10 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 		       bool sign)
 {
   ++ mNumIOH;
-  void* p = alloc().get_memory(sizeof(CptIOH));
-  return new (p) CptIOH(file_region,
+  auto obj = new CptIOH(file_region,
 			type, VpiAuxType::None,
 			VpiNetType::None, VpiVarType::None, sign);
+  return obj;
 }
 
 // @brief IO 宣言のヘッダの生成 (reg 型)
@@ -318,10 +318,10 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 			  bool sign)
 {
   ++ mNumIOH;
-  void* p = alloc().get_memory(sizeof(CptIOH));
-  return new (p) CptIOH(file_region,
+  auto obj = new CptIOH(file_region,
 			type, VpiAuxType::Reg,
 			VpiNetType::None, VpiVarType::None, sign);
+  return obj;
 }
 
 // @brief IO 宣言のヘッダの生成 (ネット型)
@@ -337,10 +337,10 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
 			  bool sign)
 {
   ++ mNumIOH;
-  void* p = alloc().get_memory(sizeof(CptIOH));
-  return new (p) CptIOH(file_region,
+  auto obj = new CptIOH(file_region,
 			type, VpiAuxType::Net,
 			net_type, VpiVarType::None, sign);
+  return obj;
 }
 
 // @brief IO 宣言のヘッダの生成 (変数型)
@@ -354,10 +354,10 @@ CptFactory::new_VarIOHead(const FileRegion& file_region,
 			  VpiVarType var_type)
 {
   ++ mNumIOH;
-  void* p = alloc().get_memory(sizeof(CptIOH));
-  return new (p) CptIOH(file_region, type,
+  auto obj = new CptIOH(file_region, type,
 			VpiAuxType::Var, VpiNetType::None,
 			var_type, false);
+  return obj;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成
@@ -375,10 +375,10 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 		       const PtExpr* right)
 {
   ++ mNumIOHV;
-  void* p = alloc().get_memory(sizeof(CptIOHV));
-  return new (p) CptIOHV(file_region, type,
+  auto obj = new CptIOHV(file_region, type,
 			 VpiAuxType::None, VpiNetType::None,
 			 sign, left, right);
+  return obj;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (reg 型)
@@ -396,10 +396,10 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 			  const PtExpr* right)
 {
   ++ mNumIOHV;
-  void* p = alloc().get_memory(sizeof(CptIOHV));
-  return new (p) CptIOHV(file_region,
+  auto obj = new CptIOHV(file_region,
 			 type, VpiAuxType::Reg, VpiNetType::None,
 			 sign, left, right);
+  return obj;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (ネット型)
@@ -419,10 +419,10 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
 			  const PtExpr* right)
 {
   ++ mNumIOHV;
-  void* p = alloc().get_memory(sizeof(CptIOHV));
-  return new (p) CptIOHV(file_region,
+  auto obj = new CptIOHV(file_region,
 			 type, VpiAuxType::Net, net_type,
 			 sign, left, right);
+  return obj;
 }
 
 // @brief IO 宣言の要素を生成する．
@@ -433,8 +433,8 @@ CptFactory::new_IOItem(const FileRegion& file_region,
 		       const char* name)
 {
   ++ mNumIOItem;
-  void* p = alloc().get_memory(sizeof(CptIOItem));
-  return new (p) CptIOItem(file_region, name);
+  auto obj = new CptIOItem(file_region, name);
+  return obj;
 }
 
 // @brief 初期値付き IO 宣言の要素の生成
@@ -447,8 +447,8 @@ CptFactory::new_IOItem(const FileRegion& file_region,
 		       const PtExpr* init_value)
 {
   ++ mNumIOItemI;
-  void* p = alloc().get_memory(sizeof(CptIOItemI));
-  return new (p) CptIOItemI(file_region, name, init_value);
+  auto obj = new CptIOItemI(file_region, name, init_value);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

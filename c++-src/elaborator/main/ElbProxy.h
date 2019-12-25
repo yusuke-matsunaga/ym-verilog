@@ -1066,8 +1066,7 @@ ElbProxy::make_stub(T* obj,
 		    void (T::*memfunc)(A),
 		    A a)
 {
-  void* p = mElaborator.mAlloc.get_memory(sizeof(ElbStubT1<T, A>));
-  return new (p) ElbStubT1<T, A>(obj, memfunc, a);
+  return new ElbStubT1<T, A>(obj, memfunc, a);
 }
 
 // @brief 2引数版の ElbStub を作る．
@@ -1081,8 +1080,7 @@ ElbProxy::make_stub(T* obj,
 		    A a,
 		    B b)
 {
-  void* p = mElaborator.mAlloc.get_memory(sizeof(ElbStubT2<T, A, B>));
-  return new (p) ElbStubT2<T, A, B>(obj, memfunc, a, b);
+  return new ElbStubT2<T, A, B>(obj, memfunc, a, b);
 }
 
 // @brief 3引数版の ElbStub を作る．
@@ -1098,8 +1096,7 @@ ElbProxy::make_stub(T* obj,
 		    B b,
 		    C c)
 {
-  void* p = mElaborator.mAlloc.get_memory(sizeof(ElbStubT3<T, A, B, C>));
-  return new (p) ElbStubT3<T, A, B, C>(obj, memfunc, a, b, c);
+  return new ElbStubT3<T, A, B, C>(obj, memfunc, a, b, c);
 }
 
 // @brief 4引数版の ElbStub を作る．
@@ -1117,8 +1114,7 @@ ElbProxy::make_stub(T* obj,
 		    C c,
 		    D d)
 {
-  void* p = mElaborator.mAlloc.get_memory(sizeof(ElbStubT4<T, A, B, C, D>));
-  return new (p) ElbStubT4<T, A, B, C, D>(obj, memfunc, a, b, c, d);
+  return new ElbStubT4<T, A, B, C, D>(obj, memfunc, a, b, c, d);
 }
 
 END_NAMESPACE_YM_VERILOG

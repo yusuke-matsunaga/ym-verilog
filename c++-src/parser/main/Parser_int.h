@@ -22,7 +22,7 @@ Parser::push_declhead_list(PtDeclHeadList* new_declhead)
 {
   mDeclHeadListStack.push_back(mCurDeclHeadList);
   if ( new_declhead == nullptr ) {
-    new_declhead = new PtDeclHeadList(mCellAlloc);
+    new_declhead = new PtDeclHeadList();
   }
   mCurDeclHeadList = new_declhead;
 }
@@ -48,7 +48,7 @@ Parser::push_item_list(PtItemList* new_item)
 {
   mItemListStack.push_back(mCurItemList);
   if ( new_item == nullptr ) {
-    new_item = new PtItemList(mCellAlloc);
+    new_item = new PtItemList();
   }
   mCurItemList = new_item;
 }
@@ -71,7 +71,7 @@ inline
 PtDeclHeadArray
 Parser::get_decl_array()
 {
-  return mCurDeclHeadList->to_array(mAlloc);
+  return mCurDeclHeadList->to_array();
 }
 
 // @brief item リストを配列に変換する．
@@ -79,7 +79,7 @@ inline
 PtItemArray
 Parser::get_item_array()
 {
-  return mCurItemList->to_array(mAlloc);
+  return mCurItemList->to_array();
 }
 
 END_NAMESPACE_YM_VERILOG

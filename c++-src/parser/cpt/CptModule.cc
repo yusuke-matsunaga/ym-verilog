@@ -563,8 +563,7 @@ CptFactory::new_Module(const FileRegion& file_region,
 		       PtItemArray item_array)
 {
   ++ mNumModule;
-  void* p = alloc().get_memory(sizeof(CptModule));
-  return new (p) CptModule(file_region, name,
+  auto obj = new CptModule(file_region, name,
 			   macro, is_cell, is_protected,
 			   time_unit, time_precision,
 			   net_type, unconn,
@@ -577,6 +576,7 @@ CptFactory::new_Module(const FileRegion& file_region,
 			   iohead_array,
 			   declhead_array,
 			   item_array);
+  return obj;
 }
 
 
@@ -593,8 +593,8 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  void* p = alloc().get_memory(sizeof(CptPort));
-  return new (p) CptPort(file_region, ext_name);
+  auto obj = new CptPort(file_region, ext_name);
+  return obj;
 }
 
 // ポートの生成
@@ -608,8 +608,8 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  void* p = alloc().get_memory(sizeof(CptPort1));
-  return new (p) CptPort1(file_region, portref, ext_name);
+  auto obj = new CptPort1(file_region, portref, ext_name);
+  return obj;
 }
 
 // ポートの生成
@@ -627,9 +627,9 @@ CptFactory::new_Port(const FileRegion& file_region,
   ++ mNumPort;
   int n = portref_array.size();
   VpiDir* dir_array = alloc_array<VpiDir>(n);
-  void* p = alloc().get_memory(sizeof(CptPort2));
-  return new (p) CptPort2(file_region, portref,
+  auto obj = new CptPort2(file_region, portref,
 			  portref_array, dir_array, ext_name);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

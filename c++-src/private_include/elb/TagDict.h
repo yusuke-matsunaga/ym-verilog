@@ -5,7 +5,7 @@
 /// @brief TagDict のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -239,10 +239,6 @@ public:
   find_internalscope_list(const VlNamedObj* parent,
 			  vector<const VlNamedObj*>& scope_list) const;
 
-  /// @brief このオブジェクトが使用しているメモリ量を返す．
-  ymuint
-  allocated_size() const;
-
 
 private:
 
@@ -262,17 +258,40 @@ private:
   find_cell(const VlNamedObj* parent,
 	    int tag) const;
 
-  /// @brief テーブルの領域を確保する．
-  /// @param[in] size 必要なサイズ
-  void
-  alloc_table(ymuint size);
 
-  /// @brief ハッシュ値を計算する．
-  /// @param[in] parent 親のスコープ
-  /// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-  ymuint
-  hash_func(const VlNamedObj* parent,
-	    int tag) const;
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で使用されるデータ構造
+  //////////////////////////////////////////////////////////////////////
+
+  struct Key
+  {
+    // 親のスコープ
+    const VlNamedObj* mParent;
+
+    // タグ
+    int mTag;
+
+  };
+
+  struct Eq
+  {
+    bool
+    operator()(const Key& left,
+	       const Key& right) const
+    {
+      return left.mParent == right.mParent && left.mTag == right.mTag;
+    }
+  };
+
+  struct Hash
+  {
+    SizeType
+    operator()(const Key& key) const
+    {
+      return ((reinterpret_cast<ympuint>(key.mParent) * key.mTag) >> 8);
+    }
+  };
 
 
 private:
@@ -280,17 +299,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  ymuint32 mSize;
-
   // ハッシュ表
-  TagDictCell** mTable;
+  unordered_map<Key, TagDictCell*, Hash, Eq> mHash;
 
-  // ハッシュ表を拡大するしきい値
-  ymuint32 mLimit;
-
-  // 要素数
-  ymuint32 mNum;
+  // セルのリスト
+  vector<unique_ptr<TagDictCell>> mCellList;
 
 };
 

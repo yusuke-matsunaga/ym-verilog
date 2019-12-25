@@ -273,7 +273,7 @@ inline
 PtIOHeadArray
 Parser::get_module_io_array()
 {
-  return mModuleIOHeadList.to_array(mAlloc);
+  return mModuleIOHeadList.to_array();
 }
 
 // @brief parameter port リストを配列に変換する．
@@ -281,7 +281,7 @@ inline
 PtDeclHeadArray
 Parser::get_paramport_array()
 {
-  return mParamPortHeadList.to_array(mAlloc);
+  return mParamPortHeadList.to_array();
 }
 
 // @brief module 用の宣言リストを配列に変換する．
@@ -289,7 +289,7 @@ inline
 PtDeclHeadArray
 Parser::get_module_decl_array()
 {
-  return mModuleDeclHeadList.to_array(mAlloc);
+  return mModuleDeclHeadList.to_array();
 }
 
 // @brief module 用の item リストを配列に変換する．
@@ -297,7 +297,7 @@ inline
 PtItemArray
 Parser::get_module_item_array()
 {
-  return mModuleItemList.to_array(mAlloc);
+  return mModuleItemList.to_array();
 }
 
 END_NAMESPACE_YM_VERILOG

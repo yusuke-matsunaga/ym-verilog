@@ -10,7 +10,6 @@
 
 
 #include "PtiFactory.h"
-#include "ym/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -27,8 +26,7 @@ class CptFactory :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリ確保用のアロケータ
-  CptFactory(Alloc& alloc);
+  CptFactory();
 
   /// @brief デストラクタ
   ~CptFactory();

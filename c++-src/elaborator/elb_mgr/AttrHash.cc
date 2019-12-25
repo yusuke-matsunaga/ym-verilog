@@ -17,26 +17,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 // クラス AttrHash
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-AttrHash::AttrHash() :
-  mNum(0)
-{
-}
-
-// @brief デストラクタ
-AttrHash::~AttrHash()
-{
-  delete [] mTable;
-}
-
 // @brief 内容をクリアする．
 void
 AttrHash::clear()
 {
-  for ( SizeType i = 0; i < mSize; ++ i ) {
-    mTable[i] = nullptr;
-  }
-  mNum = 0;
+  mHash.clear();
 }
 
 // @brief 属性を追加する．
@@ -48,14 +33,13 @@ AttrHash::add(const VlObj* obj,
 	      bool def,
 	      ElbAttrList* attr_list)
 {
-  // 該当の Cell が存在するか調べる．
-  Cell* cell = find_cell(obj);
-  if ( !cell ) {
-    cell = new_cell(obj);
+  if ( mHash.count(obj) == 0 ) {
+    mHash.emplace(obj, Cell{{nullptr, nullptr}});
   }
   SizeType pos = (def) ? 1 : 0;
-  ASSERT_COND(cell->mAttrList[pos] == nullptr );
-  cell->mAttrList[pos] = attr_list;
+  auto& cell = mHash.at(obj);
+  ASSERT_COND(cell.mAttrList[pos] == nullptr );
+  cell.mAttrList[pos] = attr_list;
 }
 
 // @brief 属性を取り出す．
@@ -65,88 +49,11 @@ ElbAttrList*
 AttrHash::find(const VlObj* obj,
 	       bool def) const
 {
-  // 該当の Cell が存在するか調べる．
-  Cell* cell = find_cell(obj);
-  if ( cell ) {
+  if ( mHash.count(obj) > 0 ) {
     SizeType pos = (def) ? 1 : 0;
-    return cell->mAttrList[pos];
+    return mHash.at(obj).mAttrList[pos];
   }
   return nullptr;
 }
-
-// @brief 新しい Cell を生成する．
-// @param[in] obj 対象のオブジェクト
-AttrHash::Cell*
-AttrHash::new_cell(const VlObj* obj)
-{
-  if ( mNum >= mLimit ) {
-    // テーブルを拡張する．
-    SizeType old_size = mSize;
-    Cell** old_table = mTable;
-    alloc_table(old_size << 1);
-    for ( SizeType i = 0; i < old_size; ++ i ) {
-      for ( Cell* cell = old_table[i]; cell; ) {
-	Cell* next = cell->mLink;
-	SizeType pos = hash_func(cell->mObj);
-	cell->mLink = mTable[pos];
-	mTable[pos] = cell;
-	cell = next;
-      }
-    }
-    delete [] old_table;
-  }
-  SizeType pos = hash_func(obj);
-  void* p = mAlloc.get_memory(sizeof(Cell));
-  Cell* cell = new (p) Cell;
-  cell->mObj = obj;
-  cell->mAttrList[0] = nullptr;
-  cell->mAttrList[1] = nullptr;
-  cell->mLink = mTable[pos];
-  mTable[pos] = cell;
-  ++ mNum;
-  return cell;
-}
-
-// @brief オブジェクトから対応する Cell を取り出す．
-// @param[in] obj 対象のオブジェクト
-AttrHash::Cell*
-AttrHash::find_cell(const VlObj* obj) const
-{
-  SizeType pos = hash_func(obj);
-  for ( Cell* cell = mTable[pos]; cell; cell = cell->mLink ) {
-    if ( cell->mObj == obj ) {
-      return cell;
-    }
-  }
-  return nullptr;
-}
-
-// @brief このオブジェクトが使用しているメモリ量を返す．
-SizeType
-AttrHash::allocated_size() const
-{
-  return sizeof(Cell*) * mSize;
-}
-
-// @brief テーブルの領域を確保する．
-void
-AttrHash::alloc_table(SizeType size)
-{
-  mSize = size;
-  mLimit = static_cast<SizeType>(mSize * 1.8);
-  mTable = new Cell*[mSize];
-  for ( SizeType i = 0; i < mSize; ++ i ) {
-    mTable[i] = nullptr;
-  }
-}
-
-// @brief ハッシュ値を計算する．
-SizeType
-AttrHash::hash_func(const VlObj* obj) const
-{
-  ympuint tmp = reinterpret_cast<ympuint>(obj);
-  return ((tmp * tmp) >> 12) % mSize;
-}
-
 
 END_NAMESPACE_YM_VERILOG

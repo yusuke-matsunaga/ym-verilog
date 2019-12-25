@@ -36,11 +36,9 @@ class PuHierName
 private:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリアロケータ
   /// @param[in] nb 階層ブランチ
   /// @param[in] name 名前
-  PuHierName(UnitAlloc& alloc,
-	     const PtNameBranch* nb,
+  PuHierName(const PtNameBranch* nb,
 	     const char* name);
 
   /// @brief デストラクタ
@@ -88,10 +86,8 @@ private:
 // @param[in] nb 階層ブランチ
 // @param[in] name 名前
 inline
-PuHierName::PuHierName(UnitAlloc& alloc,
-		       const PtNameBranch* nb,
+PuHierName::PuHierName(const PtNameBranch* nb,
 		       const char* name) :
-  mNbList(alloc),
   mTailName(name)
 {
   mNbList.push_back(nb);

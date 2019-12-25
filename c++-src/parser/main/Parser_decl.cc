@@ -143,7 +143,7 @@ Parser::flush_io()
   if ( !mIOItemList.empty() ) {
     ASSERT_COND( !mCurIOHeadList->empty() );
     PtiIOHead* last = mCurIOHeadList->back();
-    last->set_elem(mIOItemList.to_array(mAlloc));
+    last->set_elem(mIOItemList.to_array());
     mIOItemList.clear();
   }
 }
@@ -247,7 +247,7 @@ Parser::flush_paramport()
   if ( !mDeclItemList.empty() ) {
     ASSERT_COND( !mParamPortHeadList.empty() );
     PtiDeclHead* last = mParamPortHeadList.back();
-    last->set_elem(mDeclItemList.to_array(mAlloc));
+    last->set_elem(mDeclItemList.to_array());
     mDeclItemList.clear();
   }
 }
@@ -511,7 +511,7 @@ Parser::add_decl_head(PtiDeclHead* head,
     reg_attrinst(head, attr_list);
     mCurDeclHeadList->push_back(head);
     if ( !mDeclItemList.empty() ) {
-      head->set_elem(mDeclItemList.to_array(mAlloc));
+      head->set_elem(mDeclItemList.to_array());
     }
   }
   mDeclItemList.clear();

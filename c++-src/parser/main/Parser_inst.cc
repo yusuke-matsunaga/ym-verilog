@@ -359,7 +359,7 @@ inline
 PtInstArray
 Parser::get_inst_array()
 {
-  return mInstList.to_array(mAlloc);
+  return mInstList.to_array();
 }
 
 END_NAMESPACE_YM_VERILOG

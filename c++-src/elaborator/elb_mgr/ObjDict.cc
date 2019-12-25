@@ -27,8 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbObjHandle::ElbObjHandle() :
-  mLink(nullptr)
+ElbObjHandle::ElbObjHandle()
 {
 }
 
@@ -450,36 +449,19 @@ ElbGenvarHandle::genvar()
 // VlNamedObj を格納するハッシュ表
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-ObjDict::ObjDict(Alloc& alloc) :
-  mAlloc(sizeof(ElbScopeHandle), 1024),
-  mNum(0)
-{
-  alloc_table(1024);
-}
-
-// @brief デストラクタ
-ObjDict::~ObjDict()
-{
-  delete [] mTable;
-}
-
 // @brief 内容を空にする．
 void
 ObjDict::clear()
 {
-  for (ymuint i = 0; i < mSize; ++ i) {
-    mTable[i] = nullptr;
-  }
-  mNum = 0;
+  mHash.clear();
+  mHandleList.clear();
 }
 
 // @brief 要素を追加する．
 void
 ObjDict::add(const VlNamedObj* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbScopeHandle));
-  ElbScopeHandle* handle = new (p) ElbScopeHandle(obj);
+  auto handle = new ElbScopeHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -487,8 +469,7 @@ ObjDict::add(const VlNamedObj* obj)
 void
 ObjDict::add(ElbTaskFunc* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbTaskFuncHandle));
-  ElbTaskFuncHandle* handle = new (p) ElbTaskFuncHandle(obj);
+  auto handle = new ElbTaskFuncHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -496,8 +477,7 @@ ObjDict::add(ElbTaskFunc* obj)
 void
 ObjDict::add(ElbDecl* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbDeclHandle));
-  ElbDeclHandle* handle = new (p) ElbDeclHandle(obj);
+  auto handle = new ElbDeclHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -505,8 +485,7 @@ ObjDict::add(ElbDecl* obj)
 void
 ObjDict::add(ElbDeclArray* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbDeclArrayHandle));
-  ElbDeclArrayHandle* handle = new (p) ElbDeclArrayHandle(obj);
+  auto handle = new ElbDeclArrayHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -514,8 +493,7 @@ ObjDict::add(ElbDeclArray* obj)
 void
 ObjDict::add(ElbParameter* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbParamHandle));
-  ElbParamHandle* handle = new (p) ElbParamHandle(obj);
+  auto handle = new ElbParamHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -523,8 +501,7 @@ ObjDict::add(ElbParameter* obj)
 void
 ObjDict::add(ElbModuleArray* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbModuleArrayHandle));
-  ElbModuleArrayHandle* handle = new (p) ElbModuleArrayHandle(obj);
+  auto handle = new ElbModuleArrayHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -532,8 +509,7 @@ ObjDict::add(ElbModuleArray* obj)
 void
 ObjDict::add(ElbPrimArray* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbPrimArrayHandle));
-  ElbPrimArrayHandle* handle = new (p) ElbPrimArrayHandle(obj);
+  auto handle = new ElbPrimArrayHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -541,8 +517,7 @@ ObjDict::add(ElbPrimArray* obj)
 void
 ObjDict::add(ElbPrimitive* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbPrimitiveHandle));
-  ElbPrimitiveHandle* handle = new (p) ElbPrimitiveHandle(obj);
+  auto handle = new ElbPrimitiveHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -550,8 +525,7 @@ ObjDict::add(ElbPrimitive* obj)
 void
 ObjDict::add(ElbGfRoot* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbGfRootHandle));
-  ElbGfRootHandle* handle = new (p) ElbGfRootHandle(obj);
+  auto handle = new ElbGfRootHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -559,8 +533,7 @@ ObjDict::add(ElbGfRoot* obj)
 void
 ObjDict::add(ElbGenvar* obj)
 {
-  void* p = mAlloc.get_memory(sizeof(ElbGenvarHandle));
-  ElbGenvarHandle* handle = new (p) ElbGenvarHandle(obj);
+  auto handle = new ElbGenvarHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 
@@ -570,27 +543,9 @@ ObjDict::add_handle(const VlNamedObj* parent,
 		    const char* name,
 		    ElbObjHandle* handle)
 {
-  if ( mNum >= mLimit ) {
-    // テーブルを拡張する．
-    ymuint old_size = mSize;
-    ElbObjHandle** old_table = mTable;
-    alloc_table(old_size << 1);
-    for (ymuint i = 0; i < old_size; ++ i) {
-      for (ElbObjHandle* handle = old_table[i]; handle; ) {
-	ElbObjHandle* next = handle->mLink;
-	const VlNamedObj* obj = handle->obj();
-	ymuint pos = hash_func(obj->parent(), obj->name());
-	handle->mLink = mTable[pos];
-	mTable[pos] = handle;
-	handle = next;
-      }
-    }
-    delete [] old_table;
-  }
-  ymuint pos = hash_func(parent, name);
-  handle->mLink = mTable[pos];
-  mTable[pos] = handle;
-  ++ mNum;
+  HierName key{parent, name};
+  mHash.emplace(key, handle);
+  mHandleList.push_back(unique_ptr<ElbObjHandle>{handle});
 }
 
 // @brief 名前から該当する要素を検索する．
@@ -598,47 +553,11 @@ ElbObjHandle*
 ObjDict::find(const VlNamedObj* parent,
 	      const char* name) const
 {
-  ymuint pos = hash_func(parent, name);
-  for (ElbObjHandle* handle = mTable[pos]; handle; handle = handle->mLink) {
-    const VlNamedObj* obj = handle->obj();
-    if ( obj->parent() == parent && strcmp(obj->name(), name) == 0 ) {
-      return handle;
-    }
+  HierName key{parent, name};
+  if ( mHash.count(key) > 0 ) {
+    return mHash.at(key);
   }
   return nullptr;
 }
-
-// @brief このオブジェクトが使用しているメモリ量を返す．
-ymuint
-ObjDict::allocated_size() const
-{
-  return sizeof(ElbObjHandle*) * mSize + mAlloc.allocated_size();
-}
-
-// @brief テーブルの領域を確保する．
-void
-ObjDict::alloc_table(ymuint size)
-{
-  mSize = size;
-  mLimit = static_cast<ymuint>(mSize * 1.8);
-  mTable = new ElbObjHandle*[mSize];
-  for (ymuint i = 0; i < mSize; ++ i) {
-    mTable[i] = nullptr;
-  }
-}
-
-// @brief ハッシュ値を計算する．
-ymuint
-ObjDict::hash_func(const VlNamedObj* parent,
-		   const char* name) const
-{
-  ymuint h = 0;
-  ymuint c;
-  for ( ; (c = static_cast<ymuint>(*name)); ++ name) {
-    h = h * 37 + c;
-  }
-  return ((reinterpret_cast<ympuint>(parent) * h) >> 8) % mSize;
-}
-
 
 END_NAMESPACE_YM_VERILOG

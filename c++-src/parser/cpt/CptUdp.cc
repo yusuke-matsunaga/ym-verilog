@@ -233,13 +233,13 @@ CptFactory::new_CmbUdp(const FileRegion& file_region,
 		       PtUdpEntryArray entry_array)
 {
   ++ mNumUdp;
-  void* p = alloc().get_memory(sizeof(CptUdp));
-  return new (p) CptUdp(file_region,
+  auto obj = new CptUdp(file_region,
 			name,
 			port_array,
 			iohead_array,
 			false, nullptr,
 			entry_array);
+  return obj;
 }
 
 // sequential UDP の生成
@@ -260,14 +260,14 @@ CptFactory::new_SeqUdp(const FileRegion& file_region,
 		       PtUdpEntryArray entry_array)
 {
   ++ mNumUdp;
-  void* p = alloc().get_memory(sizeof(CptUdp));
-  return new (p) CptUdp(file_region,
+  auto obj = new CptUdp(file_region,
 			name,
 			port_array,
 			iohead_array,
 			true,
 			init_value,
 			entry_array);
+  return obj;
 }
 
 // combinational UDP 用のテーブルエントリの生成
@@ -281,10 +281,10 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntry;
-  void* p = alloc().get_memory(sizeof(CptUdpEntry));
-  return new (p) CptUdpEntry(file_region,
+  auto obj = new CptUdpEntry(file_region,
 			     input_array,
 			     output);
+  return obj;
 }
 
 // sequential UDP 用のテーブルエントリの生成
@@ -300,11 +300,11 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntryS;
-  void* p = alloc().get_memory(sizeof(CptUdpEntryS));
-  return new (p) CptUdpEntryS(file_region,
+  auto obj = new CptUdpEntryS(file_region,
 			      input_array,
 			      current,
 			      output);
+  return obj;
 }
 
 // UDP のテーブルエントリの要素の値の生成 (1つの値)
@@ -316,8 +316,8 @@ CptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol)
 {
   ++ mNumUdpValue;
-  void* p = alloc().get_memory(sizeof(CptUdpValue));
-  return new (p) CptUdpValue(file_region, symbol);
+  auto obj = new CptUdpValue(file_region, symbol);
+  return obj;
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
@@ -330,8 +330,8 @@ CptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol2)
 {
   ++ mNumUdpValue;
-  void* p = alloc().get_memory(sizeof(CptUdpValue));
-  return new (p) CptUdpValue(file_region, symbol1, symbol2);
+  auto obj = new CptUdpValue(file_region, symbol1, symbol2);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

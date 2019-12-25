@@ -1211,8 +1211,8 @@ PtiDeclHead*
 CptFactory::new_ParamH(const FileRegion& file_region)
 {
   ++ mNumParamH;
-  void* p = alloc().get_memory(sizeof(CptParamH));
-  return new (p) CptParamH(file_region);
+  auto obj = new CptParamH(file_region);
+  return obj;
 }
 
 // 範囲指定型パラメータ宣言のヘッダの生成
@@ -1224,12 +1224,12 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 {
   ++ mNumParamHV;
   if ( sign ) {
-    void* p = alloc().get_memory(sizeof(CptParamHSV));
-    return new (p) CptParamHSV(file_region, left, right);
+    auto obj = new CptParamHSV(file_region, left, right);
+    return obj;
   }
   else {
-    void* p = alloc().get_memory(sizeof(CptParamHV));
-    return new (p) CptParamHV(file_region, left, right);
+    auto obj = new CptParamHV(file_region, left, right);
+    return obj;
   }
 }
 
@@ -1239,8 +1239,8 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 		       VpiVarType var_type)
 {
   ++ mNumParamHT;
-  void* p = alloc().get_memory(sizeof(CptParamHT));
-  return new (p) CptParamHT(file_region, var_type);
+  auto obj = new CptParamHT(file_region, var_type);
+  return obj;
 }
 
 // local param 宣言のヘッダの生成 (型指定なし)
@@ -1248,8 +1248,8 @@ PtiDeclHead*
 CptFactory::new_LocalParamH(const FileRegion& file_region)
 {
   ++ mNumLocalParamH;
-  void* p = alloc().get_memory(sizeof(CptLocalParamH));
-  return new (p) CptLocalParamH(file_region);
+  auto obj = new CptLocalParamH(file_region);
+  return obj;
 }
 
 // 範囲指定型 local param 宣言のヘッダの生成
@@ -1261,12 +1261,12 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 {
   ++ mNumLocalParamHV;
   if ( sign ) {
-    void* p = alloc().get_memory(sizeof(CptLocalParamHSV));
-    return new (p) CptLocalParamHSV(file_region, left, right);
+    auto obj = new CptLocalParamHSV(file_region, left, right);
+    return obj;
   }
   else {
-    void* p = alloc().get_memory(sizeof(CptLocalParamHV));
-    return new (p) CptLocalParamHV(file_region, left, right);
+    auto obj = new CptLocalParamHV(file_region, left, right);
+    return obj;
   }
 }
 
@@ -1276,8 +1276,8 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 			    VpiVarType var_type)
 {
   ++ mNumLocalParamHT;
-  void* p = alloc().get_memory(sizeof(CptLocalParamHT));
-  return new (p) CptLocalParamHT(file_region, var_type);
+  auto obj = new CptLocalParamHT(file_region, var_type);
+  return obj;
 }
 
 // specparam 宣言のヘッダを生成する．
@@ -1285,8 +1285,8 @@ PtiDeclHead*
 CptFactory::new_SpecParamH(const FileRegion& file_region)
 {
   ++ mNumSpecParamH;
-  void* p = alloc().get_memory(sizeof(CptSpecParamH));
-  return new (p) CptSpecParamH(file_region);
+  auto obj = new CptSpecParamH(file_region);
+  return obj;
 }
 
 // specparam 宣言のヘッダを生成する．
@@ -1296,8 +1296,8 @@ CptFactory::new_SpecParamH(const FileRegion& file_region,
 			   const PtExpr* right)
 {
   ++ mNumSpecParamHV;
-  void* p = alloc().get_memory(sizeof(CptSpecParamHV));
-  return new (p) CptSpecParamHV(file_region, left, right);
+  auto obj = new CptSpecParamHV(file_region, left, right);
+  return obj;
 }
 
 // event 宣言のヘッダを生成する．
@@ -1305,8 +1305,8 @@ PtiDeclHead*
 CptFactory::new_EventH(const FileRegion& file_region)
 {
   ++ mNumEventH;
-  void* p = alloc().get_memory(sizeof(CptEventH));
-  return new (p) CptEventH(file_region);
+  auto obj = new CptEventH(file_region);
+  return obj;
 }
 
 // genvar 宣言のヘッダを生成する．
@@ -1314,8 +1314,8 @@ PtiDeclHead*
 CptFactory::new_GenvarH(const FileRegion& file_region)
 {
   ++ mNumGenvarH;
-  void* p = alloc().get_memory(sizeof(CptGenvarH));
-  return new (p) CptGenvarH(file_region);
+  auto obj = new CptGenvarH(file_region);
+  return obj;
 }
 
 // 変数宣言のヘッダを生成する．
@@ -1324,8 +1324,8 @@ CptFactory::new_VarH(const FileRegion& file_region,
 		     VpiVarType var_type)
 {
   ++ mNumVarH;
-  void* p = alloc().get_memory(sizeof(CptVarH));
-  return new (p) CptVarH(file_region, var_type);
+  auto obj = new CptVarH(file_region, var_type);
+  return obj;
 }
 
 // reg 宣言のヘッダを生成する．
@@ -1335,12 +1335,12 @@ CptFactory::new_RegH(const FileRegion& file_region,
 {
   ++ mNumRegH;
   if ( sign ) {
-    void* p = alloc().get_memory(sizeof(CptRegHS));
-    return new (p) CptRegHS(file_region);
+    auto obj = new CptRegHS(file_region);
+    return obj;
   }
   else {
-    void* p = alloc().get_memory(sizeof(CptRegH));
-    return new (p) CptRegH(file_region);
+    auto obj = new CptRegH(file_region);
+    return obj;
   }
 }
 
@@ -1353,12 +1353,12 @@ CptFactory::new_RegH(const FileRegion& file_region,
 {
   ++ mNumRegHV;
   if ( sign ) {
-    void* p = alloc().get_memory(sizeof(CptRegHSV));
-    return new (p) CptRegHSV(file_region, left, right);
+    auto obj = new CptRegHSV(file_region, left, right);
+    return obj;
   }
   else {
-    void* p = alloc().get_memory(sizeof(CptRegHV));
-    return new (p) CptRegHV(file_region, left, right);
+    auto obj = new CptRegHV(file_region, left, right);
+    return obj;
   }
 }
 
@@ -1369,9 +1369,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     bool sign)
 {
   ++ mNumNetH;
-  void* p = alloc().get_memory(sizeof(CptNetH));
-  return new (p) CptNetH(file_region,
-			 type, sign);
+  auto obj = new CptNetH(file_region, type, sign);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1382,9 +1381,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   ++ mNumNetHS;
-  return new CptNetHS(file_region,
-		      type, sign,
-		      strength);
+  auto obj = new CptNetHS(file_region,
+			  type, sign,
+			  strength);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1395,10 +1395,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHD;
-  void* p = alloc().get_memory(sizeof(CptNetHD));
-  return new (p) CptNetHD(file_region,
+  auto obj = new CptNetHD(file_region,
 			  type, sign,
 			  delay);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1410,10 +1410,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++mNumNetHSD;
-  void* p = alloc().get_memory(sizeof(CptNetHSD));
-  return new (p) CptNetHSD(file_region,
+  auto obj = new CptNetHSD(file_region,
 			   type, sign,
 			   strength, delay);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1426,9 +1426,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtExpr* right)
 {
   ++ mNumNetHV;
-  void* p = alloc().get_memory(sizeof(CptNetHV));
-  return new (p) CptNetHV(file_region,
+  auto obj = new CptNetHV(file_region,
 			  type, vstype, sign, left, right);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1442,10 +1442,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   ++ mNumNetHVS;
-  void* p = alloc().get_memory(sizeof(CptNetHVS));
-  return new (p) CptNetHVS(file_region,
+  auto obj = new CptNetHVS(file_region,
 			   type, vstype, sign, left, right,
 			   strength);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1459,10 +1459,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHVD;
-  void* p = alloc().get_memory(sizeof(CptNetHVD));
-  return new (p) CptNetHVD(file_region,
+  auto obj = new CptNetHVD(file_region,
 			   type, vstype, sign, left, right,
 			   delay);
+  return obj;
 }
 
 // net 宣言のヘッダを生成する．
@@ -1477,10 +1477,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHVSD;
-  void* p = alloc().get_memory(sizeof(CptNetHVSD));
-  return new (p) CptNetHVSD(file_region,
+  auto obj = new CptNetHVSD(file_region,
 			    type, vstype, sign, left, right,
 			    strength, delay);
+  return obj;
 }
 
 // 宣言要素を生成する．
@@ -1489,8 +1489,8 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name)
 {
   ++ mNumDeclItem;
-  void* p = alloc().get_memory(sizeof(CptDeclItem));
-  return new (p) CptDeclItem(file_region, name);
+  auto obj = new CptDeclItem(file_region, name);
+  return obj;
 }
 
 const PtDeclItem*
@@ -1499,8 +1499,8 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const PtExpr* init_value)
 {
   ++ mNumDeclItemI;
-  void* p = alloc().get_memory(sizeof(CptDeclItemI));
-  return new (p) CptDeclItemI(file_region, name, init_value);
+  auto obj = new CptDeclItemI(file_region, name, init_value);
+  return obj;
 }
 
 const PtDeclItem*
@@ -1509,8 +1509,8 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 PtRangeArray range_array)
 {
   ++ mNumDeclItemR;
-  void* p = alloc().get_memory(sizeof(CptDeclItemR));
-  return new (p) CptDeclItemR(file_region, name, range_array);
+  auto obj = new CptDeclItemR(file_region, name, range_array);
+  return obj;
 }
 
 const PtRange*
@@ -1518,8 +1518,8 @@ CptFactory::new_Range(const FileRegion& fr,
 		      const PtExpr* msb,
 		      const PtExpr* lsb)
 {
-  void* p = alloc().get_memory(sizeof(CptRange));
-  return new (p) CptRange(fr, msb, lsb);
+  auto obj = new CptRange(fr, msb, lsb);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

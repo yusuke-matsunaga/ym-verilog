@@ -422,8 +422,8 @@ CptFactory::new_Generate(const FileRegion& file_region,
 			 PtItemArray item_array)
 {
   ++ mNumGenerate;
-  void* p = alloc().get_memory(sizeof(CptGenerate));
-  return new (p) CptGenerate(file_region, declhead_array, item_array);
+  auto obj = new CptGenerate(file_region, declhead_array, item_array);
+  return obj;
 }
 
 // generate block 文を生成する．
@@ -433,8 +433,8 @@ CptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtItemArray item_array)
 {
   ++ mNumGenBlock;
-  void* p = alloc().get_memory(sizeof(CptGenBlock));
-  return new (p) CptGenBlock(file_region, declhead_array, item_array);
+  auto obj = new CptGenBlock(file_region, declhead_array, item_array);
+  return obj;
 }
 
 // generate block 文を生成する．
@@ -445,8 +445,8 @@ CptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtItemArray item_array)
 {
   ++ mNumGenBlockN;
-  void* p = alloc().get_memory(sizeof(CptGenBlockN));
-  return new (p) CptGenBlockN(file_region, name, declhead_array, item_array);
+  auto obj = new CptGenBlockN(file_region, name, declhead_array, item_array);
+  return obj;
 }
 
 // generate if 文を生成する．
@@ -459,10 +459,10 @@ CptFactory::new_GenIf(const FileRegion& file_region,
 		      PtItemArray else_item_array)
 {
   ++ mNumGenIf;
-  void* p = alloc().get_memory(sizeof(CptGenIf));
-  return new (p) CptGenIf(file_region, cond,
+  auto obj = new CptGenIf(file_region, cond,
 			  then_declhead_array, then_item_array,
 			  else_declhead_array, else_item_array);
+  return obj;
 }
 
 // generate case 文を生成する．
@@ -472,8 +472,8 @@ CptFactory::new_GenCase(const FileRegion& file_region,
 			PtGenCaseItemArray item_array)
 {
   ++ mNumGenCase;
-  void* p = alloc().get_memory(sizeof(CptGenCase));
-  return new (p) CptGenCase(file_region, expr, item_array);
+  auto obj = new CptGenCase(file_region, expr, item_array);
+  return obj;
 }
 
 // generate case の要素を生成する．
@@ -484,9 +484,9 @@ CptFactory::new_GenCaseItem(const FileRegion& file_region,
 			    PtItemArray item_array)
 {
   ++ mNumGenCaseItem;
-  void* p = alloc().get_memory(sizeof(CptGenCaseItem));
-  return new (p) CptGenCaseItem(file_region, label_array,
+  auto obj = new CptGenCaseItem(file_region, label_array,
 				declhead_array, item_array);
+  return obj;
 }
 
 // generate for 文を生成する．
@@ -501,10 +501,10 @@ CptFactory::new_GenFor(const FileRegion& file_region,
 		       PtItemArray item_array)
 {
   ++ mNumGenFor;
-  void* p = alloc().get_memory(sizeof(CptGenFor));
-  return new (p) CptGenFor(file_region, loop_var, init_expr, cond,
+  auto obj = new CptGenFor(file_region, loop_var, init_expr, cond,
 			   next_expr, block_name,
 			   declhead_array, item_array);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG

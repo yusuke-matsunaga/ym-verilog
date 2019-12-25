@@ -27,10 +27,10 @@ class AttrDict
 public:
 
   /// @brief コンストラクタ
-  AttrDict();
+  AttrDict() = default;
 
   /// @brief デストラクタ
-  ~AttrDict();
+  ~AttrDict() = default;
 
 
 public:
@@ -54,42 +54,11 @@ public:
   void
   clear();
 
-  /// @brief このオブジェクトが使用しているメモリ量を返す．
-  ymuint
-  allocated_size() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief テーブルの領域を確保する．
-  void
-  alloc_table(ymuint size);
-
-  /// @brief ハッシュ値を計算する．
-  ymuint
-  hash_func(const PtAttrInst* pt_attr) const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で使用するデータ構造
-  //////////////////////////////////////////////////////////////////////
-
-  struct Cell
-  {
-    // パース木の属性定義
-    const PtAttrInst* mPtAttr;
-
-    // 対象の属性リスト
-    ElbAttrList* mAttrList;
-
-    // 次の要素を指すリンク
-    Cell* mLink;
-
-  };
 
 
 private:
@@ -97,19 +66,46 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ハッシュ表のサイズ
-  ymuint32 mSize;
-
   // ハッシュ表
-  Cell** mTable;
-
-  // ハッシュ表を拡大するしきい値
-  ymuint32 mLimit;
-
-  // 要素数
-  ymuint32 mNum;
+  unordered_map<const PtAttrInst*, ElbAttrList*> mHash;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 要素を追加する．
+// @param[in] pt_attr パース木の属性定義
+// @param[in] attr_list 登録する属性のリスト
+inline
+void
+AttrDict::add(const PtAttrInst* pt_attr,
+	      ElbAttrList* attr_list)
+{
+  mHash.emplace(pt_attr, attr_list);
+}
+
+// @brief 属性リストを取り出す．
+// @param[in] pt_attr パース木の属性定義
+inline
+ElbAttrList*
+AttrDict::find(const PtAttrInst* pt_attr) const
+{
+  if ( mHash.count(pt_attr) > 0 ) {
+    return mHash.at(pt_attr);
+  }
+  return nullptr;
+}
+
+// @brief 内容をクリアする．
+inline
+void
+AttrDict::clear()
+{
+  mHash.clear();
+}
 
 
 END_NAMESPACE_YM_VERILOG

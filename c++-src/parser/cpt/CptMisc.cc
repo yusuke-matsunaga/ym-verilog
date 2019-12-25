@@ -530,8 +530,8 @@ CptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
   ++ mNumDelayControl;
-  void* p = alloc().get_memory(sizeof(CptDelayControl));
-  return new (p) CptDelayControl(file_region, value);
+  auto obj = new CptDelayControl(file_region, value);
+  return obj;
 }
 
 // イベントコントロールを生成する．
@@ -540,8 +540,8 @@ CptFactory::new_EventControl(const FileRegion& file_region,
 			     PtExprArray event_array)
 {
   ++ mNumEventControl;
-  void* p = alloc().get_memory(sizeof(CptEventControl));
-  return new (p) CptEventControl(file_region, event_array);
+  auto obj = new CptEventControl(file_region, event_array);
+  return obj;
 }
 
 // リピートコントロールを生成する．
@@ -551,8 +551,8 @@ CptFactory::new_RepeatControl(const FileRegion& file_region,
 			      PtExprArray event_array)
 {
   ++ mNumRepeatControl;
-  void* p = alloc().get_memory(sizeof(CptRepeatControl));
-  return new (p) CptRepeatControl(file_region, expr, event_array);
+  auto obj = new CptRepeatControl(file_region, expr, event_array);
+  return obj;
 }
 
 // 順序つき結合子を生成する．
@@ -561,8 +561,8 @@ CptFactory::new_OrderedCon(const FileRegion& file_region,
 			   const PtExpr* expr)
 {
   ++ mNumAiOrderedCon;
-  void* p = alloc().get_memory(sizeof(CptOrderedCon));
-  return new (p) CptOrderedCon(file_region, expr);
+  auto obj = new CptOrderedCon(file_region, expr);
+  return obj;
 }
 
 // 順序つき結合子を生成する．
@@ -574,8 +574,8 @@ CptFactory::new_OrderedCon(const PtExpr* expr)
   if ( expr ) {
     file_region = expr->file_region();
   }
-  void* p = alloc().get_memory(sizeof(CptOrderedCon));
-  return new (p) CptOrderedCon(file_region, expr);
+  auto obj = new CptOrderedCon(file_region, expr);
+  return obj;
 }
 
 // 名前つき結合子を生成する．
@@ -585,8 +585,8 @@ CptFactory::new_NamedCon(const FileRegion& file_region,
 			 const PtExpr* expr)
 {
   ++ mNumNamedCon;
-  void* p = alloc().get_memory(sizeof(CptNamedCon));
-  return new (p) CptNamedCon(file_region, name, expr);
+  auto obj = new CptNamedCon(file_region, name, expr);
+  return obj;
 }
 
 // strength を生成する．
@@ -596,8 +596,8 @@ CptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value2)
 {
   ++ mNumStrength;
-  void* p = alloc().get_memory(sizeof(CptStrength));
-  return new (p) CptStrength(file_region, value1, value2);
+  auto obj = new CptStrength(file_region, value1, value2);
+  return obj;
 }
 
 // strength を生成する．
@@ -606,8 +606,8 @@ CptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value1)
 {
   ++ mNumStrength;
-  void* p = alloc().get_memory(sizeof(CptStrength));
-  return new (p) CptStrength(file_region, value1);
+  auto obj = new CptStrength(file_region, value1);
+  return obj;
 }
 
 // delay 値を生成する．
@@ -616,8 +616,8 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value1)
 {
   ++ mNumDelay;
-  void* p = alloc().get_memory(sizeof(CptDelay));
-  return new (p) CptDelay(file_region, value1);
+  auto obj = new CptDelay(file_region, value1);
+  return obj;
 }
 
 // delay 値を生成する．
@@ -627,8 +627,8 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value2)
 {
   ++ mNumDelay;
-  void* p = alloc().get_memory(sizeof(CptDelay));
-  return new (p) CptDelay(file_region, value1, value2);
+  auto obj = new CptDelay(file_region, value1, value2);
+  return obj;
 }
 
 // delay 値を生成する．
@@ -639,8 +639,8 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value3)
 {
   ++ mNumDelay;
-  void* p = alloc().get_memory(sizeof(CptDelay));
-  return new (p) CptDelay(file_region, value1, value2, value3);
+  auto obj = new CptDelay(file_region, value1, value2, value3);
+  return obj;
 }
 
 // 階層名を生成する．
@@ -648,8 +648,8 @@ const PtNameBranch*
 CptFactory::new_NameBranch(const char* name)
 {
   ++ mNumNameBranch;
-  void* p = alloc().get_memory(sizeof(CptNameBranch));
-  return new (p) CptNameBranch(name);
+  auto obj = new CptNameBranch(name);
+  return obj;
 }
 
 // 階層名を生成する．
@@ -658,8 +658,8 @@ CptFactory::new_NameBranch(const char* name,
 			   int index)
 {
   ++ mNumNameBranchI;
-  void* p = alloc().get_memory(sizeof(CptNameBranchI));
-  return new (p) CptNameBranchI(name, index);
+  auto obj = new CptNameBranchI(name, index);
+  return obj;
 }
 
 
@@ -674,8 +674,8 @@ CptFactory::new_AttrInst(const FileRegion& file_region,
 {
   // file_region は不要
   ++ mNumAttrInst;
-  void* p = alloc().get_memory(sizeof(CptAttrInst));
-  return new (p) CptAttrInst(as_array);
+  auto obj = new CptAttrInst(as_array);
+  return obj;
 }
 
 // attribute spec を生成する．
@@ -685,8 +685,8 @@ CptFactory::new_AttrSpec(const FileRegion& file_region,
 			 const PtExpr* expr)
 {
   ++ mNumAttrSpec;
-  void* p = alloc().get_memory(sizeof(CptAttrSpec));
-  return new (p) CptAttrSpec(file_region, name, expr);
+  auto obj = new CptAttrSpec(file_region, name, expr);
+  return obj;
 }
 
 END_NAMESPACE_YM_VERILOG
