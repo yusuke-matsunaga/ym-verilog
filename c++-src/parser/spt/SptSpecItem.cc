@@ -298,8 +298,8 @@ SptFactory::new_SpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
 			 PtExprArray terminal_array)
 {
-  void* p = alloc().get_memory(sizeof(SptSpecItem));
-  return new (p) SptSpecItem(file_region, id, terminal_array);
+  auto node = new SptSpecItem(file_region, id, terminal_array);
+  return node;
 }
 
 // @brief path 仕様を生成する．
@@ -314,8 +314,8 @@ SptFactory::new_SpecPath(const FileRegion& file_region,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl)
 {
-  void* p = alloc().get_memory(sizeof(SptSpecPath));
-  return new (p) SptSpecPath(file_region, id, expr, path_decl);
+  auto node = new SptSpecPath(file_region, id, expr, path_decl);
+  return node;
 }
 
 // @brief パス記述の生成
@@ -340,10 +340,10 @@ SptFactory::new_PathDecl(const FileRegion& file_region,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay)
 {
-  void* p = alloc().get_memory(sizeof(SptPathDecl));
-  return new (p) SptPathDecl(file_region, edge, input_array, input_pol,
-			     op, output_array, output_pol,
-			     expr, path_delay);
+  auto node = new SptPathDecl(file_region, edge, input_array, input_pol,
+			      op, output_array, output_pol,
+			      expr, path_delay);
+  return node;
 }
 
 // @brief path delay value の生成 (値が1つ)
@@ -354,8 +354,8 @@ const PtPathDelay*
 SptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value)
 {
-  void* p = alloc().get_memory(sizeof(SptPathDelay));
-  return new (p) SptPathDelay(file_region, value);
+  auto node = new SptPathDelay(file_region, value);
+  return node;
 }
 
 // @brief path delay value の生成 (値が2つ)
@@ -368,8 +368,8 @@ SptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value1,
 			  const PtExpr* value2)
 {
-  void* p = alloc().get_memory(sizeof(SptPathDelay));
-  return new (p) SptPathDelay(file_region, value1, value2);
+  auto node = new SptPathDelay(file_region, value1, value2);
+  return node;
 }
 
 // @brief path delay value の生成 (値が3つ)
@@ -384,9 +384,9 @@ SptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value2,
 			  const PtExpr* value3)
 {
-  void* p = alloc().get_memory(sizeof(SptPathDelay));
-  return new (p) SptPathDelay(file_region,
-			      value1, value2, value3);
+  auto node = new SptPathDelay(file_region,
+			       value1, value2, value3);
+  return node;
 }
 
 // @brief path delay value の生成 (値が6つ)
@@ -407,10 +407,10 @@ SptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value5,
 			  const PtExpr* value6)
 {
-  void* p = alloc().get_memory(sizeof(SptPathDelay));
-  return new (p) SptPathDelay(file_region,
-			      value1, value2, value3,
-			      value4, value5, value6);
+  auto node = new SptPathDelay(file_region,
+			       value1, value2, value3,
+			       value4, value5, value6);
+  return node;
 }
 
 // @brief path delay value の生成 (値が12個)
@@ -443,12 +443,12 @@ SptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value11,
 			  const PtExpr* value12)
 {
-  void* p = alloc().get_memory(sizeof(SptPathDelay));
-  return new (p) SptPathDelay(file_region,
-			      value1, value2, value3,
-			      value4, value5, value6,
-			      value7, value8, value9,
-			      value10, value11, value12);
+  auto node = new SptPathDelay(file_region,
+			       value1, value2, value3,
+			       value4, value5, value6,
+			       value7, value8, value9,
+			       value10, value11, value12);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

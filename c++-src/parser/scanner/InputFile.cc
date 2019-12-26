@@ -21,6 +21,29 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+//////////////////////////////////////////////////////////////////////
+// 入力ファイルを表すためのクラス
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] lex 親の Lex
+// @param[in] filename ファイル名
+// @param[in] parent_loc インクルードされた場合の親のファイル位置
+InputFile::InputFile(RawLex& lex,
+		     const string& filename,
+		     const FileLoc& parent_file) :
+  Scanner(mIn, FileInfo{filename, parent_file}),
+  mIn(filename),
+  mLex(lex)
+{
+  mValid = mIn.operator bool();
+}
+
+// @brief デストラクタ
+InputFile::~InputFile()
+{
+}
+
 BEGIN_NONAMESPACE
 
 // @brief c が識別子の先頭で用いられる文字種の時に true を返す．
@@ -28,10 +51,8 @@ inline
 bool
 is_strchar1(int c)
 {
-#if 0
-  if ( isalpha(c) || c == '_' || c == '$' ) return true;
-  return false;
-#else
+  // make_table.py strchar1 で作成
+  // c++ コードの等価記述: isalpha(c) || c == '_' || c == '$'
   static char table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -51,42 +72,12 @@ is_strchar1(int c)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
   return table[c];
-#endif
 }
 
 END_NONAMESPACE
 
-//////////////////////////////////////////////////////////////////////
-// 入力ファイルを表すためのクラス
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] lex 親の Lex
-InputFile::InputFile(RawLex& lex) :
-  Scanner(mIDO),
-  mLex(lex)
-{
-}
-
-// @brief デストラクタ
-InputFile::~InputFile()
-{
-}
-
-// @brief ファイルを開く
-// @param[in] filename ファイル名
-// @param[in] parent_loc インクルードされた場合の親のファイル位置
-// @return 成功したら true を返す．
-bool
-InputFile::open(const string& filename,
-		const FileLoc& parent_file)
-{
-  return mIDO.open(filename, parent_file);
-}
-
 // @brief トークンの読み出しを行う．
 // @param[out] buff 結果の文字列を格納するバッファ
-// @param[out] token_loc トークンの位置情報
 int
 InputFile::_read_token(StrBuff& buff)
 {
@@ -427,17 +418,12 @@ inline
 bool
 is_binchar(int c)
 {
-#if 0
-  if ( c == '0' || c == '1' ||
-       c == 'x' || c == 'X' ||
-       c == 'z' || c == 'Z' ||
-       c == '?' ) {
-    return true;
-  }
-  else {
-    return false;
-  }
-#else
+  // make_table.py binchar で作成
+  // c++ の等価記述
+  // c == '0' || c == '1' ||
+  // c == 'x' || c == 'X' ||
+  // c == 'z' || c == 'Z' ||
+  // c == '?'
   static char table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -457,7 +443,6 @@ is_binchar(int c)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
   return table[c];
-#endif
 }
 
 END_NONAMESPACE
@@ -509,17 +494,12 @@ inline
 bool
 is_octchar(int c)
 {
-#if 0
-  if ( ('0' <= c && c <= '7') ||
-       c == 'x' || c == 'X' ||
-       c == 'z' || c == 'Z' ||
-       c == '?' ) {
-    return true;
-  }
-  else {
-    return false;
-  }
-#else
+  // make_table.py octchar で生成
+  // c++ の等価記述
+  //  ('0' <= c && c <= '7') ||
+  //  c == 'x' || c == 'X' ||
+  //  c == 'z' || c == 'Z' ||
+  //  c == '?'
   static char table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -539,7 +519,6 @@ is_octchar(int c)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
   return table[c];
-#endif
 }
 
 END_NONAMESPACE
@@ -591,14 +570,9 @@ inline
 bool
 is_decchar(int c)
 {
-#if 0
-  if ( '0' <= c && c <= '9' ) {
-    return true;
-  }
-  else {
-    return false;
-  }
-#else
+  // make_table.py dechar で生成
+  // c++ の等価記述
+  // '0' <= c && c <= '9'
   static char table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -618,7 +592,6 @@ is_decchar(int c)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
   return table[c];
-#endif
 }
 
 END_NONAMESPACE
@@ -687,19 +660,14 @@ inline
 bool
 is_hexchar(int c)
 {
-#if 0
-  if ( ('0' <= c && c <= '9') ||
-       ('a' <= c && c <= 'f') ||
-       ('A' <= c && c <= 'F') ||
-       c == 'x' || c == 'X' ||
-       c == 'z' || c == 'Z' ||
-       c == '?' ) {
-    return true;
-  }
-  else {
-    return false;
-  }
-#else
+  // make_table.py hexchar で生成
+  // c++ の等価記述
+  // ('0' <= c && c <= '9') ||
+  // ('a' <= c && c <= 'f') ||
+  // ('A' <= c && c <= 'F') ||
+  //  c == 'x' || c == 'X' ||
+  //  c == 'z' || c == 'Z' ||
+  //  c == '?'
   static char table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -719,7 +687,6 @@ is_hexchar(int c)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
   return table[c];
-#endif
 }
 
 END_NONAMESPACE
@@ -763,18 +730,16 @@ InputFile::read_hex_str(int c,
   return ERROR;
 }
 
+BEGIN_NONAMESPACE
+
 // 識別子で使える文字
 inline
 bool
 is_strchar(int c)
 {
-#if 0
-  if ( isalnum(c) || c == '_' || c == '$' ) {
-    return true;
-  }
-  else {
-    return false;
-#else
+  // make_table.py strchar で生成
+  // c++ の等価記述
+  // isalnum(c) || c == '_' || c == '$'
   static char table[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -794,8 +759,9 @@ is_strchar(int c)
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
   return table[c];
-#endif
 }
+
+END_NONAMESPACE
 
 // @brief 識別子に用いられる文字([a-zA-Z0-9_$])が続く限り読みつづける．
 // @param[out] buf 結果を格納する文字列バッファ
@@ -1219,7 +1185,7 @@ InputFile::read_comment(StrBuff& buff)
 // @brief 改行を読み込んだ時に起動する関数
 // @param[in] line 行番号
 void
-InputFile::check_line(ymuint line)
+InputFile::check_line(int line)
 {
   mLex.check_line(line);
 }

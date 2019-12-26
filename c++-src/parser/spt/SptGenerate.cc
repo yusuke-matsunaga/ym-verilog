@@ -309,9 +309,9 @@ SptFactory::new_Generate(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenerate));
-  return new (p) SptGenerate(file_region, kPtItem_Generate, nullptr,
-			     declhead_array, item_array);
+  auto node = new SptGenerate(file_region, kPtItem_Generate, nullptr,
+			      declhead_array, item_array);
+  return node;
 }
 
 // @brief generate block 文の生成
@@ -324,9 +324,9 @@ SptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenerate));
-  return new (p) SptGenerate(file_region, kPtItem_GenBlock, nullptr,
-			     declhead_array, item_array);
+  auto node = new SptGenerate(file_region, kPtItem_GenBlock, nullptr,
+			      declhead_array, item_array);
+  return node;
 }
 
 // @brief 名前付き generate block 文の生成
@@ -341,9 +341,9 @@ SptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenerate));
-  return new (p) SptGenerate(file_region, kPtItem_GenBlock, name,
-			     declhead_array, item_array);
+  auto node = new SptGenerate(file_region, kPtItem_GenBlock, name,
+			      declhead_array, item_array);
+  return node;
 }
 
 // @brief generate if 文の生成
@@ -362,10 +362,10 @@ SptFactory::new_GenIf(const FileRegion& file_region,
 		      PtDeclHeadArray else_declhead_array,
 		      PtItemArray else_item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenerate));
-  return new (p) SptGenIf(file_region, cond,
-			  then_declhead_array, then_item_array,
-			  else_declhead_array, else_item_array);
+  auto node = new SptGenIf(file_region, cond,
+			   then_declhead_array, then_item_array,
+			   else_declhead_array, else_item_array);
+  return node;
 }
 
 // @brief generate case 文の生成
@@ -378,8 +378,8 @@ SptFactory::new_GenCase(const FileRegion& file_region,
 			const PtExpr* expr,
 			PtGenCaseItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenCase));
-  return new (p) SptGenCase(file_region, expr, item_array);
+  auto node = new SptGenCase(file_region, expr, item_array);
+  return node;
 }
 
 // @brief generate case の要素の生成
@@ -394,9 +394,9 @@ SptFactory::new_GenCaseItem(const FileRegion& file_region,
 			    PtDeclHeadArray declhead_array,
 			    PtItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenCaseItem));
-  return new (p) SptGenCaseItem(file_region, label_array,
-				declhead_array, item_array);
+  auto node = new SptGenCaseItem(file_region, label_array,
+				 declhead_array, item_array);
+  return node;
 }
 
 // @brief generate for 文の生成
@@ -419,10 +419,10 @@ SptFactory::new_GenFor(const FileRegion& file_region,
 		       PtDeclHeadArray declhead_array,
 		       PtItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGenFor));
-  return new (p) SptGenFor(file_region, loop_var, init_expr, cond,
-			   next_expr, block_name,
-			   declhead_array, item_array);
+  auto node = new SptGenFor(file_region, loop_var, init_expr, cond,
+			    next_expr, block_name,
+			    declhead_array, item_array);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

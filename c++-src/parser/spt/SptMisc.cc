@@ -413,9 +413,9 @@ const PtControl*
 SptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
-  void* p = alloc().get_memory(sizeof(SptControl));
-  return new (p) SptControl(file_region, kPtDelayControl,
-			    value, PtExprArray());
+  auto node = new SptControl(file_region, kPtDelayControl,
+			     value, PtExprArray());
+  return node;
 }
 
 // @brief イベントコントロールの生成
@@ -426,9 +426,9 @@ const PtControl*
 SptFactory::new_EventControl(const FileRegion& file_region,
 			     PtExprArray event_array)
 {
-  void* p = alloc().get_memory(sizeof(SptControl));
-  return new (p) SptControl(file_region, kPtEventControl,
-			    nullptr, event_array);
+  auto node = new SptControl(file_region, kPtEventControl,
+			     nullptr, event_array);
+  return node;
 }
 
 // @brief リピートコントロールの生成
@@ -441,9 +441,9 @@ SptFactory::new_RepeatControl(const FileRegion& file_region,
 			      const PtExpr* expr,
 			      PtExprArray event_array)
 {
-  void* p = alloc().get_memory(sizeof(SptControl));
-  return new (p) SptControl(file_region, kPtRepeatControl,
-			    expr, event_array);
+  auto node = new SptControl(file_region, kPtRepeatControl,
+			     expr, event_array);
+  return node;
 }
 
 // @brief 順序つき結合子の生成
@@ -454,8 +454,8 @@ const PtConnection*
 SptFactory::new_OrderedCon(const FileRegion& file_region,
 			   const PtExpr* expr)
 {
-  void* p = alloc().get_memory(sizeof(SptConnection));
-  return new (p) SptConnection(file_region, expr, nullptr);
+  auto node = new SptConnection(file_region, expr, nullptr);
+  return node;
 }
 
 // @brief 順序つき結合子の生成
@@ -468,8 +468,8 @@ SptFactory::new_OrderedCon(const PtExpr* expr)
   if ( expr ) {
     file_region = expr->file_region();
   }
-  void* p = alloc().get_memory(sizeof(SptConnection));
-  return new (p) SptConnection(file_region, expr);
+  auto node = new SptConnection(file_region, expr);
+  return node;
 }
 
 // @brief 名前付き結合子の生成
@@ -482,8 +482,8 @@ SptFactory::new_NamedCon(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* expr)
 {
-  void* p = alloc().get_memory(sizeof(SptConnection));
-  return new (p) SptConnection(file_region, expr, name);
+  auto node = new SptConnection(file_region, expr, name);
+  return node;
 }
 
 // @brief strength の生成
@@ -496,8 +496,8 @@ SptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value0,
 			 VpiStrength value1)
 {
-  void* p = alloc().get_memory(sizeof(SptStrength));
-  return new (p) SptStrength(file_region, value0, value1);
+  auto node = new SptStrength(file_region, value0, value1);
+  return node;
 }
 
 // @brief charge strength の生成
@@ -508,8 +508,8 @@ const PtStrength*
 SptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value)
 {
-  void* p = alloc().get_memory(sizeof(SptStrength));
-  return new (p) SptStrength(file_region, value);
+  auto node = new SptStrength(file_region, value);
+  return node;
 }
 
 // @brief 遅延値の生成 (1つの値)
@@ -520,8 +520,8 @@ const PtDelay*
 SptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value1)
 {
-  void* p = alloc().get_memory(sizeof(SptDelay));
-  return new (p) SptDelay(file_region, value1);
+  auto node = new SptDelay(file_region, value1);
+  return node;
 }
 
 // @brief 遅延値の生成 (2つの値)
@@ -534,8 +534,8 @@ SptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value1,
 		      const PtExpr* value2)
 {
-  void* p = alloc().get_memory(sizeof(SptDelay));
-  return new (p) SptDelay(file_region, value1, value2);
+  auto node = new SptDelay(file_region, value1, value2);
+  return node;
 }
 
 // @brief 遅延値の生成 (3つの値)
@@ -550,8 +550,8 @@ SptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value2,
 		      const PtExpr* value3)
 {
-  void* p = alloc().get_memory(sizeof(SptDelay));
-  return new (p) SptDelay(file_region, value1, value2, value3);
+  auto node = new SptDelay(file_region, value1, value2, value3);
+  return node;
 }
 
 // @brief 階層名の生成
@@ -560,8 +560,8 @@ SptFactory::new_Delay(const FileRegion& file_region,
 const PtNameBranch*
 SptFactory::new_NameBranch(const char* name)
 {
-  void* p = alloc().get_memory(sizeof(SptNameBranch));
-  return new (p) SptNameBranch(name);
+  auto node = new SptNameBranch(name);
+  return node;
 }
 
 // @brief インデックス付きの階層名の生成
@@ -572,8 +572,8 @@ const PtNameBranch*
 SptFactory::new_NameBranch(const char* name,
 			   int index)
 {
-  void* p = alloc().get_memory(sizeof(SptNameBranch));
-  return new (p) SptNameBranch(name, index);
+  auto node = new SptNameBranch(name, index);
+  return node;
 }
 
 
@@ -589,9 +589,9 @@ const PtAttrInst*
 SptFactory::new_AttrInst(const FileRegion& file_region,
 			 PtAttrSpecArray as_array)
 {
-  void* p = alloc().get_memory(sizeof(SptAttrInst));
   // file_region は不要
-  return new (p) SptAttrInst(as_array);
+  auto node = new SptAttrInst(as_array);
+  return node;
 }
 
 // @brief attribute spec の生成
@@ -604,8 +604,8 @@ SptFactory::new_AttrSpec(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* expr)
 {
-  void* p = alloc().get_memory(sizeof(SptAttrSpec));
-  return new (p) SptAttrSpec(file_region, name, expr);
+  auto node = new SptAttrSpec(file_region, name, expr);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

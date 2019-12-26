@@ -83,13 +83,6 @@ parse_mode(const vector<string>& filename_list,
 	cerr << "Total " << MsgMgr::error_num() << " errors" << endl;
 	break;
       }
-
-      if ( profile ) {
-	//ptfactory->dump_profile(cerr);
-	cerr << vlmgr.allocated_size() / (1024 * 1024)
-	     << "M bytes" << endl;
-	sleep(10);
-      }
     }
     catch ( AssertError x ) {
       cerr << x << endl;

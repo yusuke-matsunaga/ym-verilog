@@ -91,11 +91,6 @@ elaborate_mode(const vector<string>& filename_list,
 	if ( verbose ) {
 	  cerr << "Elaborating time: " << time << endl;
 	}
-	if ( profile ) {
-	  cout << "VlMgr:   " << vlmgr.allocated_size() / (1024 * 1024)
-	       << "M bytes" << endl;
-	  sleep(20);
-	}
 
 	if ( MsgMgr::error_num() == 0 && dump_vpi ) {
 	  VlDumper dumper(cout);

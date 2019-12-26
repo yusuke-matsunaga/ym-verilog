@@ -114,10 +114,6 @@ private:
   // 内部で用いられる下請け関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief InputFile を削除する．
-  void
-  delete_file(InputFile* file);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -131,10 +127,10 @@ private:
   SearchPathList mSearchPathList;
 
   // 現在のファイル情報
-  InputFile* mCurFile;
+  unique_ptr<InputFile> mCurFile;
 
   // ファイル情報のスタック
-  vector<InputFile*> mFileStack;
+  vector<unique_ptr<InputFile>> mFileStack;
 
 };
 

@@ -303,13 +303,13 @@ const PtStmt*
 SptFactory::new_Disable(const FileRegion& file_region,
 			const char* name)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtDisableStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name);
+  auto node = new SptStmt(file_region,
+			  kPtDisableStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name);
+  return node;
 }
 
 // @brief disable 文の生成 (階層付き識別子)
@@ -322,14 +322,14 @@ SptFactory::new_Disable(const FileRegion& file_region,
 			PtNameBranchArray nb_array,
 			const char* name)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtDisableStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name,
-			 nb_array);
+  auto node = new SptStmt(file_region,
+			  kPtDisableStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name,
+			  nb_array);
+  return node;
 }
 
 // @brief enable 文の生成
@@ -342,18 +342,18 @@ SptFactory::new_Enable(const FileRegion& file_region,
 		       const char* name,
 		       PtExprArray arg_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtEnableStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name,
-			 PtNameBranchArray(),
-			 PtCaseItemArray(),
-			 PtDeclHeadArray(),
-			 PtStmtArray(),
-			 arg_array);
+  auto node = new SptStmt(file_region,
+			  kPtEnableStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name,
+			  PtNameBranchArray(),
+			  PtCaseItemArray(),
+			  PtDeclHeadArray(),
+			  PtStmtArray(),
+			  arg_array);
+  return node;
 }
 
 // @brief enable 文の生成 (階層付き識別子)
@@ -368,18 +368,18 @@ SptFactory::new_Enable(const FileRegion& file_region,
 		       const char* name,
 		       PtExprArray arg_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtEnableStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name,
-			 nb_array,
-			 PtCaseItemArray(),
-			 PtDeclHeadArray(),
-			 PtStmtArray(),
-			 arg_array);
+  auto node = new SptStmt(file_region,
+			  kPtEnableStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name,
+			  nb_array,
+			  PtCaseItemArray(),
+			  PtDeclHeadArray(),
+			  PtStmtArray(),
+			  arg_array);
+  return node;
 }
 
 // @brief system task enable 文の生成
@@ -392,18 +392,18 @@ SptFactory::new_SysEnable(const FileRegion& file_region,
 			  const char* name,
 			  PtExprArray arg_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtSysEnableStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name,
-			 PtNameBranchArray(),
-			 PtCaseItemArray(),
-			 PtDeclHeadArray(),
-			 PtStmtArray(),
-			 arg_array);
+  auto node = new SptStmt(file_region,
+			  kPtSysEnableStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name,
+			  PtNameBranchArray(),
+			  PtCaseItemArray(),
+			  PtDeclHeadArray(),
+			  PtStmtArray(),
+			  arg_array);
+  return node;
 }
 
 // @brief delay control 文の生成
@@ -416,12 +416,12 @@ SptFactory::new_DcStmt(const FileRegion& file_region,
 		       const PtControl* delay,
 		       const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtDcStmt,
-			 body, nullptr, nullptr,
-			 nullptr, nullptr,
-			 delay);
+  auto node = new SptStmt(file_region,
+			  kPtDcStmt,
+			  body, nullptr, nullptr,
+			  nullptr, nullptr,
+			  delay);
+  return node;
 }
 
 // @brief event control 文の生成
@@ -434,12 +434,12 @@ SptFactory::new_EcStmt(const FileRegion& file_region,
 		       const PtControl* event,
 		       const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtEcStmt,
-			 body, nullptr, nullptr,
-			 nullptr, nullptr,
-			 event);
+  auto node = new SptStmt(file_region,
+			  kPtEcStmt,
+			  body, nullptr, nullptr,
+			  nullptr, nullptr,
+			  event);
+  return node;
 }
 
 // @brief wait 文の生成
@@ -452,12 +452,12 @@ SptFactory::new_Wait(const FileRegion& file_region,
 		     const PtExpr* cond,
 		     const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtWaitStmt,
-			 body, nullptr, nullptr,
-			 cond, nullptr,
-			 nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtWaitStmt,
+			  body, nullptr, nullptr,
+			  cond, nullptr,
+			  nullptr);
+  return node;
 }
 
 // @brief assign 文の生成
@@ -470,11 +470,11 @@ SptFactory::new_Assign(const FileRegion& file_region,
 		       const PtExpr* lhs,
 		       const PtExpr* rhs)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtAssignStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, rhs);
+  auto node = new SptStmt(file_region,
+			  kPtAssignStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, rhs);
+  return node;
 }
 
 // @brief control 付き assign 文の生成
@@ -489,12 +489,12 @@ SptFactory::new_Assign(const FileRegion& file_region,
 		       const PtExpr* rhs,
 		       const PtControl* control)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtAssignStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, rhs,
-			 control);
+  auto node = new SptStmt(file_region,
+			  kPtAssignStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, rhs,
+			  control);
+  return node;
 }
 
 // @brief nonblocking assign 文の生成
@@ -507,11 +507,11 @@ SptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtExpr* lhs,
 			 const PtExpr* rhs)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtNbAssignStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, rhs);
+  auto node = new SptStmt(file_region,
+			  kPtNbAssignStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, rhs);
+  return node;
 }
 
 // @brief control 付き nonblocking assign 文の生成
@@ -526,12 +526,12 @@ SptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtExpr* rhs,
 			 const PtControl* control)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtNbAssignStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, rhs,
-			 control);
+  auto node = new SptStmt(file_region,
+			  kPtNbAssignStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, rhs,
+			  control);
+  return node;
 }
 
 // @brief event 文の生成
@@ -542,11 +542,11 @@ const PtStmt*
 SptFactory::new_EventStmt(const FileRegion& file_region,
 			  const PtExpr* event)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtEventStmt,
-			 nullptr, nullptr, nullptr,
-			 event, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtEventStmt,
+			  nullptr, nullptr, nullptr,
+			  event, nullptr);
+  return node;
 }
 
 // @brief null 文の生成
@@ -555,9 +555,9 @@ SptFactory::new_EventStmt(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_NullStmt(const FileRegion& file_region)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtNullStmt);
+  auto node = new SptStmt(file_region,
+			  kPtNullStmt);
+  return node;
 }
 
 // @brief if 文の生成
@@ -570,11 +570,11 @@ SptFactory::new_If(const FileRegion& file_region,
 		   const PtExpr* expr,
 		   const PtStmt* then_body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtIfStmt,
-			 then_body, nullptr, nullptr,
-			 expr, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtIfStmt,
+			  then_body, nullptr, nullptr,
+			  expr, nullptr);
+  return node;
 }
 
 // @brief if 文の生成
@@ -589,11 +589,11 @@ SptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* then_body,
 		   const PtStmt* else_body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtIfStmt,
-			 then_body, else_body, nullptr,
-			 expr, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtIfStmt,
+			  then_body, else_body, nullptr,
+			  expr, nullptr);
+  return node;
 }
 
 // @brief case 文の生成
@@ -606,15 +606,15 @@ SptFactory::new_Case(const FileRegion& file_region,
 		     const PtExpr* expr,
 		     PtCaseItemArray caseitem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtCaseStmt,
-			 nullptr, nullptr, nullptr,
-			 expr, nullptr,
-			 nullptr,
-			 nullptr,
-			 PtNameBranchArray(),
-			 caseitem_array);
+  auto node = new SptStmt(file_region,
+			  kPtCaseStmt,
+			  nullptr, nullptr, nullptr,
+			  expr, nullptr,
+			  nullptr,
+			  nullptr,
+			  PtNameBranchArray(),
+			  caseitem_array);
+  return node;
 }
 
 // @brief casex 文の生成
@@ -627,15 +627,15 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 		      const PtExpr* expr,
 		      PtCaseItemArray caseitem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtCaseXStmt,
-			 nullptr, nullptr, nullptr,
-			 expr, nullptr,
-			 nullptr,
-			 nullptr,
-			 PtNameBranchArray(),
-			 caseitem_array);
+  auto node = new SptStmt(file_region,
+			  kPtCaseXStmt,
+			  nullptr, nullptr, nullptr,
+			  expr, nullptr,
+			  nullptr,
+			  nullptr,
+			  PtNameBranchArray(),
+			  caseitem_array);
+  return node;
 }
 
 // @brief casez 文の生成
@@ -648,15 +648,15 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 		      const PtExpr* expr,
 		      PtCaseItemArray caseitem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtCaseZStmt,
-			 nullptr, nullptr, nullptr,
-			 expr, nullptr,
-			 nullptr,
-			 nullptr,
-			 PtNameBranchArray(),
-			 caseitem_array);
+  auto node = new SptStmt(file_region,
+			  kPtCaseZStmt,
+			  nullptr, nullptr, nullptr,
+			  expr, nullptr,
+			  nullptr,
+			  nullptr,
+			  PtNameBranchArray(),
+			  caseitem_array);
+  return node;
 }
 
 // @brief case item の生成
@@ -669,8 +669,8 @@ SptFactory::new_CaseItem(const FileRegion& file_region,
 			 PtExprArray label_array,
 			 const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptCaseItem));
-  return new (p) SptCaseItem(file_region, label_array, body);
+  auto node = new SptCaseItem(file_region, label_array, body);
+  return node;
 }
 
 // @brief forever 文の生成
@@ -681,10 +681,10 @@ const PtStmt*
 SptFactory::new_Forever(const FileRegion& file_region,
 			const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtForeverStmt,
-			 body, nullptr, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtForeverStmt,
+			  body, nullptr, nullptr);
+  return node;
 }
 
 // @brief repeat 文の生成
@@ -697,11 +697,11 @@ SptFactory::new_Repeat(const FileRegion& file_region,
 		       const PtExpr* expr,
 		       const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtRepeatStmt,
-			 body, nullptr, nullptr,
-			 expr, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtRepeatStmt,
+			  body, nullptr, nullptr,
+			  expr, nullptr);
+  return node;
 }
 
 // @brief while 文の生成
@@ -714,11 +714,11 @@ SptFactory::new_While(const FileRegion& file_region,
 		      const PtExpr* cond,
 		      const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtWhileStmt,
-			 body, nullptr, nullptr,
-			 cond, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtWhileStmt,
+			  body, nullptr, nullptr,
+			  cond, nullptr);
+  return node;
 }
 
 // @brief for 文の生成
@@ -735,11 +735,11 @@ SptFactory::new_For(const FileRegion& file_region,
 		    const PtStmt* next,
 		    const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtForStmt,
-			 body, init, next,
-			 cond, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtForStmt,
+			  body, init, next,
+			  cond, nullptr);
+  return node;
 }
 
 // @brief procedural assign 文の生成
@@ -752,11 +752,11 @@ SptFactory::new_PcAssign(const FileRegion& file_region,
 			 const PtExpr* lhs,
 			 const PtExpr* rhs)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtPcAssignStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, rhs);
+  auto node = new SptStmt(file_region,
+			  kPtPcAssignStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, rhs);
+  return node;
 }
 
 // @brief deassign 文の生成
@@ -767,11 +767,11 @@ const PtStmt*
 SptFactory::new_Deassign(const FileRegion& file_region,
 			 const PtExpr* lhs)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtDeassignStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtDeassignStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, nullptr);
+  return node;
 }
 
 // @brief force 文の生成
@@ -784,11 +784,11 @@ SptFactory::new_Force(const FileRegion& file_region,
 		      const PtExpr* lhs,
 		      const PtExpr* rhs)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtForceStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, rhs);
+  auto node = new SptStmt(file_region,
+			  kPtForceStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, rhs);
+  return node;
 }
 
 // @brief release 文の生成
@@ -799,11 +799,11 @@ const PtStmt*
 SptFactory::new_Release(const FileRegion& file_region,
 			const PtExpr* lhs)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtReleaseStmt,
-			 nullptr, nullptr, nullptr,
-			 lhs, nullptr);
+  auto node = new SptStmt(file_region,
+			  kPtReleaseStmt,
+			  nullptr, nullptr, nullptr,
+			  lhs, nullptr);
+  return node;
 }
 
 // @brief parallel block の生成
@@ -814,17 +814,17 @@ const PtStmt*
 SptFactory::new_ParBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtParBlockStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 nullptr,
-			 PtNameBranchArray(),
-			 PtCaseItemArray(),
-			 PtDeclHeadArray(),
-			 stmt_array);
+  auto node = new SptStmt(file_region,
+			  kPtParBlockStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  nullptr,
+			  PtNameBranchArray(),
+			  PtCaseItemArray(),
+			  PtDeclHeadArray(),
+			  stmt_array);
+  return node;
 }
 
 // @brief 名前付き parallel block の生成
@@ -839,17 +839,17 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      PtDeclHeadArray decl_array,
 			      PtStmtArray stmt_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtNamedParBlockStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name,
-			 PtNameBranchArray(),
-			 PtCaseItemArray(),
-			 decl_array,
-			 stmt_array);
+  auto node = new SptStmt(file_region,
+			  kPtNamedParBlockStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name,
+			  PtNameBranchArray(),
+			  PtCaseItemArray(),
+			  decl_array,
+			  stmt_array);
+  return node;
 }
 
 // @brief sequential block の生成
@@ -860,17 +860,17 @@ const PtStmt*
 SptFactory::new_SeqBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtSeqBlockStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 nullptr,
-			 PtNameBranchArray(),
-			 PtCaseItemArray(),
-			 PtDeclHeadArray(),
-			 stmt_array);
+  auto node = new SptStmt(file_region,
+			  kPtSeqBlockStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  nullptr,
+			  PtNameBranchArray(),
+			  PtCaseItemArray(),
+			  PtDeclHeadArray(),
+			  stmt_array);
+  return node;
 }
 
 // @brief 名前付き sequential block の生成
@@ -885,17 +885,17 @@ SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      PtDeclHeadArray decl_array,
 			      PtStmtArray stmt_array)
 {
-  void* p = alloc().get_memory(sizeof(SptStmt));
-  return new (p) SptStmt(file_region,
-			 kPtNamedSeqBlockStmt,
-			 nullptr, nullptr, nullptr,
-			 nullptr, nullptr,
-			 nullptr,
-			 name,
-			 PtNameBranchArray(),
-			 PtCaseItemArray(),
-			 decl_array,
-			 stmt_array);
+  auto node = new SptStmt(file_region,
+			  kPtNamedSeqBlockStmt,
+			  nullptr, nullptr, nullptr,
+			  nullptr, nullptr,
+			  nullptr,
+			  name,
+			  PtNameBranchArray(),
+			  PtCaseItemArray(),
+			  decl_array,
+			  stmt_array);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

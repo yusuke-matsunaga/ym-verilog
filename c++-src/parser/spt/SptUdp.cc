@@ -207,13 +207,13 @@ SptFactory::new_CmbUdp(const FileRegion& file_region,
 		       PtIOHeadArray iohead_array,
 		       PtUdpEntryArray entry_array)
 {
-  void* p = alloc().get_memory(sizeof(SptUdp));
-  return new (p) SptUdp(file_region,
-			name,
-			port_array,
-			iohead_array,
-			false, nullptr,
-			entry_array);
+  auto node = new SptUdp(file_region,
+			 name,
+			 port_array,
+			 iohead_array,
+			 false, nullptr,
+			 entry_array);
+  return node;
 }
 
 // @brief sequential UDP の生成
@@ -233,13 +233,13 @@ SptFactory::new_SeqUdp(const FileRegion& file_region,
 		       const PtExpr* init_value,
 		       PtUdpEntryArray entry_array)
 {
-  void* p = alloc().get_memory(sizeof(SptUdp));
-  return new (p) SptUdp(file_region,
-			name,
-			port_array,
-			iohead_array,
-			true, init_value,
-			entry_array);
+  auto node = new SptUdp(file_region,
+			 name,
+			 port_array,
+			 iohead_array,
+			 true, init_value,
+			 entry_array);
+  return node;
 }
 
 // @brief combinational UDP 用のテーブルエントリの生成
@@ -252,11 +252,11 @@ SptFactory::new_UdpEntry(const FileRegion& file_region,
 			 PtUdpValueArray input_array,
 			 const PtUdpValue* output)
 {
-  void* p = alloc().get_memory(sizeof(SptUdpEntry));
-  return new (p) SptUdpEntry(file_region,
-			     input_array,
-			     nullptr,
-			     output);
+  auto node = new SptUdpEntry(file_region,
+			      input_array,
+			      nullptr,
+			      output);
+  return node;
 }
 
 // @brief sequential UDP 用のテーブルエントリの生成
@@ -271,11 +271,11 @@ SptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* current,
 			 const PtUdpValue* output)
 {
-  void* p = alloc().get_memory(sizeof(SptUdpEntry));
-  return new (p) SptUdpEntry(file_region,
-			     input_array,
-			     current,
-			     output);
+  auto node = new SptUdpEntry(file_region,
+			      input_array,
+			      current,
+			      output);
+  return node;
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
@@ -286,8 +286,8 @@ const PtUdpValue*
 SptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol)
 {
-  void* p = alloc().get_memory(sizeof(SptUdpValue));
-  return new (p) SptUdpValue(file_region, symbol);
+  auto node = new SptUdpValue(file_region, symbol);
+  return node;
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
@@ -299,8 +299,8 @@ SptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol1,
 			 char symbol2)
 {
-  void* p = alloc().get_memory(sizeof(SptUdpValue));
-  return new (p) SptUdpValue(file_region, symbol1, symbol2);
+  auto node = new SptUdpValue(file_region, symbol1, symbol2);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

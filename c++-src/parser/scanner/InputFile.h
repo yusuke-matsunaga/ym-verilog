@@ -5,14 +5,13 @@
 /// @brief InputFile のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2013-2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/verilog.h"
 
 #include "ym/Scanner.h"
-#include "ym/FileIDO.h"
 #include "ym/FileRegion.h"
 #include "ym/FileInfo.h"
 #include "ym/StrBuff.h"
@@ -35,13 +34,15 @@ BEGIN_NAMESPACE_YM_VERILOG
 class InputFile :
   public Scanner
 {
-  friend class InputMgr;
-
-private:
+public:
 
   /// @brief コンストラクタ
   /// @param[in] lex 親の Lex
-  InputFile(RawLex& lex);
+  /// @param[in] filename ファイル名
+  /// @param[in] parent_loc インクルードされた場合の親のファイル位置
+  InputFile(RawLex& lex,
+	    const string& filename,
+	    const FileLoc& parent_file);
 
   /// @brief デストラクタ
   ~InputFile();
@@ -52,13 +53,9 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ファイルを開く
-  /// @param[in] filename ファイル名
-  /// @param[in] parent_loc インクルードされた場合の親のファイル位置
-  /// @return 成功したら true を返す．
+  /// @brief 正常な状態の時 true を返す．
   bool
-  open(const string& filename,
-       const FileLoc& parent_file);
+  is_valid() const;
 
   /// @brief トークンの読み出しを行う．
   /// @param[out] buff 結果の文字列を格納するバッファ
@@ -66,6 +63,14 @@ public:
   int
   read_token(StrBuff& buff,
 	     FileRegion& token_loc);
+
+  /// @brief インクルード元のファイル位置を返す．
+  FileLoc
+  parent_loc();
+
+  /// @brief ファイルの末尾の時 true を返す．
+  bool
+  is_eof();
 
 
 private:
@@ -167,9 +172,8 @@ protected:
 
   /// @brief 改行を読み込んだ時に起動する関数
   /// @param[in] line 行番号
-  virtual
   void
-  check_line(ymuint line);
+  check_line(int line) override;
 
 
 private:
@@ -177,17 +181,28 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 入力データ
-  FileIDO mIDO;
+  // 入力のファイルストリーム
+  ifstream mIn;
 
   // 親の Lex
   RawLex& mLex;
+
+  // 状態
+  bool mValid{false};
 
 };
 
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
+
+// @brief 正常な状態の時 true を返す．
+inline
+bool
+InputFile::is_valid() const
+{
+  return mValid;
+}
 
 // @brief トークンの読み出しを行う．
 // @param[out] buff 結果の文字列を格納するバッファ
@@ -200,6 +215,23 @@ InputFile::read_token(StrBuff& buff,
   int id = _read_token(buff);
   token_loc = cur_loc();
   return id;
+}
+
+// @brief インクルード元のファイル位置を返す．
+inline
+FileLoc
+InputFile::parent_loc()
+{
+  return FileLoc{file_info(), cur_loc().end_line(), 1};
+}
+
+// @brief ファイルの末尾の時 true を返す．
+inline
+bool
+InputFile::is_eof()
+{
+  int c = peek();
+  return c == EOF;
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -490,20 +490,20 @@ SptFactory::new_Module(const FileRegion& file_region,
 		       PtDeclHeadArray declhead_array,
 		       PtItemArray item_array)
 {
-  void* p = alloc().get_memory(sizeof(SptModule));
-  return new (p) SptModule(file_region, name,
-			   macro, is_cell, is_protected,
-			   time_unit, time_precision,
-			   net_type, unconn,
-			   delay, decay,
-			   explicit_name,
-			   portfaults, suppress_faults,
-			   config, library, cell,
-			   paramport_array,
-			   port_array,
-			   iohead_array,
-			   declhead_array,
-			   item_array);
+  auto node = new SptModule(file_region, name,
+			    macro, is_cell, is_protected,
+			    time_unit, time_precision,
+			    net_type, unconn,
+			    delay, decay,
+			    explicit_name,
+			    portfaults, suppress_faults,
+			    config, library, cell,
+			    paramport_array,
+			    port_array,
+			    iohead_array,
+			    declhead_array,
+			    item_array);
+  return node;
 }
 
 
@@ -519,11 +519,11 @@ PtiPort*
 SptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
-  void* p = alloc().get_memory(sizeof(SptPort));
-  return new (p) SptPort(file_region,
-			 nullptr,
-			 PtExprArray(),
-			 ext_name);
+  auto node = new SptPort(file_region,
+			  nullptr,
+			  PtExprArray(),
+			  ext_name);
+  return node;
 }
 
 // @brief ポートの生成
@@ -539,11 +539,11 @@ SptFactory::new_Port(const FileRegion& file_region,
   int portref_num = 1;
   const PtExpr** portref_array = alloc_array<const PtExpr*>(portref_num);
   portref_array[0] = portref;
-  void* p = alloc().get_memory(sizeof(SptPort));
-  return new (p) SptPort(file_region,
-			 portref,
-			 PtExprArray(portref_num, portref_array),
-			 ext_name);
+  auto node = new SptPort(file_region,
+			  portref,
+			  PtExprArray(portref_num, portref_array),
+			  ext_name);
+  return node;
 }
 
 // @brief ポートの生成
@@ -558,11 +558,11 @@ SptFactory::new_Port(const FileRegion& file_region,
 		     PtExprArray portref_array,
 		     const char* ext_name)
 {
-  void* p = alloc().get_memory(sizeof(SptPort));
-  return new (p) SptPort(file_region,
-			 portref,
-			 portref_array,
-			 ext_name);
+  auto node = new SptPort(file_region,
+			  portref,
+			  portref_array,
+			  ext_name);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

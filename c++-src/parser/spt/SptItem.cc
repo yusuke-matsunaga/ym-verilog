@@ -901,8 +901,8 @@ const PtItem*
 SptFactory::new_DefParamH(const FileRegion& file_region,
 			  PtDefParamArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptDefParamH));
-  return new (p) SptDefParamH(file_region, elem_array);
+  auto node = new SptDefParamH(file_region, elem_array);
+  return node;
 }
 
 // @brief defparam 文の要素の生成
@@ -915,8 +915,8 @@ SptFactory::new_DefParam(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* value)
 {
-  void* p = alloc().get_memory(sizeof(SptDefParam));
-  return new (p) SptDefParam(file_region, PtNameBranchArray(), name, value);
+  auto node = new SptDefParam(file_region, PtNameBranchArray(), name, value);
+  return node;
 }
 
 // @brief defparam 文の要素の生成 (階層つき識別子)
@@ -931,8 +931,8 @@ SptFactory::new_DefParam(const FileRegion& file_region,
 			 const char* tail_name,
 			 const PtExpr* value)
 {
-  void* p = alloc().get_memory(sizeof(SptDefParam));
-  return new (p) SptDefParam(file_region, nb_array, tail_name, value);
+  auto node = new SptDefParam(file_region, nb_array, tail_name, value);
+  return node;
 }
 
 // @brief continuous assign 文のヘッダの生成
@@ -943,8 +943,8 @@ const PtItem*
 SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptContAssignH));
-  return new (p) SptContAssignH(file_region, nullptr, nullptr, elem_array);
+  auto node = new SptContAssignH(file_region, nullptr, nullptr, elem_array);
+  return node;
 }
 
 // @brief continuous assign 文のヘッダの生成 (strengthつき)
@@ -957,8 +957,8 @@ SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtStrength* strength,
 			    PtContAssignArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptContAssignH));
-  return new (p) SptContAssignH(file_region, strength, nullptr, elem_array);
+  auto node = new SptContAssignH(file_region, strength, nullptr, elem_array);
+  return node;
 }
 
 // @brief continuous assign 文のヘッダの生成 (遅延付き)
@@ -971,8 +971,8 @@ SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtDelay* delay,
 			    PtContAssignArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptContAssignH));
-  return new (p) SptContAssignH(file_region, nullptr, delay, elem_array);
+  auto node = new SptContAssignH(file_region, nullptr, delay, elem_array);
+  return node;
 }
 
 // @brief continuous assign 文のヘッダの生成 (strength, 遅延付き)
@@ -987,8 +987,8 @@ SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtDelay* delay,
 			    PtContAssignArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptContAssignH));
-  return new (p) SptContAssignH(file_region, strength, delay, elem_array);
+  auto node = new SptContAssignH(file_region, strength, delay, elem_array);
+  return node;
 }
 
 // @brief continuous assign 文の生成
@@ -1001,8 +1001,8 @@ SptFactory::new_ContAssign(const FileRegion& file_region,
 			   const PtExpr* lhs,
 			   const PtExpr* rhs)
 {
-  void* p = alloc().get_memory(sizeof(SptContAssign));
-  return new (p) SptContAssign(file_region, lhs, rhs);
+  auto node = new SptContAssign(file_region, lhs, rhs);
+  return node;
 }
 
 // @brief initial 文の生成
@@ -1013,10 +1013,10 @@ const PtItem*
 SptFactory::new_Initial(const FileRegion& file_region,
 			const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptProcess));
-  return new (p) SptProcess(file_region,
-			    kPtItem_Initial,
-			    body);
+  auto node = new SptProcess(file_region,
+			     kPtItem_Initial,
+			     body);
+  return node;
 }
 
 // @brief always 文の生成
@@ -1027,10 +1027,10 @@ const PtItem*
 SptFactory::new_Always(const FileRegion& file_region,
 		       const PtStmt* body)
 {
-  void* p = alloc().get_memory(sizeof(SptProcess));
-  return new (p) SptProcess(file_region,
-			    kPtItem_Always,
-			    body);
+  auto node = new SptProcess(file_region,
+			     kPtItem_Always,
+			     body);
+  return node;
 }
 
 // @brief task 文の生成
@@ -1051,15 +1051,15 @@ SptFactory::new_Task(const FileRegion& file_region,
 		     PtDeclHeadArray declhead_array,
 		     const PtStmt* stmt)
 {
-  void* p = alloc().get_memory(sizeof(SptTf));
-  return new (p) SptTf(file_region,
-		       kPtItem_Task,
-		       name, automatic,
-		       false, nullptr, nullptr,
-		       VpiVarType::None,
-		       iohead_array,
-		       declhead_array,
-		       stmt);
+  auto node = new SptTf(file_region,
+			kPtItem_Task,
+			name, automatic,
+			false, nullptr, nullptr,
+			VpiVarType::None,
+			iohead_array,
+			declhead_array,
+			stmt);
+  return node;
 }
 
 // @brief 1ビット型 function 文の生成
@@ -1082,15 +1082,15 @@ SptFactory::new_Function(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 const PtStmt* stmt)
 {
-  void* p = alloc().get_memory(sizeof(SptTf));
-  return new (p) SptTf(file_region,
-		       kPtItem_Func,
-		       name, automatic,
-		       sign, nullptr, nullptr,
-		       VpiVarType::None,
-		       iohead_array,
-		       declhead_array,
-		       stmt);
+  auto node = new SptTf(file_region,
+			kPtItem_Func,
+			name, automatic,
+			sign, nullptr, nullptr,
+			VpiVarType::None,
+			iohead_array,
+			declhead_array,
+			stmt);
+  return node;
 }
 
 // @brief 範囲指定型 function 文の生成
@@ -1117,15 +1117,15 @@ SptFactory::new_SizedFunc(const FileRegion& file_region,
 			  PtDeclHeadArray declhead_array,
 			  const PtStmt* stmt)
 {
-  void* p = alloc().get_memory(sizeof(SptTf));
-  return new (p) SptTf(file_region,
-		       kPtItem_Func,
-		       name, automatic,
-		       sign, left, right,
-		       VpiVarType::None,
-		       iohead_array,
-		       declhead_array,
-		       stmt);
+  auto node = new SptTf(file_region,
+			kPtItem_Func,
+			name, automatic,
+			sign, left, right,
+			VpiVarType::None,
+			iohead_array,
+			declhead_array,
+			stmt);
+  return node;
 }
 
 // @brief 組み込み型 function 文の生成
@@ -1150,15 +1150,15 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 			  PtDeclHeadArray declhead_array,
 			  const PtStmt* stmt)
 {
-  void* p = alloc().get_memory(sizeof(SptTf));
-  return new (p) SptTf(file_region,
-		       kPtItem_Func,
-		       name, automatic,
-		       sign, nullptr, nullptr,
-		       func_type,
-		       iohead_array,
-		       declhead_array,
-		       stmt);
+  auto node = new SptTf(file_region,
+			kPtItem_Func,
+			name, automatic,
+			sign, nullptr, nullptr,
+			func_type,
+			iohead_array,
+			declhead_array,
+			stmt);
+  return node;
 }
 
 // @brief gate instance 文のヘッダの生成
@@ -1171,11 +1171,11 @@ SptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGateH));
-  return new (p) SptGateH(file_region,
-			  type,
-			  nullptr, nullptr,
-			  elem_array);
+  auto node = new SptGateH(file_region,
+			   type,
+			   nullptr, nullptr,
+			   elem_array);
+  return node;
 }
 
 // @brief gate instance 文のヘッダの生成 (strength付き)
@@ -1190,11 +1190,11 @@ SptFactory::new_GateH(const FileRegion& file_region,
 		      const PtStrength* strength,
 		      PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGateH));
-  return new (p) SptGateH(file_region,
-			  type,
-			  strength, nullptr,
-			  elem_array);
+  auto node = new SptGateH(file_region,
+			   type,
+			   strength, nullptr,
+			   elem_array);
+  return node;
 }
 
 // @brief gate instance 文のヘッダの生成 (遅延付き)
@@ -1209,11 +1209,11 @@ SptFactory::new_GateH(const FileRegion& file_region,
 		      const PtDelay* delay,
 		      PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGateH));
-  return new (p) SptGateH(file_region,
-			  type,
-			  nullptr, delay,
-			  elem_array);
+  auto node = new SptGateH(file_region,
+			   type,
+			   nullptr, delay,
+			   elem_array);
+  return node;
 }
 
 // @brief gate instance 文のヘッダの生成 (strength, 遅延付き)
@@ -1230,11 +1230,11 @@ SptFactory::new_GateH(const FileRegion& file_region,
 		      const PtDelay* delay,
 		      PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptGateH));
-  return new (p) SptGateH(file_region,
-			  type,
-			  strength, delay,
-			  elem_array);
+  auto node = new SptGateH(file_region,
+			   type,
+			   strength, delay,
+			   elem_array);
+  return node;
 }
 
 // @brief module instance/UDP instance 文のヘッダの生成
@@ -1247,11 +1247,11 @@ SptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptMuH));
-  return new (p) SptMuH(file_region, def_name,
-			PtConnectionArray(),
-			nullptr, nullptr,
-			elem_array);
+  auto node = new SptMuH(file_region, def_name,
+			 PtConnectionArray(),
+			 nullptr, nullptr,
+			 elem_array);
+  return node;
 }
 
 // @brief module instance/UDP instance 文のヘッダの生成 (strength付き)
@@ -1266,11 +1266,11 @@ SptFactory::new_MuH(const FileRegion& file_region,
 		    const PtStrength* strength,
 		    PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptMuH));
-  return new (p) SptMuH(file_region, def_name,
-			PtConnectionArray(),
-			strength, nullptr,
-			elem_array);
+  auto node = new SptMuH(file_region, def_name,
+			 PtConnectionArray(),
+			 strength, nullptr,
+			 elem_array);
+  return node;
 }
 
 // @brief module instance/UDP instance 文のヘッダの生成 (遅延付き)
@@ -1285,11 +1285,11 @@ SptFactory::new_MuH(const FileRegion& file_region,
 		    const PtDelay* delay,
 		    PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptMuH));
-  return new (p) SptMuH(file_region, def_name,
-			PtConnectionArray(),
-			nullptr, delay,
-			elem_array);
+  auto node = new SptMuH(file_region, def_name,
+			 PtConnectionArray(),
+			 nullptr, delay,
+			 elem_array);
+  return node;
 }
 
 // @brief module instance/UDP instance 文のヘッダの生成 (strength, 遅延付き)
@@ -1306,11 +1306,11 @@ SptFactory::new_MuH(const FileRegion& file_region,
 		    const PtDelay* delay,
 		    PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptMuH));
-  return new (p) SptMuH(file_region, def_name,
-			PtConnectionArray(),
-			strength, delay,
-			elem_array);
+  auto node = new SptMuH(file_region, def_name,
+			 PtConnectionArray(),
+			 strength, delay,
+			 elem_array);
+  return node;
 }
 
 // @brief module instance/UDP instance 文のヘッダの生成
@@ -1325,11 +1325,11 @@ SptFactory::new_MuH(const FileRegion& file_region,
 		    PtConnectionArray con_array,
 		    PtInstArray elem_array)
 {
-  void* p = alloc().get_memory(sizeof(SptMuH));
-  return new (p) SptMuH(file_region, def_name,
-			con_array,
-			nullptr, nullptr,
-			elem_array);
+  auto node = new SptMuH(file_region, def_name,
+			 con_array,
+			 nullptr, nullptr,
+			 elem_array);
+  return node;
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -1340,8 +1340,8 @@ const PtInst*
 SptFactory::new_Inst(const FileRegion& file_region,
 		     PtConnectionArray con_array)
 {
-  void* p = alloc().get_memory(sizeof(SptInst));
-  return new (p) SptInst(file_region, nullptr, nullptr, nullptr, con_array);
+  auto node = new SptInst(file_region, nullptr, nullptr, nullptr, con_array);
+  return node;
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -1354,8 +1354,8 @@ SptFactory::new_InstN(const FileRegion& file_region,
 		      const char* name,
 		      PtConnectionArray con_array)
 {
-  void* p = alloc().get_memory(sizeof(SptInst));
-  return new (p) SptInst(file_region, name, nullptr, nullptr, con_array);
+  auto node = new SptInst(file_region, name, nullptr, nullptr, con_array);
+  return node;
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -1372,8 +1372,8 @@ SptFactory::new_InstV(const FileRegion& file_region,
 		      const PtExpr* right,
 		      PtConnectionArray con_array)
 {
-  void* p = alloc().get_memory(sizeof(SptInst));
-  return new (p) SptInst(file_region, name, left, right, con_array);
+  auto node = new SptInst(file_region, name, left, right, con_array);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

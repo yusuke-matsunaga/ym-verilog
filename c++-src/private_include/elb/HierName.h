@@ -115,6 +115,17 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
+// @brief コンストラクタ
+// @param[in] parent 親のスコープ
+// @param[in] name 名前
+inline
+HierName::HierName(const VlNamedObj* parent,
+		   const char* name) :
+  mParent{parent},
+  mName{name}
+{
+}
+
 // @brief 親のスコープを返す．
 inline
 const VlNamedObj*

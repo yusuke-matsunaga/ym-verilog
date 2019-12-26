@@ -769,9 +769,9 @@ SptFactory::new_Opr(const FileRegion& file_region,
 		    VpiOpType type,
 		    const PtExpr* opr)
 {
-  void* p = alloc().get_memory(sizeof(SptOpr1));
-  return new (p) SptOpr1(file_region, type,
-			 opr, nullptr, nullptr);
+  auto node = new SptOpr1(file_region, type,
+			  opr, nullptr, nullptr);
+  return node;
 }
 
 // @brief 二項演算子の生成
@@ -786,9 +786,9 @@ SptFactory::new_Opr(const FileRegion& file_region,
 		    const PtExpr* opr1,
 		    const PtExpr* opr2)
 {
-  void* p = alloc().get_memory(sizeof(SptOpr1));
-  return new (p) SptOpr1(file_region, type,
-			 opr1, opr2, nullptr);
+  auto node = new SptOpr1(file_region, type,
+			  opr1, opr2, nullptr);
+  return node;
 }
 
 // @brief 三項演算子の生成
@@ -805,9 +805,9 @@ SptFactory::new_Opr(const FileRegion& file_region,
 		    const PtExpr* opr2,
 		    const PtExpr* opr3)
 {
-  void* p = alloc().get_memory(sizeof(SptOpr1));
-  return new (p) SptOpr1(file_region, type,
-			 opr1, opr2, opr3);
+  auto node = new SptOpr1(file_region, type,
+			  opr1, opr2, opr3);
+  return node;
 }
 
 // @brief concatination 演算子の生成
@@ -818,8 +818,8 @@ const PtExpr*
 SptFactory::new_Concat(const FileRegion& file_region,
 		       PtExprArray expr_array)
 {
-  void* p = alloc().get_memory(sizeof(SptOpr2));
-  return new (p) SptOpr2(file_region, VpiOpType::Concat, expr_array);
+  auto node = new SptOpr2(file_region, VpiOpType::Concat, expr_array);
+  return node;
 }
 
 // @brief multi-concatination 演算子の生成
@@ -830,8 +830,8 @@ const PtExpr*
 SptFactory::new_MultiConcat(const FileRegion& file_region,
 			    PtExprArray expr_array)
 {
-  void* p = alloc().get_memory(sizeof(SptOpr2));
-  return new (p) SptOpr2(file_region, VpiOpType::MultiConcat, expr_array);
+  auto node = new SptOpr2(file_region, VpiOpType::MultiConcat, expr_array);
+  return node;
 }
 
 // @brief min/typ/max delay 演算子の生成
@@ -846,9 +846,9 @@ SptFactory::new_MinTypMax(const FileRegion& file_region,
 			  const PtExpr* val1,
 			  const PtExpr* val2)
 {
-  void* p = alloc().get_memory(sizeof(SptOpr1));
-  return new (p) SptOpr1(file_region, VpiOpType::MinTypMax,
-			 val0, val1, val2);
+  auto node = new SptOpr1(file_region, VpiOpType::MinTypMax,
+			  val0, val1, val2);
+  return node;
 }
 
 // @brief primary の生成
@@ -859,11 +859,11 @@ const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    PtNameBranchArray(),
-			    name,
-			    false);
+  auto node = new SptPrimary(file_region,
+			     PtNameBranchArray(),
+			     name,
+			     false);
+  return node;
 }
 
 // @brief インデックス付き primary の生成
@@ -876,12 +876,12 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
 			PtExprArray index_array)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    PtNameBranchArray(),
-			    name,
-			    false,
-			    index_array);
+  auto node = new SptPrimary(file_region,
+			     PtNameBranchArray(),
+			     name,
+			     false,
+			     index_array);
+  return node;
 }
 
 // @brief 範囲指定付き primary の生成
@@ -898,13 +898,13 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* left,
 			const PtExpr* right)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    PtNameBranchArray(),
-			    name,
-			    false,
-			    PtExprArray(),
-			    mode, left, right);
+  auto node = new SptPrimary(file_region,
+			     PtNameBranchArray(),
+			     name,
+			     false,
+			     PtExprArray(),
+			     mode, left, right);
+  return node;
 }
 
 // @brief インデックスと範囲指定付き primary の生成
@@ -923,13 +923,13 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* left,
 			const PtExpr* right)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    PtNameBranchArray(),
-			    name,
-			    false,
-			    index_array,
-			    mode, left, right);
+  auto node = new SptPrimary(file_region,
+			     PtNameBranchArray(),
+			     name,
+			     false,
+			     index_array,
+			     mode, left, right);
+  return node;
 }
 
 // @brief primary の生成 (階層付き)
@@ -942,11 +942,11 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			PtNameBranchArray nb_array,
 			const char* tail_name)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    nb_array,
-			    tail_name,
-			    false);
+  auto node = new SptPrimary(file_region,
+			     nb_array,
+			     tail_name,
+			     false);
+  return node;
 }
 
 // @brief インデックス付き primary の生成 (階層付き)
@@ -961,12 +961,12 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const char* tail_name,
 			PtExprArray index_array)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    nb_array,
-			    tail_name,
-			    false,
-			    index_array);
+  auto node = new SptPrimary(file_region,
+			     nb_array,
+			     tail_name,
+			     false,
+			     index_array);
+  return node;
 }
 
 // @brief 範囲指定付き primary の生成 (階層付き)
@@ -985,13 +985,13 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* left,
 			const PtExpr* right)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    nb_array,
-			    tail_name,
-			    false,
-			    PtExprArray(),
-			    mode, left, right);
+  auto node = new SptPrimary(file_region,
+			     nb_array,
+			     tail_name,
+			     false,
+			     PtExprArray(),
+			     mode, left, right);
+  return node;
 }
 
 // @brief インデックスと範囲指定付き primary の生成 (階層付き)
@@ -1012,13 +1012,13 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* left,
 			const PtExpr* right)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    nb_array,
-			    tail_name,
-			    false,
-			    index_array,
-			    mode, left, right);
+  auto node = new SptPrimary(file_region,
+			     nb_array,
+			     tail_name,
+			     false,
+			     index_array,
+			     mode, left, right);
+  return node;
 }
 
 // @brief constant primary の生成
@@ -1031,12 +1031,12 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 			 const char* name,
 			 PtExprArray index_array)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    PtNameBranchArray(),
-			    name,
-			    true,
-			    index_array);
+  auto node = new SptPrimary(file_region,
+			     PtNameBranchArray(),
+			     name,
+			     true,
+			     index_array);
+  return node;
 }
 
 // @brief 範囲指定付き constant primary の生成
@@ -1053,13 +1053,13 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 			 const PtExpr* left,
 			 const PtExpr* right)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    PtNameBranchArray(),
-			    name,
-			    true,
-			    PtExprArray(),
-			    mode, left, right);
+  auto node = new SptPrimary(file_region,
+			     PtNameBranchArray(),
+			     name,
+			     true,
+			     PtExprArray(),
+			     mode, left, right);
+  return node;
 }
 
 // @brief インデックス付き constant primary の生成 (階層付き)
@@ -1074,12 +1074,12 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 			 const char* tail_name,
 			 PtExprArray index_array)
 {
-  void* p = alloc().get_memory(sizeof(SptPrimary));
-  return new (p) SptPrimary(file_region,
-			    nb_array,
-			    tail_name,
-			    true,
-			    index_array);
+  auto node = new SptPrimary(file_region,
+			     nb_array,
+			     tail_name,
+			     true,
+			     index_array);
+  return node;
 }
 
 // @brief function call の生成
@@ -1093,10 +1093,10 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* name,
 			 PtExprArray arg_array)
 {
-  void* p = alloc().get_memory(sizeof(SptFuncCall));
-  return new (p) SptFuncCall(file_region, kPtFuncCallExpr,
-			     PtNameBranchArray(),
-			     name, arg_array);
+  auto node = new SptFuncCall(file_region, kPtFuncCallExpr,
+			      PtNameBranchArray(),
+			      name, arg_array);
+  return node;
 }
 
 // @brief function call の生成 (階層付き)
@@ -1111,9 +1111,9 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* tail_name,
 			 PtExprArray arg_array)
 {
-  void* p = alloc().get_memory(sizeof(SptFuncCall));
-  return new (p) SptFuncCall(file_region, kPtFuncCallExpr,
-			     nb_array, tail_name, arg_array);
+  auto node = new SptFuncCall(file_region, kPtFuncCallExpr,
+			      nb_array, tail_name, arg_array);
+  return node;
 }
 
 // @brief system function call の生成
@@ -1126,10 +1126,10 @@ SptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    const char* name,
 			    PtExprArray arg_array)
 {
-  void* p = alloc().get_memory(sizeof(SptFuncCall));
-  return new (p) SptFuncCall(file_region, kPtSysFuncCallExpr,
-			     PtNameBranchArray(),
-			     name, arg_array);
+  auto node = new SptFuncCall(file_region, kPtSysFuncCallExpr,
+			      PtNameBranchArray(),
+			      name, arg_array);
+  return node;
 }
 
 // @brief 整数型の定数の生成
@@ -1140,9 +1140,9 @@ const PtExpr*
 SptFactory::new_IntConst(const FileRegion& file_region,
 			 unsigned int value)
 {
-  void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, VpiConstType::Int,
-			     0, value, nullptr, 0.0);
+  auto node = new SptConstant(file_region, VpiConstType::Int,
+			      0, value, nullptr, 0.0);
+  return node;
 }
 
 // @brief 整数型の定数の生成
@@ -1153,9 +1153,9 @@ const PtExpr*
 SptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
-  void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, VpiConstType::Int,
-			     0, 0, value, 0.0);
+  auto node = new SptConstant(file_region, VpiConstType::Int,
+			      0, 0, value, 0.0);
+  return node;
 }
 
 // @brief 基底付き整数型の定数の生成
@@ -1168,9 +1168,9 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 			 VpiConstType const_type,
 			 const char* value)
 {
-  void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, const_type,
-			     0, 0, value, 0.0);
+  auto node = new SptConstant(file_region, const_type,
+			      0, 0, value, 0.0);
+  return node;
 }
 
 // @brief サイズと基底付き定数の生成
@@ -1185,9 +1185,9 @@ SptFactory::new_IntConst(const FileRegion& file_region,
 			 VpiConstType const_type,
 			 const char* value)
 {
-  void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, const_type,
-			     size, 0, value, 0.0);
+  auto node = new SptConstant(file_region, const_type,
+			      size, 0, value, 0.0);
+  return node;
 }
 
 // @brief 実数型の定数の生成
@@ -1198,9 +1198,9 @@ const PtExpr*
 SptFactory::new_RealConst(const FileRegion& file_region,
 			  double value)
 {
-  void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, VpiConstType::Real,
-			     0, 0, nullptr, value);
+  auto node = new SptConstant(file_region, VpiConstType::Real,
+			      0, 0, nullptr, value);
+  return node;
 }
 
 // @brief 文字列型の定数の生成
@@ -1211,9 +1211,9 @@ const PtExpr*
 SptFactory::new_StringConst(const FileRegion& file_region,
 			    const char* value)
 {
-  void* p = alloc().get_memory(sizeof(SptConstant));
-  return new (p) SptConstant(file_region, VpiConstType::String,
-			     0, 0, value, 0.0);
+  auto node = new SptConstant(file_region, VpiConstType::String,
+			      0, 0, value, 0.0);
+  return node;
 }
 
 END_NAMESPACE_YM_VERILOG

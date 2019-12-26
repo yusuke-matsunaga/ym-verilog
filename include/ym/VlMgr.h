@@ -246,10 +246,6 @@ public:
   find_attr(const VlObj* obj,
 	    bool def = false) const;
 
-  /// @brief このオブジェクトが確保したメモリの総量を返す．
-  ymuint
-  allocated_size() const;
-
 
 private:
   //////////////////////////////////////////////////////////////////////

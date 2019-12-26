@@ -26,15 +26,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] lex 親の Lex
 InputMgr::InputMgr(RawLex& lex) :
-  mLex(lex),
-  mCurFile(nullptr)
+  mLex{lex},
+  mCurFile{nullptr}
 {
 }
 
 // @brief デストラクタ
 InputMgr::~InputMgr()
 {
-  clear();
 }
 
 // @brief 初期状態に戻す．
@@ -43,11 +42,6 @@ InputMgr::~InputMgr()
 void
 InputMgr::clear()
 {
-  delete_file(mCurFile);
-  mCurFile = nullptr;
-  for ( auto input_file: mFileStack ) {
-    delete_file(input_file);
-  }
   mFileStack.clear();
 }
 
@@ -91,15 +85,15 @@ InputMgr::open_file(const string& filename,
   // 本当のパス名
   string realname = pathname.str();
 
-  InputFile* new_file = new InputFile(mLex);
-  if ( !new_file->open(realname, parent_file) ) {
+  unique_ptr<InputFile> new_file{new InputFile(mLex, realname, parent_file)};
+  if ( !new_file->is_valid() ) {
     return false;
   }
 
   if ( mCurFile ) {
-    mFileStack.push_back(mCurFile);
+    mFileStack.push_back(move(mCurFile));
   }
-  mCurFile = new_file;
+  mCurFile = move(new_file);
 
   return true;
 }
@@ -132,10 +126,7 @@ InputMgr::set_file_loc(const char* new_filename,
     break;
 
   case 1: // 新しいインクルードファイル．
-    {
-      FileLoc parent_loc(cur_fi, cur_file()->cur_loc().end_line(), 1);
-      cur_fi = FileInfo(new_filename, parent_loc);
-    }
+    cur_fi = FileInfo{new_filename, cur_file()->parent_loc()};
     break;
 
   case 2: // インクルードの終り
@@ -154,7 +145,7 @@ InputMgr::set_file_loc(const char* new_filename,
 InputFile*
 InputMgr::cur_file() const
 {
-  return mCurFile;
+  return mCurFile.get();
 }
 
 // @brief 現在のファイル名を返す．
@@ -170,18 +161,16 @@ bool
 InputMgr::wrap_up()
 {
   for ( ; ; ) {
-    delete_file(mCurFile);
     if ( mFileStack.empty() ) {
       // もうファイルが残っていない．
       mCurFile = nullptr;
       return false;
     }
 
-    mCurFile = mFileStack.back();
+    mCurFile.swap(mFileStack.back());
     mFileStack.pop_back();
 
-    int c = mCurFile->peek();
-    if ( c != EOF ) {
+    if ( !mCurFile->is_eof() ) {
       return true;
     }
   }
@@ -197,19 +186,12 @@ InputMgr::check_file(const char* name) const
   if ( cur_filename() == name ) {
     return true;
   }
-  for ( auto input_file: mFileStack ) {
+  for ( auto& input_file: mFileStack ) {
     if ( input_file->file_info().filename() == name ) {
       return true;
     }
   }
   return false;
-}
-
-// @brief InputFile を削除する．
-void
-InputMgr::delete_file(InputFile* file)
-{
-  delete file;
 }
 
 END_NAMESPACE_YM_VERILOG
