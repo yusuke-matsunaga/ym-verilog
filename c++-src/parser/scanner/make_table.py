@@ -1,4 +1,11 @@
-﻿#! /usr/bin/env python3
+#! /usr/bin/env python3
+
+### @file make_table.py
+### @brief InputFile.cc 内部で使うテーブルを生成するスクリプト
+### @author Yusuke Matsunaga (松永 裕介)
+###
+### Copyright (C) 2019 Yusuke Matsunaga
+### All rights reserved.
 
 # 述語の内容のテーブルを作る．
 def make_table(pred) :
@@ -125,26 +132,36 @@ def is_hexchar(ch) :
     return False
 
 
-# 識別子の先頭のテーブル作成
-print ('  // 識別子の先頭')
-make_table(is_strchar1)
+if __name__ == '__main__' :
+    import sys
+    import os
 
-# 識別子のテーブル作成
-print ('  // 識別子')
-make_table(is_strchar)
+    def usage() :
+        print('USAGE: {} command'.format(os.path.basename(sys.argv[0])))
+        print(' command| strchar1: 識別子の先頭文字')
+        print('        | strchar:  識別子の文字')
+        print('        | binchar:  2進数モードの文字')
+        print('        | octchar:  8進数モードの文字')
+        print('        | decchar:  10進数モードの文字')
+        print('        | hexchar:  16進数モードの文字')
+        exit(1)
 
-# 2進数モードのテーブル作成
-print ('  // 2進数モード')
-make_table(is_binchar)
+    if len(sys.argv) != 2 :
+        usage()
 
-# 8進数モードのテーブル作成
-print ('  // 8進数モード')
-make_table(is_octchar)
+    if sys.argv[1] == 'strchar1' :
+        make_table(is_strchar1)
+    elif sys.argv[1] == 'strchar' :
+        make_table(is_strchar)
+    elif sys.argv[1] == 'binchar' :
+        make_table(is_binchar)
+    elif sys.argv[1] == 'octchar' :
+        make_table(is_octchar)
+    elif sys.argv[1] == 'decchar' :
+        make_table(is_decchar)
+    elif sys.argv[1] == 'hexchar' :
+        make_table(is_hexchar)
+    else:
+        usage()
 
-# 10進数モードのテーブル作成
-print ('  // 10進数モード')
-make_table(is_decchar)
-
-# 16進数モードのテーブル作成
-print ('  // 16進数モード')
-make_table(is_hexchar)
+    exit(0)
