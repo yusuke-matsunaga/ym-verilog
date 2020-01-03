@@ -3,7 +3,7 @@
 /// @brief RawLex の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -30,13 +30,201 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+BEGIN_NONAMESPACE
+
+// @brief c が識別子の先頭で用いられる文字種の時に true を返す．
+inline
+bool
+is_strchar1(int c)
+{
+  // make_table.py strchar1 で作成
+  // c++ コードの等価記述: isalpha(c) || c == '_' || c == '$'
+  static char table[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+  return table[c];
+}
+
+// 識別子で使える文字
+inline
+bool
+is_strchar(int c)
+{
+  // make_table.py strchar で生成
+  // c++ の等価記述
+  // isalnum(c) || c == '_' || c == '$'
+  static char table[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+  return table[c];
+}
+
+// 2進数モードで使える文字
+inline
+bool
+is_binchar(int c)
+{
+  // make_table.py binchar で作成
+  // c++ の等価記述
+  // c == '0' || c == '1' ||
+  // c == 'x' || c == 'X' ||
+  // c == 'z' || c == 'Z' ||
+  // c == '?'
+  static char table[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+  return table[c];
+}
+
+// 8進数モードで使える文字
+inline
+bool
+is_octchar(int c)
+{
+  // make_table.py octchar で生成
+  // c++ の等価記述
+  //  ('0' <= c && c <= '7') ||
+  //  c == 'x' || c == 'X' ||
+  //  c == 'z' || c == 'Z' ||
+  //  c == '?'
+  static char table[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+  return table[c];
+}
+
+// 10進数モードで使える文字
+inline
+bool
+is_decchar(int c)
+{
+  // make_table.py dechar で生成
+  // c++ の等価記述
+  // '0' <= c && c <= '9'
+  static char table[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+  return table[c];
+}
+
+// 16進数モードで使える文字
+inline
+bool
+is_hexchar(int c)
+{
+  // make_table.py hexchar で生成
+  // c++ の等価記述
+  // ('0' <= c && c <= '9') ||
+  // ('a' <= c && c <= 'f') ||
+  // ('A' <= c && c <= 'F') ||
+  //  c == 'x' || c == 'X' ||
+  //  c == 'z' || c == 'Z' ||
+  //  c == '?'
+  static char table[] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1,
+    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+  return table[c];
+}
+
+END_NONAMESPACE
+
 //////////////////////////////////////////////////////////////////////
 // RawLex のパブリックなメンバ関数
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 RawLex::RawLex() :
-  mInputMgr{new InputMgr(*this)},
+  mInputMgr{new InputMgr()},
   mDic{RsrvWordDic::the_dic()},
   mPluginDict{new LexPluginDict},
   mDebug{false}
@@ -282,9 +470,9 @@ RawLex::get_raw_token()
 
   // 通常の読み込み
  LOOP:
-  InputFile* input_file = mInputMgr->cur_file();
-  int id = input_file->read_token(mStringBuff, mCurPos);
+  int id = _read_token();
   mCurString = mStringBuff.c_str();
+  mCurPos = FileRegion{mFirstLoc, cur_loc()};
 
   switch ( id ) {
   case IDENTIFIER:
@@ -344,6 +532,924 @@ RawLex::get_raw_token()
   }
 
   return id;
+}
+
+// @brief トークンの読み出しを行う．
+// @param[out] buff 結果の文字列を格納するバッファ
+int
+RawLex::_read_token()
+{
+  mStringBuff.clear();
+
+  int c = get();
+  mFirstLoc = cur_loc();
+
+  if ( c == EOF ) {
+    return EOF;
+  }
+  if ( c == '\n' || c == '\r' ) {
+    return NL;
+  }
+
+  if ( c == ' ' || c == '\t' ) {
+    read_space();
+    return SPACE;
+  }
+
+  switch ( context() ) {
+  case kBin:
+    // 2進数モード
+    return read_bin_str(c);
+
+  case kOct:
+    // 8進数モード
+    return read_oct_str(c);
+
+  case kDec:
+    // 10進数モード
+    return read_dec_str(c);
+
+  case kHex:
+    // 16進数モード
+    return read_hex_str(c);
+
+  case kUdp:
+    switch ( c ) {
+    case '-': return '-';
+    case '*': return '*';
+    case '0': return '0';
+    case '1': return '1';
+    case 'X':
+    case 'x': return 'x';
+    case '?': return '?';
+    case 'B':
+    case 'b': return 'b';
+    case 'R':
+    case 'r': return 'r';
+    case 'F':
+    case 'f': return 'f';
+    case 'P':
+    case 'p': return 'p';
+    case 'N':
+    case 'n': return 'n';
+    default: break;
+    }
+
+  case kNormal:
+    break;
+  }
+
+  // ここに来るのは kUdp か kNormal
+  switch ( c ) {
+  case ';':
+  case ':':
+  case '[':
+  case ']':
+  case '{':
+  case '}':
+  case ')':
+  case ',':
+  case '.':
+  case '@':
+  case '#':
+  case '%':
+  case '?':
+    // これらの文字は単独のトークンとなる．
+    return c;
+
+  case '\'':
+    // 定数
+    mStringBuff.put_char(c);
+    c = get();
+    if ( c == 's' || c == 'S' ) {
+      mStringBuff.put_char(c);
+      c = get();
+    }
+    if ( c == 'B' || c == 'b' ) {
+      return BASE_B;
+    }
+    if ( c == 'O' || c == 'o' ) {
+      return BASE_O;
+    }
+    if ( c == 'D' || c == 'd' ) {
+      return BASE_D;
+    }
+    if ( c == 'H' || c == 'h' ) {
+      return BASE_H;
+    }
+    {
+      ostringstream buf;
+      buf << "illegal character \'" << static_cast<char>(c) << "\',"
+	  << "only B|b|O|o|D|d|H|h is allowed here.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      cur_loc(),
+		      MsgType::Error,
+		      "LEX",
+		      buf.str());
+    }
+    return ERROR;
+
+  case '(':
+    c = peek();
+    if ( c == '*' ) {
+      accept();
+      return PRSTAR;
+    }
+    return '(';
+
+  case '+':
+    c = peek();
+    if ( c == ':' ) {
+      accept();
+      return PLUSCOLON;
+    }
+    return '+';
+
+  case '-':
+    c = peek();
+    if ( c == ':' ) {
+      accept();
+      return MINUSCOLON;
+    }
+    if ( c == '>' ) {
+      accept();
+      return MINUSGT;
+    }
+    return '-';
+
+  case '^':
+    c = peek();
+    if ( c == '~' ) {
+      accept();
+      return TILDEXOR;
+    }
+    return '^';
+
+  case '*':
+    c = peek();
+    if ( c == '>' ) {
+      accept();
+      return STARGT;
+    }
+    if ( c == '*' ) {
+      accept();
+      return STARSTAR;
+    }
+    if ( c == ')' ) {
+      accept();
+      return STARPR;
+    }
+    return '*';
+
+  case '!':
+    c = peek();
+    if ( c == '=' ) {
+      accept();
+      c = peek();
+      if ( c == '=' ) {
+	accept();
+	return NOTEQEQ;
+      }
+      return NOTEQ;
+    }
+    return '!';
+
+  case '&':
+    c = peek();
+    if ( c == '&' ) {
+      accept();
+      c = peek();
+      if ( c == '&' ) {
+	accept();
+	return ANDANDAND;
+      }
+      return ANDAND;
+    }
+    return '&';
+
+  case '|':
+    c = peek();
+    if ( c == '|' ) {
+      accept();
+      return OROR;
+    }
+    return '|';
+
+  case '~':
+    c = peek();
+    if ( c == '&' ) {
+      accept();
+      return TILDEAND;
+    }
+    if ( c == '|' ) {
+      accept();
+      return TILDEOR;
+    }
+    if ( c == '^' ) {
+      accept();
+      return TILDEXOR;
+    }
+    return '~';
+
+  case '<':
+    c = peek();
+    if ( c == '<' ) {
+      accept();
+      c = peek();
+      if ( c == '<' ) {
+	accept();
+	return LTLTLT;
+      }
+      return LTLT;
+    }
+    if ( c == '=' ) {
+      accept();
+      return LTEQ;
+    }
+    return '<';
+
+  case '>':
+    c = peek();
+    if ( c == '>' ) {
+      accept();
+      c = peek();
+      if ( c == '>' ) {
+	accept();
+	return GTGTGT;
+      }
+      return GTGT;
+    }
+    if ( c == '=' ) {
+      accept();
+      return GTEQ;
+    }
+    return '>';
+
+  case '=':
+    c = peek();
+    if ( c == '=' ) {
+      accept();
+      c = peek();
+      if ( c == '=' ) {
+	accept();
+	return EQEQEQ;
+      }
+      return EQEQ;
+    }
+    if ( c == '>' ) {
+      accept();
+      return EQGT;
+    }
+    return '=';
+
+  case '\"':
+    return read_dq_str();
+
+  case '\\':
+    return read_esc_str();
+
+  case '`':
+    mStringBuff.put_char(c);
+    c = get();
+    if ( is_strchar1(c) ) {
+      mStringBuff.put_char(c);
+      read_str();
+      return CD_SYMBOL;
+    }
+    else {
+      ostringstream buf;
+      buf << "illegal charactor \'" << static_cast<char>(c)
+	  << "\' [" << c << " in digit code].";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      cur_loc(),
+		      MsgType::Error,
+		      "LEX",
+		      buf.str());
+      return ERROR;
+    }
+
+  case '/':
+    return read_comment();
+
+  default:
+    break;
+  }
+
+  if ( is_strchar1(c) ) {
+    // 通常の識別子
+    mStringBuff.put_char(c);
+    // 文字列要素が表れる限り mStringBuff につむ．
+    read_str();
+
+    // buff の内容をチェックする．
+    // 特例: 単独の $
+    if ( strcmp(mStringBuff.c_str(), "$") == 0 ) {
+      return '$';
+    }
+
+    // 取り合えずここでは予約語の検査はせずに IDENTIFIER としておく
+    return IDENTIFIER;
+  }
+
+  if ( isdigit(c) ) {
+    // 数字
+    mStringBuff.put_char(c);
+    return read_num();
+  }
+
+  ostringstream msg_buf;
+  msg_buf << "illegal charactor \'" << static_cast<char>(c)
+	  << "\' [" << c << " in digit code].";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  cur_loc(),
+		  MsgType::Error,
+		  "LEX",
+		  msg_buf.str());
+  return ERROR;
+}
+
+// @brief 2進数モードの読み込みを行う．
+// @param[in] c 最初の文字
+// @param[out] buff 結果を格納するバッファ
+// @return トークンを返す．
+int
+RawLex::read_bin_str(int c)
+{
+  if ( is_binchar(c) ) {
+    mStringBuff.put_char(c);
+    for ( ; ; ) {
+      c = peek();
+      if ( is_binchar(c) ) {
+	accept();
+	mStringBuff.put_char(c);
+      }
+      else if ( c == '_' ) {
+	accept();
+	// ただ読み飛ばす
+      }
+      else {
+	// c == EOF も含む．
+	break;
+      }
+    }
+    return UNUMBER;
+  }
+
+  ostringstream msg_buf;
+  msg_buf << "illegal charactor \'" << static_cast<char>(c) << "\',"
+	  << "only \'01xXzZ?\' are allowed here.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  cur_loc(),
+		  MsgType::Error,
+		  "LEX",
+		  msg_buf.str());
+  return ERROR;
+}
+
+// @brief 8進数モードの読み込みを行う．
+// @param[in] c 最初の文字
+// @param[out] buff 結果を格納するバッファ
+// @return トークンを返す．
+int
+RawLex::read_oct_str(int c)
+{
+  if ( is_octchar(c) ) {
+    mStringBuff.put_char(c);
+    for ( ; ; ) {
+      c = peek();
+      if ( is_octchar(c) ) {
+	accept();
+	mStringBuff.put_char(c);
+      }
+      else if ( c == '_' ) {
+	accept();
+	// ただ読み飛ばす．
+      }
+      else {
+	// c == EOF も含む．
+	break;
+      }
+    }
+    return UNUMBER;
+  }
+
+  ostringstream msg_buf;
+  msg_buf << "illegal charactor \'" << static_cast<char>(c) << "\',"
+	  << "only \'0-7xXzZ?\' are allowed here.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  cur_loc(),
+		  MsgType::Error,
+		  "LEX",
+		  msg_buf.str());
+  return ERROR;
+}
+
+// @brief 10進数モードの読み込みを行う．
+// @param[in] c 最初の文字
+// @return トークンを返す．
+int
+RawLex::read_dec_str(int c)
+{
+  if ( is_decchar(c) ) {
+    mStringBuff.put_char(c);
+    for ( ; ; ) {
+      c = peek();
+      if ( is_decchar(c) ) {
+	accept();
+	mStringBuff.put_char(c);
+      }
+      else if ( c == '_' ) {
+	accept();
+	// ただ読み飛ばす．
+      }
+      else {
+	// c == EOF も含む．
+	break;
+      }
+    }
+    return UNUMBER;
+  }
+  else if ( c == 'x' || c == 'X' ||
+	    c == 'Z' || c == 'Z' ||
+	    c == '?' ) {
+    mStringBuff.put_char(c);
+    // xz? と他の数字との混在はない．
+    for ( ; ; ) {
+      c = peek();
+      if ( c == '_' ) {
+	accept();
+	// ただ読み飛ばす．
+      }
+      else {
+	break;
+      }
+    }
+    return UNUMBER;
+  }
+
+  ostringstream msg_buf;
+  msg_buf << "illegal charactor \'" << static_cast<char>(c) << "\',"
+	  << "only \'0-9xXzZ?\' are allowed here.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  cur_loc(),
+		  MsgType::Error,
+		  "LEX",
+		  msg_buf.str());
+  return ERROR;
+}
+
+// @brief 16進数モードの読み込みを行う．
+// @param[in] c 最初の文字
+// @return トークンを返す．
+int
+RawLex::read_hex_str(int c)
+{
+  if ( is_hexchar(c) ) {
+    mStringBuff.put_char(c);
+    for ( ; ; ) {
+      c = peek();
+      if ( is_hexchar(c) ) {
+	accept();
+	mStringBuff.put_char(c);
+      }
+      else if ( c == '_' ) {
+	accept();
+	// ただ読み飛ばす．
+      }
+      else {
+	// c == EOF も含む．
+	break;
+      }
+    }
+    return UNUMBER;
+  }
+
+  ostringstream msg_buf;
+  msg_buf << "illegal charactor \'" << static_cast<char>(c) << "\',"
+	  << "only \'0-9a-ha-HxXzZ?\' are allowed here.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  cur_loc(),
+		  MsgType::Error,
+		  "LEX",
+		  msg_buf.str());
+  return ERROR;
+}
+
+// @brief 識別子に用いられる文字([a-zA-Z0-9_$])が続く限り読みつづける．
+// @param[out] buf 結果を格納する文字列バッファ
+void
+RawLex::read_str()
+{
+  for ( ; ; ) {
+    int c = peek();
+    if ( is_strchar(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+    }
+    else {
+      // [a-zA-Z0-9_$] でなければ終わり
+      return;
+    }
+  }
+}
+
+// @brief 二重引用符用の読み込み
+// @param[out] buf 結果を格納する文字列バッファ
+// @return トークン番号を返す．
+// @note 可能性のあるトークンは
+//  - STRING
+//  - ERROR
+int
+RawLex::read_dq_str()
+{
+  // goto 文の嵐だが，全体の構造はいくつかの無限ループのブロック間の
+  // 移動に goto 文を用いているだけ．
+  // 各々の無限ループを状態ととらえて状態遷移だと思えば良い．
+
+  // 8進数モードの値
+  int cur_val = 0;
+
+ INIT:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '\"' ) {
+      accept();
+      // 終わり
+      return STRING;
+    }
+    else if ( c == '\n' || c == '\r' || c == EOF ) {
+      accept();
+      // 文字列が終わらないうちに改行が来てしまった．
+      goto ERR_END;
+    }
+    else if ( c == '\\' ) {
+      accept();
+      goto BSLASH;
+    }
+    else {
+      accept();
+      mStringBuff.put_char(c);
+    }
+  }
+
+ BSLASH:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == 'n' || c == 't' ) {
+      accept();
+      mStringBuff.put_char('\\');
+      mStringBuff.put_char(c);
+      goto INIT;
+    }
+    else if ( c == '\n' ) {
+      accept();
+      // これでいいのか良くわからないけどスペースに変える．
+      mStringBuff.put_char(' ');
+      goto INIT;
+    }
+    else if ( c >= '0' && c <= '7' ) {
+      accept();
+      cur_val = c - '0';
+      goto BSLASH1;
+    }
+    else if ( c == EOF ) {
+      goto ERR_END;
+    }
+    else {
+      accept();
+      // 上記以外の文字ならバックスラッシュの意味はない
+      mStringBuff.put_char(c);
+      goto INIT;
+    }
+  }
+
+ BSLASH1:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c >= '0' && c <= '7' ) {
+      accept();
+      cur_val = cur_val * 8 + (c - '0');
+      goto BSLASH2;
+    }
+    else if ( c == EOF ) {
+      goto ERR_END;
+    }
+    else {
+      mStringBuff.put_char(static_cast<char>(cur_val));
+      goto INIT;
+    }
+  }
+
+ BSLASH2:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c >= '0' && c <= '7' ) {
+      accept();
+      cur_val = cur_val * 8 + (c - '0');
+    }
+    else if ( c == EOF ) {
+      goto ERR_END;
+    }
+    mStringBuff.put_char(static_cast<char>(cur_val));
+    goto INIT;
+  }
+
+ ERR_END:
+  // 文字列が終わらないうちに改行が来てしまった．
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  cur_loc(),
+		  MsgType::Error,
+		  "LEX",
+		  "new line in quoted string.");
+  return ERROR;
+}
+
+// @brief escaped identifier 用の読み込み
+// @param[out] buf 結果を格納する文字列バッファ
+// @return トークン番号を返す．
+// @note 可能性のあるトークンは
+//  - SPACE
+//  - IDENTIFIER
+//  - ERROR
+int
+RawLex::read_esc_str()
+{
+  int c = peek();
+  if ( c == ' ' || c == '\t' || c == '\n' ) {
+    accept();
+    // ただの空白に置き換える．
+    return SPACE;
+  }
+  if ( !isascii(c) ) {
+    // escaped identifier でも非 ascii 文字は違反
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    cur_loc(),
+		    MsgType::Error,
+		    "LEX",
+		    "non-ascii character in escaped string.");
+    return ERROR;
+  }
+
+  // escaped identifier モード
+  accept();
+  mStringBuff.put_char(c);
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == ' ' || c == '\t' || c == '\n' || c == '\r' ) {
+      // 空白改行文字なら終わり
+      return IDENTIFIER;
+    }
+    else if ( isascii(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+    }
+    else {
+      // 非 ascii 文字はエラー
+      // ただしその直前までを escaped identifier とする．
+      // 次の read_token() でエラーとなるはず．
+      break;
+    }
+  }
+
+  return IDENTIFIER;
+}
+
+// @brief 数字を読み込む．
+// @param[out] buf 結果を格納する文字列バッファ
+// @return トークン番号を返す．
+// @note 可能性のあるトークンは
+//  - UNUM_INT
+//  - RNUMBER
+//  - ERROR
+int
+RawLex::read_num()
+{
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '_' ) {
+      accept();
+      // ただ読み飛ばす．
+    }
+    else if ( isdigit(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+    }
+    else if ( c == '.' ) {
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_DOT;
+    }
+    else if ( c == 'e' || c == 'E' ) {
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_EXP;
+    }
+    else {
+      break;
+    }
+  }
+  return UNUM_INT;
+
+ AFTER_DOT:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '_' ) {
+      accept();
+      // ただ読み飛ばす．
+    }
+    else if ( isdigit(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_DOT_NUM;
+    }
+    else {
+      break;
+    }
+  }
+  return ERROR;
+
+ AFTER_DOT_NUM:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '_' ) {
+      accept();
+      // ただ読み飛ばす．
+    }
+    else if ( c == 'e' || c == 'E' ) {
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_EXP;
+    }
+    else if ( isdigit(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+    }
+    else {
+      break;
+    }
+  }
+  return RNUMBER;
+
+ AFTER_EXP:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '_' ) {
+      accept();
+      // ただ読み飛ばす．
+    }
+    else if ( c == '+' || c == '-' ) {
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_EXP_SIGN;
+    }
+    else if ( isdigit(c) ) {
+      mStringBuff.put_char('+');
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_EXP_NUM;
+    }
+    else {
+      break;
+    }
+  }
+  return ERROR;
+
+ AFTER_EXP_SIGN:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '_' ) {
+      accept();
+      // ただ読み飛ばす．
+    }
+    else if ( isdigit(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+      goto AFTER_EXP_NUM;
+    }
+    else {
+      break;
+    }
+  }
+  return ERROR;
+
+ AFTER_EXP_NUM:
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == '_' ) {
+      accept();
+      // ただ読み飛ばす．
+    }
+    else if ( isdigit(c) ) {
+      accept();
+      mStringBuff.put_char(c);
+    }
+    else {
+      break;
+    }
+  }
+  return RNUMBER;
+}
+
+// @brief 空白文字を読み飛ばす
+void
+RawLex::read_space()
+{
+  for ( ; ; ) {
+    int c = peek();
+    if ( c == ' ' || c == '\t' ) {
+      accept();
+    }
+    else {
+      break;
+    }
+  }
+}
+
+// @brief '/' を読んだ直後の処理
+// @return トークン番号を返す．
+// @note 可能性のあるトークンは
+//  - COMMENT1
+//  - COMMENT2
+//  - '/'
+//  - ERROR
+int
+RawLex::read_comment()
+{
+  int c = peek();
+  if ( c == '/' ) {
+    accept();
+
+    mStringBuff.put_char('/');
+    mStringBuff.put_char('/');
+
+    // 意味的には以下のコードと等価な処理を行う．
+    // for ( ; ; ) {
+    //   int c = peek();
+    //   accept();
+    //   if ( c == '\n' ) {
+    //     break;
+    //   }
+    // }
+    for ( ; ; ) {
+      c = peek();
+      if ( c == '\n' ) {
+	// 末尾の改行は buf に積まない．
+	return COMMENT1;
+      }
+      else if ( c == EOF ) {
+	// 末尾に NL がなく EOF の場合の処理はこれでいいの？
+	return COMMENT1;
+      }
+      else {
+	accept();
+	mStringBuff.put_char(c);
+      }
+    }
+  }
+  else if ( c == '*' ) {
+    accept();
+
+    mStringBuff.put_char('/');
+    mStringBuff.put_char('*');
+
+    // 直前の文字が '*' の時 true となるフラグ
+    bool star = false;
+    for ( ; ; ) {
+      c = peek();
+      if ( c == '\n' ) {
+	accept();
+	mStringBuff.put_char('\n');
+      }
+      else if ( c == '*' ) {
+	accept();
+	mStringBuff.put_char(c);
+	star = true;
+      }
+      else if ( star && c == '/' ) {
+	accept();
+	mStringBuff.put_char(c);
+	// '*/' を読み込んだ
+	return COMMENT2;
+      }
+      else if ( c == EOF ) {
+	// '*/' を読む前に EOF になってしまった．
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			cur_loc(),
+			MsgType::Error,
+			"LEX",
+			"unexpected end-of-file in comment block(/*).");
+	return ERROR;
+      }
+      else {
+	accept();
+	mStringBuff.put_char(c);
+	star = false;
+      }
+    }
+  }
+  else {
+    return '/';
+  }
 }
 
 
@@ -489,6 +1595,45 @@ void
 RawLex::check_line(ymuint line)
 {
   mWatcherMgr.prop_event(line);
+}
+
+// @brief 一文字読み出す．
+//
+// 実際には peek(); acept() と等価
+int
+RawLex::get()
+{
+  return mInputMgr->get();
+}
+
+// @brief 次の文字を読み出す．
+//
+// ファイル位置の情報等は変わらない
+int
+RawLex::peek()
+{
+  return mInputMgr->peek();
+}
+
+// @brief 直前の peek() を確定させる．
+void
+RawLex::accept()
+{
+  mInputMgr->accept();
+}
+
+// @brief ファイルの末尾の時にtrue を返す．
+bool
+RawLex::is_eof() const
+{
+  return mInputMgr->is_eof();
+}
+
+// @brief 現在の位置を返す．
+FileLoc
+RawLex::cur_loc() const
+{
+  return mInputMgr->cur_loc();
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -5,7 +5,7 @@
 /// @brief InputMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2013-2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2013-2014, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -13,15 +13,12 @@
 
 #include "ym/File.h"
 #include "ym/FileRegion.h"
+#include "ym/InputFileObj.h"
 #include "ym/MsgHandler.h"
 #include "ym/StrBuff.h"
 
-#include "InputFile.h"
-
 
 BEGIN_NAMESPACE_YM_VERILOG
-
-class RawLex;
 
 //////////////////////////////////////////////////////////////////////
 /// @class InputMgr InputMgr.h "InputMgr.h"
@@ -34,8 +31,7 @@ class InputMgr
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] lex 親の Lex
-  InputMgr(RawLex& lex);
+  InputMgr();
 
   /// @brief デストラクタ
   ~InputMgr();
@@ -89,11 +85,11 @@ public:
   ///           - 2 新しいファイルはインクルードもとのファイル
   void
   set_file_loc(const char* new_filename,
-	       ymuint line,
-	       ymuint level);
+	       int line,
+	       int level);
 
   /// @brief 現在のファイルを返す．
-  InputFile*
+  InputFileObj&
   cur_file() const;
 
   /// @brief 現在のファイル名を返す．
@@ -104,6 +100,39 @@ public:
   /// @return 処理を続けられる時 true を返す．
   bool
   wrap_up();
+
+  /// @}
+  //////////////////////////////////////////////////////////////////////
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  /// @name データの入力関係の関数
+  /// @{
+
+  /// @brief 一文字読み出す．
+  ///
+  /// 実際には peek(); acept() と等価
+  int
+  get();
+
+  /// @brief 次の文字を読み出す．
+  ///
+  /// ファイル位置の情報等は変わらない
+  int
+  peek();
+
+  /// @brief 直前の peek() を確定させる．
+  void
+  accept();
+
+  /// @brief ファイルの末尾の時にtrue を返す．
+  bool
+  is_eof() const;
+
+  /// @brief 現在の位置を返す．
+  FileLoc
+  cur_loc() const;
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -120,17 +149,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 親の Lex
-  RawLex& mLex;
-
   // サーチパス
   SearchPathList mSearchPathList;
 
-  // 現在のファイル情報
-  unique_ptr<InputFile> mCurFile;
+  // ファイルストリームのスタック
+  vector<ifstream> mFsStack;
 
   // ファイル情報のスタック
-  vector<unique_ptr<InputFile>> mFileStack;
+  vector<unique_ptr<InputFileObj>> mFileStack;
 
 };
 

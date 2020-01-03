@@ -36,7 +36,7 @@ class TokenList;
 ///
 /// 基本的なトークンの切り出しはここで行うが，compiler-directive
 /// の処理は Lex で行う．
-/// @sa InputFile Lex VlLineWatcher
+/// @sa InputFileObj Lex VlLineWatcher
 //////////////////////////////////////////////////////////////////////
 class RawLex
 {
@@ -267,6 +267,110 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief トークンの読み出しを行う．
+  /// @param[out] buff 結果の文字列を格納するバッファ
+  /// @param[out] token_loc トークンの位置情報
+  int
+  _read_token();
+
+  /// @brief 2進数モードの読み込みを行う．
+  /// @param[in] c 最初の文字
+  /// @return トークンを返す．
+  int
+  read_bin_str(int c);
+
+  /// @brief 8進数モードの読み込みを行う．
+  /// @param[in] c 最初の文字
+  /// @return トークンを返す．
+  int
+  read_oct_str(int c);
+
+  /// @brief 10進数モードの読み込みを行う．
+  /// @param[in] c 最初の文字
+  /// @return トークンを返す．
+  int
+  read_dec_str(int c);
+
+  /// @brief 16進数モードの読み込みを行う．
+  /// @param[in] c 最初の文字
+  /// @return トークンを返す．
+  int
+  read_hex_str(int c);
+
+  /// @brief 識別子に用いられる文字([a-zA-Z0-9_$])が続く限り読みつづける．
+  void
+  read_str();
+
+  /// @brief 二重引用符用の読み込み
+  /// @return トークン番号を返す．
+  /// @note 可能性のあるトークンは
+  ///  - STRING
+  ///  - ERROR
+  int
+  read_dq_str();
+
+  /// @brief escaped identifier 用の読み込み
+  /// @return トークン番号を返す．
+  /// @note 可能性のあるトークンは
+  ///  - SPACE
+  ///  - IDENTIFIER
+  ///  - ERROR
+  int
+  read_esc_str();
+
+  /// @brief 数字を読み込む．
+  /// @return トークン番号を返す．
+  /// @note 可能性のあるトークンは
+  ///  - UNUM_INT
+  ///  - RNUMBER
+  ///  - ERROR
+  int
+  read_num();
+
+  /// @brief 空白文字を読み飛ばす
+  void
+  read_space();
+
+  /// @brief '/' を読み込んだ後の処理
+  /// @return トークン番号を返す．
+  /// @note 可能性のあるトークンは
+  ///  - COMMENT1
+  ///  - COMMENT2
+  ///  - '/'
+  ///  - ERROR
+  int
+  read_comment();
+
+  /// @brief 一文字読み出す．
+  ///
+  /// 実際には peek(); acept() と等価
+  int
+  get();
+
+  /// @brief 次の文字を読み出す．
+  ///
+  /// ファイル位置の情報等は変わらない
+  int
+  peek();
+
+  /// @brief 直前の peek() を確定させる．
+  void
+  accept();
+
+  /// @brief ファイルの末尾の時にtrue を返す．
+  bool
+  is_eof() const;
+
+  /// @brief 現在の位置を返す．
+  FileLoc
+  cur_loc() const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
@@ -308,6 +412,9 @@ private:
 
   // read_token の結果の文字列を格納するバッファ
   StrBuff mStringBuff;
+
+  // read_token の読み始めの位置
+  FileLoc mFirstLoc;
 
   // デバッグ時に true にするフラグ
   bool mDebug;

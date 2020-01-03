@@ -57,13 +57,6 @@ public:
   bool
   is_valid() const;
 
-  /// @brief トークンの読み出しを行う．
-  /// @param[out] buff 結果の文字列を格納するバッファ
-  /// @param[out] token_loc トークンの位置情報
-  int
-  read_token(StrBuff& buff,
-	     FileRegion& token_loc);
-
   /// @brief インクルード元のファイル位置を返す．
   FileLoc
   parent_loc();
@@ -82,87 +75,6 @@ private:
   /// @param[out] buff 結果の文字列を格納するバッファ
   int
   _read_token(StrBuff& buff);
-
-  /// @brief 2進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
-  /// @param[out] buff 結果を格納するバッファ
-  /// @return トークンを返す．
-  int
-  read_bin_str(int c,
-	       StrBuff& buff);
-
-  /// @brief 8進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
-  /// @param[out] buff 結果を格納するバッファ
-  /// @return トークンを返す．
-  int
-  read_oct_str(int c,
-	       StrBuff& buff);
-
-  /// @brief 10進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
-  /// @param[out] buff 結果を格納するバッファ
-  /// @return トークンを返す．
-  int
-  read_dec_str(int c,
-	       StrBuff& buff);
-
-  /// @brief 16進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
-  /// @param[out] buff 結果を格納するバッファ
-  /// @return トークンを返す．
-  int
-  read_hex_str(int c,
-	       StrBuff& buff);
-
-  /// @brief 識別子に用いられる文字([a-zA-Z0-9_$])が続く限り読みつづける．
-  /// @param[out] buff 結果を格納する文字列バッファ
-  void
-  read_str(StrBuff& buff);
-
-  /// @brief 二重引用符用の読み込み
-  /// @param[out] buff 結果を格納する文字列バッファ
-  /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
-  ///  - STRING
-  ///  - ERROR
-  int
-  read_dq_str(StrBuff& buff);
-
-  /// @brief escaped identifier 用の読み込み
-  /// @param[out] buff 結果を格納する文字列バッファ
-  /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
-  ///  - SPACE
-  ///  - IDENTIFIER
-  ///  - ERROR
-  int
-  read_esc_str(StrBuff& buff);
-
-  /// @brief 数字を読み込む．
-  /// @param[out] buff 結果を格納する文字列バッファ
-  /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
-  ///  - UNUM_INT
-  ///  - RNUMBER
-  ///  - ERROR
-  int
-  read_num(StrBuff& buff);
-
-  /// @brief 空白文字を読み飛ばす
-  void
-  read_space();
-
-  /// @brief '/' を読み込んだ後の処理
-  /// @param[out] buff コメントを格納する文字列バッファ
-  /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
-  ///  - COMMENT1
-  ///  - COMMENT2
-  ///  - '/'
-  ///  - ERROR
-  int
-  read_comment(StrBuff& buff);
 
 
 protected:

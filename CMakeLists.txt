@@ -178,7 +178,6 @@ set (parser_SOURCES
   c++-src/parser/pt_mgr/PtiBase.cc
   c++-src/parser/pt_mgr/PtiFactory.cc
 
-  c++-src/parser/scanner/InputFile.cc
   c++-src/parser/scanner/InputMgr.cc
   c++-src/parser/scanner/Lex.cc
   c++-src/parser/scanner/LexCondPlugin.cc
