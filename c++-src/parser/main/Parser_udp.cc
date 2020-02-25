@@ -419,36 +419,4 @@ Parser::init_udp_value_list()
   mUdpValueList.clear();
 }
 
-// @brief UdpValue を追加する．
-inline
-void
-Parser::add_udp_value(const PtUdpValue* value)
-{
-  mUdpValueList.push_back(value);
-}
-
-// @brief UdpValue のリストを配列に変換する．
-inline
-PtUdpValueArray
-Parser::get_udp_value_array()
-{
-  return mUdpValueList.to_array();
-}
-
-// @brief IO宣言リストを配列に変換する．
-inline
-PtIOHeadArray
-Parser::get_module_io_array()
-{
-  return mModuleIOHeadList.to_array();
-}
-
-// @brief module 用の宣言リストを配列に変換する．
-inline
-PtDeclHeadArray
-Parser::get_module_decl_array()
-{
-  return mModuleDeclHeadList.to_array();
-}
-
 END_NAMESPACE_YM_VERILOG
