@@ -34,20 +34,61 @@ public:
   PtArray();
 
   /// @breif 内容を指定したコンストラクタ
-  /// @param[in] size サイズ
-  /// @param[in] body 配列本体
-  PtArray(SizeType size,
-	  T** body);
+  /// @param[in] src ソース
+  explicit
+  PtArray(const vector<T*>& src);
 
-  /// コピーコンストラクタ，コピー代入演算子はデフォルトでOK
-  PtArray(const PtArray& src) = default;
+  /// @brief 1つの要素からなるコンストラクタ
+  /// @param[in] elem1 要素1
+  explicit
+  PtArray(T* elem1);
+
+  /// @brief 2つの要素からなるコンストラクタ
+  /// @param[in] elem1 要素1
+  /// @param[in] elem2 要素2
+  explicit
+  PtArray(T* elem1,
+	  T* elem2);
+
+  /// @brief 3つの要素からなるコンストラクタ
+  /// @param[in] elem1 要素1
+  /// @param[in] elem2 要素2
+  /// @param[in] elem3 要素3
+  explicit
+  PtArray(T* elem1,
+	  T* elem2,
+	  T* elem3);
+
+  /// @brief 4つの要素からなるコンストラクタ
+  /// @param[in] elem1 要素1
+  /// @param[in] elem2 要素2
+  /// @param[in] elem3 要素3
+  /// @param[in] elem4 要素4
+  explicit
+  PtArray(T* elem1,
+	  T* elem2,
+	  T* elem3,
+	  T* elem4);
+
+  /// コピーコンストラクタ
+  /// @param[in] src ソース
+  PtArray(const PtArray& src);
+
+  /// @brief コピー代入演算子
+  /// @param[in] src ソース
   PtArray&
-  operator=(const PtArray& src) = default;
+  operator=(const PtArray& src);
 
-  // ムーブ系は意味がないのでどうでもいい．
+  /// @brief ムーブコンストラクタ
+  /// @param[in] src ムーブ元
+  PtArray(PtArray&& src);
+
+  /// @brief ムーブ代入演算子
+  /// @param[in] src ムーブ元
+  PtArray&
+  operator=(PtArray&& src);
 
   /// @brief デストラクタ
-  /// @note このクラスではメモリの開放は行わない．
   ~PtArray();
 
 
@@ -104,15 +145,137 @@ PtArray<T>::PtArray() :
 }
 
 // @breif 内容を指定したコンストラクタ
-// @param[in] size サイズ
-// @param[in] body 配列本体
+// @param[in] src ソース
 template <typename T>
 inline
-PtArray<T>::PtArray(SizeType size,
-		    T** body) :
-  mNum{size},
-  mArray{body}
+PtArray<T>::PtArray(const vector<T*>& src) :
+  mNum{src.size()},
+  mArray{new T*[mNum]}
 {
+  for ( int i = 0; i < mNum; ++ i ) {
+    mArray[i] = src[i];
+  }
+}
+
+// @brief 1つの要素からなるコンストラクタ
+// @param[in] elem1 要素1
+template <typename T>
+inline
+PtArray<T>::PtArray(T* elem1) :
+  mNum{1},
+  mArray{new T*[1]}
+{
+  mArray[0] = elem1;
+}
+
+// @brief 2つの要素からなるコンストラクタ
+// @param[in] elem1 要素1
+// @param[in] elem2 要素2
+template <typename T>
+inline
+PtArray<T>::PtArray(T* elem1,
+		    T* elem2) :
+  mNum{2},
+  mArray{new T*[2]}
+{
+  mArray[0] = elem1;
+  mArray[1] = elem2;
+}
+
+// @brief 3つの要素からなるコンストラクタ
+// @param[in] elem1 要素1
+// @param[in] elem2 要素2
+// @param[in] elem3 要素3
+template <typename T>
+inline
+PtArray<T>::PtArray(T* elem1,
+		    T* elem2,
+		    T* elem3) :
+  mNum{3},
+  mArray{new T*[3]}
+{
+  mArray[0] = elem1;
+  mArray[1] = elem2;
+  mArray[2] = elem3;
+}
+
+// @brief 4つの要素からなるコンストラクタ
+// @param[in] elem1 要素1
+// @param[in] elem2 要素2
+// @param[in] elem3 要素3
+// @param[in] elem4 要素4
+template <typename T>
+inline
+PtArray<T>::PtArray(T* elem1,
+		    T* elem2,
+		    T* elem3,
+		    T* elem4) :
+  mNum{4},
+  mArray{new T*[4]}
+{
+  mArray[0] = elem1;
+  mArray[1] = elem2;
+  mArray[2] = elem3;
+  mArray[3] = elem4;
+}
+
+// コピーコンストラクタ
+// @param[in] src ソース
+template <typename T>
+inline
+PtArray<T>::PtArray(const PtArray& src) :
+  mNum{src.mNum},
+  mArray{new T*[mNum]}
+{
+  for ( int i = 0; i < mNum; ++ i ) {
+    mArray[i] = src.mArray[i];
+  }
+}
+
+// @brief コピー代入演算子
+// @param[in] src ソース
+template <typename T>
+inline
+PtArray<T>&
+PtArray<T>::operator=(const PtArray& src)
+{
+  if ( this != &src ) {
+    if ( mNum != src.mNum ) {
+      delete [] mArray;
+      mNum = src.mNum;
+      mArray = new T*[mNum];
+    }
+    for ( int i = 0; i < mNum; ++ i ) {
+      mArray[i] = src.mArray[i];
+    }
+  }
+  return *this;
+}
+
+// @brief ムーブコンストラクタ
+// @param[in] src ムーブ元
+template <typename T>
+inline
+PtArray<T>::PtArray(PtArray&& src) :
+  mNum{src.mNum},
+  mArray{src.mArray}
+{
+  src.mNum = 0;
+  src.mArray = nullptr;
+}
+
+// @brief ムーブ代入演算子
+// @param[in] src ムーブ元
+template <typename T>
+inline
+PtArray<T>&
+PtArray<T>::operator=(PtArray&& src)
+{
+  mNum = src.mNum;
+  mArray = src.mArray;
+  src.mNum = 0;
+  src.mArray = nullptr;
+  return *this;
 }
 
 // @brief デストラクタ
@@ -120,7 +283,7 @@ template <typename T>
 inline
 PtArray<T>::~PtArray()
 {
-  // mArray は他で確保されていると仮定する．
+  delete [] mArray;
 }
 
 // @brief 要素数の取得

@@ -907,7 +907,7 @@ CptFactory::new_DefParamH(const FileRegion& file_region,
 			  PtDefParamArray elem_array)
 {
   ++ mNumDefParamH;
-  auto obj = new CptDefParamH(file_region, elem_array);
+  auto obj{new CptDefParamH(file_region, elem_array)};
   return obj;
 }
 
@@ -918,7 +918,8 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 			 const PtExpr* value)
 {
   ++ mNumDefParam;
-  auto obj = new CptDefParam(file_region, PtNameBranchArray(), name, value);
+  auto obj{new CptDefParam(file_region, PtNameBranchArray(),
+			   name, value)};
   return obj;
 }
 
@@ -929,7 +930,7 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 			 const PtExpr* value)
 {
   ++ mNumDefParam;
-  auto obj = new CptDefParam(file_region, nb_array, tail_name, value);
+  auto obj{new CptDefParam(file_region, nb_array, tail_name, value)};
   return obj;
 }
 
@@ -939,7 +940,7 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignH;
-  auto obj = new CptContAssignH(file_region, elem_array);
+  auto obj{new CptContAssignH(file_region, elem_array)};
   return obj;
 }
 
@@ -950,7 +951,7 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignHS;
-  auto obj = new CptContAssignHS(file_region, strength, elem_array);
+  auto obj{new CptContAssignHS(file_region, strength, elem_array)};
   return obj;
 }
 
@@ -961,7 +962,7 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignHD;
-  auto obj = new CptContAssignHD(file_region, delay, elem_array);
+  auto obj{new CptContAssignHD(file_region, delay, elem_array)};
   return obj;
 }
 
@@ -973,7 +974,7 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    PtContAssignArray elem_array)
 {
   ++ mNumContAssignHSD;
-  auto obj = new CptContAssignHSD(file_region, strength, delay, elem_array);
+  auto obj{new CptContAssignHSD(file_region, strength, delay, elem_array)};
   return obj;
 }
 
@@ -985,7 +986,7 @@ CptFactory::new_ContAssign(const FileRegion& file_region,
 {
   ++ mNumContAssign;
   // 実は file_region は不要
-  auto obj = new CptContAssign(lhs, rhs);
+  auto obj{new CptContAssign(lhs, rhs)};
   return obj;
 }
 
@@ -995,7 +996,7 @@ CptFactory::new_Initial(const FileRegion& file_region,
 			const PtStmt* body)
 {
   ++ mNumInitial;
-  auto obj = new CptInitial(file_region, body);
+  auto obj{new CptInitial(file_region, body)};
   return obj;
 }
 
@@ -1005,7 +1006,7 @@ CptFactory::new_Always(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumAlways;
-  auto obj = new CptAlways(file_region, body);
+  auto obj{new CptAlways(file_region, body)};
   return obj;
 }
 
@@ -1019,10 +1020,10 @@ CptFactory::new_Task(const FileRegion& file_region,
 		     const PtStmt* stmt)
 {
   ++ mNumTask;
-  auto obj = new CptTask(file_region, name, automatic,
-			 iohead_array,
-			 declhead_array,
-			 stmt);
+  auto obj{new CptTask(file_region, name, automatic,
+		       iohead_array,
+		       declhead_array,
+		       stmt)};
   return obj;
 }
 
@@ -1037,10 +1038,10 @@ CptFactory::new_Function(const FileRegion& file_region,
 			 const PtStmt* stmt)
 {
   ++ mNumFunction;
-  auto obj = new CptFunction(file_region, name, automatic, sign,
-			     iohead_array,
-			     declhead_array,
-			     stmt);
+  auto obj{new CptFunction(file_region, name, automatic, sign,
+			   iohead_array,
+			   declhead_array,
+			   stmt)};
   return obj;
 }
 
@@ -1057,12 +1058,12 @@ CptFactory::new_SizedFunc(const FileRegion& file_region,
 			  const PtStmt* stmt)
 {
   ++ mNumSizedFunc;
-  auto obj = new CptSizedFunc(file_region,
-			      name, automatic,
-			      sign, left, right,
-			      iohead_array,
-			      declhead_array,
-			      stmt);
+  auto obj{new CptSizedFunc(file_region,
+			    name, automatic,
+			    sign, left, right,
+			    iohead_array,
+			    declhead_array,
+			    stmt)};
   return obj;
 }
 
@@ -1078,12 +1079,12 @@ CptFactory::new_TypedFunc(const FileRegion& file_region,
 			  const PtStmt* stmt)
 {
   ++ mNumTypedFunc;
-  auto obj = new CptTypedFunc(file_region, name,
-			      automatic, sign,
-			      func_type,
-			      iohead_array,
-			      declhead_array,
-			      stmt);
+  auto obj{new CptTypedFunc(file_region, name,
+			    automatic, sign,
+			    func_type,
+			    iohead_array,
+			    declhead_array,
+			    stmt)};
   return obj;
 }
 

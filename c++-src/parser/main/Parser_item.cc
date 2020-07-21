@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -136,7 +136,8 @@ Parser::new_ContAssign(const FileRegion& fr,
 		       const PtExpr* lhs,
 		       const PtExpr* rhs)
 {
-  add_contassign( mFactory.new_ContAssign(fr, lhs, rhs) );
+  auto ca = mFactory.new_ContAssign(fr, lhs, rhs);
+  add_contassign(ca);
 }
 
 // @brief contassign リストに要素を追加する．
@@ -313,7 +314,7 @@ Parser::new_SpecItem(const FileRegion& fr,
 		     VpiSpecItemType id,
 		     PtrList<const PtExpr>* terminal_list)
 {
-  const PtItem* item = mFactory.new_SpecItem(fr, id, to_array(terminal_list));
+  auto item = mFactory.new_SpecItem(fr, id, to_array(terminal_list));
   mCurItemList->push_back(item);
 }
 
@@ -328,7 +329,7 @@ Parser::new_SpecPath(const FileRegion& fr,
 		     const PtExpr* expr,
 		     const PtPathDecl* path_decl)
 {
-  const PtItem* item = mFactory.new_SpecPath(fr, id, expr, path_decl);
+  auto item = mFactory.new_SpecPath(fr, id, expr, path_decl);
   mCurItemList->push_back(item);
 }
 

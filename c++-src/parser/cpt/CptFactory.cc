@@ -27,16 +27,6 @@ CptFactory::~CptFactory()
 {
 }
 
-// @brief 文字列領域の確保
-const char*
-CptFactory::new_string(const char* str)
-{
-  SizeType len{strlen(str) + 1};
-  auto dst{new char[len]};
-  strcpy(dst, str);
-  return dst;
-}
-
 // 確保したオブジェクトに関する情報を出力する．
 void
 CptFactory::dump_profile(ostream& s) const
@@ -182,6 +172,7 @@ CptFactory::dump_profile(ostream& s) const
   s << "mNumDelay " << mNumDelay<< endl;
   s << "mNumNameBranch " << mNumNameBranch<< endl;
   s << "mNumNameBranchI " << mNumNameBranchI<< endl;
+  s << "mNumRange " << mNumRange << endl;
   s << "mNumAttrInst " << mNumAttrInst<< endl;
   s << "mNumAttrSpec " << mNumAttrSpec<< endl;
 }

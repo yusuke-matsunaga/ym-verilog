@@ -8,6 +8,8 @@
 
 
 #include "parser/PtMgr.h"
+#include "ym/pt/PtModule.h"
+#include "ym/pt/PtUdp.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -25,15 +27,7 @@ PtMgr::PtMgr()
 // @brief デストラクタ
 PtMgr::~PtMgr()
 {
-}
-
-// @brief 今までに生成したインスタンスをすべて破壊する．
-void
-PtMgr::clear()
-{
-  mUdpList.clear();
-  mModuleList.clear();
-  mDefNames.clear();
+  clear();
 }
 
 // @brief 登録されているモジュールのリストを返す．
@@ -61,6 +55,28 @@ PtMgr::check_def_name(const char* name) const
   return mDefNames.count(name) > 0;
 }
 
+// @brief 今までに生成したインスタンスをすべて破壊する．
+void
+PtMgr::clear()
+{
+  for ( auto udp: mUdpList ) {
+    delete udp;
+  }
+  mUdpList.clear();
+
+  for ( auto module: mModuleList ) {
+    delete module;
+  }
+  mModuleList.clear();
+
+  mDefNames.clear();
+
+  for ( auto str: mStringPool ) {
+    delete [] str;
+  }
+  mStringPool.clear();
+}
+
 // UDP の登録
 // @param udp 登録する UDP
 void
@@ -82,6 +98,30 @@ void
 PtMgr::reg_defname(const char* name)
 {
   mDefNames.insert(name);
+}
+
+// @brief 文字列領域を確保する．
+// @param[in] str 文字列
+// @return 文字列を返す．
+//
+// 同一の文字列は共有する．
+const char*
+PtMgr::save_string(const char* str)
+{
+  auto p = mStringPool.find(str);
+  if ( p == mStringPool.end() ) {
+    // str と同じ内容は登録されていなかった．
+    // 新しい領域を確保して登録する．
+    SizeType n = strlen(str) + 1;
+    auto new_str{new char[n]};
+    strcpy(new_str, str);
+    mStringPool.insert(new_str);
+    return new_str;
+  }
+  else {
+    // 登録されていたらその文字列を返す．
+    return *p;
+  }
 }
 
 END_NAMESPACE_YM_VERILOG

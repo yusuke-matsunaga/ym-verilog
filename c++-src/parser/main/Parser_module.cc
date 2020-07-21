@@ -3,7 +3,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -99,9 +99,9 @@ Parser::new_Module1995(const FileRegion& file_region,
   unordered_set<string> portref_dic;
   for ( auto port: port_vector ) {
     SizeType n = port->portref_size();
-    for ( int j = 0; j < n; ++ j ) {
-      const PtExpr* portref = port->portref_elem(j);
-      const char* name = portref->name();
+    for ( int i = 0; i < n; ++ i ) {
+      auto portref = port->portref_elem(i);
+      auto name = portref->name();
       portref_dic.insert(name);
     }
   }
@@ -114,7 +114,7 @@ Parser::new_Module1995(const FileRegion& file_region,
     // 名前をキーにして方向を記録しておく
     VpiDir dir = io_head->direction();
     for ( auto elem: io_head->item_list() ) {
-      const char* elem_name = elem->name();
+      auto elem_name = elem->name();
 
       // まず未定義/多重定義のエラーをチェックする．
       if ( portref_dic.count(elem_name) == 0 ) {
@@ -154,9 +154,9 @@ Parser::new_Module1995(const FileRegion& file_region,
       named_port = false;
     }
     SizeType n = port->portref_size();
-    for ( int j = 0; j < n; ++ j ) {
-      const PtExpr* portref = port->portref_elem(j);
-      const char* name = portref->name();
+    for ( int i = 0; i < n; ++ i ) {
+      auto portref = port->portref_elem(i);
+      auto name = portref->name();
       if ( iodecl_dirs.count(name) == 0 ) {
 	// name は IOH リストに存在しない．
 	ostringstream buf;
@@ -169,7 +169,7 @@ Parser::new_Module1995(const FileRegion& file_region,
       }
       else {
 	VpiDir dir = iodecl_dirs.at(name);
-	port->_set_portref_dir(j, dir);
+	port->_set_portref_dir(i, dir);
       }
     }
   }

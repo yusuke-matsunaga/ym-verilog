@@ -3,7 +3,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -121,7 +121,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
   vector<PtiPort*> port_vector = get_port_vector();
   bool first = true;
   for ( auto port: port_vector ) {
-    const char* port_name = port->ext_name();
+    auto port_name = port->ext_name();
     if ( iomap.count(port_name) == 0 ) {
       ostringstream buf;
       buf << "\"" << port_name << "\" undefined.";
@@ -135,7 +135,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
     }
     if ( first ) {
       first = false;
-      const PtIOItem* ioelem = iomap.at(port_name);
+      auto ioelem = iomap.at(port_name);
       if ( out_item != ioelem ) {
 	// 最初の名前は output でなければならない．
 	ostringstream buf;
@@ -155,7 +155,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
   if ( iomap.size() > 0 ) {
     // iolist 中のみに現れる要素がある．
     for ( auto q: iomap ) {
-      const PtIOItem* ioelem = q.second;
+      auto ioelem = q.second;
       ostringstream buf;
       buf << "\"" << ioelem->name() << "\" does not appear in portlist.";
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -180,12 +180,12 @@ Parser::new_Udp1995(const FileRegion& file_region,
     sane = false;
   }
   else if ( decl_array.size() == 1 ) {
-    const PtDeclHead* reghead = decl_array[0];
+    auto reghead = decl_array[0];
     if ( reghead ) {
       is_seq = true;
       ASSERT_COND(reghead->type() == PtDeclType::Reg );
       ASSERT_COND(reghead->item_list().size() == 1 );
-      const PtDeclItem* regitem = reghead->item_list()[0];
+      auto regitem = reghead->item_list()[0];
       ASSERT_COND(regitem );
       if ( strcmp(regitem->name(), out_item->name()) != 0 ) {
 	// output と名前が違う
@@ -236,10 +236,10 @@ Parser::new_Udp2001(const FileRegion& file_region,
   // YACC の文法が正しく書かれていれば最初のヘッダが出力で
   // 要素数が1となっているはず．
   ASSERT_COND(iohead_array.size() > 0 );
-  const PtIOHead* out_head = iohead_array[0];
+  auto out_head = iohead_array[0];
   ASSERT_COND( out_head->direction() == VpiDir::Output );
   ASSERT_COND( out_head->item_list().size() == 1 );
-  const PtIOItem* out_item = out_head->item_list()[0];
+  auto out_item = out_head->item_list()[0];
 
   if ( out_head->aux_type() == VpiAuxType::Reg ) {
     is_seq = true;
@@ -348,8 +348,9 @@ Parser::new_UdpEntry(const FileRegion& fr,
 		     const FileRegion& output_loc,
 		     char output_symbol)
 {
-  const PtUdpValue* output = mFactory.new_UdpValue(output_loc, output_symbol);
-  add_udp_entry( mFactory.new_UdpEntry(fr, get_udp_value_array(), output) );
+  auto output = mFactory.new_UdpValue(output_loc, output_symbol);
+  auto entry = mFactory.new_UdpEntry(fr, get_udp_value_array(), output);
+  add_udp_entry(entry);
 }
 
 // @brief sequential UDP 用のテーブルエントリの生成
@@ -365,12 +366,10 @@ Parser::new_UdpEntry(const FileRegion& fr,
 		     const FileRegion& output_loc,
 		     char output_symbol)
 {
-  const PtUdpValue* current = mFactory.new_UdpValue(current_loc,
-						    current_symbol);
-  const PtUdpValue* output = mFactory.new_UdpValue(output_loc,
-						   output_symbol);
-  add_udp_entry( mFactory.new_UdpEntry(fr, get_udp_value_array(),
-				       current, output) );
+  auto current = mFactory.new_UdpValue(current_loc, current_symbol);
+  auto output = mFactory.new_UdpValue(output_loc, output_symbol);
+  auto entry = mFactory.new_UdpEntry(fr, get_udp_value_array(), current, output);
+  add_udp_entry(entry);
 }
 
 // @brief UdpEntry を追加する．
@@ -397,7 +396,8 @@ void
 Parser::new_UdpValue(const FileRegion& fr,
 		     char symbol)
 {
-  add_udp_value( mFactory.new_UdpValue(fr, symbol) );
+  auto value = mFactory.new_UdpValue(fr, symbol);
+  add_udp_value(value);
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
@@ -409,7 +409,8 @@ Parser::new_UdpValue(const FileRegion& fr,
 		     char symbol1,
 		     char symbol2)
 {
-  add_udp_value( mFactory.new_UdpValue(fr, symbol1, symbol2) );
+  auto value = mFactory.new_UdpValue(fr, symbol1, symbol2);
+  add_udp_value(value);
 }
 
 // @brief UdpValue のリストを初期化する．

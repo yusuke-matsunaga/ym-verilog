@@ -301,9 +301,8 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 		       bool sign)
 {
   ++ mNumIOH;
-  auto obj = new CptIOH(file_region,
-			dir, VpiAuxType::None,
-			VpiNetType::None, VpiVarType::None, sign);
+  auto obj{new CptIOH(file_region, dir, VpiAuxType::None,
+		      VpiNetType::None, VpiVarType::None, sign)};
   return obj;
 }
 
@@ -318,9 +317,8 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 			  bool sign)
 {
   ++ mNumIOH;
-  auto obj = new CptIOH(file_region,
-			dir, VpiAuxType::Reg,
-			VpiNetType::None, VpiVarType::None, sign);
+  auto obj{new CptIOH(file_region, dir, VpiAuxType::Reg,
+		      VpiNetType::None, VpiVarType::None, sign)};
   return obj;
 }
 
@@ -337,9 +335,8 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
 			  bool sign)
 {
   ++ mNumIOH;
-  auto obj = new CptIOH(file_region,
-			dir, VpiAuxType::Net,
-			net_type, VpiVarType::None, sign);
+  auto obj{new CptIOH(file_region, dir, VpiAuxType::Net,
+		      net_type, VpiVarType::None, sign)};
   return obj;
 }
 
@@ -354,9 +351,8 @@ CptFactory::new_VarIOHead(const FileRegion& file_region,
 			  VpiVarType var_type)
 {
   ++ mNumIOH;
-  auto obj = new CptIOH(file_region, dir,
-			VpiAuxType::Var, VpiNetType::None,
-			var_type, false);
+  auto obj{new CptIOH(file_region, dir,	VpiAuxType::Var, VpiNetType::None,
+		      var_type, false)};
   return obj;
 }
 
@@ -375,9 +371,8 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 		       const PtExpr* right)
 {
   ++ mNumIOHV;
-  auto obj = new CptIOHV(file_region, dir,
-			 VpiAuxType::None, VpiNetType::None,
-			 sign, left, right);
+  auto obj{new CptIOHV(file_region, dir, VpiAuxType::None, VpiNetType::None,
+		       sign, left, right)};
   return obj;
 }
 
@@ -396,9 +391,8 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 			  const PtExpr* right)
 {
   ++ mNumIOHV;
-  auto obj = new CptIOHV(file_region, dir,
-			 VpiAuxType::Reg, VpiNetType::None,
-			 sign, left, right);
+  auto obj{new CptIOHV(file_region, dir, VpiAuxType::Reg, VpiNetType::None,
+		       sign, left, right)};
   return obj;
 }
 
@@ -419,9 +413,8 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
 			  const PtExpr* right)
 {
   ++ mNumIOHV;
-  auto obj = new CptIOHV(file_region, dir,
-			 VpiAuxType::Net, net_type,
-			 sign, left, right);
+  auto obj{new CptIOHV(file_region, dir, VpiAuxType::Net, net_type,
+		       sign, left, right)};
   return obj;
 }
 
@@ -433,7 +426,7 @@ CptFactory::new_IOItem(const FileRegion& file_region,
 		       const char* name)
 {
   ++ mNumIOItem;
-  auto obj = new CptIOItem(file_region, name);
+  auto obj{new CptIOItem(file_region, name)};
   return obj;
 }
 
@@ -447,7 +440,7 @@ CptFactory::new_IOItem(const FileRegion& file_region,
 		       const PtExpr* init_value)
 {
   ++ mNumIOItemI;
-  auto obj = new CptIOItemI(file_region, name, init_value);
+  auto obj{new CptIOItemI(file_region, name, init_value)};
   return obj;
 }
 

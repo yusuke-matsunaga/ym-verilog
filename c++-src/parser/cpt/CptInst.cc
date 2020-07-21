@@ -449,7 +449,7 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateH;
-  auto obj = new CptGateH(file_region, type, inst_array);
+  auto obj{new CptGateH(file_region, type, inst_array)};
   return obj;
 }
 
@@ -461,7 +461,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHS;
-  auto obj = new CptGateHS(file_region, type, strength, inst_array);
+  auto obj{new CptGateHS(file_region, type, strength,
+			 inst_array)};
   return obj;
 }
 
@@ -473,7 +474,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHD;
-  auto obj = new CptGateHD(file_region, type, delay, inst_array);
+  auto obj{new CptGateHD(file_region, type, delay,
+			 inst_array)};
   return obj;
 }
 
@@ -486,8 +488,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHSD;
-  auto obj = new CptGateHSD(file_region,
-			    type, strength, delay, inst_array);
+  auto obj{new CptGateHSD(file_region, type, strength, delay,
+			  inst_array)};
   return obj;
 }
 
@@ -498,8 +500,7 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuH;
-  auto obj = new CptMuH(file_region, def_name,
-			inst_array);
+  auto obj{new CptMuH(file_region, def_name, inst_array)};
   return obj;
 }
 
@@ -511,8 +512,8 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHS;
-  auto obj = new CptMuHS(file_region, def_name,
-			 strength, inst_array);
+  auto obj{new CptMuHS(file_region, def_name, strength,
+		       inst_array)};
   return obj;
 }
 
@@ -524,8 +525,8 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHD;
-  auto obj = new CptMuHD(file_region, def_name,
-			 delay, inst_array);
+  auto obj{new CptMuHD(file_region, def_name, delay,
+		       inst_array)};
   return obj;
 }
 
@@ -538,8 +539,8 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHSD;
-  auto obj = new CptMuHSD(file_region, def_name,
-			  strength, delay, inst_array);
+  auto obj{new CptMuHSD(file_region, def_name, strength, delay,
+			inst_array)};
   return obj;
 }
 
@@ -551,8 +552,8 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHP;
-  auto obj = new CptMuHP(file_region, def_name,
-			 con_array, inst_array);
+  auto obj{new CptMuHP(file_region, def_name, con_array,
+		       inst_array)};
   return obj;
 }
 
@@ -562,7 +563,7 @@ CptFactory::new_Inst(const FileRegion& file_region,
 		     PtConnectionArray con_array)
 {
   ++ mNumInst;
-  auto obj = new CptInst(file_region, con_array);
+  auto obj{new CptInst(file_region, con_array)};
   return obj;
 }
 
@@ -573,7 +574,7 @@ CptFactory::new_InstN(const FileRegion& file_region,
 		      PtConnectionArray con_array)
 {
   ++ mNumInstN;
-  auto obj = new CptInstN(file_region, name, con_array);
+  auto obj{new CptInstN(file_region, name, con_array)};
   return obj;
 }
 
@@ -586,7 +587,8 @@ CptFactory::new_InstV(const FileRegion& file_region,
 		      PtConnectionArray con_array)
 {
   ++ mNumInstR;
-  auto obj = new CptInstR(file_region, name, left, right, con_array);
+  auto obj{new CptInstR(file_region, name, left, right,
+			con_array)};
   return obj;
 }
 

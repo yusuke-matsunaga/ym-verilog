@@ -1211,7 +1211,7 @@ PtiDeclHead*
 CptFactory::new_ParamH(const FileRegion& file_region)
 {
   ++ mNumParamH;
-  auto obj = new CptParamH(file_region);
+  auto obj{new CptParamH(file_region)};
   return obj;
 }
 
@@ -1224,11 +1224,11 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 {
   ++ mNumParamHV;
   if ( sign ) {
-    auto obj = new CptParamHSV(file_region, left, right);
+    auto obj{new CptParamHSV(file_region, left, right)};
     return obj;
   }
   else {
-    auto obj = new CptParamHV(file_region, left, right);
+    auto obj{new CptParamHV(file_region, left, right)};
     return obj;
   }
 }
@@ -1239,7 +1239,7 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 		       VpiVarType var_type)
 {
   ++ mNumParamHT;
-  auto obj = new CptParamHT(file_region, var_type);
+  auto obj{new CptParamHT(file_region, var_type)};
   return obj;
 }
 
@@ -1248,7 +1248,7 @@ PtiDeclHead*
 CptFactory::new_LocalParamH(const FileRegion& file_region)
 {
   ++ mNumLocalParamH;
-  auto obj = new CptLocalParamH(file_region);
+  auto obj{new CptLocalParamH(file_region)};
   return obj;
 }
 
@@ -1261,11 +1261,11 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 {
   ++ mNumLocalParamHV;
   if ( sign ) {
-    auto obj = new CptLocalParamHSV(file_region, left, right);
+    auto obj{new CptLocalParamHSV(file_region, left, right)};
     return obj;
   }
   else {
-    auto obj = new CptLocalParamHV(file_region, left, right);
+    auto obj{new CptLocalParamHV(file_region, left, right)};
     return obj;
   }
 }
@@ -1276,7 +1276,7 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 			    VpiVarType var_type)
 {
   ++ mNumLocalParamHT;
-  auto obj = new CptLocalParamHT(file_region, var_type);
+  auto obj{new CptLocalParamHT(file_region, var_type)};
   return obj;
 }
 
@@ -1285,7 +1285,7 @@ PtiDeclHead*
 CptFactory::new_SpecParamH(const FileRegion& file_region)
 {
   ++ mNumSpecParamH;
-  auto obj = new CptSpecParamH(file_region);
+  auto obj{new CptSpecParamH(file_region)};
   return obj;
 }
 
@@ -1296,7 +1296,7 @@ CptFactory::new_SpecParamH(const FileRegion& file_region,
 			   const PtExpr* right)
 {
   ++ mNumSpecParamHV;
-  auto obj = new CptSpecParamHV(file_region, left, right);
+  auto obj{new CptSpecParamHV(file_region, left, right)};
   return obj;
 }
 
@@ -1305,7 +1305,7 @@ PtiDeclHead*
 CptFactory::new_EventH(const FileRegion& file_region)
 {
   ++ mNumEventH;
-  auto obj = new CptEventH(file_region);
+  auto obj{new CptEventH(file_region)};
   return obj;
 }
 
@@ -1314,7 +1314,7 @@ PtiDeclHead*
 CptFactory::new_GenvarH(const FileRegion& file_region)
 {
   ++ mNumGenvarH;
-  auto obj = new CptGenvarH(file_region);
+  auto obj{new CptGenvarH(file_region)};
   return obj;
 }
 
@@ -1324,7 +1324,7 @@ CptFactory::new_VarH(const FileRegion& file_region,
 		     VpiVarType var_type)
 {
   ++ mNumVarH;
-  auto obj = new CptVarH(file_region, var_type);
+  auto obj{new CptVarH(file_region, var_type)};
   return obj;
 }
 
@@ -1335,11 +1335,11 @@ CptFactory::new_RegH(const FileRegion& file_region,
 {
   ++ mNumRegH;
   if ( sign ) {
-    auto obj = new CptRegHS(file_region);
+    auto obj{new CptRegHS(file_region)};
     return obj;
   }
   else {
-    auto obj = new CptRegH(file_region);
+    auto obj{new CptRegH(file_region)};
     return obj;
   }
 }
@@ -1353,11 +1353,11 @@ CptFactory::new_RegH(const FileRegion& file_region,
 {
   ++ mNumRegHV;
   if ( sign ) {
-    auto obj = new CptRegHSV(file_region, left, right);
+    auto obj{new CptRegHSV(file_region, left, right)};
     return obj;
   }
   else {
-    auto obj = new CptRegHV(file_region, left, right);
+    auto obj{new CptRegHV(file_region, left, right)};
     return obj;
   }
 }
@@ -1369,7 +1369,7 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     bool sign)
 {
   ++ mNumNetH;
-  auto obj = new CptNetH(file_region, type, sign);
+  auto obj{new CptNetH(file_region, type, sign)};
   return obj;
 }
 
@@ -1381,9 +1381,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   ++ mNumNetHS;
-  auto obj = new CptNetHS(file_region,
-			  type, sign,
-			  strength);
+  auto obj{new CptNetHS(file_region,
+			type, sign,
+			strength)};
   return obj;
 }
 
@@ -1395,9 +1395,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHD;
-  auto obj = new CptNetHD(file_region,
-			  type, sign,
-			  delay);
+  auto obj{new CptNetHD(file_region,
+			type, sign,
+			delay)};
   return obj;
 }
 
@@ -1410,9 +1410,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++mNumNetHSD;
-  auto obj = new CptNetHSD(file_region,
-			   type, sign,
-			   strength, delay);
+  auto obj{new CptNetHSD(file_region,
+			 type, sign,
+			 strength, delay)};
   return obj;
 }
 
@@ -1426,8 +1426,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtExpr* right)
 {
   ++ mNumNetHV;
-  auto obj = new CptNetHV(file_region,
-			  type, vstype, sign, left, right);
+  auto obj{new CptNetHV(file_region,
+			type, vstype, sign, left, right)};
   return obj;
 }
 
@@ -1442,9 +1442,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   ++ mNumNetHVS;
-  auto obj = new CptNetHVS(file_region,
-			   type, vstype, sign, left, right,
-			   strength);
+  auto obj{new CptNetHVS(file_region,
+			 type, vstype, sign, left, right,
+			 strength)};
   return obj;
 }
 
@@ -1459,9 +1459,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHVD;
-  auto obj = new CptNetHVD(file_region,
-			   type, vstype, sign, left, right,
-			   delay);
+  auto obj{new CptNetHVD(file_region,
+			 type, vstype, sign, left, right,
+			 delay)};
   return obj;
 }
 
@@ -1477,9 +1477,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHVSD;
-  auto obj = new CptNetHVSD(file_region,
-			    type, vstype, sign, left, right,
-			    strength, delay);
+  auto obj{new CptNetHVSD(file_region,
+			  type, vstype, sign, left, right,
+			  strength, delay)};
   return obj;
 }
 
@@ -1489,7 +1489,7 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name)
 {
   ++ mNumDeclItem;
-  auto obj = new CptDeclItem(file_region, name);
+  auto obj{new CptDeclItem(file_region, name)};
   return obj;
 }
 
@@ -1499,7 +1499,7 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const PtExpr* init_value)
 {
   ++ mNumDeclItemI;
-  auto obj = new CptDeclItemI(file_region, name, init_value);
+  auto obj{new CptDeclItemI(file_region, name, init_value)};
   return obj;
 }
 
@@ -1509,7 +1509,7 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 PtRangeArray range_array)
 {
   ++ mNumDeclItemR;
-  auto obj = new CptDeclItemR(file_region, name, range_array);
+  auto obj{new CptDeclItemR(file_region, name, range_array)};
   return obj;
 }
 
@@ -1518,7 +1518,8 @@ CptFactory::new_Range(const FileRegion& fr,
 		      const PtExpr* msb,
 		      const PtExpr* lsb)
 {
-  auto obj = new CptRange(fr, msb, lsb);
+  ++ mNumRange;
+  auto obj{new CptRange(fr, msb, lsb)};
   return obj;
 }
 

@@ -530,7 +530,7 @@ CptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
   ++ mNumDelayControl;
-  auto obj = new CptDelayControl(file_region, value);
+  auto obj{new CptDelayControl(file_region, value)};
   return obj;
 }
 
@@ -540,7 +540,7 @@ CptFactory::new_EventControl(const FileRegion& file_region,
 			     PtExprArray event_array)
 {
   ++ mNumEventControl;
-  auto obj = new CptEventControl(file_region, event_array);
+  auto obj{new CptEventControl(file_region, event_array)};
   return obj;
 }
 
@@ -551,7 +551,7 @@ CptFactory::new_RepeatControl(const FileRegion& file_region,
 			      PtExprArray event_array)
 {
   ++ mNumRepeatControl;
-  auto obj = new CptRepeatControl(file_region, expr, event_array);
+  auto obj{new CptRepeatControl(file_region, expr, event_array)};
   return obj;
 }
 
@@ -561,7 +561,7 @@ CptFactory::new_OrderedCon(const FileRegion& file_region,
 			   const PtExpr* expr)
 {
   ++ mNumAiOrderedCon;
-  auto obj = new CptOrderedCon(file_region, expr);
+  auto obj{new CptOrderedCon(file_region, expr)};
   return obj;
 }
 
@@ -574,7 +574,7 @@ CptFactory::new_OrderedCon(const PtExpr* expr)
   if ( expr ) {
     file_region = expr->file_region();
   }
-  auto obj = new CptOrderedCon(file_region, expr);
+  auto obj{new CptOrderedCon(file_region, expr)};
   return obj;
 }
 
@@ -585,7 +585,7 @@ CptFactory::new_NamedCon(const FileRegion& file_region,
 			 const PtExpr* expr)
 {
   ++ mNumNamedCon;
-  auto obj = new CptNamedCon(file_region, name, expr);
+  auto obj{new CptNamedCon(file_region, name, expr)};
   return obj;
 }
 
@@ -596,7 +596,7 @@ CptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value2)
 {
   ++ mNumStrength;
-  auto obj = new CptStrength(file_region, value1, value2);
+  auto obj{new CptStrength(file_region, value1, value2)};
   return obj;
 }
 
@@ -606,7 +606,7 @@ CptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value1)
 {
   ++ mNumStrength;
-  auto obj = new CptStrength(file_region, value1);
+  auto obj{new CptStrength(file_region, value1)};
   return obj;
 }
 
@@ -616,7 +616,7 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value1)
 {
   ++ mNumDelay;
-  auto obj = new CptDelay(file_region, value1);
+  auto obj{new CptDelay(file_region, value1)};
   return obj;
 }
 
@@ -627,7 +627,7 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value2)
 {
   ++ mNumDelay;
-  auto obj = new CptDelay(file_region, value1, value2);
+  auto obj{new CptDelay(file_region, value1, value2)};
   return obj;
 }
 
@@ -639,7 +639,7 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value3)
 {
   ++ mNumDelay;
-  auto obj = new CptDelay(file_region, value1, value2, value3);
+  auto obj{new CptDelay(file_region, value1, value2, value3)};
   return obj;
 }
 
@@ -648,7 +648,7 @@ const PtNameBranch*
 CptFactory::new_NameBranch(const char* name)
 {
   ++ mNumNameBranch;
-  auto obj = new CptNameBranch(name);
+  auto obj{new CptNameBranch(name)};
   return obj;
 }
 
@@ -658,7 +658,7 @@ CptFactory::new_NameBranch(const char* name,
 			   int index)
 {
   ++ mNumNameBranchI;
-  auto obj = new CptNameBranchI(name, index);
+  auto obj{new CptNameBranchI(name, index)};
   return obj;
 }
 
@@ -674,7 +674,7 @@ CptFactory::new_AttrInst(const FileRegion& file_region,
 {
   // file_region は不要
   ++ mNumAttrInst;
-  auto obj = new CptAttrInst(as_array);
+  auto obj{new CptAttrInst(as_array)};
   return obj;
 }
 
@@ -685,7 +685,7 @@ CptFactory::new_AttrSpec(const FileRegion& file_region,
 			 const PtExpr* expr)
 {
   ++ mNumAttrSpec;
-  auto obj = new CptAttrSpec(file_region, name, expr);
+  auto obj{new CptAttrSpec(file_region, name, expr)};
   return obj;
 }
 

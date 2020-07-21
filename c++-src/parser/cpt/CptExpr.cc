@@ -17,16 +17,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 // expression を表す基底クラス
 //////////////////////////////////////////////////////////////////////
 
-// コンストラクタ
-CptExpr::CptExpr()
-{
-}
-
-// デストラクタ
-CptExpr::~CptExpr()
-{
-}
-
 // @brief 演算子の種類の取得
 // @return 演算子の種類
 // このクラスでは VpiOpType::Null を返す．
@@ -1091,7 +1081,7 @@ CptFactory::new_Opr(const FileRegion& file_region,
 		    const PtExpr* opr)
 {
   ++ mNumOpr1;
-  auto obj = new CptOpr1(file_region, type, opr);
+  auto obj{new CptOpr1(file_region, type, opr)};
   return obj;
 }
 
@@ -1103,7 +1093,7 @@ CptFactory::new_Opr(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumOpr2;
-  auto obj = new CptOpr2(type, opr1, opr2);
+  auto obj{new CptOpr2(type, opr1, opr2)};
   return obj;
 }
 
@@ -1116,7 +1106,7 @@ CptFactory::new_Opr(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumOpr3;
-  auto obj = new CptOpr3(type, opr1, opr2, opr3);
+  auto obj{new CptOpr3(type, opr1, opr2, opr3)};
   return obj;
 }
 
@@ -1126,7 +1116,7 @@ CptFactory::new_Concat(const FileRegion& file_region,
 		       PtExprArray expr_array)
 {
   ++ mNumConcat;
-  auto obj = new CptConcat(file_region, expr_array);
+  auto obj{new CptConcat(file_region, expr_array)};
   return obj;
 }
 
@@ -1136,7 +1126,7 @@ CptFactory::new_MultiConcat(const FileRegion& file_region,
 			    PtExprArray expr_array)
 {
   ++ mNumMultiConcat;
-  auto obj = new CptMultiConcat(file_region, expr_array);
+  auto obj{new CptMultiConcat(file_region, expr_array)};
   return obj;
 }
 
@@ -1149,7 +1139,7 @@ CptFactory::new_MinTypMax(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumMinTypMax3;
-  auto obj = new CptMinTypMax(val0, val1, val2);
+  auto obj{new CptMinTypMax(val0, val1, val2)};
   return obj;
 }
 
@@ -1160,7 +1150,7 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PtExprArray arg_array)
 {
   ++ mNumFuncCall;
-  auto obj = new CptFuncCall(file_region, name, arg_array);
+  auto obj{new CptFuncCall(file_region, name, arg_array)};
   return obj;
 }
 
@@ -1172,7 +1162,7 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PtExprArray arg_array)
 {
   ++ mNumFuncCallH;
-  auto obj = new CptFuncCallH(file_region, nb_array, tail_name, arg_array);
+  auto obj{new CptFuncCallH(file_region, nb_array, tail_name, arg_array)};
   return obj;
 }
 
@@ -1183,7 +1173,7 @@ CptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    PtExprArray arg_array)
 {
   ++ mNumSysFuncCall;
-  auto obj = new CptSysFuncCall(file_region, name, arg_array);
+  auto obj{new CptSysFuncCall(file_region, name, arg_array)};
   return obj;
 }
 
@@ -1193,7 +1183,7 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 unsigned int value)
 {
   ++ mNumIntConstant1;
-  auto obj = new CptIntConstant1(file_region, value);
+  auto obj{new CptIntConstant1(file_region, value)};
   return obj;
 }
 
@@ -1203,7 +1193,7 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant2;
-  auto obj = new CptIntConstant2(file_region, VpiConstType::Int, value);
+  auto obj{new CptIntConstant2(file_region, VpiConstType::Int, value)};
   return obj;
 }
 
@@ -1214,7 +1204,7 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant2;
-  auto obj = new CptIntConstant2(file_region, const_type, value);
+  auto obj{new CptIntConstant2(file_region, const_type, value)};
   return obj;
 }
 
@@ -1226,7 +1216,7 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant3;
-  auto obj = new CptIntConstant3(file_region, size, const_type, value);
+  auto obj{new CptIntConstant3(file_region, size, const_type, value)};
   return obj;
 }
 
@@ -1236,7 +1226,7 @@ CptFactory::new_RealConst(const FileRegion& file_region,
 			  double value)
 {
   ++ mNumRealConstant;
-  auto obj = new CptRealConstant(file_region, value);
+  auto obj{new CptRealConstant(file_region, value)};
   return obj;
 }
 
@@ -1246,7 +1236,7 @@ CptFactory::new_StringConst(const FileRegion& file_region,
 			    const char* value)
 {
   ++ mNumStringConstant;
-  auto obj = new CptStringConstant(file_region, value);
+  auto obj{new CptStringConstant(file_region, value)};
   return obj;
 }
 

@@ -162,10 +162,10 @@ CptPrimaryR::CptPrimaryR(const FileRegion& file_region,
 			 const PtExpr* left,
 			 const PtExpr* right) :
   CptPrimaryBase(name),
-  mFileRegion(file_region),
-  mMode(mode),
-  mLeftRange(left),
-  mRightRange(right)
+  mFileRegion{file_region},
+  mMode{mode},
+  mLeftRange{left},
+  mRightRange{right}
 {
 }
 
@@ -249,9 +249,9 @@ CptPrimaryIR::CptPrimaryIR(const FileRegion& file_region,
 			   const PtExpr* left,
 			   const PtExpr* right) :
   CptPrimaryI(file_region, name, index_array),
-  mMode(mode),
-  mLeftRange(left),
-  mRightRange(right)
+  mMode{mode},
+  mLeftRange{left},
+  mRightRange{right}
 {
 }
 
@@ -291,8 +291,8 @@ CptPrimaryH::CptPrimaryH(const FileRegion& file_region,
 			 PtNameBranchArray nb_array,
 			 const char* tail_name) :
   CptPrimaryBase(tail_name),
-  mFileRegion(file_region),
-  mNbArray(nb_array)
+  mFileRegion{file_region},
+  mNbArray{nb_array}
 {
 }
 
@@ -326,7 +326,7 @@ CptPrimaryHI::CptPrimaryHI(const FileRegion& file_region,
 			   const char* tail_name,
 			   PtExprArray index_array) :
   CptPrimaryI(file_region, tail_name, index_array),
-  mNbArray(nb_array)
+  mNbArray{nb_array}
 {
 }
 
@@ -381,7 +381,7 @@ CptPrimaryHR::CptPrimaryHR(const FileRegion& file_region,
 			   const PtExpr* left,
 			   const PtExpr* right) :
   CptPrimaryR(file_region, tail_name, mode, left, right),
-  mNbArray(nb_array)
+  mNbArray{nb_array}
 {
 }
 
@@ -411,7 +411,7 @@ CptPrimaryHIR::CptPrimaryHIR(const FileRegion& file_region,
 			     const PtExpr* left,
 			     const PtExpr* right) :
   CptPrimaryIR(file_region, tail_name, index_array, mode, left, right),
-  mNbArray(nb_array)
+  mNbArray{nb_array}
 {
 }
 
@@ -438,7 +438,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name)
 {
   ++ mNumPrimary;
-  auto obj = new CptPrimary(file_region, name);
+  auto obj{new CptPrimary(file_region, name)};
   return obj;
 }
 
@@ -449,7 +449,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtExprArray index_array)
 {
   ++ mNumPrimaryI;
-  auto obj = new CptPrimaryI(file_region, name, index_array);
+  auto obj{new CptPrimaryI(file_region, name, index_array)};
   return obj;
 }
 
@@ -462,7 +462,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryR;
-  auto obj = new CptPrimaryR(file_region, name, mode, left, right);
+  auto obj{new CptPrimaryR(file_region, name, mode, left, right)};
   return obj;
 }
 
@@ -476,7 +476,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryIR;
-  auto obj = new CptPrimaryIR(file_region, name, index_array, mode, left, right);
+  auto obj{new CptPrimaryIR(file_region, name, index_array, mode,
+			    left, right)};
   return obj;
 }
 
@@ -487,7 +488,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const char* tail_name)
 {
   ++ mNumPrimaryH;
-  auto obj = new CptPrimaryH(file_region, nb_array, tail_name);
+  auto obj{new CptPrimaryH(file_region, nb_array, tail_name)};
   return obj;
 }
 
@@ -499,7 +500,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtExprArray index_array)
 {
   ++ mNumPrimaryHI;
-  auto obj = new CptPrimaryHI(file_region, nb_array, tail_name, index_array);
+  auto obj{new CptPrimaryHI(file_region, nb_array, tail_name,
+			    index_array)};
   return obj;
 }
 
@@ -513,7 +515,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHR;
-  auto obj = new CptPrimaryHR(file_region, nb_array, tail_name, mode, left, right);
+  auto obj{new CptPrimaryHR(file_region, nb_array, tail_name, mode,
+			    left, right)};
   return obj;
 }
 
@@ -528,8 +531,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHIR;
-  auto obj = new CptPrimaryHIR(file_region, nb_array, tail_name,
-			       index_array, mode, left, right);
+  auto obj{new CptPrimaryHIR(file_region, nb_array, tail_name,
+			     index_array, mode, left, right)};
   return obj;
 }
 
@@ -540,7 +543,7 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 PtExprArray index_array)
 {
   ++ mNumPrimaryCI;
-  auto obj = new CptPrimaryCI(file_region, name, index_array);
+  auto obj{new CptPrimaryCI(file_region, name, index_array)};
   return obj;
 }
 
@@ -553,7 +556,7 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 const PtExpr* right)
 {
   ++ mNumPrimaryCR;
-  auto obj = new CptPrimaryCR(file_region, name, mode, left, right);
+  auto obj{new CptPrimaryCR(file_region, name, mode, left, right)};
   return obj;
 }
 
@@ -565,7 +568,7 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 PtExprArray index_array)
 {
   ++ mNumPrimaryHCI;
-  auto obj = new CptPrimaryHCI(file_region, nb_array, tail_name, index_array);
+  auto obj{new CptPrimaryHCI(file_region, nb_array, tail_name, index_array)};
   return obj;
 }
 

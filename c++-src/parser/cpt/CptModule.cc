@@ -458,17 +458,17 @@ CptPort1::_set_portref_dir(int pos,
 CptPort2::CptPort2(const FileRegion& file_region,
 		   const PtExpr* portref,
 		   PtExprArray portref_array,
-		   VpiDir* dir_array,
 		   const char* ext_name) :
   CptPort1(file_region, portref, ext_name),
   mPortRefArray(portref_array),
-  mDirArray(dir_array)
+  mDirArray{new VpiDir[portref_array.size()]}
 {
 }
 
 // デストラクタ
 CptPort2::~CptPort2()
 {
+  delete [] mDirArray;
 }
 
 // @brief 内部のポート結線リストのサイズの取得
@@ -483,24 +483,27 @@ CptPort2::portref_size() const
 const PtExpr*
 CptPort2::portref_elem(int pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < portref_size() );
   return mPortRefArray[pos];
 }
 
 // @brief 内部ポート結線の方向の取得
-// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
+// @param[in] pos 位置番号 ( 0 <= pos < portref_size() )
 VpiDir
 CptPort2::portref_dir(int pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < portref_size() );
   return mDirArray[pos];
 }
 
 // @brief portref の方向を設定する．
-// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
+// @param[in] pos 位置番号 ( 0 <= pos < portref_size() )
 // @param[in] dir 方向
 void
 CptPort2::_set_portref_dir(int pos,
 			   VpiDir dir)
 {
+  ASSERT_COND( 0 <= pos && pos < portref_size() );
   mDirArray[pos] = dir;
 }
 
@@ -563,19 +566,19 @@ CptFactory::new_Module(const FileRegion& file_region,
 		       PtItemArray item_array)
 {
   ++ mNumModule;
-  auto obj = new CptModule(file_region, name,
-			   macro, is_cell, is_protected,
-			   time_unit, time_precision,
-			   net_type, unconn,
-			   delay, decay,
-			   explicit_name,
-			   portfaults, suppress_faults,
-			   config, library, cell,
-			   paramport_array,
-			   port_array,
-			   iohead_array,
-			   declhead_array,
-			   item_array);
+  auto obj{new CptModule(file_region, name,
+			 macro, is_cell, is_protected,
+			 time_unit, time_precision,
+			 net_type, unconn,
+			 delay, decay,
+			 explicit_name,
+			 portfaults, suppress_faults,
+			 config, library, cell,
+			 paramport_array,
+			 port_array,
+			 iohead_array,
+			 declhead_array,
+			 item_array)};
   return obj;
 }
 
@@ -593,7 +596,7 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  auto obj = new CptPort(file_region, ext_name);
+  auto obj{new CptPort(file_region, ext_name)};
   return obj;
 }
 
@@ -608,7 +611,7 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  auto obj = new CptPort1(file_region, portref, ext_name);
+  auto obj{new CptPort1(file_region, portref, ext_name)};
   return obj;
 }
 
@@ -625,10 +628,7 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  int n = portref_array.size();
-  VpiDir* dir_array = alloc_array<VpiDir>(n);
-  auto obj = new CptPort2(file_region, portref,
-			  portref_array, dir_array, ext_name);
+  auto obj{new CptPort2(file_region, portref, portref_array, ext_name)};
   return obj;
 }
 

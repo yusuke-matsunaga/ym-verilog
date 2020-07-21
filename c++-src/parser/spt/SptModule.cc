@@ -536,12 +536,10 @@ SptFactory::new_Port(const FileRegion& file_region,
 		     const PtExpr* portref,
 		     const char* ext_name)
 {
-  int portref_num = 1;
-  const PtExpr** portref_array = alloc_array<const PtExpr*>(portref_num);
-  portref_array[0] = portref;
+  vector<const PtExpr*> vec{portref};
   auto node = new SptPort(file_region,
 			  portref,
-			  PtExprArray(portref_num, portref_array),
+			  PtExprArray(vec),
 			  ext_name);
   return node;
 }

@@ -70,10 +70,10 @@ CptSpecPath::CptSpecPath(const FileRegion& file_region,
 			 VpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl) :
-  mFileRegion(file_region),
-  mId(id),
-  mExpr(expr),
-  mPathDecl(path_decl)
+  mFileRegion{file_region},
+  mId{id},
+  mExpr{expr},
+  mPathDecl{path_decl}
 {
 }
 
@@ -132,15 +132,15 @@ CptPathDecl::CptPathDecl(const FileRegion& file_region,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay) :
-  mFileRegion(file_region),
-  mEdge(edge),
-  mInputArray(input_array),
-  mInputPol(input_pol),
-  mOp(op),
-  mOutputArray(output_array),
-  mOutputPol(output_pol),
-  mExpr(expr),
-  mPathDelay(path_delay)
+  mFileRegion{file_region},
+  mEdge{edge},
+  mInputArray{input_array},
+  mInputPol{input_pol},
+  mOp{op},
+  mOutputArray{output_array},
+  mOutputPol{output_pol},
+  mExpr{expr},
+  mPathDelay{path_delay}
 {
 }
 
@@ -224,8 +224,8 @@ CptPathDecl::path_delay() const
 // コンストラクタ
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value) :
-  mFileRegion(file_region),
-  mValues{value, nullptr, nullptr,
+  mFileRegion{file_region},
+  mValues{value,   nullptr, nullptr,
 	  nullptr, nullptr, nullptr,
 	  nullptr, nullptr, nullptr,
 	  nullptr, nullptr, nullptr}
@@ -235,20 +235,20 @@ CptPathDelay::CptPathDelay(const FileRegion& file_region,
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2) :
-  mFileRegion(file_region)
+  mFileRegion{file_region},
+  mValues{value1,  value2,  nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr,
+	  nullptr, nullptr, nullptr}
+
 {
-  mValues[0] = value1;
-  mValues[1] = value2;
-  for ( int i = 2; i < 12; ++ i ) {
-    mValues[i] = nullptr;
-  }
 }
 CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value1,
 			   const PtExpr* value2,
 			   const PtExpr* value3) :
-  mFileRegion(file_region),
-  mValues{value1, value2, value3,
+  mFileRegion{file_region},
+  mValues{value1,  value2,  value3,
 	  nullptr, nullptr, nullptr,
 	  nullptr, nullptr, nullptr,
 	  nullptr, nullptr, nullptr}
@@ -262,7 +262,7 @@ CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value4,
 			   const PtExpr* value5,
 			   const PtExpr* value6) :
-  mFileRegion(file_region),
+  mFileRegion{file_region},
   mValues{value1, value2, value3,
 	  value4, value5, value6,
 	  nullptr, nullptr, nullptr,
@@ -283,10 +283,10 @@ CptPathDelay::CptPathDelay(const FileRegion& file_region,
 			   const PtExpr* value10,
 			   const PtExpr* value11,
 			   const PtExpr* value12) :
-  mFileRegion(file_region),
-  mValues{value1, value2, value3,
-	  value4, value5, value6,
-	  value7, value8, value9,
+  mFileRegion{file_region},
+  mValues{value1,  value2,  value3,
+	  value4,  value5,  value6,
+	  value7,  value8,  value9,
 	  value10, value11, value12}
 {
 }
@@ -328,7 +328,7 @@ CptFactory::new_SpecItem(const FileRegion& file_region,
 			 PtExprArray terminal_array)
 {
   ++ mNumSpecItem;
-  auto obj = new CptSpecItem(file_region, id, terminal_array);
+  auto obj{new CptSpecItem(file_region, id, terminal_array)};
   return obj;
 }
 
@@ -340,7 +340,7 @@ CptFactory::new_SpecPath(const FileRegion& file_region,
 			 const PtPathDecl* path_decl)
 {
   ++ mNumSpecPath;
-  auto obj = new CptSpecPath(file_region, id, expr, path_decl);
+  auto obj{new CptSpecPath(file_region, id, expr, path_decl)};
   return obj;
 }
 
@@ -357,9 +357,9 @@ CptFactory::new_PathDecl(const FileRegion& file_region,
 			 const PtPathDelay* path_delay)
 {
   ++ mNumPathDecl;
-  auto obj = new CptPathDecl(file_region, edge, input_array, input_pol,
-			     op, output_array, output_pol,
-			     expr, path_delay);
+  auto obj{new CptPathDecl(file_region, edge, input_array, input_pol,
+			   op, output_array, output_pol,
+			   expr, path_delay)};
   return obj;
 }
 
@@ -369,7 +369,7 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value)
 {
   ++ mNumPathDelay;
-  auto obj = new CptPathDelay(file_region, value);
+  auto obj{new CptPathDelay(file_region, value)};
   return obj;
 }
 
@@ -380,7 +380,7 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value2)
 {
   ++ mNumPathDelay;
-  auto obj = new CptPathDelay(file_region, value1, value2);
+  auto obj{new CptPathDelay(file_region, value1, value2)};
   return obj;
 }
 
@@ -392,7 +392,7 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value3)
 {
   ++ mNumPathDelay;
-  auto obj = new CptPathDelay(file_region, value1, value2, value3);
+  auto obj{new CptPathDelay(file_region, value1, value2, value3)};
   return obj;
 }
 
@@ -407,8 +407,9 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value6)
 {
   ++ mNumPathDelay;
-  auto obj = new CptPathDelay(file_region, value1, value2, value3,
-			      value4, value5, value6);
+  auto obj{new CptPathDelay(file_region,
+			    value1, value2, value3,
+			    value4, value5, value6)};
   return obj;
 }
 
@@ -429,10 +430,11 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value12)
 {
   ++ mNumPathDelay;
-  auto obj = new CptPathDelay(file_region, value1, value2, value3,
-			      value4, value5, value6,
-			      value7, value8, value9,
-			      value10, value11, value12);
+  auto obj{new CptPathDelay(file_region,
+			    value1, value2, value3,
+			    value4, value5, value6,
+			    value7, value8, value9,
+			    value10, value11, value12)};
   return obj;
 }
 

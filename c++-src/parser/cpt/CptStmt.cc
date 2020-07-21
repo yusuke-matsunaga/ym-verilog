@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // コンストラクタ
 CptStmt::CptStmt(const FileRegion& file_region) :
-  mFileRegion(file_region)
+  mFileRegion{file_region}
 {
 }
 
@@ -41,32 +41,32 @@ const char*
 CptStmt::stmt_name() const
 {
   switch ( type() ) {
-  case PtStmtType::Disable:   return "disable statment";
-  case PtStmtType::Enable:    return "task enable statement";
-  case PtStmtType::SysEnable: return "system task enable statement";
-  case PtStmtType::DelayControl:        return "delay control statement";
-  case PtStmtType::EventControl:        return "event control statement";
-  case PtStmtType::Assign:    return "assignment";
-  case PtStmtType::NbAssign:  return "nonblocking assignment";
-  case PtStmtType::Event:     return "event statement";
-  case PtStmtType::Null:      return "null statement";
-  case PtStmtType::If:        return "if statement";
-  case PtStmtType::Case:      return "case statement";
-  case PtStmtType::CaseX:     return "casex statement";
-  case PtStmtType::CaseZ:     return "casez statement";
-  case PtStmtType::Wait:      return "wait statement";
-  case PtStmtType::Forever:   return "forever statement";
-  case PtStmtType::Repeat:    return "repeat statement";
-  case PtStmtType::White:     return "while statement";
-  case PtStmtType::For:       return "for-loop statement";
-  case PtStmtType::PcAssign:  return "procedural continuous assignment";
-  case PtStmtType::Deassign:  return "deassign statement";
-  case PtStmtType::Force:     return "force statement";
-  case PtStmtType::Release:   return "release statement";
+  case PtStmtType::Disable:       return "disable statment";
+  case PtStmtType::Enable:        return "task enable statement";
+  case PtStmtType::SysEnable:     return "system task enable statement";
+  case PtStmtType::DelayControl:  return "delay control statement";
+  case PtStmtType::EventControl:  return "event control statement";
+  case PtStmtType::Assign:        return "assignment";
+  case PtStmtType::NbAssign:      return "nonblocking assignment";
+  case PtStmtType::Event:         return "event statement";
+  case PtStmtType::Null:          return "null statement";
+  case PtStmtType::If:            return "if statement";
+  case PtStmtType::Case:          return "case statement";
+  case PtStmtType::CaseX:         return "casex statement";
+  case PtStmtType::CaseZ:         return "casez statement";
+  case PtStmtType::Wait:          return "wait statement";
+  case PtStmtType::Forever:       return "forever statement";
+  case PtStmtType::Repeat:        return "repeat statement";
+  case PtStmtType::White:         return "while statement";
+  case PtStmtType::For:           return "for-loop statement";
+  case PtStmtType::PcAssign:      return "procedural continuous assignment";
+  case PtStmtType::Deassign:      return "deassign statement";
+  case PtStmtType::Force:         return "force statement";
+  case PtStmtType::Release:       return "release statement";
   case PtStmtType::NamedParBlock:
-  case PtStmtType::ParBlock:  return "parallel block";
+  case PtStmtType::ParBlock:      return "parallel block";
   case PtStmtType::NamedSeqBlock:
-  case PtStmtType::SeqBlock:  return "sequential block";
+  case PtStmtType::SeqBlock:      return "sequential block";
   }
   return "";
 }
@@ -218,7 +218,7 @@ CptStmt::stmt_array() const
 CptDisable::CptDisable(const FileRegion& file_region,
 		       const char* name) :
   CptStmt(file_region),
-  mName(name)
+  mName{name}
 {
 }
 
@@ -251,7 +251,7 @@ CptDisableH::CptDisableH(const FileRegion& file_region,
 			 PtNameBranchArray nb_array,
 			 const char* tail_name) :
   CptDisable(file_region, tail_name),
-  mNbArray(nb_array)
+  mNbArray{nb_array}
 {
 }
 
@@ -279,8 +279,8 @@ CptEnableBase::CptEnableBase(const FileRegion& file_region,
 			     const char* name,
 			     PtExprArray arg_array) :
   CptStmt(file_region),
-  mName(name),
-  mArgArray(arg_array)
+  mName{name},
+  mArgArray{arg_array}
 {
 }
 
@@ -339,7 +339,7 @@ CptEnableH::CptEnableH(const FileRegion& file_region,
 		       const char* tail_name,
 		       PtExprArray arg_array) :
   CptEnable(file_region, tail_name, arg_array),
-  mNbArray(nb_array)
+  mNbArray{nb_array}
 {
 }
 
@@ -390,8 +390,8 @@ CptCtrlStmt::CptCtrlStmt(const FileRegion& file_region,
 			 const PtControl* delay,
 			 const PtStmt* body) :
   CptStmt(file_region),
-  mDelay(delay),
-  mBody(body)
+  mDelay{delay},
+  mBody{body}
 {
   ASSERT_COND( delay );
   ASSERT_COND( body );
@@ -476,8 +476,8 @@ CptWait::CptWait(const FileRegion& file_region,
 		 const PtExpr* expr,
 		 const PtStmt* body) :
   CptStmt(file_region),
-  mExpr(expr),
-  mBody(body)
+  mExpr{expr},
+  mBody{body}
 {
   ASSERT_COND( expr );
   ASSERT_COND( body );
@@ -518,9 +518,9 @@ CptWait::body() const
 CptAssignBase::CptAssignBase(const FileRegion& file_region,
 			     const PtExpr* lhs) :
   CptStmt(file_region),
-  mLhs(lhs)
+  mLhs{lhs}
 {
-  ASSERT_COND(lhs );
+  ASSERT_COND( lhs );
 }
 
 // デストラクタ
@@ -545,7 +545,7 @@ CptAssign::CptAssign(const FileRegion& file_region,
 		     const PtExpr* lhs,
 		     const PtExpr* rhs) :
   CptAssignBase(file_region, lhs),
-  mRhs(rhs)
+  mRhs{rhs}
 {
   ASSERT_COND( rhs );
 }
@@ -580,7 +580,7 @@ CptAssignC::CptAssignC(const FileRegion& file_region,
 		       const PtExpr* rhs,
 		       const PtControl* control) :
   CptAssign(file_region, lhs, rhs),
-  mControl(control)
+  mControl{control}
 {
   ASSERT_COND( control );
 }
@@ -658,7 +658,7 @@ CptPcAssign::CptPcAssign(const FileRegion& file_region,
 			 const PtExpr* lhs,
 			 const PtExpr* rhs) :
   CptAssignBase(file_region, lhs),
-  mRhs(rhs)
+  mRhs{rhs}
 {
   ASSERT_COND( rhs );
 }
@@ -764,7 +764,7 @@ CptRelease::type() const
 CptEventStmt::CptEventStmt(const FileRegion& file_region,
 			   const PtExpr* event) :
   CptStmt(file_region),
-  mPrimary(event)
+  mPrimary{event}
 {
   ASSERT_COND( event );
 }
@@ -821,8 +821,8 @@ CptIf::CptIf(const FileRegion& file_region,
 	     const PtExpr* expr,
 	     const PtStmt* then_body) :
   CptStmt(file_region),
-  mCond(expr),
-  mThen(then_body)
+  mCond{expr},
+  mThen{then_body}
 {
   ASSERT_COND( expr );
 }
@@ -864,7 +864,7 @@ CptIfElse::CptIfElse(const FileRegion& file_region,
 		     const PtStmt* then_body,
 		     const PtStmt* else_body) :
   CptIf(file_region, expr, then_body),
-  mElse(else_body)
+  mElse{else_body}
 {
   ASSERT_COND( expr );
 }
@@ -891,8 +891,8 @@ CptCase::CptCase(const FileRegion& file_region,
 		 const PtExpr* expr,
 		 PtCaseItemArray caseitem_array) :
   CptStmt(file_region),
-  mExpr(expr),
-  mCaseItemArray(caseitem_array)
+  mExpr{expr},
+  mCaseItemArray{caseitem_array}
 {
   ASSERT_COND( expr );
 }
@@ -982,9 +982,9 @@ CptCaseZ::type() const
 CptCaseItem::CptCaseItem(const FileRegion& file_region,
 			 PtExprArray label_array,
 			 const PtStmt* body) :
-  mFileRegion(file_region),
-  mLabelArray(label_array),
-  mBody(body)
+  mFileRegion{file_region},
+  mLabelArray{label_array},
+  mBody{body}
 {
   ASSERT_COND( body );
 }
@@ -1024,7 +1024,7 @@ CptCaseItem::body() const
 CptLoopStmt::CptLoopStmt(const FileRegion& file_region,
 			 const PtStmt* body) :
   CptStmt(file_region),
-  mBody(body)
+  mBody{body}
 {
   ASSERT_COND( body );
 }
@@ -1075,7 +1075,7 @@ CptRepeat::CptRepeat(const FileRegion& file_region,
 		     const PtExpr* expr,
 		     const PtStmt* body) :
   CptLoopStmt(file_region, body),
-  mExpr(expr)
+  mExpr{expr}
 {
   ASSERT_COND( expr );
 }
@@ -1136,8 +1136,8 @@ CptFor::CptFor(const FileRegion& file_region,
 	       const PtStmt* next,
 	       const PtStmt* body) :
   CptRepeat(file_region, cond, body),
-  mInit(init),
-  mNext(next)
+  mInit{init},
+  mNext{next}
 {
   ASSERT_COND( init );
   ASSERT_COND( next );
@@ -1178,7 +1178,7 @@ CptFor::next_stmt() const
 CptStmtBlock::CptStmtBlock(const FileRegion& file_region,
 			   PtStmtArray stmt_array) :
   CptStmt(file_region),
-  mStmtArray(stmt_array)
+  mStmtArray{stmt_array}
 {
 }
 
@@ -1205,8 +1205,8 @@ CptStmtBlockN::CptStmtBlockN(const FileRegion& file_region,
 			     PtDeclHeadArray declhead_array,
 			     PtStmtArray stmt_array) :
   CptStmtBlock(file_region, stmt_array),
-  mName(name),
-  mDeclHeadArray(declhead_array)
+  mName{name},
+  mDeclHeadArray{declhead_array}
 {
 }
 
@@ -1340,7 +1340,7 @@ CptFactory::new_Disable(const FileRegion& file_region,
 			const char* name)
 {
   ++ mNumDisable;
-  auto obj = new CptDisable(file_region, name);
+  auto obj{new CptDisable(file_region, name)};
   return obj;
 }
 
@@ -1350,7 +1350,7 @@ CptFactory::new_Disable(const FileRegion& file_region,
 			const char* tail_name)
 {
   ++ mNumDisableH;
-  auto obj = new CptDisableH(file_region, nb_array, tail_name);
+  auto obj{new CptDisableH(file_region, nb_array, tail_name)};
   return obj;
 }
 
@@ -1361,7 +1361,7 @@ CptFactory::new_Enable(const FileRegion& file_region,
 		       PtExprArray arg_array)
 {
   ++ mNumEnable;
-  auto obj = new CptEnable(file_region, name, arg_array);
+  auto obj{new CptEnable(file_region, name, arg_array)};
   return obj;
 }
 
@@ -1372,7 +1372,7 @@ CptFactory::new_Enable(const FileRegion& file_region,
 		       PtExprArray arg_array)
 {
   ++ mNumEnableH;
-  auto obj = new CptEnableH(file_region, nb_array, tail_name, arg_array);
+  auto obj{new CptEnableH(file_region, nb_array, tail_name, arg_array)};
   return obj;
 }
 
@@ -1383,7 +1383,7 @@ CptFactory::new_SysEnable(const FileRegion& file_region,
 			  PtExprArray arg_array)
 {
   ++ mNumSysEnable;
-  auto obj = new CptSysEnable(file_region, task_name, arg_array);
+  auto obj{new CptSysEnable(file_region, task_name, arg_array)};
   return obj;
 }
 
@@ -1394,7 +1394,7 @@ CptFactory::new_DcStmt(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumDcStmt;
-  auto obj = new CptDcStmt(file_region, delay, body);
+  auto obj{new CptDcStmt(file_region, delay, body)};
   return obj;
 }
 
@@ -1405,7 +1405,7 @@ CptFactory::new_EcStmt(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumEcStmt;
-  auto obj = new CptEcStmt(file_region, event, body);
+  auto obj{new CptEcStmt(file_region, event, body)};
   return obj;
 }
 
@@ -1416,7 +1416,7 @@ CptFactory::new_Wait(const FileRegion& file_region,
 		     const PtStmt* body)
 {
   ++ mNumWait;
-  auto obj = new CptWait(file_region, cond, body);
+  auto obj{new CptWait(file_region, cond, body)};
   return obj;
 }
 
@@ -1427,7 +1427,7 @@ CptFactory::new_Assign(const FileRegion& file_region,
 		       const PtExpr* rhs)
 {
   ++ mNumAssign;
-  auto obj = new CptAssign(file_region, lhs, rhs);
+  auto obj{new CptAssign(file_region, lhs, rhs)};
   return obj;
 }
 
@@ -1439,7 +1439,7 @@ CptFactory::new_Assign(const FileRegion& file_region,
 		       const PtControl* control)
 {
   ++ mNumAssignC;
-  auto obj = new CptAssignC(file_region, lhs, rhs, control);
+  auto obj{new CptAssignC(file_region, lhs, rhs, control)};
   return obj;
 }
 
@@ -1450,7 +1450,7 @@ CptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtExpr* rhs)
 {
   ++ mNumNbAssign;
-  auto obj = new CptNbAssign(file_region, lhs, rhs);
+  auto obj{new CptNbAssign(file_region, lhs, rhs)};
   return obj;
 }
 
@@ -1462,7 +1462,7 @@ CptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtControl* control)
 {
   ++ mNumNbAssignC;
-  auto obj = new CptNbAssignC(file_region, lhs, rhs, control);
+  auto obj{new CptNbAssignC(file_region, lhs, rhs, control)};
   return obj;
 }
 
@@ -1472,7 +1472,7 @@ CptFactory::new_EventStmt(const FileRegion& file_region,
 			  const PtExpr* event)
 {
   ++ mNumEventStmt;
-  auto obj = new CptEventStmt(file_region, event);
+  auto obj{new CptEventStmt(file_region, event)};
   return obj;
 }
 
@@ -1481,7 +1481,7 @@ const PtStmt*
 CptFactory::new_NullStmt(const FileRegion& file_region)
 {
   ++ mNumNullStmt;
-  auto obj = new CptNullStmt(file_region);
+  auto obj{new CptNullStmt(file_region)};
   return obj;
 }
 
@@ -1492,7 +1492,7 @@ CptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* then_body)
 {
   ++ mNumIf;
-  auto obj = new CptIf(file_region, expr, then_body);
+  auto obj{new CptIf(file_region, expr, then_body)};
   return obj;
 }
 
@@ -1504,7 +1504,7 @@ CptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* else_body)
 {
   ++ mNumIf;
-  auto obj = new CptIfElse(file_region, expr, then_body, else_body);
+  auto obj{new CptIfElse(file_region, expr, then_body, else_body)};
   return obj;
 }
 
@@ -1515,7 +1515,7 @@ CptFactory::new_Case(const FileRegion& file_region,
 		     PtCaseItemArray caseitem_array)
 {
   ++ mNumCase;
-  auto obj = new CptCase(file_region, expr, caseitem_array);
+  auto obj{new CptCase(file_region, expr, caseitem_array)};
   return obj;
 }
 
@@ -1526,7 +1526,7 @@ CptFactory::new_CaseX(const FileRegion& file_region,
 		      PtCaseItemArray caseitem_array)
 {
   ++ mNumCaseX;
-  auto obj = new CptCaseX(file_region, expr, caseitem_array);
+  auto obj{new CptCaseX(file_region, expr, caseitem_array)};
   return obj;
 }
 
@@ -1537,7 +1537,7 @@ CptFactory::new_CaseZ(const FileRegion& file_region,
 		      PtCaseItemArray caseitem_array)
 {
   ++ mNumCaseZ;
-  auto obj = new CptCaseZ(file_region, expr, caseitem_array);
+  auto obj{new CptCaseZ(file_region, expr, caseitem_array)};
   return obj;
 }
 
@@ -1548,7 +1548,7 @@ CptFactory::new_CaseItem(const FileRegion& file_region,
 			 const PtStmt* body)
 {
   ++ mNumCaseItem;
-  auto obj = new CptCaseItem(file_region, label_array, body);
+  auto obj{new CptCaseItem(file_region, label_array, body)};
   return obj;
 }
 
@@ -1558,7 +1558,7 @@ CptFactory::new_Forever(const FileRegion& file_region,
 			const PtStmt* body)
 {
   ++ mNumForever;
-  auto obj = new CptForever(file_region, body);
+  auto obj{new CptForever(file_region, body)};
   return obj;
 }
 
@@ -1569,7 +1569,7 @@ CptFactory::new_Repeat(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   ++ mNumRepeat;
-  auto obj = new CptRepeat(file_region, expr, body);
+  auto obj{new CptRepeat(file_region, expr, body)};
   return obj;
 }
 
@@ -1580,7 +1580,7 @@ CptFactory::new_While(const FileRegion& file_region,
 		      const PtStmt* body)
 {
   ++ mNumWhile;
-  auto obj = new CptWhile(file_region, cond, body);
+  auto obj{new CptWhile(file_region, cond, body)};
   return obj;
 }
 
@@ -1593,7 +1593,7 @@ CptFactory::new_For(const FileRegion& file_region,
 		    const PtStmt* body)
 {
   ++ mNumFor;
-  auto obj = new CptFor(file_region, init, cond, next, body);
+  auto obj{new CptFor(file_region, init, cond, next, body)};
   return obj;
 }
 
@@ -1604,7 +1604,7 @@ CptFactory::new_PcAssign(const FileRegion& file_region,
 			 const PtExpr* rhs)
 {
   ++ mNumPcAssign;
-  auto obj = new CptPcAssign(file_region, lhs, rhs);
+  auto obj{new CptPcAssign(file_region, lhs, rhs)};
   return obj;
 }
 
@@ -1614,7 +1614,7 @@ CptFactory::new_Deassign(const FileRegion& file_region,
 			 const PtExpr* lhs)
 {
   ++ mNumDeassign;
-  auto obj = new CptDeassign(file_region, lhs);
+  auto obj{new CptDeassign(file_region, lhs)};
   return obj;
 }
 
@@ -1625,7 +1625,7 @@ CptFactory::new_Force(const FileRegion& file_region,
 		      const PtExpr* rhs)
 {
   ++ mNumForce;
-  auto obj = new CptForce(file_region, lhs, rhs);
+  auto obj{new CptForce(file_region, lhs, rhs)};
   return obj;
 }
 
@@ -1635,7 +1635,7 @@ CptFactory::new_Release(const FileRegion& file_region,
 			const PtExpr* lhs)
 {
   ++ mNumRelease;
-  auto obj = new CptRelease(file_region, lhs);
+  auto obj{new CptRelease(file_region, lhs)};
   return obj;
 }
 
@@ -1645,7 +1645,7 @@ CptFactory::new_ParBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
   ++ mNumParBlock;
-  auto obj = new CptParBlock(file_region, stmt_array);
+  auto obj{new CptParBlock(file_region, stmt_array)};
   return obj;
 }
 
@@ -1657,7 +1657,8 @@ CptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      PtStmtArray stmt_array)
 {
   ++ mNumParBlockN;
-  auto obj = new CptParBlockN(file_region, name, declhead_array, stmt_array);
+  auto obj{new CptParBlockN(file_region, name,
+			    declhead_array, stmt_array)};
   return obj;
 }
 
@@ -1667,7 +1668,7 @@ CptFactory::new_SeqBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
   ++ mNumSeqBlock;
-  auto obj = new CptSeqBlock(file_region, stmt_array);
+  auto obj{new CptSeqBlock(file_region, stmt_array)};
   return obj;
 }
 
@@ -1679,7 +1680,8 @@ CptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      PtStmtArray stmt_array)
 {
   ++ mNumSeqBlockN;
-  auto obj = new CptSeqBlockN(file_region, name, declhead_array, stmt_array);
+  auto obj{new CptSeqBlockN(file_region, name,
+			    declhead_array, stmt_array)};
   return obj;
 }
 

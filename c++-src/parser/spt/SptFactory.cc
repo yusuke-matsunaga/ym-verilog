@@ -26,16 +26,6 @@ SptFactory::~SptFactory()
 {
 }
 
-// @brief 文字列領域の確保
-const char*
-SptFactory::new_string(const char* str)
-{
-  SizeType len = strlen(str) + 1;
-  char* dst = new char[len];
-  strcpy(dst, str);
-  return dst;
-}
-
 // 確保したオブジェクトに関する情報を出力する．
 void
 SptFactory::dump_profile(ostream& s) const

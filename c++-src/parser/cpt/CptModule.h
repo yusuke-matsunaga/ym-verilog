@@ -405,7 +405,6 @@ private:
   CptPort2(const FileRegion& file_region,
 	   const PtExpr* portref,
 	   PtExprArray portref_array,
-	   VpiDir* dir_array,
 	   const char* ext_name);
 
   /// @brief デストラクタ
@@ -449,9 +448,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // ポート参照式
-  const PtExpr* mPortRef;
 
   // ポート参照式の配列
   PtExprArray mPortRefArray;

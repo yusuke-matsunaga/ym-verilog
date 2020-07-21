@@ -1190,15 +1190,6 @@ public:
 	       const PtExpr* expr) override;
 
 
-  //////////////////////////////////////////////////////////////////////
-  // その他
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 文字列領域の確保
-  const char*
-  new_string(const char* str) override;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // おもにデバッグ用の関数
@@ -1356,6 +1347,7 @@ private:
   int mNumDelay;
   int mNumNameBranch;
   int mNumNameBranchI;
+  int mNumRange;
   int mNumAttrInst;
   int mNumAttrSpec;
 };

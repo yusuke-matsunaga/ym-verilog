@@ -13,6 +13,8 @@
 #include "parser/PtMgr.h"
 #include "parser/PuHierName.h"
 
+#include "ym/pt/PtModule.h"
+#include "ym/pt/PtUdp.h"
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtStmt.h"
 #include "ym/MsgMgr.h"
@@ -40,8 +42,8 @@ const int check_memory_leak = 0;
 // @param[in] ptifactory パース木の要素を生成するファクトリクラス
 Parser::Parser(PtMgr& ptmgr,
 	       PtiFactory& ptifactory) :
-  mPtMgr(ptmgr),
-  mFactory(ptifactory),
+  mPtMgr{ptmgr},
+  mFactory{ptifactory},
   mLex{new Lex}
 {
 }
@@ -49,6 +51,7 @@ Parser::Parser(PtMgr& ptmgr,
 // @brief デストラクタ
 Parser::~Parser()
 {
+  // mLex は unique_ptr のデストラクタで破壊される．
 }
 
 // @brief ファイルを読み込む．
@@ -102,7 +105,7 @@ Parser::yylex(YYSTYPE& lval,
   case STRING:
   case UNUMBER:
   case UNUM_BIG:
-    lval.strtype = mFactory.new_string(lex().cur_string());
+    lval.strtype = mPtMgr.save_string(lex().cur_string());
     break;
 
   case UNUM_INT:
@@ -244,17 +247,17 @@ Parser::ExprArray(const PtExpr* pre_expr,
 		  PtrList<const PtExpr>* expr_list_p)
 {
   SizeType n = expr_list_p->size();
-  const PtExpr** array = new const PtExpr*[n + 1];
-  array[0] = pre_expr;
+  vector<const PtExpr*> vec(n + 1);
+  vec[0] = pre_expr;
   int i = 1;
   for ( auto expr: *expr_list_p ) {
-    array[i] = expr;
+    vec[i] = expr;
     ++ i;
   }
 
   delete expr_list_p;
 
-  return PtExprArray(n + 1, array);
+  return PtExprArray(vec);
 }
 
 // @brief 階層名の生成
@@ -264,7 +267,7 @@ PuHierName*
 Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
-  const PtNameBranch* nb = mFactory.new_NameBranch(head_name);
+  auto nb = mFactory.new_NameBranch(head_name);
   return new PuHierName(nb, name);
 }
 
@@ -277,7 +280,7 @@ Parser::new_HierName(const char* head_name,
 		     int index,
 		     const char* name)
 {
-  const PtNameBranch* nb = mFactory.new_NameBranch(head_name, index);
+  auto nb = mFactory.new_NameBranch(head_name, index);
   return new PuHierName(nb, name);
 }
 
@@ -288,7 +291,7 @@ void
 Parser::add_HierName(PuHierName* hname,
 		     const char* name)
 {
-  const PtNameBranch* nb = mFactory.new_NameBranch(hname->tail_name());
+  auto nb = mFactory.new_NameBranch(hname->tail_name());
   hname->add(nb, name);
 }
 
@@ -301,7 +304,7 @@ Parser::add_HierName(PuHierName* hname,
 		     int index,
 		     const char* name)
 {
-  const PtNameBranch* nb = mFactory.new_NameBranch(hname->tail_name(), index);
+  auto nb = mFactory.new_NameBranch(hname->tail_name(), index);
   hname->add(nb, name);
 }
 
@@ -314,7 +317,7 @@ const char*
 Parser::extract_HierName(PuHierName* hname,
 			 PtNameBranchArray& nb_array)
 {
-  const char* ans = hname->mTailName;
+  auto ans = hname->mTailName;
   nb_array = hname->mNbList.to_array();
 
   delete hname;

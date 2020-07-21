@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -144,7 +144,8 @@ void
 Parser::new_Inst(const FileRegion& fr,
 		 PtrList<const PtConnection>* con_list)
 {
-  add_inst( mFactory.new_Inst(fr, to_array(con_list)) );
+  auto inst = mFactory.new_Inst(fr, to_array(con_list));;
+  add_inst(inst);
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -154,7 +155,8 @@ void
 Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr1)
 {
-  add_inst( mFactory.new_Inst(fr, expr1) );
+  auto inst = mFactory.new_Inst(fr, expr1);
+  add_inst(inst);
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -165,7 +167,8 @@ Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr1,
 		 const PtExpr* expr2)
 {
-  add_inst( mFactory.new_Inst(fr, expr1, expr2) );
+  auto inst = mFactory.new_Inst(fr, expr1, expr2);
+  add_inst(inst);
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -177,7 +180,8 @@ Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr2,
 		 const PtExpr* expr3)
 {
-  add_inst( mFactory.new_Inst(fr, expr1, expr2, expr3) );
+  auto inst = mFactory.new_Inst(fr, expr1, expr2, expr3);
+  add_inst(inst);
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -190,7 +194,8 @@ Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr3,
 		 const PtExpr* expr4)
 {
-  add_inst( mFactory.new_Inst(fr, expr1, expr2, expr3, expr4) );
+  auto inst = mFactory.new_Inst(fr, expr1, expr2, expr3, expr4);
+  add_inst(inst);
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -202,7 +207,8 @@ Parser::new_InstN(const FileRegion& fr,
 		  const char* name,
 		  PtrList<const PtConnection>* con_list)
 {
-  add_inst( mFactory.new_InstN(fr, name, to_array(con_list)) );
+  auto inst = mFactory.new_InstN(fr, name, to_array(con_list));
+  add_inst(inst);
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -214,7 +220,8 @@ Parser::new_InstN(const FileRegion& fr,
 		  const char* name,
 		  const PtExpr* expr1)
 {
-  add_inst( mFactory.new_InstN(fr, name, expr1) );
+  auto inst = mFactory.new_InstN(fr, name, expr1);
+  add_inst(inst);
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -227,7 +234,8 @@ Parser::new_InstN(const FileRegion& fr,
 		  const PtExpr* expr1,
 		  const PtExpr* expr2)
 {
-  add_inst( mFactory.new_InstN(fr, name, expr1, expr2) );
+  auto inst = mFactory.new_InstN(fr, name, expr1, expr2);
+  add_inst(inst);
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -241,7 +249,8 @@ Parser::new_InstN(const FileRegion& fr,
 		  const PtExpr* expr2,
 		  const PtExpr* expr3)
 {
-  add_inst( mFactory.new_InstN(fr, name, expr1, expr2, expr3) );
+  auto inst = mFactory.new_InstN(fr, name, expr1, expr2, expr3);
+  add_inst(inst);
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -256,7 +265,8 @@ Parser::new_InstN(const FileRegion& fr,
 		  const PtExpr* expr3,
 		  const PtExpr* expr4)
 {
-  add_inst( mFactory.new_InstN(fr, name, expr1, expr2, expr3, expr4) );
+  auto inst = mFactory.new_InstN(fr, name, expr1, expr2, expr3, expr4);
+  add_inst(inst);
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -272,7 +282,8 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* right,
 		  PtrList<const PtConnection>* con_list)
 {
-  add_inst( mFactory.new_InstV(fr, name, left, right, to_array(con_list)) );
+  auto inst = mFactory.new_InstV(fr, name, left, right, to_array(con_list));
+  add_inst(inst);
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -288,7 +299,8 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* right,
 		  const PtExpr* expr1)
 {
-  add_inst( mFactory.new_InstV(fr, name, left, right, expr1) );
+  auto inst = mFactory.new_InstV(fr, name, left, right, expr1);
+  add_inst(inst);
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -305,7 +317,8 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* expr1,
 		  const PtExpr* expr2)
 {
-  add_inst( mFactory.new_InstV(fr, name, left, right, expr1, expr2) );
+  auto inst = mFactory.new_InstV(fr, name, left, right, expr1, expr2);
+  add_inst(inst);
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -323,7 +336,8 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* expr2,
 		  const PtExpr* expr3)
 {
-  add_inst( mFactory.new_InstV(fr, name, left, right, expr1, expr2, expr3) );
+  auto inst = mFactory.new_InstV(fr, name, left, right, expr1, expr2, expr3);
+  add_inst(inst);
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -342,8 +356,8 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* expr3,
 		  const PtExpr* expr4)
 {
-  add_inst( mFactory.new_InstV(fr, name, left, right,
-			       expr1, expr2, expr3, expr4) );
+  auto inst = mFactory.new_InstV(fr, name, left, right, expr1, expr2, expr3, expr4);
+  add_inst(inst);
 }
 
 // @brief instance リストに要素を追加する．

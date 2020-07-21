@@ -401,14 +401,7 @@ inline
 PtArray<T2>
 PtrList<T1, T2>::to_array()
 {
-  SizeType n = mNum;
-  T2** array = new T2*[n];
-  SizeType i = 0;
-  for ( Cell* cell = mTop; cell; cell = cell->mLink, ++ i ) {
-    array[i] = cell->mPtr;
-  }
-  clear();
-  return PtArray<T2>{n, const_cast<const T2**>(array)};
+  return PtArray<T2>{to_vector()};
 }
 
 // @brief 内容を配列にコピーする．
@@ -420,8 +413,7 @@ inline
 vector<T2*>
 PtrList<T1, T2>::to_vector()
 {
-  SizeType n = mNum;
-  vector<T2*> vec(n);
+  vector<T2*> vec(mNum);
   SizeType i = 0;
   for ( Cell* cell = mTop; cell; cell = cell->mLink, ++ i ) {
     vec[i] = cell->mPtr;

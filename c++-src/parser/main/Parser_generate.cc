@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -52,7 +52,7 @@ Parser::new_Generate(const FileRegion& fr)
 void
 Parser::new_GenBlock(const FileRegion& fr)
 {
-  const PtItem* item = mFactory.new_GenBlock(fr, mCurDeclArray, mCurItemArray);
+  auto item = mFactory.new_GenBlock(fr, mCurDeclArray, mCurItemArray);
   mCurItemList->push_back(item);
 }
 
@@ -63,8 +63,7 @@ void
 Parser::new_GenBlock(const FileRegion& fr,
 		     const char* name)
 {
-  const PtItem* item = mFactory.new_GenBlock(fr, name,
-					     mCurDeclArray, mCurItemArray);
+  auto item = mFactory.new_GenBlock(fr, name, mCurDeclArray, mCurItemArray);
   mCurItemList->push_back(item);
 }
 
@@ -113,11 +112,11 @@ void
 Parser::new_GenIf(const FileRegion& fr,
 		  const PtExpr* cond)
 {
-  const PtItem* item = mFactory.new_GenIf(fr, cond,
-					  mGenThenDeclArray,
-					  mGenThenItemArray,
-					  PtDeclHeadArray(),
-					  PtItemArray());
+  auto item = mFactory.new_GenIf(fr, cond,
+				 mGenThenDeclArray,
+				 mGenThenItemArray,
+				 PtDeclHeadArray(),
+				 PtItemArray());
   mCurItemList->push_back(item);
 }
 
@@ -128,11 +127,11 @@ void
 Parser::new_GenIfElse(const FileRegion& fr,
 		      const PtExpr* cond)
 {
-  const PtItem* item = mFactory.new_GenIf(fr, cond,
-					  mGenThenDeclArray,
-					  mGenThenItemArray,
-					  mGenElseDeclArray,
-					  mGenElseItemArray);
+  auto item = mFactory.new_GenIf(fr, cond,
+				 mGenThenDeclArray,
+				 mGenThenItemArray,
+				 mGenElseDeclArray,
+				 mGenElseItemArray);
   mCurItemList->push_back(item);
 }
 
@@ -145,7 +144,7 @@ Parser::new_GenCase(const FileRegion& fr,
 		    const PtExpr* expr,
 		    PtrList<const PtGenCaseItem>* item_list)
 {
-  const PtItem* item = mFactory.new_GenCase(fr, expr, to_array(item_list));
+  auto item = mFactory.new_GenCase(fr, expr, to_array(item_list));
   mCurItemList->push_back(item);
 }
 
@@ -157,10 +156,10 @@ const PtGenCaseItem*
 Parser::new_GenCaseItem(const FileRegion& fr,
 			PtrList<const PtExpr>* label_list)
 {
-  const PtGenCaseItem* item = mFactory.new_GenCaseItem(fr,
-						       to_array(label_list),
-						       mCurDeclArray,
-						       mCurItemArray);
+  auto item = mFactory.new_GenCaseItem(fr,
+				       to_array(label_list),
+				       mCurDeclArray,
+				       mCurItemArray);
   return item;
 }
 
@@ -184,11 +183,11 @@ Parser::new_GenFor(const FileRegion& fr,
 		   const char* block_name)
 {
   if ( strcmp(loop_var, inc_var) == 0 ) {
-    const PtItem* item = mFactory.new_GenFor(fr, loop_var,
-					     init_expr, cond, inc_expr,
-					     block_name,
-					     mCurDeclArray,
-					     mCurItemArray);
+    auto item = mFactory.new_GenFor(fr, loop_var,
+				    init_expr, cond, inc_expr,
+				    block_name,
+				    mCurDeclArray,
+				    mCurItemArray);
     mCurItemList->push_back(item);
   }
   else {

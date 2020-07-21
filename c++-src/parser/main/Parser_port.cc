@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -35,7 +35,7 @@ Parser::new_Port1(const FileRegion& file_region)
   // 明示的に外の名前がついていなくても内側の名前が1つで
   // 範囲指定が無いときには内側の名前を外側の名前とする．
   if ( mPortRefList.size() == 1 ) {
-    const PtExpr* portref = mPortRefList.front();
+    auto portref = mPortRefList.front();
     const char* name = nullptr;
     if ( portref->index_num() == 0 && portref->left_range() == nullptr ) {
       name = portref->name();
@@ -45,8 +45,9 @@ Parser::new_Port1(const FileRegion& file_region)
   }
   else {
     PtExprArray portref_array = mPortRefList.to_array();
-    const PtExpr* portref = mFactory.new_Concat(file_region, portref_array);
-    add_port( mFactory.new_Port(file_region, portref, portref_array, nullptr) );
+    auto portref = mFactory.new_Concat(file_region, portref_array);
+    auto port = mFactory.new_Port(file_region, portref, portref_array, nullptr);
+    add_port(port);
   }
 }
 
@@ -57,7 +58,8 @@ void
 Parser::new_Port2(const FileRegion& file_region,
 		  const char* name)
 {
-  add_port( mFactory.new_Port(file_region, name) );
+  auto port = mFactory.new_Port(file_region, name);
+  add_port(port);
 }
 
 // @brief ポートの生成 (外側の名前と内側の式を指定するタイプ)
@@ -68,13 +70,15 @@ Parser::new_Port3(const FileRegion& file_region,
 		  const char* name)
 {
   if ( mPortRefList.size() == 1 ) {
-    add_port( mFactory.new_Port(file_region, mPortRefList.front(), name) );
+    auto port = mFactory.new_Port(file_region, mPortRefList.front(), name);
+    add_port(port);
     mPortRefList.clear();
   }
   else {
     PtExprArray portref_array = mPortRefList.to_array();
-    const PtExpr* portref = mFactory.new_Concat(file_region, portref_array);
-    add_port( mFactory.new_Port(file_region, portref, portref_array, name) );
+    auto portref = mFactory.new_Concat(file_region, portref_array);
+    auto port = mFactory.new_Port(file_region, portref, portref_array, name);
+    add_port(port);
   }
 }
 
@@ -98,7 +102,7 @@ Parser::check_PortArray(PtIOHeadArray iohead_array)
   unordered_set<string> portref_dic;
   for ( auto head: iohead_array ) {
     for ( auto elem: head->item_list() ) {
-      string name = elem->name();
+      auto name = elem->name();
       if ( portref_dic.count(name) > 0 ) {
 	ostringstream buf;
 	buf << "\"" << name << "\" is redefined.";
@@ -119,12 +123,13 @@ Parser::check_PortArray(PtIOHeadArray iohead_array)
 PtPortArray
 Parser::new_PortArray(const vector<PtiPort*>& port_vector)
 {
-  SizeType num = port_vector.size();
-  const PtPort** body = new const PtPort*[num];
-  for ( SizeType i = 0; i < num; ++ i ) {
-    body[i] = port_vector[i];
+  // vector<PtiPort*> -> vector<const PtPort*> への変換
+  SizeType n{port_vector.size()};
+  vector<const PtPort*> tmp_vec(n);
+  for ( int i = 0; i < n; ++ i ) {
+    tmp_vec[i] = port_vector[i];
   }
-  return PtPortArray(num, body);
+  return PtPortArray(tmp_vec);
 }
 
 // @brief 入出力宣言からポートを作る．
@@ -136,23 +141,21 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
     num += head->item_list().size();
   }
 
-  // port_array を確保する．
-  const PtPort** array = new const PtPort*[num];
-
-  // ポートを生成し arary に格納する．
+  // ポートを生成し vec に格納する．
   SizeType i = 0;
+  vector<const PtPort*> vec(num);
   for ( auto head: iohead_array ) {
     for ( auto elem: head->item_list() ) {
-      const char* name = elem->name();
-      const PtExpr* portref = mFactory.new_Primary(elem->file_region(), name);
-      PtiPort* port = mFactory.new_Port(elem->file_region(), portref, name);
+      auto name = elem->name();
+      auto portref = mFactory.new_Primary(elem->file_region(), name);
+      auto port = mFactory.new_Port(elem->file_region(), portref, name);
       VpiDir dir = head->direction();
       port->_set_portref_dir(0, dir);
-      array[i] = port;
+      vec[i] = port;
       ++ i;
     }
   }
-  return PtPortArray(num, array);
+  return PtPortArray(vec);
 }
 
 
@@ -167,7 +170,8 @@ void
 Parser::new_PortRef(const FileRegion& fr,
 		    const char* name)
 {
-  add_portref( mFactory.new_Primary(fr, name) );
+  auto primary = mFactory.new_Primary(fr, name);
+  add_portref(primary);
 }
 
 // @brief ビット指定つきポート参照式の生成
@@ -182,7 +186,8 @@ Parser::new_PortRef(const FileRegion& fr,
   PtrList<const PtExpr> index_list;
   index_list.push_back(index);
   PtExprArray index_array = to_array(&index_list);
-  add_portref( mFactory.new_Primary(fr, name, index_array) );
+  auto primary = mFactory.new_Primary(fr, name, index_array);
+  add_portref(primary);
 }
 
 // @brief 範囲指定付きポート参照式の生成
@@ -198,7 +203,8 @@ Parser::new_PortRef(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  add_portref( mFactory.new_Primary(fr, name, range_mode, left, right) );
+  auto primary = mFactory.new_Primary(fr, name, range_mode, left, right);
+  add_portref(primary);
 }
 
 // @brief ポート参照リストを初期化する．

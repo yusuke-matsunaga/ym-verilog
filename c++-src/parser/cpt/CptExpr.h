@@ -23,15 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class CptExpr :
   public PtiExpr
 {
-protected:
-
-  /// コンストラクタ
-  CptExpr();
-
-  /// デストラクタ
-  ~CptExpr();
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // PtExpr の仮想関数

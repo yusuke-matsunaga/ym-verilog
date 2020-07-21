@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -24,7 +24,7 @@ Parser::new_Opr(const FileRegion& fr,
 		const PtExpr* opr,
 		PtrList<const PtAttrInst>* ai_list)
 {
-  const PtExpr* expr = mFactory.new_Opr(fr, type, opr);
+  auto expr = mFactory.new_Opr(fr, type, opr);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -42,7 +42,7 @@ Parser::new_Opr(const FileRegion& fr,
 		const PtExpr* opr2,
 		PtrList<const PtAttrInst>* ai_list)
 {
-  const PtExpr* expr = mFactory.new_Opr(fr, type, opr1, opr2);
+  auto expr = mFactory.new_Opr(fr, type, opr1, opr2);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -62,7 +62,7 @@ Parser::new_Opr(const FileRegion& fr,
 		const PtExpr* opr3,
 		PtrList<const PtAttrInst>* ai_list)
 {
-  const PtExpr* expr = mFactory.new_Opr(fr, type, opr1, opr2, opr3);
+  auto expr = mFactory.new_Opr(fr, type, opr1, opr2, opr3);
   reg_attrinst(expr, ai_list);
   return expr;
 }

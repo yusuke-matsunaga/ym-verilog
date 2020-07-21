@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -45,7 +45,7 @@ Parser::new_EventControl(const FileRegion& fr,
 			 const char* event_name,
 			 const FileRegion& name_loc)
 {
-  const PtExpr* expr = new_Primary(name_loc, event_name);
+  auto expr = new_Primary(name_loc, event_name);
   return mFactory.new_EventControl(fr, expr);
 }
 
@@ -58,7 +58,7 @@ Parser::new_EventControl(const FileRegion& fr,
 			 PuHierName* event_name,
 			 const FileRegion& name_loc)
 {
-  const PtExpr* expr = new_Primary(name_loc, event_name);
+  auto expr = new_Primary(name_loc, event_name);
   return mFactory.new_EventControl(fr, expr);
 }
 
@@ -95,7 +95,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const char* event_name,
 			  const FileRegion& name_loc)
 {
-  const PtExpr* expr = new_Primary(name_loc, event_name);
+  auto expr = new_Primary(name_loc, event_name);
   return mFactory.new_RepeatControl(fr, rep, expr);
 }
 
@@ -110,7 +110,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  PuHierName* event_name,
 			  const FileRegion& name_loc)
 {
-  const PtExpr* expr = new_Primary(name_loc, event_name);
+  auto expr = new_Primary(name_loc, event_name);
   return mFactory.new_RepeatControl(fr, rep, expr);
 }
 
@@ -145,7 +145,7 @@ Parser::new_OrderedCon(const FileRegion& fr,
 		       const PtExpr* expr,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  const PtConnection* con = mFactory.new_OrderedCon(fr, expr);
+  auto con = mFactory.new_OrderedCon(fr, expr);
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -161,7 +161,7 @@ Parser::new_NamedCon(const FileRegion& fr,
 		     const PtExpr* expr,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  const PtConnection* con = mFactory.new_NamedCon(fr, name, expr);
+  auto con = mFactory.new_NamedCon(fr, name, expr);
   reg_attrinst(con, ai_list);
   return con;
 }

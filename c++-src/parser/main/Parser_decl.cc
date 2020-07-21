@@ -2,7 +2,7 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -142,7 +142,7 @@ Parser::flush_io()
 {
   if ( !mIOItemList.empty() ) {
     ASSERT_COND( !mCurIOHeadList->empty() );
-    PtiIOHead* last = mCurIOHeadList->back();
+    auto last = mCurIOHeadList->back();
     last->set_elem(mIOItemList.to_array());
     mIOItemList.clear();
   }
@@ -246,7 +246,7 @@ Parser::flush_paramport()
 {
   if ( !mDeclItemList.empty() ) {
     ASSERT_COND( !mParamPortHeadList.empty() );
-    PtiDeclHead* last = mParamPortHeadList.back();
+    auto last = mParamPortHeadList.back();
     last->set_elem(mDeclItemList.to_array());
     mDeclItemList.clear();
   }

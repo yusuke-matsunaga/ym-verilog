@@ -35,7 +35,7 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/ym-logic/include
   ${PROJECT_SOURCE_DIR}/ym-cell/include
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/c++-src/private_include
+  ${CMAKE_CURRENT_SOURCE_DIR}/private_include
   ${CMAKE_CURRENT_BINARY_DIR}
   )
 

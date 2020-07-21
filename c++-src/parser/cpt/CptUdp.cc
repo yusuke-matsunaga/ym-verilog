@@ -27,13 +27,13 @@ CptUdp::CptUdp(const FileRegion& file_region,
 	       bool is_seq,
 	       const PtExpr* init_value,
 	       PtUdpEntryArray entry_array) :
-  mFileRegion(file_region),
-  mName(name),
-  mPortArray(port_array),
-  mIOHeadArray(iohead_array),
-  mSeq(is_seq),
-  mInitValue(init_value),
-  mTableArray(entry_array)
+  mFileRegion{file_region},
+  mName{name},
+  mPortArray{port_array},
+  mIOHeadArray{iohead_array},
+  mSeq{is_seq},
+  mInitValue{init_value},
+  mTableArray{entry_array}
 {
 }
 
@@ -105,9 +105,9 @@ CptUdp::table_array() const
 CptUdpEntry::CptUdpEntry(const FileRegion& file_region,
 			 PtUdpValueArray input_array,
 			 const PtUdpValue* output) :
-  mFileRegion(file_region),
-  mInputArray(input_array),
-  mOutput(output)
+  mFileRegion{file_region},
+  mInputArray{input_array},
+  mOutput{output}
 {
 }
 
@@ -156,7 +156,7 @@ CptUdpEntryS::CptUdpEntryS(const FileRegion& file_region,
 			   const PtUdpValue* current,
 			   const PtUdpValue* output) :
   CptUdpEntry(file_region, input_array, output),
-  mCurrent(current)
+  mCurrent{current}
 {
 }
 
@@ -180,8 +180,8 @@ CptUdpEntryS::current() const
 // コンストラクタ
 CptUdpValue::CptUdpValue(const FileRegion& file_region,
 			 char symbol) :
-  mFileRegion(file_region),
-  mSymbol(symbol)
+  mFileRegion{file_region},
+  mSymbol{symbol}
 {
 }
 
@@ -189,8 +189,8 @@ CptUdpValue::CptUdpValue(const FileRegion& file_region,
 CptUdpValue::CptUdpValue(const FileRegion& file_region,
 			 char symbol1,
 			 char symbol2) :
-  mFileRegion(file_region),
-  mSymbol(symbol1, symbol2)
+  mFileRegion{file_region},
+  mSymbol{symbol1, symbol2}
 {
 }
 
@@ -233,12 +233,12 @@ CptFactory::new_CmbUdp(const FileRegion& file_region,
 		       PtUdpEntryArray entry_array)
 {
   ++ mNumUdp;
-  auto obj = new CptUdp(file_region,
-			name,
-			port_array,
-			iohead_array,
-			false, nullptr,
-			entry_array);
+  auto obj{new CptUdp(file_region,
+		      name,
+		      port_array,
+		      iohead_array,
+		      false, nullptr,
+		      entry_array)};
   return obj;
 }
 
@@ -260,13 +260,13 @@ CptFactory::new_SeqUdp(const FileRegion& file_region,
 		       PtUdpEntryArray entry_array)
 {
   ++ mNumUdp;
-  auto obj = new CptUdp(file_region,
-			name,
-			port_array,
-			iohead_array,
-			true,
-			init_value,
-			entry_array);
+  auto obj{new CptUdp(file_region,
+		      name,
+		      port_array,
+		      iohead_array,
+		      true,
+		      init_value,
+		      entry_array)};
   return obj;
 }
 
@@ -281,9 +281,9 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntry;
-  auto obj = new CptUdpEntry(file_region,
-			     input_array,
-			     output);
+  auto obj{new CptUdpEntry(file_region,
+			   input_array,
+			   output)};
   return obj;
 }
 
@@ -300,10 +300,10 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntryS;
-  auto obj = new CptUdpEntryS(file_region,
-			      input_array,
-			      current,
-			      output);
+  auto obj{new CptUdpEntryS(file_region,
+			    input_array,
+			    current,
+			    output)};
   return obj;
 }
 
@@ -316,7 +316,7 @@ CptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol)
 {
   ++ mNumUdpValue;
-  auto obj = new CptUdpValue(file_region, symbol);
+  auto obj{new CptUdpValue(file_region, symbol)};
   return obj;
 }
 
@@ -330,7 +330,7 @@ CptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol2)
 {
   ++ mNumUdpValue;
-  auto obj = new CptUdpValue(file_region, symbol1, symbol2);
+  auto obj{new CptUdpValue(file_region, symbol1, symbol2)};
   return obj;
 }
 
