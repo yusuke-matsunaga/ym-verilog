@@ -707,6 +707,10 @@ public:
   bool
   automatic() const override;
 
+  /// @brief IO宣言の要素数の取得
+  int
+  ioitem_num() const override;
+
   /// @brief IO宣言リストの配列の取得
   PtIOHeadArray
   iohead_array() const override;

@@ -694,6 +694,13 @@ CptTf::automatic() const
   return mAutomatic;
 }
 
+// @brief IO宣言の要素数の取得
+int
+CptTf::ioitem_num() const
+{
+  return mIOItemNum;
+}
+
 // @brief IO宣言リストの配列の取得
 PtIOHeadArray
 CptTf::iohead_array() const
