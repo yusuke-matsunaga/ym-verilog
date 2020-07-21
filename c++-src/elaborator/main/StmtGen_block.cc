@@ -18,6 +18,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 BEGIN_NONAMESPACE
 
 const int debug = 0;
+#define dout cout
 
 END_NONAMESPACE
 
@@ -31,7 +32,7 @@ StmtGen::phase2_namedblock(const VlNamedObj* parent,
 			   PtDeclHeadArray pt_head_array)
 {
   if ( debug ) {
-    cout << endl
+    dout << endl
 	 << "phase2_namedblock( "
 	 << parent->full_name()
 	 << " ["
@@ -42,7 +43,7 @@ StmtGen::phase2_namedblock(const VlNamedObj* parent,
   instantiate_decl(parent, pt_head_array);
 
   if ( debug ) {
-    cout << "phase2_namedblock end" << endl
+    dout << "phase2_namedblock end" << endl
 	 << endl;
   }
 }

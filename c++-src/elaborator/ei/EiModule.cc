@@ -36,17 +36,17 @@ EiFactory::new_Module(const VlNamedObj* parent,
 		      const PtItem* pt_head,
 		      const PtInst* pt_inst)
 {
-  EiModule2* module = new EiModule2(parent,
-				    pt_module,
-				    pt_head,
-				    pt_inst);
 
   SizeType port_num = pt_module->port_list().size();
-  EiPort* port_array = new EiPort[port_num];
+  auto port_array{new EiPort[port_num]};
 
   SizeType io_num = pt_module->iodecl_num();
-  EiIODecl* io_array = new EiIODecl[io_num];
+  auto io_array{new EiIODecl[io_num]};
 
+  auto module{new EiModule2(parent,
+			    pt_module,
+			    pt_head,
+			    pt_inst)};
   module->init(port_array, io_array);
 
   return module;
@@ -75,23 +75,22 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
   range.set(left, right, left_val, right_val);
 
   SizeType n = range.size();
-  EiModule1* array = new EiModule1[n];
-  EiModuleArray* module_array = new EiModuleArray(parent,
-						  pt_module,
-						  pt_head,
-						  pt_inst,
-						  range,
-						  array);
+  auto chunk{new EiModule1[n]};
+  auto module_array{new EiModuleArray(parent,
+				      pt_module,
+				      pt_head,
+				      pt_inst,
+				      range,
+				      chunk)};
 
   SizeType port_num = pt_module->port_list().size();
   SizeType io_num = pt_module->iodecl_num();
-
   for ( int i = 0; i < n; ++ i ) {
-    EiPort* port_array = new EiPort[port_num];
-    EiIODecl* io_array = new EiIODecl[io_num];
+    auto port_array{new EiPort[port_num]};
+    auto io_array{new EiIODecl[io_num]};
 
     int index = module_array->mRange.index(i);
-    array[i].init(port_array, io_array,
+    chunk[i].init(port_array, io_array,
 		  module_array, index);
   }
 
@@ -443,6 +442,10 @@ EiModule::port_num() const
 const VlPort*
 EiModule::port(SizeType pos) const
 {
+  if ( pos >= port_num() ) {
+    abort();
+  }
+  ASSERT_COND( 0 <= pos && pos < port_num() );
   return &mPortList[pos];
 }
 
@@ -458,6 +461,7 @@ EiModule::io_num() const
 const VlIODecl*
 EiModule::io(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < io_num() );
   return &mIODeclList[pos];
 }
 
@@ -472,6 +476,7 @@ EiModule::init_iodecl(int pos,
 		      const PtIOItem* pt_item,
 		      ElbDecl* decl)
 {
+  ASSERT_COND( 0 <= pos && pos < io_num() );
   mIODeclList[pos].init(head, pt_item, decl);
 }
 
@@ -486,6 +491,7 @@ EiModule::init_port(int index,
 		    ElbExpr* low_conn,
 		    VpiDir dir)
 {
+  ASSERT_COND( 0 <= index && index < port_num() );
   mPortList[index].init(this, pt_port, index, low_conn, dir);
 }
 
@@ -498,6 +504,7 @@ EiModule::set_port_high_conn(int index,
 			     ElbExpr* high_conn,
 			     bool conn_by_name)
 {
+  ASSERT_COND( 0 <= index && index < port_num() );
   mPortList[index].set_high_conn(high_conn, conn_by_name);
 }
 
@@ -536,7 +543,7 @@ EiModule1::init(EiPort* port_array,
   // 名前の生成
   ostringstream buf;
   buf << module_array->name() << "[" << index << "]";
-  mName = buf.str().c_str();
+  mName = buf.str();
 }
 
 // @brief 名前の取得
@@ -747,6 +754,7 @@ EiModuleArray::elem_num() const
 const VlModule*
 EiModuleArray::elem_by_offset(SizeType offset) const
 {
+  ASSERT_COND( 0 <= offset && offset < elem_num() );
   return &mArray[offset];
 }
 
@@ -757,7 +765,7 @@ EiModuleArray::elem_by_index(int index) const
 {
   int offset;
   if ( mRange.calc_offset(index, offset) ) {
-    return &mArray[offset];
+    return elem_by_offset(offset);
   }
   else {
     // index が範囲外だった．
@@ -784,6 +792,7 @@ EiModuleArray::head()
 ElbModule*
 EiModuleArray::_module(int offset)
 {
+  ASSERT_COND( 0 <= offset && offset < elem_num() );
   return &mArray[offset];
 }
 

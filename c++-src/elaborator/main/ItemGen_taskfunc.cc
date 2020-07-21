@@ -79,8 +79,6 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
       taskfunc = factory().new_Function(parent,	pt_item);
     }
     ASSERT_COND( taskfunc != nullptr );
-    cout << "taskfunc = " << taskfunc->full_name() << endl
-	 << " io_num = " << taskfunc->io_num() << endl;
 
     reg_function(taskfunc);
   }

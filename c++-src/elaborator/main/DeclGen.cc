@@ -29,6 +29,7 @@
 
 #include "ym/MsgMgr.h"
 
+#define dout cout
 
 BEGIN_NAMESPACE_YM_VERILOG
 
@@ -243,7 +244,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 			    MsgType::Error,
 			    "ELAB",
 			    buf.str());
-	    cout << "IO range: [" << left_val << ":" << right_val << "]"
+	    dout << "IO range: [" << left_val << ":" << right_val << "]"
 		 << endl
 		 << "Decl range: [" << left_val2 << ":" << right_val2 << "]"
 		 << endl;

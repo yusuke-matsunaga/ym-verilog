@@ -577,7 +577,7 @@ ItemGen::link_module(ElbModule* module,
     }
 
     // この式に対応するポート番号を求める．
-    int index ;
+    int index = -1;
     if ( conn_by_name ) {
       // 名前による割り当ての場合はポート名で探す．
       const char* port_name = pt_con->name();
@@ -592,8 +592,8 @@ ItemGen::link_module(ElbModule* module,
 			buf.str());
 	continue;
       }
-      int index = port_index.at(port_name);
-      ASSERT_COND( index < port_num );
+      index = port_index.at(port_name);
+      ASSERT_COND( 0 <= index && index < port_num );
     }
     else {
       // 順序による割り当ての場合は単純に pos
