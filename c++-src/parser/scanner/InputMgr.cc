@@ -153,15 +153,17 @@ InputMgr::cur_filename() const
 bool
 InputMgr::wrap_up()
 {
-  while ( !mFileStack.empty() ) {
+  for ( ; ; ) {
     mFsStack.pop_back();
     mFileStack.pop_back();
+    if ( mFileStack.empty() ) {
+      // もうファイルが残っていない．
+      return false;
+    }
     if ( !cur_file().is_eof() ) {
       return true;
     }
   }
-  // もうファイルが残っていない．
-  return false;
 }
 
 // @brief ファイルのオープン済チェック
