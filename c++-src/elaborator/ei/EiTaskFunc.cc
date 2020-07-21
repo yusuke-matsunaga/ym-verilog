@@ -46,9 +46,9 @@ EiFactory::new_Function(const VlNamedObj* parent,
 
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  EiIODecl* io_array = new EiIODecl[io_num];
-  EiFunction* func = new EiFunctionV(parent, pt_item, io_num, io_array,
-				     left, right, left_val, right_val);
+  auto io_array{new EiIODecl[io_num]};
+  auto func{new EiFunctionV(parent, pt_item, io_num, io_array,
+			    left, right, left_val, right_val)};
 
   return func;
 }
@@ -62,8 +62,8 @@ EiFactory::new_Function(const VlNamedObj* parent,
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  EiIODecl* io_array = new EiIODecl[io_num];
-  EiFunction* func = new EiFunction(parent, pt_item, io_num, io_array);
+  auto io_array{new EiIODecl[io_num]};
+  auto func{new EiFunction(parent, pt_item, io_num, io_array)};
 
   return func;
 }
@@ -160,7 +160,6 @@ EiTaskFunc::stmt() const
 }
 
 // @brief 入出力の初期設定を行う．
-// @param[in] pos 位置番号
 // @param[in] pos 位置番号
 // @param[in] head ヘッダ
 // @param[in] pt_item パース木のIO宣言要素

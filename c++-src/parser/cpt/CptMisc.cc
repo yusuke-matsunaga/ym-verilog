@@ -84,10 +84,10 @@ CptDelayControl::file_region() const
 }
 
 // 型を返す．
-tPtCtrlType
+PtCtrlType
 CptDelayControl::type() const
 {
-  return kPtDelayControl;
+  return PtCtrlType::Delay;
 }
 
 // 遅延式を返す．
@@ -123,10 +123,10 @@ CptEventControl::file_region() const
 }
 
 // 型を返す．
-tPtCtrlType
+PtCtrlType
 CptEventControl::type() const
 {
-  return kPtEventControl;
+  return PtCtrlType::Event;
 }
 
 // @brief イベントリストの取得
@@ -166,10 +166,10 @@ CptRepeatControl::file_region() const
 }
 
 // 型を返す．
-tPtCtrlType
+PtCtrlType
 CptRepeatControl::type() const
 {
-  return kPtRepeatControl;
+  return PtCtrlType::Repeat;
 }
 
 // 繰り返し数を得る．

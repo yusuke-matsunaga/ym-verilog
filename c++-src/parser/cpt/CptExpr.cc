@@ -236,10 +236,10 @@ CptOpr::~CptOpr()
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptOpr::type() const
 {
-  return kPtOprExpr;
+  return PtExprType::Opr;
 }
 
 // 演算子のトークン番号を得る．
@@ -520,10 +520,10 @@ CptConcat::file_region() const
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptConcat::type() const
 {
-  return kPtOprExpr;
+  return PtExprType::Opr;
 }
 
 ///演算子の種類の取得
@@ -644,10 +644,10 @@ CptMinTypMax::file_region() const
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptMinTypMax::type() const
 {
-  return kPtOprExpr;
+  return PtExprType::Opr;
 }
 
 // 演算子の種類の取得
@@ -811,10 +811,10 @@ CptFuncCall::~CptFuncCall()
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptFuncCall::type() const
 {
-  return kPtFuncCallExpr;
+  return PtExprType::FuncCall;
 }
 
 
@@ -863,10 +863,10 @@ CptSysFuncCall::~CptSysFuncCall()
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptSysFuncCall::type() const
 {
-  return kPtSysFuncCallExpr;
+  return PtExprType::SysFuncCall;
 }
 
 
@@ -893,10 +893,10 @@ CptConstant::file_region() const
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptConstant::type() const
 {
-  return kPtConstExpr;
+  return PtExprType::Const;
 }
 
 

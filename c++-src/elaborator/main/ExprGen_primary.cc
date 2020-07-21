@@ -384,7 +384,7 @@ ElbExpr*
 ExprGen::instantiate_namedevent(const VlNamedObj* parent,
 				const PtExpr* pt_expr)
 {
-  ASSERT_COND(pt_expr->type() == kPtPrimaryExpr );
+  ASSERT_COND(pt_expr->type() == PtExprType::Primary );
   ASSERT_COND(pt_expr->left_range() == nullptr );
   ASSERT_COND(pt_expr->right_range() == nullptr );
 

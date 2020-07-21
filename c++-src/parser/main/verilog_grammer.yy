@@ -808,67 +808,67 @@ list_of_port_declarations
 portdecl_head
 : INOUT          sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Inout, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Inout, $2);
 }
 | INOUT net_type sign
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Inout, $2, $3);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Inout, $2, $3);
 }
 | INOUT          sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Inout, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Inout, $2, $4, $6);
 }
 | INOUT net_type sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Inout, $2, $3, $5, $7);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Inout, $2, $3, $5, $7);
 }
 | INPUT          sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Input, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, $2);
 }
 | INPUT net_type sign
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Input, $2, $3);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Input, $2, $3);
 }
 | INPUT          sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Input, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, $2, $4, $6);
 }
 | INPUT net_type sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Input, $2, $3, $5, $7);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Input, $2, $3, $5, $7);
 }
 | OUTPUT          sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Output, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, $2);
 }
 | OUTPUT net_type sign
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Output, $2, $3);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Output, $2, $3);
 }
 | OUTPUT          sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Output, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, $2, $4, $6);
 }
 | OUTPUT net_type sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Output, $2, $3, $5, $7);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Output, $2, $3, $5, $7);
 }
 | OUTPUT REG sign
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, $3);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, $3);
 }
 | OUTPUT REG sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, $3, $5, $7);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, $3, $5, $7);
 }
 | OUTPUT INTEGER
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Integer);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Output, VpiVarType::Integer);
 }
 | OUTPUT TIME
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Time);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Output, VpiVarType::Time);
 }
 ;
 
@@ -1246,19 +1246,19 @@ inout_declaration
 inout_declhead
 : INOUT          sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Inout, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Inout, $2);
 }
 | INOUT net_type sign
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Inout, $2, $3);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Inout, $2, $3);
 }
 | INOUT          sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Inout, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Inout, $2, $4, $6);
 }
 | INOUT net_type sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Inout, $2, $3, $5, $7);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Inout, $2, $3, $5, $7);
 }
 ;
 
@@ -1280,19 +1280,19 @@ input_declaration
 input_declhead
 : INPUT          sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Input, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, $2);
 }
 | INPUT net_type sign
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Input, $2, $3);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Input, $2, $3);
 }
 | INPUT          sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Input, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, $2, $4, $6);
 }
 | INPUT net_type sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Input, $2, $3, $5, $7);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Input, $2, $3, $5, $7);
 }
 ;
 
@@ -1344,19 +1344,19 @@ output_declaration
 output_declhead1
 : OUTPUT          sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Output, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, $2);
 }
 | OUTPUT net_type sign
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Output, $2, $3);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Output, $2, $3);
 }
 | OUTPUT          sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Output, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, $2, $4, $6);
 }
 | OUTPUT net_type sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_NetIOHead(@$, kPtIO_Output, $2, $3, $5, $7);
+  $$ = parser.new_NetIOHead(@$, VpiDir::Output, $2, $3, $5, $7);
 }
 ;
 
@@ -1378,19 +1378,19 @@ output_declhead1
 output_declhead2
 : OUTPUT REG sign
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, $3);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, $3);
 }
 | OUTPUT REG sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, $3, $5, $7);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, $3, $5, $7);
 }
 | OUTPUT INTEGER
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Integer);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Output, VpiVarType::Integer);
 }
 | OUTPUT TIME
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, VpiVarType::Time);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Output, VpiVarType::Time);
 }
 
 
@@ -2646,23 +2646,23 @@ tf_input_declaration
 tf_input_declhead
 : INPUT     sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Input, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, $2);
 }
 | INPUT REG sign
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Input, $3);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Input, $3);
 }
 | INPUT     sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Input, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, $2, $4, $6);
 }
 | INPUT REG sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Input, $3, $5, $7);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Input, $3, $5, $7);
 }
 | INPUT task_port_type
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Input, $2);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Input, $2);
 }
 ;
 
@@ -2689,23 +2689,23 @@ tf_output_declaration
 tf_output_declhead
 : OUTPUT     sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Output, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, $2);
 }
 | OUTPUT REG sign
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, $3);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, $3);
 }
 | OUTPUT     sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Output, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, $2, $4, $6);
 }
 | OUTPUT REG sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, $3, $5, $7);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, $3, $5, $7);
 }
 | OUTPUT task_port_type
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Output, $2);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Output, $2);
 }
 ;
 
@@ -2732,23 +2732,23 @@ tf_inout_declaration
 tf_inout_declhead
 : INOUT     sign
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Inout, $2);
+  $$ = parser.new_IOHead(@$, VpiDir::Inout, $2);
 }
 | INOUT REG sign
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Inout, $3);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Inout, $3);
 }
 | INOUT     sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_IOHead(@$, kPtIO_Inout, $2, $4, $6);
+  $$ = parser.new_IOHead(@$, VpiDir::Inout, $2, $4, $6);
 }
 | INOUT REG sign '[' expression ':' expression ']'
 {
-  $$ = parser.new_RegIOHead(@$, kPtIO_Inout, $3, $5, $7);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Inout, $3, $5, $7);
 }
 | INOUT task_port_type
 {
-  $$ = parser.new_VarIOHead(@$, kPtIO_Inout, $2);
+  $$ = parser.new_VarIOHead(@$, VpiDir::Inout, $2);
 }
 ;
 
@@ -4081,7 +4081,7 @@ udp_output_declhead1
 : OUTPUT
 {
   // UDP は1ビット符号なしのみ
-  $$ = parser.new_IOHead(@$, kPtIO_Output, false);
+  $$ = parser.new_IOHead(@$, VpiDir::Output, false);
 }
 ;
 
@@ -4089,7 +4089,7 @@ udp_output_declhead2
 : OUTPUT REG
 {
   // UDP は1ビット符号なしのみ
-  $$ = parser.new_RegIOHead(@$, kPtIO_Output, false);
+  $$ = parser.new_RegIOHead(@$, VpiDir::Output, false);
 }
 ;
 
@@ -4113,7 +4113,7 @@ udp_input_declhead
 : INPUT
 {
   // UDP は1ビット符号無しのみ
-  $$ = parser.new_IOHead(@$, kPtIO_Input, false);
+  $$ = parser.new_IOHead(@$, VpiDir::Input, false);
 }
 ;
 

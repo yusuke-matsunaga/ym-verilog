@@ -157,7 +157,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -188,7 +188,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -317,7 +317,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -352,7 +352,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -385,7 +385,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
   /// @brief 符号の取得
@@ -439,7 +439,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -470,7 +470,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -626,7 +626,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
   /// @brief 符号の取得
@@ -680,7 +680,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -715,7 +715,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
   /// @brief net type を返す．(vpiWire など)
@@ -1143,7 +1143,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };
@@ -1174,7 +1174,7 @@ public:
 
   /// @brief クラスを識別するための型を返す．
   /// @return 宣言要素の型
-  tPtDeclType
+  PtDeclType
   type() const override;
 
 };

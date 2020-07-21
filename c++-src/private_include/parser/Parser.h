@@ -239,78 +239,78 @@ public:
 
   /// @brief IO 宣言のヘッダの生成
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] sign 符号付きのとき true となるフラグ
   PtiIOHead*
   new_IOHead(const FileRegion& fr,
-	     tPtIOType type,
+	     VpiDir dir,
 	     bool sign);
 
   /// @brief IO 宣言のヘッダの生成 (reg 型)
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] sign 符号付きのとき true となるフラグ
   PtiIOHead*
   new_RegIOHead(const FileRegion& fr,
-		tPtIOType type,
+		VpiDir dir,
 		bool sign);
 
   /// @brief IO 宣言のヘッダの生成 (ネット型)
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] net_type 補助的なネット型
   /// @param[in] sign 符号付きのとき true となるフラグ
   PtiIOHead*
   new_NetIOHead(const FileRegion& fr,
-		tPtIOType type,
+		VpiDir dir,
 		VpiNetType net_type,
 		bool sign);
 
   /// @brief IO 宣言のヘッダの生成 (変数型)
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] var_type 補助的な変数型
   PtiIOHead*
   new_VarIOHead(const FileRegion& fr,
-		tPtIOType type,
+		VpiDir dir,
 		VpiVarType var_type);
 
   /// @brief 範囲付きの IO 宣言のヘッダの生成
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] sign 符号付きのとき true となるフラグ
   /// @param[in] left 範囲の左側の式
   /// @param[in] right 範囲の右側の式
   PtiIOHead*
   new_IOHead(const FileRegion& fr,
-	     tPtIOType type,
+	     VpiDir dir,
 	     bool sign,
 	     const PtExpr* left,
 	     const PtExpr* right);
 
   /// @brief 範囲付きの IO 宣言のヘッダの生成 (reg 型)
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] sign 符号付きのとき true となるフラグ
   /// @param[in] left 範囲の左側の式
   /// @param[in] right 範囲の右側の式
   PtiIOHead*
   new_RegIOHead(const FileRegion& fr,
-		tPtIOType type,
+		VpiDir dir,
 		bool sign,
 		const PtExpr* left,
 		const PtExpr* right);
 
   /// @brief 範囲付きの IO 宣言のヘッダの生成 (ネット型)
   /// @param[in] fr ファイル位置の情報
-  /// @param[in] type IO の種類
+  /// @param[in] dir IO の種類
   /// @param[in] net_type 補助的なネット型
   /// @param[in] sign 符号付きのとき true となるフラグ
   /// @param[in] left 範囲の左側の式
   /// @param[in] right 範囲の右側の式
   PtiIOHead*
   new_NetIOHead(const FileRegion& fr,
-		tPtIOType type,
+		VpiDir dir,
 		VpiNetType net_type,
 		bool sign,
 		const PtExpr* left,

@@ -29,7 +29,7 @@ private:
 
   /// コンストラクタ
   SptControl(const FileRegion& file_region,
-	     tPtCtrlType type,
+	     PtCtrlType type,
 	     const PtExpr* expr,
 	     PtExprArray event_array);
 
@@ -47,7 +47,7 @@ public:
   file_region() const override;
 
   /// 型の取得
-  tPtCtrlType
+  PtCtrlType
   type() const override;
 
   /// 遅延式の取得
@@ -73,7 +73,7 @@ private:
   FileRegion mFileRegion;
 
   // クラスの型
-  tPtCtrlType mType;
+  PtCtrlType mType;
 
   // 遅延を表す式/繰り返し回数を表す式
   const PtExpr* mExpr;

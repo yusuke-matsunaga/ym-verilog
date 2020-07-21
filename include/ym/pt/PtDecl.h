@@ -35,11 +35,11 @@ public:
   // PtIOH の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 型の取得
-  /// @return 型
+  /// @brief 方向の取得
+  /// @return 方向(Input, Output, Inout)
   virtual
-  tPtIOType
-  type() const = 0;
+  VpiDir
+  direction() const = 0;
 
   /// @brief 補助的な型の取得
   /// @return 補助的な型
@@ -143,7 +143,7 @@ public:
   /// @brief 宣言要素の型の取得
   /// @return 宣言要素の型
   virtual
-  tPtDeclType
+  PtDeclType
   type() const = 0;
 
   /// @brief 符号の取得

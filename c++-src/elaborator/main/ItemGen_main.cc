@@ -64,67 +64,67 @@ ItemGen::phase1_item(const VlNamedObj* parent,
   for (ymuint i = 0; i < pt_item_array.size(); ++ i) {
     const PtItem* pt_item = pt_item_array[i];
     switch ( pt_item->type() ) {
-    case kPtItem_DefParam:
+    case PtItemType::DefParam:
       // 実際には登録するだけ
       add_defparamstub(parent->parent_module(), pt_item);
       break;
 
-    case kPtItem_ContAssign:
+    case PtItemType::ContAssign:
       // phase3 で処理する．
       add_phase3stub(make_stub(this, &ItemGen::instantiate_cont_assign,
 			       parent, pt_item));
       break;
 
-    case kPtItem_Initial:
-    case kPtItem_Always:
+    case PtItemType::Initial:
+    case PtItemType::Always:
       phase1_stmt(parent, pt_item->body());
       // 本体の生成は phase3 で処理する．
       add_phase3stub(make_stub(this, &ItemGen::instantiate_process,
 			       parent, pt_item));
       break;
 
-    case kPtItem_Task:
-    case kPtItem_Func:
+    case PtItemType::Task:
+    case PtItemType::Func:
       phase1_tf(parent, pt_item);
       break;
 
-    case kPtItem_GateInst:
+    case PtItemType::GateInst:
       // 今すぐには処理できないのでキューに積む．
       add_phase2stub(make_stub(this, &ItemGen::instantiate_gateheader,
 			       parent, pt_item));
       break;
 
-    case kPtItem_MuInst:
+    case PtItemType::MuInst:
       phase1_muheader(parent, pt_item);
       break;
 
-    case kPtItem_Generate:
+    case PtItemType::Generate:
       // 実際にはキューに積まれるだけ
       add_phase1stub(make_stub(this, &ItemGen::phase1_generate,
 			       parent, pt_item));
       break;
 
-    case kPtItem_GenBlock:
+    case PtItemType::GenBlock:
       phase1_genblock(parent, pt_item);
       break;
 
-    case kPtItem_GenIf:
+    case PtItemType::GenIf:
       phase1_genif(parent, pt_item);
       break;
 
-    case kPtItem_GenCase:
+    case PtItemType::GenCase:
       phase1_gencase(parent, pt_item);
       break;
 
-    case kPtItem_GenFor:
+    case PtItemType::GenFor:
       phase1_genfor(parent, pt_item);
       break;
 
-    case kPtItem_SpecItem:
+    case PtItemType::SpecItem:
       // 未対応
       break;
 
-    case kPtItem_SpecPath:
+    case PtItemType::SpecPath:
       // 未対応
       break;
 

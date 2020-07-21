@@ -38,7 +38,7 @@ SptGenBody::~SptGenBody()
 
 // コンストラクタ
 SptGenerate::SptGenerate(const FileRegion& file_region,
-			 tPtItemType type,
+			 PtItemType type,
 			 const char* name,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array) :
@@ -86,7 +86,7 @@ SptGenIf::SptGenIf(const FileRegion& file_region,
 		   PtItemArray then_item_array,
 		   PtDeclHeadArray else_declhead_array,
 		   PtItemArray else_item_array) :
-  SptItem{file_region, kPtItem_GenIf},
+  SptItem{file_region, PtItemType::GenIf},
   mCond{cond},
   mThenBody{then_declhead_array, then_item_array},
   mElseBody{else_declhead_array, else_item_array}
@@ -191,7 +191,7 @@ SptGenCaseItem::item_array() const
 SptGenCase::SptGenCase(const FileRegion& file_region,
 		       const PtExpr* expr,
 		       PtGenCaseItemArray item_array) :
-  SptItem{file_region, kPtItem_GenCase},
+  SptItem{file_region, PtItemType::GenCase},
   mExpr{expr},
   mCaseItemArray{item_array}
 {
@@ -230,7 +230,7 @@ SptGenFor::SptGenFor(const FileRegion& file_region,
 		     const char* block_name,
 		     PtDeclHeadArray declhead_array,
 		     PtItemArray item_array) :
-  SptItem{file_region, kPtItem_GenFor},
+  SptItem{file_region, PtItemType::GenFor},
   mName{block_name},
   mLoopVar{loop_var},
   mInitExpr{init_expr},
@@ -309,7 +309,7 @@ SptFactory::new_Generate(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array)
 {
-  auto node = new SptGenerate(file_region, kPtItem_Generate, nullptr,
+  auto node = new SptGenerate(file_region, PtItemType::Generate, nullptr,
 			      declhead_array, item_array);
   return node;
 }
@@ -324,7 +324,7 @@ SptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array)
 {
-  auto node = new SptGenerate(file_region, kPtItem_GenBlock, nullptr,
+  auto node = new SptGenerate(file_region, PtItemType::GenBlock, nullptr,
 			      declhead_array, item_array);
   return node;
 }
@@ -341,7 +341,7 @@ SptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtDeclHeadArray declhead_array,
 			 PtItemArray item_array)
 {
-  auto node = new SptGenerate(file_region, kPtItem_GenBlock, name,
+  auto node = new SptGenerate(file_region, PtItemType::GenBlock, name,
 			      declhead_array, item_array);
   return node;
 }

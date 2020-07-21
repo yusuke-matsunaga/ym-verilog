@@ -263,13 +263,8 @@ EiUdpIO::name() const
 VpiDir
 EiUdpIO::direction() const
 {
-  switch ( mPtHeader->type() ) {
-  case kPtIO_Input:  return VpiDir::Input;
-  case kPtIO_Output: return VpiDir::Output;
-  default: ASSERT_NOT_REACHED;
-  }
-  // ダミー
-  return VpiDir::NoDirection;
+  ASSERT_COND( mPtHeader->direction() != VpiDir::Inout );
+  return mPtHeader->direction();
 }
 
 // @brief 符号の属性の取得

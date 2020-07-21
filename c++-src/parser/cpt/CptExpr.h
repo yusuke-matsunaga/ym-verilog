@@ -189,7 +189,7 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kOpr を返す．
-  tPtExprType
+  PtExprType
   type() const override;
 
   // 演算子のトークン番号を得る．
@@ -437,7 +437,7 @@ public:
   file_region() const override;
 
   // クラスの型を返す．
-  tPtExprType
+  PtExprType
   type() const override;
 
   ///演算子の種類の取得
@@ -541,7 +541,7 @@ public:
   file_region() const override;
 
   // クラスの型を返す．
-  tPtExprType
+  PtExprType
   type() const override;
 
   ///演算子の種類の取得
@@ -682,7 +682,7 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kPtFunCallExpr を返す．
-  tPtExprType
+  PtExprType
   type() const override;
 
 };
@@ -755,7 +755,7 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kPtSysFunCallExpr を返す．
-  tPtExprType
+  PtExprType
   type() const override;
 
 };
@@ -807,8 +807,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // クラスの型を返す．
-  // このクラスの場合は kPtPrimaryExpr を返す．
-  tPtExprType
+  // このクラスの場合は PtExprType::Primary を返す．
+  PtExprType
   type() const override;
 
 
@@ -1362,7 +1362,7 @@ public:
 
   // クラスの型を返す．
   // このクラスの場合は kPtConstantExpr を返す．
-  tPtExprType
+  PtExprType
   type() const override;
 
 

@@ -163,7 +163,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
       else {
 	for ( int i = 0; i < declhead_array.size(); ++ i ) {
 	  const PtDeclHead* pt_decl = declhead_array[i];
-	  if ( pt_decl->type() == kPtDecl_Param ) {
+	  if ( pt_decl->type() == PtDeclType::Param ) {
 	    for ( auto pt_item: pt_decl->item_list() ) {
 	      paramport_list.push_back(pt_item->name());
 	    }

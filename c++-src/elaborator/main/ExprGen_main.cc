@@ -54,22 +54,22 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
 			  const PtExpr* pt_expr)
 {
   // '(' expression ')' の時の対応
-  while ( pt_expr->type() == kPtOprExpr &&
+  while ( pt_expr->type() == PtExprType::Opr &&
 	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     return instantiate_opr(parent, env, pt_expr);
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     return factory().new_Constant(pt_expr);
 
-  case kPtFuncCallExpr:
+  case PtExprType::FuncCall:
     return instantiate_funccall(parent, env, pt_expr);
 
-  case kPtSysFuncCallExpr:
+  case PtExprType::SysFuncCall:
     if ( env.inside_constant_function() ) {
       error_illegal_sysfunccall_in_cf(pt_expr);
       return nullptr;
@@ -80,7 +80,7 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
     }
     return instantiate_sysfunccall(parent, env, pt_expr);
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     return instantiate_primary(parent, env, pt_expr);
 
   default:
@@ -114,13 +114,13 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
 				const PtExpr* pt_expr)
 {
   // '(' expression ')' の時の対応
-  while ( pt_expr->type() == kPtOprExpr &&
+  while ( pt_expr->type() == PtExprType::Opr &&
 	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     switch ( pt_expr->op_type() ) {
     case VpiOpType::Posedge:
     case VpiOpType::Negedge:
@@ -149,24 +149,24 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
     }
     break;
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     // 通常の識別子に加えて named event も扱う．
     {
       ElbEventExprEnv env1(env);
       return instantiate_primary(parent, env1, pt_expr);
     }
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     // イベント式の根元には定数は使えない．
     error_illegal_constant_in_event_expression(pt_expr);
     return nullptr;
 
-  case kPtFuncCallExpr:
+  case PtExprType::FuncCall:
     // イベント式の根元には関数呼び出しは使えない．
     error_illegal_funccall_in_event_expression(pt_expr);
     return nullptr;
 
-  case kPtSysFuncCallExpr:
+  case PtExprType::SysFuncCall:
     // イベント式の根元にはシステム関数呼び出しは使えない．
     error_illegal_sysfunccall_in_event_expression(pt_expr);
     return nullptr;
@@ -192,12 +192,12 @@ ExprGen::instantiate_arg(const VlNamedObj* parent,
 			 const PtExpr* pt_expr)
 {
   // '(' expression ')' の時の対応
-  while ( pt_expr->type() == kPtOprExpr &&
+  while ( pt_expr->type() == PtExprType::Opr &&
 	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
-  if ( pt_expr->type() == kPtPrimaryExpr ) {
+  if ( pt_expr->type() == PtExprType::Primary ) {
     // システム関数の引数用の特別処理はここだけ．
     ElbSystemTfArgEnv env1(env);
     return instantiate_primary(parent, env1, pt_expr);
@@ -217,7 +217,7 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
 			 const PtExpr* pt_expr)
 {
   switch ( pt_expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     // 左辺では concatination しか適当でない．
     if ( pt_expr->op_type() == VpiOpType::Concat ) {
       vector<ElbExpr*> elem_array;
@@ -257,18 +257,18 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
     return nullptr;
 
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     return instantiate_primary(parent, env, pt_expr);
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     error_illegal_constant_in_lhs(pt_expr);
     return nullptr;
 
-  case kPtFuncCallExpr:
+  case PtExprType::FuncCall:
     error_illegal_funccall_in_lhs(pt_expr);
     return nullptr;
 
-  case kPtSysFuncCallExpr:
+  case PtExprType::SysFuncCall:
     error_illegal_sysfunccall_in_lhs(pt_expr);
     return nullptr;
 
@@ -295,7 +295,7 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
 {
   elem_array.clear();
   switch ( pt_expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     // 左辺では concatination しか適当でない．
     if ( pt_expr->op_type() == VpiOpType::Concat ) {
       SizeType opr_size = pt_expr->operand_num();
@@ -328,22 +328,22 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
     return nullptr;
 
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     {
       ElbExpr* expr = instantiate_primary(parent, env, pt_expr);
       elem_array.push_back(expr);
       return expr;
     }
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     error_illegal_constant_in_lhs(pt_expr);
     return nullptr;
 
-  case kPtFuncCallExpr:
+  case PtExprType::FuncCall:
     error_illegal_funccall_in_lhs(pt_expr);
     return nullptr;
 
-  case kPtSysFuncCallExpr:
+  case PtExprType::SysFuncCall:
     error_illegal_sysfunccall_in_lhs(pt_expr);
     return nullptr;
 
@@ -456,28 +456,28 @@ ExprGen::evaluate_expr(const VlNamedObj* parent,
 		       bool put_error)
 {
   // '(' expression ')' の時の対応
-  while ( pt_expr->type() == kPtOprExpr &&
+  while ( pt_expr->type() == PtExprType::Opr &&
 	  pt_expr->op_type() == VpiOpType::Null ) {
     pt_expr = pt_expr->operand0();
   }
 
   switch ( pt_expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     return evaluate_opr(parent, pt_expr, put_error);
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     return evaluate_const(parent, pt_expr);
 
-  case kPtFuncCallExpr:
+  case PtExprType::FuncCall:
     return evaluate_funccall(parent, pt_expr, put_error);
 
-  case kPtSysFuncCallExpr:
+  case PtExprType::SysFuncCall:
     if ( put_error ) {
       error_illegal_sysfunccall_in_ce(pt_expr);
     }
     break;
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     return evaluate_primary(parent, pt_expr, put_error);
 
   default:

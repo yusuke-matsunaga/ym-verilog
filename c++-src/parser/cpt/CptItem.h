@@ -243,8 +243,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_DefParam を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::DefParam を返す．
+  PtItemType
   type() const override;
 
   /// @brief defparam リストの取得
@@ -360,8 +360,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_ContAssign を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::ContAssign を返す．
+  PtItemType
   type() const override;
 
   /// @brief continuous assign リストの取得
@@ -632,8 +632,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_Initial を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::Initial を返す．
+  PtItemType
   type() const override;
 
 };
@@ -663,8 +663,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_Always を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::Always を返す．
+  PtItemType
   type() const override;
 
 };
@@ -777,8 +777,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_Task を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::Task を返す．
+  PtItemType
   type() const override;
 
 };
@@ -813,8 +813,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_Function を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::Function を返す．
+  PtItemType
   type() const override;
 
 

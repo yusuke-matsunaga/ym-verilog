@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param file_region ファイル位置の情報
 // @param type 種類
 SptItem::SptItem(const FileRegion& file_region,
-		 tPtItemType type) :
+		 PtItemType type) :
   mFileRegion{file_region},
   mType{type}
 {
@@ -42,7 +42,7 @@ SptItem::file_region() const
 
 // 型の取得
 // @return 型
-tPtItemType
+PtItemType
 SptItem::type() const
 {
   return mType;
@@ -335,7 +335,7 @@ SptItem::next_expr() const
 // dplist は削除される．
 SptDefParamH::SptDefParamH(const FileRegion& file_region,
 			   PtDefParamArray dp_array) :
-  SptItem{file_region, kPtItem_DefParam},
+  SptItem{file_region, PtItemType::DefParam},
   mArray{dp_array}
 {
 }
@@ -424,7 +424,7 @@ SptContAssignH::SptContAssignH(const FileRegion& file_region,
 			       const PtStrength* strength,
 			       const PtDelay* delay,
 			       PtContAssignArray ca_array) :
-  SptItem{file_region, kPtItem_ContAssign},
+  SptItem{file_region, PtItemType::ContAssign},
   mStrength{strength},
   mDelay{delay},
   mArray{ca_array}
@@ -516,7 +516,7 @@ SptContAssign::rhs() const
 // @param type 型(kInitial/kAlways)
 // @param body 本体のステートメント
 SptProcess::SptProcess(const FileRegion& file_region,
-		       tPtItemType type,
+		       PtItemType type,
 		       const PtStmt* body) :
   SptItem{file_region, type},
   mBody{body}
@@ -555,7 +555,7 @@ SptProcess::body() const
 // @param decl_list 宣言のリスト
 // @param stmt 本体のステートメント
 SptTf::SptTf(const FileRegion& file_region,
-	     tPtItemType type,
+	     PtItemType type,
 	     const char* name,
 	     bool automatic,
 	     bool sign,
@@ -706,7 +706,7 @@ SptGateH::SptGateH(const FileRegion& file_region,
 		   const PtStrength* strength,
 		   const PtDelay* delay,
 		   PtInstArray elem_array) :
-  SptItem{file_region, kPtItem_GateInst},
+  SptItem{file_region, PtItemType::GateInst},
   mPrimType{prim_type},
   mStrength{strength},
   mDelay{delay},
@@ -768,7 +768,7 @@ SptMuH::SptMuH(const FileRegion& file_region,
 	       const PtStrength* strength,
 	       const PtDelay* delay,
 	       PtInstArray elem_array) :
-  SptItem{file_region, kPtItem_MuInst},
+  SptItem{file_region, PtItemType::MuInst},
   mName{def_name},
   mParamArray{con_array},
   mStrength{strength},
@@ -1014,7 +1014,7 @@ SptFactory::new_Initial(const FileRegion& file_region,
 			const PtStmt* body)
 {
   auto node = new SptProcess(file_region,
-			     kPtItem_Initial,
+			     PtItemType::Initial,
 			     body);
   return node;
 }
@@ -1028,7 +1028,7 @@ SptFactory::new_Always(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   auto node = new SptProcess(file_region,
-			     kPtItem_Always,
+			     PtItemType::Always,
 			     body);
   return node;
 }
@@ -1052,7 +1052,7 @@ SptFactory::new_Task(const FileRegion& file_region,
 		     const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
-			kPtItem_Task,
+			PtItemType::Task,
 			name, automatic,
 			false, nullptr, nullptr,
 			VpiVarType::None,
@@ -1083,7 +1083,7 @@ SptFactory::new_Function(const FileRegion& file_region,
 			 const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
-			kPtItem_Func,
+			PtItemType::Func,
 			name, automatic,
 			sign, nullptr, nullptr,
 			VpiVarType::None,
@@ -1118,7 +1118,7 @@ SptFactory::new_SizedFunc(const FileRegion& file_region,
 			  const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
-			kPtItem_Func,
+			PtItemType::Func,
 			name, automatic,
 			sign, left, right,
 			VpiVarType::None,
@@ -1151,7 +1151,7 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 			  const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
-			kPtItem_Func,
+			PtItemType::Func,
 			name, automatic,
 			sign, nullptr, nullptr,
 			func_type,

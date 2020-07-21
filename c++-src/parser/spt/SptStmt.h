@@ -32,7 +32,7 @@ private:
 
   /// コンストラクタ
   SptStmt(const FileRegion& file_region,
-	  tPtStmtType type,
+	  PtStmtType type,
 	  const PtStmt* body1 = nullptr,
 	  const PtStmt* body2 = nullptr,
 	  const PtStmt* body3 = nullptr,
@@ -60,7 +60,7 @@ public:
   file_region() const override;
 
   /// クラスの型の取得
-  tPtStmtType
+  PtStmtType
   type() const override;
 
   /// @brief ステートメントの種類を表す文字列の取得
@@ -140,7 +140,7 @@ private:
   FileRegion mFileRegion;
 
   // クラスの型
-  tPtStmtType mType;
+  PtStmtType mType;
 
   // 階層ブランチの配列
   PtNameBranchArray mNbArray;

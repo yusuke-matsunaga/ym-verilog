@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] var_type 補助的な変数型
 // @param[in] sign 符号つきの時 true にするフラグ
 CptIOHBase::CptIOHBase(const FileRegion& file_region,
-		       tPtIOType type,
+		       VpiDir dir,
 		       VpiAuxType aux_type,
 		       VpiNetType net_type,
 		       VpiVarType var_type,
@@ -36,7 +36,7 @@ CptIOHBase::CptIOHBase(const FileRegion& file_region,
 {
   mAttr =
     static_cast<unsigned int>(sign) |
-    (static_cast<unsigned int>(type) << 1) |
+    (static_cast<unsigned int>(dir) << 1) |
     (static_cast<unsigned int>(aux_type) << 8) |
     (static_cast<unsigned int>(net_type) << 16) |
     (static_cast<unsigned int>(var_type) << 24);
@@ -55,10 +55,10 @@ CptIOHBase::file_region() const
 }
 
 // @brief 型の取得
-tPtIOType
-CptIOHBase::type() const
+VpiDir
+CptIOHBase::direction() const
 {
-  return static_cast<tPtIOType>((mAttr & 0xff) >> 1);
+  return static_cast<VpiDir>((mAttr & 0xff) >> 1);
 }
 
 // @brief 補助的な型の取得
@@ -139,13 +139,13 @@ CptIOHBase::set_elem(PtIOItemArray elem_array)
 // @param[in] var_type 補助的な変数型
 // @param[in] sign 符号の有無
 CptIOH::CptIOH(const FileRegion& file_region,
-	       tPtIOType type,
+	       VpiDir dir,
 	       VpiAuxType aux_type,
 	       VpiNetType net_type,
 	       VpiVarType var_type,
 	       bool sign) :
   CptIOHBase(file_region,
-	     type, aux_type,
+	     dir, aux_type,
 	     net_type, var_type,
 	     sign)
 {
@@ -170,14 +170,14 @@ CptIOH::~CptIOH()
 // @param[in] left 範囲の左側の式
 // @param[in] right 範囲の右側の式
 CptIOHV::CptIOHV(const FileRegion& file_region,
-		 tPtIOType type,
+		 VpiDir dir,
 		 VpiAuxType aux_type,
 		 VpiNetType net_type,
 		 bool sign,
 		 const PtExpr* left,
 		 const PtExpr* right) :
   CptIOHBase(file_region,
-	     type, aux_type,
+	     dir, aux_type,
 	     net_type, VpiVarType::None,
 	     sign),
   mLeftRange(left),
@@ -297,12 +297,12 @@ CptIOItemI::init_value() const
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_IOHead(const FileRegion& file_region,
-		       tPtIOType type,
+		       VpiDir dir,
 		       bool sign)
 {
   ++ mNumIOH;
   auto obj = new CptIOH(file_region,
-			type, VpiAuxType::None,
+			dir, VpiAuxType::None,
 			VpiNetType::None, VpiVarType::None, sign);
   return obj;
 }
@@ -314,12 +314,12 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_RegIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  bool sign)
 {
   ++ mNumIOH;
   auto obj = new CptIOH(file_region,
-			type, VpiAuxType::Reg,
+			dir, VpiAuxType::Reg,
 			VpiNetType::None, VpiVarType::None, sign);
   return obj;
 }
@@ -332,13 +332,13 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_NetIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  VpiNetType net_type,
 			  bool sign)
 {
   ++ mNumIOH;
   auto obj = new CptIOH(file_region,
-			type, VpiAuxType::Net,
+			dir, VpiAuxType::Net,
 			net_type, VpiVarType::None, sign);
   return obj;
 }
@@ -350,11 +350,11 @@ CptFactory::new_NetIOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_VarIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  VpiVarType var_type)
 {
   ++ mNumIOH;
-  auto obj = new CptIOH(file_region, type,
+  auto obj = new CptIOH(file_region, dir,
 			VpiAuxType::Var, VpiNetType::None,
 			var_type, false);
   return obj;
@@ -369,13 +369,13 @@ CptFactory::new_VarIOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_IOHead(const FileRegion& file_region,
-		       tPtIOType type,
+		       VpiDir dir,
 		       bool sign,
 		       const PtExpr* left,
 		       const PtExpr* right)
 {
   ++ mNumIOHV;
-  auto obj = new CptIOHV(file_region, type,
+  auto obj = new CptIOHV(file_region, dir,
 			 VpiAuxType::None, VpiNetType::None,
 			 sign, left, right);
   return obj;
@@ -390,14 +390,14 @@ CptFactory::new_IOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_RegIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right)
 {
   ++ mNumIOHV;
-  auto obj = new CptIOHV(file_region,
-			 type, VpiAuxType::Reg, VpiNetType::None,
+  auto obj = new CptIOHV(file_region, dir,
+			 VpiAuxType::Reg, VpiNetType::None,
 			 sign, left, right);
   return obj;
 }
@@ -412,15 +412,15 @@ CptFactory::new_RegIOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 CptFactory::new_NetIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  VpiNetType net_type,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right)
 {
   ++ mNumIOHV;
-  auto obj = new CptIOHV(file_region,
-			 type, VpiAuxType::Net, net_type,
+  auto obj = new CptIOHV(file_region, dir,
+			 VpiAuxType::Net, net_type,
 			 sign, left, right);
   return obj;
 }

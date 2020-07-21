@@ -41,10 +41,10 @@ CptGateH::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptGateH::type() const
 {
-  return kPtItem_GateInst;
+  return PtItemType::GateInst;
 }
 
 // プリミティブタイプ(vpiAndPrim など)を返す．
@@ -179,10 +179,10 @@ CptMuH::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptMuH::type() const
 {
-  return kPtItem_MuInst;
+  return PtItemType::MuInst;
 }
 
 // 定義名を返す．

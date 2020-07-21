@@ -40,10 +40,10 @@ CptSpecItem::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptSpecItem::type() const
 {
-  return kPtItem_SpecItem;
+  return PtItemType::SpecItem;
 }
 
 // トークン番号を返す．??? たぶん変更される．
@@ -90,10 +90,10 @@ CptSpecPath::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptSpecPath::type() const
 {
-  return kPtItem_SpecPath;
+  return PtItemType::SpecPath;
 }
 
 // トークン番号を返す．??? たぶん変更される．

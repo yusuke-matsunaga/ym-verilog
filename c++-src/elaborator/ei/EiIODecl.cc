@@ -78,14 +78,7 @@ EiIOHead::~EiIOHead()
 VpiDir
 EiIOHead::direction() const
 {
-  switch ( mPtHead->type() ) {
-  case kPtIO_Input:  return VpiDir::Input;
-  case kPtIO_Output: return VpiDir::Output;
-  case kPtIO_Inout:  return VpiDir::Inout;
-  default: ASSERT_NOT_REACHED;
-  }
-  // ダミー
-  return VpiDir::NoDirection;
+  return mPtHead->direction();
 }
 
 // @brief 親のモジュールの取得

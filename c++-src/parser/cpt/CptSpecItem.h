@@ -43,8 +43,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_SpecItem を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::SpecItem を返す．
+  PtItemType
   type() const override;
 
   /// @brief specify block item の種類を返す．
@@ -103,8 +103,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_SpecPath を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::SpecPath を返す．
+  PtItemType
   type() const override;
 
   /// @brief specify block path の種類を返す．

@@ -29,7 +29,7 @@ protected:
 
   /// コンストラクタ
   SptExpr(const FileRegion& file_region,
-	  tPtExprType type);
+	  PtExprType type);
 
   /// デストラクタ
   ~SptExpr();
@@ -45,7 +45,7 @@ public:
   file_region() const override;
 
   /// 式の型の取得
-  tPtExprType
+  PtExprType
   type() const override;
 
   /// @brief 演算子の種類の取得
@@ -183,7 +183,7 @@ private:
   FileRegion mFileRegion;
 
   // 式の種類
-  tPtExprType mType;
+  PtExprType mType;
 
 };
 
@@ -349,7 +349,7 @@ protected:
 
   /// コンストラクタ
   SptFuncCall(const FileRegion& file_region,
-	      tPtExprType type,
+	      PtExprType type,
 	      PtNameBranchArray nb_array,
 	      const char* name,
 	      PtExprArray arg_array);

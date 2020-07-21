@@ -29,10 +29,10 @@ CptPrimaryBase::~CptPrimaryBase()
 }
 
 // クラスの型を返す．
-tPtExprType
+PtExprType
 CptPrimaryBase::type() const
 {
-  return kPtPrimaryExpr;
+  return PtExprType::Primary;
 }
 
 // 末尾の名前を取り出す．

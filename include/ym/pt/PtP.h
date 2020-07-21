@@ -5,7 +5,7 @@
 /// @brief Pt クラスの名前の宣言のみおこなうヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,99 +18,89 @@ BEGIN_NAMESPACE_YM_VERILOG
 // 列挙型の定義
 //////////////////////////////////////////////////////////////////////
 
-/// @brief IO の種類を表す列挙型
-enum tPtIOType {
-  /// @brief 入力
-  kPtIO_Input  = 0,
-  /// @brief 出力
-  kPtIO_Output = 1,
-  /// @brief 入出力
-  kPtIO_Inout  = 2
-};
-
 /// @brief PtDeclH の派生クラスを区別するための列挙型
-enum tPtDeclType {
-  kPtDecl_Param,      //< @brief parameter
-  kPtDecl_LocalParam, //< @brief localparam
-  kPtDecl_Reg,        //< @brief reg
-  kPtDecl_Var,        //< @brief variables
-  kPtDecl_Genvar,     //< @brief genvar
-  kPtDecl_Net,        //< @brief net
-  kPtDecl_Event,      //< @brief named event
-  kPtDecl_SpecParam   //< @brief specparam
+enum class PtDeclType {
+  Param,      //< @brief parameter
+  LocalParam, //< @brief localparam
+  Reg,        //< @brief reg
+  Var,        //< @brief variables
+  Genvar,     //< @brief genvar
+  Net,        //< @brief net
+  Event,      //< @brief named event
+  SpecParam   //< @brief specparam
 };
 
 /// @brief PtItem の派生クラスの識別コード
-enum tPtItemType {
-  kPtItem_DefParam,
-  kPtItem_ContAssign,
-  kPtItem_Initial,
-  kPtItem_Always,
-  kPtItem_Task,
-  kPtItem_Func,
-  kPtItem_GateInst,
-  kPtItem_MuInst,
-  kPtItem_SpecItem,
-  kPtItem_SpecPath,
-  kPtItem_Generate,
-  kPtItem_GenBlock,
-  kPtItem_GenIf,
-  kPtItem_GenCase,
-  kPtItem_GenFor
+enum class PtItemType {
+  DefParam,
+  ContAssign,
+  Initial,
+  Always,
+  Task,
+  Func,
+  GateInst,
+  MuInst,
+  SpecItem,
+  SpecPath,
+  Generate,
+  GenBlock,
+  GenIf,
+  GenCase,
+  GenFor
 };
 
 /// @brief PtStmt の派生クラスの型を表す列挙型
-enum tPtStmtType {
-  kPtDisableStmt,
-  kPtEnableStmt,
-  kPtSysEnableStmt,
-  kPtDcStmt,
-  kPtEcStmt,
-  kPtAssignStmt,
-  kPtNbAssignStmt,
-  kPtEventStmt,
-  kPtNullStmt,
-  kPtIfStmt,
-  kPtCaseStmt,
-  kPtCaseXStmt,
-  kPtCaseZStmt,
-  kPtWaitStmt,
-  kPtForeverStmt,
-  kPtRepeatStmt,
-  kPtWhileStmt,
-  kPtForStmt,
-  kPtPcAssignStmt,
-  kPtDeassignStmt,
-  kPtForceStmt,
-  kPtReleaseStmt,
-  kPtParBlockStmt,
-  kPtSeqBlockStmt,
-  kPtNamedParBlockStmt,
-  kPtNamedSeqBlockStmt
+enum class PtStmtType {
+  Disable,
+  Enable,
+  SysEnable,
+  DelayControl,
+  EventControl,
+  Assign,
+  NbAssign,
+  Event,
+  Null,
+  If,
+  Case,
+  CaseX,
+  CaseZ,
+  Wait,
+  Forever,
+  Repeat,
+  White,
+  For,
+  PcAssign,
+  Deassign,
+  Force,
+  Release,
+  ParBlock,
+  SeqBlock,
+  NamedParBlock,
+  NamedSeqBlock
 };
 
 /// @brief PtExpr の派生クラスを識別するための列挙型
-enum tPtExprType {
+enum class PtExprType {
   /// @brief 演算子
-  kPtOprExpr,
+  Opr,
   /// @brief 関数呼び出し
-  kPtFuncCallExpr,
+  FuncCall,
   /// @brief システム関数呼び出し
-  kPtSysFuncCallExpr,
+  SysFuncCall,
   /// @brief プライマリ
-  kPtPrimaryExpr,
+  Primary,
   /// @brief 定数
-  kPtConstExpr
+  Const
 };
 
 /// @brief コントロールの型を区別するための列挙型
-enum tPtCtrlType {
+enum class PtCtrlType {
   /// @brief delay control
-  kPtDelayControl,
+  Delay,
   /// @brief event control
-  kPtEventControl,
+  Event,
   /// @brief repeat control
-  kPtRepeatControl
+  Repeat
 };
 
 

@@ -112,14 +112,7 @@ Parser::new_Module1995(const FileRegion& file_region,
   unordered_map<string, VpiDir> iodecl_dirs;
   for ( auto io_head: iohead_array ) {
     // 名前をキーにして方向を記録しておく
-    VpiDir dir = VpiDir::NoDirection;
-    switch ( io_head->type() ) {
-    case kPtIO_Input:  dir = VpiDir::Input; break;
-    case kPtIO_Output: dir = VpiDir::Output; break;
-    case kPtIO_Inout:  dir = VpiDir::Inout; break;
-    default:
-      ASSERT_NOT_REACHED;
-    }
+    VpiDir dir = io_head->direction();
     for ( auto elem: io_head->item_list() ) {
       const char* elem_name = elem->name();
 

@@ -90,10 +90,10 @@ CptGenerate::~CptGenerate()
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptGenerate::type() const
 {
-  return kPtItem_Generate;
+  return PtItemType::Generate;
 }
 
 
@@ -115,10 +115,10 @@ CptGenBlock::~CptGenBlock()
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptGenBlock::type() const
 {
-  return kPtItem_GenBlock;
+  return PtItemType::GenBlock;
 }
 
 
@@ -180,10 +180,10 @@ CptGenIf::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptGenIf::type() const
 {
-  return kPtItem_GenIf;
+  return PtItemType::GenIf;
 }
 
 // 条件式を返す．
@@ -298,10 +298,10 @@ CptGenCase::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptGenCase::type() const
 {
-  return kPtItem_GenCase;
+  return PtItemType::GenCase;
 }
 
 // 比較式を返す．
@@ -355,10 +355,10 @@ CptGenFor::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptGenFor::type() const
 {
-  return kPtItem_GenFor;
+  return PtItemType::GenFor;
 }
 
 // 名前を返す．

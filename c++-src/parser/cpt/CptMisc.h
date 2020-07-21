@@ -86,8 +86,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtDelayControl を返す．
-  tPtCtrlType
+  /// @note ここでは PtCtrlType::Delay を返す．
+  PtCtrlType
   type() const override;
 
   /// @brief 遅延式を返す．
@@ -137,8 +137,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtEventControl を返す．
-  tPtCtrlType
+  /// @note ここでは PtCtrlType::Event を返す．
+  PtCtrlType
   type() const override;
 
   /// @brief イベントリストの取得
@@ -190,8 +190,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtRepeatControl を返す．
-  tPtCtrlType
+  /// @note ここでは PtCtrlType::Repeat を返す．
+  PtCtrlType
   type() const override;
 
   /// @brief 繰り返し数を得る．

@@ -146,13 +146,7 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
       const char* name = elem->name();
       const PtExpr* portref = mFactory.new_Primary(elem->file_region(), name);
       PtiPort* port = mFactory.new_Port(elem->file_region(), portref, name);
-      VpiDir dir;
-      switch ( head->type() ) {
-      case kPtIO_Input:  dir = VpiDir::Input; break;
-      case kPtIO_Output: dir = VpiDir::Output; break;
-      case kPtIO_Inout:  dir = VpiDir::Inout; break;
-      default: ASSERT_NOT_REACHED;
-      }
+      VpiDir dir = head->direction();
       port->_set_portref_dir(0, dir);
       array[i] = port;
       ++ i;

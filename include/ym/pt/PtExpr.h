@@ -38,7 +38,7 @@ public:
   /// @brief 式の型の取得
   /// @return 式の型
   virtual
-  tPtExprType
+  PtExprType
   type() const = 0;
 
   /// @brief 演算子の種類の取得

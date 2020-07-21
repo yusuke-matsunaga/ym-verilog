@@ -55,8 +55,8 @@ VpiObjType
 EiBlockScope::type() const
 {
   switch ( mPtStmt->type() ) {
-  case kPtNamedParBlockStmt: return VpiObjType::NamedFork;
-  case kPtNamedSeqBlockStmt: return VpiObjType::NamedBegin;
+  case PtStmtType::NamedParBlock: return VpiObjType::NamedFork;
+  case PtStmtType::NamedSeqBlock: return VpiObjType::NamedBegin;
   default:
     break;
   }

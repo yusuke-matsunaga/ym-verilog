@@ -27,7 +27,7 @@ protected:
 
   /// コンストラクタ
   SptItem(const FileRegion& file_region,
-	  tPtItemType type);
+	  PtItemType type);
 
   /// デストラクタ
   ~SptItem();
@@ -43,7 +43,7 @@ public:
   file_region() const override;
 
   /// 型の取得
-  tPtItemType
+  PtItemType
   type() const override;
 
   /// @brief プリミティブタイプの取得
@@ -232,7 +232,7 @@ private:
   FileRegion mFileRegion;
 
   // 型
-  tPtItemType mType;
+  PtItemType mType;
 
 };
 
@@ -460,7 +460,7 @@ private:
 
   // コンストラクタ
   SptProcess(const FileRegion& file_region,
-	     tPtItemType type,
+	     PtItemType type,
 	     const PtStmt* body);
 
   // デストラクタ
@@ -511,7 +511,7 @@ private:
   /// @param[in] declhead_array 宣言のリスト
   /// @param[in] stmt 本体のステートメント
   SptTf(const FileRegion& file_region,
-	tPtItemType type,
+	PtItemType type,
 	const char* name,
 	bool automatic,
 	bool sign,
@@ -883,7 +883,7 @@ private:
 
   // コンストラクタ
   SptGenerate(const FileRegion& file_region,
-	      tPtItemType type,
+	      PtItemType type,
 	      const char* name,
 	      PtDeclHeadArray decl_array,
 	      PtItemArray item_array);

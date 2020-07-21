@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // コンストラクタ
 // @param file_region ファイル位置の情報
-// @param type IO の種類
+// @param dir IO の種類
 // @param aux_type 補助的な型
 // @param sign 符号の有無を表すフラグ
 // @param left 範囲の左側の式
@@ -28,7 +28,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // 少なくとも一つは kVpiNone(net_type) か VpiVarType::None(var_type)
 // になっていなければならない．
 SptIOHead::SptIOHead(const FileRegion& file_region,
-		     tPtIOType type,
+		     VpiDir dir,
 		     VpiAuxType aux_type,
 		     VpiNetType net_type,
 		     VpiVarType var_type,
@@ -36,7 +36,7 @@ SptIOHead::SptIOHead(const FileRegion& file_region,
 		     const PtExpr* left,
 		     const PtExpr* right) :
   mFileRegion{file_region},
-  mType{type},
+  mDir{dir},
   mAuxType{aux_type},
   mNetType{net_type},
   mVarType{var_type},
@@ -61,10 +61,10 @@ SptIOHead::file_region() const
 
 // 型の取得
 // @return 型
-tPtIOType
-SptIOHead::type() const
+VpiDir
+SptIOHead::direction() const
 {
-  return mType;
+  return mDir;
 }
 
 // 補助的な型の取得
@@ -199,7 +199,7 @@ SptIOItem::init_value() const
 // net_type/vs_type/strength/delay が意味を持つのは type == kNet の
 // 時のみ
 SptDeclHead::SptDeclHead(const FileRegion& file_region,
-			 tPtDeclType type,
+			 PtDeclType type,
 			 bool sign,
 			 const PtExpr* left,
 			 const PtExpr* right,
@@ -236,7 +236,7 @@ SptDeclHead::file_region() const
 
 // 宣言要素の型の取得
 // @return 宣言要素の型
-tPtDeclType
+PtDeclType
 SptDeclHead::type() const
 {
   return mType;
@@ -447,119 +447,119 @@ SptRange::right() const
 
 // @brief IO 宣言のヘッダの生成
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_IOHead(const FileRegion& file_region,
-		       tPtIOType type,
+		       VpiDir dir,
 		       bool sign)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::None, VpiNetType::None,
-			   VpiVarType::None,
+			    dir, VpiAuxType::None, VpiNetType::None,
+			    VpiVarType::None,
 			    sign, nullptr, nullptr);
   return node;
 }
 
 // @brief IO 宣言のヘッダの生成 (reg 型)
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_RegIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  bool sign)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::Reg, VpiNetType::None,
-			   VpiVarType::None,
-			   sign, nullptr, nullptr);
+			    dir, VpiAuxType::Reg, VpiNetType::None,
+			    VpiVarType::None,
+			    sign, nullptr, nullptr);
   return node;
 }
 
 // @brief IO 宣言のヘッダの生成 (ネット型)
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] net_type 補助的なネット型
 // @param[in] sign 符号付きのとき true となるフラグ
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_NetIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  VpiNetType net_type,
 			  bool sign)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::Net, net_type,
-			   VpiVarType::None,
-			   sign, nullptr, nullptr);
+			    dir, VpiAuxType::Net, net_type,
+			    VpiVarType::None,
+			    sign, nullptr, nullptr);
   return node;
 }
 
 // @brief IO 宣言のヘッダの生成 (変数型)
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] var_type 補助的な変数型
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_VarIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  VpiVarType var_type)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::Var, VpiNetType::None,
-			   var_type,
-			   false, nullptr, nullptr);
+			    dir, VpiAuxType::Var, VpiNetType::None,
+			    var_type,
+			    false, nullptr, nullptr);
   return node;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @param[in] left 範囲の左側の式
 // @param[in] right 範囲の右側の式
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_IOHead(const FileRegion& file_region,
-		       tPtIOType type,
+		       VpiDir dir,
 		       bool sign,
 		       const PtExpr* left,
 		       const PtExpr* right)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::None, VpiNetType::None,
-			   VpiVarType::None,
-			   sign, left, right);
+			    dir, VpiAuxType::None, VpiNetType::None,
+			    VpiVarType::None,
+			    sign, left, right);
   return node;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (reg 型)
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @param[in] left 範囲の左側の式
 // @param[in] right 範囲の右側の式
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_RegIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::Reg, VpiNetType::None,
-			   VpiVarType::None,
-			   sign, left, right);
+			    dir, VpiAuxType::Reg, VpiNetType::None,
+			    VpiVarType::None,
+			    sign, left, right);
   return node;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (ネット型)
 // @param[in] file_region ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] net_type 補助的なネット型
 // @param[in] sign 符号付きのとき true となるフラグ
 // @param[in] left 範囲の左側の式
@@ -567,16 +567,16 @@ SptFactory::new_RegIOHead(const FileRegion& file_region,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 SptFactory::new_NetIOHead(const FileRegion& file_region,
-			  tPtIOType type,
+			  VpiDir dir,
 			  VpiNetType net_type,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right)
 {
   auto node = new SptIOHead(file_region,
-			   type, VpiAuxType::Net, net_type,
-			   VpiVarType::None,
-			   sign, left, right);
+			    dir, VpiAuxType::Net, net_type,
+			    VpiVarType::None,
+			    sign, left, right);
   return node;
 }
 
@@ -618,7 +618,7 @@ PtiDeclHead*
 SptFactory::new_ParamH(const FileRegion& file_region)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Param,
+			     PtDeclType::Param,
 			     false, nullptr, nullptr,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -638,7 +638,7 @@ SptFactory::new_ParamH(const FileRegion& file_region,
 		       const PtExpr* right)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Param,
+			     PtDeclType::Param,
 			     sign, left, right,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -654,7 +654,7 @@ SptFactory::new_ParamH(const FileRegion& file_region,
 		       VpiVarType var_type)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Param,
+			     PtDeclType::Param,
 			     false, nullptr, nullptr,
 			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -668,7 +668,7 @@ PtiDeclHead*
 SptFactory::new_LocalParamH(const FileRegion& file_region)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_LocalParam,
+			     PtDeclType::LocalParam,
 			     false, nullptr, nullptr,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -688,7 +688,7 @@ SptFactory::new_LocalParamH(const FileRegion& file_region,
 			    const PtExpr* right)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_LocalParam,
+			     PtDeclType::LocalParam,
 			     sign, left, right,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -704,7 +704,7 @@ SptFactory::new_LocalParamH(const FileRegion& file_region,
 			    VpiVarType var_type)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_LocalParam,
+			     PtDeclType::LocalParam,
 			     false, nullptr, nullptr,
 			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -718,7 +718,7 @@ PtiDeclHead*
 SptFactory::new_SpecParamH(const FileRegion& file_region)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_SpecParam,
+			     PtDeclType::SpecParam,
 			     false, nullptr, nullptr,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -736,7 +736,7 @@ SptFactory::new_SpecParamH(const FileRegion& file_region,
 			   const PtExpr* right)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_SpecParam,
+			     PtDeclType::SpecParam,
 			     false, left, right,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -750,7 +750,7 @@ PtiDeclHead*
 SptFactory::new_EventH(const FileRegion& file_region)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Event,
+			     PtDeclType::Event,
 			     false, nullptr, nullptr,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -764,7 +764,7 @@ PtiDeclHead*
 SptFactory::new_GenvarH(const FileRegion& file_region)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Genvar,
+			     PtDeclType::Genvar,
 			     false, nullptr, nullptr,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -789,7 +789,7 @@ SptFactory::new_VarH(const FileRegion& file_region,
     break;
   }
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Var,
+			     PtDeclType::Var,
 			     sign, nullptr, nullptr,
 			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -805,7 +805,7 @@ SptFactory::new_RegH(const FileRegion& file_region,
 		     bool sign)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Reg,
+			     PtDeclType::Reg,
 			     sign, nullptr, nullptr,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -825,7 +825,7 @@ SptFactory::new_RegH(const FileRegion& file_region,
 		     const PtExpr* right)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Reg,
+			     PtDeclType::Reg,
 			     sign, left, right,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -843,7 +843,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     bool sign)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, nullptr, nullptr,
 			     VpiVarType::None, type, VpiVsType::None,
 			     nullptr, nullptr);
@@ -863,7 +863,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, nullptr, nullptr,
 			     VpiVarType::None, type, VpiVsType::None,
 			     strength, nullptr);
@@ -883,7 +883,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, nullptr, nullptr,
 			     VpiVarType::None, type, VpiVsType::None,
 			     nullptr, delay);
@@ -905,7 +905,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, nullptr, nullptr,
 			     VpiVarType::None, type, VpiVsType::None,
 			     strength, delay);
@@ -930,7 +930,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtExpr* right)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, left, right,
 			     VpiVarType::None, type, vstype,
 			     nullptr, nullptr);
@@ -956,7 +956,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, left, right,
 			     VpiVarType::None, type, vstype,
 			     strength, nullptr);
@@ -982,7 +982,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, left, right,
 			     VpiVarType::None, type, vstype,
 			     nullptr, delay);
@@ -1010,7 +1010,7 @@ SptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   auto node = new SptDeclHead(file_region,
-			     kPtDecl_Net,
+			     PtDeclType::Net,
 			     sign, left, right,
 			     VpiVarType::None, type, vstype,
 			     strength, delay);

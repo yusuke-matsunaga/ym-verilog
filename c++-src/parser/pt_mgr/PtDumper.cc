@@ -285,10 +285,10 @@ PtDumper::put(const char* label,
 	      const PtIOHead* io)
 {
   const char* nm = nullptr;
-  switch ( io->type() ) {
-  case kPtIO_Input:  nm = "Input"; break;
-  case kPtIO_Output: nm = "Output"; break;
-  case kPtIO_Inout:  nm = "Inout"; break;
+  switch ( io->direction() ) {
+  case VpiDir::Input:  nm = "Input"; break;
+  case VpiDir::Output: nm = "Output"; break;
+  case VpiDir::Inout:  nm = "Inout"; break;
   default: ASSERT_NOT_REACHED;
   }
   PtHeader x(*this, label, nm);
@@ -324,7 +324,7 @@ PtDumper::put(const char* label,
 {
   const char* nm = nullptr;
   switch ( decl->type() ) {
-  case kPtDecl_Param:
+  case PtDeclType::Param:
     switch ( decl->data_type() ) {
     case VpiVarType::None:            nm = "Parameter"; break;
     case VpiVarType::Integer:         nm = "Parameter(integer)";  break;
@@ -334,7 +334,7 @@ PtDumper::put(const char* label,
     default: ASSERT_NOT_REACHED; break;
     }
     break;
-  case kPtDecl_LocalParam:
+  case PtDeclType::LocalParam:
     switch ( decl->data_type() ) {
     case VpiVarType::None:            nm = "Localparam"; break;
     case VpiVarType::Integer:         nm = "Localparam(integer)";  break;
@@ -344,8 +344,8 @@ PtDumper::put(const char* label,
     default: ASSERT_NOT_REACHED; break;
     }
     break;
-  case kPtDecl_Reg:            nm = "Reg";        break;
-  case kPtDecl_Var:
+  case PtDeclType::Reg:            nm = "Reg";        break;
+  case PtDeclType::Var:
     switch ( decl->data_type() ) {
     case VpiVarType::Integer:         nm = "Integer";    break;
     case VpiVarType::Real:            nm = "Real";       break;
@@ -355,10 +355,10 @@ PtDumper::put(const char* label,
     default: ASSERT_NOT_REACHED; break;
     }
     break;
-  case kPtDecl_Genvar:         nm = "Genvar";     break;
-  case kPtDecl_Event:          nm = "Event";      break;
-  case kPtDecl_SpecParam:      nm = "Specparam";  break;
-  case kPtDecl_Net:
+  case PtDeclType::Genvar:         nm = "Genvar";     break;
+  case PtDeclType::Event:          nm = "Event";      break;
+  case PtDeclType::SpecParam:      nm = "Specparam";  break;
+  case PtDeclType::Net:
     switch ( decl->net_type() ) {
     case VpiNetType::Supply0:          nm = "Supply0"; break;
     case VpiNetType::Supply1:          nm = "Supply1"; break;
@@ -419,12 +419,12 @@ PtDumper::put(const char* label,
 
   const char* nm = nullptr;
   switch ( item->type() ) {
-  case kPtItem_DefParam:        nm = "DefparamHeader"; break;
-  case kPtItem_ContAssign:      nm = "ContAssignHeader"; break;
-  case kPtItem_Initial:         nm = "Initial"; break;
-  case kPtItem_Always:          nm = "Always"; break;
-  case kPtItem_Task:            nm = "Task"; break;
-  case kPtItem_Func:
+  case PtItemType::DefParam:        nm = "DefparamHeader"; break;
+  case PtItemType::ContAssign:      nm = "ContAssignHeader"; break;
+  case PtItemType::Initial:         nm = "Initial"; break;
+  case PtItemType::Always:          nm = "Always"; break;
+  case PtItemType::Task:            nm = "Task"; break;
+  case PtItemType::Func:
     switch ( item->data_type() ) {
     case VpiVarType::None:            nm = "Function"; break;
     case VpiVarType::Integer:         nm = "Function(integer)"; break;
@@ -434,9 +434,9 @@ PtDumper::put(const char* label,
     default: ASSERT_NOT_REACHED; break;
     }
     break;
-  case kPtItem_GateInst:        nm = "GateHeader"; break;
-  case kPtItem_MuInst:          nm = "MuHeader"; break;
-  case kPtItem_SpecItem:
+  case PtItemType::GateInst:        nm = "GateHeader"; break;
+  case PtItemType::MuInst:          nm = "MuHeader"; break;
+  case PtItemType::SpecItem:
     switch ( item->specitem_type() ) {
     case VpiSpecItemType::PulsestyleOnEvent:  nm = "Pulse_onevent"; break;
     case VpiSpecItemType::PulsestyleOnDetect: nm = "Pulse_ondetect"; break;
@@ -444,12 +444,12 @@ PtDumper::put(const char* label,
     case VpiSpecItemType::Noshowcancelled:    nm = "Noshowcancelld"; break;
     default: ASSERT_NOT_REACHED; break;
     }
-  case kPtItem_SpecPath:        nm = "SpecPath"; break;
-  case kPtItem_Generate:        nm = "Generate"; break;
-  case kPtItem_GenBlock:        nm = "GenBlock"; break;
-  case kPtItem_GenIf:           nm = "GenIf"; break;
-  case kPtItem_GenCase:         nm = "GenCase"; break;
-  case kPtItem_GenFor:          nm = "GenFor"; break;
+  case PtItemType::SpecPath:        nm = "SpecPath"; break;
+  case PtItemType::Generate:        nm = "Generate"; break;
+  case PtItemType::GenBlock:        nm = "GenBlock"; break;
+  case PtItemType::GenIf:           nm = "GenIf"; break;
+  case PtItemType::GenCase:         nm = "GenCase"; break;
+  case PtItemType::GenFor:          nm = "GenFor"; break;
   default: ASSERT_NOT_REACHED; break;
   }
   PtHeader x(*this, label, nm);
@@ -460,7 +460,7 @@ PtDumper::put(const char* label,
 #endif
 
   switch ( item->type() ) {
-  case kPtItem_DefParam:
+  case PtItemType::DefParam:
     for ( auto dp: item->defparam_list() ) {
       PtHeader x(*this, "mElem", "DefParam");
 
@@ -471,7 +471,7 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtItem_ContAssign:
+  case PtItemType::ContAssign:
     put("mStrength", item->strength());
     put("mDelay", item->delay());
     for ( auto ca: item->contassign_list() ) {
@@ -483,13 +483,13 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtItem_Initial:
-  case kPtItem_Always:
+  case PtItemType::Initial:
+  case PtItemType::Always:
     put("mBody", item->body());
     break;
 
-  case kPtItem_Task:
-  case kPtItem_Func:
+  case PtItemType::Task:
+  case PtItemType::Func:
     put("mAutomatic", item->automatic());
     if ( item->left_range() ) {
       put("mSigned", item->is_signed());
@@ -502,7 +502,7 @@ PtDumper::put(const char* label,
     put("mBody", item->body());
     break;
 
-  case kPtItem_GateInst:
+  case PtItemType::GateInst:
     put("mPrimType", item->prim_type());
     put("mStrength", item->strength());
     put("mDelay", item->delay());
@@ -523,7 +523,7 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtItem_MuInst:
+  case PtItemType::MuInst:
     put("mDefName", item->name());
     for ( auto con: item->paramassign_array() ) {
       put("mParamCon", con);
@@ -545,13 +545,13 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtItem_SpecItem:
+  case PtItemType::SpecItem:
     for ( auto expr: item->terminal_list() ) {
       put("mTerminal", expr);
     }
     break;
 
-  case kPtItem_SpecPath:
+  case PtItemType::SpecPath:
 #if 0 // PATH_DECL
     switch ( item->specpath_type() ) {
     case kVpiSpecPathNull:
@@ -572,21 +572,21 @@ PtDumper::put(const char* label,
 #endif
     break;
 
-  case kPtItem_Generate:
-  case kPtItem_GenBlock:
+  case PtItemType::Generate:
+  case PtItemType::GenBlock:
     if ( item->name() != nullptr ) {
       put("mName", item->name());
     }
     put_decl_item("mBody", item->declhead_array(), item->item_array());
     break;
 
-  case kPtItem_GenIf:
+  case PtItemType::GenIf:
     put("mCond", item->expr());
     put_decl_item("mThenBody", item->then_declhead_array(), item->then_item_array());
     put_decl_item("mElseBody", item->else_declhead_array(), item->else_item_array());
     break;
 
-  case kPtItem_GenCase:
+  case PtItemType::GenCase:
     put("mExpr", item->expr());
     for ( auto gci: item->caseitem_list() ) {
       PtHeader x(*this, "mCaseItem", "GenCaseItem");
@@ -599,7 +599,7 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtItem_GenFor:
+  case PtItemType::GenFor:
     put("mLoopVar", item->loop_var());
     put("mInitehExpr", item->init_expr());
     put("mCond", item->expr());
@@ -708,32 +708,32 @@ PtDumper::put(const char* label,
 
   const char* nm = nullptr;
   switch ( stmt->type() ) {
-  case kPtDisableStmt:       nm = "Disable"; break;
-  case kPtEnableStmt:        nm = "Enable"; break;
-  case kPtSysEnableStmt:     nm = "SysEnable"; break;
-  case kPtDcStmt:            nm = "ControlStmt"; break;
-  case kPtEcStmt:            nm = "ControlStmt"; break;
-  case kPtAssignStmt:        nm = "Assign"; break;
-  case kPtNbAssignStmt:      nm = "NonBlockingAssign"; break;
-  case kPtEventStmt:         nm = "EventTrigger"; break;
-  case kPtNullStmt:          nm = "NullStmt"; break;
-  case kPtIfStmt:            nm = "If"; break;
-  case kPtCaseStmt:          nm = "Case"; break;
-  case kPtCaseXStmt:         nm = "Casex"; break;
-  case kPtCaseZStmt:         nm = "Casez"; break;
-  case kPtWaitStmt:          nm = "Wait"; break;
-  case kPtForeverStmt:       nm = "Forever"; break;
-  case kPtRepeatStmt:        nm = "Repeat"; break;
-  case kPtWhileStmt:         nm = "While"; break;
-  case kPtForStmt:           nm = "For"; break;
-  case kPtPcAssignStmt:      nm = "PcAssign"; break;
-  case kPtDeassignStmt:      nm = "Deassign"; break;
-  case kPtForceStmt:         nm = "Force"; break;
-  case kPtReleaseStmt:       nm = "Release"; break;
-  case kPtParBlockStmt:      nm = "Fork"; break;
-  case kPtSeqBlockStmt:      nm = "Begin"; break;
-  case kPtNamedParBlockStmt: nm = "Fork"; break;
-  case kPtNamedSeqBlockStmt: nm = "Begin"; break;
+  case PtStmtType::Disable:       nm = "Disable"; break;
+  case PtStmtType::Enable:        nm = "Enable"; break;
+  case PtStmtType::SysEnable:     nm = "SysEnable"; break;
+  case PtStmtType::DelayControl:            nm = "ControlStmt"; break;
+  case PtStmtType::EventControl:            nm = "ControlStmt"; break;
+  case PtStmtType::Assign:        nm = "Assign"; break;
+  case PtStmtType::NbAssign:      nm = "NonBlockingAssign"; break;
+  case PtStmtType::Event:         nm = "EventTrigger"; break;
+  case PtStmtType::Null:          nm = "NullStmt"; break;
+  case PtStmtType::If:            nm = "If"; break;
+  case PtStmtType::Case:          nm = "Case"; break;
+  case PtStmtType::CaseX:         nm = "Casex"; break;
+  case PtStmtType::CaseZ:         nm = "Casez"; break;
+  case PtStmtType::Wait:          nm = "Wait"; break;
+  case PtStmtType::Forever:       nm = "Forever"; break;
+  case PtStmtType::Repeat:        nm = "Repeat"; break;
+  case PtStmtType::White:         nm = "While"; break;
+  case PtStmtType::For:           nm = "For"; break;
+  case PtStmtType::PcAssign:      nm = "PcAssign"; break;
+  case PtStmtType::Deassign:      nm = "Deassign"; break;
+  case PtStmtType::Force:         nm = "Force"; break;
+  case PtStmtType::Release:       nm = "Release"; break;
+  case PtStmtType::ParBlock:      nm = "Fork"; break;
+  case PtStmtType::SeqBlock:      nm = "Begin"; break;
+  case PtStmtType::NamedParBlock: nm = "Fork"; break;
+  case PtStmtType::NamedSeqBlock: nm = "Begin"; break;
   default: ASSERT_NOT_REACHED; break;
   }
   PtHeader x(*this, label, nm);
@@ -744,13 +744,13 @@ PtDumper::put(const char* label,
 #endif
 
   switch ( stmt->type() ) {
-  case kPtDisableStmt:
+  case PtStmtType::Disable:
     put(stmt->namebranch_array());
     put("mName", stmt->name());
     break;
 
-  case kPtEnableStmt:
-  case kPtSysEnableStmt:
+  case PtStmtType::Enable:
+  case PtStmtType::SysEnable:
     put(stmt->namebranch_array());
     put("mName", stmt->name());
     for ( auto arg: stmt->arg_list() ) {
@@ -763,44 +763,44 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtDcStmt:
-  case kPtEcStmt:
+  case PtStmtType::DelayControl:
+  case PtStmtType::EventControl:
     put("mControl", stmt->control());
     put("mBody", stmt->body());
     break;
 
-  case kPtWaitStmt:
+  case PtStmtType::Wait:
     put("mExpr", stmt->expr());
     put("mBody", stmt->body());
     break;
 
-  case kPtAssignStmt:
-  case kPtNbAssignStmt:
-  case kPtPcAssignStmt:
-  case kPtForceStmt:
-  case kPtDeassignStmt:
-  case kPtReleaseStmt:
+  case PtStmtType::Assign:
+  case PtStmtType::NbAssign:
+  case PtStmtType::PcAssign:
+  case PtStmtType::Force:
+  case PtStmtType::Deassign:
+  case PtStmtType::Release:
     put("mControl", stmt->control());
     put("mLhs", stmt->lhs());
     put("mRhs", stmt->rhs());
     break;
 
-  case kPtEventStmt:
+  case PtStmtType::Event:
     put("mEventName", stmt->primary());
     break;
 
-  case kPtNullStmt:
+  case PtStmtType::Null:
     break;
 
-  case kPtIfStmt:
+  case PtStmtType::If:
     put("mCond", stmt->expr());
     put("mThen", stmt->body());
     put("mElse", stmt->else_body());
     break;
 
-  case kPtCaseStmt:
-  case kPtCaseXStmt:
-  case kPtCaseZStmt:
+  case PtStmtType::Case:
+  case PtStmtType::CaseX:
+  case PtStmtType::CaseZ:
     put("mExpr", stmt->expr());
     for ( auto ci: stmt->caseitem_list() ) {
       PtHeader x(*this, "mCaseItem", "CaseItem");
@@ -813,23 +813,23 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtForeverStmt:
-  case kPtRepeatStmt:
-  case kPtWhileStmt:
-  case kPtForStmt:
+  case PtStmtType::Forever:
+  case PtStmtType::Repeat:
+  case PtStmtType::White:
+  case PtStmtType::For:
     put("mInit", stmt->init_stmt());
     put("mExpr", stmt->expr());
     put("mNext", stmt->next_stmt());
     put("mBody", stmt->body());
     break;
 
-  case kPtNamedParBlockStmt:
-  case kPtNamedSeqBlockStmt:
+  case PtStmtType::NamedParBlock:
+  case PtStmtType::NamedSeqBlock:
     put("mName", stmt->name());
     // 次の case にわざと継続する．
 
-  case kPtParBlockStmt:
-  case kPtSeqBlockStmt:
+  case PtStmtType::ParBlock:
+  case PtStmtType::SeqBlock:
     for (ymuint i = 0; i < stmt->declhead_array().size(); ++ i) {
       const PtDeclHead* head = stmt->declhead_array()[i];
       put("mDecl", head);
@@ -856,7 +856,7 @@ PtDumper::put(const char* label,
   }
 
   switch ( expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     if ( expr->op_type() == VpiOpType::Null ) {
       // '(' expression ')' なので無視
       return put(label, expr->operand(0));
@@ -876,7 +876,7 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     {
       PtHeader x(*this, label, "Constant");
 
@@ -896,11 +896,11 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtFuncCallExpr:
-  case kPtSysFuncCallExpr:
+  case PtExprType::FuncCall:
+  case PtExprType::SysFuncCall:
     {
       const char* nm = nullptr;
-      if ( expr->type() == kPtFuncCallExpr ) {
+      if ( expr->type() == PtExprType::FuncCall ) {
 	nm = "FuncCall";
       }
       else {
@@ -926,7 +926,7 @@ PtDumper::put(const char* label,
     }
     break;
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     {
       PtHeader x(*this, label, "Primary");
 
@@ -1472,9 +1472,9 @@ PtDumper::put(const char* label,
 
   const char* nm = nullptr;
   switch ( ctrl->type() ) {
-  case kPtDelayControl:  nm = "DelayControl"; break;
-  case kPtEventControl:  nm = "EventControl"; break;
-  case kPtRepeatControl: nm = "RepeatControl"; break;
+  case PtCtrlType::Delay:  nm = "DelayControl"; break;
+  case PtCtrlType::Event:  nm = "EventControl"; break;
+  case PtCtrlType::Repeat: nm = "RepeatControl"; break;
   default: ASSERT_NOT_REACHED; break;
   }
   PtHeader x(*this, label, nm);

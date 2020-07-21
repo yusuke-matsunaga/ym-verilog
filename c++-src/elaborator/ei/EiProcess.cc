@@ -58,8 +58,8 @@ VpiObjType
 EiProcess::type() const
 {
   switch ( mPtItem->type() ) {
-  case kPtItem_Initial: return VpiObjType::Initial;
-  case kPtItem_Always:  return VpiObjType::Always;
+  case PtItemType::Initial: return VpiObjType::Initial;
+  case PtItemType::Always:  return VpiObjType::Always;
   default: break;
   }
   ASSERT_NOT_REACHED;

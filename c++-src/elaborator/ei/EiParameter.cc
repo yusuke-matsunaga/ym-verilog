@@ -113,11 +113,11 @@ VpiObjType
 EiParamHead::type() const
 {
   switch ( mPtHead->type() ) {
-  case kPtDecl_Param:
-  case kPtDecl_LocalParam:
+  case PtDeclType::Param:
+  case PtDeclType::LocalParam:
     return VpiObjType::Parameter;
 
-  case kPtDecl_SpecParam:
+  case PtDeclType::SpecParam:
     return VpiObjType::SpecParam;
 
   default:

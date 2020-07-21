@@ -38,7 +38,7 @@ public:
   /// @brief 型の取得
   /// @return 型
   virtual
-  tPtItemType
+  PtItemType
   type() const = 0;
 
   /// @brief プリミティブタイプの取得

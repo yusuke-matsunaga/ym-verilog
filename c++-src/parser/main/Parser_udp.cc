@@ -79,7 +79,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
   // ついでに output の数を数える．
   unordered_map<string, const PtIOItem*> iomap;
   for ( auto io: iohead_array ) {
-    if ( io->type() == kPtIO_Output ) {
+    if ( io->direction() == VpiDir::Output ) {
       if ( out_item ) {
 	// 複数の出力宣言があった．
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -183,7 +183,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
     const PtDeclHead* reghead = decl_array[0];
     if ( reghead ) {
       is_seq = true;
-      ASSERT_COND(reghead->type() == kPtDecl_Reg );
+      ASSERT_COND(reghead->type() == PtDeclType::Reg );
       ASSERT_COND(reghead->item_list().size() == 1 );
       const PtDeclItem* regitem = reghead->item_list()[0];
       ASSERT_COND(regitem );
@@ -237,8 +237,8 @@ Parser::new_Udp2001(const FileRegion& file_region,
   // 要素数が1となっているはず．
   ASSERT_COND(iohead_array.size() > 0 );
   const PtIOHead* out_head = iohead_array[0];
-  ASSERT_COND(out_head->type() == kPtIO_Output );
-  ASSERT_COND(out_head->item_list().size() == 1 );
+  ASSERT_COND( out_head->direction() == VpiDir::Output );
+  ASSERT_COND( out_head->item_list().size() == 1 );
   const PtIOItem* out_item = out_head->item_list()[0];
 
   if ( out_head->aux_type() == VpiAuxType::Reg ) {

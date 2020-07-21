@@ -41,32 +41,32 @@ const char*
 CptStmt::stmt_name() const
 {
   switch ( type() ) {
-  case kPtDisableStmt:   return "disable statment";
-  case kPtEnableStmt:    return "task enable statement";
-  case kPtSysEnableStmt: return "system task enable statement";
-  case kPtDcStmt:        return "delay control statement";
-  case kPtEcStmt:        return "event control statement";
-  case kPtAssignStmt:    return "assignment";
-  case kPtNbAssignStmt:  return "nonblocking assignment";
-  case kPtEventStmt:     return "event statement";
-  case kPtNullStmt:      return "null statement";
-  case kPtIfStmt:        return "if statement";
-  case kPtCaseStmt:      return "case statement";
-  case kPtCaseXStmt:     return "casex statement";
-  case kPtCaseZStmt:     return "casez statement";
-  case kPtWaitStmt:      return "wait statement";
-  case kPtForeverStmt:   return "forever statement";
-  case kPtRepeatStmt:    return "repeat statement";
-  case kPtWhileStmt:     return "while statement";
-  case kPtForStmt:       return "for-loop statement";
-  case kPtPcAssignStmt:  return "procedural continuous assignment";
-  case kPtDeassignStmt:  return "deassign statement";
-  case kPtForceStmt:     return "force statement";
-  case kPtReleaseStmt:   return "release statement";
-  case kPtNamedParBlockStmt:
-  case kPtParBlockStmt:  return "parallel block";
-  case kPtNamedSeqBlockStmt:
-  case kPtSeqBlockStmt:  return "sequential block";
+  case PtStmtType::Disable:   return "disable statment";
+  case PtStmtType::Enable:    return "task enable statement";
+  case PtStmtType::SysEnable: return "system task enable statement";
+  case PtStmtType::DelayControl:        return "delay control statement";
+  case PtStmtType::EventControl:        return "event control statement";
+  case PtStmtType::Assign:    return "assignment";
+  case PtStmtType::NbAssign:  return "nonblocking assignment";
+  case PtStmtType::Event:     return "event statement";
+  case PtStmtType::Null:      return "null statement";
+  case PtStmtType::If:        return "if statement";
+  case PtStmtType::Case:      return "case statement";
+  case PtStmtType::CaseX:     return "casex statement";
+  case PtStmtType::CaseZ:     return "casez statement";
+  case PtStmtType::Wait:      return "wait statement";
+  case PtStmtType::Forever:   return "forever statement";
+  case PtStmtType::Repeat:    return "repeat statement";
+  case PtStmtType::White:     return "while statement";
+  case PtStmtType::For:       return "for-loop statement";
+  case PtStmtType::PcAssign:  return "procedural continuous assignment";
+  case PtStmtType::Deassign:  return "deassign statement";
+  case PtStmtType::Force:     return "force statement";
+  case PtStmtType::Release:   return "release statement";
+  case PtStmtType::NamedParBlock:
+  case PtStmtType::ParBlock:  return "parallel block";
+  case PtStmtType::NamedSeqBlock:
+  case PtStmtType::SeqBlock:  return "sequential block";
   }
   return "";
 }
@@ -228,10 +228,10 @@ CptDisable::~CptDisable()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptDisable::type() const
 {
-  return kPtDisableStmt;
+  return PtStmtType::Disable;
 }
 
 // 末尾の名前を返す．
@@ -322,10 +322,10 @@ CptEnable::~CptEnable()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptEnable::type() const
 {
-  return kPtEnableStmt;
+  return PtStmtType::Enable;
 }
 
 
@@ -374,10 +374,10 @@ CptSysEnable::~CptSysEnable()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptSysEnable::type() const
 {
-  return kPtSysEnableStmt;
+  return PtStmtType::SysEnable;
 }
 
 
@@ -435,10 +435,10 @@ CptDcStmt::~CptDcStmt()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptDcStmt::type() const
 {
-  return kPtDcStmt;
+  return PtStmtType::DelayControl;
 }
 
 
@@ -460,10 +460,10 @@ CptEcStmt::~CptEcStmt()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptEcStmt::type() const
 {
-  return kPtEcStmt;
+  return PtStmtType::EventControl;
 }
 
 
@@ -489,10 +489,10 @@ CptWait::~CptWait()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptWait::type() const
 {
-  return kPtWaitStmt;
+  return PtStmtType::Wait;
 }
 
 // 条件を返す．
@@ -556,10 +556,10 @@ CptAssign::~CptAssign()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptAssign::type() const
 {
-  return kPtAssignStmt;
+  return PtStmtType::Assign;
 }
 
 // rhs を得る．
@@ -616,10 +616,10 @@ CptNbAssign::~CptNbAssign()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptNbAssign::type() const
 {
-  return kPtNbAssignStmt;
+  return PtStmtType::NbAssign;
 }
 
 
@@ -642,10 +642,10 @@ CptNbAssignC::~CptNbAssignC()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptNbAssignC::type() const
 {
-  return kPtNbAssignStmt;
+  return PtStmtType::NbAssign;
 }
 
 
@@ -669,10 +669,10 @@ CptPcAssign::~CptPcAssign()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptPcAssign::type() const
 {
-  return kPtPcAssignStmt;
+  return PtStmtType::PcAssign;
 }
 
 // 右辺式を返す．
@@ -700,10 +700,10 @@ CptDeassign::~CptDeassign()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptDeassign::type() const
 {
-  return kPtDeassignStmt;
+  return PtStmtType::Deassign;
 }
 
 
@@ -725,10 +725,10 @@ CptForce::~CptForce()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptForce::type() const
 {
-  return kPtForceStmt;
+  return PtStmtType::Force;
 }
 
 
@@ -749,10 +749,10 @@ CptRelease::~CptRelease()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptRelease::type() const
 {
-  return kPtReleaseStmt;
+  return PtStmtType::Release;
 }
 
 
@@ -775,10 +775,10 @@ CptEventStmt::~CptEventStmt()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptEventStmt::type() const
 {
-  return kPtEventStmt;
+  return PtStmtType::Event;
 }
 
 // イベントプライマリを返す．
@@ -805,10 +805,10 @@ CptNullStmt::~CptNullStmt()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptNullStmt::type() const
 {
-  return kPtNullStmt;
+  return PtStmtType::Null;
 }
 
 
@@ -833,10 +833,10 @@ CptIf::~CptIf()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptIf::type() const
 {
-  return kPtIfStmt;
+  return PtStmtType::If;
 }
 
 // 条件式を返す．
@@ -903,10 +903,10 @@ CptCase::~CptCase()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptCase::type() const
 {
-  return kPtCaseStmt;
+  return PtStmtType::Case;
 }
 
 // 比較される式を返す．
@@ -942,10 +942,10 @@ CptCaseX::~CptCaseX()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptCaseX::type() const
 {
-  return kPtCaseXStmt;
+  return PtStmtType::CaseX;
 }
 
 
@@ -967,10 +967,10 @@ CptCaseZ::~CptCaseZ()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptCaseZ::type() const
 {
-  return kPtCaseZStmt;
+  return PtStmtType::CaseZ;
 }
 
 
@@ -1059,10 +1059,10 @@ CptForever::~CptForever()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptForever::type() const
 {
-  return kPtForeverStmt;
+  return PtStmtType::Forever;
 }
 
 
@@ -1086,10 +1086,10 @@ CptRepeat::~CptRepeat()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptRepeat::type() const
 {
-  return kPtRepeatStmt;
+  return PtStmtType::Repeat;
 }
 
 // 繰り返し式を返す．
@@ -1118,10 +1118,10 @@ CptWhile::~CptWhile()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptWhile::type() const
 {
-  return kPtWhileStmt;
+  return PtStmtType::White;
 }
 
 
@@ -1149,10 +1149,10 @@ CptFor::~CptFor()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptFor::type() const
 {
-  return kPtForStmt;
+  return PtStmtType::For;
 }
 
 // 初期化代入式を取出す
@@ -1247,10 +1247,10 @@ CptParBlock::~CptParBlock()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptParBlock::type() const
 {
-  return kPtParBlockStmt;
+  return PtStmtType::ParBlock;
 }
 
 
@@ -1273,10 +1273,10 @@ CptParBlockN::~CptParBlockN()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptParBlockN::type() const
 {
-  return kPtNamedParBlockStmt;
+  return PtStmtType::NamedParBlock;
 }
 
 
@@ -1297,10 +1297,10 @@ CptSeqBlock::~CptSeqBlock()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptSeqBlock::type() const
 {
-  return kPtSeqBlockStmt;
+  return PtStmtType::SeqBlock;
 }
 
 
@@ -1323,10 +1323,10 @@ CptSeqBlockN::~CptSeqBlockN()
 }
 
 // クラスの型を返す仮想関数
-tPtStmtType
+PtStmtType
 CptSeqBlockN::type() const
 {
-  return kPtNamedSeqBlockStmt;
+  return PtStmtType::NamedSeqBlock;
 }
 
 

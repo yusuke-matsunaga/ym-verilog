@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] file_region ファイル位置の情報
 // @param[in] type 式の種類を表す型
 SptExpr::SptExpr(const FileRegion& file_region,
-		 tPtExprType type) :
+		 PtExprType type) :
   mFileRegion{file_region},
   mType{type}
 {
@@ -42,7 +42,7 @@ SptExpr::file_region() const
 
 // @brief 式の型の取得
 // @return 式の型
-tPtExprType
+PtExprType
 SptExpr::type() const
 {
   return mType;
@@ -238,7 +238,7 @@ SptExpr::index_value() const
 bool
 SptExpr::is_simple() const
 {
-  if ( type() == kPtPrimaryExpr &&
+  if ( type() == PtExprType::Primary &&
        index_num() == 0 &&
        left_range() == nullptr ) {
     return true;
@@ -261,7 +261,7 @@ SptOpr1::SptOpr1(const FileRegion& file_region,
 		 const PtExpr* opr1,
 		 const PtExpr* opr2,
 		 const PtExpr* opr3) :
-  SptExpr{file_region, kPtOprExpr},
+  SptExpr{file_region, PtExprType::Opr},
   mOpType{op_type},
   mExprList{opr1, opr2, opr3}
 {
@@ -374,7 +374,7 @@ SptOpr1::operand(SizeType pos) const
 SptOpr2::SptOpr2(const FileRegion& file_region,
 		 VpiOpType op_type,
 		 PtExprArray opr_array) :
-  SptExpr{file_region, kPtOprExpr},
+  SptExpr{file_region, PtExprType::Opr},
   mOpType{op_type},
   mExprArray{opr_array}
 {
@@ -481,7 +481,7 @@ SptOpr2::operand(SizeType pos) const
 // @param[in] name 名前
 // @param[in] arg_list 引数のリスト
 SptFuncCall::SptFuncCall(const FileRegion& file_region,
-			 tPtExprType type,
+			 PtExprType type,
 			 PtNameBranchArray nb_array,
 			 const char* name,
 			 PtExprArray arg_array) :
@@ -592,7 +592,7 @@ SptPrimary::SptPrimary(const FileRegion& file_region,
 		       VpiRangeMode mode,
 		       const PtExpr* left,
 		       const PtExpr* right) :
-  SptExpr{file_region, kPtPrimaryExpr},
+  SptExpr{file_region, PtExprType::Primary},
   mNbArray{nb_array},
   mName{tail_name},
   mConstIndex{const_index},
@@ -690,7 +690,7 @@ SptConstant::SptConstant(const FileRegion& file_region,
 			 unsigned int uvalue,
 			 const char* svalue,
 			 double rvalue) :
-  SptExpr{file_region, kPtConstExpr},
+  SptExpr{file_region, PtExprType::Const},
   mConstType{const_type},
   mSize{size},
   mUintValue{uvalue},
@@ -1093,7 +1093,7 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* name,
 			 PtExprArray arg_array)
 {
-  auto node = new SptFuncCall(file_region, kPtFuncCallExpr,
+  auto node = new SptFuncCall(file_region, PtExprType::FuncCall,
 			      PtNameBranchArray(),
 			      name, arg_array);
   return node;
@@ -1111,7 +1111,7 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* tail_name,
 			 PtExprArray arg_array)
 {
-  auto node = new SptFuncCall(file_region, kPtFuncCallExpr,
+  auto node = new SptFuncCall(file_region, PtExprType::FuncCall,
 			      nb_array, tail_name, arg_array);
   return node;
 }
@@ -1126,7 +1126,7 @@ SptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    const char* name,
 			    PtExprArray arg_array)
 {
-  auto node = new SptFuncCall(file_region, kPtSysFuncCallExpr,
+  auto node = new SptFuncCall(file_region, PtExprType::SysFuncCall,
 			      PtNameBranchArray(),
 			      name, arg_array);
   return node;

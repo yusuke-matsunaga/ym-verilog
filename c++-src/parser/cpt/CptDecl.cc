@@ -153,10 +153,10 @@ CptParamH::~CptParamH()
 
 // 宣言要素の型の取得
 // @return 宣言要素の型
-tPtDeclType
+PtDeclType
 CptParamH::type() const
 {
-  return kPtDecl_Param;
+  return PtDeclType::Param;
 }
 
 
@@ -178,10 +178,10 @@ CptLocalParamH::~CptLocalParamH()
 
 // 宣言要素の型の取得
 // @return 宣言要素の型
-tPtDeclType
+PtDeclType
 CptLocalParamH::type() const
 {
-  return kPtDecl_LocalParam;
+  return PtDeclType::LocalParam;
 }
 
 
@@ -286,10 +286,10 @@ CptLocalParamHV::~CptLocalParamHV()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptLocalParamHV::type() const
 {
-  return kPtDecl_LocalParam;
+  return PtDeclType::LocalParam;
 }
 
 
@@ -314,10 +314,10 @@ CptLocalParamHSV::~CptLocalParamHSV()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptLocalParamHSV::type() const
 {
-  return kPtDecl_LocalParam;
+  return PtDeclType::LocalParam;
 }
 
 
@@ -341,10 +341,10 @@ CptParamHT::~CptParamHT()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptParamHT::type() const
 {
-  return kPtDecl_Param;
+  return PtDeclType::Param;
 }
 
 // @brief 符号の取得
@@ -392,10 +392,10 @@ CptLocalParamHT::~CptLocalParamHT()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptLocalParamHT::type() const
 {
-  return kPtDecl_LocalParam;
+  return PtDeclType::LocalParam;
 }
 
 
@@ -416,10 +416,10 @@ CptRegH::~CptRegH()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptRegH::type() const
 {
-  return kPtDecl_Reg;
+  return PtDeclType::Reg;
 }
 
 
@@ -541,10 +541,10 @@ CptVarH::~CptVarH()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptVarH::type() const
 {
-  return kPtDecl_Var;
+  return PtDeclType::Var;
 }
 
 // @brief 符号の取得
@@ -590,10 +590,10 @@ CptGenvarH::~CptGenvarH()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptGenvarH::type() const
 {
-  return kPtDecl_Genvar;
+  return PtDeclType::Genvar;
 }
 
 
@@ -619,10 +619,10 @@ CptNetH::~CptNetH()
 
 // 宣言要素の型の取得
 // @return 宣言要素の型
-tPtDeclType
+PtDeclType
 CptNetH::type() const
 {
-  return kPtDecl_Net;
+  return PtDeclType::Net;
 }
 
 // net 型の取得
@@ -935,10 +935,10 @@ CptEventH::~CptEventH()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptEventH::type() const
 {
-  return kPtDecl_Event;
+  return PtDeclType::Event;
 }
 
 
@@ -959,10 +959,10 @@ CptSpecParamH::~CptSpecParamH()
 }
 
 // 宣言要素の型の取得
-tPtDeclType
+PtDeclType
 CptSpecParamH::type() const
 {
-  return kPtDecl_SpecParam;
+  return PtDeclType::SpecParam;
 }
 
 

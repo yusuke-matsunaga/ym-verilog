@@ -124,6 +124,7 @@ HierName::HierName(const VlNamedObj* parent,
   mParent{parent},
   mName{name}
 {
+  ASSERT_COND( name != nullptr );
 }
 
 // @brief 親のスコープを返す．

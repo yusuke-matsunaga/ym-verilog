@@ -332,10 +332,10 @@ CptDefParamH::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptDefParamH::type() const
 {
-  return kPtItem_DefParam;
+  return PtItemType::DefParam;
 }
 
 // @brief defparam リストの取得
@@ -422,10 +422,10 @@ CptContAssignH::file_region() const
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptContAssignH::type() const
 {
-  return kPtItem_ContAssign;
+  return PtItemType::ContAssign;
 }
 
 // @brief continuous assign リストの取得
@@ -612,10 +612,10 @@ CptInitial::~CptInitial()
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptInitial::type() const
 {
-  return kPtItem_Initial;
+  return PtItemType::Initial;
 }
 
 
@@ -636,10 +636,10 @@ CptAlways::~CptAlways()
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptAlways::type() const
 {
-  return kPtItem_Always;
+  return PtItemType::Always;
 }
 
 
@@ -741,10 +741,10 @@ CptTask::~CptTask()
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptTask::type() const
 {
-  return kPtItem_Task;
+  return PtItemType::Task;
 }
 
 
@@ -776,10 +776,10 @@ CptFunction::~CptFunction()
 }
 
 // 型を返す．
-tPtItemType
+PtItemType
 CptFunction::type() const
 {
-  return kPtItem_Func;
+  return PtItemType::Func;
 }
 
 // 符号の有無を返す．

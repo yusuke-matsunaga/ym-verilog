@@ -29,7 +29,7 @@ private:
 
   /// コンストラクタ
   SptIOHead(const FileRegion& file_region,
-	    tPtIOType type,
+	    VpiDir dir,
 	    VpiAuxType aux_type,
 	    VpiNetType net_type,
 	    VpiVarType var_type,
@@ -51,8 +51,8 @@ public:
   file_region() const override;
 
   /// 型の取得
-  tPtIOType
-  type() const override;
+  VpiDir
+  direction() const override;
 
   /// 補助的な型の取得
   VpiAuxType
@@ -103,7 +103,7 @@ private:
   FileRegion mFileRegion;
 
   // IO の種類
-  tPtIOType mType;
+  VpiDir mDir;
 
   // 補助的な型
   VpiAuxType mAuxType;
@@ -196,7 +196,7 @@ private:
 
   /// コンストラクタ
   SptDeclHead(const FileRegion& file_region,
-	      tPtDeclType type,
+	      PtDeclType type,
 	      bool sign,
 	      const PtExpr* left,
 	      const PtExpr* right,
@@ -220,7 +220,7 @@ public:
   file_region() const override;
 
   /// 宣言要素の型の取得
-  tPtDeclType
+  PtDeclType
   type() const override;
 
   /// 符号の取得
@@ -280,7 +280,7 @@ private:
   FileRegion mFileRegion;
 
   // クラスの型
-  tPtDeclType mType;
+  PtDeclType mType;
 
   // 符号の有無
   bool mSigned;

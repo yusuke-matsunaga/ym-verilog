@@ -143,16 +143,16 @@ bool
 Parser::check_function_statement(const PtStmt* stmt)
 {
   switch ( stmt->type() ) {
-  case kPtDisableStmt:
-  case kPtSysEnableStmt:
-  case kPtNullStmt:
+  case PtStmtType::Disable:
+  case PtStmtType::SysEnable:
+  case PtStmtType::Null:
     return true;
 
-  case kPtAssignStmt:
+  case PtStmtType::Assign:
     if ( stmt->control() == nullptr) return true;
     break;
 
-  case kPtIfStmt:
+  case PtStmtType::If:
     if ( stmt->body() ) {
       if ( !check_function_statement(stmt->body()) ) {
 	return false;
@@ -165,9 +165,9 @@ Parser::check_function_statement(const PtStmt* stmt)
     }
     return true;
 
-  case kPtCaseStmt:
-  case kPtCaseXStmt:
-  case kPtCaseZStmt:
+  case PtStmtType::Case:
+  case PtStmtType::CaseX:
+  case PtStmtType::CaseZ:
     for ( auto item: stmt->caseitem_list() ) {
       if ( !check_function_statement(item->body()) ) {
 	return false;
@@ -175,10 +175,10 @@ Parser::check_function_statement(const PtStmt* stmt)
     }
     return true;
 
-  case kPtForeverStmt:
-  case kPtRepeatStmt:
-  case kPtWhileStmt:
-  case kPtForStmt:
+  case PtStmtType::Forever:
+  case PtStmtType::Repeat:
+  case PtStmtType::White:
+  case PtStmtType::For:
     if ( stmt->init_stmt() ) {
       if ( !check_function_statement(stmt->init_stmt()) ) {
 	return false;
@@ -191,8 +191,8 @@ Parser::check_function_statement(const PtStmt* stmt)
     }
     return check_function_statement(stmt->body());
 
-  case kPtSeqBlockStmt:
-  case kPtNamedSeqBlockStmt:
+  case PtStmtType::SeqBlock:
+  case PtStmtType::NamedSeqBlock:
     for ( int i = 0; i < stmt->stmt_array().size(); ++ i ) {
       const PtStmt* stmt1 = stmt->stmt_array()[i];
       if ( !check_function_statement(stmt1) ) {

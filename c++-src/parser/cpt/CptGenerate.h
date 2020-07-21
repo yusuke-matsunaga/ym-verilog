@@ -131,8 +131,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_Generate を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::Generate を返す．
+  PtItemType
   type() const override;
 
 };
@@ -163,8 +163,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_GenBlock を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::GenBlock を返す．
+  PtItemType
   type() const override;
 
 };
@@ -243,8 +243,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_GenIf を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::GenIf を返す．
+  PtItemType
   type() const override;
 
   /// @brief 条件式を返す．
@@ -317,8 +317,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_GenCase を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::GenCase を返す．
+  PtItemType
   type() const override;
 
 
@@ -446,8 +446,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_GenFor を返す．
-  tPtItemType
+  /// @note ここでは PtItemType::GenFor を返す．
+  PtItemType
   type() const override;
 
   /// @brief 名前を返す．

@@ -61,18 +61,17 @@ DeclGen::phase1_decl(const VlNamedObj* parent,
 		     PtDeclHeadArray pt_head_array,
 		     bool force_to_local)
 {
-  for (ymuint i = 0; i < pt_head_array.size(); ++ i) {
-    const PtDeclHead* pt_head = pt_head_array[i];
+  for ( auto pt_head: pt_head_array ) {
     switch ( pt_head->type() ) {
-    case kPtDecl_Param:
+    case PtDeclType::Param:
       instantiate_param_head(parent, pt_head, force_to_local);
       break;
 
-    case kPtDecl_LocalParam:
+    case PtDeclType::LocalParam:
       instantiate_param_head(parent, pt_head, true);
       break;
 
-    case kPtDecl_Genvar:
+    case PtDeclType::Genvar:
       instantiate_genvar_head(parent, pt_head);
       break;
 
@@ -108,9 +107,8 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     ASSERT_NOT_REACHED;
   }
 
-  ymuint index = 0;
-  for (ymuint i = 0; i < pt_head_array.size(); ++ i) {
-    const PtIOHead* pt_head = pt_head_array[i];
+  int index = 0;
+  for ( auto pt_head: pt_head_array ) {
     VpiAuxType def_aux_type = pt_head->aux_type();
     bool sign = pt_head->is_signed();
     const PtExpr* pt_left = pt_head->left_range();
@@ -134,13 +132,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     if ( module ) {
       head = factory().new_ModIOHead(module, pt_head);
     }
+    else if ( taskfunc->type() == VpiObjType::Task ) {
+      head = factory().new_TaskIOHead(taskfunc, pt_head);
+    }
     else {
-      if ( taskfunc->type() == VpiObjType::Task ) {
-	head = factory().new_TaskIOHead(taskfunc, pt_head);
-      }
-      else {
-	head = factory().new_FunctionIOHead(taskfunc, pt_head);
-      }
+      head = factory().new_FunctionIOHead(taskfunc, pt_head);
     }
     ASSERT_COND( head != nullptr );
 
@@ -398,32 +394,32 @@ DeclGen::instantiate_decl(const VlNamedObj* parent,
   for (ymuint i = 0; i < pt_head_array.size(); ++ i) {
     const PtDeclHead* pt_head = pt_head_array[i];
     switch ( pt_head->type() ) {
-    case kPtDecl_Param:
-    case kPtDecl_LocalParam:
+    case PtDeclType::Param:
+    case PtDeclType::LocalParam:
       // すでに処理済みのはず．
       break;
 
-    case kPtDecl_Reg:
+    case PtDeclType::Reg:
       instantiate_reg_head(parent, pt_head);
       break;
 
-    case kPtDecl_Var:
+    case PtDeclType::Var:
       instantiate_var_head(parent, pt_head);
       break;
 
-    case kPtDecl_Genvar:
+    case PtDeclType::Genvar:
       // すでに処理済みのはず．
       break;
 
-    case kPtDecl_Net:
+    case PtDeclType::Net:
       instantiate_net_head(parent, pt_head);
       break;
 
-    case kPtDecl_Event:
+    case PtDeclType::Event:
       instantiate_event_head(parent, pt_head);
       break;
 
-    case kPtDecl_SpecParam:
+    case PtDeclType::SpecParam:
       // 未対応
       break;
 

@@ -20,95 +20,95 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief IO 宣言のヘッダの生成
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_IOHead(const FileRegion& fr,
-		   tPtIOType type,
+		   VpiDir dir,
 		   bool sign)
 {
-  return mFactory.new_IOHead(fr, type, sign);
+  return mFactory.new_IOHead(fr, dir, sign);
 }
 
 // @brief IO 宣言のヘッダの生成 (reg 型)
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_RegIOHead(const FileRegion& fr,
-		      tPtIOType type,
+		      VpiDir dir,
 		      bool sign)
 {
-  return mFactory.new_RegIOHead(fr, type, sign);
+  return mFactory.new_RegIOHead(fr, dir, sign);
 }
 
 // @brief IO 宣言のヘッダの生成 (ネット型)
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] net_type 補助的なネット型
 // @param[in] sign 符号付きのとき true となるフラグ
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_NetIOHead(const FileRegion& fr,
-		      tPtIOType type,
+		      VpiDir dir,
 		      VpiNetType net_type,
 		      bool sign)
 {
-  return mFactory.new_NetIOHead(fr, type, net_type, sign);
+  return mFactory.new_NetIOHead(fr, dir, net_type, sign);
 }
 
 // @brief IO 宣言のヘッダの生成 (変数型)
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] var_type 補助的な変数型
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_VarIOHead(const FileRegion& fr,
-		      tPtIOType type,
+		      VpiDir dir,
 		      VpiVarType var_type)
 {
-  return mFactory.new_VarIOHead(fr, type, var_type);
+  return mFactory.new_VarIOHead(fr, dir, var_type);
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @param[in] left 範囲の左側の式
 // @param[in] right 範囲の右側の式
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_IOHead(const FileRegion& fr,
-		   tPtIOType type,
+		   VpiDir dir,
 		   bool sign,
 		   const PtExpr* left,
 		   const PtExpr* right)
 {
-  return mFactory.new_IOHead(fr, type, sign, left, right);
+  return mFactory.new_IOHead(fr, dir, sign, left, right);
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (reg 型)
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] sign 符号付きのとき true となるフラグ
 // @param[in] left 範囲の左側の式
 // @param[in] right 範囲の右側の式
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_RegIOHead(const FileRegion& fr,
-		      tPtIOType type,
+		      VpiDir dir,
 		      bool sign,
 		      const PtExpr* left,
 		      const PtExpr* right)
 {
-  return mFactory.new_RegIOHead(fr, type, sign, left, right);
+  return mFactory.new_RegIOHead(fr, dir, sign, left, right);
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (ネット型)
 // @param[in] fr ファイル位置の情報
-// @param[in] type IO の種類
+// @param[in] dir IO の種類
 // @param[in] net_type 補助的なネット型
 // @param[in] sign 符号付きのとき true となるフラグ
 // @param[in] left 範囲の左側の式
@@ -116,13 +116,13 @@ Parser::new_RegIOHead(const FileRegion& fr,
 // @return 生成された IO宣言ヘッダ
 PtiIOHead*
 Parser::new_NetIOHead(const FileRegion& fr,
-		      tPtIOType type,
+		      VpiDir dir,
 		      VpiNetType net_type,
 		      bool sign,
 		      const PtExpr* left,
 		      const PtExpr* right)
 {
-  return mFactory.new_NetIOHead(fr, type, net_type, sign, left, right);
+  return mFactory.new_NetIOHead(fr, dir, net_type, sign, left, right);
 }
 
 // @brief IOポート宣言リストにIO宣言ヘッダを追加する．

@@ -38,7 +38,7 @@ public:
   /// @brief 型の取得
   /// @return 型
   virtual
-  tPtCtrlType
+  PtCtrlType
   type() const = 0;
 
   /// @brief 遅延式の取得

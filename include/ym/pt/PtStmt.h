@@ -38,7 +38,7 @@ public:
   /// @brief クラスの型の取得
   /// @return 型
   virtual
-  tPtStmtType
+  PtStmtType
   type() const = 0;
 
   /// @brief ステートメントの種類を表す文字列の取得

@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 SptSpecItem::SptSpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
 			 PtExprArray terminal_array) :
-  SptItem{file_region, kPtItem_SpecItem},
+  SptItem{file_region, PtItemType::SpecItem},
   mId{id},
   mTerminals{terminal_array}
 {
@@ -56,7 +56,7 @@ SptSpecPath::SptSpecPath(const FileRegion& file_region,
 			 VpiSpecPathType id,
 			 const PtExpr* expr,
 			 const PtPathDecl* path_decl) :
-  SptItem{file_region, kPtItem_SpecPath},
+  SptItem{file_region, PtItemType::SpecPath},
   mId{id},
   mExpr{expr},
   mPathDecl{path_decl}

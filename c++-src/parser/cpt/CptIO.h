@@ -35,7 +35,7 @@ protected:
   /// @param[in] var_type 補助的な変数型
   /// @param[in] sign 符号つきの時 true にするフラグ
   CptIOHBase(const FileRegion& file_region,
-	     tPtIOType type,
+	     VpiDir dir,
 	     VpiAuxType aux_type,
 	     VpiNetType net_type,
 	     VpiVarType var_type,
@@ -55,8 +55,8 @@ public:
   file_region() const override;
 
   /// @brief 型の取得
-  tPtIOType
-  type() const override;
+  VpiDir
+  direction() const override;
 
   /// @brief 補助的な型の取得
   VpiAuxType
@@ -141,7 +141,7 @@ protected:
   /// @param[in] var_type 補助的な変数型
   /// @param[in] sign 符号の有無
   CptIOH(const FileRegion& file_region,
-	 tPtIOType type,
+	 VpiDir dir,
 	 VpiAuxType aux_type,
 	 VpiNetType net_type,
 	 VpiVarType var_type,
@@ -172,7 +172,7 @@ protected:
   /// @param[in] left 範囲の左側の式
   /// @param[in] right 範囲の右側の式
   CptIOHV(const FileRegion& file_region,
-	  tPtIOType type,
+	  VpiDir dir,
 	  VpiAuxType aux_type,
 	  VpiNetType net_type,
 	  bool sign,

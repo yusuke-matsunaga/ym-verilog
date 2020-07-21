@@ -75,7 +75,7 @@ CptModule::CptModule(const FileRegion& file_region,
   }
 
   for ( auto item: mItemArray ) {
-    if ( item->type() == kPtItem_Func ) {
+    if ( item->type() == PtItemType::Func ) {
       mFuncDic[item->name()] = item;
     }
   }

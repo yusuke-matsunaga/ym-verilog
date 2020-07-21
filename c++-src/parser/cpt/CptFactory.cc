@@ -31,8 +31,8 @@ CptFactory::~CptFactory()
 const char*
 CptFactory::new_string(const char* str)
 {
-  SizeType len = strlen(str) + 1;
-  char* dst = new char[len];
+  SizeType len{strlen(str) + 1};
+  auto dst{new char[len]};
   strcpy(dst, str);
   return dst;
 }

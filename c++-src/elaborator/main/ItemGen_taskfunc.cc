@@ -53,12 +53,12 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
 
   ElbTaskFunc* taskfunc = nullptr;
 
-  if ( pt_item->type() == kPtItem_Task ) {
+  if ( pt_item->type() == PtItemType::Task ) {
     taskfunc = factory().new_Task(parent, pt_item);
     reg_task(taskfunc);
   }
   else {
-    ASSERT_COND( pt_item->type() == kPtItem_Func );
+    ASSERT_COND( pt_item->type() == PtItemType::Func );
 
     const PtExpr* pt_left = pt_item->left_range();
     const PtExpr* pt_right = pt_item->right_range();
@@ -79,6 +79,8 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
       taskfunc = factory().new_Function(parent,	pt_item);
     }
     ASSERT_COND( taskfunc != nullptr );
+    cout << "taskfunc = " << taskfunc->full_name() << endl
+	 << " io_num = " << taskfunc->io_num() << endl;
 
     reg_function(taskfunc);
   }

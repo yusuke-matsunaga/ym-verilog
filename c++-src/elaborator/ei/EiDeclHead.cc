@@ -193,14 +193,14 @@ VpiObjType
 EiDeclHeadPt::type() const
 {
   switch ( mPtHead->type() ) {
-  case kPtDecl_Param:
-  case kPtDecl_LocalParam:
+  case PtDeclType::Param:
+  case PtDeclType::LocalParam:
     return VpiObjType::Parameter;
 
-  case kPtDecl_Reg:
+  case PtDeclType::Reg:
     return VpiObjType::Reg;
 
-  case kPtDecl_Var:
+  case PtDeclType::Var:
     switch ( mPtHead->data_type() ) {
     case VpiVarType::Integer:  return VpiObjType::IntegerVar;
     case VpiVarType::Real:     return VpiObjType::RealVar;
@@ -209,13 +209,13 @@ EiDeclHeadPt::type() const
     }
     break;
 
-  case kPtDecl_Net:
+  case PtDeclType::Net:
     return VpiObjType::Net;
 
-  case kPtDecl_Event:
+  case PtDeclType::Event:
     return VpiObjType::NamedEvent;
 
-  case kPtDecl_SpecParam:
+  case PtDeclType::SpecParam:
     return VpiObjType::SpecParam;
 
   default:
@@ -292,14 +292,14 @@ SizeType
 EiDeclHeadPt::bit_size() const
 {
   switch ( mPtHead->type() ) {
-  case kPtDecl_Reg:
-  case kPtDecl_Net:
+  case PtDeclType::Reg:
+  case PtDeclType::Net:
     // この型は範囲指定を含まないので 1ビットとなる．
     return 1;
 
-  case kPtDecl_Param:
-  case kPtDecl_LocalParam:
-  case kPtDecl_Var:
+  case PtDeclType::Param:
+  case PtDeclType::LocalParam:
+  case PtDeclType::Var:
     switch ( mPtHead->data_type() ) {
     case VpiVarType::Integer:
       return kVpiSizeInteger;
@@ -316,10 +316,10 @@ EiDeclHeadPt::bit_size() const
     }
     break;
 
-  case kPtDecl_Event:
+  case PtDeclType::Event:
     return 0;
 
-  case kPtDecl_SpecParam:
+  case PtDeclType::SpecParam:
     return kVpiSizeInteger;
 
   default:
@@ -339,8 +339,8 @@ EiDeclHeadPt::calc_bit_offset(int index,
 			      int& offset) const
 {
   switch ( mPtHead->type() ) {
-  case kPtDecl_Reg:
-  case kPtDecl_Net:
+  case PtDeclType::Reg:
+  case PtDeclType::Net:
     // この型は範囲指定を含まないので 1ビットとなる．
     if ( index == 0 ) {
       offset = 0;
@@ -349,9 +349,9 @@ EiDeclHeadPt::calc_bit_offset(int index,
     // 0 以外のインデックスは無効
     return false;
 
-  case kPtDecl_Param:
-  case kPtDecl_LocalParam:
-  case kPtDecl_Var:
+  case PtDeclType::Param:
+  case PtDeclType::LocalParam:
+  case PtDeclType::Var:
     switch ( mPtHead->data_type() ) {
     case VpiVarType::Real:
       // 実数タイプの部分ビット指定は無効
@@ -377,13 +377,13 @@ EiDeclHeadPt::calc_bit_offset(int index,
     }
     break;
 
-  case kPtDecl_Event:
+  case PtDeclType::Event:
     // イベントオブジェクトは部分指定できない．
     // というかたぶん，ここには来ないはず．
     ASSERT_NOT_REACHED;
     return false;
 
-  case kPtDecl_SpecParam:
+  case PtDeclType::SpecParam:
     // int とみなす．
     if ( index >= 0 && index < static_cast<int>(kVpiSizeInteger) ) {
       offset = index;

@@ -33,7 +33,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param stmt_array ステートメントのリスト
 // @param arg_array 引数のリスト
 SptStmt::SptStmt(const FileRegion& file_region,
-		 tPtStmtType type,
+		 PtStmtType type,
 		 const PtStmt* body1,
 		 const PtStmt* body2,
 		 const PtStmt* body3,
@@ -78,7 +78,7 @@ SptStmt::file_region() const
 
 // クラスの型の取得
 // @return 型
-tPtStmtType
+PtStmtType
 SptStmt::type() const
 {
   return mType;
@@ -90,32 +90,32 @@ const char*
 SptStmt::stmt_name() const
 {
   switch ( type() ) {
-  case kPtDisableStmt:   return "disable statment";
-  case kPtEnableStmt:    return "task enable statement";
-  case kPtSysEnableStmt: return "system task enable statement";
-  case kPtDcStmt:        return "delay control statement";
-  case kPtEcStmt:        return "event control statement";
-  case kPtAssignStmt:    return "assignment";
-  case kPtNbAssignStmt:  return "nonblocking assignment";
-  case kPtEventStmt:     return "event statement";
-  case kPtNullStmt:      return "null statement";
-  case kPtIfStmt:        return "if statement";
-  case kPtCaseStmt:      return "case statement";
-  case kPtCaseXStmt:     return "casex statement";
-  case kPtCaseZStmt:     return "casez statement";
-  case kPtWaitStmt:      return "wait statement";
-  case kPtForeverStmt:   return "forever statement";
-  case kPtRepeatStmt:    return "repeat statement";
-  case kPtWhileStmt:     return "while statement";
-  case kPtForStmt:       return "for-loop statement";
-  case kPtPcAssignStmt:  return "procedural continuous assignment";
-  case kPtDeassignStmt:  return "deassign statement";
-  case kPtForceStmt:     return "force statement";
-  case kPtReleaseStmt:   return "release statement";
-  case kPtNamedParBlockStmt:
-  case kPtParBlockStmt:  return "parallel block";
-  case kPtNamedSeqBlockStmt:
-  case kPtSeqBlockStmt:  return "sequential block";
+  case PtStmtType::Disable:   return "disable statment";
+  case PtStmtType::Enable:    return "task enable statement";
+  case PtStmtType::SysEnable: return "system task enable statement";
+  case PtStmtType::DelayControl:        return "delay control statement";
+  case PtStmtType::EventControl:        return "event control statement";
+  case PtStmtType::Assign:    return "assignment";
+  case PtStmtType::NbAssign:  return "nonblocking assignment";
+  case PtStmtType::Event:     return "event statement";
+  case PtStmtType::Null:      return "null statement";
+  case PtStmtType::If:        return "if statement";
+  case PtStmtType::Case:      return "case statement";
+  case PtStmtType::CaseX:     return "casex statement";
+  case PtStmtType::CaseZ:     return "casez statement";
+  case PtStmtType::Wait:      return "wait statement";
+  case PtStmtType::Forever:   return "forever statement";
+  case PtStmtType::Repeat:    return "repeat statement";
+  case PtStmtType::White:     return "while statement";
+  case PtStmtType::For:       return "for-loop statement";
+  case PtStmtType::PcAssign:  return "procedural continuous assignment";
+  case PtStmtType::Deassign:  return "deassign statement";
+  case PtStmtType::Force:     return "force statement";
+  case PtStmtType::Release:   return "release statement";
+  case PtStmtType::NamedParBlock:
+  case PtStmtType::ParBlock:  return "parallel block";
+  case PtStmtType::NamedSeqBlock:
+  case PtStmtType::SeqBlock:  return "sequential block";
   }
   return "";
 }
@@ -304,7 +304,7 @@ SptFactory::new_Disable(const FileRegion& file_region,
 			const char* name)
 {
   auto node = new SptStmt(file_region,
-			  kPtDisableStmt,
+			  PtStmtType::Disable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -323,7 +323,7 @@ SptFactory::new_Disable(const FileRegion& file_region,
 			const char* name)
 {
   auto node = new SptStmt(file_region,
-			  kPtDisableStmt,
+			  PtStmtType::Disable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -343,7 +343,7 @@ SptFactory::new_Enable(const FileRegion& file_region,
 		       PtExprArray arg_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtEnableStmt,
+			  PtStmtType::Enable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -369,7 +369,7 @@ SptFactory::new_Enable(const FileRegion& file_region,
 		       PtExprArray arg_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtEnableStmt,
+			  PtStmtType::Enable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -393,7 +393,7 @@ SptFactory::new_SysEnable(const FileRegion& file_region,
 			  PtExprArray arg_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtSysEnableStmt,
+			  PtStmtType::SysEnable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -417,7 +417,7 @@ SptFactory::new_DcStmt(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtDcStmt,
+			  PtStmtType::DelayControl,
 			  body, nullptr, nullptr,
 			  nullptr, nullptr,
 			  delay);
@@ -435,7 +435,7 @@ SptFactory::new_EcStmt(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtEcStmt,
+			  PtStmtType::EventControl,
 			  body, nullptr, nullptr,
 			  nullptr, nullptr,
 			  event);
@@ -453,7 +453,7 @@ SptFactory::new_Wait(const FileRegion& file_region,
 		     const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtWaitStmt,
+			  PtStmtType::Wait,
 			  body, nullptr, nullptr,
 			  cond, nullptr,
 			  nullptr);
@@ -471,7 +471,7 @@ SptFactory::new_Assign(const FileRegion& file_region,
 		       const PtExpr* rhs)
 {
   auto node = new SptStmt(file_region,
-			  kPtAssignStmt,
+			  PtStmtType::Assign,
 			  nullptr, nullptr, nullptr,
 			  lhs, rhs);
   return node;
@@ -490,7 +490,7 @@ SptFactory::new_Assign(const FileRegion& file_region,
 		       const PtControl* control)
 {
   auto node = new SptStmt(file_region,
-			  kPtAssignStmt,
+			  PtStmtType::Assign,
 			  nullptr, nullptr, nullptr,
 			  lhs, rhs,
 			  control);
@@ -508,7 +508,7 @@ SptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtExpr* rhs)
 {
   auto node = new SptStmt(file_region,
-			  kPtNbAssignStmt,
+			  PtStmtType::NbAssign,
 			  nullptr, nullptr, nullptr,
 			  lhs, rhs);
   return node;
@@ -527,7 +527,7 @@ SptFactory::new_NbAssign(const FileRegion& file_region,
 			 const PtControl* control)
 {
   auto node = new SptStmt(file_region,
-			  kPtNbAssignStmt,
+			  PtStmtType::NbAssign,
 			  nullptr, nullptr, nullptr,
 			  lhs, rhs,
 			  control);
@@ -543,7 +543,7 @@ SptFactory::new_EventStmt(const FileRegion& file_region,
 			  const PtExpr* event)
 {
   auto node = new SptStmt(file_region,
-			  kPtEventStmt,
+			  PtStmtType::Event,
 			  nullptr, nullptr, nullptr,
 			  event, nullptr);
   return node;
@@ -556,7 +556,7 @@ const PtStmt*
 SptFactory::new_NullStmt(const FileRegion& file_region)
 {
   auto node = new SptStmt(file_region,
-			  kPtNullStmt);
+			  PtStmtType::Null);
   return node;
 }
 
@@ -571,7 +571,7 @@ SptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* then_body)
 {
   auto node = new SptStmt(file_region,
-			  kPtIfStmt,
+			  PtStmtType::If,
 			  then_body, nullptr, nullptr,
 			  expr, nullptr);
   return node;
@@ -590,7 +590,7 @@ SptFactory::new_If(const FileRegion& file_region,
 		   const PtStmt* else_body)
 {
   auto node = new SptStmt(file_region,
-			  kPtIfStmt,
+			  PtStmtType::If,
 			  then_body, else_body, nullptr,
 			  expr, nullptr);
   return node;
@@ -607,7 +607,7 @@ SptFactory::new_Case(const FileRegion& file_region,
 		     PtCaseItemArray caseitem_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtCaseStmt,
+			  PtStmtType::Case,
 			  nullptr, nullptr, nullptr,
 			  expr, nullptr,
 			  nullptr,
@@ -628,7 +628,7 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 		      PtCaseItemArray caseitem_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtCaseXStmt,
+			  PtStmtType::CaseX,
 			  nullptr, nullptr, nullptr,
 			  expr, nullptr,
 			  nullptr,
@@ -649,7 +649,7 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 		      PtCaseItemArray caseitem_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtCaseZStmt,
+			  PtStmtType::CaseZ,
 			  nullptr, nullptr, nullptr,
 			  expr, nullptr,
 			  nullptr,
@@ -682,7 +682,7 @@ SptFactory::new_Forever(const FileRegion& file_region,
 			const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtForeverStmt,
+			  PtStmtType::Forever,
 			  body, nullptr, nullptr);
   return node;
 }
@@ -698,7 +698,7 @@ SptFactory::new_Repeat(const FileRegion& file_region,
 		       const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtRepeatStmt,
+			  PtStmtType::Repeat,
 			  body, nullptr, nullptr,
 			  expr, nullptr);
   return node;
@@ -715,7 +715,7 @@ SptFactory::new_While(const FileRegion& file_region,
 		      const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtWhileStmt,
+			  PtStmtType::White,
 			  body, nullptr, nullptr,
 			  cond, nullptr);
   return node;
@@ -736,7 +736,7 @@ SptFactory::new_For(const FileRegion& file_region,
 		    const PtStmt* body)
 {
   auto node = new SptStmt(file_region,
-			  kPtForStmt,
+			  PtStmtType::For,
 			  body, init, next,
 			  cond, nullptr);
   return node;
@@ -753,7 +753,7 @@ SptFactory::new_PcAssign(const FileRegion& file_region,
 			 const PtExpr* rhs)
 {
   auto node = new SptStmt(file_region,
-			  kPtPcAssignStmt,
+			  PtStmtType::PcAssign,
 			  nullptr, nullptr, nullptr,
 			  lhs, rhs);
   return node;
@@ -768,7 +768,7 @@ SptFactory::new_Deassign(const FileRegion& file_region,
 			 const PtExpr* lhs)
 {
   auto node = new SptStmt(file_region,
-			  kPtDeassignStmt,
+			  PtStmtType::Deassign,
 			  nullptr, nullptr, nullptr,
 			  lhs, nullptr);
   return node;
@@ -785,7 +785,7 @@ SptFactory::new_Force(const FileRegion& file_region,
 		      const PtExpr* rhs)
 {
   auto node = new SptStmt(file_region,
-			  kPtForceStmt,
+			  PtStmtType::Force,
 			  nullptr, nullptr, nullptr,
 			  lhs, rhs);
   return node;
@@ -800,7 +800,7 @@ SptFactory::new_Release(const FileRegion& file_region,
 			const PtExpr* lhs)
 {
   auto node = new SptStmt(file_region,
-			  kPtReleaseStmt,
+			  PtStmtType::Release,
 			  nullptr, nullptr, nullptr,
 			  lhs, nullptr);
   return node;
@@ -815,7 +815,7 @@ SptFactory::new_ParBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtParBlockStmt,
+			  PtStmtType::ParBlock,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -840,7 +840,7 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      PtStmtArray stmt_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtNamedParBlockStmt,
+			  PtStmtType::NamedParBlock,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -861,7 +861,7 @@ SptFactory::new_SeqBlock(const FileRegion& file_region,
 			 PtStmtArray stmt_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtSeqBlockStmt,
+			  PtStmtType::SeqBlock,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
@@ -886,7 +886,7 @@ SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      PtStmtArray stmt_array)
 {
   auto node = new SptStmt(file_region,
-			  kPtNamedSeqBlockStmt,
+			  PtStmtType::NamedSeqBlock,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,

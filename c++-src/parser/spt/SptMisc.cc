@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //  - type == kRepeatControl の場合は繰り返し数を表す式
 // @param event_array イベントリスト
 SptControl::SptControl(const FileRegion& file_region,
-		       tPtCtrlType type,
+		       PtCtrlType type,
 		       const PtExpr* expr,
 		       PtExprArray event_array) :
   mFileRegion{file_region},
@@ -52,7 +52,7 @@ SptControl::file_region() const
 
 // 型の取得
 // @return 型
-tPtCtrlType
+PtCtrlType
 SptControl::type() const
 {
   return mType;
@@ -64,7 +64,7 @@ SptControl::type() const
 const PtExpr*
 SptControl::delay() const
 {
-  if ( type() == kPtDelayControl ) {
+  if ( type() == PtCtrlType::Delay ) {
     return mExpr;
   }
   else {
@@ -86,7 +86,7 @@ SptControl::event_list() const
 const PtExpr*
 SptControl::rep_expr() const
 {
-  if ( type() == kPtRepeatControl ) {
+  if ( type() == PtCtrlType::Repeat ) {
     return mExpr;
   }
   else {
@@ -413,7 +413,7 @@ const PtControl*
 SptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
-  auto node = new SptControl(file_region, kPtDelayControl,
+  auto node = new SptControl(file_region, PtCtrlType::Delay,
 			     value, PtExprArray());
   return node;
 }
@@ -426,7 +426,7 @@ const PtControl*
 SptFactory::new_EventControl(const FileRegion& file_region,
 			     PtExprArray event_array)
 {
-  auto node = new SptControl(file_region, kPtEventControl,
+  auto node = new SptControl(file_region, PtCtrlType::Event,
 			     nullptr, event_array);
   return node;
 }
@@ -441,7 +441,7 @@ SptFactory::new_RepeatControl(const FileRegion& file_region,
 			      const PtExpr* expr,
 			      PtExprArray event_array)
 {
-  auto node = new SptControl(file_region, kPtRepeatControl,
+  auto node = new SptControl(file_region, PtCtrlType::Repeat,
 			     expr, event_array);
   return node;
 }

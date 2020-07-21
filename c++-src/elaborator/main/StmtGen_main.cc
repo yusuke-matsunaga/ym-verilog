@@ -61,55 +61,55 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   ASSERT_COND(pt_stmt != nullptr );
 
   switch ( pt_stmt->type() ) {
-  case kPtDisableStmt:
-  case kPtEnableStmt:
-  case kPtSysEnableStmt:
-  case kPtAssignStmt:
-  case kPtNbAssignStmt:
-  case kPtEventStmt:
-  case kPtNullStmt:
-  case kPtPcAssignStmt:
-  case kPtDeassignStmt:
-  case kPtForceStmt:
-  case kPtReleaseStmt:
+  case PtStmtType::Disable:
+  case PtStmtType::Enable:
+  case PtStmtType::SysEnable:
+  case PtStmtType::Assign:
+  case PtStmtType::NbAssign:
+  case PtStmtType::Event:
+  case PtStmtType::Null:
+  case PtStmtType::PcAssign:
+  case PtStmtType::Deassign:
+  case PtStmtType::Force:
+  case PtStmtType::Release:
     // 無視
     break;
 
-  case kPtDcStmt:
-  case kPtEcStmt:
-  case kPtWaitStmt:
-  case kPtForeverStmt:
-  case kPtRepeatStmt:
-  case kPtWhileStmt:
-  case kPtForStmt:
+  case PtStmtType::DelayControl:
+  case PtStmtType::EventControl:
+  case PtStmtType::Wait:
+  case PtStmtType::Forever:
+  case PtStmtType::Repeat:
+  case PtStmtType::White:
+  case PtStmtType::For:
     phase1_stmt(parent, pt_stmt->body());
     break;
 
-  case kPtIfStmt:
+  case PtStmtType::If:
     phase1_stmt(parent, pt_stmt->body());
     if ( pt_stmt->else_body() ) {
       phase1_stmt(parent, pt_stmt->else_body());
     }
     break;
 
-  case kPtCaseStmt:
-  case kPtCaseXStmt:
-  case kPtCaseZStmt:
+  case PtStmtType::Case:
+  case PtStmtType::CaseX:
+  case PtStmtType::CaseZ:
     for ( auto pt_item: pt_stmt->caseitem_list() ) {
       phase1_stmt(parent, pt_item->body());
     }
     break;
 
-  case kPtParBlockStmt:
-  case kPtSeqBlockStmt:
+  case PtStmtType::ParBlock:
+  case PtStmtType::SeqBlock:
     for (ymuint i = 0; i < pt_stmt->stmt_array().size(); ++ i) {
       const PtStmt* pt_stmt1 = pt_stmt->stmt_array()[i];
       phase1_stmt(parent, pt_stmt1);
     }
     break;
 
-  case kPtNamedParBlockStmt:
-  case kPtNamedSeqBlockStmt:
+  case PtStmtType::NamedParBlock:
+  case PtStmtType::NamedSeqBlock:
     {
       ElbScope* block_scope = factory().new_StmtScope(parent, pt_stmt);
       reg_internalscope(block_scope);
@@ -149,12 +149,12 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 
   ElbStmt* stmt = nullptr;
   switch ( pt_stmt->type() ) {
-  case kPtDisableStmt:
+  case PtStmtType::Disable:
     stmt = instantiate_disable(parent, process,
 			       pt_stmt);
     break;
 
-  case kPtEnableStmt:
+  case PtStmtType::Enable:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -162,7 +162,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 			      pt_stmt);
     break;
 
-  case kPtSysEnableStmt:
+  case PtStmtType::SysEnable:
     if ( env.inside_constant_function() ) {
       // 無視する．
       // といっても nullptr を返すとまずいので NULL_STMT を返す．
@@ -175,18 +175,18 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
     }
     break;
 
-  case kPtAssignStmt:
+  case PtStmtType::Assign:
     stmt = instantiate_assign(parent, process, env,
 			      pt_stmt, true);
     break;
 
-  case kPtNbAssignStmt:
+  case PtStmtType::NbAssign:
     ASSERT_COND(!env.inside_function() );
     stmt = instantiate_assign(parent, process, env,
 			      pt_stmt, false);
     break;
 
-  case kPtEventStmt:
+  case PtStmtType::Event:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -194,12 +194,12 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 				 pt_stmt);
     break;
 
-  case kPtNullStmt:
+  case PtStmtType::Null:
     stmt = instantiate_nullstmt(parent, process,
 				pt_stmt);
     break;
 
-  case kPtPcAssignStmt:
+  case PtStmtType::PcAssign:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -207,7 +207,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 			   pt_stmt);
     break;
 
-  case kPtDeassignStmt:
+  case PtStmtType::Deassign:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -215,7 +215,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 				pt_stmt);
     break;
 
-  case kPtForceStmt:
+  case PtStmtType::Force:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -223,7 +223,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 			     pt_stmt);
     break;
 
-  case kPtReleaseStmt:
+  case PtStmtType::Release:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -231,8 +231,8 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 			       pt_stmt);
     break;
 
-  case kPtDcStmt:
-  case kPtEcStmt:
+  case PtStmtType::DelayControl:
+  case PtStmtType::EventControl:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -240,7 +240,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 				pt_stmt);
     break;
 
-  case kPtWaitStmt:
+  case PtStmtType::Wait:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -248,39 +248,39 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 			    pt_stmt);
     break;
 
-  case kPtForeverStmt:
+  case PtStmtType::Forever:
     stmt = instantiate_forever(parent, process, env,
 			       pt_stmt);
     break;
 
-  case kPtRepeatStmt:
+  case PtStmtType::Repeat:
     stmt = instantiate_repeat(parent, process, env,
 			      pt_stmt);
     break;
 
-  case kPtWhileStmt:
+  case PtStmtType::White:
     stmt = instantiate_while(parent, process, env,
 			     pt_stmt);
     break;
 
-  case kPtForStmt:
+  case PtStmtType::For:
     stmt = instantiate_for(parent, process, env,
 			   pt_stmt);
     break;
 
-  case kPtIfStmt:
+  case PtStmtType::If:
     stmt = instantiate_if(parent, process, env,
 			  pt_stmt);
     break;
 
-  case kPtCaseStmt:
-  case kPtCaseXStmt:
-  case kPtCaseZStmt:
+  case PtStmtType::Case:
+  case PtStmtType::CaseX:
+  case PtStmtType::CaseZ:
     stmt = instantiate_case(parent, process, env,
 			    pt_stmt);
     break;
 
-  case kPtParBlockStmt:
+  case PtStmtType::ParBlock:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -288,12 +288,12 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 				pt_stmt);
     break;
 
-  case kPtSeqBlockStmt:
+  case PtStmtType::SeqBlock:
     stmt = instantiate_seqblock(parent, process, env,
 				pt_stmt);
     break;
 
-  case kPtNamedParBlockStmt:
+  case PtStmtType::NamedParBlock:
     if ( env.inside_function() ) {
       goto error;
     }
@@ -301,7 +301,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 				     pt_stmt);
     break;
 
-  case kPtNamedSeqBlockStmt:
+  case PtStmtType::NamedSeqBlock:
     stmt = instantiate_namedseqblock(parent, process, env,
 				     pt_stmt);
     break;
@@ -536,7 +536,7 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
 			     const ElbEnv& env,
 			     const PtControl* pt_control)
 {
-  if ( pt_control->type() == kPtDelayControl ) {
+  if ( pt_control->type() == PtCtrlType::Delay ) {
     ElbExpr* delay = instantiate_expr(parent, env, pt_control->delay());
     if ( delay ) {
       return factory().new_DelayControl(pt_control, delay);
@@ -556,7 +556,7 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
     event_list[i] = expr;
   }
 
-  if ( pt_control->type() == kPtEventControl ) {
+  if ( pt_control->type() == PtCtrlType::Event ) {
     return factory().new_EventControl(pt_control, event_num, event_list);
   }
 

@@ -24,6 +24,9 @@ class TagDictCell
 {
 public:
 
+  virtual
+  ~TagDictCell() = default;
+
   /// @brief  宣言要素を追加する．
   virtual
   void

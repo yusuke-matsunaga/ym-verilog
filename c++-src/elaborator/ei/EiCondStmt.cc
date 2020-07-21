@@ -596,9 +596,9 @@ VpiCaseType
 EiCaseStmt::case_type() const
 {
   switch ( pt_stmt()->type() ) {
-  case kPtCaseStmt:  return VpiCaseType::Exact;
-  case kPtCaseXStmt: return VpiCaseType::X;
-  case kPtCaseZStmt: return VpiCaseType::Z;
+  case PtStmtType::Case:  return VpiCaseType::Exact;
+  case PtStmtType::CaseX: return VpiCaseType::X;
+  case PtStmtType::CaseZ: return VpiCaseType::Z;
   default: break;
   }
   ASSERT_NOT_REACHED;

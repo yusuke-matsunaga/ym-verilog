@@ -44,7 +44,7 @@ public:
 
   /// @brief 型を返す．
   /// @note ここでは kGateInst を返す．
-  tPtItemType
+  PtItemType
   type() const override;
 
   /// @brief プリミティブタイプを返す．
@@ -233,8 +233,8 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kPtItem_MuInst を返す
-  tPtItemType
+  /// @note ここでは PtItemType::MuInst を返す
+  PtItemType
   type() const override;
 
   /// @brief 定義名を返す．

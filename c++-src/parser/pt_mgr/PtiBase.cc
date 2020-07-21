@@ -246,11 +246,11 @@ decompile_impl(const PtExpr* expr,
 	       int ppri)
 {
   switch ( expr->type() ) {
-  case kPtOprExpr:
+  case PtExprType::Opr:
     return decompile_opr(expr, ppri);
     break;
 
-  case kPtConstExpr:
+  case PtExprType::Const:
     {
       ostringstream buf;
       if ( expr->const_size() > 0 ) {
@@ -300,8 +300,8 @@ decompile_impl(const PtExpr* expr,
       return buf.str();
     }
 
-  case kPtFuncCallExpr:
-  case kPtSysFuncCallExpr:
+  case PtExprType::FuncCall:
+  case PtExprType::SysFuncCall:
     {
       string ans(expr->name());
       ans += "(";
@@ -315,7 +315,7 @@ decompile_impl(const PtExpr* expr,
       return ans;
     }
 
-  case kPtPrimaryExpr:
+  case PtExprType::Primary:
     {
       string ans(expand_full_name(expr->namebranch_array(), expr->name()));
       ymuint n = expr->index_num();

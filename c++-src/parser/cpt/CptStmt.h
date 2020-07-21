@@ -176,8 +176,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtDisableStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Disable を返す．
+  PtStmtType
   type() const override;
 
 
@@ -312,8 +312,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtEnableStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Enable を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -385,8 +385,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtSysEnableStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::SysEnable を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -462,8 +462,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtDcStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::DelayControl を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -494,8 +494,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtEcStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::EventControl を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -526,8 +526,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtWaitStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Wait を返す．
+  PtStmtType
   type() const override;
 
   /// @brief 条件を返す．
@@ -615,8 +615,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtAssignStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Assign を返す．
+  PtStmtType
   type() const override;
 
   /// @brief rhs を得る．
@@ -701,8 +701,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtNbAssignStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::NbAssign を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -734,8 +734,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtNbAssignStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::NbAssign を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -767,7 +767,7 @@ public:
 
   /// @brief クラスの型を返す仮想関数
   /// @note このクラスは kPtPcaAssignStmt を返す．
-  tPtStmtType
+  PtStmtType
   type() const override;
 
   /// @brief 右辺式を返す．
@@ -810,8 +810,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtDeassignStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Deassign を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -842,8 +842,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtForceStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Force を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -873,8 +873,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtReleaseStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Release を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -904,8 +904,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtEventStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Event を返す．
+  PtStmtType
   type() const override;
 
   /// @brief イベントプライマリを返す．
@@ -947,8 +947,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtNullStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Null を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -979,8 +979,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtIfStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::If を返す．
+  PtStmtType
   type() const override;
 
   /// @brief 条件式を返す．
@@ -1126,8 +1126,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtCaseStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Case を返す．
+  PtStmtType
   type() const override;
 
   /// @brief 比較される式を返す．
@@ -1178,8 +1178,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note ここでは kPtCaseXStmt を返す．
-  tPtStmtType
+  /// @note ここでは PtStmtType::CaseX を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1210,8 +1210,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note ここでは kPtCaseZStmt を返す．
-  tPtStmtType
+  /// @note ここでは PtStmtType::CaseZ を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1278,8 +1278,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtForeverStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Forever を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1310,8 +1310,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtRepeatStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::Repeat を返す．
+  PtStmtType
   type() const override;
 
   /// @brief 繰り返し式を返す．
@@ -1355,8 +1355,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtWhileStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::White を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1389,8 +1389,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtForStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::For を返す．
+  PtStmtType
   type() const override;
 
   /// @brief 初期化代入式を取出す
@@ -1526,8 +1526,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtParBlockStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::ParBlock を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1559,8 +1559,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtNamedParBlockStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::NamedParBlock を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1590,8 +1590,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtSeqBlockStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::SeqBlock を返す．
+  PtStmtType
   type() const override;
 
 };
@@ -1623,8 +1623,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtNamedSeqBlockStmt を返す．
-  tPtStmtType
+  /// @note このクラスは PtStmtType::NamedSeqBlock を返す．
+  PtStmtType
   type() const override;
 
 };
