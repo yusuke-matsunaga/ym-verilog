@@ -348,8 +348,10 @@ Parser::new_UdpEntry(const FileRegion& fr,
 		     const FileRegion& output_loc,
 		     char output_symbol)
 {
-  auto output = mFactory.new_UdpValue(output_loc, output_symbol);
-  auto entry = mFactory.new_UdpEntry(fr, get_udp_value_array(), output);
+  auto output{mFactory.new_UdpValue(output_loc, output_symbol)};
+  reg_pt(output);
+  auto entry{mFactory.new_UdpEntry(fr, get_udp_value_array(), output)};
+  reg_pt(entry);
   add_udp_entry(entry);
 }
 
@@ -366,9 +368,12 @@ Parser::new_UdpEntry(const FileRegion& fr,
 		     const FileRegion& output_loc,
 		     char output_symbol)
 {
-  auto current = mFactory.new_UdpValue(current_loc, current_symbol);
-  auto output = mFactory.new_UdpValue(output_loc, output_symbol);
-  auto entry = mFactory.new_UdpEntry(fr, get_udp_value_array(), current, output);
+  auto current{mFactory.new_UdpValue(current_loc, current_symbol)};
+  reg_pt(current);
+  auto output{mFactory.new_UdpValue(output_loc, output_symbol)};
+  reg_pt(output);
+  auto entry{mFactory.new_UdpEntry(fr, get_udp_value_array(), current, output)};
+  reg_pt(entry);
   add_udp_entry(entry);
 }
 
@@ -396,7 +401,8 @@ void
 Parser::new_UdpValue(const FileRegion& fr,
 		     char symbol)
 {
-  auto value = mFactory.new_UdpValue(fr, symbol);
+  auto value{mFactory.new_UdpValue(fr, symbol)};
+  reg_pt(value);
   add_udp_value(value);
 }
 
@@ -409,7 +415,8 @@ Parser::new_UdpValue(const FileRegion& fr,
 		     char symbol1,
 		     char symbol2)
 {
-  auto value = mFactory.new_UdpValue(fr, symbol1, symbol2);
+  auto value{mFactory.new_UdpValue(fr, symbol1, symbol2)};
+  reg_pt(value);
   add_udp_value(value);
 }
 

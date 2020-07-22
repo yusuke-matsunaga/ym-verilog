@@ -2349,6 +2349,11 @@ private:
   void
   pop_item_list(bool delete_top);
 
+  /// @brief PtBase(の継承クラス)を登録する．
+  /// @param[in] obj オブジェクト
+  void
+  reg_pt(const PtBase* obj);
+
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -2363,6 +2368,9 @@ private:
 
   // 字句解析を行うオブジェクト
   unique_ptr<Lex> mLex;
+
+  // 一時的に生成された PuHierName のリスト
+  vector<unique_ptr<PuHierName>> mHnameList;
 
 
 public:
@@ -2491,7 +2499,7 @@ PtArray<T>
 Parser::to_array(PtrList<T, T>* list)
 {
   if ( list ) {
-    PtArray<T> array = list->to_array();
+    auto array = list->to_array();
 
     delete list;
 

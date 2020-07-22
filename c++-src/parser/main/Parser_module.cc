@@ -176,22 +176,22 @@ Parser::new_Module1995(const FileRegion& file_region,
 
   PtPortArray port_array = new_PortArray(port_vector);
 
-  const PtModule* module = mFactory.new_Module(file_region,
-					       module_name,
-					       is_macro,
-					       is_cell,
-					       is_protected,
-					       time_u, time_p,
-					       nettype, unconn,
-					       delay, decay,
-					       named_port,
-					       portfaults, suppress_faults,
-					       config, library, cell,
-					       paramport_array,
-					       port_array,
-					       iohead_array,
-					       declhead_array,
-					       item_array);
+  auto module{mFactory.new_Module(file_region,
+				  module_name,
+				  is_macro,
+				  is_cell,
+				  is_protected,
+				  time_u, time_p,
+				  nettype, unconn,
+				  delay, decay,
+				  named_port,
+				  portfaults, suppress_faults,
+				  config, library, cell,
+				  paramport_array,
+				  port_array,
+				  iohead_array,
+				  declhead_array,
+				  item_array)};
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list);
 }
@@ -236,19 +236,19 @@ Parser::new_Module2001(const FileRegion& file_region,
   // iohead_array からポートの配列を作る．
   PtPortArray port_array = new_PortArray(iohead_array);
 
-  const PtModule* module = mFactory.new_Module(file_region,
-					       module_name,
-					       is_macro, is_cell, is_protected,
-					       time_u, time_p, nettype,
-					       unconn, delay, decay,
-					       true,
-					       portfaults, suppress_faults,
-					       config, library, cell,
-					       paramport_array,
-					       port_array,
-					       iohead_array,
-					       declhead_array,
-					       item_array);
+  auto module{mFactory.new_Module(file_region,
+				  module_name,
+				  is_macro, is_cell, is_protected,
+				  time_u, time_p, nettype,
+				  unconn, delay, decay,
+				  true,
+				  portfaults, suppress_faults,
+				  config, library, cell,
+				  paramport_array,
+				  port_array,
+				  iohead_array,
+				  declhead_array,
+				  item_array)};
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list);
 }

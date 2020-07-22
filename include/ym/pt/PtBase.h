@@ -28,7 +28,7 @@ public:
 
   /// @brief デストラクタ
   virtual
-  ~PtBase() { }
+  ~PtBase() = default;
 
 
 public:
@@ -54,13 +54,6 @@ public:
 class PtNamedBase :
   public PtBase
 {
-public:
-
-  /// @brief デストラクタ
-  virtual
-  ~PtNamedBase() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // PtNamedBase の継承クラスが実装する仮想関数

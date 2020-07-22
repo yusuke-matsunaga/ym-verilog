@@ -24,7 +24,8 @@ Parser::new_Opr(const FileRegion& fr,
 		const PtExpr* opr,
 		PtrList<const PtAttrInst>* ai_list)
 {
-  auto expr = mFactory.new_Opr(fr, type, opr);
+  auto expr{mFactory.new_Opr(fr, type, opr)};
+  reg_pt(expr);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -42,7 +43,8 @@ Parser::new_Opr(const FileRegion& fr,
 		const PtExpr* opr2,
 		PtrList<const PtAttrInst>* ai_list)
 {
-  auto expr = mFactory.new_Opr(fr, type, opr1, opr2);
+  auto expr{mFactory.new_Opr(fr, type, opr1, opr2)};
+  reg_pt(expr);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -62,7 +64,8 @@ Parser::new_Opr(const FileRegion& fr,
 		const PtExpr* opr3,
 		PtrList<const PtAttrInst>* ai_list)
 {
-  auto expr = mFactory.new_Opr(fr, type, opr1, opr2, opr3);
+  auto expr{mFactory.new_Opr(fr, type, opr1, opr2, opr3)};
+  reg_pt(expr);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -75,7 +78,9 @@ const PtExpr*
 Parser::new_Concat(const FileRegion& fr,
 		   PtrList<const PtExpr>* expr_list)
 {
-  return mFactory.new_Concat(fr, to_array(expr_list));
+  auto expr{mFactory.new_Concat(fr, to_array(expr_list))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief multi-concatination 演算子の生成
@@ -88,7 +93,9 @@ Parser::new_MultiConcat(const FileRegion& fr,
 			const PtExpr* rep,
 			PtrList<const PtExpr>* expr_list)
 {
-  return mFactory.new_MultiConcat(fr, ExprArray(rep, expr_list));
+  auto expr{mFactory.new_MultiConcat(fr, ExprArray(rep, expr_list))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief min/typ/max delay 演算子の生成
@@ -103,7 +110,9 @@ Parser::new_MinTypMax(const FileRegion& fr,
 		      const PtExpr* val1,
 		      const PtExpr* val2)
 {
-  return mFactory.new_MinTypMax(fr, val0, val1, val2);
+  auto expr{mFactory.new_MinTypMax(fr, val0, val1, val2)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief primary の生成
@@ -114,7 +123,9 @@ const PtExpr*
 Parser::new_Primary(const FileRegion& fr,
 		    const char* name)
 {
-  return mFactory.new_Primary(fr, name);
+  auto expr{mFactory.new_Primary(fr, name)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief インデックス付き primary の生成
@@ -127,7 +138,9 @@ Parser::new_Primary(const FileRegion& fr,
 		    const char* name,
 		    PtrList<const PtExpr>* index_array)
 {
-  return mFactory.new_Primary(fr, name, to_array(index_array));
+  auto expr{mFactory.new_Primary(fr, name, to_array(index_array))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 範囲指定付き primary の生成
@@ -144,7 +157,9 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  return mFactory.new_Primary(fr, name, mode, left, right);
+  auto expr{mFactory.new_Primary(fr, name, mode, left, right)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief インデックスと範囲指定付き primary の生成
@@ -163,8 +178,10 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  return mFactory.new_Primary(fr, name, to_array(index_list),
-			      mode, left, right);
+  auto expr{mFactory.new_Primary(fr, name, to_array(index_list),
+				 mode, left, right)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief primary の生成 (階層付き)
@@ -177,7 +194,9 @@ Parser::new_Primary(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_Primary(fr, nb_array, tail_name);
+  auto expr{mFactory.new_Primary(fr, nb_array, tail_name)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief インデックス付き primary の生成 (階層付き)
@@ -192,7 +211,9 @@ Parser::new_Primary(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_Primary(fr, nb_array, tail_name, to_array(index_list));
+  auto expr{mFactory.new_Primary(fr, nb_array, tail_name, to_array(index_list))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 範囲指定付き primary の生成 (階層付き)
@@ -211,7 +232,9 @@ Parser::new_Primary(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_Primary(fr, nb_array, tail_name, mode, left, right);
+  auto expr{mFactory.new_Primary(fr, nb_array, tail_name, mode, left, right)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief インデックスと範囲指定付き primary の生成 (階層付き)
@@ -232,8 +255,10 @@ Parser::new_Primary(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_Primary(fr, nb_array, tail_name, to_array(index_list),
-			      mode, left, right);
+  auto expr{mFactory.new_Primary(fr, nb_array, tail_name, to_array(index_list),
+				 mode, left, right)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief constant primary の生成
@@ -246,7 +271,9 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     const char* name,
 		     const PtExpr* index)
 {
-  return mFactory.new_CPrimary(fr, name, index);
+  auto expr{mFactory.new_CPrimary(fr, name, index)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief constant primary の生成
@@ -259,7 +286,9 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     const char* name,
 		     PtrList<const PtExpr>* index_list)
 {
-  return mFactory.new_CPrimary(fr, name, to_array(index_list));
+  auto expr{mFactory.new_CPrimary(fr, name, to_array(index_list))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 範囲指定付き constant primary の生成
@@ -276,7 +305,9 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     const PtExpr* left,
 		     const PtExpr* right)
 {
-  return mFactory.new_CPrimary(fr, name, mode, left, right);
+  auto expr{mFactory.new_CPrimary(fr, name, mode, left, right)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief インデックス付き constant primary の生成 (階層付き)
@@ -291,7 +322,9 @@ Parser::new_CPrimary(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_CPrimary(fr, nb_array, tail_name, to_array(index_list));
+  auto expr{mFactory.new_CPrimary(fr, nb_array, tail_name, to_array(index_list))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief function call の生成
@@ -305,7 +338,8 @@ Parser::new_FuncCall(const FileRegion& fr,
 		     PtrList<const PtExpr>* arg_list,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  const PtExpr* expr = mFactory.new_FuncCall(fr, name, to_array(arg_list));
+  auto expr{mFactory.new_FuncCall(fr, name, to_array(arg_list))};
+  reg_pt(expr);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -323,8 +357,8 @@ Parser::new_FuncCall(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  const PtExpr* expr = mFactory.new_FuncCall(fr, nb_array, tail_name,
-				       to_array(arg_list));
+  auto expr{mFactory.new_FuncCall(fr, nb_array, tail_name, to_array(arg_list))};
+  reg_pt(expr);
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -339,7 +373,9 @@ Parser::new_SysFuncCall(const FileRegion& fr,
 			const char* name,
 			PtrList<const PtExpr>* arg_list)
 {
-  return mFactory.new_SysFuncCall(fr, name, to_array(arg_list));
+  auto expr{mFactory.new_SysFuncCall(fr, name, to_array(arg_list))};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 整数型の定数の生成
@@ -350,7 +386,9 @@ const PtExpr*
 Parser::new_IntConst(const FileRegion& fr,
 		     unsigned int value)
 {
-  return mFactory.new_IntConst(fr, value);
+  auto expr{mFactory.new_IntConst(fr, value)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 整数型の定数の生成
@@ -361,7 +399,9 @@ const PtExpr*
 Parser::new_IntConst(const FileRegion& fr,
 		     const char* value)
 {
-  return mFactory.new_IntConst(fr, value);
+  auto expr{mFactory.new_IntConst(fr, value)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 基底付き整数型の定数の生成
@@ -374,7 +414,9 @@ Parser::new_IntConst(const FileRegion& fr,
 		     VpiConstType const_type,
 		     const char* value)
 {
-  return mFactory.new_IntConst(fr, const_type, value);
+  auto expr{mFactory.new_IntConst(fr, const_type, value)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief サイズと基底付き定数の生成
@@ -389,7 +431,9 @@ Parser::new_IntConst(const FileRegion& fr,
 		     VpiConstType const_type,
 		     const char* value)
 {
-  return mFactory.new_IntConst(fr, size, const_type, value);
+  auto expr{mFactory.new_IntConst(fr, size, const_type, value)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 実数型の定数の生成
@@ -400,7 +444,9 @@ const PtExpr*
 Parser::new_RealConst(const FileRegion& fr,
 		      double value)
 {
-  return mFactory.new_RealConst(fr, value);
+  auto expr{mFactory.new_RealConst(fr, value)};
+  reg_pt(expr);
+  return expr;
 }
 
 // @brief 文字列型の定数の生成
@@ -411,7 +457,9 @@ const PtExpr*
 Parser::new_StringConst(const FileRegion& fr,
 			const char* value)
 {
-  return mFactory.new_StringConst(fr, value);
+  auto expr{mFactory.new_StringConst(fr, value)};
+  reg_pt(expr);
+  return expr;
 }
 
 END_NAMESPACE_YM_VERILOG

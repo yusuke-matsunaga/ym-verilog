@@ -10,6 +10,7 @@
 #include "parser/PtMgr.h"
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtUdp.h"
+#include "ym/pt/PtMisc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -59,15 +60,18 @@ PtMgr::check_def_name(const char* name) const
 void
 PtMgr::clear()
 {
-  for ( auto udp: mUdpList ) {
-    delete udp;
-  }
   mUdpList.clear();
-
-  for ( auto module: mModuleList ) {
-    delete module;
-  }
   mModuleList.clear();
+
+  for ( auto obj: mObjList ) {
+    delete obj;
+  }
+  mObjList.clear();
+
+  for ( auto nb: mNbList ) {
+    delete nb;
+  }
+  mNbList.clear();
 
   mDefNames.clear();
 
@@ -83,6 +87,7 @@ void
 PtMgr::reg_udp(const PtUdp* udp)
 {
   mUdpList.push_back(udp);
+  reg_pt(udp);
 }
 
 // モジュールの登録
@@ -91,6 +96,7 @@ void
 PtMgr::reg_module(const PtModule* module)
 {
   mModuleList.push_back(module);
+  reg_pt(module);
 }
 
 // @brief インスタンス定義名を追加する．
@@ -98,6 +104,21 @@ void
 PtMgr::reg_defname(const char* name)
 {
   mDefNames.insert(name);
+}
+
+// @brief PtBase(の継承クラス)を登録する．
+// @param[in] obj オブジェクト
+void
+PtMgr::reg_pt(const PtBase* obj)
+{
+  mObjList.push_back(obj);
+}
+
+// @brief 階層名の要素を登録する．
+void
+PtMgr::reg_namebranch(const PtNameBranch* nb)
+{
+  mNbList.push_back(nb);
 }
 
 // @brief 文字列領域を確保する．

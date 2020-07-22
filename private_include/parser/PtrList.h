@@ -5,7 +5,7 @@
 /// @brief PtrList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -87,6 +87,8 @@ private:
 /// @class PtrList PtrList.h "PtrList.h"
 /// @brief リスト構造のテンプレートクラス
 /// @note T2 は T1 の親クラス
+///
+/// 単純なリンクトリストの実装
 //////////////////////////////////////////////////////////////////////
 template <typename T1,
 	  typename T2 = T1>
@@ -94,8 +96,8 @@ class PtrList
 {
 public:
 
-  typedef PtrListIterator<T1> const_iterator;
-  typedef PtrListCell<T1> Cell;
+  using const_iterator = PtrListIterator<T1>;
+  using Cell = PtrListCell<T1>;
 
 public:
 
@@ -128,11 +130,11 @@ public:
   empty() const;
 
   /// @brief 先頭の反復子を返す．
-  PtrListIterator<T1>
+  const_iterator
   begin() const;
 
   /// @brief 末尾の反復子を返す．
-  PtrListIterator<T1>
+  const_iterator
   end() const;
 
   /// @brief 先頭の要素を返す．
@@ -268,9 +270,9 @@ template <typename T1,
 	  typename T2>
 inline
 PtrList<T1, T2>::PtrList() :
-  mTop(nullptr),
-  mEnd(nullptr),
-  mNum(0)
+  mTop{nullptr},
+  mEnd{nullptr},
+  mNum{0}
 {
 }
 
@@ -291,7 +293,7 @@ void
 PtrList<T1, T2>::clear()
 {
   for ( auto cell = mTop; cell; ) {
-    auto next = cell->mLink;
+    auto next{cell->mLink};
     delete cell;
     cell = next;
   }
@@ -308,9 +310,7 @@ inline
 void
 PtrList<T1, T2>::push_back(T1* elem)
 {
-  Cell* cell = new Cell;
-  cell->mPtr = elem;
-  cell->mLink = nullptr;
+  Cell* cell{new Cell{elem, nullptr}};
   if ( mEnd ) {
     mEnd->mLink = cell;
   }
@@ -413,10 +413,9 @@ inline
 vector<T2*>
 PtrList<T1, T2>::to_vector()
 {
-  vector<T2*> vec(mNum);
-  SizeType i = 0;
-  for ( Cell* cell = mTop; cell; cell = cell->mLink, ++ i ) {
-    vec[i] = cell->mPtr;
+  vector<T2*> vec; vec.reserve(mNum);
+  for ( auto elem: *this ) {
+    vec.push_back(elem);
   }
   clear();
   return vec;

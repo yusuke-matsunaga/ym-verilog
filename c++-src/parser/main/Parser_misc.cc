@@ -24,7 +24,9 @@ const PtControl*
 Parser::new_DelayControl(const FileRegion& fr,
 			 const PtExpr* value)
 {
-  return mFactory.new_DelayControl(fr, value);
+  auto control{mFactory.new_DelayControl(fr, value)};
+  reg_pt(control);
+  return control;
 }
 
 // @brief イベントコントロールの生成
@@ -33,7 +35,9 @@ Parser::new_DelayControl(const FileRegion& fr,
 const PtControl*
 Parser::new_EventControl(const FileRegion& fr)
 {
-  return mFactory.new_EventControl(fr);
+  auto control{mFactory.new_EventControl(fr)};
+  reg_pt(control);
+  return control;
 }
 
 // @brief イベントコントロールの生成
@@ -45,8 +49,10 @@ Parser::new_EventControl(const FileRegion& fr,
 			 const char* event_name,
 			 const FileRegion& name_loc)
 {
-  auto expr = new_Primary(name_loc, event_name);
-  return mFactory.new_EventControl(fr, expr);
+  auto expr{new_Primary(name_loc, event_name)};
+  auto control{mFactory.new_EventControl(fr, expr)};
+  reg_pt(control);
+  return control;
 }
 
 // @brief イベントコントロールの生成
@@ -58,8 +64,10 @@ Parser::new_EventControl(const FileRegion& fr,
 			 PuHierName* event_name,
 			 const FileRegion& name_loc)
 {
-  auto expr = new_Primary(name_loc, event_name);
-  return mFactory.new_EventControl(fr, expr);
+  auto expr{new_Primary(name_loc, event_name)};
+  auto control{mFactory.new_EventControl(fr, expr)};
+  reg_pt(control);
+  return control;
 }
 
 // @brief イベントコントロールの生成
@@ -70,7 +78,9 @@ const PtControl*
 Parser::new_EventControl(const FileRegion& fr,
 			 PtrList<const PtExpr>* event_list)
 {
-  return mFactory.new_EventControl(fr, to_array(event_list));
+  auto control{mFactory.new_EventControl(fr, to_array(event_list))};
+  reg_pt(control);
+  return control;
 }
 
 // @brief リピートコントロールの生成
@@ -81,7 +91,9 @@ const PtControl*
 Parser::new_RepeatControl(const FileRegion& fr,
 			  const PtExpr* expr)
 {
-  return mFactory.new_RepeatControl(fr, expr);
+  auto control{mFactory.new_RepeatControl(fr, expr)};
+  reg_pt(control);
+  return control;
 }
 
 // @brief リピートコントロールの生成
@@ -95,8 +107,9 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const char* event_name,
 			  const FileRegion& name_loc)
 {
-  auto expr = new_Primary(name_loc, event_name);
-  return mFactory.new_RepeatControl(fr, rep, expr);
+  auto expr{new_Primary(name_loc, event_name)};
+  auto control{mFactory.new_RepeatControl(fr, rep, expr)};
+  return control;
 }
 
 // @brief リピートコントロールの生成
@@ -110,8 +123,10 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  PuHierName* event_name,
 			  const FileRegion& name_loc)
 {
-  auto expr = new_Primary(name_loc, event_name);
-  return mFactory.new_RepeatControl(fr, rep, expr);
+  auto expr{new_Primary(name_loc, event_name)};
+  auto control{mFactory.new_RepeatControl(fr, rep, expr)};
+  reg_pt(control);
+  return control;
 }
 
 // @brief リピートコントロールの生成
@@ -124,7 +139,9 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const PtExpr* rep,
 			  PtrList<const PtExpr>* event_list)
 {
-  return mFactory.new_RepeatControl(fr, rep, to_array(event_list));
+  auto control{mFactory.new_RepeatControl(fr, rep, to_array(event_list))};
+  reg_pt(control);
+  return control;
 }
 
 // @brief 順序つき結合子の生成
@@ -133,7 +150,9 @@ Parser::new_RepeatControl(const FileRegion& fr,
 const PtConnection*
 Parser::new_OrderedCon(const PtExpr* expr)
 {
-  return mFactory.new_OrderedCon(expr);
+  auto con{mFactory.new_OrderedCon(expr)};
+  reg_pt(con);
+  return con;
 }
 
 // @brief 順序つき結合子の生成
@@ -145,7 +164,8 @@ Parser::new_OrderedCon(const FileRegion& fr,
 		       const PtExpr* expr,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  auto con = mFactory.new_OrderedCon(fr, expr);
+  auto con{mFactory.new_OrderedCon(fr, expr)};
+  reg_pt(con);
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -161,7 +181,8 @@ Parser::new_NamedCon(const FileRegion& fr,
 		     const PtExpr* expr,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  auto con = mFactory.new_NamedCon(fr, name, expr);
+  auto con{mFactory.new_NamedCon(fr, name, expr)};
+  reg_pt(con);
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -176,7 +197,9 @@ Parser::new_Strength(const FileRegion& fr,
 		     VpiStrength value0,
 		     VpiStrength value1)
 {
-  return mFactory.new_Strength(fr, value0, value1);
+  auto str{mFactory.new_Strength(fr, value0, value1)};
+  reg_pt(str);
+  return str;
 }
 
 // @brief charge strength の生成
@@ -187,7 +210,9 @@ const PtStrength*
 Parser::new_Strength(const FileRegion& fr,
 		     VpiStrength value)
 {
-  return mFactory.new_Strength(fr, value);
+  auto str{mFactory.new_Strength(fr, value)};
+  reg_pt(str);
+  return str;
 }
 
 // @brief 遅延値の生成 (1つの値)
@@ -198,7 +223,9 @@ const PtDelay*
 Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value1)
 {
-  return mFactory.new_Delay(fr, value1);
+  auto delay{mFactory.new_Delay(fr, value1)};
+  reg_pt(delay);
+  return delay;
 }
 
 // @brief 遅延値の生成 (2つの値)
@@ -211,7 +238,9 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value1,
 		  const PtExpr* value2)
 {
-  return mFactory.new_Delay(fr, value1, value2);
+  auto delay{mFactory.new_Delay(fr, value1, value2)};
+  reg_pt(delay);
+  return delay;
 }
 
 // @brief 遅延値の生成 (3つの値)
@@ -226,7 +255,9 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value2,
 		  const PtExpr* value3)
 {
-  return mFactory.new_Delay(fr, value1, value2, value3);
+  auto delay{mFactory.new_Delay(fr, value1, value2, value3)};
+  reg_pt(delay);
+  return delay;
 }
 
 // @brief attribute instance の生成
@@ -237,7 +268,9 @@ const PtAttrInst*
 Parser::new_AttrInst(const FileRegion& fr,
 		     PtrList<const PtAttrSpec>* as_list)
 {
-  return mFactory.new_AttrInst(fr, to_array(as_list));
+  auto ai{mFactory.new_AttrInst(fr, to_array(as_list))};
+  reg_pt(ai);
+  return ai;
 }
 
 // @brief attribute spec の生成
@@ -250,7 +283,9 @@ Parser::new_AttrSpec(const FileRegion& fr,
 		     const char* name,
 		     const PtExpr* expr)
 {
-  return mFactory.new_AttrSpec(fr, name, expr);
+  auto as{mFactory.new_AttrSpec(fr, name, expr)};
+  reg_pt(as);
+  return as;
 }
 
 END_NAMESPACE_YM_VERILOG

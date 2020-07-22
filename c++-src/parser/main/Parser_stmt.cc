@@ -23,7 +23,9 @@ const PtStmt*
 Parser::new_Disable(const FileRegion& fr,
 		    const char* name)
 {
-  return mFactory.new_Disable(fr, name);
+  auto stmt{mFactory.new_Disable(fr, name)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief disable 文の生成 (階層付き識別子)
@@ -37,7 +39,9 @@ Parser::new_Disable(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_Disable(fr, nb_array, tail_name);
+  auto stmt{mFactory.new_Disable(fr, nb_array, tail_name)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief enable 文の生成
@@ -50,7 +54,9 @@ Parser::new_Enable(const FileRegion& fr,
 		   const char* name,
 		   PtrList<const PtExpr>* arg_list)
 {
-  return mFactory.new_Enable(fr, name, to_array(arg_list));
+  auto stmt{mFactory.new_Enable(fr, name, to_array(arg_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief enable 文の生成 (階層付き識別子)
@@ -66,7 +72,9 @@ Parser::new_Enable(const FileRegion& fr,
 {
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
-  return mFactory.new_Enable(fr, nb_array, tail_name, to_array(arg_list));
+  auto stmt{mFactory.new_Enable(fr, nb_array, tail_name, to_array(arg_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief system task enable 文の生成
@@ -78,7 +86,9 @@ Parser::new_SysEnable(const FileRegion& fr,
 		      const char* name,
 		      PtrList<const PtExpr>* arg_list)
 {
-  return mFactory.new_SysEnable(fr, name, to_array(arg_list));
+  auto stmt{mFactory.new_SysEnable(fr, name, to_array(arg_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief delay control 文の生成
@@ -91,7 +101,9 @@ Parser::new_DcStmt(const FileRegion& fr,
 		   const PtControl* delay,
 		   const PtStmt* body)
 {
-  return mFactory.new_DcStmt(fr, delay, body);
+  auto stmt{mFactory.new_DcStmt(fr, delay, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief event control 文の生成
@@ -104,7 +116,9 @@ Parser::new_EcStmt(const FileRegion& fr,
 		   const PtControl* event,
 		   const PtStmt* body)
 {
-  return mFactory.new_EcStmt(fr, event, body);
+  auto stmt{mFactory.new_EcStmt(fr, event, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief wait 文の生成
@@ -117,7 +131,9 @@ Parser::new_Wait(const FileRegion& fr,
 		 const PtExpr* cond,
 		 const PtStmt* body)
 {
-  return mFactory.new_Wait(fr, cond, body);
+  auto stmt{mFactory.new_Wait(fr, cond, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief assign 文の生成
@@ -130,7 +146,9 @@ Parser::new_Assign(const FileRegion& fr,
 		   const PtExpr* lhs,
 		   const PtExpr* rhs)
 {
-  return mFactory.new_Assign(fr, lhs, rhs);
+  auto stmt{mFactory.new_Assign(fr, lhs, rhs)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief control 付き assign 文の生成
@@ -145,7 +163,9 @@ Parser::new_Assign(const FileRegion& fr,
 		   const PtExpr* rhs,
 		   const PtControl* control)
 {
-  return mFactory.new_Assign(fr, lhs, rhs, control);
+  auto stmt{mFactory.new_Assign(fr, lhs, rhs, control)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief nonblocking assign 文の生成
@@ -158,7 +178,9 @@ Parser::new_NbAssign(const FileRegion& fr,
 		     const PtExpr* lhs,
 		     const PtExpr* rhs)
 {
-  return mFactory.new_NbAssign(fr, lhs, rhs);
+  auto stmt{mFactory.new_NbAssign(fr, lhs, rhs)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief control 付き nonblocking assign 文の生成
@@ -173,7 +195,9 @@ Parser::new_NbAssign(const FileRegion& fr,
 		     const PtExpr* rhs,
 		     const PtControl* control)
 {
-  return mFactory.new_NbAssign(fr, lhs, rhs, control);
+  auto stmt{mFactory.new_NbAssign(fr, lhs, rhs, control)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief event 文の生成
@@ -184,7 +208,9 @@ const PtStmt*
 Parser::new_EventStmt(const FileRegion& fr,
 		      const PtExpr* event)
 {
-  return mFactory.new_EventStmt(fr, event);
+  auto stmt{mFactory.new_EventStmt(fr, event)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief null 文の生成
@@ -193,7 +219,9 @@ Parser::new_EventStmt(const FileRegion& fr,
 const PtStmt*
 Parser::new_NullStmt(const FileRegion& fr)
 {
-  return mFactory.new_NullStmt(fr);
+  auto stmt{mFactory.new_NullStmt(fr)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief if 文の生成
@@ -206,7 +234,9 @@ Parser::new_If(const FileRegion& fr,
 	       const PtExpr* expr,
 	       const PtStmt* then_body)
 {
-  return mFactory.new_If(fr, expr, then_body);
+  auto stmt{mFactory.new_If(fr, expr, then_body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief if 文の生成
@@ -221,7 +251,9 @@ Parser::new_If(const FileRegion& fr,
 	       const PtStmt* then_body,
 	       const PtStmt* else_body)
 {
-  return mFactory.new_If(fr, expr, then_body, else_body);
+  auto stmt{mFactory.new_If(fr, expr, then_body, else_body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief case 文の生成
@@ -234,7 +266,9 @@ Parser::new_Case(const FileRegion& fr,
 		 const PtExpr* expr,
 		 PtrList<const PtCaseItem>* caseitem_list)
 {
-  return mFactory.new_Case(fr, expr, to_array(caseitem_list));
+  auto stmt{mFactory.new_Case(fr, expr, to_array(caseitem_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief casex 文の生成
@@ -247,7 +281,9 @@ Parser::new_CaseX(const FileRegion& fr,
 		  const PtExpr* expr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
-  return mFactory.new_CaseX(fr, expr, to_array(caseitem_list));
+  auto stmt{mFactory.new_CaseX(fr, expr, to_array(caseitem_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief casez 文の生成
@@ -260,7 +296,9 @@ Parser::new_CaseZ(const FileRegion& fr,
 		  const PtExpr* expr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
-  return mFactory.new_CaseZ(fr, expr, to_array(caseitem_list));
+  auto stmt{mFactory.new_CaseZ(fr, expr, to_array(caseitem_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief case item の生成
@@ -273,7 +311,9 @@ Parser::new_CaseItem(const FileRegion& fr,
 		     PtrList<const PtExpr>* label_list,
 		     const PtStmt* body)
 {
-  return mFactory.new_CaseItem(fr, to_array(label_list), body);
+  auto stmt{mFactory.new_CaseItem(fr, to_array(label_list), body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief forever 文の生成
@@ -284,7 +324,9 @@ const PtStmt*
 Parser::new_Forever(const FileRegion& fr,
 		    const PtStmt* body)
 {
-  return mFactory.new_Forever(fr, body);
+  auto stmt{mFactory.new_Forever(fr, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief repeat 文の生成
@@ -297,7 +339,9 @@ Parser::new_Repeat(const FileRegion& fr,
 		   const PtExpr* expr,
 		   const PtStmt* body)
 {
-  return mFactory.new_Repeat(fr, expr, body);
+  auto stmt{mFactory.new_Repeat(fr, expr, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief while 文の生成
@@ -310,7 +354,9 @@ Parser::new_While(const FileRegion& fr,
 		  const PtExpr* cond,
 		  const PtStmt* body)
 {
-  return mFactory.new_While(fr, cond, body);
+  auto stmt{mFactory.new_While(fr, cond, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief for 文の生成
@@ -327,7 +373,9 @@ Parser::new_For(const FileRegion& fr,
 		const PtStmt* next,
 		const PtStmt* body)
 {
-  return mFactory.new_For(fr, init, cond, next, body);
+  auto stmt{mFactory.new_For(fr, init, cond, next, body)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief procedural assign 文の生成
@@ -340,7 +388,9 @@ Parser::new_PcAssign(const FileRegion& fr,
 		     const PtExpr* lhs,
 		     const PtExpr* rhs)
 {
-  return mFactory.new_PcAssign(fr, lhs, rhs);
+  auto stmt{mFactory.new_PcAssign(fr, lhs, rhs)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief deassign 文の生成
@@ -351,7 +401,9 @@ const PtStmt*
 Parser::new_Deassign(const FileRegion& fr,
 		     const PtExpr* lhs)
 {
-  return mFactory.new_Deassign(fr, lhs);
+  auto stmt{mFactory.new_Deassign(fr, lhs)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief force 文の生成
@@ -364,7 +416,9 @@ Parser::new_Force(const FileRegion& fr,
 		  const PtExpr* lhs,
 		  const PtExpr* rhs)
 {
-  return mFactory.new_Force(fr, lhs, rhs);
+  auto stmt{mFactory.new_Force(fr, lhs, rhs)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief release 文の生成
@@ -375,7 +429,9 @@ const PtStmt*
 Parser::new_Release(const FileRegion& fr,
 		    const PtExpr* lhs)
 {
-  return mFactory.new_Release(fr, lhs);
+  auto stmt{mFactory.new_Release(fr, lhs)};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief parallel block の生成
@@ -386,7 +442,9 @@ const PtStmt*
 Parser::new_ParBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
-  return mFactory.new_ParBlock(fr, to_array(stmt_list));
+  auto stmt{mFactory.new_ParBlock(fr, to_array(stmt_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief 名前付き parallel block の生成
@@ -399,8 +457,10 @@ Parser::new_NamedParBlock(const FileRegion& fr,
 			  const char* name,
 			  PtrList<const PtStmt>* stmt_list)
 {
-  return mFactory.new_NamedParBlock(fr, name, mCurDeclArray,
-				    to_array(stmt_list));
+  auto stmt{mFactory.new_NamedParBlock(fr, name, mCurDeclArray,
+				       to_array(stmt_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief sequential block の生成
@@ -411,7 +471,9 @@ const PtStmt*
 Parser::new_SeqBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
-  return mFactory.new_SeqBlock(fr, to_array(stmt_list));
+  auto stmt{mFactory.new_SeqBlock(fr, to_array(stmt_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 // @brief 名前付き sequential block の生成
@@ -424,8 +486,10 @@ Parser::new_NamedSeqBlock(const FileRegion& fr,
 			  const char* name,
 			  PtrList<const PtStmt>* stmt_list)
 {
-  return mFactory.new_NamedSeqBlock(fr, name, mCurDeclArray,
-				    to_array(stmt_list));
+  auto stmt{mFactory.new_NamedSeqBlock(fr, name, mCurDeclArray,
+				       to_array(stmt_list))};
+  reg_pt(stmt);
+  return stmt;
 }
 
 END_NAMESPACE_YM_VERILOG

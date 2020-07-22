@@ -328,6 +328,10 @@ public:
   // PtAttrInst の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// ファイル位置の取得
+  FileRegion
+  file_region() const override;
+
   /// @brief 要素のリストの取得
   PtAttrSpecArray
   attrspec_list() const override;

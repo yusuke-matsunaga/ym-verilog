@@ -267,8 +267,11 @@ PuHierName*
 Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
-  auto nb = mFactory.new_NameBranch(head_name);
-  return new PuHierName(nb, name);
+  auto nb{mFactory.new_NameBranch(head_name)};
+  mPtMgr.reg_namebranch(nb);
+  auto hname{new PuHierName(nb, name)};
+  mHnameList.push_back(unique_ptr<PuHierName>{hname});
+  return hname;
 }
 
 // @brief 階層名の生成
@@ -280,8 +283,11 @@ Parser::new_HierName(const char* head_name,
 		     int index,
 		     const char* name)
 {
-  auto nb = mFactory.new_NameBranch(head_name, index);
-  return new PuHierName(nb, name);
+  auto nb{mFactory.new_NameBranch(head_name, index)};
+  mPtMgr.reg_namebranch(nb);
+  auto hname{new PuHierName(nb, name)};
+  mHnameList.push_back(unique_ptr<PuHierName>{hname});
+  return hname;
 }
 
 // @brief 階層名の追加
@@ -291,7 +297,8 @@ void
 Parser::add_HierName(PuHierName* hname,
 		     const char* name)
 {
-  auto nb = mFactory.new_NameBranch(hname->tail_name());
+  auto nb{mFactory.new_NameBranch(hname->tail_name())};
+  mPtMgr.reg_namebranch(nb);
   hname->add(nb, name);
 }
 
@@ -304,7 +311,8 @@ Parser::add_HierName(PuHierName* hname,
 		     int index,
 		     const char* name)
 {
-  auto nb = mFactory.new_NameBranch(hname->tail_name(), index);
+  auto nb{mFactory.new_NameBranch(hname->tail_name(), index)};
+  mPtMgr.reg_namebranch(nb);
   hname->add(nb, name);
 }
 
@@ -317,10 +325,8 @@ const char*
 Parser::extract_HierName(PuHierName* hname,
 			 PtNameBranchArray& nb_array)
 {
-  auto ans = hname->mTailName;
-  nb_array = hname->mNbList.to_array();
-
-  delete hname;
+  auto ans{hname->tail_name()};
+  nb_array = hname->name_branch();
 
   return ans;
 }
@@ -350,6 +356,14 @@ Parser::end_block()
   mCurDeclArray = get_decl_array();
 
   pop_declhead_list(true);
+}
+
+// @brief PtBase(の継承クラス)を登録する．
+// @param[in] obj オブジェクト
+void
+Parser::reg_pt(const PtBase* obj)
+{
+  mPtMgr.reg_pt(obj);
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -41,6 +41,7 @@ struct str_eq
   }
 };
 
+
 //////////////////////////////////////////////////////////////////////
 /// @class PtMgr PtMgr.h <ym/PtMgr.h>
 /// @ingroup PtMgr
@@ -91,16 +92,29 @@ public:
   clear();
 
   /// @brief UDP 定義を追加する．
+  ///
+  /// 内部で reg_pt() を呼んでいる．
   void
   reg_udp(const PtUdp* udp);
 
   /// @brief モジュール定義を追加する．
+  ///
+  /// 内部で reg_pt() を呼んでいる．
   void
   reg_module(const PtModule* module);
 
   /// @brief インスタンス定義名を追加する．
   void
   reg_defname(const char* name);
+
+  /// @brief PtBase(の継承クラス)を登録する．
+  /// @param[in] obj オブジェクト
+  void
+  reg_pt(const PtBase* obj);
+
+  /// @brief 階層名の要素を登録する．
+  void
+  reg_namebranch(const PtNameBranch* nb);
 
   /// @brief 文字列領域を確保する．
   /// @param[in] str 文字列
@@ -121,6 +135,12 @@ private:
 
   // モジュール定義のリスト
   vector<const PtModule*> mModuleList;
+
+  // すべての PtBase の継承クラスのリスト
+  vector<const PtBase*> mObjList;
+
+  // すべての PtNameBranch のリスト
+  vector<const PtNameBranch*> mNbList;
 
   // インスタンス記述で用いられている名前
   // たぶんモジュール名か UDP名のはず

@@ -23,7 +23,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 void
 Parser::new_Port()
 {
-  add_port( mFactory.new_Port(FileRegion()) );
+  auto port{mFactory.new_Port(FileRegion())};
+  add_port(port);
 }
 
 // @brief ポートの生成 (内側の式のみ指定するタイプ)
@@ -41,12 +42,13 @@ Parser::new_Port1(const FileRegion& file_region)
       name = portref->name();
     }
     mPortRefList.clear();
-    add_port( mFactory.new_Port(file_region, portref, name) );
+    auto port{mFactory.new_Port(file_region, portref, name)};
+    add_port(port);
   }
   else {
     PtExprArray portref_array = mPortRefList.to_array();
-    auto portref = mFactory.new_Concat(file_region, portref_array);
-    auto port = mFactory.new_Port(file_region, portref, portref_array, nullptr);
+    auto portref{mFactory.new_Concat(file_region, portref_array)};
+    auto port{mFactory.new_Port(file_region, portref, portref_array, nullptr)};
     add_port(port);
   }
 }
@@ -58,7 +60,7 @@ void
 Parser::new_Port2(const FileRegion& file_region,
 		  const char* name)
 {
-  auto port = mFactory.new_Port(file_region, name);
+  auto port{mFactory.new_Port(file_region, name)};
   add_port(port);
 }
 
@@ -70,14 +72,14 @@ Parser::new_Port3(const FileRegion& file_region,
 		  const char* name)
 {
   if ( mPortRefList.size() == 1 ) {
-    auto port = mFactory.new_Port(file_region, mPortRefList.front(), name);
+    auto port{mFactory.new_Port(file_region, mPortRefList.front(), name)};
     add_port(port);
     mPortRefList.clear();
   }
   else {
     PtExprArray portref_array = mPortRefList.to_array();
-    auto portref = mFactory.new_Concat(file_region, portref_array);
-    auto port = mFactory.new_Port(file_region, portref, portref_array, name);
+    auto portref{mFactory.new_Concat(file_region, portref_array)};
+    auto port{mFactory.new_Port(file_region, portref, portref_array, name)};
     add_port(port);
   }
 }
@@ -88,6 +90,7 @@ void
 Parser::add_port(PtiPort* port)
 {
   mPortList.push_back(port);
+  reg_pt(port);
 }
 
 
@@ -147,8 +150,10 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
   for ( auto head: iohead_array ) {
     for ( auto elem: head->item_list() ) {
       auto name = elem->name();
-      auto portref = mFactory.new_Primary(elem->file_region(), name);
-      auto port = mFactory.new_Port(elem->file_region(), portref, name);
+      auto portref{mFactory.new_Primary(elem->file_region(), name)};
+      reg_pt(portref);
+      auto port{mFactory.new_Port(elem->file_region(), portref, name)};
+      reg_pt(port);
       VpiDir dir = head->direction();
       port->_set_portref_dir(0, dir);
       vec[i] = port;
@@ -170,7 +175,7 @@ void
 Parser::new_PortRef(const FileRegion& fr,
 		    const char* name)
 {
-  auto primary = mFactory.new_Primary(fr, name);
+  auto primary{mFactory.new_Primary(fr, name)};
   add_portref(primary);
 }
 
@@ -186,7 +191,7 @@ Parser::new_PortRef(const FileRegion& fr,
   PtrList<const PtExpr> index_list;
   index_list.push_back(index);
   PtExprArray index_array = to_array(&index_list);
-  auto primary = mFactory.new_Primary(fr, name, index_array);
+  auto primary{mFactory.new_Primary(fr, name, index_array)};
   add_portref(primary);
 }
 
@@ -203,7 +208,7 @@ Parser::new_PortRef(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  auto primary = mFactory.new_Primary(fr, name, range_mode, left, right);
+  auto primary{mFactory.new_Primary(fr, name, range_mode, left, right)};
   add_portref(primary);
 }
 
@@ -220,6 +225,7 @@ void
 Parser::add_portref(const PtExpr* portref)
 {
   mPortRefList.push_back(portref);
+  reg_pt(portref);
 }
 
 END_NAMESPACE_YM_VERILOG

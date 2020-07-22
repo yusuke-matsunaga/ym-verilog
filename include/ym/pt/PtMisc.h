@@ -24,13 +24,6 @@ class PtControl :
   public PtBase
 {
 public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtControl() { }
-
-
-public:
   //////////////////////////////////////////////////////////////////////
   // PtControl の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -74,13 +67,6 @@ class PtConnection :
   public PtBase
 {
 public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtConnection() { }
-
-
-public:
   //////////////////////////////////////////////////////////////////////
   // PtConnection の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -110,13 +96,6 @@ public:
 class PtStrength :
   public PtBase
 {
-public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtStrength() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // PtStrength の継承クラスが実装する仮想関数
@@ -153,13 +132,6 @@ class PtDelay :
   public PtBase
 {
 public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtDelay() { }
-
-
-public:
   //////////////////////////////////////////////////////////////////////
   // PtDelay の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
@@ -185,9 +157,9 @@ class PtNameBranch
 {
 public:
 
-  /// @brief 仮想デストラクタ
+  /// @brief デストラクタ
   virtual
-  ~PtNameBranch() { }
+  ~PtNameBranch() = default;
 
 
 public:
@@ -231,15 +203,9 @@ expand_full_name(const PtNameBranchArray& nb_array,
 /// @ingroup PtGroup
 /// @brief attribute_instance を表すクラス
 //////////////////////////////////////////////////////////////////////
-class PtAttrInst
+class PtAttrInst :
+  public PtBase
 {
-public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtAttrInst() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // PtAttrInst の継承クラスが実装する仮想関数
@@ -259,25 +225,13 @@ public:
 /// @ingroup PtGroup
 /// @brief attr_spec を表すクラス
 //////////////////////////////////////////////////////////////////////
-class PtAttrSpec
+class PtAttrSpec :
+  public PtBase
 {
-public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtAttrSpec() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // PtAttrSpec の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief ファイル位置の取得
-  /// @return ファイル位置
-  virtual
-  FileRegion
-  file_region() const = 0;
 
   /// @brief 名前の取得
   /// @return 名前

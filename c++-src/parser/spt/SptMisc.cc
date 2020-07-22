@@ -345,6 +345,19 @@ SptAttrInst::~SptAttrInst()
 {
 }
 
+// ファイル位置の取得
+FileRegion
+SptAttrInst::file_region() const
+{
+  SizeType n = mAttrSpecArray.size();
+  if ( n == 0 ) {
+    return FileRegion();
+  }
+  else {
+    return FileRegion{mAttrSpecArray[0]->file_region(), mAttrSpecArray[n - 1]->file_region()};
+  }
+}
+
 // @brief 要素のリストの取得
 PtAttrSpecArray
 SptAttrInst::attrspec_list() const

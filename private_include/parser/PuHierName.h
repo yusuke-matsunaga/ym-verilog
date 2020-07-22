@@ -31,9 +31,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 class PuHierName
 {
-  friend class Parser;
-
-private:
+public:
 
   /// @brief コンストラクタ
   /// @param[in] nb 階層ブランチ
@@ -56,6 +54,12 @@ public:
 
 
 public:
+
+  /// @brief 階層ブランチを PtNameBranchArray の形で取り出す．
+  ///
+  /// この関数を呼ぶと mNbList は破壊される．
+  PtNameBranchArray
+  name_branch();
 
   /// @brief 最下層の名前を取り出す．
   /// @return 最下層の名前
@@ -108,6 +112,16 @@ PuHierName::add(const PtNameBranch* nb,
 {
   mNbList.push_back(nb);
   mTailName = tail_name;
+}
+
+// @brief 階層ブランチを PtNameBranchArray の形で取り出す．
+//
+// この関数を呼ぶと mNbList は破壊される．
+inline
+PtNameBranchArray
+PuHierName::name_branch()
+{
+  return mNbList.to_array();
 }
 
 // @brief 最下層の名前を取り出す．
