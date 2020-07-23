@@ -16,6 +16,36 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+
+//////////////////////////////////////////////////////////////////////
+// クラス LexModulePlugin
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+// @param[in] lex 親の Lex オブジェクト
+// @param[in] name compiler directive 名
+// @param[in] state 状態を保持するオブジェクト
+LexModulePlugin::LexModulePlugin(RawLex& lex,
+				 const char* name,
+				 LexModuleState* state) :
+  LexPlugin(lex, name),
+  mState{state}
+{
+}
+
+// @brief デストラクタ
+LexModulePlugin::~LexModulePlugin()
+{
+}
+
+// @brief LexModuleState を返す．
+LexModuleState*
+LexModulePlugin::module_state()
+{
+  return mState;
+}
+
+
 //////////////////////////////////////////////////////////////////////
 // @class LpCellDefine
 // @ingroup VlParser
@@ -29,8 +59,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 LpCellDefine::LpCellDefine(RawLex& lex,
 			   const char* name,
 			   LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -64,7 +93,7 @@ LpCellDefine::parse()
     return false;
   }
 
-  mState->set_cell_define(true, loc);
+  module_state()->set_cell_define(true, loc);
 
   return true;
 }
@@ -83,8 +112,7 @@ LpCellDefine::parse()
 LpEndCellDefine::LpEndCellDefine(RawLex& lex,
 				 const char* name,
 				 LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -118,7 +146,7 @@ LpEndCellDefine::parse()
     return false;
   }
 
-  mState->set_cell_define(false, loc);
+  module_state()->set_cell_define(false, loc);
 
   return true;
 }
@@ -136,9 +164,8 @@ LpEndCellDefine::parse()
 // @param[in] state 状態を保持するオブジェクト
 LpNetType::LpNetType(RawLex& lex,
 		     const char* name,
-		     LexModuleState* nettype) :
-  LexPlugin(lex, name),
-  mState(nettype)
+		     LexModuleState* state) :
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -204,7 +231,7 @@ LpNetType::parse()
     return false;
   }
 
-  mState->set_default_nettype(val, file_region);
+  module_state()->set_default_nettype(val, file_region);
 
   return true;
 }
@@ -223,8 +250,7 @@ LpNetType::parse()
 LpTimeScale::LpTimeScale(RawLex& lex,
 			 const char* name,
 			 LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -290,8 +316,8 @@ LpTimeScale::parse()
     return false;
   }
 
-  mState->set_time_unit(unit, file_region1);
-  mState->set_time_precision(precision, file_region2);
+  module_state()->set_time_unit(unit, file_region1);
+  module_state()->set_time_precision(precision, file_region2);
 
   return true;
 }
@@ -392,8 +418,7 @@ LpTimeScale::parse_unit(int& unit)
 LpUnconnDrive::LpUnconnDrive(RawLex& lex,
 			     const char* name,
 			     LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -442,7 +467,7 @@ LpUnconnDrive::parse()
     return false;
   }
 
-  mState->set_unconnected_drive(ud, loc);
+  module_state()->set_unconnected_drive(ud, loc);
 
   return true;
 }
@@ -461,8 +486,7 @@ LpUnconnDrive::parse()
 LpNounconnDrive::LpNounconnDrive(RawLex& lex,
 				 const char* name,
 				 LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -497,7 +521,7 @@ LpNounconnDrive::parse()
     return false;
   }
 
-  mState->set_unconnected_drive(VpiUnconnDrive::HighZ, loc);
+  module_state()->set_unconnected_drive(VpiUnconnDrive::HighZ, loc);
 
   return true;
 }
@@ -516,8 +540,7 @@ LpNounconnDrive::parse()
 LpDecayTime::LpDecayTime(RawLex& lex,
 			 const char* name,
 			 LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -578,7 +601,7 @@ LpDecayTime::parse()
     return false;
   }
 
-  mState->set_default_decay_time(val, loc);
+  module_state()->set_default_decay_time(val, loc);
 
   return true;
 }
@@ -597,8 +620,7 @@ LpDecayTime::parse()
 LpTriregStrength::LpTriregStrength(RawLex& lex,
 				   const char* name,
 				   LexModuleState* state) :
-  LexPlugin(lex, name),
-  mState(state)
+  LexModulePlugin(lex, name, state)
 {
 }
 
@@ -651,7 +673,7 @@ LpTriregStrength::parse()
     return false;
   }
 
-  mState->set_default_trireg_strength(val, loc);
+  module_state()->set_default_trireg_strength(val, loc);
 
   return true;
 }
@@ -671,8 +693,7 @@ LpDelayMode::LpDelayMode(RawLex& lex,
 			 const char* name,
 			 LexModuleState* state,
 			 VpiDefDelayMode mode) :
-  LexPlugin(lex, name),
-  mState(state),
+  LexModulePlugin(lex, name, state),
   mMode(mode)
 {
 }
@@ -708,7 +729,7 @@ LpDelayMode::parse()
     return false;
   }
 
-  mState->set_delay_mode(mMode, loc);
+  module_state()->set_delay_mode(mMode, loc);
 
   return true;
 }

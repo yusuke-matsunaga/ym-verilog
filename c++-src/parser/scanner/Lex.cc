@@ -19,10 +19,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-Lex::Lex()
+Lex::Lex() :
+  mModuleState{new LexModuleState(*this)}
 {
-  mModuleState = new LexModuleState(*this);
-
   // 生成されたプラグインは Lex の管理下におかれるのでここでポインタを
   // 保持しておく必要はない．
   new LpNetType(*this, "default_nettype", mModuleState);

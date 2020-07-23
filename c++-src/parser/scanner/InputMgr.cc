@@ -38,6 +38,7 @@ InputMgr::~InputMgr()
 void
 InputMgr::clear()
 {
+  mFsStack.clear();
   mFileStack.clear();
 }
 

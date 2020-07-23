@@ -29,7 +29,6 @@ Parser::new_IOHead(const FileRegion& fr,
 		   bool sign)
 {
   auto decl{mFactory.new_IOHead(fr, dir, sign)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -44,7 +43,6 @@ Parser::new_RegIOHead(const FileRegion& fr,
 		      bool sign)
 {
   auto decl{mFactory.new_RegIOHead(fr, dir, sign)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -61,7 +59,6 @@ Parser::new_NetIOHead(const FileRegion& fr,
 		      bool sign)
 {
   auto decl{mFactory.new_NetIOHead(fr, dir, net_type, sign)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -76,7 +73,6 @@ Parser::new_VarIOHead(const FileRegion& fr,
 		      VpiVarType var_type)
 {
   auto decl{mFactory.new_VarIOHead(fr, dir, var_type)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -95,7 +91,6 @@ Parser::new_IOHead(const FileRegion& fr,
 		   const PtExpr* right)
 {
   auto decl{mFactory.new_IOHead(fr, dir, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -114,7 +109,6 @@ Parser::new_RegIOHead(const FileRegion& fr,
 		      const PtExpr* right)
 {
   auto decl{mFactory.new_RegIOHead(fr, dir, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -135,7 +129,6 @@ Parser::new_NetIOHead(const FileRegion& fr,
 		      const PtExpr* right)
 {
   auto decl{mFactory.new_NetIOHead(fr, dir, net_type, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -206,7 +199,6 @@ void
 Parser::add_io_item(const PtIOItem* item)
 {
   mIOItemList.push_back(item);
-  reg_pt(item);
 }
 
 
@@ -220,7 +212,6 @@ PtiDeclHead*
 Parser::new_ParamH(const FileRegion& fr)
 {
   auto decl{mFactory.new_ParamH(fr)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -236,7 +227,6 @@ Parser::new_ParamH(const FileRegion& fr,
 		   const PtExpr* right)
 {
   auto decl{mFactory.new_ParamH(fr, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -248,7 +238,6 @@ Parser::new_ParamH(const FileRegion& fr,
 		   VpiVarType var_type)
 {
   auto decl{mFactory.new_ParamH(fr, var_type)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -286,7 +275,6 @@ PtiDeclHead*
 Parser::new_LocalParamH(const FileRegion& fr)
 {
   auto decl{mFactory.new_LocalParamH(fr)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -302,7 +290,6 @@ Parser::new_LocalParamH(const FileRegion& fr,
 			const PtExpr* right)
 {
   auto decl{mFactory.new_LocalParamH(fr, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -314,7 +301,6 @@ Parser::new_LocalParamH(const FileRegion& fr,
 			VpiVarType var_type)
 {
   auto decl{mFactory.new_LocalParamH(fr, var_type)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -330,7 +316,6 @@ PtiDeclHead*
 Parser::new_SpecParamH(const FileRegion& fr)
 {
   auto decl{mFactory.new_SpecParamH(fr)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -344,7 +329,6 @@ Parser::new_SpecParamH(const FileRegion& fr,
 		       const PtExpr* right)
 {
   auto decl{mFactory.new_SpecParamH(fr, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -355,7 +339,6 @@ PtiDeclHead*
 Parser::new_EventH(const FileRegion& fr)
 {
   auto decl{mFactory.new_EventH(fr)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -365,7 +348,6 @@ PtiDeclHead*
 Parser::new_GenvarH(const FileRegion& fr)
 {
   auto decl{mFactory.new_GenvarH(fr)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -377,7 +359,6 @@ Parser::new_VarH(const FileRegion& fr,
 		 VpiVarType var_type)
 {
   auto decl{mFactory.new_VarH(fr, var_type)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -389,7 +370,6 @@ Parser::new_RegH(const FileRegion& fr,
 		 bool sign)
 {
   auto decl{mFactory.new_RegH(fr, sign)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -405,7 +385,6 @@ Parser::new_RegH(const FileRegion& fr,
 		 const PtExpr* right)
 {
   auto decl{mFactory.new_RegH(fr, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -419,7 +398,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 bool sign)
 {
   auto decl{mFactory.new_NetH(fr, type, sign)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -435,7 +413,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtStrength* strength)
 {
   auto decl{mFactory.new_NetH(fr, type, sign, strength)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -451,7 +428,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtDelay* delay)
 {
   auto decl{mFactory.new_NetH(fr, type, sign, delay)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -469,7 +445,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtDelay* delay)
 {
   auto decl{mFactory.new_NetH(fr, type, sign, strength, delay)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -489,7 +464,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtExpr* right)
 {
   auto decl{mFactory.new_NetH(fr, type, vstype, sign, left, right)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -511,7 +485,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtStrength* strength)
 {
   auto decl{mFactory.new_NetH(fr, type, vstype, sign, left, right, strength)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -533,7 +506,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtDelay* delay)
 {
   auto decl{mFactory.new_NetH(fr, type, vstype, sign, left, right, delay)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -557,7 +529,6 @@ Parser::new_NetH(const FileRegion& fr,
 		 const PtDelay* delay)
 {
   auto decl{mFactory.new_NetH(fr, type, vstype, sign, left, right, strength, delay)};
-  reg_pt(decl);
   return decl;
 }
 
@@ -624,7 +595,6 @@ void
 Parser::add_decl_item(const PtDeclItem* item)
 {
   mDeclItemList.push_back(item);
-  reg_pt(item);
 }
 
 
@@ -641,7 +611,6 @@ Parser::new_Range(const FileRegion& fr,
 		  const PtExpr* lsb)
 {
   auto range{mFactory.new_Range(fr, msb, lsb)};
-  reg_pt(range);
   return range;
 }
 

@@ -29,4 +29,11 @@ class PtiDeclHead;
 
 END_NAMESPACE_YM_VERILOG
 
+BEGIN_NAMESPACE_YM
+
+// in Alloc.h
+class Alloc;
+
+END_NAMESPACE_YM
+
 #endif // PTIFWD_H

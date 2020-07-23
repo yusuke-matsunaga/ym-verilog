@@ -9,6 +9,7 @@
 
 #include "CptDecl.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 #include "ym/pt/PtExpr.h"
 
@@ -1211,7 +1212,8 @@ PtiDeclHead*
 CptFactory::new_ParamH(const FileRegion& file_region)
 {
   ++ mNumParamH;
-  auto obj{new CptParamH(file_region)};
+  void* p{mAlloc.get_memory(sizeof(CptParamH))};
+  auto obj{new (p) CptParamH(file_region)};
   return obj;
 }
 
@@ -1224,11 +1226,13 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 {
   ++ mNumParamHV;
   if ( sign ) {
-    auto obj{new CptParamHSV(file_region, left, right)};
+    void* p{mAlloc.get_memory(sizeof(CptParamHSV))};
+    auto obj{new (p) CptParamHSV(file_region, left, right)};
     return obj;
   }
   else {
-    auto obj{new CptParamHV(file_region, left, right)};
+    void* p{mAlloc.get_memory(sizeof(CptParamHV))};
+    auto obj{new (p) CptParamHV(file_region, left, right)};
     return obj;
   }
 }
@@ -1239,7 +1243,8 @@ CptFactory::new_ParamH(const FileRegion& file_region,
 		       VpiVarType var_type)
 {
   ++ mNumParamHT;
-  auto obj{new CptParamHT(file_region, var_type)};
+  void* p{mAlloc.get_memory(sizeof(CptParamHT))};
+  auto obj{new (p) CptParamHT(file_region, var_type)};
   return obj;
 }
 
@@ -1248,7 +1253,8 @@ PtiDeclHead*
 CptFactory::new_LocalParamH(const FileRegion& file_region)
 {
   ++ mNumLocalParamH;
-  auto obj{new CptLocalParamH(file_region)};
+  void* p{mAlloc.get_memory(sizeof(CptLocalParamH))};
+  auto obj{new (p) CptLocalParamH(file_region)};
   return obj;
 }
 
@@ -1261,11 +1267,13 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 {
   ++ mNumLocalParamHV;
   if ( sign ) {
-    auto obj{new CptLocalParamHSV(file_region, left, right)};
+    void* p{mAlloc.get_memory(sizeof(CptLocalParamHSV))};
+    auto obj{new (p) CptLocalParamHSV(file_region, left, right)};
     return obj;
   }
   else {
-    auto obj{new CptLocalParamHV(file_region, left, right)};
+    void* p{mAlloc.get_memory(sizeof(CptLocalParamHV))};
+    auto obj{new (p) CptLocalParamHV(file_region, left, right)};
     return obj;
   }
 }
@@ -1276,7 +1284,8 @@ CptFactory::new_LocalParamH(const FileRegion& file_region,
 			    VpiVarType var_type)
 {
   ++ mNumLocalParamHT;
-  auto obj{new CptLocalParamHT(file_region, var_type)};
+  void* p{mAlloc.get_memory(sizeof(CptLocalParamHT))};
+  auto obj{new (p) CptLocalParamHT(file_region, var_type)};
   return obj;
 }
 
@@ -1285,7 +1294,8 @@ PtiDeclHead*
 CptFactory::new_SpecParamH(const FileRegion& file_region)
 {
   ++ mNumSpecParamH;
-  auto obj{new CptSpecParamH(file_region)};
+  void* p{mAlloc.get_memory(sizeof(CptSpecParamH))};
+  auto obj{new (p) CptSpecParamH(file_region)};
   return obj;
 }
 
@@ -1296,7 +1306,8 @@ CptFactory::new_SpecParamH(const FileRegion& file_region,
 			   const PtExpr* right)
 {
   ++ mNumSpecParamHV;
-  auto obj{new CptSpecParamHV(file_region, left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptSpecParamHV))};
+  auto obj{new (p) CptSpecParamHV(file_region, left, right)};
   return obj;
 }
 
@@ -1305,7 +1316,8 @@ PtiDeclHead*
 CptFactory::new_EventH(const FileRegion& file_region)
 {
   ++ mNumEventH;
-  auto obj{new CptEventH(file_region)};
+  void* p{mAlloc.get_memory(sizeof(CptEventH))};
+  auto obj{new (p) CptEventH(file_region)};
   return obj;
 }
 
@@ -1314,7 +1326,8 @@ PtiDeclHead*
 CptFactory::new_GenvarH(const FileRegion& file_region)
 {
   ++ mNumGenvarH;
-  auto obj{new CptGenvarH(file_region)};
+  void* p{mAlloc.get_memory(sizeof(CptGenvarH))};
+  auto obj{new (p) CptGenvarH(file_region)};
   return obj;
 }
 
@@ -1324,7 +1337,8 @@ CptFactory::new_VarH(const FileRegion& file_region,
 		     VpiVarType var_type)
 {
   ++ mNumVarH;
-  auto obj{new CptVarH(file_region, var_type)};
+  void* p{mAlloc.get_memory(sizeof(CptVarH))};
+  auto obj{new (p) CptVarH(file_region, var_type)};
   return obj;
 }
 
@@ -1335,11 +1349,13 @@ CptFactory::new_RegH(const FileRegion& file_region,
 {
   ++ mNumRegH;
   if ( sign ) {
-    auto obj{new CptRegHS(file_region)};
+    void* p{mAlloc.get_memory(sizeof(CptRegHS))};
+    auto obj{new (p) CptRegHS(file_region)};
     return obj;
   }
   else {
-    auto obj{new CptRegH(file_region)};
+    void* p{mAlloc.get_memory(sizeof(CptRegH))};
+    auto obj{new (p) CptRegH(file_region)};
     return obj;
   }
 }
@@ -1353,11 +1369,13 @@ CptFactory::new_RegH(const FileRegion& file_region,
 {
   ++ mNumRegHV;
   if ( sign ) {
-    auto obj{new CptRegHSV(file_region, left, right)};
+    void* p{mAlloc.get_memory(sizeof(CptRegHSV))};
+    auto obj{new (p) CptRegHSV(file_region, left, right)};
     return obj;
   }
   else {
-    auto obj{new CptRegHV(file_region, left, right)};
+    void* p{mAlloc.get_memory(sizeof(CptRegHV))};
+    auto obj{new (p) CptRegHV(file_region, left, right)};
     return obj;
   }
 }
@@ -1369,7 +1387,8 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     bool sign)
 {
   ++ mNumNetH;
-  auto obj{new CptNetH(file_region, type, sign)};
+  void* p{mAlloc.get_memory(sizeof(CptNetH))};
+  auto obj{new (p) CptNetH(file_region, type, sign)};
   return obj;
 }
 
@@ -1381,9 +1400,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   ++ mNumNetHS;
-  auto obj{new CptNetHS(file_region,
-			type, sign,
-			strength)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHS))};
+  auto obj{new (p) CptNetHS(file_region,
+			    type, sign,
+			    strength)};
   return obj;
 }
 
@@ -1395,9 +1415,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHD;
-  auto obj{new CptNetHD(file_region,
-			type, sign,
-			delay)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHD))};
+  auto obj{new (p) CptNetHD(file_region,
+			    type, sign,
+			    delay)};
   return obj;
 }
 
@@ -1410,9 +1431,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++mNumNetHSD;
-  auto obj{new CptNetHSD(file_region,
-			 type, sign,
-			 strength, delay)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHSD))};
+  auto obj{new (p) CptNetHSD(file_region,
+			     type, sign,
+			     strength, delay)};
   return obj;
 }
 
@@ -1426,8 +1448,9 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtExpr* right)
 {
   ++ mNumNetHV;
-  auto obj{new CptNetHV(file_region,
-			type, vstype, sign, left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHV))};
+  auto obj{new (p) CptNetHV(file_region,
+			    type, vstype, sign, left, right)};
   return obj;
 }
 
@@ -1442,9 +1465,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtStrength* strength)
 {
   ++ mNumNetHVS;
-  auto obj{new CptNetHVS(file_region,
-			 type, vstype, sign, left, right,
-			 strength)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHVS))};
+  auto obj{new (p) CptNetHVS(file_region,
+			     type, vstype, sign, left, right,
+			     strength)};
   return obj;
 }
 
@@ -1459,9 +1483,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHVD;
-  auto obj{new CptNetHVD(file_region,
-			 type, vstype, sign, left, right,
-			 delay)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHVD))};
+  auto obj{new (p) CptNetHVD(file_region,
+			     type, vstype, sign, left, right,
+			     delay)};
   return obj;
 }
 
@@ -1477,9 +1502,10 @@ CptFactory::new_NetH(const FileRegion& file_region,
 		     const PtDelay* delay)
 {
   ++ mNumNetHVSD;
-  auto obj{new CptNetHVSD(file_region,
-			  type, vstype, sign, left, right,
-			  strength, delay)};
+  void* p{mAlloc.get_memory(sizeof(CptNetHVSD))};
+  auto obj{new (p) CptNetHVSD(file_region,
+			      type, vstype, sign, left, right,
+			      strength, delay)};
   return obj;
 }
 
@@ -1489,7 +1515,8 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name)
 {
   ++ mNumDeclItem;
-  auto obj{new CptDeclItem(file_region, name)};
+  void* p{mAlloc.get_memory(sizeof(CptDeclItem))};
+  auto obj{new (p) CptDeclItem(file_region, name)};
   return obj;
 }
 
@@ -1499,7 +1526,8 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const PtExpr* init_value)
 {
   ++ mNumDeclItemI;
-  auto obj{new CptDeclItemI(file_region, name, init_value)};
+  void* p{mAlloc.get_memory(sizeof(CptDeclItemI))};
+  auto obj{new (p) CptDeclItemI(file_region, name, init_value)};
   return obj;
 }
 
@@ -1509,7 +1537,8 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 			 PtRangeArray range_array)
 {
   ++ mNumDeclItemR;
-  auto obj{new CptDeclItemR(file_region, name, range_array)};
+  void* p{mAlloc.get_memory(sizeof(CptDeclItemR))};
+  auto obj{new (p) CptDeclItemR(file_region, name, range_array)};
   return obj;
 }
 
@@ -1519,7 +1548,8 @@ CptFactory::new_Range(const FileRegion& fr,
 		      const PtExpr* lsb)
 {
   ++ mNumRange;
-  auto obj{new CptRange(fr, msb, lsb)};
+  void* p{mAlloc.get_memory(sizeof(CptRange))};
+  auto obj{new (p) CptRange(fr, msb, lsb)};
   return obj;
 }
 

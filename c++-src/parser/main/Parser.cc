@@ -86,6 +86,9 @@ Parser::read_file(const string& filename,
 
   int stat = yyparse(*this);
 
+  FileInfo::clear();
+  mHnameList.clear();
+
   return (stat == 0);
 }
 
@@ -268,7 +271,6 @@ Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
   auto nb{mFactory.new_NameBranch(head_name)};
-  mPtMgr.reg_namebranch(nb);
   auto hname{new PuHierName(nb, name)};
   mHnameList.push_back(unique_ptr<PuHierName>{hname});
   return hname;
@@ -284,7 +286,6 @@ Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
   auto nb{mFactory.new_NameBranch(head_name, index)};
-  mPtMgr.reg_namebranch(nb);
   auto hname{new PuHierName(nb, name)};
   mHnameList.push_back(unique_ptr<PuHierName>{hname});
   return hname;
@@ -298,7 +299,6 @@ Parser::add_HierName(PuHierName* hname,
 		     const char* name)
 {
   auto nb{mFactory.new_NameBranch(hname->tail_name())};
-  mPtMgr.reg_namebranch(nb);
   hname->add(nb, name);
 }
 
@@ -312,7 +312,6 @@ Parser::add_HierName(PuHierName* hname,
 		     const char* name)
 {
   auto nb{mFactory.new_NameBranch(hname->tail_name(), index)};
-  mPtMgr.reg_namebranch(nb);
   hname->add(nb, name);
 }
 
@@ -356,14 +355,6 @@ Parser::end_block()
   mCurDeclArray = get_decl_array();
 
   pop_declhead_list(true);
-}
-
-// @brief PtBase(の継承クラス)を登録する．
-// @param[in] obj オブジェクト
-void
-Parser::reg_pt(const PtBase* obj)
-{
-  mPtMgr.reg_pt(obj);
 }
 
 END_NAMESPACE_YM_VERILOG

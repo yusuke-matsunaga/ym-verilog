@@ -27,7 +27,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 VlMgr::VlMgr() :
   mPtMgr{new PtMgr},
-  mPtiFactory{PtiFactory::make_obj("cpt")},
+  mPtiFactory{PtiFactory::make_obj("cpt", mPtMgr->alloc())},
   mElbMgr{new ElbMgr()},
   mElbFactory{ElbFactory::new_obj()}
 {

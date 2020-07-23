@@ -405,7 +405,8 @@ private:
   CptPort2(const FileRegion& file_region,
 	   const PtExpr* portref,
 	   PtExprArray portref_array,
-	   const char* ext_name);
+	   const char* ext_name,
+	   void* q);
 
   /// @brief デストラクタ
   ~CptPort2();

@@ -9,6 +9,7 @@
 
 #include "CptGenerate.h"
 #include "parser/CptFactory.h"
+#include "parser/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -422,7 +423,8 @@ CptFactory::new_Generate(const FileRegion& file_region,
 			 PtItemArray item_array)
 {
   ++ mNumGenerate;
-  auto obj{new CptGenerate(file_region, declhead_array, item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenerate))};
+  auto obj{new (p) CptGenerate(file_region, declhead_array, item_array)};
   return obj;
 }
 
@@ -433,7 +435,8 @@ CptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtItemArray item_array)
 {
   ++ mNumGenBlock;
-  auto obj{new CptGenBlock(file_region, declhead_array, item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenBlock))};
+  auto obj{new (p) CptGenBlock(file_region, declhead_array, item_array)};
   return obj;
 }
 
@@ -445,7 +448,8 @@ CptFactory::new_GenBlock(const FileRegion& file_region,
 			 PtItemArray item_array)
 {
   ++ mNumGenBlockN;
-  auto obj{new CptGenBlockN(file_region, name, declhead_array, item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenBlockN))};
+  auto obj{new (p) CptGenBlockN(file_region, name, declhead_array, item_array)};
   return obj;
 }
 
@@ -459,9 +463,10 @@ CptFactory::new_GenIf(const FileRegion& file_region,
 		      PtItemArray else_item_array)
 {
   ++ mNumGenIf;
-  auto obj{new CptGenIf(file_region, cond,
-			then_declhead_array, then_item_array,
-			else_declhead_array, else_item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenIf))};
+  auto obj{new (p) CptGenIf(file_region, cond,
+			    then_declhead_array, then_item_array,
+			    else_declhead_array, else_item_array)};
   return obj;
 }
 
@@ -472,7 +477,8 @@ CptFactory::new_GenCase(const FileRegion& file_region,
 			PtGenCaseItemArray item_array)
 {
   ++ mNumGenCase;
-  auto obj{new CptGenCase(file_region, expr, item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenCase))};
+  auto obj{new (p) CptGenCase(file_region, expr, item_array)};
   return obj;
 }
 
@@ -484,8 +490,9 @@ CptFactory::new_GenCaseItem(const FileRegion& file_region,
 			    PtItemArray item_array)
 {
   ++ mNumGenCaseItem;
-  auto obj{new CptGenCaseItem(file_region, label_array,
-			      declhead_array, item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenCaseItem))};
+  auto obj{new (p) CptGenCaseItem(file_region, label_array,
+				  declhead_array, item_array)};
   return obj;
 }
 
@@ -501,9 +508,10 @@ CptFactory::new_GenFor(const FileRegion& file_region,
 		       PtItemArray item_array)
 {
   ++ mNumGenFor;
-  auto obj{new CptGenFor(file_region, loop_var, init_expr, cond,
-			 next_expr, block_name,
-			 declhead_array, item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGenFor))};
+  auto obj{new (p) CptGenFor(file_region, loop_var, init_expr, cond,
+			     next_expr, block_name,
+			     declhead_array, item_array)};
   return obj;
 }
 

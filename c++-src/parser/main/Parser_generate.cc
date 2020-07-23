@@ -45,7 +45,6 @@ const PtItem*
 Parser::new_Generate(const FileRegion& fr)
 {
   auto item{mFactory.new_Generate(fr, mCurDeclArray, mCurItemArray)};
-  reg_pt(item);
   return item;
 }
 
@@ -56,7 +55,6 @@ Parser::new_GenBlock(const FileRegion& fr)
 {
   auto item{mFactory.new_GenBlock(fr, mCurDeclArray, mCurItemArray)};
   mCurItemList->push_back(item);
-  reg_pt(item);
 }
 
 // @brief 名前付き generate block 文の生成
@@ -68,7 +66,6 @@ Parser::new_GenBlock(const FileRegion& fr,
 {
   auto item{mFactory.new_GenBlock(fr, name, mCurDeclArray, mCurItemArray)};
   mCurItemList->push_back(item);
-  reg_pt(item);
 }
 
 // @brief generate-if の then 節の開始
@@ -122,7 +119,6 @@ Parser::new_GenIf(const FileRegion& fr,
 			       PtDeclHeadArray(),
 			       PtItemArray())};
   mCurItemList->push_back(item);
-  reg_pt(item);
 }
 
 // @brief generate if 文の生成
@@ -138,7 +134,6 @@ Parser::new_GenIfElse(const FileRegion& fr,
 			       mGenElseDeclArray,
 			       mGenElseItemArray)};
   mCurItemList->push_back(item);
-  reg_pt(item);
 }
 
 // @brief generate case 文の生成
@@ -152,7 +147,6 @@ Parser::new_GenCase(const FileRegion& fr,
 {
   auto item{mFactory.new_GenCase(fr, expr, to_array(item_list))};
   mCurItemList->push_back(item);
-  reg_pt(item);
 }
 
 // @brief generate case の要素の生成
@@ -167,7 +161,6 @@ Parser::new_GenCaseItem(const FileRegion& fr,
 				     to_array(label_list),
 				     mCurDeclArray,
 				     mCurItemArray)};
-  reg_pt(item);
   return item;
 }
 
@@ -197,7 +190,6 @@ Parser::new_GenFor(const FileRegion& fr,
 				  mCurDeclArray,
 				  mCurItemArray)};
     mCurItemList->push_back(item);
-    reg_pt(item);
   }
   else {
     ostringstream buf;

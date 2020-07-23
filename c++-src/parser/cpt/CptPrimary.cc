@@ -9,6 +9,7 @@
 
 #include "CptExpr.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -438,7 +439,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name)
 {
   ++ mNumPrimary;
-  auto obj{new CptPrimary(file_region, name)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimary))};
+  auto obj{new (p) CptPrimary(file_region, name)};
   return obj;
 }
 
@@ -449,7 +451,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtExprArray index_array)
 {
   ++ mNumPrimaryI;
-  auto obj{new CptPrimaryI(file_region, name, index_array)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryI))};
+  auto obj{new (p) CptPrimaryI(file_region, name, index_array)};
   return obj;
 }
 
@@ -462,7 +465,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryR;
-  auto obj{new CptPrimaryR(file_region, name, mode, left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryR))};
+  auto obj{new (p) CptPrimaryR(file_region, name, mode, left, right)};
   return obj;
 }
 
@@ -476,8 +480,9 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryIR;
-  auto obj{new CptPrimaryIR(file_region, name, index_array, mode,
-			    left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryIR))};
+  auto obj{new (p) CptPrimaryIR(file_region, name, index_array, mode,
+				left, right)};
   return obj;
 }
 
@@ -488,7 +493,8 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const char* tail_name)
 {
   ++ mNumPrimaryH;
-  auto obj{new CptPrimaryH(file_region, nb_array, tail_name)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryH))};
+  auto obj{new (p) CptPrimaryH(file_region, nb_array, tail_name)};
   return obj;
 }
 
@@ -500,8 +506,9 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			PtExprArray index_array)
 {
   ++ mNumPrimaryHI;
-  auto obj{new CptPrimaryHI(file_region, nb_array, tail_name,
-			    index_array)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryHI))};
+  auto obj{new (p) CptPrimaryHI(file_region, nb_array, tail_name,
+				index_array)};
   return obj;
 }
 
@@ -515,8 +522,9 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHR;
-  auto obj{new CptPrimaryHR(file_region, nb_array, tail_name, mode,
-			    left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryHR))};
+  auto obj{new (p) CptPrimaryHR(file_region, nb_array, tail_name, mode,
+				left, right)};
   return obj;
 }
 
@@ -531,8 +539,9 @@ CptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHIR;
-  auto obj{new CptPrimaryHIR(file_region, nb_array, tail_name,
-			     index_array, mode, left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryHIR))};
+  auto obj{new (p) CptPrimaryHIR(file_region, nb_array, tail_name,
+				 index_array, mode, left, right)};
   return obj;
 }
 
@@ -543,7 +552,8 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 PtExprArray index_array)
 {
   ++ mNumPrimaryCI;
-  auto obj{new CptPrimaryCI(file_region, name, index_array)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryCI))};
+  auto obj{new (p) CptPrimaryCI(file_region, name, index_array)};
   return obj;
 }
 
@@ -556,7 +566,8 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 const PtExpr* right)
 {
   ++ mNumPrimaryCR;
-  auto obj{new CptPrimaryCR(file_region, name, mode, left, right)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryCR))};
+  auto obj{new (p) CptPrimaryCR(file_region, name, mode, left, right)};
   return obj;
 }
 
@@ -568,7 +579,8 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 			 PtExprArray index_array)
 {
   ++ mNumPrimaryHCI;
-  auto obj{new CptPrimaryHCI(file_region, nb_array, tail_name, index_array)};
+  void* p{mAlloc.get_memory(sizeof(CptPrimaryCI))};
+  auto obj{new (p) CptPrimaryHCI(file_region, nb_array, tail_name, index_array)};
   return obj;
 }
 

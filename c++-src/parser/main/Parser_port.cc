@@ -90,7 +90,6 @@ void
 Parser::add_port(PtiPort* port)
 {
   mPortList.push_back(port);
-  reg_pt(port);
 }
 
 
@@ -151,9 +150,7 @@ Parser::new_PortArray(PtIOHeadArray iohead_array)
     for ( auto elem: head->item_list() ) {
       auto name = elem->name();
       auto portref{mFactory.new_Primary(elem->file_region(), name)};
-      reg_pt(portref);
       auto port{mFactory.new_Port(elem->file_region(), portref, name)};
-      reg_pt(port);
       VpiDir dir = head->direction();
       port->_set_portref_dir(0, dir);
       vec[i] = port;
@@ -225,7 +222,6 @@ void
 Parser::add_portref(const PtExpr* portref)
 {
   mPortRefList.push_back(portref);
-  reg_pt(portref);
 }
 
 END_NAMESPACE_YM_VERILOG

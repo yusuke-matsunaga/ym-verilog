@@ -9,6 +9,7 @@
 
 #include "CptModule.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 #include "parser/PtiDecl.h"
 #include "ym/pt/PtItem.h"
 
@@ -458,10 +459,11 @@ CptPort1::_set_portref_dir(int pos,
 CptPort2::CptPort2(const FileRegion& file_region,
 		   const PtExpr* portref,
 		   PtExprArray portref_array,
-		   const char* ext_name) :
+		   const char* ext_name,
+		   void* q) :
   CptPort1(file_region, portref, ext_name),
   mPortRefArray(portref_array),
-  mDirArray{new VpiDir[portref_array.size()]}
+  mDirArray{new (q) VpiDir[portref_array.size()]}
 {
 }
 
@@ -566,19 +568,20 @@ CptFactory::new_Module(const FileRegion& file_region,
 		       PtItemArray item_array)
 {
   ++ mNumModule;
-  auto obj{new CptModule(file_region, name,
-			 macro, is_cell, is_protected,
-			 time_unit, time_precision,
-			 net_type, unconn,
-			 delay, decay,
-			 explicit_name,
-			 portfaults, suppress_faults,
-			 config, library, cell,
-			 paramport_array,
-			 port_array,
-			 iohead_array,
-			 declhead_array,
-			 item_array)};
+  void* p{mAlloc.get_memory(sizeof(CptModule))};
+  auto obj{new (p) CptModule(file_region, name,
+			     macro, is_cell, is_protected,
+			     time_unit, time_precision,
+			     net_type, unconn,
+			     delay, decay,
+			     explicit_name,
+			     portfaults, suppress_faults,
+			     config, library, cell,
+			     paramport_array,
+			     port_array,
+			     iohead_array,
+			     declhead_array,
+			     item_array)};
   return obj;
 }
 
@@ -596,7 +599,8 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  auto obj{new CptPort(file_region, ext_name)};
+  void* p{mAlloc.get_memory(sizeof(CptPort))};
+  auto obj{new (p) CptPort(file_region, ext_name)};
   return obj;
 }
 
@@ -611,7 +615,8 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  auto obj{new CptPort1(file_region, portref, ext_name)};
+  void* p{mAlloc.get_memory(sizeof(CptPort1))};
+  auto obj{new (p) CptPort1(file_region, portref, ext_name)};
   return obj;
 }
 
@@ -628,7 +633,9 @@ CptFactory::new_Port(const FileRegion& file_region,
 		     const char* ext_name)
 {
   ++ mNumPort;
-  auto obj{new CptPort2(file_region, portref, portref_array, ext_name)};
+  void* p{mAlloc.get_memory(sizeof(CptPort2))};
+  void* q{mAlloc.get_memory(sizeof(VpiDir) * portref_array.size())};
+  auto obj{new (p) CptPort2(file_region, portref, portref_array, ext_name, q)};
   return obj;
 }
 

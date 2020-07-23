@@ -46,12 +46,52 @@ BEGIN_NAMESPACE_YM_VERILOG
 class LexModuleState;
 
 //////////////////////////////////////////////////////////////////////
+/// @class LexModulePlugin
+/// @ingroup VlParser
+/// @brief LexModuleState を持つプラグイン基底クラス
+//////////////////////////////////////////////////////////////////////
+class LexModulePlugin :
+  public LexPlugin
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @param[in] lex 親の Lex オブジェクト
+  /// @param[in] name compiler directive 名
+  /// @param[in] state 状態を保持するオブジェクト
+  LexModulePlugin(RawLex& lex,
+		  const char* name,
+		  LexModuleState* state);
+
+  /// @brief デストラクタ
+  ~LexModulePlugin();
+
+
+public:
+
+  /// @brief LexModuleState を返す．
+  LexModuleState*
+  module_state();
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 状態
+  LexModuleState* mState;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class LpCellDefine
 /// @ingroup VlParser
 /// @brief `celldefine 用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpCellDefine :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -80,9 +120,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -92,7 +129,7 @@ private:
 /// @brief `endcelldefine 用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpEndCellDefine :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -121,9 +158,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -133,7 +167,7 @@ private:
 /// @brief `default_nettype 用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpNetType :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -162,9 +196,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -174,7 +205,7 @@ private:
 /// @brief `timescale のパース
 //////////////////////////////////////////////////////////////////////
 class LpTimeScale :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -214,9 +245,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -226,7 +254,7 @@ private:
 /// @brief unconnected_drive のパース用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpUnconnDrive :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -255,9 +283,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -267,7 +292,7 @@ private:
 /// @brief unconnected_drive のパース用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpNounconnDrive :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -296,9 +321,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -308,7 +330,7 @@ private:
 /// @brief `decay_time のパース用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpDecayTime :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -337,9 +359,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -349,7 +368,7 @@ private:
 /// @brief `trireg_strength のパース用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpTriregStrength :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -378,9 +397,6 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 状態
-  LexModuleState* mState;
-
 };
 
 
@@ -390,7 +406,7 @@ private:
 /// @brief `delay_mode のパース用プラグイン
 //////////////////////////////////////////////////////////////////////
 class LpDelayMode :
-  public LexPlugin
+  public LexModulePlugin
 {
 public:
 
@@ -420,9 +436,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // 状態
-  LexModuleState* mState;
 
   // delay_mode
   VpiDefDelayMode mMode;

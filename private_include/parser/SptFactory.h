@@ -23,11 +23,11 @@ class SptFactory :
 public:
 
   /// @brief コンストラクタ
-  SptFactory();
+  /// @param[in] alloc メモリアロケータ
+  SptFactory(Alloc& alloc);
 
   /// @brief デストラクタ
   /// @note このオブジェクトが生成したすべての Pt オブジェクトを破壊する．
-  virtual
   ~SptFactory();
 
 

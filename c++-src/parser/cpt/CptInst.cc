@@ -9,6 +9,7 @@
 
 #include "CptInst.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -449,7 +450,8 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateH;
-  auto obj{new CptGateH(file_region, type, inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGateH))};
+  auto obj{new (p) CptGateH(file_region, type, inst_array)};
   return obj;
 }
 
@@ -461,8 +463,9 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHS;
-  auto obj{new CptGateHS(file_region, type, strength,
-			 inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGateHS))};
+  auto obj{new (p) CptGateHS(file_region, type, strength,
+			     inst_array)};
   return obj;
 }
 
@@ -474,8 +477,9 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHD;
-  auto obj{new CptGateHD(file_region, type, delay,
-			 inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGateHD))};
+  auto obj{new (p) CptGateHD(file_region, type, delay,
+			     inst_array)};
   return obj;
 }
 
@@ -488,8 +492,9 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      PtInstArray inst_array)
 {
   ++ mNumGateHSD;
-  auto obj{new CptGateHSD(file_region, type, strength, delay,
-			  inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptGateHSD))};
+  auto obj{new (p) CptGateHSD(file_region, type, strength, delay,
+			      inst_array)};
   return obj;
 }
 
@@ -500,7 +505,8 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuH;
-  auto obj{new CptMuH(file_region, def_name, inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptMuH))};
+  auto obj{new (p) CptMuH(file_region, def_name, inst_array)};
   return obj;
 }
 
@@ -512,8 +518,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHS;
-  auto obj{new CptMuHS(file_region, def_name, strength,
-		       inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptMuHS))};
+  auto obj{new (p) CptMuHS(file_region, def_name, strength,
+			   inst_array)};
   return obj;
 }
 
@@ -525,8 +532,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHD;
-  auto obj{new CptMuHD(file_region, def_name, delay,
-		       inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptMuHD))};
+  auto obj{new (p) CptMuHD(file_region, def_name, delay,
+			   inst_array)};
   return obj;
 }
 
@@ -539,8 +547,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHSD;
-  auto obj{new CptMuHSD(file_region, def_name, strength, delay,
-			inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptMuHSD))};
+  auto obj{new (p) CptMuHSD(file_region, def_name, strength, delay,
+			    inst_array)};
   return obj;
 }
 
@@ -552,8 +561,9 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    PtInstArray inst_array)
 {
   ++ mNumMuHP;
-  auto obj{new CptMuHP(file_region, def_name, con_array,
-		       inst_array)};
+  void* p{mAlloc.get_memory(sizeof(CptMuHP))};
+  auto obj{new (p) CptMuHP(file_region, def_name, con_array,
+			   inst_array)};
   return obj;
 }
 
@@ -563,7 +573,8 @@ CptFactory::new_Inst(const FileRegion& file_region,
 		     PtConnectionArray con_array)
 {
   ++ mNumInst;
-  auto obj{new CptInst(file_region, con_array)};
+  void* p{mAlloc.get_memory(sizeof(CptInst))};
+  auto obj{new (p) CptInst(file_region, con_array)};
   return obj;
 }
 
@@ -574,7 +585,8 @@ CptFactory::new_InstN(const FileRegion& file_region,
 		      PtConnectionArray con_array)
 {
   ++ mNumInstN;
-  auto obj{new CptInstN(file_region, name, con_array)};
+  void* p{mAlloc.get_memory(sizeof(CptInstN))};
+  auto obj{new (p) CptInstN(file_region, name, con_array)};
   return obj;
 }
 
@@ -587,8 +599,9 @@ CptFactory::new_InstV(const FileRegion& file_region,
 		      PtConnectionArray con_array)
 {
   ++ mNumInstR;
-  auto obj{new CptInstR(file_region, name, left, right,
-			con_array)};
+  void* p{mAlloc.get_memory(sizeof(CptInstR))};
+  auto obj{new (p) CptInstR(file_region, name, left, right,
+			    con_array)};
   return obj;
 }
 

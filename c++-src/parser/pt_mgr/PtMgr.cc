@@ -31,6 +31,13 @@ PtMgr::~PtMgr()
   clear();
 }
 
+// @brief アロケータを返す．
+Alloc&
+PtMgr::alloc()
+{
+  return mAlloc;
+}
+
 // @brief 登録されているモジュールのリストを返す．
 // @return 登録されているモジュールのリスト
 const vector<const PtModule*>&
@@ -62,23 +69,10 @@ PtMgr::clear()
 {
   mUdpList.clear();
   mModuleList.clear();
-
-  for ( auto obj: mObjList ) {
-    delete obj;
-  }
-  mObjList.clear();
-
-  for ( auto nb: mNbList ) {
-    delete nb;
-  }
-  mNbList.clear();
-
   mDefNames.clear();
-
-  for ( auto str: mStringPool ) {
-    delete [] str;
-  }
   mStringPool.clear();
+
+  mAlloc.destroy();
 }
 
 // UDP の登録
@@ -87,7 +81,6 @@ void
 PtMgr::reg_udp(const PtUdp* udp)
 {
   mUdpList.push_back(udp);
-  reg_pt(udp);
 }
 
 // モジュールの登録
@@ -96,7 +89,6 @@ void
 PtMgr::reg_module(const PtModule* module)
 {
   mModuleList.push_back(module);
-  reg_pt(module);
 }
 
 // @brief インスタンス定義名を追加する．
@@ -104,21 +96,6 @@ void
 PtMgr::reg_defname(const char* name)
 {
   mDefNames.insert(name);
-}
-
-// @brief PtBase(の継承クラス)を登録する．
-// @param[in] obj オブジェクト
-void
-PtMgr::reg_pt(const PtBase* obj)
-{
-  mObjList.push_back(obj);
-}
-
-// @brief 階層名の要素を登録する．
-void
-PtMgr::reg_namebranch(const PtNameBranch* nb)
-{
-  mNbList.push_back(nb);
 }
 
 // @brief 文字列領域を確保する．
@@ -134,7 +111,8 @@ PtMgr::save_string(const char* str)
     // str と同じ内容は登録されていなかった．
     // 新しい領域を確保して登録する．
     SizeType n = strlen(str) + 1;
-    auto new_str{new char[n]};
+    void* p{mAlloc.get_memory(sizeof(char) * n)};
+    auto new_str{new (p) char[n]};
     strcpy(new_str, str);
     mStringPool.insert(new_str);
     return new_str;

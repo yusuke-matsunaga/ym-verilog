@@ -25,7 +25,6 @@ Parser::new_DelayControl(const FileRegion& fr,
 			 const PtExpr* value)
 {
   auto control{mFactory.new_DelayControl(fr, value)};
-  reg_pt(control);
   return control;
 }
 
@@ -36,7 +35,6 @@ const PtControl*
 Parser::new_EventControl(const FileRegion& fr)
 {
   auto control{mFactory.new_EventControl(fr)};
-  reg_pt(control);
   return control;
 }
 
@@ -51,7 +49,6 @@ Parser::new_EventControl(const FileRegion& fr,
 {
   auto expr{new_Primary(name_loc, event_name)};
   auto control{mFactory.new_EventControl(fr, expr)};
-  reg_pt(control);
   return control;
 }
 
@@ -66,7 +63,6 @@ Parser::new_EventControl(const FileRegion& fr,
 {
   auto expr{new_Primary(name_loc, event_name)};
   auto control{mFactory.new_EventControl(fr, expr)};
-  reg_pt(control);
   return control;
 }
 
@@ -79,7 +75,6 @@ Parser::new_EventControl(const FileRegion& fr,
 			 PtrList<const PtExpr>* event_list)
 {
   auto control{mFactory.new_EventControl(fr, to_array(event_list))};
-  reg_pt(control);
   return control;
 }
 
@@ -92,7 +87,6 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const PtExpr* expr)
 {
   auto control{mFactory.new_RepeatControl(fr, expr)};
-  reg_pt(control);
   return control;
 }
 
@@ -125,7 +119,6 @@ Parser::new_RepeatControl(const FileRegion& fr,
 {
   auto expr{new_Primary(name_loc, event_name)};
   auto control{mFactory.new_RepeatControl(fr, rep, expr)};
-  reg_pt(control);
   return control;
 }
 
@@ -140,7 +133,6 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  PtrList<const PtExpr>* event_list)
 {
   auto control{mFactory.new_RepeatControl(fr, rep, to_array(event_list))};
-  reg_pt(control);
   return control;
 }
 
@@ -151,7 +143,6 @@ const PtConnection*
 Parser::new_OrderedCon(const PtExpr* expr)
 {
   auto con{mFactory.new_OrderedCon(expr)};
-  reg_pt(con);
   return con;
 }
 
@@ -165,7 +156,6 @@ Parser::new_OrderedCon(const FileRegion& fr,
 		       PtrList<const PtAttrInst>* ai_list)
 {
   auto con{mFactory.new_OrderedCon(fr, expr)};
-  reg_pt(con);
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -182,7 +172,6 @@ Parser::new_NamedCon(const FileRegion& fr,
 		     PtrList<const PtAttrInst>* ai_list)
 {
   auto con{mFactory.new_NamedCon(fr, name, expr)};
-  reg_pt(con);
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -198,7 +187,6 @@ Parser::new_Strength(const FileRegion& fr,
 		     VpiStrength value1)
 {
   auto str{mFactory.new_Strength(fr, value0, value1)};
-  reg_pt(str);
   return str;
 }
 
@@ -211,7 +199,6 @@ Parser::new_Strength(const FileRegion& fr,
 		     VpiStrength value)
 {
   auto str{mFactory.new_Strength(fr, value)};
-  reg_pt(str);
   return str;
 }
 
@@ -224,7 +211,6 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value1)
 {
   auto delay{mFactory.new_Delay(fr, value1)};
-  reg_pt(delay);
   return delay;
 }
 
@@ -239,7 +225,6 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value2)
 {
   auto delay{mFactory.new_Delay(fr, value1, value2)};
-  reg_pt(delay);
   return delay;
 }
 
@@ -256,7 +241,6 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value3)
 {
   auto delay{mFactory.new_Delay(fr, value1, value2, value3)};
-  reg_pt(delay);
   return delay;
 }
 
@@ -269,7 +253,6 @@ Parser::new_AttrInst(const FileRegion& fr,
 		     PtrList<const PtAttrSpec>* as_list)
 {
   auto ai{mFactory.new_AttrInst(fr, to_array(as_list))};
-  reg_pt(ai);
   return ai;
 }
 
@@ -284,7 +267,6 @@ Parser::new_AttrSpec(const FileRegion& fr,
 		     const PtExpr* expr)
 {
   auto as{mFactory.new_AttrSpec(fr, name, expr)};
-  reg_pt(as);
   return as;
 }
 

@@ -25,7 +25,6 @@ Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type)
 {
   auto item{mFactory.new_GateH(fr, type, get_inst_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -39,7 +38,6 @@ Parser::new_GateH(const FileRegion& fr,
 		  const PtStrength* strength)
 {
   auto item{mFactory.new_GateH(fr, type, strength, get_inst_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -53,7 +51,6 @@ Parser::new_GateH(const FileRegion& fr,
 		  const PtDelay* delay)
 {
   auto item{mFactory.new_GateH(fr, type, delay, get_inst_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -69,7 +66,6 @@ Parser::new_GateH(const FileRegion& fr,
 		  const PtDelay* delay)
 {
   auto item{mFactory.new_GateH(fr, type, strength, delay, get_inst_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -82,7 +78,6 @@ Parser::new_MuH(const FileRegion& fr,
 {
   auto item{mFactory.new_MuH(fr, def_name, get_inst_array())};
   reg_defname(def_name);
-  reg_pt(item);
   return item;
 }
 
@@ -97,7 +92,6 @@ Parser::new_MuH(const FileRegion& fr,
 {
   auto item{mFactory.new_MuH(fr, def_name, strength, get_inst_array())};
   reg_defname(def_name);
-  reg_pt(item);
   return item;
 }
 
@@ -112,7 +106,6 @@ Parser::new_MuH(const FileRegion& fr,
 {
   auto item{mFactory.new_MuH(fr, def_name, delay, get_inst_array())};
   reg_defname(def_name);
-  reg_pt(item);
   return item;
 }
 
@@ -129,7 +122,6 @@ Parser::new_MuH(const FileRegion& fr,
 {
   auto item{mFactory.new_MuH(fr, def_name, strength, delay, get_inst_array())};
   reg_defname(def_name);
-  reg_pt(item);
   return item;
 }
 
@@ -144,7 +136,6 @@ Parser::new_MuH(const FileRegion& fr,
 {
   auto item{mFactory.new_MuH(fr, def_name, to_array(con_list), get_inst_array())};
   reg_defname(def_name);
-  reg_pt(item);
   return item;
 }
 
@@ -384,7 +375,6 @@ void
 Parser::add_inst(const PtInst* inst)
 {
   mInstList.push_back(inst);
-  reg_pt(inst);
 }
 
 // @brief instance リストを配列に変換する．

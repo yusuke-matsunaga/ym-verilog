@@ -14,7 +14,7 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-class CptDefStub;
+//class CptDefStub;
 
 //////////////////////////////////////////////////////////////////////
 /// @class CptFactory CptFactory.h "CptFactory.h"
@@ -26,7 +26,8 @@ class CptFactory :
 public:
 
   /// @brief コンストラクタ
-  CptFactory();
+  /// @param[in] alloc メモリアロケータ
+  CptFactory(Alloc& alloc);
 
   /// @brief デストラクタ
   ~CptFactory();

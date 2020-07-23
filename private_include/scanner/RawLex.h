@@ -381,7 +381,7 @@ private:
   const RsrvWordDic& mDic;
 
   // 条件コンパイル用の状態
-  LexCondState* mCondState;
+  unique_ptr<LexCondState> mCondState;
 
   // 現在のトークンの位置
   FileRegion mCurPos;

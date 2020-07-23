@@ -9,6 +9,7 @@
 
 #include "CptSpecItem.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -328,7 +329,8 @@ CptFactory::new_SpecItem(const FileRegion& file_region,
 			 PtExprArray terminal_array)
 {
   ++ mNumSpecItem;
-  auto obj{new CptSpecItem(file_region, id, terminal_array)};
+  void* p{mAlloc.get_memory(sizeof(CptSpecItem))};
+  auto obj{new (p) CptSpecItem(file_region, id, terminal_array)};
   return obj;
 }
 
@@ -340,7 +342,8 @@ CptFactory::new_SpecPath(const FileRegion& file_region,
 			 const PtPathDecl* path_decl)
 {
   ++ mNumSpecPath;
-  auto obj{new CptSpecPath(file_region, id, expr, path_decl)};
+  void* p{mAlloc.get_memory(sizeof(CptSpecPath))};
+  auto obj{new (p) CptSpecPath(file_region, id, expr, path_decl)};
   return obj;
 }
 
@@ -357,9 +360,10 @@ CptFactory::new_PathDecl(const FileRegion& file_region,
 			 const PtPathDelay* path_delay)
 {
   ++ mNumPathDecl;
-  auto obj{new CptPathDecl(file_region, edge, input_array, input_pol,
-			   op, output_array, output_pol,
-			   expr, path_delay)};
+  void* p{mAlloc.get_memory(sizeof(CptPathDecl))};
+  auto obj{new (p) CptPathDecl(file_region, edge, input_array, input_pol,
+			       op, output_array, output_pol,
+			       expr, path_delay)};
   return obj;
 }
 
@@ -369,7 +373,8 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value)
 {
   ++ mNumPathDelay;
-  auto obj{new CptPathDelay(file_region, value)};
+  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
+  auto obj{new (p) CptPathDelay(file_region, value)};
   return obj;
 }
 
@@ -380,7 +385,8 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value2)
 {
   ++ mNumPathDelay;
-  auto obj{new CptPathDelay(file_region, value1, value2)};
+  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
+  auto obj{new (p) CptPathDelay(file_region, value1, value2)};
   return obj;
 }
 
@@ -392,7 +398,8 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value3)
 {
   ++ mNumPathDelay;
-  auto obj{new CptPathDelay(file_region, value1, value2, value3)};
+  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
+  auto obj{new (p) CptPathDelay(file_region, value1, value2, value3)};
   return obj;
 }
 
@@ -407,9 +414,10 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value6)
 {
   ++ mNumPathDelay;
-  auto obj{new CptPathDelay(file_region,
-			    value1, value2, value3,
-			    value4, value5, value6)};
+  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
+  auto obj{new (p) CptPathDelay(file_region,
+				value1, value2, value3,
+				value4, value5, value6)};
   return obj;
 }
 
@@ -430,11 +438,12 @@ CptFactory::new_PathDelay(const FileRegion& file_region,
 			  const PtExpr* value12)
 {
   ++ mNumPathDelay;
-  auto obj{new CptPathDelay(file_region,
-			    value1, value2, value3,
-			    value4, value5, value6,
-			    value7, value8, value9,
-			    value10, value11, value12)};
+  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
+  auto obj{new (p) CptPathDelay(file_region,
+				value1, value2, value3,
+				value4, value5, value6,
+				value7, value8, value9,
+				value10, value11, value12)};
   return obj;
 }
 

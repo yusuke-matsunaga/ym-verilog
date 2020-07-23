@@ -9,6 +9,7 @@
 
 #include "CptMisc.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 #include "ym/pt/PtExpr.h"
 
@@ -543,7 +544,8 @@ CptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
   ++ mNumDelayControl;
-  auto obj{new CptDelayControl(file_region, value)};
+  void* p{mAlloc.get_memory(sizeof(CptDelayControl))};
+  auto obj{new (p) CptDelayControl(file_region, value)};
   return obj;
 }
 
@@ -553,7 +555,8 @@ CptFactory::new_EventControl(const FileRegion& file_region,
 			     PtExprArray event_array)
 {
   ++ mNumEventControl;
-  auto obj{new CptEventControl(file_region, event_array)};
+  void* p{mAlloc.get_memory(sizeof(CptEventControl))};
+  auto obj{new (p) CptEventControl(file_region, event_array)};
   return obj;
 }
 
@@ -564,7 +567,8 @@ CptFactory::new_RepeatControl(const FileRegion& file_region,
 			      PtExprArray event_array)
 {
   ++ mNumRepeatControl;
-  auto obj{new CptRepeatControl(file_region, expr, event_array)};
+  void* p{mAlloc.get_memory(sizeof(CptRepeatControl))};
+  auto obj{new (p) CptRepeatControl(file_region, expr, event_array)};
   return obj;
 }
 
@@ -574,7 +578,8 @@ CptFactory::new_OrderedCon(const FileRegion& file_region,
 			   const PtExpr* expr)
 {
   ++ mNumAiOrderedCon;
-  auto obj{new CptOrderedCon(file_region, expr)};
+  void* p{mAlloc.get_memory(sizeof(CptOrderedCon))};
+  auto obj{new (p) CptOrderedCon(file_region, expr)};
   return obj;
 }
 
@@ -587,7 +592,8 @@ CptFactory::new_OrderedCon(const PtExpr* expr)
   if ( expr ) {
     file_region = expr->file_region();
   }
-  auto obj{new CptOrderedCon(file_region, expr)};
+  void* p{mAlloc.get_memory(sizeof(CptOrderedCon))};
+  auto obj{new (p) CptOrderedCon(file_region, expr)};
   return obj;
 }
 
@@ -598,7 +604,8 @@ CptFactory::new_NamedCon(const FileRegion& file_region,
 			 const PtExpr* expr)
 {
   ++ mNumNamedCon;
-  auto obj{new CptNamedCon(file_region, name, expr)};
+  void* p{mAlloc.get_memory(sizeof(CptNamedCon))};
+  auto obj{new (p) CptNamedCon(file_region, name, expr)};
   return obj;
 }
 
@@ -609,7 +616,8 @@ CptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value2)
 {
   ++ mNumStrength;
-  auto obj{new CptStrength(file_region, value1, value2)};
+  void* p{mAlloc.get_memory(sizeof(CptStrength))};
+  auto obj{new (p) CptStrength(file_region, value1, value2)};
   return obj;
 }
 
@@ -619,7 +627,8 @@ CptFactory::new_Strength(const FileRegion& file_region,
 			 VpiStrength value1)
 {
   ++ mNumStrength;
-  auto obj{new CptStrength(file_region, value1)};
+  void* p{mAlloc.get_memory(sizeof(CptStrength))};
+  auto obj{new (p) CptStrength(file_region, value1)};
   return obj;
 }
 
@@ -629,7 +638,8 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value1)
 {
   ++ mNumDelay;
-  auto obj{new CptDelay(file_region, value1)};
+  void* p{mAlloc.get_memory(sizeof(CptDelay))};
+  auto obj{new (p) CptDelay(file_region, value1)};
   return obj;
 }
 
@@ -640,7 +650,8 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value2)
 {
   ++ mNumDelay;
-  auto obj{new CptDelay(file_region, value1, value2)};
+  void* p{mAlloc.get_memory(sizeof(CptDelay))};
+  auto obj{new (p) CptDelay(file_region, value1, value2)};
   return obj;
 }
 
@@ -652,7 +663,8 @@ CptFactory::new_Delay(const FileRegion& file_region,
 		      const PtExpr* value3)
 {
   ++ mNumDelay;
-  auto obj{new CptDelay(file_region, value1, value2, value3)};
+  void* p{mAlloc.get_memory(sizeof(CptDelay))};
+  auto obj{new (p) CptDelay(file_region, value1, value2, value3)};
   return obj;
 }
 
@@ -661,7 +673,8 @@ const PtNameBranch*
 CptFactory::new_NameBranch(const char* name)
 {
   ++ mNumNameBranch;
-  auto obj{new CptNameBranch(name)};
+  void* p{mAlloc.get_memory(sizeof(CptNameBranch))};
+  auto obj{new (p) CptNameBranch(name)};
   return obj;
 }
 
@@ -671,7 +684,8 @@ CptFactory::new_NameBranch(const char* name,
 			   int index)
 {
   ++ mNumNameBranchI;
-  auto obj{new CptNameBranchI(name, index)};
+  void* p{mAlloc.get_memory(sizeof(CptNameBranchI))};
+  auto obj{new (p) CptNameBranchI(name, index)};
   return obj;
 }
 
@@ -687,7 +701,8 @@ CptFactory::new_AttrInst(const FileRegion& file_region,
 {
   // file_region は不要
   ++ mNumAttrInst;
-  auto obj{new CptAttrInst(as_array)};
+  void* p{mAlloc.get_memory(sizeof(CptAttrInst))};
+  auto obj{new (p) CptAttrInst(as_array)};
   return obj;
 }
 
@@ -698,7 +713,8 @@ CptFactory::new_AttrSpec(const FileRegion& file_region,
 			 const PtExpr* expr)
 {
   ++ mNumAttrSpec;
-  auto obj{new CptAttrSpec(file_region, name, expr)};
+  void* p{mAlloc.get_memory(sizeof(CptAttrSpec))};
+  auto obj{new (p) CptAttrSpec(file_region, name, expr)};
   return obj;
 }
 

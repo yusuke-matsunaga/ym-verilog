@@ -9,6 +9,7 @@
 
 #include "CptExpr.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -1081,7 +1082,8 @@ CptFactory::new_Opr(const FileRegion& file_region,
 		    const PtExpr* opr)
 {
   ++ mNumOpr1;
-  auto obj{new CptOpr1(file_region, type, opr)};
+  auto p{mAlloc.get_memory(sizeof(CptOpr1))};
+  auto obj{new (p) CptOpr1(file_region, type, opr)};
   return obj;
 }
 
@@ -1093,7 +1095,8 @@ CptFactory::new_Opr(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumOpr2;
-  auto obj{new CptOpr2(type, opr1, opr2)};
+  auto p{mAlloc.get_memory(sizeof(CptOpr2))};
+  auto obj{new (p) CptOpr2(type, opr1, opr2)};
   return obj;
 }
 
@@ -1106,7 +1109,8 @@ CptFactory::new_Opr(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumOpr3;
-  auto obj{new CptOpr3(type, opr1, opr2, opr3)};
+  auto p{mAlloc.get_memory(sizeof(CptOpr3))};
+  auto obj{new (p) CptOpr3(type, opr1, opr2, opr3)};
   return obj;
 }
 
@@ -1116,7 +1120,8 @@ CptFactory::new_Concat(const FileRegion& file_region,
 		       PtExprArray expr_array)
 {
   ++ mNumConcat;
-  auto obj{new CptConcat(file_region, expr_array)};
+  auto p{mAlloc.get_memory(sizeof(CptConcat))};
+  auto obj{new (p) CptConcat(file_region, expr_array)};
   return obj;
 }
 
@@ -1126,7 +1131,8 @@ CptFactory::new_MultiConcat(const FileRegion& file_region,
 			    PtExprArray expr_array)
 {
   ++ mNumMultiConcat;
-  auto obj{new CptMultiConcat(file_region, expr_array)};
+  auto p{mAlloc.get_memory(sizeof(CptMultiConcat))};
+  auto obj{new (p) CptMultiConcat(file_region, expr_array)};
   return obj;
 }
 
@@ -1139,7 +1145,8 @@ CptFactory::new_MinTypMax(const FileRegion& file_region,
 {
   // 実は file_region は不要
   ++ mNumMinTypMax3;
-  auto obj{new CptMinTypMax(val0, val1, val2)};
+  auto p{mAlloc.get_memory(sizeof(CptMinTypMax))};
+  auto obj{new (p) CptMinTypMax(val0, val1, val2)};
   return obj;
 }
 
@@ -1150,7 +1157,8 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PtExprArray arg_array)
 {
   ++ mNumFuncCall;
-  auto obj{new CptFuncCall(file_region, name, arg_array)};
+  auto p{mAlloc.get_memory(sizeof(CptFuncCall))};
+  auto obj{new (p) CptFuncCall(file_region, name, arg_array)};
   return obj;
 }
 
@@ -1162,7 +1170,8 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PtExprArray arg_array)
 {
   ++ mNumFuncCallH;
-  auto obj{new CptFuncCallH(file_region, nb_array, tail_name, arg_array)};
+  auto p{mAlloc.get_memory(sizeof(CptFuncCallH))};
+  auto obj{new (p) CptFuncCallH(file_region, nb_array, tail_name, arg_array)};
   return obj;
 }
 
@@ -1173,7 +1182,8 @@ CptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    PtExprArray arg_array)
 {
   ++ mNumSysFuncCall;
-  auto obj{new CptSysFuncCall(file_region, name, arg_array)};
+  auto p{mAlloc.get_memory(sizeof(CptSysFuncCall))};
+  auto obj{new (p) CptSysFuncCall(file_region, name, arg_array)};
   return obj;
 }
 
@@ -1183,7 +1193,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 unsigned int value)
 {
   ++ mNumIntConstant1;
-  auto obj{new CptIntConstant1(file_region, value)};
+  auto p{mAlloc.get_memory(sizeof(CptIntConstant1))};
+  auto obj{new (p) CptIntConstant1(file_region, value)};
   return obj;
 }
 
@@ -1193,7 +1204,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant2;
-  auto obj{new CptIntConstant2(file_region, VpiConstType::Int, value)};
+  auto p{mAlloc.get_memory(sizeof(CptIntConstant2))};
+  auto obj{new (p) CptIntConstant2(file_region, VpiConstType::Int, value)};
   return obj;
 }
 
@@ -1204,7 +1216,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant2;
-  auto obj{new CptIntConstant2(file_region, const_type, value)};
+  auto p{mAlloc.get_memory(sizeof(CptIntConstant2))};
+  auto obj{new (p) CptIntConstant2(file_region, const_type, value)};
   return obj;
 }
 
@@ -1216,7 +1229,8 @@ CptFactory::new_IntConst(const FileRegion& file_region,
 			 const char* value)
 {
   ++ mNumIntConstant3;
-  auto obj{new CptIntConstant3(file_region, size, const_type, value)};
+  auto p{mAlloc.get_memory(sizeof(CptIntConstant3))};
+  auto obj{new (p) CptIntConstant3(file_region, size, const_type, value)};
   return obj;
 }
 
@@ -1226,7 +1240,8 @@ CptFactory::new_RealConst(const FileRegion& file_region,
 			  double value)
 {
   ++ mNumRealConstant;
-  auto obj{new CptRealConstant(file_region, value)};
+  auto p{mAlloc.get_memory(sizeof(CptRealConstant))};
+  auto obj{new (p) CptRealConstant(file_region, value)};
   return obj;
 }
 
@@ -1236,7 +1251,8 @@ CptFactory::new_StringConst(const FileRegion& file_region,
 			    const char* value)
 {
   ++ mNumStringConstant;
-  auto obj{new CptStringConstant(file_region, value)};
+  auto p{mAlloc.get_memory(sizeof(CptStringConstant))};
+  auto obj{new (p) CptStringConstant(file_region, value)};
   return obj;
 }
 

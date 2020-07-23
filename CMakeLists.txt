@@ -208,6 +208,11 @@ set (parser_SOURCES
   ${CMAKE_CURRENT_BINARY_DIR}/verilog_grammer.cc
   )
 
+set (alloc_SOURCES
+  c++-src/alloc/Alloc.cc
+  c++-src/alloc/SimpleAlloc.cc
+  )
+
 
 # Create target for the parser
 add_custom_target ( verilog_grammer ALL
@@ -239,4 +244,5 @@ ym_add_object_library ( ym_verilog
   ${common_SOURCES}
   ${elaborator_SOURCES}
   ${parser_SOURCES}
+  ${alloc_SOURCES}
   )

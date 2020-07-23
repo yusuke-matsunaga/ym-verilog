@@ -2349,11 +2349,6 @@ private:
   void
   pop_item_list(bool delete_top);
 
-  /// @brief PtBase(の継承クラス)を登録する．
-  /// @param[in] obj オブジェクト
-  void
-  reg_pt(const PtBase* obj);
-
 
 private:
   //////////////////////////////////////////////////////////////////////

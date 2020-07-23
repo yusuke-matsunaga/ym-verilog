@@ -9,6 +9,7 @@
 
 #include "CptUdp.h"
 #include "parser/CptFactory.h"
+#include "parser/Alloc.h"
 
 #include "parser/PtiDecl.h"
 
@@ -233,12 +234,13 @@ CptFactory::new_CmbUdp(const FileRegion& file_region,
 		       PtUdpEntryArray entry_array)
 {
   ++ mNumUdp;
-  auto obj{new CptUdp(file_region,
-		      name,
-		      port_array,
-		      iohead_array,
-		      false, nullptr,
-		      entry_array)};
+  void* p{mAlloc.get_memory(sizeof(CptUdp))};
+  auto obj{new (p) CptUdp(file_region,
+			  name,
+			  port_array,
+			  iohead_array,
+			  false, nullptr,
+			  entry_array)};
   return obj;
 }
 
@@ -260,13 +262,14 @@ CptFactory::new_SeqUdp(const FileRegion& file_region,
 		       PtUdpEntryArray entry_array)
 {
   ++ mNumUdp;
-  auto obj{new CptUdp(file_region,
-		      name,
-		      port_array,
-		      iohead_array,
-		      true,
-		      init_value,
-		      entry_array)};
+  void* p{mAlloc.get_memory(sizeof(CptUdp))};
+  auto obj{new (p) CptUdp(file_region,
+			  name,
+			  port_array,
+			  iohead_array,
+			  true,
+			  init_value,
+			  entry_array)};
   return obj;
 }
 
@@ -281,9 +284,10 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntry;
-  auto obj{new CptUdpEntry(file_region,
-			   input_array,
-			   output)};
+  void* p{mAlloc.get_memory(sizeof(CptUdpEntry))};
+  auto obj{new (p) CptUdpEntry(file_region,
+			       input_array,
+			       output)};
   return obj;
 }
 
@@ -300,10 +304,11 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntryS;
-  auto obj{new CptUdpEntryS(file_region,
-			    input_array,
-			    current,
-			    output)};
+  void* p{mAlloc.get_memory(sizeof(CptUdpEntryS))};
+  auto obj{new (p) CptUdpEntryS(file_region,
+				input_array,
+				current,
+				output)};
   return obj;
 }
 
@@ -316,7 +321,8 @@ CptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol)
 {
   ++ mNumUdpValue;
-  auto obj{new CptUdpValue(file_region, symbol)};
+  void* p{mAlloc.get_memory(sizeof(CptUdpValue))};
+  auto obj{new (p) CptUdpValue(file_region, symbol)};
   return obj;
 }
 
@@ -330,7 +336,8 @@ CptFactory::new_UdpValue(const FileRegion& file_region,
 			 char symbol2)
 {
   ++ mNumUdpValue;
-  auto obj{new CptUdpValue(file_region, symbol1, symbol2)};
+  void* p{mAlloc.get_memory(sizeof(CptUdpValue))};
+  auto obj{new (p) CptUdpValue(file_region, symbol1, symbol2)};
   return obj;
 }
 

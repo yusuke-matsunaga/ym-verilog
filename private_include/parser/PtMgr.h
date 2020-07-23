@@ -10,6 +10,7 @@
 
 
 #include "ym/pt/PtP.h"
+#include "SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -65,6 +66,10 @@ public:
   // 情報を取得する関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief アロケータを返す．
+  Alloc&
+  alloc();
+
   /// @brief 登録されているモジュールのリストを返す．
   /// @return 登録されているモジュールのリスト
   const vector<const PtModule*>&
@@ -107,15 +112,6 @@ public:
   void
   reg_defname(const char* name);
 
-  /// @brief PtBase(の継承クラス)を登録する．
-  /// @param[in] obj オブジェクト
-  void
-  reg_pt(const PtBase* obj);
-
-  /// @brief 階層名の要素を登録する．
-  void
-  reg_namebranch(const PtNameBranch* nb);
-
   /// @brief 文字列領域を確保する．
   /// @param[in] str 文字列
   /// @return 文字列を返す．
@@ -130,17 +126,14 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
+  // メモリアロケータ
+  SimpleAlloc mAlloc;
+
   // UDP 定義のリスト
   vector<const PtUdp*> mUdpList;
 
   // モジュール定義のリスト
   vector<const PtModule*> mModuleList;
-
-  // すべての PtBase の継承クラスのリスト
-  vector<const PtBase*> mObjList;
-
-  // すべての PtNameBranch のリスト
-  vector<const PtNameBranch*> mNbList;
 
   // インスタンス記述で用いられている名前
   // たぶんモジュール名か UDP名のはず

@@ -40,7 +40,7 @@ protected:
   /// @param[in] name compiler directive 名
   LexCondPlugin(RawLex& lex,
 		const char* name,
-		LexCondState* cond_state);
+		const unique_ptr<LexCondState>& cond_state);
 
   /// @brief デストラクタ
   virtual
@@ -151,7 +151,7 @@ public:
   /// @param[in] name compiler directive 名
   LpIfdef(RawLex& lex,
 	  const char* name,
-	  LexCondState* cond_state);
+	  const unique_ptr<LexCondState>& cond_state);
 
   /// @brief デストラクタ
   virtual
@@ -184,7 +184,7 @@ public:
   /// @param[in] name compiler directive 名
   LpElse(RawLex& lex,
 	 const char* name,
-	 LexCondState* cond_state);
+	 const unique_ptr<LexCondState>& cond_state);
 
   /// @brief デストラクタ
   virtual
@@ -217,7 +217,7 @@ public:
   /// @param[in] name compiler directive 名
   LpElsif(RawLex& lex,
 	  const char* name,
-	  LexCondState* cond_state);
+	  const unique_ptr<LexCondState>& cond_state);
 
   /// @brief デストラクタ
   virtual
@@ -250,7 +250,7 @@ public:
   /// @param[in] name compiler directive 名
   LpEndif(RawLex& lex,
 	  const char* name,
-	  LexCondState* cond_state);
+	  const unique_ptr<LexCondState>& cond_state);
 
   /// @brief デストラクタ
   virtual

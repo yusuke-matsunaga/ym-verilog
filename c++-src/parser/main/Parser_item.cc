@@ -23,7 +23,6 @@ const PtItem*
 Parser::new_DefParamH(const FileRegion& fr)
 {
   auto item{mFactory.new_DefParamH(fr, get_defparam_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -68,7 +67,6 @@ void
 Parser::add_defparam(const PtDefParam* defparam)
 {
   mDefParamList.push_back(defparam);
-  reg_pt(defparam);
 }
 
 // @brief defparam リストを配列に変換する．
@@ -90,7 +88,7 @@ const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr)
 {
   auto item{mFactory.new_ContAssignH(fr, get_contassign_array())};
-  reg_pt(item);
+
   return item;
 }
 
@@ -102,7 +100,6 @@ Parser::new_ContAssignH(const FileRegion& fr,
 			const PtStrength* strength)
 {
   auto item{mFactory.new_ContAssignH(fr, strength, get_contassign_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -114,7 +111,6 @@ Parser::new_ContAssignH(const FileRegion& fr,
 			const PtDelay* delay)
 {
   auto item{mFactory.new_ContAssignH(fr, delay, get_contassign_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -129,7 +125,6 @@ Parser::new_ContAssignH(const FileRegion& fr,
 			const PtDelay* delay)
 {
   auto item{mFactory.new_ContAssignH(fr, strength, delay, get_contassign_array())};
-  reg_pt(item);
   return item;
 }
 
@@ -159,7 +154,6 @@ void
 Parser::add_contassign(const PtContAssign* contassign)
 {
   mContAssignList.push_back(contassign);
-  reg_pt(contassign);
 }
 
 // @brief contassign リストを配列に変換する．
@@ -183,7 +177,6 @@ Parser::new_Initial(const FileRegion& fr,
 		    const PtStmt* body)
 {
   auto item{mFactory.new_Initial(fr, body)};
-  reg_pt(item);
   return item;
 }
 
@@ -195,7 +188,6 @@ Parser::new_Always(const FileRegion& fr,
 		   const PtStmt* body)
 {
   auto item{mFactory.new_Always(fr, body)};
-  reg_pt(item);
   return item;
 }
 
@@ -250,7 +242,6 @@ Parser::new_Task(const FileRegion& fr,
 			      get_tf_io_array(),
 			      get_tf_decl_array(),
 			      stmt)};
-  reg_pt(item);
   return item;
 }
 
@@ -272,7 +263,6 @@ Parser::new_Function(const FileRegion& fr,
 				  get_tf_io_array(),
 				  get_tf_decl_array(),
 				  stmt)};
-  reg_pt(item);
   return item;
 }
 
@@ -298,7 +288,6 @@ Parser::new_SizedFunc(const FileRegion& fr,
 				   get_tf_io_array(),
 				   get_tf_decl_array(),
 				   stmt)};
-  reg_pt(item);
   return item;
 }
 
@@ -322,7 +311,6 @@ Parser::new_TypedFunc(const FileRegion& fr,
 				   get_tf_io_array(),
 				   get_tf_decl_array(),
 				   stmt)};
-  reg_pt(item);
   return item;
 }
 
@@ -341,7 +329,6 @@ Parser::new_SpecItem(const FileRegion& fr,
 		     PtrList<const PtExpr>* terminal_list)
 {
   auto item{mFactory.new_SpecItem(fr, id, to_array(terminal_list))};
-  reg_pt(item);
   mCurItemList->push_back(item);
 }
 
@@ -357,7 +344,6 @@ Parser::new_SpecPath(const FileRegion& fr,
 		     const PtPathDecl* path_decl)
 {
   auto item{mFactory.new_SpecPath(fr, id, expr, path_decl)};
-  reg_pt(item);
   mCurItemList->push_back(item);
 }
 
@@ -387,7 +373,6 @@ Parser::new_PathDecl(const FileRegion& fr,
 				  op,
 				  to_array(output_list), output_pol,
 				  expr, path_delay)};
-  reg_pt(item);
   return item;
 }
 
@@ -417,7 +402,6 @@ Parser::new_PathDecl(const FileRegion& fr,
 				  op,
 				  output, output_pol,
 				  expr, path_delay)};
-  reg_pt(item);
   return item;
 }
 
@@ -430,7 +414,6 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value)
 {
   auto item{mFactory.new_PathDelay(fr, value)};
-  reg_pt(item);
   return item;
 }
 
@@ -445,7 +428,6 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value2)
 {
   auto item{mFactory.new_PathDelay(fr, value1, value2)};
-  reg_pt(item);
   return item;
 }
 
@@ -462,7 +444,6 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value3)
 {
   auto item{mFactory.new_PathDelay(fr, value1, value2, value3)};
-  reg_pt(item);
   return item;
 }
 
@@ -487,7 +468,6 @@ Parser::new_PathDelay(const FileRegion& fr,
   auto item{mFactory.new_PathDelay(fr,
 				   value1, value2, value3,
 				   value4, value5, value6)};
-  reg_pt(item);
   return item;
 }
 
@@ -526,7 +506,6 @@ Parser::new_PathDelay(const FileRegion& fr,
 				   value4, value5, value6,
 				   value7, value8, value9,
 				   value10, value11, value12)};
-  reg_pt(item);
   return item;
 }
 

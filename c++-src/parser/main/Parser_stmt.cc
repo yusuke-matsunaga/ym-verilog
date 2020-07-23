@@ -24,7 +24,6 @@ Parser::new_Disable(const FileRegion& fr,
 		    const char* name)
 {
   auto stmt{mFactory.new_Disable(fr, name)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -40,7 +39,6 @@ Parser::new_Disable(const FileRegion& fr,
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
   auto stmt{mFactory.new_Disable(fr, nb_array, tail_name)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -55,7 +53,6 @@ Parser::new_Enable(const FileRegion& fr,
 		   PtrList<const PtExpr>* arg_list)
 {
   auto stmt{mFactory.new_Enable(fr, name, to_array(arg_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -73,7 +70,6 @@ Parser::new_Enable(const FileRegion& fr,
   PtNameBranchArray nb_array;
   const char* tail_name = extract_HierName(hname, nb_array);
   auto stmt{mFactory.new_Enable(fr, nb_array, tail_name, to_array(arg_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -87,7 +83,6 @@ Parser::new_SysEnable(const FileRegion& fr,
 		      PtrList<const PtExpr>* arg_list)
 {
   auto stmt{mFactory.new_SysEnable(fr, name, to_array(arg_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -102,7 +97,6 @@ Parser::new_DcStmt(const FileRegion& fr,
 		   const PtStmt* body)
 {
   auto stmt{mFactory.new_DcStmt(fr, delay, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -117,7 +111,6 @@ Parser::new_EcStmt(const FileRegion& fr,
 		   const PtStmt* body)
 {
   auto stmt{mFactory.new_EcStmt(fr, event, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -132,7 +125,6 @@ Parser::new_Wait(const FileRegion& fr,
 		 const PtStmt* body)
 {
   auto stmt{mFactory.new_Wait(fr, cond, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -147,7 +139,6 @@ Parser::new_Assign(const FileRegion& fr,
 		   const PtExpr* rhs)
 {
   auto stmt{mFactory.new_Assign(fr, lhs, rhs)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -164,7 +155,6 @@ Parser::new_Assign(const FileRegion& fr,
 		   const PtControl* control)
 {
   auto stmt{mFactory.new_Assign(fr, lhs, rhs, control)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -179,7 +169,6 @@ Parser::new_NbAssign(const FileRegion& fr,
 		     const PtExpr* rhs)
 {
   auto stmt{mFactory.new_NbAssign(fr, lhs, rhs)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -196,7 +185,6 @@ Parser::new_NbAssign(const FileRegion& fr,
 		     const PtControl* control)
 {
   auto stmt{mFactory.new_NbAssign(fr, lhs, rhs, control)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -209,7 +197,6 @@ Parser::new_EventStmt(const FileRegion& fr,
 		      const PtExpr* event)
 {
   auto stmt{mFactory.new_EventStmt(fr, event)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -220,7 +207,6 @@ const PtStmt*
 Parser::new_NullStmt(const FileRegion& fr)
 {
   auto stmt{mFactory.new_NullStmt(fr)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -235,7 +221,6 @@ Parser::new_If(const FileRegion& fr,
 	       const PtStmt* then_body)
 {
   auto stmt{mFactory.new_If(fr, expr, then_body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -252,7 +237,6 @@ Parser::new_If(const FileRegion& fr,
 	       const PtStmt* else_body)
 {
   auto stmt{mFactory.new_If(fr, expr, then_body, else_body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -267,7 +251,6 @@ Parser::new_Case(const FileRegion& fr,
 		 PtrList<const PtCaseItem>* caseitem_list)
 {
   auto stmt{mFactory.new_Case(fr, expr, to_array(caseitem_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -282,7 +265,6 @@ Parser::new_CaseX(const FileRegion& fr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
   auto stmt{mFactory.new_CaseX(fr, expr, to_array(caseitem_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -297,7 +279,6 @@ Parser::new_CaseZ(const FileRegion& fr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
   auto stmt{mFactory.new_CaseZ(fr, expr, to_array(caseitem_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -312,7 +293,6 @@ Parser::new_CaseItem(const FileRegion& fr,
 		     const PtStmt* body)
 {
   auto stmt{mFactory.new_CaseItem(fr, to_array(label_list), body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -325,7 +305,6 @@ Parser::new_Forever(const FileRegion& fr,
 		    const PtStmt* body)
 {
   auto stmt{mFactory.new_Forever(fr, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -340,7 +319,6 @@ Parser::new_Repeat(const FileRegion& fr,
 		   const PtStmt* body)
 {
   auto stmt{mFactory.new_Repeat(fr, expr, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -355,7 +333,6 @@ Parser::new_While(const FileRegion& fr,
 		  const PtStmt* body)
 {
   auto stmt{mFactory.new_While(fr, cond, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -374,7 +351,6 @@ Parser::new_For(const FileRegion& fr,
 		const PtStmt* body)
 {
   auto stmt{mFactory.new_For(fr, init, cond, next, body)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -389,7 +365,6 @@ Parser::new_PcAssign(const FileRegion& fr,
 		     const PtExpr* rhs)
 {
   auto stmt{mFactory.new_PcAssign(fr, lhs, rhs)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -402,7 +377,6 @@ Parser::new_Deassign(const FileRegion& fr,
 		     const PtExpr* lhs)
 {
   auto stmt{mFactory.new_Deassign(fr, lhs)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -417,7 +391,6 @@ Parser::new_Force(const FileRegion& fr,
 		  const PtExpr* rhs)
 {
   auto stmt{mFactory.new_Force(fr, lhs, rhs)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -430,7 +403,6 @@ Parser::new_Release(const FileRegion& fr,
 		    const PtExpr* lhs)
 {
   auto stmt{mFactory.new_Release(fr, lhs)};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -443,7 +415,6 @@ Parser::new_ParBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
   auto stmt{mFactory.new_ParBlock(fr, to_array(stmt_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -459,7 +430,6 @@ Parser::new_NamedParBlock(const FileRegion& fr,
 {
   auto stmt{mFactory.new_NamedParBlock(fr, name, mCurDeclArray,
 				       to_array(stmt_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -472,7 +442,6 @@ Parser::new_SeqBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
   auto stmt{mFactory.new_SeqBlock(fr, to_array(stmt_list))};
-  reg_pt(stmt);
   return stmt;
 }
 
@@ -488,7 +457,6 @@ Parser::new_NamedSeqBlock(const FileRegion& fr,
 {
   auto stmt{mFactory.new_NamedSeqBlock(fr, name, mCurDeclArray,
 				       to_array(stmt_list))};
-  reg_pt(stmt);
   return stmt;
 }
 

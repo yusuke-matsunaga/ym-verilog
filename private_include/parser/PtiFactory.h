@@ -28,12 +28,15 @@ public:
 
   /// @brief PtiFactory の実装クラスのオブジェクトを作る関数
   /// @param[in] type 実装クラスを指定する文字列
+  /// @param[in] alloc メモリアロケータ
   static
   PtiFactory*
-  make_obj(const string& type);
+  make_obj(const string& type,
+	   Alloc& alloc);
 
   /// @brief コンストラクタ
-  PtiFactory();
+  /// @param[in] alloc メモリアロケータ
+  PtiFactory(Alloc& alloc);
 
   /// @brief デストラクタ
   virtual
@@ -2304,10 +2307,13 @@ public:
   dump_profile(ostream& s) const = 0;
 
 
-private:
+protected:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // メモリアロケータ
+  Alloc& mAlloc;
 
 };
 

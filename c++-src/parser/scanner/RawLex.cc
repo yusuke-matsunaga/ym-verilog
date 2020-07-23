@@ -226,10 +226,10 @@ END_NONAMESPACE
 RawLex::RawLex() :
   mInputMgr{new InputMgr()},
   mDic{RsrvWordDic::the_dic()},
+  mCondState{new LexCondState(*this)},
   mPluginDict{new LexPluginDict},
   mDebug{false}
 {
-  mCondState = new LexCondState(*this);
   new LpIfdef(*this, "ifdef", mCondState);
   new LpIfdef(*this, "ifndef", mCondState);
   new LpElse(*this, "else", mCondState);

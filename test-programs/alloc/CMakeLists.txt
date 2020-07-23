@@ -8,8 +8,8 @@
 # ===================================================================
 # インクルードパスの設定
 # ===================================================================
-include_directories(
-  ${GTEST_INCLUDE_DIR}
+include_directories (
+  ${PROJECT_SOURCE_DIR}/ym-verilog/private_include
   )
 
 
@@ -22,16 +22,29 @@ include_directories(
 # サブディレクトリの設定
 # ===================================================================
 
-add_subdirectory ( vltest )
-add_subdirectory ( lex_test )
-add_subdirectory ( alloc )
+
 
 # ===================================================================
 #  ソースファイルの設定
 # ===================================================================
 
 
-
 # ===================================================================
 #  テスト用のターゲットの設定
 # ===================================================================
+
+add_executable ( alloc_test
+  alloc_test.cc
+  $<TARGET_OBJECTS:ym_verilog_obj_d>
+  $<TARGET_OBJECTS:ym_cell_obj_d>
+  $<TARGET_OBJECTS:ym_logic_obj_d>
+  $<TARGET_OBJECTS:ym_base_obj_d>
+  )
+
+target_compile_options ( alloc_test
+  PRIVATE "-g"
+  )
+
+target_link_libraries ( alloc_test
+  ${YM_LIB_DEPENDS}
+  )
