@@ -269,7 +269,7 @@ RawLex::clear()
 
   mInputMgr->clear();
 
-  mContext = kNormal;
+  mContext = NORMAL;
 }
 
 // @brief サーチパスリストを設定する．
@@ -481,32 +481,32 @@ RawLex::get_raw_token()
 
     // UDP のテーブル定義の中はルールが変わるのでモードを用意しておく
     if ( id == TABLE ) {
-      mContext = kUdp;
+      mContext = UDP;
     }
     else if ( id == ENDTABLE ) {
-      mContext = kNormal;
+      mContext = NORMAL;
     }
     break;
 
   case BASE_B:
-    mContext = kBin;
+    mContext = BIN;
     break;
 
   case BASE_O:
-    mContext = kOct;
+    mContext = OCT;
     break;
 
   case BASE_D:
-    mContext = kDec;
+    mContext = DEC;
     break;
 
   case BASE_H:
-    mContext = kHex;
+    mContext = HEX;
     break;
 
   case UNUMBER:
   case ERROR:
-    mContext = kNormal;
+    mContext = NORMAL;
     break;
 
   case EOF:
@@ -557,23 +557,23 @@ RawLex::_read_token()
   }
 
   switch ( context() ) {
-  case kBin:
+  case BIN:
     // 2進数モード
     return read_bin_str(c);
 
-  case kOct:
+  case OCT:
     // 8進数モード
     return read_oct_str(c);
 
-  case kDec:
+  case DEC:
     // 10進数モード
     return read_dec_str(c);
 
-  case kHex:
+  case HEX:
     // 16進数モード
     return read_hex_str(c);
 
-  case kUdp:
+  case UDP:
     switch ( c ) {
     case '-': return '-';
     case '*': return '*';
@@ -595,11 +595,11 @@ RawLex::_read_token()
     default: break;
     }
 
-  case kNormal:
+  case NORMAL:
     break;
   }
 
-  // ここに来るのは kUdp か kNormal
+  // ここに来るのは UDP か NORMAL
   switch ( c ) {
   case ';':
   case ':':

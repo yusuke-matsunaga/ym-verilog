@@ -45,19 +45,19 @@ class RawLex
 public:
 
   /// @brief 解析用のコンテキスト
-  enum tContext {
+  enum Context {
     /// @brief 通常
-    kNormal,
+    NORMAL,
     /// @brief UDP 定義のテーブル記述内
-    kUdp,
+    UDP,
     /// @brief 2進定数
-    kBin,
+    BIN,
     /// @brief 8進定数
-    kOct,
+    OCT,
     /// @brief 10進定数
-    kDec,
+    DEC,
     /// @brief 16進定数
-    kHex
+    HEX
   };
 
 
@@ -258,7 +258,7 @@ public:
   check_line(ymuint line);
 
   /// @brief コンテキストを返す．
-  tContext
+  Context
   context();
 
   /// @}
@@ -380,8 +380,11 @@ private:
   // 予約語辞書の参照
   const RsrvWordDic& mDic;
 
+  // 内部状態用のリスト
+  vector<unique_ptr<LexState>> mStates;
+
   // 条件コンパイル用の状態
-  unique_ptr<LexCondState> mCondState;
+  LexCondState* mCondState;
 
   // 現在のトークンの位置
   FileRegion mCurPos;
@@ -404,11 +407,8 @@ private:
   // プラグイン用の辞書
   unique_ptr<LexPluginDict> mPluginDict;
 
-  // 内部状態用のリスト
-  vector<unique_ptr<LexState>> mStates;
-
   // コンテキスト
-  tContext mContext;
+  Context mContext;
 
   // read_token の結果の文字列を格納するバッファ
   StrBuff mStringBuff;
@@ -464,7 +464,7 @@ RawLex::cur_rnumber() const
 
 // @brief コンテキストを返す．
 inline
-RawLex::tContext
+RawLex::Context
 RawLex::context()
 {
   return mContext;

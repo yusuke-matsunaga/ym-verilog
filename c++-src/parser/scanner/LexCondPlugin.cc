@@ -68,9 +68,9 @@ LexCondState::resetall(const FileRegion& file_region)
 // @param[in] name compiler directive 名
 LexCondPlugin::LexCondPlugin(RawLex& lex,
 			     const char* name,
-			     const unique_ptr<LexCondState>& cond_state) :
+			     LexCondState* cond_state) :
   LexPlugin(lex, name),
-  mCondState(cond_state.get())
+  mCondState{cond_state}
 {
 }
 
@@ -201,7 +201,7 @@ LexCondPlugin::is_macro_defined(const char* name)
 // @param[in] name compiler directive 名
 LpIfdef::LpIfdef(RawLex& lex,
 		 const char* name,
-		 const unique_ptr<LexCondState>& cond_state) :
+		 LexCondState* cond_state) :
   LexCondPlugin(lex, name, cond_state)
 {
 }
@@ -271,7 +271,7 @@ LpIfdef::parse()
 // @param[in] name compiler directive 名
 LpElse::LpElse(RawLex& lex,
 	       const char* name,
-	       const unique_ptr<LexCondState>& cond_state) :
+	       LexCondState* cond_state) :
   LexCondPlugin(lex, name, cond_state)
 {
 }
@@ -336,7 +336,7 @@ LpElse::parse()
 // @param[in] name compiler directive 名
 LpElsif::LpElsif(RawLex& lex,
 		 const char* name,
-		 const unique_ptr<LexCondState>& cond_state) :
+		 LexCondState* cond_state) :
   LexCondPlugin(lex, name, cond_state)
 {
 }
@@ -416,7 +416,7 @@ LpElsif::parse()
 // @param[in] name compiler directive 名
 LpEndif::LpEndif(RawLex& lex,
 		 const char* name,
-		 const unique_ptr<LexCondState>& cond_state) :
+		 LexCondState* cond_state) :
   LexCondPlugin(lex, name, cond_state)
 {
 }
