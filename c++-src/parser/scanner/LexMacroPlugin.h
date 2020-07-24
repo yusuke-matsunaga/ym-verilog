@@ -48,7 +48,6 @@ public:
 	   const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~LpDefine();
 
 
@@ -56,9 +55,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 
@@ -80,7 +78,6 @@ public:
 	  const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~LpUndef();
 
 
@@ -88,9 +85,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 
@@ -116,7 +112,6 @@ public:
 	  int num_param);
 
   /// @brief デストラクタ
-  virtual
   ~LpMacro();
 
 
@@ -124,14 +119,12 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
   /// @brief マクロの時 true を返す仮想関数
-  virtual
   bool
-  is_macro();
+  is_macro() override;
 
 
 private:

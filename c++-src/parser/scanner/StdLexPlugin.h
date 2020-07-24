@@ -48,7 +48,6 @@ public:
 	    InputMgr* input_mgr);
 
   /// @brief デストラクタ
-  virtual
   ~LpInclude();
 
 
@@ -56,9 +55,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -91,7 +89,6 @@ public:
 	 InputMgr* input_mgr);
 
   /// @brief デストラクタ
-  virtual
   ~LpLine();
 
 
@@ -99,9 +96,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 
 private:
@@ -132,7 +128,6 @@ public:
 	     const char* name);
 
   /// @brief デストラクタ
-  virtual
   ~LpResetAll();
 
 
@@ -140,9 +135,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 

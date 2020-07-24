@@ -43,7 +43,6 @@ protected:
 		LexCondState* cond_state);
 
   /// @brief デストラクタ
-  virtual
   ~LexCondPlugin();
 
 
@@ -53,9 +52,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 条件コンパイル用のプラグインの時 true を返す仮想関数
-  virtual
   bool
-  is_cond_plugin();
+  is_cond_plugin() override;
 
 
 protected:
@@ -154,7 +152,6 @@ public:
 	  LexCondState* cond_state);
 
   /// @brief デストラクタ
-  virtual
   ~LpIfdef();
 
 
@@ -162,9 +159,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 
@@ -187,7 +183,6 @@ public:
 	 LexCondState* cond_state);
 
   /// @brief デストラクタ
-  virtual
   ~LpElse();
 
 
@@ -195,9 +190,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 
@@ -220,7 +214,6 @@ public:
 	  LexCondState* cond_state);
 
   /// @brief デストラクタ
-  virtual
   ~LpElsif();
 
 
@@ -228,9 +221,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 
@@ -253,7 +245,6 @@ public:
 	  LexCondState* cond_state);
 
   /// @brief デストラクタ
-  virtual
   ~LpEndif();
 
 
@@ -261,9 +252,8 @@ public:
 
   /// @brief 該当するコンパイラディレクティブが読み込まれた時に呼ばれる関数
   /// @return エラーが起きたら false を返す．
-  virtual
   bool
-  parse();
+  parse() override;
 
 };
 

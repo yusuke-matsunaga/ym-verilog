@@ -30,7 +30,6 @@ public:
   LexCondState(RawLex& lex);
 
   /// @brief デストラクタ
-  virtual
   ~LexCondState();
 
 
@@ -50,9 +49,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 状態を初期化する．
-  virtual
   void
-  resetall(const FileRegion& file_region);
+  resetall(const FileRegion& file_region) override;
 
 
 private:
