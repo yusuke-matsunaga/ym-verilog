@@ -1,24 +1,24 @@
-﻿#ifndef YM_ALLOC_H
-#define YM_ALLOC_H
+﻿#ifndef YM_PT_PTALLOC_H
+#define YM_PT_PTALLOC_H
 
-/// @file ym/Alloc.h
-/// @brief Alloc のヘッダファイル
+/// @file ym/pt/PtAlloc.h
+/// @brief PtAlloc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym_config.h"
+#include "ym/verilog.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class Alloc Alloc.h "ym/Alloc.h"
+/// @class PtAlloc PtAlloc.h "ym/PtAlloc.h"
 /// @brief メモリの管理を行うクラスの基底クラス
 //////////////////////////////////////////////////////////////////////
-class Alloc
+class PtAlloc
 {
 public:
 
@@ -28,11 +28,11 @@ public:
   /// @{
 
   /// @brief コンストラクタ
-  Alloc() = default;
+  PtAlloc() = default;
 
   /// @brief デストラクタ
   virtual
-  ~Alloc() = default;
+  ~PtAlloc() = default;
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -200,7 +200,7 @@ private:
 template<typename T>
 inline
 T*
-Alloc::get_array(SizeType num)
+PtAlloc::get_array(SizeType num)
 {
   if ( num <= 0 ) {
     return nullptr;
@@ -214,7 +214,7 @@ Alloc::get_array(SizeType num)
 // @note limit が 0 の時は制限なし
 inline
 void
-Alloc::set_mem_limit(SizeType limit)
+PtAlloc::set_mem_limit(SizeType limit)
 {
   mMemLimit = limit;
 }
@@ -222,7 +222,7 @@ Alloc::set_mem_limit(SizeType limit)
 // @brief メモリ量の制限値を返す．
 inline
 SizeType
-Alloc::mem_limit() const
+PtAlloc::mem_limit() const
 {
   return mMemLimit;
 }
@@ -230,7 +230,7 @@ Alloc::mem_limit() const
 // @brief 使用されているメモリ量を返す．
 inline
 SizeType
-Alloc::used_size() const
+PtAlloc::used_size() const
 {
   return mUsedSize;
 }
@@ -238,7 +238,7 @@ Alloc::used_size() const
 // @brief used_size() の今までの最大値を返す．
 inline
 SizeType
-Alloc::max_used_size() const
+PtAlloc::max_used_size() const
 {
   return mMaxUsedSize;
 }
@@ -246,7 +246,7 @@ Alloc::max_used_size() const
 // @brief 実際に確保したメモリ量を返す．
 inline
 SizeType
-Alloc::allocated_size() const
+PtAlloc::allocated_size() const
 {
   return mAllocSize;
 }
@@ -254,11 +254,11 @@ Alloc::allocated_size() const
 // @brief 実際に確保した回数を返す．
 inline
 SizeType
-Alloc::allocated_count() const
+PtAlloc::allocated_count() const
 {
   return mAllocCount;
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_VERILOG
 
-#endif // YM_ALLOC_H
+#endif // YM_PT_PTALLOC_H

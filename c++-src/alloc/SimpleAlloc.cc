@@ -10,7 +10,7 @@
 #include "parser/SimpleAlloc.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
 // クラス SimpleAlloc
@@ -126,4 +126,4 @@ SimpleAlloc::find_page(SizeType alloc_size)
   return p;
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_VERILOG

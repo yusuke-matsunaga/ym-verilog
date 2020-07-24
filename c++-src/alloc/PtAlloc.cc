@@ -7,18 +7,18 @@
 /// All rights reserved.
 
 
-#include "parser/Alloc.h"
+#include "ym/pt/PtAlloc.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-// クラス Alloc
+// クラス PtAlloc
 //////////////////////////////////////////////////////////////////////
 
 // @brief n バイトの領域を確保する．
 void*
-Alloc::get_memory(SizeType n)
+PtAlloc::get_memory(SizeType n)
 {
   if ( n == 0 ) {
     return nullptr;
@@ -34,8 +34,8 @@ Alloc::get_memory(SizeType n)
 
 // @brief n バイトの領域を開放する．
 void
-Alloc::put_memory(SizeType n,
-		  void* block)
+PtAlloc::put_memory(SizeType n,
+		    void* block)
 {
   mUsedSize -= n;
 
@@ -44,7 +44,7 @@ Alloc::put_memory(SizeType n,
 
 // @brief 今までに確保した全ての領域を破棄する．
 void
-Alloc::destroy()
+PtAlloc::destroy()
 {
   mUsedSize = 0;
   _destroy();
@@ -52,7 +52,7 @@ Alloc::destroy()
 
 // @brief 内部状態を出力する．
 void
-Alloc::print_stats(ostream& s) const
+PtAlloc::print_stats(ostream& s) const
 {
   s << "maximum used size: " << max_used_size() << endl
     << "current used size: " << used_size() << endl
@@ -65,7 +65,7 @@ Alloc::print_stats(ostream& s) const
 // @param[in] n 確保するメモリ量(単位はバイト)
 // @note 確保した総量が制限値を越えていたら 0 を返す．
 void*
-Alloc::alloc(SizeType n)
+PtAlloc::alloc(SizeType n)
 {
   if ( mMemLimit > 0 && mAllocSize + n >= mMemLimit ) {
     // 総量が制限値を越えた．
@@ -80,11 +80,11 @@ Alloc::alloc(SizeType n)
 // @param[in] n 解放するメモリ量(単位はバイト)
 // @param[in] blk 解放するメモリ領域
 void
-Alloc::free(SizeType n,
-	    void* blk)
+PtAlloc::free(SizeType n,
+	      void* blk)
 {
   mAllocSize -= n;
   ::operator delete(blk);
 }
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_VERILOG
