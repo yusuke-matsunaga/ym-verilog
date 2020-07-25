@@ -3,11 +3,11 @@
 /// @brief SimpleAlloc の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2018, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2018, 2019, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "parser/SimpleAlloc.h"
+#include "alloc/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -17,12 +17,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-SimpleAlloc::SimpleAlloc(SizeType page_size)
+SimpleAlloc::SimpleAlloc(SizeType page_size) :
+  mPageSize{align(page_size)}
 {
   ASSERT_COND( page_size > 0 );
-
-  mPageSize = align(page_size);
-  mBlockTop = nullptr;
 }
 
 // デストラクタ
@@ -37,30 +35,20 @@ SimpleAlloc::_get_memory(SizeType n)
 {
   if ( n > mPageSize ) {
     // mPageSize を越えるものは普通にアロケートする．
-    SizeType n1 = n + sizeof(BigBlock) - sizeof(char);
-    void* p = alloc(n1);
-    BigBlock* block = new (p) BigBlock();
+    SizeType alloc_size = align(n + sizeof(BigBlock) - sizeof(char));
+    auto p = alloc(alloc_size);
+    auto block = new (p) BigBlock();
     block->mSize = n;
-    block->mNext = mBlockTop;
-    mBlockTop = block;
+    mBigBlockList.push_back(block);
     return &block->mDummy[0];
   }
+  else {
+    // ワード境界に乗るようにサイズに整える．
+    SizeType alloc_size = align(n);
 
-  // ワード境界に乗るようにサイズに整える．
-  SizeType alloc_size = align(n);
-
-  // alloc_size 以上の余りがあるページを探す．
-  auto p = find_page(alloc_size);
-  auto& page{*p};
-  char* s = &page.mChunk[page.mNextPos];
-  page.mNextPos += alloc_size;
-
-  // page の余りがなくなったら mAvailList から取り除く．
-  if ( page.mNextPos + align(1) > mPageSize ) {
-    mAvailList.erase(p);
+    // alloc_size 以上の余りがあるブロックを探す．
+    return find_block(alloc_size);
   }
-
-  return static_cast<void*>(s);
 }
 
 // @brief n バイトの領域を開放する．
@@ -76,19 +64,17 @@ SimpleAlloc::_put_memory(SizeType n,
 void
 SimpleAlloc::_destroy()
 {
-  mAvailList.clear();
-
   for ( auto chunk: mUsedList ) {
-    free(mPageSize, chunk);
+    free(page_size(), chunk);
   }
   mUsedList.clear();
 
-  for ( BigBlock* block = mBlockTop; block; ) {
-    BigBlock* next = block->mNext;
-    free(block->mSize + sizeof(BigBlock) - sizeof(char), block);
-    block = next;
+  mPageList.clear();
+
+  for ( auto block: mBigBlockList ) {
+    free(block->alloc_size(), block);
   }
-  mBlockTop = nullptr;
+  mBigBlockList.clear();
 }
 
 // @brief アラインメントを考慮してサイズを調節する．
@@ -105,25 +91,44 @@ SimpleAlloc::align(SizeType req_size)
   return ((req_size + ALIGNOF_DOUBLE - 1) / ALIGNOF_DOUBLE) * ALIGNOF_DOUBLE;
 }
 
-// @brief 利用可能なページを見つける．
-vector<SimpleAlloc::Page>::iterator
-SimpleAlloc::find_page(SizeType alloc_size)
+// @brief 利用可能なブロックを見つける．
+void*
+SimpleAlloc::find_block(SizeType alloc_size)
 {
-  for ( vector<Page>::iterator p = mAvailList.begin(); p != mAvailList.end(); ++ p ) {
-    auto& page{*p};
-    if ( page.mNextPos + alloc_size <= mPageSize ) {
+
+  for ( auto i = mPageList.begin(); i != mPageList.end(); ++ i ) {
+    auto page = *i;
+    if ( page->mNextPos + alloc_size <= mPageSize ) {
       // 見つけた．
+      auto p = page->alloc(alloc_size);
+      if ( page->mNextPos + align(1) > mPageSize ) {
+	// ページが一杯になったので削除する．
+	mPageList.erase(i);
+      }
       return p;
     }
   }
 
   // 適当なページがなければ新しいページを確保する．
-  void* chunk = alloc(mPageSize);
+  void* chunk = alloc(page_size());
   mUsedList.push_back(static_cast<char*>(chunk));
-  mAvailList.push_back(Page(chunk));
-  auto p = mAvailList.end();
-  -- p;
+
+  auto page = static_cast<Page*>(chunk);
+  page->mNextPos = 0;
+  auto p = page->alloc(alloc_size);
+  if ( page->mNextPos + align(1) <= mPageSize ) {
+    mPageList.push_back(page);
+  }
+
   return p;
+}
+
+// @brief 通常ページの実際のメモリサイズ
+inline
+SizeType
+SimpleAlloc::page_size() const
+{
+  return sizeof(Page) + mPageSize - 1;
 }
 
 END_NAMESPACE_YM_VERILOG

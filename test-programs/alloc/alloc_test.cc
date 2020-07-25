@@ -7,13 +7,14 @@
 /// All rights reserved.
 
 
-#include "parser/SimpleAlloc.h"
+#include "alloc/SimpleAlloc.h"
 
 int
 main(int argc,
      char** argv)
 {
   using namespace nsYm;
+  using namespace nsYm::nsVerilog;
 
   for ( int i = 0; i < 10000; ++ i ) {
     SimpleAlloc alloc(4096);

@@ -1,7 +1,7 @@
 ﻿#ifndef YM_SIMPLEALLOC_H
 #define YM_SIMPLEALLOC_H
 
-/// @file ym/SimpleAlloc.h
+/// @file SimpleAlloc.h
 /// @brief SimpleAlloc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
@@ -9,17 +9,17 @@
 /// All rights reserved.
 
 
-#include "parser/Alloc.h"
+#include "ym/pt/PtAlloc.h"
 
 
-BEGIN_NAMESPACE_YM
+BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
 /// @class SimpleAlloc SimpleAlloc.h "ym/SimpleAlloc.h"
 /// @brief 単純なメモリ管理
 //////////////////////////////////////////////////////////////////////
 class SimpleAlloc :
-  public Alloc
+  public PtAlloc
 {
 public:
 
@@ -61,41 +61,6 @@ private:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられるデータ構造
-  //////////////////////////////////////////////////////////////////////
-
-  struct Page
-  {
-    // コンストラクタ
-    Page(void* p = nullptr) :
-      mNextPos{0},
-      mChunk{static_cast<char*>(p)}
-    {
-    }
-
-    // 利用可能な先頭番地
-    SizeType mNextPos;
-
-    // メモリチャンク
-    char* mChunk;
-
-  };
-
-  struct BigBlock
-  {
-    // サイズ
-    SizeType mSize;
-
-    // 次のブロックを指すリンク
-    BigBlock* mNext;
-
-    // 実際にはこの後に確保したメモリ領域がある．
-    char mDummy[1];
-  };
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
   // 内部で用いられる下請け関数
   //////////////////////////////////////////////////////////////////////
 
@@ -104,9 +69,58 @@ private:
   SizeType
   align(SizeType req_size);
 
-  /// @brief 利用可能なページを見つける．
-  vector<Page>::iterator
-  find_page(SizeType alloc_size);
+  /// @brief 利用可能なブロックを見つける．
+  void*
+  find_block(SizeType alloc_size);
+
+  /// @brief 通常ページの実際のメモリサイズ
+  SizeType
+  page_size() const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられるデータ構造
+  //////////////////////////////////////////////////////////////////////
+
+  // mPageSize のメモリブロックを管理するための構造体
+  // 実際には mPageSize + sizeof(Page) のメモリを確保する．
+  struct Page
+  {
+    // size のメモリを確保する．
+    void*
+    alloc(SizeType size)
+    {
+      auto p{static_cast<void*>(&mDummy[mNextPos])};
+      mNextPos += size;
+      return p;
+    }
+
+    // 利用可能な先頭番地
+    SizeType mNextPos;
+
+    // 実際にはこの後に確保したメモリ領域がある．
+    char mDummy[1];
+  };
+
+  // mPageSize 以上のメモリブロックを管理するための構造体
+  // size のメモリブロックを確保する場合，実際には
+  // sizeof(BigBlock) + size - 1 のメモリを確保する．
+  struct BigBlock
+  {
+    // 実際に確保したメモリサイズを返す．
+    SizeType
+    alloc_size() const
+    {
+      return sizeof(BigBlock) + mSize - 1;
+    }
+
+    // サイズ
+    SizeType mSize;
+
+    // 実際にはこの後に確保したメモリ領域がある．
+    char mDummy[1];
+  };
 
 
 private:
@@ -117,17 +131,17 @@ private:
   // 一度に確保するメモリの単位
   SizeType mPageSize;
 
-  // 使用可能なメモリ領域のリスト
-  vector<Page> mAvailList;
+  // ページのリスト
+  vector<Page*> mPageList;
 
   // 確保されたメモリブロックのリスト
   vector<char*> mUsedList;
 
-  // BigBlock の先頭
-  BigBlock* mBlockTop;
+  // BigBlock のリスト
+  vector<BigBlock*> mBigBlockList;
 
 };
 
-END_NAMESPACE_YM
+END_NAMESPACE_YM_VERILOG
 
 #endif // YM_SIMPLEALLOC_H
