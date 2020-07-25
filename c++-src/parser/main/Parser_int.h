@@ -18,11 +18,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] new_declhead 新しく設定する declhead
 inline
 void
-Parser::push_declhead_list(PtDeclHeadList* new_declhead)
+Parser::push_declhead_list(vector<PtiDeclHead*>* new_declhead)
 {
   mDeclHeadListStack.push_back(mCurDeclHeadList);
   if ( new_declhead == nullptr ) {
-    new_declhead = new PtDeclHeadList();
+    new_declhead = new vector<PtiDeclHead*>();
   }
   mCurDeclHeadList = new_declhead;
 }
@@ -44,11 +44,11 @@ Parser::pop_declhead_list(bool delete_top)
 // @param[in] new_item 新しく設定する item リスト
 inline
 void
-Parser::push_item_list(PtItemList* new_item)
+Parser::push_item_list(vector<const PtItem*>* new_item)
 {
   mItemListStack.push_back(mCurItemList);
   if ( new_item == nullptr ) {
-    new_item = new PtItemList();
+    new_item = new vector<const PtItem*>();
   }
   mCurItemList = new_item;
 }
@@ -68,18 +68,18 @@ Parser::pop_item_list(bool delete_top)
 
 // @brief 宣言リストを配列に変換する．
 inline
-PtDeclHeadArray
+const PtDeclHeadArray*
 Parser::get_decl_array()
 {
-  return mCurDeclHeadList->to_array();
+  return new_array2<const PtDeclHead, PtiDeclHead>(*mCurDeclHeadList);
 }
 
 // @brief item リストを配列に変換する．
 inline
-PtItemArray
+const PtItemArray*
 Parser::get_item_array()
 {
-  return mCurItemList->to_array();
+  return new_array<const PtItem>(*mCurItemList);
 }
 
 END_NAMESPACE_YM_VERILOG

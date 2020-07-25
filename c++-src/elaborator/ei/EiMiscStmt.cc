@@ -70,7 +70,7 @@ EiFactory::new_TaskCall(const VlNamedObj* parent,
 			ElbTaskFunc* task,
 			ElbExpr** arg_array)
 {
-  int n = pt_stmt->arg_list().size();
+  int n = pt_stmt->arg_list()->size();
   EiTaskCall* stmt = new EiTaskCall(parent, process, pt_stmt,
 				    task, n, arg_array);
 
@@ -90,7 +90,7 @@ EiFactory::new_SysTaskCall(const VlNamedObj* parent,
 			   const ElbUserSystf* user_systf,
 			   ElbExpr** arg_array)
 {
-  int n = pt_stmt->arg_list().size();
+  int n = pt_stmt->arg_list()->size();
   EiSysTaskCall* stmt = new EiSysTaskCall(parent, process, pt_stmt,
 					  user_systf, n, arg_array);
 

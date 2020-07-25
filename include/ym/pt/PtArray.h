@@ -10,6 +10,7 @@
 
 
 #include "ym/pt/PtP.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -34,50 +35,62 @@ public:
   PtArray();
 
   /// @breif 内容を指定したコンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] src ソース
   explicit
-  PtArray(const vector<T*>& src);
+  PtArray(PtAlloc& alloc,
+	  const vector<T*>& src);
 
   /// @brief 1つの要素からなるコンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   explicit
-  PtArray(T* elem1);
+  PtArray(PtAlloc& alloc,
+	  T* elem1);
 
   /// @brief 2つの要素からなるコンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   /// @param[in] elem2 要素2
   explicit
-  PtArray(T* elem1,
+  PtArray(PtAlloc& alloc,
+	  T* elem1,
 	  T* elem2);
 
   /// @brief 3つの要素からなるコンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   /// @param[in] elem2 要素2
   /// @param[in] elem3 要素3
   explicit
-  PtArray(T* elem1,
+  PtArray(PtAlloc& alloc,
+	  T* elem1,
 	  T* elem2,
 	  T* elem3);
 
   /// @brief 4つの要素からなるコンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   /// @param[in] elem2 要素2
   /// @param[in] elem3 要素3
   /// @param[in] elem4 要素4
   explicit
-  PtArray(T* elem1,
+  PtArray(PtAlloc& alloc,
+	  T* elem1,
 	  T* elem2,
 	  T* elem3,
 	  T* elem4);
 
   /// コピーコンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] src ソース
-  PtArray(const PtArray& src);
+  PtArray(PtAlloc& alloc,
+	  const PtArray& src);
 
-  /// @brief コピー代入演算子
+  /// @brief コピー代入演算子は禁止
   /// @param[in] src ソース
   PtArray&
-  operator=(const PtArray& src);
+  operator=(const PtArray& src) = delete;
 
   /// @brief ムーブコンストラクタ
   /// @param[in] src ムーブ元
@@ -148,12 +161,14 @@ PtArray<T>::PtArray() :
 }
 
 // @breif 内容を指定したコンストラクタ
+// @param[in] alloc メモリアロケータ
 // @param[in] src ソース
 template <typename T>
 inline
-PtArray<T>::PtArray(const vector<T*>& src) :
+PtArray<T>::PtArray(PtAlloc& alloc,
+		    const vector<T*>& src) :
   mNum{src.size()},
-  mArray{new T*[mNum]}
+  mArray{alloc.get_array<T*>(mNum)}
 {
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = src[i];
@@ -161,41 +176,47 @@ PtArray<T>::PtArray(const vector<T*>& src) :
 }
 
 // @brief 1つの要素からなるコンストラクタ
+// @param[in] alloc メモリアロケータ
 // @param[in] elem1 要素1
 template <typename T>
 inline
-PtArray<T>::PtArray(T* elem1) :
+PtArray<T>::PtArray(PtAlloc& alloc,
+		    T* elem1) :
   mNum{1},
-  mArray{new T*[1]}
+  mArray{alloc.get_array<T*>(1)}
 {
   mArray[0] = elem1;
 }
 
 // @brief 2つの要素からなるコンストラクタ
+// @param[in] alloc メモリアロケータ
 // @param[in] elem1 要素1
 // @param[in] elem2 要素2
 template <typename T>
 inline
-PtArray<T>::PtArray(T* elem1,
+PtArray<T>::PtArray(PtAlloc& alloc,
+		    T* elem1,
 		    T* elem2) :
   mNum{2},
-  mArray{new T*[2]}
+  mArray{alloc.get_array<T*>(2)}
 {
   mArray[0] = elem1;
   mArray[1] = elem2;
 }
 
 // @brief 3つの要素からなるコンストラクタ
+// @param[in] alloc メモリアロケータ
 // @param[in] elem1 要素1
 // @param[in] elem2 要素2
 // @param[in] elem3 要素3
 template <typename T>
 inline
-PtArray<T>::PtArray(T* elem1,
+PtArray<T>::PtArray(PtAlloc& alloc,
+		    T* elem1,
 		    T* elem2,
 		    T* elem3) :
   mNum{3},
-  mArray{new T*[3]}
+  mArray{alloc.get_array<T*>(3)}
 {
   mArray[0] = elem1;
   mArray[1] = elem2;
@@ -203,18 +224,20 @@ PtArray<T>::PtArray(T* elem1,
 }
 
 // @brief 4つの要素からなるコンストラクタ
+// @param[in] alloc メモリアロケータ
 // @param[in] elem1 要素1
 // @param[in] elem2 要素2
 // @param[in] elem3 要素3
 // @param[in] elem4 要素4
 template <typename T>
 inline
-PtArray<T>::PtArray(T* elem1,
+PtArray<T>::PtArray(PtAlloc& alloc,
+		    T* elem1,
 		    T* elem2,
 		    T* elem3,
 		    T* elem4) :
   mNum{4},
-  mArray{new T*[4]}
+  mArray{alloc.get_array<T*>(4)}
 {
   mArray[0] = elem1;
   mArray[1] = elem2;
@@ -223,36 +246,18 @@ PtArray<T>::PtArray(T* elem1,
 }
 
 // コピーコンストラクタ
+// @param[in] alloc メモリアロケータ
 // @param[in] src ソース
 template <typename T>
 inline
-PtArray<T>::PtArray(const PtArray& src) :
+PtArray<T>::PtArray(PtAlloc& alloc,
+		    const PtArray& src) :
   mNum{src.mNum},
-  mArray{new T*[mNum]}
+  mArray{alloc.get_array<T*>(mNum)}
 {
   for ( int i = 0; i < mNum; ++ i ) {
     mArray[i] = src.mArray[i];
   }
-}
-
-// @brief コピー代入演算子
-// @param[in] src ソース
-template <typename T>
-inline
-PtArray<T>&
-PtArray<T>::operator=(const PtArray& src)
-{
-  if ( this != &src ) {
-    if ( mNum != src.mNum ) {
-      delete [] mArray;
-      mNum = src.mNum;
-      mArray = new T*[mNum];
-    }
-    for ( int i = 0; i < mNum; ++ i ) {
-      mArray[i] = src.mArray[i];
-    }
-  }
-  return *this;
 }
 
 // @brief ムーブコンストラクタ
@@ -286,7 +291,7 @@ template <typename T>
 inline
 PtArray<T>::~PtArray()
 {
-  delete [] mArray;
+  // mArray は alloc の管理下にある．
 }
 
 // @brief 要素数の取得

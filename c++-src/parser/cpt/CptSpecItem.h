@@ -27,7 +27,7 @@ protected:
   /// @brief コンストラクタ
   CptSpecItem(const FileRegion& file_region,
 	      VpiSpecItemType id,
-	      PtExprArray terminal_array);
+	      const PtExprArray* terminal_array);
 
   /// @brief デストラクタ
   ~CptSpecItem();
@@ -52,7 +52,7 @@ public:
   specitem_type() const override;
 
   /// @brief ターミナルリストの取得
-  PtExprArray
+  const PtExprArray*
   terminal_list() const override;
 
 
@@ -68,7 +68,7 @@ private:
   VpiSpecItemType mId;
 
   // ターミナルの配列
-  PtExprArray mTerminalArray;
+  const PtExprArray* mTerminalArray;
 
 };
 
@@ -153,10 +153,10 @@ protected:
   /// @brief コンストラクタ
   CptPathDecl(const FileRegion& file_region,
 	      int edge,
-	      PtExprArray input_array,
+	      const PtExprArray* input_array,
 	      int input_pol,
 	      VpiPathType op,
-	      PtExprArray output_array,
+	      const PtExprArray* output_array,
 	      int output_pol,
 	      const PtExpr* expr,
 	      const PtPathDelay* path_delay);
@@ -180,7 +180,7 @@ public:
   edge() const override;
 
   /// @brief 入力のリストの取得
-  PtExprArray
+  const PtExprArray*
   input_list() const override;
 
   /// @brief 入力の極性を取り出す．
@@ -193,7 +193,7 @@ public:
   op() const override;
 
   /// @brief 出力のリストの取得
-  PtExprArray
+  const PtExprArray*
   output_list() const override;
 
   /// @brief 出力の極性を取り出す．
@@ -220,10 +220,10 @@ private:
   FileRegion mFileRegion;
 
   int mEdge;
-  PtExprArray mInputArray;
+  const PtExprArray* mInputArray;
   int mInputPol;
   VpiPathType mOp;
-  PtExprArray mOutputArray;
+  const PtExprArray* mOutputArray;
   int mOutputPol;
   const PtExpr* mExpr;
   const PtPathDelay* mPathDelay;

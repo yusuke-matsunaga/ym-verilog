@@ -122,8 +122,8 @@ private:
 
   /// @brief 宣言を出力する．
   void
-  put_decls(PtIOHeadArray iohead_array,
-	    PtDeclHeadArray declhead_array);
+  put_decls(const PtIOHeadArray* iohead_array,
+	    const PtDeclHeadArray* declhead_array);
 
   /// @brief 宣言と要素を出力する．
   /// @param[in] label ラベル
@@ -131,12 +131,12 @@ private:
   /// @param[in] item_array 要素の配列
   void
   put_decl_item(const char* label,
-		PtDeclHeadArray decl_array,
-		PtItemArray item_array);
+		const PtDeclHeadArray* decl_array,
+		const PtItemArray* item_array);
 
   /// @brief 階層名の出力
   void
-  put(PtNameBranchArray nb_array);
+  put(const PtNameBranchArray* nb_array);
 
   /// @brief ブール型データの出力
   /// @param[in] label ラベル

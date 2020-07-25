@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 SptSpecItem::SptSpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 PtExprArray terminal_array) :
+			 const PtExprArray* terminal_array) :
   SptItem{file_region, PtItemType::SpecItem},
   mId{id},
   mTerminals{terminal_array}
@@ -40,7 +40,7 @@ SptSpecItem::specitem_type() const
 }
 
 // @brief ターミナルリストの取得
-PtExprArray
+const PtExprArray*
 SptSpecItem::terminal_list() const
 {
   return mTerminals;
@@ -97,10 +97,10 @@ SptSpecPath::path_decl() const
 // コンストラクタ
 SptPathDecl::SptPathDecl(const FileRegion& file_region,
 			 int edge,
-			 PtExprArray input_array,
+			 const PtExprArray* input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 PtExprArray output_array,
+			 const PtExprArray* output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay) :
@@ -137,7 +137,7 @@ SptPathDecl::edge() const
 }
 
 // @brief 入力のリストの取得
-PtExprArray
+const PtExprArray*
 SptPathDecl::input_list() const
 {
   return mInputs;
@@ -159,7 +159,7 @@ SptPathDecl::op() const
 }
 
 // @brief 出力のリストの取得
-PtExprArray
+const PtExprArray*
 SptPathDecl::output_list() const
 {
   return mOutputs;
@@ -296,7 +296,7 @@ SptPathDelay::value(SizeType pos) const
 const PtItem*
 SptFactory::new_SpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 PtExprArray terminal_array)
+			 const PtExprArray* terminal_array)
 {
   auto node = new SptSpecItem(file_region, id, terminal_array);
   return node;
@@ -332,10 +332,10 @@ SptFactory::new_SpecPath(const FileRegion& file_region,
 const PtPathDecl*
 SptFactory::new_PathDecl(const FileRegion& file_region,
 			 int edge,
-			 PtExprArray input_array,
+			 const PtExprArray* input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 PtExprArray output_array,
+			 const PtExprArray* output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay)

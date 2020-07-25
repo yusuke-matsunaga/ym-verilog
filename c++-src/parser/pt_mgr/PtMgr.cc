@@ -32,7 +32,7 @@ PtMgr::~PtMgr()
 }
 
 // @brief アロケータを返す．
-Alloc&
+PtAlloc&
 PtMgr::alloc()
 {
   return mAlloc;
@@ -110,17 +110,11 @@ PtMgr::save_string(const char* str)
   if ( p == mStringPool.end() ) {
     // str と同じ内容は登録されていなかった．
     // 新しい領域を確保して登録する．
-    SizeType n = strlen(str) + 1;
-    void* p{mAlloc.get_memory(sizeof(char) * n)};
-    auto new_str{new (p) char[n]};
-    strcpy(new_str, str);
-    mStringPool.insert(new_str);
-    return new_str;
+    mStringPool.insert(str);
   }
-  else {
-    // 登録されていたらその文字列を返す．
-    return *p;
-  }
+  p = mStringPool.find(str);
+  ASSERT_COND( p != mStringPool.end() );
+  return (*p).c_str();
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -55,7 +55,7 @@ public:
 
   /// @brief 階層ブランチの取得
   /// system function call の場合は常に nullptr
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
   /// @brief 末尾の名前の取得
@@ -278,7 +278,7 @@ private:
   /// コンストラクタ
   SptOpr2(const FileRegion& file_region,
 	  VpiOpType op_type,
-	  PtExprArray opr_array);
+	  const PtExprArray* opr_array);
 
   /// デストラクタ
   ~SptOpr2();
@@ -332,7 +332,7 @@ private:
   VpiOpType mOpType;
 
   // オペランドのリスト
-  PtExprArray mExprArray;
+  const PtExprArray* mExprArray;
 
 };
 
@@ -350,9 +350,9 @@ protected:
   /// コンストラクタ
   SptFuncCall(const FileRegion& file_region,
 	      PtExprType type,
-	      PtNameBranchArray nb_array,
+	      const PtNameBranchArray* nb_array,
 	      const char* name,
-	      PtExprArray arg_array);
+	      const PtExprArray* arg_array);
 
   /// デストラクタ
   ~SptFuncCall();
@@ -364,7 +364,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// 階層ブランチを返す．
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
   /// 末尾の名前を返す．
@@ -401,13 +401,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチの配列
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
   // 末尾の名前
   const char* mName;
 
   // 引数リスト
-  PtExprArray mArgArray;
+  const PtExprArray* mArgArray;
 
 };
 
@@ -424,10 +424,10 @@ private:
 
   /// コンストラクタ
   SptPrimary(const FileRegion& file_region,
-	     PtNameBranchArray nb_array,
+	     const PtNameBranchArray* nb_array,
 	     const char* tail_name,
 	     bool const_index,
-	     PtExprArray index_array = PtExprArray(),
+	     const PtExprArray* index_array = nullptr,
 	     VpiRangeMode mode = VpiRangeMode::No,
 	     const PtExpr* left = nullptr,
 	     const PtExpr* right = nullptr);
@@ -442,7 +442,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// 階層ブランチを取り出す．
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
   /// 末尾の名前を取り出す．
@@ -482,7 +482,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
   // 末尾の名前
   const char* mName;
@@ -491,7 +491,7 @@ private:
   bool mConstIndex;
 
   // インデックスの配列
-  PtExprArray mIndexArray;
+  const PtExprArray* mIndexArray;
 
   // 範囲のモード
   VpiRangeMode mMode;

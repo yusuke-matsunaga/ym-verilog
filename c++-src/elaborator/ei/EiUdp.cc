@@ -31,9 +31,9 @@ ElbUdpDefn*
 EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 		       bool is_protected)
 {
-  SizeType port_num = pt_udp->port_list().size();
+  SizeType port_num = pt_udp->port_list()->size();
   EiUdpIO* iodecl = new EiUdpIO[port_num];
-  SizeType table_size = pt_udp->table_array().size();
+  SizeType table_size = pt_udp->table_array()->size();
   EiTableEntry* table = new EiTableEntry[table_size];
 
   SizeType row_size = port_num;

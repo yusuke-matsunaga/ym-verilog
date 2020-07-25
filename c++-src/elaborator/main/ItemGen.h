@@ -48,7 +48,7 @@ public:
   /// @param[in] pt_item_array 要素定義の配列
   void
   phase1_item(const VlNamedObj* parent,
-	      PtItemArray pt_item_array);
+	      const PtItemArray* pt_item_array);
 
   /// @brief defparam 文によるパラメータ割り当てを行う．
   /// @return 該当するパラメータが見つかったら true を返す．
@@ -252,8 +252,8 @@ private:
   /// @param[in] pt_item_array パース木の要素の配列
   void
   phase1_genitem(const VlNamedObj* parent,
-		 PtDeclHeadArray pt_decl_array,
-		 PtItemArray pt_item_array);
+		 const PtDeclHeadArray* pt_decl_array,
+		 const PtItemArray* pt_item_array);
 
 };
 

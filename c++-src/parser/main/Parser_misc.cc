@@ -74,7 +74,7 @@ const PtControl*
 Parser::new_EventControl(const FileRegion& fr,
 			 PtrList<const PtExpr>* event_list)
 {
-  auto control{mFactory.new_EventControl(fr, to_array(event_list))};
+  auto control{mFactory.new_EventControl(fr, new_array(event_list))};
   return control;
 }
 
@@ -132,7 +132,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const PtExpr* rep,
 			  PtrList<const PtExpr>* event_list)
 {
-  auto control{mFactory.new_RepeatControl(fr, rep, to_array(event_list))};
+  auto control{mFactory.new_RepeatControl(fr, rep, new_array(event_list))};
   return control;
 }
 
@@ -252,7 +252,7 @@ const PtAttrInst*
 Parser::new_AttrInst(const FileRegion& fr,
 		     PtrList<const PtAttrSpec>* as_list)
 {
-  auto ai{mFactory.new_AttrInst(fr, to_array(as_list))};
+  auto ai{mFactory.new_AttrInst(fr, new_array(as_list))};
   return ai;
 }
 

@@ -56,19 +56,19 @@ public:
   delay() const override;
 
   /// @brief パラメータ割り当てリストの取得
-  PtConnectionArray
+  const PtConnectionArray*
   paramassign_array() const override;
 
   /// @brief defparam のリストの取得
-  PtDefParamArray
+  const PtDefParamArray*
   defparam_list() const override;
 
   /// @brief continuous assign のリストの取得
-  PtContAssignArray
+  const PtContAssignArray*
   contassign_list() const override;
 
   /// @brief module/UDP/gate instance リストの取得
-  PtInstArray
+  const PtInstArray*
   inst_list() const override;
 
   /// @brief automatic 情報の取得
@@ -88,15 +88,15 @@ public:
   ioitem_num() const override;
 
   /// @brief IO宣言リストの配列の取得
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const override;
 
   /// @brief 本体のステートメントの取得
@@ -159,7 +159,7 @@ public:
   specpath_type() const override;
 
   /// @brief ターミナルのリストの取得
-  PtExprArray
+  const PtExprArray*
   terminal_list() const override;
 
   /// @brief パス記述の取得
@@ -175,23 +175,23 @@ public:
   expr() const override;
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   then_declhead_array() const override;
 
   /// @brief 条件が成り立ったときに生成される item 配列の取得
-  PtItemArray
+  const PtItemArray*
   then_item_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   else_declhead_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される item 配列の取得
-  PtItemArray
+  const PtItemArray*
   else_item_array() const override;
 
   /// @brief case item のリストの取得
-  PtGenCaseItemArray
+  const PtGenCaseItemArray*
   caseitem_list() const override;
 
   /// @brief 繰り返し制御用の変数名の取得
@@ -227,7 +227,7 @@ protected:
 
   /// @brief コンストラクタ
   CptDefParamH(const FileRegion& file_region,
-	       PtDefParamArray dp_array);
+	       const PtDefParamArray* dp_array);
 
   /// @brief デストラクタ
   ~CptDefParamH();
@@ -248,7 +248,7 @@ public:
   type() const override;
 
   /// @brief defparam リストの取得
-  PtDefParamArray
+  const PtDefParamArray*
   defparam_list() const override;
 
 
@@ -261,7 +261,7 @@ private:
   FileRegion mFileRegion;
 
   // 要素の配列
-  PtDefParamArray mArray;
+  const PtDefParamArray* mArray;
 
 };
 
@@ -279,7 +279,7 @@ protected:
   /// @brief コンストラクタ
   /// @note value は常に定数式
   CptDefParam(const FileRegion& file_region,
-	      PtNameBranchArray nb_array,
+	      const PtNameBranchArray* nb_array,
 	      const char* tail_name,
 	      const PtExpr* value);
 
@@ -298,7 +298,7 @@ public:
   file_region() const override;
 
   /// @brief 階層ブランチの取得
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
   /// @brief 末尾の名前の取得
@@ -321,7 +321,7 @@ private:
   FileLoc mTopLoc;
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
   // 末尾の名前
   const char* mName;
@@ -344,7 +344,7 @@ protected:
 
   /// @brief コンストラクタ
   CptContAssignH(const FileRegion& file_region,
-		 PtContAssignArray ca_array);
+		 const PtContAssignArray* ca_array);
 
   /// @brief デストラクタ
   ~CptContAssignH();
@@ -366,7 +366,7 @@ public:
 
   /// @brief continuous assign リストの取得
   /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  PtContAssignArray
+  const PtContAssignArray*
   contassign_list() const override;
 
 
@@ -379,7 +379,7 @@ private:
   FileRegion mFileRegion;
 
   // 要素の配列
-  PtContAssignArray mArray;
+  const PtContAssignArray* mArray;
 
 };
 
@@ -397,7 +397,7 @@ protected:
   /// @brief コンストラクタ
   CptContAssignHS(const FileRegion& file_region,
 		  const PtStrength* str,
-		  PtContAssignArray ca_array);
+		  const PtContAssignArray* ca_array);
 
   /// @brief デストラクタ
   ~CptContAssignHS();
@@ -437,7 +437,7 @@ protected:
   /// @brief コンストラクタ
   CptContAssignHD(const FileRegion& file_region,
 		  const PtDelay* delay,
-		  PtContAssignArray ca_array);
+		  const PtContAssignArray* ca_array);
 
   /// @brief デストラクタ
   ~CptContAssignHD();
@@ -478,7 +478,7 @@ protected:
   CptContAssignHSD(const FileRegion& file_region,
 		   const PtStrength* str,
 		   const PtDelay* delay,
-		   PtContAssignArray ca_array);
+		   const PtContAssignArray* ca_array);
 
   /// @brief デストラクタ
   ~CptContAssignHSD();
@@ -682,8 +682,8 @@ protected:
   CptTf(const FileRegion& file_region,
 	const char* name,
 	bool automatic,
-	PtIOHeadArray iohead_array,
-	PtDeclHeadArray declhead_array,
+	const PtIOHeadArray* iohead_array,
+	const PtDeclHeadArray* declhead_array,
 	const PtStmt* stmt);
 
   /// @brief デストラクタ
@@ -712,11 +712,11 @@ public:
   ioitem_num() const override;
 
   /// @brief IO宣言リストの配列の取得
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief 本体を取り出す．
@@ -742,10 +742,10 @@ private:
   int mIOItemNum;
 
   // IO宣言の配列
-  PtIOHeadArray mIOHeadArray;
+  const PtIOHeadArray* mIOHeadArray;
 
   // その他の宣言の配列
-  PtDeclHeadArray mDeclHeadArray;
+  const PtDeclHeadArray* mDeclHeadArray;
 
   // 本体
   const PtStmt* mBody;
@@ -767,8 +767,8 @@ private:
   CptTask(const FileRegion& file_region,
 	  const char* name,
 	  bool automatic,
-	  PtIOHeadArray iohead_array,
-	  PtDeclHeadArray declhead_array,
+	  const PtIOHeadArray* iohead_array,
+	  const PtDeclHeadArray* declhead_array,
 	  const PtStmt* stmt);
 
   /// @brief デストラクタ
@@ -803,8 +803,8 @@ protected:
 	      const char* name,
 	      bool automatic,
 	      bool sign,
-	      PtIOHeadArray iohead_array,
-	      PtDeclHeadArray declhead_array,
+	      const PtIOHeadArray* iohead_array,
+	      const PtDeclHeadArray* declhead_array,
 	      const PtStmt* stmt);
 
   /// @brief デストラクタ
@@ -875,8 +875,8 @@ protected:
 	       bool sign,
 	       const PtExpr* left,
 	       const PtExpr* right,
-	       PtIOHeadArray iohead_array,
-	       PtDeclHeadArray declhead_array,
+	       const PtIOHeadArray* iohead_array,
+	       const PtDeclHeadArray* declhead_array,
 	       const PtStmt* stmt);
 
   /// @brief デストラクタ
@@ -927,8 +927,8 @@ protected:
 	       bool automatic,
 	       bool sign,
 	       VpiVarType dat_type,
-	       PtIOHeadArray iohead_array,
-	       PtDeclHeadArray declhead_array,
+	       const PtIOHeadArray* iohead_array,
+	       const PtDeclHeadArray* declhead_array,
 	       const PtStmt* stmt);
 
   /// @brief デストラクタ

@@ -9,9 +9,9 @@
 
 #include "CptModule.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
 #include "parser/PtiDecl.h"
 #include "ym/pt/PtItem.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -38,11 +38,11 @@ CptModule::CptModule(const FileRegion& file_region,
 		     const string& config,
 		     const string& library,
 		     const string& cell,
-		     PtDeclHeadArray paramport_array,
-		     PtPortArray port_array,
-		     PtIOHeadArray iohead_array,
-		     PtDeclHeadArray declhead_array,
-		     PtItemArray item_array) :
+		     const PtDeclHeadArray* paramport_array,
+		     const PtPortArray* port_array,
+		     const PtIOHeadArray* iohead_array,
+		     const PtDeclHeadArray* declhead_array,
+		     const PtItemArray* item_array) :
   mFileRegion{file_region},
   mName{name},
   mDefDecayTime{decay},
@@ -71,15 +71,17 @@ CptModule::CptModule(const FileRegion& file_region,
     ;
 
   mIODeclNum = 0;
-  for ( auto head: mIOHeadArray ) {
-    mIODeclNum += head->item_list().size();
+  for ( auto head: *mIOHeadArray ) {
+    mIODeclNum += head->item_list()->size();
   }
 
-  for ( auto item: mItemArray ) {
+#if 0
+  for ( auto item: *mItemArray ) {
     if ( item->type() == PtItemType::Func ) {
       mFuncDic[item->name()] = item;
     }
   }
+#endif
 }
 
 // デストラクタ
@@ -102,21 +104,21 @@ CptModule::name() const
 }
 
 // @brief パラメータポート宣言配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 CptModule::paramport_array() const
 {
   return mParamPortArray;
 }
 
 // @brief ポートのリストを取り出す．
-PtPortArray
+const PtPortArray*
 CptModule::port_list() const
 {
   return mPortArray;
 }
 
 // @brief 入出力宣言ヘッダ配列の取得
-PtIOHeadArray
+const PtIOHeadArray*
 CptModule::iohead_array() const
 {
   return mIOHeadArray;
@@ -132,14 +134,14 @@ CptModule::iodecl_num() const
 }
 
 // @brief 宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 CptModule::declhead_array() const
 {
   return mDeclHeadArray;
 }
 
 // @brief item 配列の取得
-PtItemArray
+const PtItemArray*
 CptModule::item_array() const
 {
   return mItemArray;
@@ -306,12 +308,16 @@ CptModule::cell() const
 const PtItem*
 CptModule::find_function(const char* name) const
 {
+#if 0
   if ( mFuncDic.count(name) > 0 ) {
     return mFuncDic.at(name);
   }
   else {
     return nullptr;
   }
+#else
+  return nullptr;
+#endif
 }
 
 
@@ -458,12 +464,12 @@ CptPort1::_set_portref_dir(int pos,
 // コンストラクタ
 CptPort2::CptPort2(const FileRegion& file_region,
 		   const PtExpr* portref,
-		   PtExprArray portref_array,
+		   const PtExprArray* portref_array,
 		   const char* ext_name,
 		   void* q) :
   CptPort1(file_region, portref, ext_name),
   mPortRefArray(portref_array),
-  mDirArray{new (q) VpiDir[portref_array.size()]}
+  mDirArray{new (q) VpiDir[portref_array->size()]}
 {
 }
 
@@ -477,7 +483,7 @@ CptPort2::~CptPort2()
 int
 CptPort2::portref_size() const
 {
-  return mPortRefArray.size();
+  return mPortRefArray->size();
 }
 
 // @brief 内部のポート結線リストの取得
@@ -486,7 +492,7 @@ const PtExpr*
 CptPort2::portref_elem(int pos) const
 {
   ASSERT_COND( 0 <= pos && pos < portref_size() );
-  return mPortRefArray[pos];
+  return (*mPortRefArray)[pos];
 }
 
 // @brief 内部ポート結線の方向の取得
@@ -561,11 +567,11 @@ CptFactory::new_Module(const FileRegion& file_region,
 		       const string& config,
 		       const string& library,
 		       const string& cell,
-		       PtDeclHeadArray paramport_array,
-		       PtPortArray port_array,
-		       PtIOHeadArray iohead_array,
-		       PtDeclHeadArray declhead_array,
-		       PtItemArray item_array)
+		       const PtDeclHeadArray* paramport_array,
+		       const PtPortArray* port_array,
+		       const PtIOHeadArray* iohead_array,
+		       const PtDeclHeadArray* declhead_array,
+		       const PtItemArray* item_array)
 {
   ++ mNumModule;
   void* p{mAlloc.get_memory(sizeof(CptModule))};
@@ -629,12 +635,12 @@ CptFactory::new_Port(const FileRegion& file_region,
 PtiPort*
 CptFactory::new_Port(const FileRegion& file_region,
 		     const PtExpr* portref,
-		     PtExprArray portref_array,
+		     const PtExprArray* portref_array,
 		     const char* ext_name)
 {
   ++ mNumPort;
   void* p{mAlloc.get_memory(sizeof(CptPort2))};
-  void* q{mAlloc.get_memory(sizeof(VpiDir) * portref_array.size())};
+  void* q{mAlloc.get_memory(sizeof(VpiDir) * portref_array->size())};
   auto obj{new (p) CptPort2(file_region, portref, portref_array, ext_name, q)};
   return obj;
 }

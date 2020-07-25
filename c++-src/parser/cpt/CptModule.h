@@ -48,11 +48,11 @@ private:
 	    const string& config,
 	    const string& library,
 	    const string& cell,
-	    PtDeclHeadArray paramport_array,
-	    PtPortArray port_array,
-	    PtIOHeadArray iohead_array,
-	    PtDeclHeadArray declhead_array,
-	    PtItemArray item_array);
+	    const PtDeclHeadArray* paramport_array,
+	    const PtPortArray* port_array,
+	    const PtIOHeadArray* iohead_array,
+	    const PtDeclHeadArray* declhead_array,
+	    const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptModule();
@@ -128,15 +128,15 @@ public:
   cell() const override;
 
   /// @brief パラメータポート宣言配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   paramport_array() const override;
 
   /// @brief ポートのリストを取り出す．
-  PtPortArray
+  const PtPortArray*
   port_list() const override;
 
   /// @brief 入出力宣言ヘッダ配列の取得
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const override;
 
   /// @brief 入出力宣言の要素数の取得
@@ -145,11 +145,11 @@ public:
   iodecl_num() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const override;
 
   /// @brief 関数名から関数の検索
@@ -218,25 +218,25 @@ private:
   string mCell;
 
   // パラメータポート宣言のリスト
-  PtDeclHeadArray mParamPortArray;
+  const PtDeclHeadArray* mParamPortArray;
 
   // ポートの配列
-  PtPortArray mPortArray;
+  const PtPortArray* mPortArray;
 
   // 入出力宣言リスト
-  PtIOHeadArray mIOHeadArray;
+  const PtIOHeadArray* mIOHeadArray;
 
   // 入出力宣言の要素数
   int mIODeclNum;
 
   // 宣言リスト
-  PtDeclHeadArray mDeclHeadArray;
+  const PtDeclHeadArray* mDeclHeadArray;
 
   // 要素のリスト
-  PtItemArray mItemArray;
+  const PtItemArray* mItemArray;
 
   // 関数定義の辞書
-  unordered_map<string, const PtItem*> mFuncDic;
+  //unordered_map<string, const PtItem*> mFuncDic;
 
 };
 
@@ -404,7 +404,7 @@ private:
   /// @brief コンストラクタ
   CptPort2(const FileRegion& file_region,
 	   const PtExpr* portref,
-	   PtExprArray portref_array,
+	   const PtExprArray* portref_array,
 	   const char* ext_name,
 	   void* q);
 
@@ -451,7 +451,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ポート参照式の配列
-  PtExprArray mPortRefArray;
+  const PtExprArray* mPortRefArray;
 
   // 方向の配列
   VpiDir* mDirArray;

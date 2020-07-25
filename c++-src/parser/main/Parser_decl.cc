@@ -150,7 +150,8 @@ Parser::flush_io()
   if ( !mIOItemList.empty() ) {
     ASSERT_COND( !mCurIOHeadList->empty() );
     auto last{mCurIOHeadList->back()};
-    last->set_elem(mIOItemList.to_array());
+    auto item_array{new_array<const PtIOItem>(mIOItemList)};
+    last->set_elem(item_array);
     mIOItemList.clear();
   }
 }
@@ -259,7 +260,8 @@ Parser::flush_paramport()
   if ( !mDeclItemList.empty() ) {
     ASSERT_COND( !mParamPortHeadList.empty() );
     auto last{mParamPortHeadList.back()};
-    last->set_elem(mDeclItemList.to_array());
+    auto item_array{new_array<const PtDeclItem>(mDeclItemList)};
+    last->set_elem(item_array);
     mDeclItemList.clear();
   }
 }
@@ -541,7 +543,8 @@ Parser::add_decl_head(PtiDeclHead* head,
     reg_attrinst(head, attr_list);
     mCurDeclHeadList->push_back(head);
     if ( !mDeclItemList.empty() ) {
-      head->set_elem(mDeclItemList.to_array());
+      auto item_array{new_array<const PtDeclItem>(mDeclItemList)};
+      head->set_elem(item_array);
     }
   }
   mDeclItemList.clear();
@@ -585,7 +588,7 @@ Parser::new_DeclItem(const FileRegion& fr,
 		     const char* name,
 		     PtrList<const PtRange>* range_list)
 {
-  auto item{mFactory.new_DeclItem(fr, name, to_array(range_list))};
+  auto item{mFactory.new_DeclItem(fr, name, new_array(range_list))};
   add_decl_item(item);
 }
 

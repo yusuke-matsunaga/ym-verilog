@@ -1106,7 +1106,7 @@ parameter_override
 }
 | defparam_head error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1166,7 +1166,7 @@ parameter_declaration
 }
 | parameter_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1207,7 +1207,7 @@ specparam_declaration
 }
 | specparam_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1238,7 +1238,7 @@ inout_declaration
 }
 | inout_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1272,7 +1272,7 @@ input_declaration
 }
 | input_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1328,12 +1328,12 @@ output_declaration
 }
 | output_declhead1 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 | output_declhead2 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1406,7 +1406,7 @@ event_declaration
 }
 | event_declhead  error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1426,7 +1426,7 @@ genvar_declaration
 }
 | genvar_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1446,7 +1446,7 @@ integer_declaration
 }
 | integer_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1498,17 +1498,17 @@ net_declaration
 }
 | net_declhead1 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 | net_declhead2 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 | net_declhead3 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1674,7 +1674,7 @@ real_declaration
 }
 | real_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1694,7 +1694,7 @@ realtime_declaration
 }
 | realtime_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1715,7 +1715,7 @@ reg_declaration
 }
 | reg_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -1739,7 +1739,7 @@ time_declaration
 }
 | time_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -2236,23 +2236,23 @@ specparam_assignment
 }
 | PATHPULSE '=' '(' mintypmax_expression ')'
 {
-  //$$ = parser.new_specparam(@$, NULL, NULL, $4, NULL);
+  // $$ = parser.new_specparam(@$, NULL, NULL, $4, NULL);
 }
 | PATHPULSE '=' '(' mintypmax_expression ','
                     mintypmax_expression ')'
 {
-  //$$ = parser.new_specparam(@$, NULL, NULL, $4, $6);
+  // $$ = parser.new_specparam(@$, NULL, NULL, $4, $6);
 }
 | PATHPULSE specify_terminal '$' specify_terminal '='
                 '(' mintypmax_expression ')'
 {
-  //$$ = parser.new_specparam(@$, $2, $4, $7, NULL);
+  // $$ = parser.new_specparam(@$, $2, $4, $7, NULL);
 }
 | PATHPULSE specify_terminal '$' specify_terminal '='
                 '(' mintypmax_expression ','
                     mintypmax_expression ')'
 {
-  //$$ = parser.new_specparam(@$, $2, $4, $7, $9);
+  // $$ = parser.new_specparam(@$, $2, $4, $7, $9);
 }
 ;
 
@@ -2322,7 +2322,7 @@ function_declaration
     $$ = parser.new_Function(@$, $4, $2, $3, $7);
   }
   else {
-    $$ = NULL;
+    $$ = nullptr;
   }
 }
 | function_head opt_auto sign '[' expression ':' expression ']' IDENTIFIER ';'
@@ -2335,7 +2335,7 @@ function_declaration
     $$ = parser.new_SizedFunc(@$, $9, $2, $3, $5, $7, $12);
   }
   else {
-    $$ = NULL;
+    $$ = nullptr;
   }
 }
 | function_head opt_auto sign data_type IDENTIFIER ';'
@@ -2348,7 +2348,7 @@ function_declaration
     $$ = parser.new_TypedFunc(@$, $5, $2, $3, $4, $8);
   }
   else {
-    $$ = NULL;
+    $$ = nullptr;
   }
 }
 | function_head opt_auto sign IDENTIFIER function_port_block ';'
@@ -2361,12 +2361,12 @@ function_declaration
     $$ = parser.new_Function(@$, $4, $2, $3, $8);
   }
   else {
-    $$ = NULL;
+    $$ = nullptr;
   }
 }
 | function_head opt_auto sign '[' expression ':' expression ']'
   IDENTIFIER function_port_block ';'
-  list_of_bitem_decl
+list_of_bitem_decl
   statement
   function_tail
 {
@@ -2375,7 +2375,7 @@ function_declaration
     $$ = parser.new_SizedFunc(@$, $9, $2, $3, $5, $7, $13);
   }
   else {
-    $$ = NULL;
+    $$ = nullptr;
   }
 }
 | function_head opt_auto sign data_type IDENTIFIER function_port_block ';'
@@ -2388,12 +2388,12 @@ function_declaration
     $$ = parser.new_TypedFunc(@$, $5, $2, $3, $4, $9);
   }
   else {
-    $$ = NULL;
+    $$ = nullptr;
   }
 }
 | function_head error function_tail
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -2520,7 +2520,7 @@ task_declaration
 }
 | task_head error task_tail
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -2838,7 +2838,7 @@ block_reg_declaration
 }
 | reg_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -3522,7 +3522,7 @@ module_instantiation
 }
 | mu_head error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -3726,7 +3726,7 @@ generated_instantiation
 }
 | generate_head error generate_tail
 {
-  $$ = NULL;
+  $$ = nullptr;
   // generate 中のエラーは endgenerate まで読み飛ばす
   yyerrok;
 }
@@ -3910,12 +3910,12 @@ genvar_case_head
 | DEFAULT
 {
   parser.init_generate();
-  $$ = NULL;
+  $$ = nullptr;
 }
 | DEFAULT               ':'
 {
   parser.init_generate();
-  $$ = NULL;
+  $$ = nullptr;
 }
 ;
 
@@ -4067,12 +4067,12 @@ udp_output_declaration
 }
 | udp_output_declhead1 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 | udp_output_declhead2 error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -4103,7 +4103,7 @@ udp_input_declaration
 }
 | udp_input_declhead error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -4127,7 +4127,7 @@ udp_reg_declaration
 }
 | REG error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -4440,7 +4440,7 @@ continuous_assign
 }
 | assign_head error ';'
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -4691,6 +4691,7 @@ variable_assignment
 : variable_lvalue '=' expression
 {
   $$ = parser.new_Assign(@$, $1, $3, NULL);
+  $$ = nullptr;
 }
 ;
 
@@ -4933,22 +4934,22 @@ any_event
 event_trigger
 : MINUSGT hierarchical_identifier ';'
 {
-  const PtExpr* primary = parser.new_Primary(@2, $2);
+  auto primary = parser.new_Primary(@2, $2);
   $$ = parser.new_EventStmt(@$, primary);
 }
 | MINUSGT IDENTIFIER ';'
 {
-  const PtExpr* primary = parser.new_Primary(@2, $2);
+  auto primary = parser.new_Primary(@2, $2);
   $$ = parser.new_EventStmt(@$, primary);
 }
 | MINUSGT hierarchical_identifier nzlist_of_index ';'
 {
-  const PtExpr* primary = parser.new_Primary(FileRegion(@2, @3), $2, $3);
+  auto primary = parser.new_Primary(FileRegion(@2, @3), $2, $3);
   $$ = parser.new_EventStmt(@$, primary);
 }
 | MINUSGT IDENTIFIER nzlist_of_index ';'
 {
-  const PtExpr* primary = parser.new_Primary(FileRegion(@2, @3), $2, $3);
+  auto primary = parser.new_Primary(FileRegion(@2, @3), $2, $3);
   $$ = parser.new_EventStmt(@$, primary);
 }
 ;
@@ -5144,11 +5145,11 @@ case_item_label
 }
 | DEFAULT
 {
-  $$ = NULL;
+  $$ = nullptr;
 }
 | DEFAULT               ':'
 {
-  $$ = NULL;
+  $$ = nullptr;
 }
 ;
 
@@ -5256,7 +5257,7 @@ task_enable
 specify_block
 : SPECIFY specify_items ENDSPECIFY
 {
-  $$ = NULL;
+  $$ = nullptr;
 }
 ;
 
@@ -5561,7 +5562,7 @@ list_of_path_delay_expressions
   path_delay_expression ',' path_delay_expression
 {
   $$ = parser.new_PathDelay(@$, $1, $3, $5, $7, $9, $11, $13, $15,
-			    $17, $19, $21, $23);
+  			    $17, $19, $21, $23);
 }
 ;
 
@@ -6120,7 +6121,7 @@ nzlist_of_arguments
 argument
 : /* 空 */
 {
-  $$ = NULL;
+  $$ = nullptr;
   @$ = FileRegion();
 }
 | expression
@@ -6825,7 +6826,7 @@ numbase
 ai_list
 : // 空もありうる
 {
-  $$ = NULL;
+  $$ = nullptr;
   @$ = FileRegion();
 }
 | nz_ai_list
@@ -6855,7 +6856,7 @@ attr_inst
 }
 | PRSTAR error STARPR
 {
-  $$ = NULL;
+  $$ = nullptr;
   yyerrok;
 }
 ;
@@ -6987,7 +6988,7 @@ hierarchical_identifier
 		    MsgType::Error,
 		    "PARS",
 		    "illegal expression in hierarchical identifier.");
-    $$ = NULL;
+    $$ = nullptr;
     YYERROR;
   }
   else {
@@ -7008,7 +7009,7 @@ hierarchical_identifier
 		    MsgType::Error,
 		    "PARS",
 		    "illegal expression in hierarchical identifier.");
-    $$ = NULL;
+    $$ = nullptr;
     YYERROR;
   }
   else {

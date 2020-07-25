@@ -43,7 +43,9 @@ parse_mode(const vector<string>& filename_list,
 
   int c = loop + 1;
   for ( int i = 0; i < c; ++ i ) {
+#if 0
     try {
+#endif
       StopWatch timer;
       timer.start();
       VlMgr vlmgr;
@@ -83,6 +85,7 @@ parse_mode(const vector<string>& filename_list,
 	cerr << "Total " << MsgMgr::error_num() << " errors" << endl;
 	break;
       }
+#if 0
     }
     catch ( AssertError x ) {
       cerr << x << endl;
@@ -94,6 +97,7 @@ parse_mode(const vector<string>& filename_list,
     catch (...) {
       cerr << "unkown exception" << endl;
     }
+#endif
   }
 }
 

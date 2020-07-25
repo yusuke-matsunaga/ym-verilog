@@ -88,18 +88,18 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
   // この case 文に関係する全ての式のリスト
   vector<ElbExpr*> expr_list;
   SizeType ne = 0;
-  for ( auto pt_item: pt_stmt->caseitem_list() ) {
-    ne += pt_item->label_list().size();
+  for ( auto pt_item: *pt_stmt->caseitem_list() ) {
+    ne += pt_item->label_list()->size();
   }
   expr_list.reserve(ne);
 
   // default caseitem を末尾にするために順序づけを行う．
   // Parser::check_default_label() で default が高々1個しかないことは確認済み．
-  SizeType nc = pt_stmt->caseitem_list().size();
+  SizeType nc = pt_stmt->caseitem_list()->size();
   vector<const PtCaseItem*> caseitem_list(nc);
   SizeType wpos = 0;
-  for ( auto pt_item: pt_stmt->caseitem_list() ) {
-    if ( pt_item->label_list().size() > 0 ) {
+  for ( auto pt_item: *pt_stmt->caseitem_list() ) {
+    if ( pt_item->label_list()->size() > 0 ) {
       caseitem_list[wpos] = pt_item;
       ++ wpos;
     }
@@ -120,10 +120,10 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
     }
 
     // ラベルの生成と設定
-    SizeType n = pt_item->label_list().size();
+    SizeType n = pt_item->label_list()->size();
     ElbExpr** label_list = factory().new_ExprList(n);
     SizeType pos = 0;
-    for ( auto pt_expr: pt_item->label_list() ) {
+    for ( auto pt_expr: *pt_item->label_list() ) {
       ElbExpr* tmp = instantiate_expr(parent, env, pt_expr);
       if ( !tmp ) {
 	// たぶんエラー

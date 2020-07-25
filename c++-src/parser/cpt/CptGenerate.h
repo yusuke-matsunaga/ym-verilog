@@ -23,8 +23,8 @@ class CptGenBody
 public:
 
   /// @brief コンストラクタ
-  CptGenBody(PtDeclHeadArray declhead_array,
-	     PtItemArray item_array);
+  CptGenBody(const PtDeclHeadArray* declhead_array,
+	     const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenBody();
@@ -33,11 +33,11 @@ public:
 public:
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const { return mDeclHeadArray; }
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const { return mItemArray; }
 
 
@@ -47,10 +47,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 宣言の配列
-  PtDeclHeadArray mDeclHeadArray;
+  const PtDeclHeadArray* mDeclHeadArray;
 
   // 要素の配列
-  PtItemArray mItemArray;
+  const PtItemArray* mItemArray;
 
 };
 
@@ -67,8 +67,8 @@ protected:
 
   /// @brief コンストラクタ
   CptGenBase(const FileRegion& file_region,
-	     PtDeclHeadArray declhead_array,
-	     PtItemArray item_array);
+	     const PtDeclHeadArray* declhead_array,
+	     const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenBase();
@@ -84,11 +84,11 @@ public:
   file_region() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const override;
 
 
@@ -118,8 +118,8 @@ protected:
 
   /// @brief コンストラクタ
   CptGenerate(const FileRegion& file_region,
-	      PtDeclHeadArray declhead_array,
-	      PtItemArray item_array);
+	      const PtDeclHeadArray* declhead_array,
+	      const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenerate();
@@ -150,8 +150,8 @@ protected:
 
   /// @brief コンストラクタ
   CptGenBlock(const FileRegion& file_region,
-	      PtDeclHeadArray declhead_array,
-	      PtItemArray item_array);
+	      const PtDeclHeadArray* declhead_array,
+	      const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenBlock();
@@ -183,8 +183,8 @@ protected:
   /// @brief コンストラクタ
   CptGenBlockN(const FileRegion& file_region,
 	       const char* name,
-	       PtDeclHeadArray declhead_array,
-	       PtItemArray item_array);
+	       const PtDeclHeadArray* declhead_array,
+	       const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenBlockN();
@@ -224,10 +224,10 @@ protected:
   /// @brief コンストラクタ
   CptGenIf(const FileRegion& file_region,
 	   const PtExpr* cond,
-	   PtDeclHeadArray then_declhead_array,
-	   PtItemArray then_item_array,
-	   PtDeclHeadArray else_declhead_array,
-	   PtItemArray else_item_array);
+	   const PtDeclHeadArray* then_declhead_array,
+	   const PtItemArray* then_item_array,
+	   const PtDeclHeadArray* else_declhead_array,
+	   const PtItemArray* else_item_array);
 
   /// @brief デストラクタ
   ~CptGenIf();
@@ -252,19 +252,19 @@ public:
   expr() const override;
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   then_declhead_array() const override;
 
   /// @brief 条件が成り立ったときに生成される item 配列の取得
-  PtItemArray
+  const PtItemArray*
   then_item_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   else_declhead_array() const override;
 
   /// @brief 条件が成り立たなかったときに生成される item 配列の取得
-  PtItemArray
+  const PtItemArray*
   else_item_array() const override;
 
 
@@ -301,7 +301,7 @@ protected:
   /// @brief コンストラクタ
   CptGenCase(const FileRegion& file_region,
 	     const PtExpr* expr,
-	     PtGenCaseItemArray item_array);
+	     const PtGenCaseItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenCase();
@@ -332,7 +332,7 @@ public:
   expr() const override;
 
   /// @brief case item のリストを返す．
-  PtGenCaseItemArray
+  const PtGenCaseItemArray*
   caseitem_list() const override;
 
 
@@ -348,7 +348,7 @@ private:
   const PtExpr* mExpr;
 
   // case item の配列
-  PtGenCaseItemArray mCaseItemArray;
+  const PtGenCaseItemArray* mCaseItemArray;
 
 };
 
@@ -365,9 +365,9 @@ protected:
 
   /// @brief コンストラクタ
   CptGenCaseItem(const FileRegion& file_region,
-		 PtExprArray label_array,
-		 PtDeclHeadArray declhead_array,
-		 PtItemArray item_array);
+		 const PtExprArray* label_array,
+		 const PtDeclHeadArray* declhead_array,
+		 const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenCaseItem();
@@ -383,15 +383,15 @@ public:
   file_region() const override;
 
   /// @brief ラベルのリストの取得
-  PtExprArray
+  const PtExprArray*
   label_list() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const override;
 
 
@@ -404,7 +404,7 @@ private:
   FileRegion mFileRegion;
 
   // ラベルの配列
-  PtExprArray mLabelArray;
+  const PtExprArray* mLabelArray;
 
   // 生成される本体
   CptGenBody mBody;
@@ -429,8 +429,8 @@ protected:
 	    const PtExpr* cond,
 	    const PtExpr* next_expr,
 	    const char* block_name,
-	    PtDeclHeadArray declhead_array,
-	    PtItemArray item_array);
+	    const PtDeclHeadArray* declhead_array,
+	    const PtItemArray* item_array);
 
   /// @brief デストラクタ
   ~CptGenFor();
@@ -455,11 +455,11 @@ public:
   name() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const override;
 
   /// @brief 繰り返し制御用の変数名を返す．

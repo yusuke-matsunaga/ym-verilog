@@ -75,7 +75,7 @@ const PtExpr*
 Parser::new_Concat(const FileRegion& fr,
 		   PtrList<const PtExpr>* expr_list)
 {
-  auto expr{mFactory.new_Concat(fr, to_array(expr_list))};
+  auto expr{mFactory.new_Concat(fr, new_array(expr_list))};
   return expr;
 }
 
@@ -89,7 +89,18 @@ Parser::new_MultiConcat(const FileRegion& fr,
 			const PtExpr* rep,
 			PtrList<const PtExpr>* expr_list)
 {
-  auto expr{mFactory.new_MultiConcat(fr, ExprArray(rep, expr_list))};
+  SizeType n = expr_list->size();
+  vector<const PtExpr*> vec(n + 1);
+  vec[0] = rep;
+  int i = 1;
+  for ( auto expr: *expr_list ) {
+    vec[i] = expr;
+    ++ i;
+  }
+
+  void* p{mPtMgr.alloc().get_memory(sizeof(PtExprArray))};
+  auto expr_array{new (p) PtExprArray(mPtMgr.alloc(), vec)};
+  auto expr{mFactory.new_MultiConcat(fr, expr_array)};
   return expr;
 }
 
@@ -131,7 +142,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const char* name,
 		    PtrList<const PtExpr>* index_array)
 {
-  auto expr{mFactory.new_Primary(fr, name, to_array(index_array))};
+  auto expr{mFactory.new_Primary(fr, name, new_array(index_array))};
   return expr;
 }
 
@@ -169,7 +180,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  auto expr{mFactory.new_Primary(fr, name, to_array(index_list),
+  auto expr{mFactory.new_Primary(fr, name, new_array(index_list),
 				 mode, left, right)};
   return expr;
 }
@@ -182,9 +193,7 @@ const PtExpr*
 Parser::new_Primary(const FileRegion& fr,
 		    PuHierName* hname)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto expr{mFactory.new_Primary(fr, nb_array, tail_name)};
+  auto expr{mFactory.new_Primary(fr, hname)};
   return expr;
 }
 
@@ -198,9 +207,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    PuHierName* hname,
 		    PtrList<const PtExpr>* index_list)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto expr{mFactory.new_Primary(fr, nb_array, tail_name, to_array(index_list))};
+  auto expr{mFactory.new_Primary(fr, hname, new_array(index_list))};
   return expr;
 }
 
@@ -218,9 +225,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto expr{mFactory.new_Primary(fr, nb_array, tail_name, mode, left, right)};
+  auto expr{mFactory.new_Primary(fr, hname, mode, left, right)};
   return expr;
 }
 
@@ -240,9 +245,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto expr{mFactory.new_Primary(fr, nb_array, tail_name, to_array(index_list),
+  auto expr{mFactory.new_Primary(fr, hname, new_array(index_list),
 				 mode, left, right)};
   return expr;
 }
@@ -271,7 +274,7 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     const char* name,
 		     PtrList<const PtExpr>* index_list)
 {
-  auto expr{mFactory.new_CPrimary(fr, name, to_array(index_list))};
+  auto expr{mFactory.new_CPrimary(fr, name, new_array(index_list))};
   return expr;
 }
 
@@ -303,9 +306,7 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     PuHierName* hname,
 		     PtrList<const PtExpr>* index_list)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto expr{mFactory.new_CPrimary(fr, nb_array, tail_name, to_array(index_list))};
+  auto expr{mFactory.new_CPrimary(fr, hname, new_array(index_list))};
   return expr;
 }
 
@@ -320,7 +321,7 @@ Parser::new_FuncCall(const FileRegion& fr,
 		     PtrList<const PtExpr>* arg_list,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  auto expr{mFactory.new_FuncCall(fr, name, to_array(arg_list))};
+  auto expr{mFactory.new_FuncCall(fr, name, new_array(arg_list))};
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -336,9 +337,7 @@ Parser::new_FuncCall(const FileRegion& fr,
 		     PtrList<const PtExpr>* arg_list,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto expr{mFactory.new_FuncCall(fr, nb_array, tail_name, to_array(arg_list))};
+  auto expr{mFactory.new_FuncCall(fr, hname, new_array(arg_list))};
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -353,7 +352,7 @@ Parser::new_SysFuncCall(const FileRegion& fr,
 			const char* name,
 			PtrList<const PtExpr>* arg_list)
 {
-  auto expr{mFactory.new_SysFuncCall(fr, name, to_array(arg_list))};
+  auto expr{mFactory.new_SysFuncCall(fr, name, new_array(arg_list))};
   return expr;
 }
 

@@ -10,38 +10,10 @@
 
 
 #include "ym/pt/PtP.h"
-#include "SimpleAlloc.h"
+#include "alloc/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
-
-struct str_hash
-{
-  size_t
-  operator()(const char* str) const
-  {
-    if ( str == 0 ) {
-      return 0;
-    }
-    size_t h = 0;
-    size_t n = strlen(str);
-    for ( int i = 0; i < n; ++ i ) {
-      h = h * 33 + str[i];
-    }
-    return h;
-  }
-};
-
-struct str_eq
-{
-  bool
-  operator()(const char* str1,
-	     const char* str2) const
-  {
-    return strcmp(str1, str2) == 0;
-  }
-};
-
 
 //////////////////////////////////////////////////////////////////////
 /// @class PtMgr PtMgr.h <ym/PtMgr.h>
@@ -67,7 +39,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief アロケータを返す．
-  Alloc&
+  PtAlloc&
   alloc();
 
   /// @brief 登録されているモジュールのリストを返す．
@@ -137,10 +109,10 @@ private:
 
   // インスタンス記述で用いられている名前
   // たぶんモジュール名か UDP名のはず
-  unordered_set<const char*, str_hash, str_eq> mDefNames;
+  unordered_set<string> mDefNames;
 
   // 文字列の辞書
-  unordered_set<const char*, str_hash, str_eq> mStringPool;
+  unordered_set<string> mStringPool;
 
 };
 

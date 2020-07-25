@@ -44,7 +44,7 @@ public:
   /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
   virtual
-  PtExprArray
+  const PtExprArray*
   event_list() const = 0;
 
   /// @brief 繰り返し数の取得
@@ -193,7 +193,7 @@ public:
 /// @param[in] name 末尾の名前
 /// @return 階層名を展開したものを返す．
 string
-expand_full_name(const PtNameBranchArray& nb_array,
+expand_full_name(const PtNameBranchArray* nb_array,
 		 const char* name);
 
 
@@ -213,7 +213,7 @@ public:
 
   /// @brief 要素のリストの取得
   virtual
-  PtAttrSpecArray
+  const PtAttrSpecArray*
   attrspec_list() const = 0;
 
 };

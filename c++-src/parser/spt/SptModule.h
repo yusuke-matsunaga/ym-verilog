@@ -45,11 +45,11 @@ private:
 	    const string& config,
 	    const string& library,
 	    const string& cell,
-	    PtDeclHeadArray paramport_array,
-	    PtPortArray port_array,
-	    PtIOHeadArray iodecl_array,
-	    PtDeclHeadArray decl_array,
-	    PtItemArray item_array);
+	    const PtDeclHeadArray* paramport_array,
+	    const PtPortArray* port_array,
+	    const PtIOHeadArray* iodecl_array,
+	    const PtDeclHeadArray* decl_array,
+	    const PtItemArray* item_array);
 
   /// デストラクタ
   ~SptModule();
@@ -125,15 +125,15 @@ public:
   cell() const override;
 
   /// @brief パラメータポート宣言配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   paramport_array() const override;
 
   /// @brief ポートのリストの取得
-  PtPortArray
+  const PtPortArray*
   port_list() const override;
 
   /// @brief 入出力宣言ヘッダ配列の取得
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const override;
 
   /// @brief 入出力宣言の要素数の取得
@@ -142,11 +142,11 @@ public:
   iodecl_num() const override;
 
   /// @brief 宣言ヘッダ配列の取得
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief item 配列の取得
-  PtItemArray
+  const PtItemArray*
   item_array() const override;
 
   /// 関数名から関数の検索
@@ -215,22 +215,22 @@ private:
   string mCell;
 
   // パラメータポート宣言の配列
-  PtDeclHeadArray mParamPortArray;
+  const PtDeclHeadArray* mParamPortArray;
 
   // ポートの配列
-  PtPortArray mPortArray;
+  const PtPortArray* mPortArray;
 
   // 入出力宣言の配列
-  PtIOHeadArray mIOHeadArray;
+  const PtIOHeadArray* mIOHeadArray;
 
   // 入出力宣言の要素数
   SizeType mIODeclNum;
 
   // 宣言リスト
-  PtDeclHeadArray mDeclHeadArray;
+  const PtDeclHeadArray* mDeclHeadArray;
 
   // 要素のリスト
-  PtItemArray mItemArray;
+  const PtItemArray* mItemArray;
 
   // 関数定義の辞書
   unordered_map<string, const PtItem*> mFuncDic;
@@ -251,7 +251,7 @@ private:
   /// @brief コンストラクタ
   SptPort(const FileRegion& file_region,
 	  const PtExpr* portref,
-	  PtExprArray portref_array,
+	  const PtExprArray* portref_array,
 	  const char* ext_name);
 
   /// @brief デストラクタ
@@ -316,7 +316,7 @@ private:
   const PtExpr* mPortRef;
 
   // portref の配列
-  PtExprArray mPortRefArray;
+  const PtExprArray* mPortRefArray;
 
   // portref の方向の配列
   VpiDir* mDirArray;

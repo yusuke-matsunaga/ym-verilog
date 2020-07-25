@@ -9,7 +9,7 @@
 
 #include "CptInst.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptGateH::CptGateH(const FileRegion& file_region,
 		   VpiPrimType prim_type,
-		   PtInstArray inst_array) :
+		   const PtInstArray* inst_array) :
   mFileRegion(file_region),
   mPrimType(prim_type),
   mInstArray(inst_array)
@@ -56,7 +56,7 @@ CptGateH::prim_type() const
 }
 
 // @brief module/UDP/gate instance リストの取得
-PtInstArray
+const PtInstArray*
 CptGateH::inst_list() const
 {
   return mInstArray;
@@ -71,7 +71,7 @@ CptGateH::inst_list() const
 CptGateHS::CptGateHS(const FileRegion& file_region,
 		     VpiPrimType prim_type,
 		     const PtStrength* strength,
-		     PtInstArray inst_array) :
+		     const PtInstArray* inst_array) :
   CptGateH(file_region, prim_type, inst_array),
   mStrength(strength)
 {
@@ -98,7 +98,7 @@ CptGateHS::strength() const
 CptGateHD::CptGateHD(const FileRegion& file_region,
 		     VpiPrimType prim_type,
 		     const PtDelay* delay,
-		     PtInstArray inst_array) :
+		     const PtInstArray* inst_array) :
   CptGateH(file_region, prim_type, inst_array),
   mDelay(delay)
 {
@@ -126,7 +126,7 @@ CptGateHSD::CptGateHSD(const FileRegion& file_region,
 		       VpiPrimType prim_type,
 		       const PtStrength* strength,
 		       const PtDelay* delay,
-		       PtInstArray inst_array) :
+		       const PtInstArray* inst_array) :
   CptGateH(file_region, prim_type, inst_array),
   mStrength(strength),
   mDelay(delay)
@@ -160,7 +160,7 @@ CptGateHSD::delay() const
 // コンストラクタ
 CptMuH::CptMuH(const FileRegion& file_region,
 	       const char* def_name,
-	       PtInstArray inst_array) :
+	       const PtInstArray* inst_array) :
   mFileRegion(file_region),
   mName(def_name),
   mInstArray(inst_array)
@@ -194,7 +194,7 @@ CptMuH::name() const
 }
 
 // @brief module/UDP/gate instance リストの取得
-PtInstArray
+const PtInstArray*
 CptMuH::inst_list() const
 {
   return mInstArray;
@@ -208,8 +208,8 @@ CptMuH::inst_list() const
 // コンストラクタ
 CptMuHP::CptMuHP(const FileRegion& file_region,
 		 const char* def_name,
-		 PtConnectionArray con_array,
-		 PtInstArray inst_array) :
+		 const PtConnectionArray* con_array,
+		 const PtInstArray* inst_array) :
   CptMuH(file_region, def_name, inst_array),
   mParamAssignArray(con_array)
 {
@@ -221,7 +221,7 @@ CptMuHP::~CptMuHP()
 }
 
 // @brief パラメータ割り当てリストの取得
-PtConnectionArray
+const PtConnectionArray*
 CptMuHP::paramassign_array() const
 {
   return mParamAssignArray;
@@ -236,7 +236,7 @@ CptMuHP::paramassign_array() const
 CptMuHS::CptMuHS(const FileRegion& file_region,
 		 const char* def_name,
 		 const PtStrength* strength,
-		 PtInstArray inst_array) :
+		 const PtInstArray* inst_array) :
   CptMuH(file_region, def_name, inst_array),
   mStrength(strength)
 {
@@ -263,7 +263,7 @@ CptMuHS::strength() const
 CptMuHD::CptMuHD(const FileRegion& file_region,
 		 const char* def_name,
 		 const PtDelay* delay,
-		 PtInstArray inst_array) :
+		 const PtInstArray* inst_array) :
   CptMuH(file_region, def_name, inst_array),
   mDelay(delay)
 {
@@ -291,7 +291,7 @@ CptMuHSD::CptMuHSD(const FileRegion& file_region,
 		   const char* def_name,
 		   const PtStrength* strength,
 		   const PtDelay* delay,
-		   PtInstArray inst_array) :
+		   const PtInstArray* inst_array) :
   CptMuH(file_region, def_name, inst_array),
   mStrength(strength),
   mDelay(delay)
@@ -324,7 +324,7 @@ CptMuHSD::delay() const
 
 // コンストラクタ
 CptInst::CptInst(const FileRegion& file_region,
-		 PtConnectionArray con_array) :
+		 const PtConnectionArray* con_array) :
   mFileRegion(file_region),
   mPortArray(con_array)
 {
@@ -370,7 +370,7 @@ CptInst::right_range() const
 }
 
 // @brief ポートのリストの取得
-PtConnectionArray
+const PtConnectionArray*
 CptInst::port_list() const
 {
   return mPortArray;
@@ -384,7 +384,7 @@ CptInst::port_list() const
 // コンストラクタ
 CptInstN::CptInstN(const FileRegion& file_region,
 		   const char* name,
-		   PtConnectionArray con_array) :
+		   const PtConnectionArray* con_array) :
   CptInst(file_region, con_array),
   mName(name)
 {
@@ -409,10 +409,10 @@ CptInstN::name() const
 
 // コンストラクタ
 CptInstR::CptInstR(const FileRegion& file_region,
-		       const char* name,
-		       const PtExpr* left,
-		       const PtExpr* right,
-		       PtConnectionArray con_array) :
+		   const char* name,
+		   const PtExpr* left,
+		   const PtExpr* right,
+		   const PtConnectionArray* con_array) :
   CptInstN(file_region, name, con_array),
   mLeftRange(left),
   mRightRange(right)
@@ -447,7 +447,7 @@ CptInstR::right_range() const
 const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
-		      PtInstArray inst_array)
+		      const PtInstArray* inst_array)
 {
   ++ mNumGateH;
   void* p{mAlloc.get_memory(sizeof(CptGateH))};
@@ -460,7 +460,7 @@ const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtStrength* strength,
-		      PtInstArray inst_array)
+		      const PtInstArray* inst_array)
 {
   ++ mNumGateHS;
   void* p{mAlloc.get_memory(sizeof(CptGateHS))};
@@ -474,7 +474,7 @@ const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtDelay* delay,
-		      PtInstArray inst_array)
+		      const PtInstArray* inst_array)
 {
   ++ mNumGateHD;
   void* p{mAlloc.get_memory(sizeof(CptGateHD))};
@@ -489,7 +489,7 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtStrength* strength,
 		      const PtDelay* delay,
-		      PtInstArray inst_array)
+		      const PtInstArray* inst_array)
 {
   ++ mNumGateHSD;
   void* p{mAlloc.get_memory(sizeof(CptGateHSD))};
@@ -502,7 +502,7 @@ CptFactory::new_GateH(const FileRegion& file_region,
 const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
-		    PtInstArray inst_array)
+		    const PtInstArray* inst_array)
 {
   ++ mNumMuH;
   void* p{mAlloc.get_memory(sizeof(CptMuH))};
@@ -515,7 +515,7 @@ const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtStrength* strength,
-		    PtInstArray inst_array)
+		    const PtInstArray* inst_array)
 {
   ++ mNumMuHS;
   void* p{mAlloc.get_memory(sizeof(CptMuHS))};
@@ -529,7 +529,7 @@ const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtDelay* delay,
-		    PtInstArray inst_array)
+		    const PtInstArray* inst_array)
 {
   ++ mNumMuHD;
   void* p{mAlloc.get_memory(sizeof(CptMuHD))};
@@ -544,7 +544,7 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtStrength* strength,
 		    const PtDelay* delay,
-		    PtInstArray inst_array)
+		    const PtInstArray* inst_array)
 {
   ++ mNumMuHSD;
   void* p{mAlloc.get_memory(sizeof(CptMuHSD))};
@@ -557,8 +557,8 @@ CptFactory::new_MuH(const FileRegion& file_region,
 const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
-		    PtConnectionArray con_array,
-		    PtInstArray inst_array)
+		    const PtConnectionArray* con_array,
+		    const PtInstArray* inst_array)
 {
   ++ mNumMuHP;
   void* p{mAlloc.get_memory(sizeof(CptMuHP))};
@@ -570,7 +570,7 @@ CptFactory::new_MuH(const FileRegion& file_region,
 // module instance/UDP instance の要素を生成する．
 const PtInst*
 CptFactory::new_Inst(const FileRegion& file_region,
-		     PtConnectionArray con_array)
+		     const PtConnectionArray* con_array)
 {
   ++ mNumInst;
   void* p{mAlloc.get_memory(sizeof(CptInst))};
@@ -582,7 +582,7 @@ CptFactory::new_Inst(const FileRegion& file_region,
 const PtInst*
 CptFactory::new_InstN(const FileRegion& file_region,
 		      const char* name,
-		      PtConnectionArray con_array)
+		      const PtConnectionArray* con_array)
 {
   ++ mNumInstN;
   void* p{mAlloc.get_memory(sizeof(CptInstN))};
@@ -596,7 +596,7 @@ CptFactory::new_InstV(const FileRegion& file_region,
 		      const char* name,
 		      const PtExpr* left,
 		      const PtExpr* right,
-		      PtConnectionArray con_array)
+		      const PtConnectionArray* con_array)
 {
   ++ mNumInstR;
   void* p{mAlloc.get_memory(sizeof(CptInstR))};

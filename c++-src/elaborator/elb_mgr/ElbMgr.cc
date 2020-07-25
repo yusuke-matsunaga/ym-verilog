@@ -440,7 +440,7 @@ ElbMgr::find_obj(const VlNamedObj* scope,
 // 見付からなかったら nullptr を返す．
 ElbObjHandle*
 ElbMgr::find_obj_up(const VlNamedObj* base_scope,
-		    PtNameBranchArray nb_array,
+		    const PtNameBranchArray* nb_array,
 		    const char* name,
 		    const VlNamedObj* ulimit)
 {
@@ -482,7 +482,7 @@ ElbMgr::find_obj_up(const VlNamedObj* base_scope,
 // なければ親のスコープに対して同様の探索を繰り返す．
 const VlNamedObj*
 ElbMgr::find_scope_up(const VlNamedObj* base_scope,
-		      PtNameBranchArray nb_array,
+		      const PtNameBranchArray* nb_array,
 		      const VlNamedObj* ulimit)
 {
   if ( debug & debug_find_scope ) {
@@ -492,10 +492,10 @@ ElbMgr::find_scope_up(const VlNamedObj* base_scope,
 	 << base_scope->full_name() << endl;
   }
 
-  ymuint n = nb_array.size();
+  int n = nb_array->size();
   const VlNamedObj* cur_scope = base_scope;
-  for (ymuint i = 0; i < n; ) {
-    const PtNameBranch* name_branch = nb_array[i];
+  for ( int i = 0; i < n; ) {
+    const PtNameBranch* name_branch = (*nb_array)[i];
     const char* top_name = name_branch->name();
     const VlNamedObj* top_scope = nullptr;
     // まず普通に探す．

@@ -9,6 +9,7 @@
 
 #include "SptExpr.h"
 #include "parser/SptFactory.h"
+#include "parser/PuHierName.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -60,10 +61,10 @@ SptExpr::op_type() const
 // @brief 階層ブランチの取得
 // system function call の場合は常に nullptr
 // このクラスでは nullptr を返す．
-PtNameBranchArray
+const PtNameBranchArray*
 SptExpr::namebranch_array() const
 {
-  return PtNameBranchArray();
+  return nullptr;
 }
 
 // @brief 末尾の名前の取得
@@ -373,7 +374,7 @@ SptOpr1::operand(SizeType pos) const
 // @param[in] opr_array オペランドのリスト
 SptOpr2::SptOpr2(const FileRegion& file_region,
 		 VpiOpType op_type,
-		 PtExprArray opr_array) :
+		 const PtExprArray* opr_array) :
   SptExpr{file_region, PtExprType::Opr},
   mOpType{op_type},
   mExprArray{opr_array}
@@ -415,7 +416,7 @@ SptOpr2::index_value() const
 SizeType
 SptOpr2::operand_num() const
 {
-  return mExprArray.size();
+  return mExprArray->size();
 }
 
 // @brief 0番目のオペランドの取得
@@ -423,7 +424,7 @@ const PtExpr*
 SptOpr2::operand0() const
 {
   if ( operand_num() > 0 ) {
-    return mExprArray[0];
+    return (*mExprArray)[0];
   }
   else {
     return nullptr;
@@ -435,7 +436,7 @@ const PtExpr*
 SptOpr2::operand1() const
 {
   if ( operand_num() > 1 ) {
-    return mExprArray[1];
+    return (*mExprArray)[1];
   }
   else {
     return nullptr;
@@ -447,7 +448,7 @@ const PtExpr*
 SptOpr2::operand2() const
 {
   if ( operand_num() > 2 ) {
-    return mExprArray[2];
+    return (*mExprArray)[2];
   }
   else {
     return nullptr;
@@ -461,7 +462,7 @@ const PtExpr*
 SptOpr2::operand(SizeType pos) const
 {
   if ( operand_num() > pos ) {
-    return mExprArray[pos];
+    return (*mExprArray)[pos];
   }
   else {
     return nullptr;
@@ -482,9 +483,9 @@ SptOpr2::operand(SizeType pos) const
 // @param[in] arg_list 引数のリスト
 SptFuncCall::SptFuncCall(const FileRegion& file_region,
 			 PtExprType type,
-			 PtNameBranchArray nb_array,
+			 const PtNameBranchArray* nb_array,
 			 const char* name,
-			 PtExprArray arg_array) :
+			 const PtExprArray* arg_array) :
   SptExpr{file_region, type},
   mNbArray{nb_array},
   mName{name},
@@ -498,7 +499,7 @@ SptFuncCall::~SptFuncCall()
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 SptFuncCall::namebranch_array() const
 {
   return mNbArray;
@@ -517,43 +518,28 @@ SptFuncCall::name() const
 SizeType
 SptFuncCall::operand_num() const
 {
-  return mArgArray.size();
+  return mArgArray->size();
 }
 
 // @brief 0番目のオペランドの取得
 const PtExpr*
 SptFuncCall::operand0() const
 {
-  if ( operand_num() > 0 ) {
-    return mArgArray[0];
-  }
-  else {
-    return nullptr;
-  }
+  return operand(0);
 }
 
 // @brief 1番目のオペランドの取得
 const PtExpr*
 SptFuncCall::operand1() const
 {
-  if ( operand_num() > 1 ) {
-    return mArgArray[1];
-  }
-  else {
-    return nullptr;
-  }
+  return operand(1);
 }
 
 // @brief 2番目のオペランドの取得
 const PtExpr*
 SptFuncCall::operand2() const
 {
-  if ( operand_num() > 2 ) {
-    return mArgArray[2];
-  }
-  else {
-    return nullptr;
-  }
+  return operand(2);
 }
 
 // @brief オペランドの取得
@@ -563,7 +549,7 @@ const PtExpr*
 SptFuncCall::operand(SizeType pos) const
 {
   if ( operand_num() > pos ) {
-    return mArgArray[pos];
+    return (*mArgArray)[pos];
   }
   else {
     return nullptr;
@@ -585,10 +571,10 @@ SptFuncCall::operand(SizeType pos) const
 // @param[in] left 範囲の左側の式
 // @param[in] right 範囲の右側の式
 SptPrimary::SptPrimary(const FileRegion& file_region,
-		       PtNameBranchArray nb_array,
+		       const PtNameBranchArray* nb_array,
 		       const char* tail_name,
 		       bool const_index,
-		       PtExprArray index_array,
+		       const PtExprArray* index_array,
 		       VpiRangeMode mode,
 		       const PtExpr* left,
 		       const PtExpr* right) :
@@ -609,7 +595,7 @@ SptPrimary::~SptPrimary()
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 SptPrimary::namebranch_array() const
 {
   return mNbArray;
@@ -637,7 +623,7 @@ SptPrimary::is_const_index() const
 SizeType
 SptPrimary::index_num() const
 {
-  return mIndexArray.size();
+  return mIndexArray->size();
 }
 
 // @brief インデックスの取得
@@ -645,7 +631,7 @@ SptPrimary::index_num() const
 const PtExpr*
 SptPrimary::index(SizeType pos) const
 {
-  return mIndexArray[pos];
+  return (*mIndexArray)[pos];
 }
 
 // @brief 範囲指定モードの取得
@@ -816,7 +802,7 @@ SptFactory::new_Opr(const FileRegion& file_region,
 // @return 生成された concatination 演算子
 const PtExpr*
 SptFactory::new_Concat(const FileRegion& file_region,
-		       PtExprArray expr_array)
+		       const PtExprArray* expr_array)
 {
   auto node = new SptOpr2(file_region, VpiOpType::Concat, expr_array);
   return node;
@@ -828,7 +814,7 @@ SptFactory::new_Concat(const FileRegion& file_region,
 // @return 生成された multi-concatination 演算子
 const PtExpr*
 SptFactory::new_MultiConcat(const FileRegion& file_region,
-			    PtExprArray expr_array)
+			    const PtExprArray* expr_array)
 {
   auto node = new SptOpr2(file_region, VpiOpType::MultiConcat, expr_array);
   return node;
@@ -860,7 +846,7 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name)
 {
   auto node = new SptPrimary(file_region,
-			     PtNameBranchArray(),
+			     nullptr,
 			     name,
 			     false);
   return node;
@@ -874,10 +860,10 @@ SptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
-			PtExprArray index_array)
+			const PtExprArray* index_array)
 {
   auto node = new SptPrimary(file_region,
-			     PtNameBranchArray(),
+			     nullptr,
 			     name,
 			     false,
 			     index_array);
@@ -899,10 +885,10 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* right)
 {
   auto node = new SptPrimary(file_region,
-			     PtNameBranchArray(),
+			     nullptr,
 			     name,
 			     false,
-			     PtExprArray(),
+			     nullptr,
 			     mode, left, right);
   return node;
 }
@@ -918,13 +904,13 @@ SptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
-			PtExprArray index_array,
+			const PtExprArray* index_array,
 			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
   auto node = new SptPrimary(file_region,
-			     PtNameBranchArray(),
+			     nullptr,
 			     name,
 			     false,
 			     index_array,
@@ -939,9 +925,10 @@ SptFactory::new_Primary(const FileRegion& file_region,
 // @return 生成された primary
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name)
+			PuHierName* hname)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     nb_array,
 			     tail_name,
@@ -957,10 +944,11 @@ SptFactory::new_Primary(const FileRegion& file_region,
 // @return 生成された primary
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name,
-			PtExprArray index_array)
+			PuHierName* hname,
+			const PtExprArray* index_array)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     nb_array,
 			     tail_name,
@@ -979,17 +967,18 @@ SptFactory::new_Primary(const FileRegion& file_region,
 // @return 生成された primary
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name,
+			PuHierName* hname,
 			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     nb_array,
 			     tail_name,
 			     false,
-			     PtExprArray(),
+			     nullptr,
 			     mode, left, right);
   return node;
 }
@@ -1005,13 +994,14 @@ SptFactory::new_Primary(const FileRegion& file_region,
 // @return 生成された primary
 const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name,
-			PtExprArray index_array,
+			PuHierName* hname,
+			const PtExprArray* index_array,
 			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     nb_array,
 			     tail_name,
@@ -1029,10 +1019,10 @@ SptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_CPrimary(const FileRegion& file_region,
 			 const char* name,
-			 PtExprArray index_array)
+			 const PtExprArray* index_array)
 {
   auto node = new SptPrimary(file_region,
-			     PtNameBranchArray(),
+			     nullptr,
 			     name,
 			     true,
 			     index_array);
@@ -1054,10 +1044,10 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 			 const PtExpr* right)
 {
   auto node = new SptPrimary(file_region,
-			     PtNameBranchArray(),
+			     nullptr,
 			     name,
 			     true,
-			     PtExprArray(),
+			     nullptr,
 			     mode, left, right);
   return node;
 }
@@ -1070,10 +1060,11 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 // @return 生成された constant primary
 const PtExpr*
 SptFactory::new_CPrimary(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
-			 const char* tail_name,
-			 PtExprArray index_array)
+			 PuHierName* hname,
+			 const PtExprArray* index_array)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     nb_array,
 			     tail_name,
@@ -1091,10 +1082,10 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* name,
-			 PtExprArray arg_array)
+			 const PtExprArray* arg_array)
 {
   auto node = new SptFuncCall(file_region, PtExprType::FuncCall,
-			      PtNameBranchArray(),
+			      nullptr,
 			      name, arg_array);
   return node;
 }
@@ -1107,10 +1098,11 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 // @return 生成された function call
 const PtExpr*
 SptFactory::new_FuncCall(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
-			 const char* tail_name,
-			 PtExprArray arg_array)
+			 PuHierName* hname,
+			 const PtExprArray* arg_array)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptFuncCall(file_region, PtExprType::FuncCall,
 			      nb_array, tail_name, arg_array);
   return node;
@@ -1124,10 +1116,10 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 const PtExpr*
 SptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    const char* name,
-			    PtExprArray arg_array)
+			    const PtExprArray* arg_array)
 {
   auto node = new SptFuncCall(file_region, PtExprType::SysFuncCall,
-			      PtNameBranchArray(),
+			      nullptr,
 			      name, arg_array);
   return node;
 }

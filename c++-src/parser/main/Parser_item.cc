@@ -55,9 +55,7 @@ Parser::new_DefParam(const FileRegion& fr,
 		     PuHierName* hname,
 		     const PtExpr* value)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto defparam{mFactory.new_DefParam(fr, nb_array, tail_name, value)};
+  auto defparam{mFactory.new_DefParam(fr, hname, value)};
   add_defparam(defparam);
 }
 
@@ -71,10 +69,10 @@ Parser::add_defparam(const PtDefParam* defparam)
 
 // @brief defparam リストを配列に変換する．
 inline
-PtDefParamArray
+const PtDefParamArray*
 Parser::get_defparam_array()
 {
-  return mDefParamList.to_array();
+  return new_array<const PtDefParam>(mDefParamList);
 }
 
 
@@ -158,10 +156,10 @@ Parser::add_contassign(const PtContAssign* contassign)
 
 // @brief contassign リストを配列に変換する．
 inline
-PtContAssignArray
+const PtContAssignArray*
 Parser::get_contassign_array()
 {
-  return mContAssignList.to_array();
+  return new_array<const PtContAssign>(mContAssignList);
 }
 
 
@@ -328,7 +326,7 @@ Parser::new_SpecItem(const FileRegion& fr,
 		     VpiSpecItemType id,
 		     PtrList<const PtExpr>* terminal_list)
 {
-  auto item{mFactory.new_SpecItem(fr, id, to_array(terminal_list))};
+  auto item{mFactory.new_SpecItem(fr, id, new_array(terminal_list))};
   mCurItemList->push_back(item);
 }
 
@@ -369,9 +367,9 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     const PtPathDelay* path_delay)
 {
   auto item{mFactory.new_PathDecl(fr, edge,
-				  to_array(input_list), input_pol,
+				  new_array(input_list), input_pol,
 				  op,
-				  to_array(output_list), output_pol,
+				  new_array(output_list), output_pol,
 				  expr, path_delay)};
   return item;
 }
@@ -398,7 +396,7 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     const PtPathDelay* path_delay)
 {
   auto item{mFactory.new_PathDecl(fr, edge,
-				  to_array(input_list), input_pol,
+				  new_array(input_list), input_pol,
 				  op,
 				  output, output_pol,
 				  expr, path_delay)};
@@ -511,18 +509,18 @@ Parser::new_PathDelay(const FileRegion& fr,
 
 // @brief task/function 用の IO宣言リストを配列に変換する．
 inline
-PtIOHeadArray
+const PtIOHeadArray*
 Parser::get_tf_io_array()
 {
-  return mTfIOHeadList.to_array();
+  return new_array2<const PtIOHead>(mTfIOHeadList);
 }
 
 // @brief task/function 用の宣言リストを配列に変換する．
 inline
-PtDeclHeadArray
+const PtDeclHeadArray*
 Parser::get_tf_decl_array()
 {
-  return mTfDeclHeadList.to_array();
+  return new_array2<const PtDeclHead, PtiDeclHead>(mTfDeclHeadList);
 }
 
 END_NAMESPACE_YM_VERILOG

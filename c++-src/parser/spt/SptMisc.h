@@ -31,7 +31,7 @@ private:
   SptControl(const FileRegion& file_region,
 	     PtCtrlType type,
 	     const PtExpr* expr,
-	     PtExprArray event_array);
+	     const PtExprArray* event_array);
 
   /// デストラクタ
   ~SptControl();
@@ -56,7 +56,7 @@ public:
 
   /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  PtExprArray
+  const PtExprArray*
   event_list() const override;
 
   /// 繰り返し数の取得
@@ -79,7 +79,7 @@ private:
   const PtExpr* mExpr;
 
   // イベントの配列
-  PtExprArray mEventArray;
+  const PtExprArray* mEventArray;
 
 };
 
@@ -317,7 +317,7 @@ class SptAttrInst :
 private:
 
   /// コンストラクタ
-  SptAttrInst(PtAttrSpecArray as_array);
+  SptAttrInst(const PtAttrSpecArray* as_array);
 
   /// デストラクタ
   ~SptAttrInst();
@@ -333,7 +333,7 @@ public:
   file_region() const override;
 
   /// @brief 要素のリストの取得
-  PtAttrSpecArray
+  const PtAttrSpecArray*
   attrspec_list() const override;
 
 
@@ -343,7 +343,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // attr spec の配列
-  PtAttrSpecArray mAttrSpecArray;
+  const PtAttrSpecArray* mAttrSpecArray;
 
 };
 

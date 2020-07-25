@@ -116,8 +116,8 @@ Parser::new_GenIf(const FileRegion& fr,
   auto item{mFactory.new_GenIf(fr, cond,
 			       mGenThenDeclArray,
 			       mGenThenItemArray,
-			       PtDeclHeadArray(),
-			       PtItemArray())};
+			       nullptr,
+			       nullptr)};
   mCurItemList->push_back(item);
 }
 
@@ -145,7 +145,7 @@ Parser::new_GenCase(const FileRegion& fr,
 		    const PtExpr* expr,
 		    PtrList<const PtGenCaseItem>* item_list)
 {
-  auto item{mFactory.new_GenCase(fr, expr, to_array(item_list))};
+  auto item{mFactory.new_GenCase(fr, expr, new_array(item_list))};
   mCurItemList->push_back(item);
 }
 
@@ -158,7 +158,7 @@ Parser::new_GenCaseItem(const FileRegion& fr,
 			PtrList<const PtExpr>* label_list)
 {
   auto item{mFactory.new_GenCaseItem(fr,
-				     to_array(label_list),
+				     new_array(label_list),
 				     mCurDeclArray,
 				     mCurItemArray)};
   return item;

@@ -9,7 +9,8 @@
 
 #include "CptExpr.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
+#include "parser/PuHierName.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -28,10 +29,10 @@ CptExpr::op_type() const
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptExpr::namebranch_array() const
 {
-  return PtNameBranchArray();
+  return nullptr;
 }
 
 // @brief 末尾の名前の取得
@@ -492,7 +493,7 @@ CptOpr3::operand(SizeType pos) const
 
 // コンストラクタ
 CptConcat::CptConcat(const FileRegion& file_region,
-		     PtExprArray expr_array) :
+		     const PtExprArray* expr_array) :
   mFileRegion(file_region),
   mExprArray(expr_array)
 {
@@ -529,7 +530,7 @@ CptConcat::op_type() const
 SizeType
 CptConcat::operand_num() const
 {
-  return mExprArray.size();
+  return mExprArray->size();
 }
 
 // @brief 0番目のオペランドの取得
@@ -537,7 +538,7 @@ const PtExpr*
 CptConcat::operand0() const
 {
   if ( operand_num() > 0 ) {
-    return mExprArray[0];
+    return (*mExprArray)[0];
   }
   else {
     return nullptr;
@@ -549,7 +550,7 @@ const PtExpr*
 CptConcat::operand1() const
 {
   if ( operand_num() > 1 ) {
-    return mExprArray[1];
+    return (*mExprArray)[1];
   }
   else {
     return nullptr;
@@ -561,7 +562,7 @@ const PtExpr*
 CptConcat::operand2() const
 {
   if ( operand_num() > 2 ) {
-    return mExprArray[2];
+    return (*mExprArray)[2];
   }
   else {
     return nullptr;
@@ -575,7 +576,7 @@ const PtExpr*
 CptConcat::operand(SizeType pos) const
 {
   if ( operand_num() > pos ) {
-    return mExprArray[pos];
+    return (*mExprArray)[pos];
   }
   else {
     return nullptr;
@@ -589,7 +590,7 @@ CptConcat::operand(SizeType pos) const
 
 // コンストラクタ
 CptMultiConcat::CptMultiConcat(const FileRegion& file_region,
-			       PtExprArray expr_array) :
+			       const PtExprArray* expr_array) :
   CptConcat(file_region, expr_array)
 {
 }
@@ -699,7 +700,7 @@ CptMinTypMax::operand(SizeType idx) const
 // コンストラクタ
 CptFuncCallBase::CptFuncCallBase(const FileRegion& file_region,
 				 const char* name,
-				 PtExprArray arg_array) :
+				 const PtExprArray* arg_array) :
   mFileRegion(file_region),
   mName(name),
   mArgArray(arg_array)
@@ -730,7 +731,7 @@ CptFuncCallBase::name() const
 SizeType
 CptFuncCallBase::operand_num() const
 {
-  return mArgArray.size();
+  return mArgArray->size();
 }
 
 // @brief 0番目のオペランドの取得
@@ -738,7 +739,7 @@ const PtExpr*
 CptFuncCallBase::operand0() const
 {
   if ( operand_num() > 0 ) {
-    return mArgArray[0];
+    return (*mArgArray)[0];
   }
   else {
     return nullptr;
@@ -750,7 +751,7 @@ const PtExpr*
 CptFuncCallBase::operand1() const
 {
   if ( operand_num() > 1 ) {
-    return mArgArray[1];
+    return (*mArgArray)[1];
   }
   else {
     return nullptr;
@@ -762,7 +763,7 @@ const PtExpr*
 CptFuncCallBase::operand2() const
 {
   if ( operand_num() > 2 ) {
-    return mArgArray[2];
+    return (*mArgArray)[2];
   }
   else {
     return nullptr;
@@ -776,7 +777,7 @@ const PtExpr*
 CptFuncCallBase::operand(SizeType pos) const
 {
   if ( operand_num() > pos ) {
-    return mArgArray[pos];
+    return (*mArgArray)[pos];
   }
   else {
     return nullptr;
@@ -791,7 +792,7 @@ CptFuncCallBase::operand(SizeType pos) const
 // コンストラクタ
 CptFuncCall::CptFuncCall(const FileRegion& file_region,
 			 const char* name,
-			 PtExprArray arg_array) :
+			 const PtExprArray* arg_array) :
   CptFuncCallBase(file_region, name, arg_array)
 {
 }
@@ -815,9 +816,9 @@ CptFuncCall::type() const
 
 // コンストラクタ
 CptFuncCallH::CptFuncCallH(const FileRegion& file_region,
-			   PtNameBranchArray nb_array,
+			   const PtNameBranchArray* nb_array,
 			   const char* tail_name,
-			   PtExprArray arg_array) :
+			   const PtExprArray* arg_array) :
   CptFuncCall(file_region, tail_name, arg_array),
   mNbArray(nb_array)
 {
@@ -829,7 +830,7 @@ CptFuncCallH::~CptFuncCallH()
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptFuncCallH::namebranch_array() const
 {
   return mNbArray;
@@ -843,7 +844,7 @@ CptFuncCallH::namebranch_array() const
 // コンストラクタ
 CptSysFuncCall::CptSysFuncCall(const FileRegion& file_region,
 			       const char* name,
-			       PtExprArray arg_array) :
+			       const PtExprArray* arg_array) :
   CptFuncCallBase(file_region, name, arg_array)
 {
 }
@@ -1117,7 +1118,7 @@ CptFactory::new_Opr(const FileRegion& file_region,
 // concatination を生成する．
 const PtExpr*
 CptFactory::new_Concat(const FileRegion& file_region,
-		       PtExprArray expr_array)
+		       const PtExprArray* expr_array)
 {
   ++ mNumConcat;
   auto p{mAlloc.get_memory(sizeof(CptConcat))};
@@ -1128,7 +1129,7 @@ CptFactory::new_Concat(const FileRegion& file_region,
 // multiple concatenation を生成する．
 const PtExpr*
 CptFactory::new_MultiConcat(const FileRegion& file_region,
-			    PtExprArray expr_array)
+			    const PtExprArray* expr_array)
 {
   ++ mNumMultiConcat;
   auto p{mAlloc.get_memory(sizeof(CptMultiConcat))};
@@ -1154,7 +1155,7 @@ CptFactory::new_MinTypMax(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* name,
-			 PtExprArray arg_array)
+			 const PtExprArray* arg_array)
 {
   ++ mNumFuncCall;
   auto p{mAlloc.get_memory(sizeof(CptFuncCall))};
@@ -1165,12 +1166,13 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 // function call を生成する．
 const PtExpr*
 CptFactory::new_FuncCall(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
-			 const char* tail_name,
-			 PtExprArray arg_array)
+			 PuHierName* hname,
+			 const PtExprArray* arg_array)
 {
   ++ mNumFuncCallH;
   auto p{mAlloc.get_memory(sizeof(CptFuncCallH))};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto obj{new (p) CptFuncCallH(file_region, nb_array, tail_name, arg_array)};
   return obj;
 }
@@ -1179,7 +1181,7 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    const char* name,
-			    PtExprArray arg_array)
+			    const PtExprArray* arg_array)
 {
   ++ mNumSysFuncCall;
   auto p{mAlloc.get_memory(sizeof(CptSysFuncCall))};

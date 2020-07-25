@@ -20,7 +20,6 @@
 #include "ym/MsgMgr.h"
 
 
-
 const int debug = 0;
 #define dout cout
 
@@ -87,7 +86,6 @@ Parser::read_file(const string& filename,
   int stat = yyparse(*this);
 
   FileInfo::clear();
-  mHnameList.clear();
 
   return (stat == 0);
 }
@@ -174,7 +172,7 @@ Parser::check_function_statement(const PtStmt* stmt)
   case PtStmtType::Case:
   case PtStmtType::CaseX:
   case PtStmtType::CaseZ:
-    for ( auto item: stmt->caseitem_list() ) {
+    for ( auto item: *stmt->caseitem_list() ) {
       if ( !check_function_statement(item->body()) ) {
 	return false;
       }
@@ -199,8 +197,7 @@ Parser::check_function_statement(const PtStmt* stmt)
 
   case PtStmtType::SeqBlock:
   case PtStmtType::NamedSeqBlock:
-    for ( int i = 0; i < stmt->stmt_array().size(); ++ i ) {
-      const PtStmt* stmt1 = stmt->stmt_array()[i];
+    for ( auto stmt1: *stmt->stmt_array() ) {
       if ( !check_function_statement(stmt1) ) {
 	return false;
       }
@@ -227,7 +224,7 @@ Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
 {
   int n = 0;
   for ( auto ci: *ci_list ) {
-    if ( ci->label_list().size() == 0 ) {
+    if ( ci->label_list()->size() == 0 ) {
       ++ n;
       if ( n > 1 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -242,27 +239,6 @@ Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
   return true;
 }
 
-// @brief 式のリストから配列を生成する．(multi_concat用)
-// @param[in] pre_expr list の前に挿入する式
-// @note 結果として expr_list は削除される．
-PtExprArray
-Parser::ExprArray(const PtExpr* pre_expr,
-		  PtrList<const PtExpr>* expr_list_p)
-{
-  SizeType n = expr_list_p->size();
-  vector<const PtExpr*> vec(n + 1);
-  vec[0] = pre_expr;
-  int i = 1;
-  for ( auto expr: *expr_list_p ) {
-    vec[i] = expr;
-    ++ i;
-  }
-
-  delete expr_list_p;
-
-  return PtExprArray(vec);
-}
-
 // @brief 階層名の生成
 // @param[in] head_name 階層の上位部分
 // @param[in] name 階層の最下位部分
@@ -271,8 +247,7 @@ Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
   auto nb{mFactory.new_NameBranch(head_name)};
-  auto hname{new PuHierName(nb, name)};
-  mHnameList.push_back(unique_ptr<PuHierName>{hname});
+  auto hname{new_HierName(nb, name)};
   return hname;
 }
 
@@ -286,8 +261,20 @@ Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
   auto nb{mFactory.new_NameBranch(head_name, index)};
-  auto hname{new PuHierName(nb, name)};
-  mHnameList.push_back(unique_ptr<PuHierName>{hname});
+  auto hname{new_HierName(nb, name)};
+  return hname;
+}
+
+// @brief 階層名の生成
+// @param[in] head_name 階層の上位部分
+// @param[in] index インデックス
+// @param[in] name 階層の最下位部分
+PuHierName*
+Parser::new_HierName(const PtNameBranch* nb,
+		     const char* name)
+{
+  void* p{mPtMgr.alloc().get_memory(sizeof(PuHierName))};
+  auto hname{new (p) PuHierName(nb, name)};
   return hname;
 }
 
@@ -313,21 +300,6 @@ Parser::add_HierName(PuHierName* hname,
 {
   auto nb{mFactory.new_NameBranch(hname->tail_name(), index)};
   hname->add(nb, name);
-}
-
-// @brief 階層名の取得
-// @param[in] hname 階層名
-// @param[out] 階層の上位部分の配列
-// @return 階層の下位名
-// @note この関数のなかで hname は削除される．
-const char*
-Parser::extract_HierName(PuHierName* hname,
-			 PtNameBranchArray& nb_array)
-{
-  auto ans{hname->tail_name()};
-  nb_array = hname->name_branch();
-
-  return ans;
 }
 
 // @brief item リストに要素を追加する．

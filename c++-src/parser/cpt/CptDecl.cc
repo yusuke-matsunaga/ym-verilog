@@ -9,8 +9,7 @@
 
 #include "CptDecl.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
-
+#include "ym/pt/PtAlloc.h"
 #include "ym/pt/PtExpr.h"
 
 
@@ -121,7 +120,7 @@ CptDeclHead::delay() const
 }
 
 // @brief 要素のリストの取得
-PtDeclItemArray
+const PtDeclItemArray*
 CptDeclHead::item_list() const
 {
   return mItemArray;
@@ -130,7 +129,7 @@ CptDeclHead::item_list() const
 // @brief 要素リストの設定
 // @param[in] elem_array 要素リスト(配列)
 void
-CptDeclHead::set_elem(PtDeclItemArray item_array)
+CptDeclHead::set_elem(const PtDeclItemArray* item_array)
 {
   mItemArray = item_array;
 }
@@ -1036,10 +1035,10 @@ CptDeclItemBase::dimension_list_size() const
 }
 
 // 範囲のリストの取得
-PtRangeArray
+const PtRangeArray*
 CptDeclItemBase::range_list() const
 {
-  return PtRangeArray{};
+  return nullptr;
 }
 
 // 初期値の取得
@@ -1088,7 +1087,7 @@ CptDeclItem::file_region() const
 // @param range_array 範囲のリスト
 CptDeclItemR::CptDeclItemR(const FileRegion& file_region,
 			   const char* name,
-			   PtRangeArray range_array) :
+			   const PtRangeArray* range_array) :
   CptDeclItemBase(name),
   mFileRegion(file_region),
   mRangeArray(range_array)
@@ -1111,11 +1110,11 @@ CptDeclItemR::file_region() const
 int
 CptDeclItemR::dimension_list_size() const
 {
-  return mRangeArray.size();
+  return mRangeArray->size();
 }
 
 // 範囲のリストの取得
-PtRangeArray
+const PtRangeArray*
 CptDeclItemR::range_list() const
 {
   return mRangeArray;
@@ -1534,7 +1533,7 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 const PtDeclItem*
 CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name,
-			 PtRangeArray range_array)
+			 const PtRangeArray* range_array)
 {
   ++ mNumDeclItemR;
   void* p{mAlloc.get_memory(sizeof(CptDeclItemR))};

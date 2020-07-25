@@ -107,15 +107,15 @@ ModuleGen::phase1_module_item(ElbModule* module,
   pt_module->set_in_use();
 
   // パラメータポートを実体化する．
-  PtDeclHeadArray paramport_array = pt_module->paramport_array();
+  auto& paramport_array = *pt_module->paramport_array();
   bool has_paramportdecl = (paramport_array.size() > 0);
   if ( has_paramportdecl ) {
-    phase1_decl(module, paramport_array, false);
+    phase1_decl(module, pt_module->paramport_array(), false);
   }
 
   // parameter と genvar を実体化する．
-  PtDeclHeadArray declhead_array = pt_module->declhead_array();
-  phase1_decl(module, declhead_array, has_paramportdecl);
+  auto& declhead_array = *pt_module->declhead_array();
+  phase1_decl(module, pt_module->declhead_array(), has_paramportdecl);
 
   // パラメータの割り当てを作る．
   if ( param_con ) {
@@ -155,7 +155,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
       if ( has_paramportdecl ) {
 	for ( int i = 0; i < paramport_array.size(); ++ i ) {
 	  const PtDeclHead* pt_param = paramport_array[i];
-	  for ( auto pt_item: pt_param->item_list() ) {
+	  for ( auto pt_item: *pt_param->item_list() ) {
 	    paramport_list.push_back(pt_item->name());
 	  }
 	}
@@ -164,7 +164,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
 	for ( int i = 0; i < declhead_array.size(); ++ i ) {
 	  const PtDeclHead* pt_decl = declhead_array[i];
 	  if ( pt_decl->type() == PtDeclType::Param ) {
-	    for ( auto pt_item: pt_decl->item_list() ) {
+	    for ( auto pt_item: *pt_decl->item_list() ) {
 	      paramport_list.push_back(pt_item->name());
 	    }
 	  }
@@ -231,7 +231,7 @@ ModuleGen::instantiate_port(ElbModule* module,
 			    const PtModule* pt_module)
 {
   int index = 0;
-  for ( auto pt_port: pt_module->port_list() ) {
+  for ( auto pt_port: *pt_module->port_list() ) {
     // 内側の接続と向きを作る．
     SizeType n = pt_port->portref_size();
 

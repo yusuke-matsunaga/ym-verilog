@@ -9,7 +9,7 @@
 
 #include "CptSpecItem.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptSpecItem::CptSpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 PtExprArray terminal_array) :
+			 const PtExprArray* terminal_array) :
   mFileRegion(file_region),
   mId(id),
   mTerminalArray(terminal_array)
@@ -55,7 +55,7 @@ CptSpecItem::specitem_type() const
 }
 
 // @brief ターミナルリストの取得
-PtExprArray
+const PtExprArray*
 CptSpecItem::terminal_list() const
 {
   return mTerminalArray;
@@ -126,10 +126,10 @@ CptSpecPath::path_decl() const
 // コンストラクタ
 CptPathDecl::CptPathDecl(const FileRegion& file_region,
 			 int edge,
-			 PtExprArray input_array,
+			 const PtExprArray* input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 PtExprArray output_array,
+			 const PtExprArray* output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay) :
@@ -166,7 +166,7 @@ CptPathDecl::edge() const
 }
 
 // @brief 入力のリストの取得
-PtExprArray
+const PtExprArray*
 CptPathDecl::input_list() const
 {
   return mInputArray;
@@ -188,7 +188,7 @@ CptPathDecl::op() const
 }
 
 // @brief 出力のリストの取得
-PtExprArray
+const PtExprArray*
 CptPathDecl::output_list() const
 {
   return mOutputArray;
@@ -326,7 +326,7 @@ CptPathDelay::value(SizeType pos) const
 const PtItem*
 CptFactory::new_SpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 PtExprArray terminal_array)
+			 const PtExprArray* terminal_array)
 {
   ++ mNumSpecItem;
   void* p{mAlloc.get_memory(sizeof(CptSpecItem))};
@@ -351,10 +351,10 @@ CptFactory::new_SpecPath(const FileRegion& file_region,
 const PtPathDecl*
 CptFactory::new_PathDecl(const FileRegion& file_region,
 			 int edge,
-			 PtExprArray input_array,
+			 const PtExprArray* input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 PtExprArray output_array,
+			 const PtExprArray* output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay)

@@ -63,7 +63,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 		  "ELAB",
 		  buf.str());
 
-  SizeType io_size = pt_udp->port_list().size();
+  SizeType io_size = pt_udp->port_list()->size();
 
   SizeType isize = io_size - 1;
   VpiPrimType ptype = pt_udp->prim_type();
@@ -72,13 +72,13 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   ElbUdpDefn* udp = factory().new_UdpDefn(pt_udp, is_protected);
 
   // 最初のポート名 = 出力のポート名
-  const char* outname = pt_udp->port_list()[0]->ext_name();
+  const char* outname = (*pt_udp->port_list())[0]->ext_name();
 
   // ポート名をキーにしたIOテンプレートの辞書を作る．
   IODict iodict;
   const PtIOHead* outhead = nullptr;
-  for ( auto iohead: pt_udp->iohead_array() ) {
-    for ( auto elem: iohead->item_list() ) {
+  for ( auto iohead: *pt_udp->iohead_array() ) {
+    for ( auto elem: *iohead->item_list() ) {
       const char* name = elem->name();
       iodict[name] = make_pair(iohead, elem);
       if ( strcmp(name, outname) == 0 ) {
@@ -90,7 +90,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   // IOポートを実体化する．
   // ただし port_list に現れる名前の順番にしたがって実体化しなければならない．
   int index = 0;
-  for ( auto port: pt_udp->port_list() ) {
+  for ( auto port: *pt_udp->port_list() ) {
     const char* name = port->ext_name();
     ASSERT_COND( iodict.count(name) > 0 );
     auto tmp = iodict.at(name);
@@ -104,7 +104,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   // initial 文がある場合と変数宣言の中に初期化式が含まれている場合がある．
   const PtExpr* pt_init_value = pt_udp->init_value();
   if ( pt_init_value == nullptr ) {
-    pt_init_value = outhead->item_list()[0]->init_value();
+    pt_init_value = (*outhead->item_list())[0]->init_value();
   }
   if ( pt_init_value ) {
     // このチェックはパース時に済んでいるはずなので念のため．
@@ -140,11 +140,11 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
     // 一行文のデータを保持しておくためのバッファ
     vector<VlUdpVal> row_data(row_size);
 
-    const PtUdpEntryArray& table = pt_udp->table_array();
+    auto& table = *pt_udp->table_array();
     int pos = 0;
     for ( auto pt_udp_entry: table ) {
       const FileRegion& tfr = pt_udp_entry->file_region();
-      PtUdpValueArray input_array = pt_udp_entry->input_array();
+      auto& input_array = *pt_udp_entry->input_array();
       if ( input_array.size() != isize ) {
 	// サイズが合わない．
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -238,11 +238,11 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
     // 一行文のデータを保持しておくためのバッファ
     vector<VlUdpVal> row_data(row_size);
 
-    const PtUdpEntryArray& table = pt_udp->table_array();
+    auto& table = *pt_udp->table_array();
     int pos = 0;
     for ( auto pt_udp_entry: table ) {
       const FileRegion& tfr = pt_udp_entry->file_region();
-      PtUdpValueArray input_array = pt_udp_entry->input_array();
+      auto& input_array = *pt_udp_entry->input_array();
 
       if ( input_array.size() != isize ) {
 	// サイズが合わない．

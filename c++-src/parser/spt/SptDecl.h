@@ -79,7 +79,7 @@ public:
   right_range() const override;
 
   /// @brief 要素のリストの取得
-  PtIOItemArray
+  const PtIOItemArray*
   item_list() const override;
 
 
@@ -91,7 +91,7 @@ private:
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト
   void
-  set_elem(PtIOItemArray elem_array) override;
+  set_elem(const PtIOItemArray* elem_array) override;
 
 
 private:
@@ -124,7 +124,7 @@ private:
   const PtExpr* mRightRange;
 
   // 要素の配列
-  PtIOItemArray mItemArray;
+  const PtIOItemArray* mItemArray;
 
 };
 
@@ -256,7 +256,7 @@ public:
   delay() const override;
 
   /// @brief 要素のリストの取得
-  PtDeclItemArray
+  const PtDeclItemArray*
   item_list() const override;
 
 
@@ -268,7 +268,7 @@ private:
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト(配列)
   void
-  set_elem(PtDeclItemArray elem_array) override;
+  set_elem(const PtDeclItemArray* elem_array) override;
 
 
 private:
@@ -307,7 +307,7 @@ private:
   const PtDelay* mDelay;
 
   // 要素の配列
-  PtDeclItemArray mItemArray;
+  const PtDeclItemArray* mItemArray;
 
 };
 
@@ -326,7 +326,7 @@ private:
   /// コンストラクタ
   SptDeclItem(const FileRegion& file_region,
 	      const char* name,
-	      PtRangeArray range_array,
+	      const PtRangeArray* range_array,
 	      const PtExpr* init_value);
 
   /// デストラクタ
@@ -351,7 +351,7 @@ public:
   dimension_list_size() const override;
 
   /// 範囲のリストの取得
-  PtRangeArray
+  const PtRangeArray*
   range_list() const override;
 
   /// 初期値の取得
@@ -371,7 +371,7 @@ private:
   const char* mName;
 
   // 範囲の配列
-  PtRangeArray mRangeArray;
+  const PtRangeArray* mRangeArray;
 
   // 初期値
   const PtExpr* mInitValue;

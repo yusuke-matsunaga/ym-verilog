@@ -42,7 +42,7 @@ public:
 
   /// @brief 階層ブランチの取得
   virtual
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const = 0;
 
   /// @brief 名前を返す．

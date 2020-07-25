@@ -79,8 +79,8 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
   const ElbTaskFunc* child_func = nullptr;
   if ( env.is_constant() ) {
     // 定数関数を探し出す．
-    PtNameBranchArray nb_array = pt_expr->namebranch_array();
-    if ( nb_array.size() > 0 ) {
+    const PtNameBranchArray* nb_array = pt_expr->namebranch_array();
+    if ( nb_array->size() > 0 ) {
       error_hname_in_ce(pt_expr);
       return nullptr;
     }
@@ -118,7 +118,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
   }
   else {
     // 関数本体を探し出す．
-    PtNameBranchArray nb_array = pt_expr->namebranch_array();
+    const PtNameBranchArray* nb_array = pt_expr->namebranch_array();
     const char* name = pt_expr->name();
     ElbObjHandle* handle = find_obj_up(parent, nb_array, name, nullptr);
     if ( handle == nullptr ) {

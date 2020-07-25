@@ -9,6 +9,7 @@
 
 #include "SptStmt.h"
 #include "parser/SptFactory.h"
+#include "parser/PuHierName.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -41,11 +42,11 @@ SptStmt::SptStmt(const FileRegion& file_region,
 		 const PtExpr* expr2,
 		 const PtControl* control,
 		 const char* name,
-		 PtNameBranchArray nb_array,
-		 PtCaseItemArray caseitem_array,
-		 PtDeclHeadArray decl_array,
-		 PtStmtArray stmt_array,
-		 PtExprArray arg_array) :
+		 const PtNameBranchArray* nb_array,
+		 const PtCaseItemArray* caseitem_array,
+		 const PtDeclHeadArray* decl_array,
+		 const PtStmtArray* stmt_array,
+		 const PtExprArray* arg_array) :
   mFileRegion{file_region},
   mType{type},
   mNbArray{nb_array},
@@ -122,7 +123,7 @@ SptStmt::stmt_name() const
 
 // 階層ブランチの取得
 // kDisable/kEnable/kSysEnable で意味のある関数
-PtNameBranchArray
+const PtNameBranchArray*
 SptStmt::namebranch_array() const
 {
   return mNbArray;
@@ -138,7 +139,7 @@ SptStmt::name() const
 }
 
 // @brief 引数のリストの取得
-PtExprArray
+const PtExprArray*
 SptStmt::arg_list() const
 {
   return mArgArray;
@@ -208,7 +209,7 @@ SptStmt::else_body() const
 }
 
 // @brief case item のリストの取得
-PtCaseItemArray
+const PtCaseItemArray*
 SptStmt::caseitem_list() const
 {
   return mCaseItemArray;
@@ -234,7 +235,7 @@ SptStmt::next_stmt() const
 
 // @brief 宣言ヘッダ配列の取得
 // @note kNamedParBlock/kNamedSeqBlock で意味のある関数
-PtDeclHeadArray
+const PtDeclHeadArray*
 SptStmt::declhead_array() const
 {
   return mDeclArray;
@@ -242,7 +243,7 @@ SptStmt::declhead_array() const
 
 // @brief 子供のステートメント配列の取得
 // @note kParBlock/kSeqBlock で意味のある関数
-PtStmtArray
+const PtStmtArray*
 SptStmt::stmt_array() const
 {
   return mStmtArray;
@@ -255,7 +256,7 @@ SptStmt::stmt_array() const
 
 // コンストラクタ
 SptCaseItem::SptCaseItem(const FileRegion& file_region,
-			 PtExprArray label_array,
+			 const PtExprArray* label_array,
 			 const PtStmt* body) :
   mFileRegion{file_region},
   mLabelArray{label_array},
@@ -277,7 +278,7 @@ SptCaseItem::file_region() const
 }
 
 // @brief ラベルのリストの取得
-PtExprArray
+const PtExprArray*
 SptCaseItem::label_list() const
 {
   return mLabelArray;
@@ -319,15 +320,16 @@ SptFactory::new_Disable(const FileRegion& file_region,
 // @return 生成された disable 文
 const PtStmt*
 SptFactory::new_Disable(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* name)
+			PuHierName* hname)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptStmt(file_region,
 			  PtStmtType::Disable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
-			  name,
+			  tail_name,
 			  nb_array);
   return node;
 }
@@ -340,7 +342,7 @@ SptFactory::new_Disable(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_Enable(const FileRegion& file_region,
 		       const char* name,
-		       PtExprArray arg_array)
+		       const PtExprArray* arg_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Enable,
@@ -348,10 +350,10 @@ SptFactory::new_Enable(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  PtNameBranchArray(),
-			  PtCaseItemArray(),
-			  PtDeclHeadArray(),
-			  PtStmtArray(),
+			  nullptr,
+			  nullptr,
+			  nullptr,
+			  nullptr,
 			  arg_array);
   return node;
 }
@@ -364,20 +366,21 @@ SptFactory::new_Enable(const FileRegion& file_region,
 // @return 生成された enable 文
 const PtStmt*
 SptFactory::new_Enable(const FileRegion& file_region,
-		       PtNameBranchArray nb_array,
-		       const char* name,
-		       PtExprArray arg_array)
+		       PuHierName* hname,
+		       const PtExprArray* arg_array)
 {
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto node = new SptStmt(file_region,
 			  PtStmtType::Enable,
 			  nullptr, nullptr, nullptr,
 			  nullptr, nullptr,
 			  nullptr,
-			  name,
+			  tail_name,
 			  nb_array,
-			  PtCaseItemArray(),
-			  PtDeclHeadArray(),
-			  PtStmtArray(),
+			  nullptr,
+			  nullptr,
+			  nullptr,
 			  arg_array);
   return node;
 }
@@ -390,7 +393,7 @@ SptFactory::new_Enable(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_SysEnable(const FileRegion& file_region,
 			  const char* name,
-			  PtExprArray arg_array)
+			  const PtExprArray* arg_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::SysEnable,
@@ -398,10 +401,10 @@ SptFactory::new_SysEnable(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  PtNameBranchArray(),
-			  PtCaseItemArray(),
-			  PtDeclHeadArray(),
-			  PtStmtArray(),
+			  nullptr,
+			  nullptr,
+			  nullptr,
+			  nullptr,
 			  arg_array);
   return node;
 }
@@ -604,7 +607,7 @@ SptFactory::new_If(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_Case(const FileRegion& file_region,
 		     const PtExpr* expr,
-		     PtCaseItemArray caseitem_array)
+		     const PtCaseItemArray* caseitem_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Case,
@@ -612,7 +615,7 @@ SptFactory::new_Case(const FileRegion& file_region,
 			  expr, nullptr,
 			  nullptr,
 			  nullptr,
-			  PtNameBranchArray(),
+			  nullptr,
 			  caseitem_array);
   return node;
 }
@@ -625,7 +628,7 @@ SptFactory::new_Case(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_CaseX(const FileRegion& file_region,
 		      const PtExpr* expr,
-		      PtCaseItemArray caseitem_array)
+		      const PtCaseItemArray* caseitem_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::CaseX,
@@ -633,7 +636,7 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 			  expr, nullptr,
 			  nullptr,
 			  nullptr,
-			  PtNameBranchArray(),
+			  nullptr,
 			  caseitem_array);
   return node;
 }
@@ -646,7 +649,7 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_CaseZ(const FileRegion& file_region,
 		      const PtExpr* expr,
-		      PtCaseItemArray caseitem_array)
+		      const PtCaseItemArray* caseitem_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::CaseZ,
@@ -654,7 +657,7 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 			  expr, nullptr,
 			  nullptr,
 			  nullptr,
-			  PtNameBranchArray(),
+			  nullptr,
 			  caseitem_array);
   return node;
 }
@@ -666,7 +669,7 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 // @return 生成された case item
 const PtCaseItem*
 SptFactory::new_CaseItem(const FileRegion& file_region,
-			 PtExprArray label_array,
+			 const PtExprArray* label_array,
 			 const PtStmt* body)
 {
   auto node = new SptCaseItem(file_region, label_array, body);
@@ -812,7 +815,7 @@ SptFactory::new_Release(const FileRegion& file_region,
 // @return 生成された parallel block
 const PtStmt*
 SptFactory::new_ParBlock(const FileRegion& file_region,
-			 PtStmtArray stmt_array)
+			 const PtStmtArray* stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::ParBlock,
@@ -820,9 +823,9 @@ SptFactory::new_ParBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  nullptr,
-			  PtNameBranchArray(),
-			  PtCaseItemArray(),
-			  PtDeclHeadArray(),
+			  nullptr,
+			  nullptr,
+			  nullptr,
 			  stmt_array);
   return node;
 }
@@ -836,8 +839,8 @@ SptFactory::new_ParBlock(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      const char* name,
-			      PtDeclHeadArray decl_array,
-			      PtStmtArray stmt_array)
+			      const PtDeclHeadArray* decl_array,
+			      const PtStmtArray* stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NamedParBlock,
@@ -845,8 +848,8 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  PtNameBranchArray(),
-			  PtCaseItemArray(),
+			  nullptr,
+			  nullptr,
 			  decl_array,
 			  stmt_array);
   return node;
@@ -858,7 +861,7 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 // @return 生成された sequential block
 const PtStmt*
 SptFactory::new_SeqBlock(const FileRegion& file_region,
-			 PtStmtArray stmt_array)
+			 const PtStmtArray* stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::SeqBlock,
@@ -866,9 +869,9 @@ SptFactory::new_SeqBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  nullptr,
-			  PtNameBranchArray(),
-			  PtCaseItemArray(),
-			  PtDeclHeadArray(),
+			  nullptr,
+			  nullptr,
+			  nullptr,
 			  stmt_array);
   return node;
 }
@@ -882,8 +885,8 @@ SptFactory::new_SeqBlock(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      const char* name,
-			      PtDeclHeadArray decl_array,
-			      PtStmtArray stmt_array)
+			      const PtDeclHeadArray* decl_array,
+			      const PtStmtArray* stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NamedSeqBlock,
@@ -891,8 +894,8 @@ SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  PtNameBranchArray(),
-			  PtCaseItemArray(),
+			  nullptr,
+			  nullptr,
 			  decl_array,
 			  stmt_array);
   return node;

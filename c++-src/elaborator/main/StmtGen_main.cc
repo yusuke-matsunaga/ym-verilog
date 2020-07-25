@@ -95,15 +95,15 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   case PtStmtType::Case:
   case PtStmtType::CaseX:
   case PtStmtType::CaseZ:
-    for ( auto pt_item: pt_stmt->caseitem_list() ) {
+    for ( auto pt_item: *pt_stmt->caseitem_list() ) {
       phase1_stmt(parent, pt_item->body());
     }
     break;
 
   case PtStmtType::ParBlock:
   case PtStmtType::SeqBlock:
-    for (ymuint i = 0; i < pt_stmt->stmt_array().size(); ++ i) {
-      const PtStmt* pt_stmt1 = pt_stmt->stmt_array()[i];
+    for ( int i = 0; i < pt_stmt->stmt_array()->size(); ++ i ) {
+      const PtStmt* pt_stmt1 = (*pt_stmt->stmt_array())[i];
       phase1_stmt(parent, pt_stmt1);
     }
     break;
@@ -114,8 +114,8 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
       ElbScope* block_scope = factory().new_StmtScope(parent, pt_stmt);
       reg_internalscope(block_scope);
 
-      for (ymuint i = 0; i < pt_stmt->stmt_array().size(); ++ i) {
-	const PtStmt* pt_stmt1 = pt_stmt->stmt_array()[i];
+      for ( int i = 0; i < pt_stmt->stmt_array()->size(); ++ i ) {
+	const PtStmt* pt_stmt1 = (*pt_stmt->stmt_array())[i];
 	phase1_stmt(block_scope, pt_stmt1);
       }
       if ( cf ) {
@@ -350,7 +350,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 			     const PtStmt* pt_stmt)
 {
   const FileRegion& fr = pt_stmt->file_region();
-  PtNameBranchArray nb_array = pt_stmt->namebranch_array();
+  auto nb_array = pt_stmt->namebranch_array();
   const char* name = pt_stmt->name();
 
   ElbObjHandle* handle = nullptr;
@@ -402,7 +402,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 			    const PtStmt* pt_stmt)
 {
   const FileRegion& fr = pt_stmt->file_region();
-  PtNameBranchArray nb_array = pt_stmt->namebranch_array();
+  auto nb_array = pt_stmt->namebranch_array();
   const char* name = pt_stmt->name();
 
   // タスクを探し出して設定する．
@@ -431,9 +431,9 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list().size());
+  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list()->size());
   SizeType wpos = 0;
-  for ( auto pt_expr: pt_stmt->arg_list() ) {
+  for ( auto pt_expr: *pt_stmt->arg_list() ) {
     ElbExpr* expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       // エラーが起った．
@@ -479,9 +479,9 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   }
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list().size());
+  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list()->size());
   SizeType wpos = 0;
-  for ( auto pt_expr: pt_stmt->arg_list() ) {
+  for ( auto pt_expr: *pt_stmt->arg_list() ) {
     ElbExpr* arg = nullptr;
     // 空の引数があるのでエラーと区別する．
     if ( pt_expr ) {
@@ -545,10 +545,11 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
   }
 
   // イベントリストの生成を行う．
-  SizeType event_num = pt_control->event_list().size();
+  auto& pt_event_list{*pt_control->event_list()};
+  SizeType event_num = pt_event_list.size();
   ElbExpr** event_list = factory().new_ExprList(event_num);
   for ( SizeType i = 0; i < event_num; ++ i ) {
-    const PtExpr* pt_expr = pt_control->event_list()[i];
+    const PtExpr* pt_expr = pt_event_list[i];
     ElbExpr* expr = instantiate_event_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;

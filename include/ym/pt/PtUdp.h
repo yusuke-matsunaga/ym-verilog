@@ -35,12 +35,12 @@ public:
 
   /// @brief ポートのリストを取り出す．
   virtual
-  PtPortArray
+  const PtPortArray*
   port_list() const = 0;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const = 0;
 
   /// @brief 初期値を取出す．
@@ -50,7 +50,7 @@ public:
 
   /// @brief テーブルを取り出す．
   virtual
-  PtUdpEntryArray
+  const PtUdpEntryArray*
   table_array() const = 0;
 
 };
@@ -72,7 +72,7 @@ public:
 
   /// @brief 入力値の配列を取り出す．
   virtual
-  PtUdpValueArray
+  const PtUdpValueArray*
   input_array() const = 0;
 
   /// @brief 現状態の値を取り出す．

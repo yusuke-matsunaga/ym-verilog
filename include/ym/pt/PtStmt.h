@@ -44,7 +44,7 @@ public:
   /// @return 階層ブランチの先頭
   /// @note kDisable/kEnable/kSysEnable で意味のある関数
   virtual
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const = 0;
 
   /// @brief 名前の取得
@@ -56,7 +56,7 @@ public:
 
   /// @brief 引数のリストの取得
   virtual
-  PtExprArray
+  const PtExprArray*
   arg_list() const = 0;
 
   /// @brief コントロールの取得
@@ -110,7 +110,7 @@ public:
 
   /// @brief case item のリストの取得
   virtual
-  PtCaseItemArray
+  const PtCaseItemArray*
   caseitem_list() const = 0;
 
   /// @brief 初期化代入文の取得
@@ -130,13 +130,13 @@ public:
   /// @brief 宣言ヘッダ配列の取得
   /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const = 0;
 
   /// @brief 子供のステートメント配列の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
   virtual
-  PtStmtArray
+  const PtStmtArray*
   stmt_array() const = 0;
 
 };
@@ -158,7 +158,7 @@ public:
 
   /// @brief ラベルのリストの取得
   virtual
-  PtExprArray
+  const PtExprArray*
   label_list() const = 0;
 
   /// @brief 本体のステートメントの取得

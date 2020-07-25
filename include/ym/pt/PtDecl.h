@@ -75,7 +75,7 @@ public:
 
   /// @brief 要素のリストの取得
   virtual
-  PtIOItemArray
+  const PtIOItemArray*
   item_list() const = 0;
 
 };
@@ -184,7 +184,7 @@ public:
 
   /// @brief 要素のリストの取得
   virtual
-  PtDeclItemArray
+  const PtDeclItemArray*
   item_list() const = 0;
 
 };
@@ -212,7 +212,7 @@ public:
 
   /// @brief 範囲のリストの取得
   virtual
-  PtRangeArray
+  const PtRangeArray*
   range_list() const = 0;
 
   /// @brief 初期値の取得

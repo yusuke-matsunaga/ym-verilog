@@ -54,22 +54,22 @@ public:
 
   /// @brief パラメータ割り当てリストの取得
   virtual
-  PtConnectionArray
+  const PtConnectionArray*
   paramassign_array() const = 0;
 
   /// @brief defparam のリストの取得
   virtual
-  PtDefParamArray
+  const PtDefParamArray*
   defparam_list() const = 0;
 
   /// @brief continuous assign のリストの取得
   virtual
-  PtContAssignArray
+  const PtContAssignArray*
   contassign_list() const = 0;
 
   /// @brief module/UDP/gate instance リストの取得
   virtual
-  PtInstArray
+  const PtInstArray*
   inst_list() const = 0;
 
   /// @brief automatic 情報の取得
@@ -86,17 +86,17 @@ public:
 
   /// @brief IO宣言リストの配列の取得
   virtual
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const = 0;
 
   /// @brief 宣言ヘッダ配列の取得
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const = 0;
 
   /// @brief item 配列の取得
   virtual
-  PtItemArray
+  const PtItemArray*
   item_array() const = 0;
 
   /// @brief 本体のステートメントの取得
@@ -160,7 +160,7 @@ public:
 
   /// @brief ターミナルのリストの取得
   virtual
-  PtExprArray
+  const PtExprArray*
   terminal_list() const = 0;
 
   /// @brief パス記述の取得
@@ -177,27 +177,27 @@ public:
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   then_declhead_array() const = 0;
 
   /// @brief 条件が成り立ったときに生成される item 配列の取得
   virtual
-  PtItemArray
+  const PtItemArray*
   then_item_array() const = 0;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   else_declhead_array() const = 0;
 
   /// @brief 条件が成り立たなかったときに生成される item 配列の取得
   virtual
-  PtItemArray
+  const PtItemArray*
   else_item_array() const = 0;
 
   /// @brief case item のリストの取得
   virtual
-  PtGenCaseItemArray
+  const PtGenCaseItemArray*
   caseitem_list() const = 0;
 
   /// @brief 繰り返し制御用の変数名の取得
@@ -237,7 +237,7 @@ public:
 
   /// @brief 階層ブランチの取得
   virtual
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const = 0;
 
   /// @brief 末尾の名前の取得
@@ -319,7 +319,7 @@ public:
 
   /// @brief ポートのリストの取得
   virtual
-  PtConnectionArray
+  const PtConnectionArray*
   port_list() const = 0;
 
 
@@ -342,17 +342,17 @@ public:
 
   /// @brief ラベルのリストの取得
   virtual
-  PtExprArray
+  const PtExprArray*
   label_list() const = 0;
 
   /// @brief 宣言のリストの取得
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const = 0;
 
   /// @brief item リストの取得
   virtual
-  PtItemArray
+  const PtItemArray*
   item_array() const = 0;
 
 };
@@ -381,7 +381,7 @@ public:
 
   /// @brief 入力のリストの取得
   virtual
-  PtExprArray
+  const PtExprArray*
   input_list() const = 0;
 
   /// @brief 入力の極性の取得
@@ -399,7 +399,7 @@ public:
 
   /// @brief 出力のリストの取得
   virtual
-  PtExprArray
+  const PtExprArray*
   output_list() const = 0;
 
   /// @brief 出力の極性の取得

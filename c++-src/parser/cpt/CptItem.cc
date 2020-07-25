@@ -9,8 +9,8 @@
 
 #include "CptItem.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
-
+#include "parser/PuHierName.h"
+#include "ym/pt/PtAlloc.h"
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 
@@ -59,31 +59,31 @@ CptItem::delay() const
 }
 
 // @brief パラメータ割り当てリストの取得
-PtConnectionArray
+const PtConnectionArray*
 CptItem::paramassign_array() const
 {
-  return PtConnectionArray();
+  return nullptr;
 }
 
 // @brief defparam のリストの取得
-PtDefParamArray
+const PtDefParamArray*
 CptItem::defparam_list() const
 {
-  return PtDefParamArray{};
+  return nullptr;
 }
 
 // @brief continuous assign のリストの取得
-PtContAssignArray
+const PtContAssignArray*
 CptItem::contassign_list() const
 {
-  return PtContAssignArray{};
+  return nullptr;
 }
 
 // @brief module/UDP/gate instance リストの取得
-PtInstArray
+const PtInstArray*
 CptItem::inst_list() const
 {
-  return PtInstArray{};
+  return nullptr;
 }
 
 // @brief 名前の取得
@@ -113,24 +113,24 @@ CptItem::ioitem_num() const
 }
 
 // @brief IO宣言リストの配列の取得
-PtIOHeadArray
+const PtIOHeadArray*
 CptItem::iohead_array() const
 {
-  return PtIOHeadArray();
+  return nullptr;
 }
 
 // @brief 宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 CptItem::declhead_array() const
 {
-  return PtDeclHeadArray();
+  return nullptr;
 }
 
 // @brief item 配列の取得
-PtItemArray
+const PtItemArray*
 CptItem::item_array() const
 {
-  return PtItemArray();
+  return nullptr;
 }
 
 // @brief 本体のステートメントの取得
@@ -221,10 +221,10 @@ CptItem::specpath_type() const
 }
 
 // @brief ターミナルのリストの取得
-PtExprArray
+const PtExprArray*
 CptItem::terminal_list() const
 {
-  return PtExprArray{};
+  return nullptr;
 }
 
 // @brief パス記述の取得
@@ -246,38 +246,38 @@ CptItem::expr() const
 }
 
 // @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 CptItem::then_declhead_array() const
 {
-  return PtDeclHeadArray();
+  return nullptr;
 }
 
 // @brief 条件が成り立ったときに生成される item 配列の取得
-PtItemArray
+const PtItemArray*
 CptItem::then_item_array() const
 {
-  return PtItemArray();
+  return nullptr;
 }
 
 // @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 CptItem::else_declhead_array() const
 {
-  return PtDeclHeadArray();
+  return nullptr;
 }
 
 // @brief 条件が成り立たなかったときに生成される item 配列の取得
-PtItemArray
+const PtItemArray*
 CptItem::else_item_array() const
 {
-  return PtItemArray();
+  return nullptr;
 }
 
 // @brief case item のリストの取得
-PtGenCaseItemArray
+const PtGenCaseItemArray*
 CptItem::caseitem_list() const
 {
-  return PtGenCaseItemArray{};
+  return nullptr;
 }
 
 // @brief 繰り返し制御用の変数名の取得
@@ -314,7 +314,7 @@ CptItem::next_expr() const
 
 // コンストラクタ
 CptDefParamH::CptDefParamH(const FileRegion& file_region,
-			   PtDefParamArray dp_array) :
+			   const PtDefParamArray* dp_array) :
   mFileRegion(file_region),
   mArray(dp_array)
 {
@@ -340,7 +340,7 @@ CptDefParamH::type() const
 }
 
 // @brief defparam リストの取得
-PtDefParamArray
+const PtDefParamArray*
 CptDefParamH::defparam_list() const
 {
   return mArray;
@@ -353,7 +353,7 @@ CptDefParamH::defparam_list() const
 
 // コンストラクタ
 CptDefParam::CptDefParam(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
+			 const PtNameBranchArray* nb_array,
 			 const char* tail_name,
 			 const PtExpr* value) :
   mTopLoc(file_region.start_loc()),
@@ -377,7 +377,7 @@ CptDefParam::file_region() const
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptDefParam::namebranch_array() const
 {
   return mNbArray;
@@ -404,7 +404,7 @@ CptDefParam::expr() const
 
 // コンストラクタ
 CptContAssignH::CptContAssignH(const FileRegion& file_region,
-			       PtContAssignArray ca_array) :
+			       const PtContAssignArray* ca_array) :
   mFileRegion(file_region),
   mArray(ca_array)
 {
@@ -430,7 +430,7 @@ CptContAssignH::type() const
 }
 
 // @brief continuous assign リストの取得
-PtContAssignArray
+const PtContAssignArray*
 CptContAssignH::contassign_list() const
 {
   return mArray;
@@ -444,7 +444,7 @@ CptContAssignH::contassign_list() const
 // コンストラクタ
 CptContAssignHS::CptContAssignHS(const FileRegion& file_region,
 				 const PtStrength* strength,
-				 PtContAssignArray ca_array) :
+				 const PtContAssignArray* ca_array) :
   CptContAssignH(file_region, ca_array),
   mStrength(strength)
 {
@@ -470,7 +470,7 @@ CptContAssignHS::strength() const
 // コンストラクタ
 CptContAssignHD::CptContAssignHD(const FileRegion& file_region,
 				 const PtDelay* delay,
-				 PtContAssignArray ca_array) :
+				 const PtContAssignArray* ca_array) :
   CptContAssignH(file_region, ca_array),
   mDelay(delay)
 {
@@ -497,7 +497,7 @@ CptContAssignHD::delay() const
 CptContAssignHSD::CptContAssignHSD(const FileRegion& file_region,
 				   const PtStrength* strength,
 				   const PtDelay* delay,
-				   PtContAssignArray ca_array) :
+				   const PtContAssignArray* ca_array) :
   CptContAssignH(file_region, ca_array),
   mStrength(strength),
   mDelay(delay)
@@ -652,8 +652,8 @@ CptAlways::type() const
 CptTf::CptTf(const FileRegion& file_region,
 	     const char* name,
 	     bool automatic,
-	     PtIOHeadArray iohead_array,
-	     PtDeclHeadArray declhead_array,
+	     const PtIOHeadArray* iohead_array,
+	     const PtDeclHeadArray* declhead_array,
 	     const PtStmt* stmt) :
   mFileRegion(file_region),
   mName(name),
@@ -663,8 +663,8 @@ CptTf::CptTf(const FileRegion& file_region,
   mBody(stmt)
 {
   int n = 0;
-  for ( int i = 0; i < iohead_array.size(); ++ i ) {
-    n += iohead_array[i]->item_list().size();
+  for ( int i = 0; i < iohead_array->size(); ++ i ) {
+    n += (*iohead_array)[i]->item_list()->size();
   }
   mIOItemNum = n;
 }
@@ -703,14 +703,14 @@ CptTf::ioitem_num() const
 }
 
 // @brief IO宣言リストの配列の取得
-PtIOHeadArray
+const PtIOHeadArray*
 CptTf::iohead_array() const
 {
   return mIOHeadArray;
 }
 
 // @brief 宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 CptTf::declhead_array() const
 {
   return mDeclHeadArray;
@@ -732,8 +732,8 @@ CptTf::body() const
 CptTask::CptTask(const FileRegion& file_region,
 		 const char* name,
 		 bool automatic,
-		 PtIOHeadArray iohead_array,
-		 PtDeclHeadArray declhead_array,
+		 const PtIOHeadArray* iohead_array,
+		 const PtDeclHeadArray* declhead_array,
 		 const PtStmt* stmt) :
   CptTf(file_region,
 	name, automatic,
@@ -765,8 +765,8 @@ CptFunction::CptFunction(const FileRegion& file_region,
 			 const char* name,
 			 bool automatic,
 			 bool sign,
-			 PtIOHeadArray iohead_array,
-			 PtDeclHeadArray declhead_array,
+			 const PtIOHeadArray* iohead_array,
+			 const PtDeclHeadArray* declhead_array,
 			 const PtStmt* stmt) :
   CptTf(file_region,
 	name, automatic,
@@ -830,8 +830,8 @@ CptSizedFunc::CptSizedFunc(const FileRegion& file_region,
 			   bool sign,
 			   const PtExpr* left,
 			   const PtExpr* right,
-			   PtIOHeadArray iohead_array,
-			   PtDeclHeadArray declhead_array,
+			   const PtIOHeadArray* iohead_array,
+			   const PtDeclHeadArray* declhead_array,
 			   const PtStmt* stmt) :
   CptFunction(file_region,
 	      name, automatic, sign,
@@ -873,8 +873,8 @@ CptTypedFunc::CptTypedFunc(const FileRegion& file_region,
 			   bool automatic,
 			   bool sign,
 			   VpiVarType data_type,
-			   PtIOHeadArray iohead_array,
-			   PtDeclHeadArray declhead_array,
+			   const PtIOHeadArray* iohead_array,
+			   const PtDeclHeadArray* declhead_array,
 			   const PtStmt* stmt) :
   CptFunction(file_region,
 	      name, automatic, sign,
@@ -905,7 +905,7 @@ CptTypedFunc::data_type() const
 // defparam 文のヘッダを生成する．
 const PtItem*
 CptFactory::new_DefParamH(const FileRegion& file_region,
-			  PtDefParamArray elem_array)
+			  const PtDefParamArray* elem_array)
 {
   ++ mNumDefParamH;
   void* p{mAlloc.get_memory(sizeof(CptDefParamH))};
@@ -921,19 +921,19 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 {
   ++ mNumDefParam;
   void* p{mAlloc.get_memory(sizeof(CptDefParam))};
-  auto obj{new (p) CptDefParam(file_region, PtNameBranchArray(),
-			       name, value)};
+  auto obj{new (p) CptDefParam(file_region, nullptr, name, value)};
   return obj;
 }
 
 const PtDefParam*
 CptFactory::new_DefParam(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
-			 const char* tail_name,
+			 PuHierName* hname,
 			 const PtExpr* value)
 {
   ++ mNumDefParam;
   void* p{mAlloc.get_memory(sizeof(CptDefParam))};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto obj{new (p) CptDefParam(file_region, nb_array, tail_name, value)};
   return obj;
 }
@@ -941,7 +941,7 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 // continuous assign 文のヘッダを生成する．
 const PtItem*
 CptFactory::new_ContAssignH(const FileRegion& file_region,
-			    PtContAssignArray elem_array)
+			    const PtContAssignArray* elem_array)
 {
   ++ mNumContAssignH;
   void* p{mAlloc.get_memory(sizeof(CptContAssignH))};
@@ -953,7 +953,7 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 const PtItem*
 CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtStrength* strength,
-			    PtContAssignArray elem_array)
+			    const PtContAssignArray* elem_array)
 {
   ++ mNumContAssignHS;
   void* p{mAlloc.get_memory(sizeof(CptContAssignHS))};
@@ -965,7 +965,7 @@ CptFactory::new_ContAssignH(const FileRegion& file_region,
 const PtItem*
 CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtDelay* delay,
-			    PtContAssignArray elem_array)
+			    const PtContAssignArray* elem_array)
 {
   ++ mNumContAssignHD;
   void* p{mAlloc.get_memory(sizeof(CptContAssignHD))};
@@ -978,7 +978,7 @@ const PtItem*
 CptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtStrength* strength,
 			    const PtDelay* delay,
-			    PtContAssignArray elem_array)
+			    const PtContAssignArray* elem_array)
 {
   ++ mNumContAssignHSD;
   void* p{mAlloc.get_memory(sizeof(CptContAssignHSD))};
@@ -1026,8 +1026,8 @@ const PtItem*
 CptFactory::new_Task(const FileRegion& file_region,
 		     const char* name,
 		     bool automatic,
-		     PtIOHeadArray iohead_array,
-		     PtDeclHeadArray declhead_array,
+		     const PtIOHeadArray* iohead_array,
+		     const PtDeclHeadArray* declhead_array,
 		     const PtStmt* stmt)
 {
   ++ mNumTask;
@@ -1045,8 +1045,8 @@ CptFactory::new_Function(const FileRegion& file_region,
 			 const char* name,
 			 bool automatic,
 			 bool sign,
-			 PtIOHeadArray iohead_array,
-			 PtDeclHeadArray declhead_array,
+			 const PtIOHeadArray* iohead_array,
+			 const PtDeclHeadArray* declhead_array,
 			 const PtStmt* stmt)
 {
   ++ mNumFunction;
@@ -1066,8 +1066,8 @@ CptFactory::new_SizedFunc(const FileRegion& file_region,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right,
-			  PtIOHeadArray iohead_array,
-			  PtDeclHeadArray declhead_array,
+			  const PtIOHeadArray* iohead_array,
+			  const PtDeclHeadArray* declhead_array,
 			  const PtStmt* stmt)
 {
   ++ mNumSizedFunc;
@@ -1088,8 +1088,8 @@ CptFactory::new_TypedFunc(const FileRegion& file_region,
 			  bool automatic,
 			  bool sign,
 			  VpiVarType func_type,
-			  PtIOHeadArray iohead_array,
-			  PtDeclHeadArray declhead_array,
+			  const PtIOHeadArray* iohead_array,
+			  const PtDeclHeadArray* declhead_array,
 			  const PtStmt* stmt)
 {
   ++ mNumTypedFunc;

@@ -118,17 +118,17 @@ public:
 
   /// @brief パラメータポート宣言配列の取得
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   paramport_array() const = 0;
 
   /// @brief ポートのリストを取り出す．
   virtual
-  PtPortArray
+  const PtPortArray*
   port_list() const = 0;
 
   /// @brief 入出力宣言ヘッダ配列の取得
   virtual
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const = 0;
 
   /// @brief 入出力宣言の要素数の取得
@@ -139,12 +139,12 @@ public:
 
   /// @brief 宣言ヘッダ配列の取得
   virtual
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const = 0;
 
   /// @brief item 配列の取得
   virtual
-  PtItemArray
+  const PtItemArray*
   item_array() const = 0;
 
   /// @brief 関数名から関数の検索

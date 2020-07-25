@@ -365,13 +365,12 @@ PtiExpr::decompile() const
 // @param[in] name 末尾の名前
 // @return 階層名を展開したものを返す．
 string
-expand_full_name(const PtNameBranchArray& nb_array,
+expand_full_name(const PtNameBranchArray* nb_array,
 		 const char* name)
 {
   ostringstream buf;
   const char* period = "";
-  for (ymuint i = 0; i < nb_array.size(); ++ i) {
-    const PtNameBranch* nb = nb_array[i];
+  for ( auto nb: *nb_array ) {
     buf << period << nb->name();
     if ( nb->has_index() ) {
       buf << "[" << nb->index() << "]";

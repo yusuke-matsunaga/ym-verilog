@@ -9,6 +9,7 @@
 #include "parser/Parser.h"
 
 #include "parser/PtiFactory.h"
+#include "parser/PuHierName.h"
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 
@@ -36,9 +37,7 @@ const PtStmt*
 Parser::new_Disable(const FileRegion& fr,
 		    PuHierName* hname)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto stmt{mFactory.new_Disable(fr, nb_array, tail_name)};
+  auto stmt{mFactory.new_Disable(fr, hname)};
   return stmt;
 }
 
@@ -52,7 +51,7 @@ Parser::new_Enable(const FileRegion& fr,
 		   const char* name,
 		   PtrList<const PtExpr>* arg_list)
 {
-  auto stmt{mFactory.new_Enable(fr, name, to_array(arg_list))};
+  auto stmt{mFactory.new_Enable(fr, name, new_array(arg_list))};
   return stmt;
 }
 
@@ -67,9 +66,7 @@ Parser::new_Enable(const FileRegion& fr,
 		   PuHierName* hname,
 		   PtrList<const PtExpr>* arg_list)
 {
-  PtNameBranchArray nb_array;
-  const char* tail_name = extract_HierName(hname, nb_array);
-  auto stmt{mFactory.new_Enable(fr, nb_array, tail_name, to_array(arg_list))};
+  auto stmt{mFactory.new_Enable(fr, hname, new_array(arg_list))};
   return stmt;
 }
 
@@ -82,7 +79,7 @@ Parser::new_SysEnable(const FileRegion& fr,
 		      const char* name,
 		      PtrList<const PtExpr>* arg_list)
 {
-  auto stmt{mFactory.new_SysEnable(fr, name, to_array(arg_list))};
+  auto stmt{mFactory.new_SysEnable(fr, name, new_array(arg_list))};
   return stmt;
 }
 
@@ -250,7 +247,7 @@ Parser::new_Case(const FileRegion& fr,
 		 const PtExpr* expr,
 		 PtrList<const PtCaseItem>* caseitem_list)
 {
-  auto stmt{mFactory.new_Case(fr, expr, to_array(caseitem_list))};
+  auto stmt{mFactory.new_Case(fr, expr, new_array(caseitem_list))};
   return stmt;
 }
 
@@ -264,7 +261,7 @@ Parser::new_CaseX(const FileRegion& fr,
 		  const PtExpr* expr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
-  auto stmt{mFactory.new_CaseX(fr, expr, to_array(caseitem_list))};
+  auto stmt{mFactory.new_CaseX(fr, expr, new_array(caseitem_list))};
   return stmt;
 }
 
@@ -278,7 +275,7 @@ Parser::new_CaseZ(const FileRegion& fr,
 		  const PtExpr* expr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
-  auto stmt{mFactory.new_CaseZ(fr, expr, to_array(caseitem_list))};
+  auto stmt{mFactory.new_CaseZ(fr, expr, new_array(caseitem_list))};
   return stmt;
 }
 
@@ -292,7 +289,7 @@ Parser::new_CaseItem(const FileRegion& fr,
 		     PtrList<const PtExpr>* label_list,
 		     const PtStmt* body)
 {
-  auto stmt{mFactory.new_CaseItem(fr, to_array(label_list), body)};
+  auto stmt{mFactory.new_CaseItem(fr, new_array(label_list), body)};
   return stmt;
 }
 
@@ -414,7 +411,7 @@ const PtStmt*
 Parser::new_ParBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
-  auto stmt{mFactory.new_ParBlock(fr, to_array(stmt_list))};
+  auto stmt{mFactory.new_ParBlock(fr, new_array(stmt_list))};
   return stmt;
 }
 
@@ -429,7 +426,7 @@ Parser::new_NamedParBlock(const FileRegion& fr,
 			  PtrList<const PtStmt>* stmt_list)
 {
   auto stmt{mFactory.new_NamedParBlock(fr, name, mCurDeclArray,
-				       to_array(stmt_list))};
+				       new_array(stmt_list))};
   return stmt;
 }
 
@@ -441,7 +438,7 @@ const PtStmt*
 Parser::new_SeqBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
-  auto stmt{mFactory.new_SeqBlock(fr, to_array(stmt_list))};
+  auto stmt{mFactory.new_SeqBlock(fr, new_array(stmt_list))};
   return stmt;
 }
 
@@ -456,7 +453,7 @@ Parser::new_NamedSeqBlock(const FileRegion& fr,
 			  PtrList<const PtStmt>* stmt_list)
 {
   auto stmt{mFactory.new_NamedSeqBlock(fr, name, mCurDeclArray,
-				       to_array(stmt_list))};
+				       new_array(stmt_list))};
   return stmt;
 }
 

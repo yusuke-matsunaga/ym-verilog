@@ -119,7 +119,7 @@ SptIOHead::right_range() const
 }
 
 // @brief 要素のリストの取得
-PtIOItemArray
+const PtIOItemArray*
 SptIOHead::item_list() const
 {
   return mItemArray;
@@ -128,7 +128,7 @@ SptIOHead::item_list() const
 // 要素リストの設定
 // @param elem_array 要素の配列
 void
-SptIOHead::set_elem(PtIOItemArray elem_array)
+SptIOHead::set_elem(const PtIOItemArray* elem_array)
 {
   mItemArray = elem_array;
 }
@@ -316,7 +316,7 @@ SptDeclHead::delay() const
 }
 
 // @brief 要素のリストの取得
-PtDeclItemArray
+const PtDeclItemArray*
 SptDeclHead::item_list() const
 {
   return mItemArray;
@@ -325,7 +325,7 @@ SptDeclHead::item_list() const
 // 要素リストの設定
 // @param elem_array 要素の配列
 void
-SptDeclHead::set_elem(PtDeclItemArray elem_array)
+SptDeclHead::set_elem(const PtDeclItemArray* elem_array)
 {
   mItemArray = elem_array;
 }
@@ -344,7 +344,7 @@ SptDeclHead::set_elem(PtDeclItemArray elem_array)
 // どちらか一方は必ず nullptr である．両方 nullptr の場合もあり得る．
 SptDeclItem::SptDeclItem(const FileRegion& file_region,
 			 const char* name,
-			 PtRangeArray range_array,
+			 const PtRangeArray* range_array,
 			 const PtExpr* init_value) :
   mFileRegion{file_region},
   mName{name},
@@ -379,11 +379,11 @@ SptDeclItem::name() const
 int
 SptDeclItem::dimension_list_size() const
 {
-  return mRangeArray.size();
+  return mRangeArray->size();
 }
 
 // 範囲のリストの取得
-PtRangeArray
+const PtRangeArray*
 SptDeclItem::range_list() const
 {
   return mRangeArray;
@@ -1025,7 +1025,7 @@ const PtDeclItem*
 SptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name)
 {
-  auto node = new SptDeclItem(file_region, name, PtRangeArray(), nullptr);
+  auto node = new SptDeclItem(file_region, name, nullptr, nullptr);
   return node;
 }
 
@@ -1039,7 +1039,7 @@ SptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* init_value)
 {
-  auto node = new SptDeclItem(file_region, name, PtRangeArray(), init_value);
+  auto node = new SptDeclItem(file_region, name, nullptr, init_value);
   return node;
 }
 
@@ -1051,7 +1051,7 @@ SptFactory::new_DeclItem(const FileRegion& file_region,
 const PtDeclItem*
 SptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name,
-			 PtRangeArray range_array)
+			 const PtRangeArray* range_array)
 {
   auto node = new SptDeclItem(file_region, name, range_array, nullptr);
   return node;

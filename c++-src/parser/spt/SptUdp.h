@@ -32,11 +32,11 @@ private:
   // コンストラクタ
   SptUdp(const FileRegion& file_region,
 	 const char* name,
-	 PtPortArray port_array,
-	 PtIOHeadArray iohead_array,
+	 const PtPortArray* port_array,
+	 const PtIOHeadArray* iohead_array,
 	 bool is_seq,
 	 const PtExpr* init_value,
-	 PtUdpEntryArray entry_array);
+	 const PtUdpEntryArray* entry_array);
 
   // デストラクタ
   ~SptUdp();
@@ -60,11 +60,11 @@ public:
   name() const override;
 
   /// @brief ポートのリストを取り出す．
-  PtPortArray
+  const PtPortArray*
   port_list() const override;
 
   /// @brief 入出力宣言ヘッダ配列の取得
-  PtIOHeadArray
+  const PtIOHeadArray*
   iohead_array() const override;
 
   // 初期値を取出す．
@@ -72,7 +72,7 @@ public:
   init_value() const override;
 
   /// @brief テーブルを取り出す．
-  PtUdpEntryArray
+  const PtUdpEntryArray*
   table_array() const override;
 
 
@@ -88,10 +88,10 @@ private:
   const char* mName;
 
   // ポートの配列
-  PtPortArray mPortArray;
+  const PtPortArray* mPortArray;
 
   // 入出力宣言の配列
-  PtIOHeadArray mIOHeadArray;
+  const PtIOHeadArray* mIOHeadArray;
 
   // sequential primitive の時 true
   bool mSeq;
@@ -100,7 +100,7 @@ private:
   const PtExpr* mInitValue;
 
   // テーブル要素の配列
-  PtUdpEntryArray mTableArray;
+  const PtUdpEntryArray* mTableArray;
 
 };
 
@@ -117,7 +117,7 @@ private:
 
   // コンストラクタ
   SptUdpEntry(const FileRegion& file_region,
-	      PtUdpValueArray input_array,
+	      const PtUdpValueArray* input_array,
 	      const PtUdpValue* current,
 	      const PtUdpValue* output);
 
@@ -135,7 +135,7 @@ public:
   file_region() const override;
 
   /// @brief 入力値の配列を取り出す．
-  PtUdpValueArray
+  const PtUdpValueArray*
   input_array() const override;
 
   // 現状態の値を取り出す．
@@ -156,7 +156,7 @@ private:
   FileRegion mFileRegion;
 
   // 入力パタンの配列
-  PtUdpValueArray mInputArray;
+  const PtUdpValueArray* mInputArray;
 
   // 現状態のパタン
   const PtUdpValue* mCurrent;

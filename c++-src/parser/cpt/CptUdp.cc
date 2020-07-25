@@ -9,9 +9,8 @@
 
 #include "CptUdp.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
-
 #include "parser/PtiDecl.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -23,11 +22,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptUdp::CptUdp(const FileRegion& file_region,
 	       const char* name,
-	       PtPortArray port_array,
-	       PtIOHeadArray iohead_array,
+	       const PtPortArray* port_array,
+	       const PtIOHeadArray* iohead_array,
 	       bool is_seq,
 	       const PtExpr* init_value,
-	       PtUdpEntryArray entry_array) :
+	       const PtUdpEntryArray* entry_array) :
   mFileRegion{file_region},
   mName{name},
   mPortArray{port_array},
@@ -70,14 +69,14 @@ CptUdp::name() const
 }
 
 // @brief ポートのリストを取り出す．
-PtPortArray
+const PtPortArray*
 CptUdp::port_list() const
 {
   return mPortArray;
 }
 
 // @brief 入出力宣言ヘッダ配列の取得
-PtIOHeadArray
+const PtIOHeadArray*
 CptUdp::iohead_array() const
 {
   return mIOHeadArray;
@@ -91,7 +90,7 @@ CptUdp::init_value() const
 }
 
 // @brief テーブルを取り出す．
-PtUdpEntryArray
+const PtUdpEntryArray*
 CptUdp::table_array() const
 {
   return mTableArray;
@@ -104,7 +103,7 @@ CptUdp::table_array() const
 
 // コンストラクタ
 CptUdpEntry::CptUdpEntry(const FileRegion& file_region,
-			 PtUdpValueArray input_array,
+			 const PtUdpValueArray* input_array,
 			 const PtUdpValue* output) :
   mFileRegion{file_region},
   mInputArray{input_array},
@@ -125,7 +124,7 @@ CptUdpEntry::file_region() const
 }
 
 // @brief 入力値の配列を取り出す．
-PtUdpValueArray
+const PtUdpValueArray*
 CptUdpEntry::input_array() const
 {
   return mInputArray;
@@ -153,7 +152,7 @@ CptUdpEntry::output() const
 
 // コンストラクタ
 CptUdpEntryS::CptUdpEntryS(const FileRegion& file_region,
-			   PtUdpValueArray input_array,
+			   const PtUdpValueArray* input_array,
 			   const PtUdpValue* current,
 			   const PtUdpValue* output) :
   CptUdpEntry(file_region, input_array, output),
@@ -229,9 +228,9 @@ CptUdpValue::symbol() const
 const PtUdp*
 CptFactory::new_CmbUdp(const FileRegion& file_region,
 		       const char* name,
-		       PtPortArray port_array,
-		       PtIOHeadArray iohead_array,
-		       PtUdpEntryArray entry_array)
+		       const PtPortArray* port_array,
+		       const PtIOHeadArray* iohead_array,
+		       const PtUdpEntryArray* entry_array)
 {
   ++ mNumUdp;
   void* p{mAlloc.get_memory(sizeof(CptUdp))};
@@ -256,10 +255,10 @@ CptFactory::new_CmbUdp(const FileRegion& file_region,
 const PtUdp*
 CptFactory::new_SeqUdp(const FileRegion& file_region,
 		       const char* name,
-		       PtPortArray port_array,
-		       PtIOHeadArray iohead_array,
+		       const PtPortArray* port_array,
+		       const PtIOHeadArray* iohead_array,
 		       const PtExpr* init_value,
-		       PtUdpEntryArray entry_array)
+		       const PtUdpEntryArray* entry_array)
 {
   ++ mNumUdp;
   void* p{mAlloc.get_memory(sizeof(CptUdp))};
@@ -280,7 +279,7 @@ CptFactory::new_SeqUdp(const FileRegion& file_region,
 // @return 生成されたテーブルエントリ
 const PtUdpEntry*
 CptFactory::new_UdpEntry(const FileRegion& file_region,
-			 PtUdpValueArray input_array,
+			 const PtUdpValueArray* input_array,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntry;
@@ -299,7 +298,7 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 // @return 生成されたテーブルエントリ
 const PtUdpEntry*
 CptFactory::new_UdpEntry(const FileRegion& file_region,
-			 PtUdpValueArray input_array,
+			 const PtUdpValueArray* input_array,
 			 const PtUdpValue* current,
 			 const PtUdpValue* output)
 {

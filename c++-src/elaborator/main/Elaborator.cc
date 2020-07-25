@@ -238,7 +238,7 @@ void
 Elaborator::add_defparamstub(const VlModule* module,
 			     const PtItem* pt_header)
 {
-  for ( auto pt_defparam: pt_header->defparam_list() ) {
+  for ( auto pt_defparam: *pt_header->defparam_list() ) {
     mDefParamStubList.push_back(DefParamStub(module, pt_header, pt_defparam));
   }
 }

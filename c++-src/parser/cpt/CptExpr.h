@@ -36,7 +36,7 @@ public:
 
   /// @brief 階層ブランチの取得
   /// @note このクラスでは nullptr を返す．
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
   /// @brief 末尾の名前の取得
@@ -412,7 +412,7 @@ protected:
 
   // コンストラクタ
   CptConcat(const FileRegion& file_region,
-	    PtExprArray expr_array);
+	    const PtExprArray* expr_array);
 
   // デストラクタ
   ~CptConcat();
@@ -468,7 +468,7 @@ private:
   FileRegion mFileRegion;
 
   // 結合する式の配列
-  PtExprArray mExprArray;
+  const PtExprArray* mExprArray;
 
 };
 
@@ -485,7 +485,7 @@ protected:
 
   // コンストラクタ
   CptMultiConcat(const FileRegion& file_region,
-		 PtExprArray expr_array);
+		 const PtExprArray* expr_array);
 
   // デストラクタ
   ~CptMultiConcat();
@@ -587,7 +587,7 @@ protected:
   // コンストラクタ
   CptFuncCallBase(const FileRegion& file_region,
 		  const char* name,
-		  PtExprArray arg_array);
+		  const PtExprArray* arg_array);
 
   // デストラクタ
   ~CptFuncCallBase();
@@ -642,7 +642,7 @@ private:
   const char* mName;
 
   // 引数の配列
-  PtExprArray mArgArray;
+  const PtExprArray* mArgArray;
 
 };
 
@@ -660,7 +660,7 @@ protected:
   // コンストラクタ
   CptFuncCall(const FileRegion& file_region,
 	      const char* name,
-	      PtExprArray arg_array);
+	      const PtExprArray* arg_array);
 
   // デストラクタ
   ~CptFuncCall();
@@ -691,9 +691,9 @@ protected:
 
   // コンストラクタ
   CptFuncCallH(const FileRegion& file_region,
-	       PtNameBranchArray nb_array,
+	       const PtNameBranchArray* nb_array,
 	       const char* tail_name,
-	       PtExprArray arg_array);
+	       const PtExprArray* arg_array);
 
   // デストラクタ
   ~CptFuncCallH();
@@ -705,7 +705,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
 
@@ -715,7 +715,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
 };
 
@@ -733,7 +733,7 @@ protected:
   // コンストラクタ
   CptSysFuncCall(const FileRegion& file_region,
 		 const char* name,
-		 PtExprArray arg_array);
+		 const PtExprArray* arg_array);
 
   // デストラクタ
   ~CptSysFuncCall();
@@ -886,7 +886,7 @@ protected:
   // コンストラクタ
   CptPrimaryI(const FileRegion& file_region,
 	      const char* name,
-	      PtExprArray index_array);
+	      const PtExprArray* index_array);
 
   // デストラクタ
   ~CptPrimaryI();
@@ -925,7 +925,7 @@ private:
   FileRegion mFileRegion;
 
   // インデックスの配列
-  PtExprArray mIndexArray;
+  const PtExprArray* mIndexArray;
 
 };
 
@@ -943,7 +943,7 @@ protected:
   // コンストラクタ
   CptPrimaryCI(const FileRegion& file_region,
 	       const char* name,
-	       PtExprArray index_array);
+	       const PtExprArray* index_array);
 
   // デストラクタ
   ~CptPrimaryCI();
@@ -1074,7 +1074,7 @@ protected:
   // コンストラクタ
   CptPrimaryIR(const FileRegion& file_region,
 	       const char* name,
-	       PtExprArray index_array,
+	       const PtExprArray* index_array,
 	       VpiRangeMode mode,
 	       const PtExpr* left,
 	       const PtExpr* right);
@@ -1130,7 +1130,7 @@ protected:
 
   // コンストラクタ
   CptPrimaryH(const FileRegion& file_region,
-	      PtNameBranchArray nb_array,
+	      const PtNameBranchArray* nb_array,
 	      const char* tail_name);
 
   // デストラクタ
@@ -1147,7 +1147,7 @@ public:
   file_region() const override;
 
   /// @brief 階層ブランチの取得
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
 
@@ -1160,7 +1160,7 @@ private:
   FileRegion mFileRegion;
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
 };
 
@@ -1177,9 +1177,9 @@ protected:
 
   // コンストラクタ
   CptPrimaryHI(const FileRegion& file_region,
-	       PtNameBranchArray nb_array,
+	       const PtNameBranchArray* nb_array,
 	       const char* tail_name,
-	       PtExprArray index_array);
+	       const PtExprArray* index_array);
 
   // デストラクタ
   ~CptPrimaryHI();
@@ -1191,7 +1191,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
 
@@ -1201,7 +1201,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
 };
 
@@ -1218,9 +1218,9 @@ protected:
 
   // コンストラクタ
   CptPrimaryHCI(const FileRegion& file_region,
-		PtNameBranchArray nb_array,
+		const PtNameBranchArray* nb_array,
 		const char* tail_name,
-		PtExprArray index_array);
+		const PtExprArray* index_array);
 
   // デストラクタ
   ~CptPrimaryHCI();
@@ -1250,7 +1250,7 @@ protected:
 
   // コンストラクタ
   CptPrimaryHR(const FileRegion& file_region,
-	       PtNameBranchArray nb_array,
+	       const PtNameBranchArray* nb_array,
 	       const char* tail_name,
 	       VpiRangeMode mode,
 	       const PtExpr* left,
@@ -1266,7 +1266,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 階層ブランチの取得
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
 
@@ -1276,7 +1276,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
 };
 
@@ -1293,9 +1293,9 @@ protected:
 
   // コンストラクタ
   CptPrimaryHIR(const FileRegion& file_region,
-		PtNameBranchArray nb_array,
+		const PtNameBranchArray* nb_array,
 		const char* tail_name,
-		PtExprArray index_array,
+		const PtExprArray* index_array,
 		VpiRangeMode mode,
 		const PtExpr* left,
 		const PtExpr* right);
@@ -1311,8 +1311,7 @@ public:
 
   /// @brief 階層ブランチの取得
   /// @note kDisable/kEnable/kSysEnable で意味のある関数
-  /// @note このクラスでは nullptr を返す．
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
 
@@ -1322,7 +1321,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
 };
 

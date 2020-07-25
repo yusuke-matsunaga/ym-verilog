@@ -8,6 +8,7 @@
 
 
 #include "ItemGen.h"
+#include "DeclGen.h"
 #include "ElbEnv.h"
 
 #include "ym/BitVector.h"
@@ -59,10 +60,10 @@ ItemGen::~ItemGen()
 // @param[in] pt_item_array 要素定義の配列
 void
 ItemGen::phase1_item(const VlNamedObj* parent,
-		     PtItemArray pt_item_array)
+		     const PtItemArray* pt_item_array)
 {
-  for (ymuint i = 0; i < pt_item_array.size(); ++ i) {
-    const PtItem* pt_item = pt_item_array[i];
+  for (ymuint i = 0; i < pt_item_array->size(); ++ i) {
+    const PtItem* pt_item = (*pt_item_array)[i];
     switch ( pt_item->type() ) {
     case PtItemType::DefParam:
       // 実際には登録するだけ
@@ -144,7 +145,7 @@ ItemGen::defparam_override(const VlModule* module,
 {
   const FileRegion& fr = pt_defparam->file_region();
 
-  PtNameBranchArray nb_array = pt_defparam->namebranch_array();
+  const PtNameBranchArray* nb_array = pt_defparam->namebranch_array();
   const char* name = pt_defparam->name();
 
   ElbObjHandle* handle = find_obj_up(module, nb_array, name, ulimit);
@@ -221,7 +222,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 
   ElbEnv env;
   ElbNetLhsEnv env1(env);
-  for ( auto pt_elem: pt_header->contassign_list() ) {
+  for ( auto pt_elem: *pt_header->contassign_list() ) {
     // 左辺式の生成
     const PtExpr* pt_lhs = pt_elem->lhs();
     ElbExpr* lhs = instantiate_lhs(parent, env1, pt_lhs);
@@ -332,11 +333,11 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
   }
 
   bool found = false;
-  for ( auto pt_caseitem: pt_gencase->caseitem_list() ) {
+  for ( auto pt_caseitem: *pt_gencase->caseitem_list() ) {
     // default(ラベルリストが空) なら常にマッチする．
-    SizeType n = pt_caseitem->label_list().size();
+    SizeType n = pt_caseitem->label_list()->size();
     bool match = (n == 0);
-    for ( auto pt_expr: pt_caseitem->label_list() ) {
+    for ( auto pt_expr: *pt_caseitem->label_list() ) {
       BitVector label_val;
       if ( !evaluate_bitvector(parent, pt_expr, label_val, true) ) {
 	continue;
@@ -356,9 +357,7 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
 	return;
       }
       found = true;
-      phase1_genitem(parent,
-		     pt_caseitem->declhead_array(),
-		     pt_caseitem->item_array());
+      phase1_genitem(parent, pt_caseitem->declhead_array(), pt_caseitem->item_array());
     }
   }
 }
@@ -481,12 +480,12 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
 // @param[in] pt_item_array パース木の要素の配列
 void
 ItemGen::phase1_genitem(const VlNamedObj* parent,
-			PtDeclHeadArray pt_decl_array,
-			PtItemArray pt_item_array)
+			const PtDeclHeadArray* pt_decl_array,
+			const PtItemArray* pt_item_array)
 {
   phase1_item(parent, pt_item_array);
   add_phase2stub(make_stub(static_cast<ElbProxy*>(this),
-			   &ItemGen::instantiate_decl,
+			   &ElbProxy::instantiate_decl,
 			   parent, pt_decl_array));
 }
 

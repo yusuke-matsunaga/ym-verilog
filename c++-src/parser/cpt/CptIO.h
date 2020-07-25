@@ -91,7 +91,7 @@ public:
   right_range() const override;
 
   /// @brief 要素のリストの取得
-  PtIOItemArray
+  const PtIOItemArray*
   item_list() const override;
 
 
@@ -103,7 +103,7 @@ private:
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト
   void
-  set_elem(PtIOItemArray elem_array) override;
+  set_elem(const PtIOItemArray* elem_array) override;
 
 
 private:
@@ -118,7 +118,7 @@ private:
   ymuint32 mAttr;
 
   // 要素の配列
-  PtIOItemArray mItemArray;
+  const PtIOItemArray* mItemArray;
 
 };
 
@@ -311,7 +311,6 @@ private:
   const PtExpr* mInitValue;
 
 };
-
 
 END_NAMESPACE_YM_VERILOG
 

@@ -9,8 +9,7 @@
 
 #include "CptIO.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
-
+#include "ym/pt/PtAlloc.h"
 #include "ym/pt/PtExpr.h"
 
 
@@ -113,7 +112,7 @@ CptIOHBase::right_range() const
 }
 
 // @brief 要素のリストの取得
-PtIOItemArray
+const PtIOItemArray*
 CptIOHBase::item_list() const
 {
   return mItemArray;
@@ -122,7 +121,7 @@ CptIOHBase::item_list() const
 // @brief 要素リストの設定
 // @param[in] elem_array 要素リスト
 void
-CptIOHBase::set_elem(PtIOItemArray elem_array)
+CptIOHBase::set_elem(const PtIOItemArray* elem_array)
 {
   mItemArray = elem_array;
 }

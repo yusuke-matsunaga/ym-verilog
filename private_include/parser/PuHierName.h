@@ -58,8 +58,8 @@ public:
   /// @brief 階層ブランチを PtNameBranchArray の形で取り出す．
   ///
   /// この関数を呼ぶと mNbList は破壊される．
-  PtNameBranchArray
-  name_branch();
+  const PtNameBranchArray*
+  name_branch(PtAlloc& alloc);
 
   /// @brief 最下層の名前を取り出す．
   /// @return 最下層の名前
@@ -118,10 +118,10 @@ PuHierName::add(const PtNameBranch* nb,
 //
 // この関数を呼ぶと mNbList は破壊される．
 inline
-PtNameBranchArray
-PuHierName::name_branch()
+const PtNameBranchArray*
+PuHierName::name_branch(PtAlloc& alloc)
 {
-  return mNbList.to_array();
+  return mNbList.to_array(alloc);
 }
 
 // @brief 最下層の名前を取り出す．

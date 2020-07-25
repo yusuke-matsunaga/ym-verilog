@@ -27,7 +27,7 @@ protected:
   /// @brief コンストラクタ
   CptGateH(const FileRegion& file_region,
 	   VpiPrimType prim_type,
-	   PtInstArray inst_array);
+	   const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptGateH();
@@ -52,7 +52,7 @@ public:
   prim_type() const override;
 
   /// @brief module/UDP/gate instance リストの取得
-  PtInstArray
+  const PtInstArray*
   inst_list() const override;
 
 
@@ -68,7 +68,7 @@ private:
   VpiPrimType mPrimType;
 
   // 要素の配列
-  PtInstArray mInstArray;
+  const PtInstArray* mInstArray;
 
 };
 
@@ -87,7 +87,7 @@ protected:
   CptGateHS(const FileRegion& file_region,
 	    VpiPrimType prim_type,
 	    const PtStrength* strength,
-	    PtInstArray inst_array);
+	    const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptGateHS();
@@ -128,7 +128,7 @@ protected:
   CptGateHD(const FileRegion& file_region,
 	    VpiPrimType prim_type,
 	    const PtDelay* delay,
-	    PtInstArray inst_array);
+	    const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptGateHD();
@@ -170,7 +170,7 @@ protected:
 	     VpiPrimType prim_type,
 	     const PtStrength* strength,
 	     const PtDelay* delay,
-	     PtInstArray inst_array);
+	     const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptGateHSD();
@@ -217,7 +217,7 @@ protected:
   /// @brief コンストラクタ
   CptMuH(const FileRegion& file_region,
 	 const char* def_name,
-	 PtInstArray inst_array);
+	 const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptMuH() override;
@@ -242,7 +242,7 @@ public:
   name() const override;
 
   /// @brief module/UDP/gate instance リストの取得
-  PtInstArray
+  const PtInstArray*
   inst_list() const override;
 
 
@@ -258,7 +258,7 @@ private:
   const char* mName;
 
   // 要素の配列
-  PtInstArray mInstArray;
+  const PtInstArray* mInstArray;
 
 };
 
@@ -276,8 +276,8 @@ protected:
   /// @brief コンストラクタ
   CptMuHP(const FileRegion& file_region,
 	  const char* def_name,
-	  PtConnectionArray con_array,
-	  PtInstArray inst_array);
+	  const PtConnectionArray* con_array,
+	  const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptMuHP();
@@ -289,7 +289,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パラメータ割り当てリストの取得
-  PtConnectionArray
+  const PtConnectionArray*
   paramassign_array() const override;
 
 
@@ -299,7 +299,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // パラメータ割り当ての配列
-  PtConnectionArray mParamAssignArray;
+  const PtConnectionArray* mParamAssignArray;
 
 };
 
@@ -318,7 +318,7 @@ protected:
   CptMuHS(const FileRegion& file_region,
 	  const char* def_name,
 	  const PtStrength* strength,
-	  PtInstArray inst_array);
+	  const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptMuHS();
@@ -359,7 +359,7 @@ protected:
   CptMuHD(const FileRegion& file_region,
 	  const char* def_name,
 	  const PtDelay* delay,
-	  PtInstArray inst_array);
+	  const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptMuHD();
@@ -401,7 +401,7 @@ protected:
 	   const char* def_name,
 	   const PtStrength* strength,
 	   const PtDelay* delay,
-	   PtInstArray inst_array);
+	   const PtInstArray* inst_array);
 
   /// @brief デストラクタ
   ~CptMuHSD();
@@ -447,7 +447,7 @@ protected:
 
   /// @brief コンストラクタ
   CptInst(const FileRegion& file_region,
-	  PtConnectionArray con_array);
+	  const PtConnectionArray* con_array);
 
   /// @brief デストラクタ
   ~CptInst();
@@ -481,7 +481,7 @@ public:
   right_range() const override;
 
   /// @brief ポートのリストの取得
-  PtConnectionArray
+  const PtConnectionArray*
   port_list() const override;
 
 
@@ -494,7 +494,7 @@ private:
   FileRegion mFileRegion;
 
   // ポート割り当ての配列
-  PtConnectionArray mPortArray;
+  const PtConnectionArray* mPortArray;
 
 };
 
@@ -512,7 +512,7 @@ protected:
   /// @brief コンストラクタ
   CptInstN(const FileRegion& file_region,
 	   const char* name,
-	   PtConnectionArray con_array);
+	   const PtConnectionArray* con_array);
 
   /// @brief デストラクタ
   ~CptInstN();
@@ -554,7 +554,7 @@ protected:
 	   const char* name,
 	   const PtExpr* left,
 	   const PtExpr* right,
-	   PtConnectionArray con_array);
+	   const PtConnectionArray* con_array);
 
   /// @brief デストラクタ
   ~CptInstR();

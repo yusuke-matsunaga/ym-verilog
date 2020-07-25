@@ -134,7 +134,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_MuH(fr, def_name, to_array(con_list), get_inst_array())};
+  auto item{mFactory.new_MuH(fr, def_name, new_array(con_list), get_inst_array())};
   reg_defname(def_name);
   return item;
 }
@@ -153,7 +153,7 @@ void
 Parser::new_Inst(const FileRegion& fr,
 		 PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_Inst(fr, to_array(con_list))};
+  auto item{mFactory.new_Inst(fr, new_array(con_list))};
   add_inst(item);
 }
 
@@ -216,7 +216,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const char* name,
 		  PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_InstN(fr, name, to_array(con_list))};
+  auto item{mFactory.new_InstN(fr, name, new_array(con_list))};
   add_inst(item);
 }
 
@@ -291,7 +291,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* right,
 		  PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, to_array(con_list))};
+  auto item{mFactory.new_InstV(fr, name, left, right, new_array(con_list))};
   add_inst(item);
 }
 
@@ -379,10 +379,10 @@ Parser::add_inst(const PtInst* inst)
 
 // @brief instance リストを配列に変換する．
 inline
-PtInstArray
+const PtInstArray*
 Parser::get_inst_array()
 {
-  return mInstList.to_array();
+  return new_array<const PtInst>(mInstList);
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -114,7 +114,7 @@ protected:
   /// 見付からなかったら nullptr を返す．
   ElbObjHandle*
   find_obj_up(const VlNamedObj* base_scope,
-	      PtNameBranchArray nb_array,
+	      const PtNameBranchArray* nb_array,
 	      const char* name,
 	      const VlNamedObj* ulimit);
 
@@ -375,7 +375,7 @@ protected:
 		     const ElbParamCon* param_con);
 
 
-protected:
+public:
   //////////////////////////////////////////////////////////////////////
   // 宣言要素のインスタンス化関係の関数
   //////////////////////////////////////////////////////////////////////
@@ -386,7 +386,7 @@ protected:
   /// @param[in] force_to_local true なら parameter を localparam にする．
   void
   phase1_decl(const VlNamedObj* parent,
-	      PtDeclHeadArray pt_head_array,
+	      const PtDeclHeadArray* pt_head_array,
 	      bool force_to_local);
 
   /// @brief IO宣言要素を実体化する．
@@ -397,14 +397,14 @@ protected:
   void
   instantiate_iodecl(ElbModule* module,
 		     ElbTaskFunc* taskfunc,
-		     PtIOHeadArray pt_head_array);
+		     const PtIOHeadArray* pt_head_array);
 
   /// @brief 宣言要素のリストをインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head_array 宣言ヘッダの配列
   void
   instantiate_decl(const VlNamedObj* parent,
-		   PtDeclHeadArray pt_head_array);
+		   const PtDeclHeadArray* pt_head_array);
 
 
 protected:
@@ -417,7 +417,7 @@ protected:
   /// @param[in] pt_item_array 要素定義の配列
   void
   phase1_item(const VlNamedObj* parent,
-	      PtItemArray pt_item_array);
+	      const PtItemArray* pt_item_array);
 
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ
@@ -628,7 +628,7 @@ protected:
   /// @param[in] def 定義側の属性の時 true とするフラグ
   /// @param[in] obj 付加する対象のオブジェクト
   void
-  instantiate_attribute(PtAttrInstArray pt_attr_array,
+  instantiate_attribute(const PtAttrInstArray* pt_attr_array,
 			bool def,
 			const VlObj* obj);
 
@@ -727,7 +727,7 @@ ElbProxy::find_obj(const VlNamedObj* parent,
 inline
 ElbObjHandle*
 ElbProxy::find_obj_up(const VlNamedObj* base_scope,
-		      PtNameBranchArray nb_array,
+		      const PtNameBranchArray* nb_array,
 		      const char* name,
 		      const VlNamedObj* ulimit)
 {

@@ -89,7 +89,7 @@ ElbProxy::phase1_module_item(ElbModule* module,
 // @param[in] force_to_local true なら parameter を localparam にする．
 void
 ElbProxy::phase1_decl(const VlNamedObj* parent,
-		      PtDeclHeadArray pt_head_array,
+		      const PtDeclHeadArray* pt_head_array,
 		      bool force_to_local)
 {
   mDeclGen->phase1_decl(parent, pt_head_array, force_to_local);
@@ -104,7 +104,7 @@ ElbProxy::phase1_decl(const VlNamedObj* parent,
 void
 ElbProxy::instantiate_iodecl(ElbModule* module,
 			     ElbTaskFunc* taskfunc,
-			     PtIOHeadArray pt_head_array)
+			     const PtIOHeadArray* pt_head_array)
 {
   mDeclGen->instantiate_iodecl(module, taskfunc, pt_head_array);
 }
@@ -114,7 +114,7 @@ ElbProxy::instantiate_iodecl(ElbModule* module,
 // @param[in] pt_head_array 宣言ヘッダの配列
 void
 ElbProxy::instantiate_decl(const VlNamedObj* parent,
-			   PtDeclHeadArray pt_head_array)
+			   const PtDeclHeadArray* pt_head_array)
 {
   mDeclGen->instantiate_decl(parent, pt_head_array);
 }
@@ -124,7 +124,7 @@ ElbProxy::instantiate_decl(const VlNamedObj* parent,
 // @param[in] pt_item_array 要素定義の配列
 void
 ElbProxy::phase1_item(const VlNamedObj* parent,
-		      PtItemArray pt_item_array)
+		      const PtItemArray* pt_item_array)
 {
   mItemGen->phase1_item(parent, pt_item_array);
 }
@@ -388,7 +388,7 @@ ElbProxy::evaluate_range(const VlNamedObj* parent,
 // @param[in] def 定義側の属性の時 true とするフラグ
 // @param[in] obj 付加する対象のオブジェクト
 void
-ElbProxy::instantiate_attribute(PtAttrInstArray pt_attr_array,
+ElbProxy::instantiate_attribute(const PtAttrInstArray* pt_attr_array,
 				bool def,
 				const VlObj* obj)
 {

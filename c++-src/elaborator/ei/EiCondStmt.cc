@@ -160,7 +160,7 @@ EiFactory::new_CaseStmt(const VlNamedObj* parent,
 			const PtStmt* pt_stmt,
 			ElbExpr* expr)
 {
-  int caseitem_num = pt_stmt->caseitem_list().size();
+  int caseitem_num = pt_stmt->caseitem_list()->size();
 
   EiCaseItem* array = new EiCaseItem[caseitem_num];
   EiCaseStmt* stmt1 = new EiCaseStmt(parent, process, pt_stmt,
@@ -639,7 +639,7 @@ EiCaseStmt::set_caseitem(SizeType pos,
 {
   EiCaseItem& ci = mCaseItemList[pos];
   ci.mPtCaseItem = pt_caseitem;
-  ci.mExprNum = pt_caseitem->label_list().size();
+  ci.mExprNum = pt_caseitem->label_list()->size();
   ci.mExprList = expr_array;
   ci.mBodyStmt = stmt;
 }

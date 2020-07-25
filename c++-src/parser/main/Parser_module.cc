@@ -67,11 +67,11 @@ Parser::new_Module1995(const FileRegion& file_region,
 		       const char* module_name,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  vector<PtiPort*> port_vector = get_port_vector();
-  PtDeclHeadArray paramport_array = get_paramport_array();
-  PtIOHeadArray iohead_array = get_module_io_array();
-  PtDeclHeadArray declhead_array = get_module_decl_array();
-  PtItemArray item_array = get_module_item_array();
+  auto& port_vector = get_port_vector();
+  const PtDeclHeadArray* paramport_array = get_paramport_array();
+  const PtIOHeadArray* iohead_array = get_module_io_array();
+  const PtDeclHeadArray* declhead_array = get_module_decl_array();
+  const PtItemArray* item_array = get_module_item_array();
 
   bool is_cell = lex().cell_define();
   bool is_protected = false; // これどうやって決めるの？
@@ -110,10 +110,10 @@ Parser::new_Module1995(const FileRegion& file_region,
   // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
   // 持たない場合にはデフォルトタイプのネットを生成する．
   unordered_map<string, VpiDir> iodecl_dirs;
-  for ( auto io_head: iohead_array ) {
+  for ( auto io_head: *iohead_array ) {
     // 名前をキーにして方向を記録しておく
     VpiDir dir = io_head->direction();
-    for ( auto elem: io_head->item_list() ) {
+    for ( auto elem: *io_head->item_list() ) {
       auto elem_name = elem->name();
 
       // まず未定義/多重定義のエラーをチェックする．
@@ -174,8 +174,7 @@ Parser::new_Module1995(const FileRegion& file_region,
     }
   }
 
-  PtPortArray port_array = new_PortArray(port_vector);
-
+  auto port_array = new_array2<const PtPort, PtiPort>(port_vector);
   auto module{mFactory.new_Module(file_region,
 				  module_name,
 				  is_macro,
@@ -203,10 +202,10 @@ Parser::new_Module2001(const FileRegion& file_region,
 		       const char* module_name,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  PtDeclHeadArray paramport_array = get_paramport_array();
-  PtIOHeadArray iohead_array = get_module_io_array();
-  PtDeclHeadArray declhead_array = get_module_decl_array();
-  PtItemArray item_array = get_module_item_array();
+  const PtDeclHeadArray* paramport_array = get_paramport_array();
+  const PtIOHeadArray* iohead_array = get_module_io_array();
+  const PtDeclHeadArray* declhead_array = get_module_decl_array();
+  const PtItemArray* item_array = get_module_item_array();
 
   bool is_cell = lex().cell_define();
   bool is_protected = false; // これどうやって決めるの？
@@ -234,8 +233,7 @@ Parser::new_Module2001(const FileRegion& file_region,
   }
 
   // iohead_array からポートの配列を作る．
-  PtPortArray port_array = new_PortArray(iohead_array);
-
+  auto port_array = new_PortArray(iohead_array);
   auto module{mFactory.new_Module(file_region,
 				  module_name,
 				  is_macro, is_cell, is_protected,

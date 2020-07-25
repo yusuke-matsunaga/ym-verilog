@@ -41,7 +41,7 @@ AttrGen::~AttrGen()
 // @param[in] def 定義側の属性の時 true とするフラグ
 // @param[in] obj 属性を設定する対象のオブジェクト
 void
-AttrGen::instantiate_attribute(PtAttrInstArray pt_attr_array,
+AttrGen::instantiate_attribute(const PtAttrInstArray* pt_attr_array,
 			       bool def,
 			       const VlObj* obj)
 {

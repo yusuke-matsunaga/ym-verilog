@@ -9,7 +9,8 @@
 
 #include "CptExpr.h"
 #include "parser/CptFactory.h"
-#include "parser/Alloc.h"
+#include "parser/PuHierName.h"
+#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -83,7 +84,7 @@ CptPrimary::is_simple() const
 // コンストラクタ
 CptPrimaryI::CptPrimaryI(const FileRegion& file_region,
 			 const char* name,
-			 PtExprArray index_array) :
+			 const PtExprArray* index_array) :
   CptPrimaryBase(name),
   mFileRegion(file_region),
   mIndexArray(index_array)
@@ -107,7 +108,7 @@ CptPrimaryI::file_region() const
 SizeType
 CptPrimaryI::index_num() const
 {
-  return mIndexArray.size();
+  return mIndexArray->size();
 }
 
 // @brief インデックスの取得
@@ -115,7 +116,8 @@ CptPrimaryI::index_num() const
 const PtExpr*
 CptPrimaryI::index(SizeType pos) const
 {
-  return mIndexArray[pos];
+  ASSERT_COND( 0 <= pos && pos < index_num() );
+  return (*mIndexArray)[pos];
 }
 
 // index_list も range も持たないとき true を返す．
@@ -133,7 +135,7 @@ CptPrimaryI::is_simple() const
 // コンストラクタ
 CptPrimaryCI::CptPrimaryCI(const FileRegion& file_region,
 			   const char* name,
-			   PtExprArray index_array) :
+			   const PtExprArray* index_array) :
   CptPrimaryI(file_region, name, index_array)
 {
 }
@@ -245,7 +247,7 @@ CptPrimaryCR::is_const_index() const
 // コンストラクタ
 CptPrimaryIR::CptPrimaryIR(const FileRegion& file_region,
 			   const char* name,
-			   PtExprArray index_array,
+			   const PtExprArray* index_array,
 			   VpiRangeMode mode,
 			   const PtExpr* left,
 			   const PtExpr* right) :
@@ -289,7 +291,7 @@ CptPrimaryIR::right_range() const
 
 // コンストラクタ
 CptPrimaryH::CptPrimaryH(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
+			 const PtNameBranchArray* nb_array,
 			 const char* tail_name) :
   CptPrimaryBase(tail_name),
   mFileRegion{file_region},
@@ -310,7 +312,7 @@ CptPrimaryH::file_region() const
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptPrimaryH::namebranch_array() const
 {
   return mNbArray;
@@ -323,9 +325,9 @@ CptPrimaryH::namebranch_array() const
 
 // コンストラクタ
 CptPrimaryHI::CptPrimaryHI(const FileRegion& file_region,
-			   PtNameBranchArray nb_array,
+			   const PtNameBranchArray* nb_array,
 			   const char* tail_name,
-			   PtExprArray index_array) :
+			   const PtExprArray* index_array) :
   CptPrimaryI(file_region, tail_name, index_array),
   mNbArray{nb_array}
 {
@@ -337,7 +339,7 @@ CptPrimaryHI::~CptPrimaryHI()
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptPrimaryHI::namebranch_array() const
 {
   return mNbArray;
@@ -350,9 +352,9 @@ CptPrimaryHI::namebranch_array() const
 
 // コンストラクタ
 CptPrimaryHCI::CptPrimaryHCI(const FileRegion& file_region,
-			     PtNameBranchArray nb_array,
+			     const PtNameBranchArray* nb_array,
 			     const char* tail_name,
-			     PtExprArray index_array) :
+			     const PtExprArray* index_array) :
   CptPrimaryHI(file_region, nb_array, tail_name, index_array)
 {
 }
@@ -376,7 +378,7 @@ CptPrimaryHCI::is_const_index() const
 
 // コンストラクタ
 CptPrimaryHR::CptPrimaryHR(const FileRegion& file_region,
-			   PtNameBranchArray nb_array,
+			   const PtNameBranchArray* nb_array,
 			   const char* tail_name,
 			   VpiRangeMode mode,
 			   const PtExpr* left,
@@ -392,7 +394,7 @@ CptPrimaryHR::~CptPrimaryHR()
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptPrimaryHR::namebranch_array() const
 {
   return mNbArray;
@@ -405,9 +407,9 @@ CptPrimaryHR::namebranch_array() const
 
 // コンストラクタ
 CptPrimaryHIR::CptPrimaryHIR(const FileRegion& file_region,
-			     PtNameBranchArray nb_array,
+			     const PtNameBranchArray* nb_array,
 			     const char* tail_name,
-			     PtExprArray index_array,
+			     const PtExprArray* index_array,
 			     VpiRangeMode mode,
 			     const PtExpr* left,
 			     const PtExpr* right) :
@@ -422,7 +424,7 @@ CptPrimaryHIR::~CptPrimaryHIR()
 }
 
 // @brief 階層ブランチの取得
-PtNameBranchArray
+const PtNameBranchArray*
 CptPrimaryHIR::namebranch_array() const
 {
   return mNbArray;
@@ -448,7 +450,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
-			PtExprArray index_array)
+			const PtExprArray* index_array)
 {
   ++ mNumPrimaryI;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryI))};
@@ -474,7 +476,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
 			const char* name,
-			PtExprArray index_array,
+			const PtExprArray* index_array,
 			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
@@ -489,11 +491,12 @@ CptFactory::new_Primary(const FileRegion& file_region,
 // primary を生成する．
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name)
+			PuHierName* hname)
 {
   ++ mNumPrimaryH;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryH))};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryH(file_region, nb_array, tail_name)};
   return obj;
 }
@@ -501,28 +504,29 @@ CptFactory::new_Primary(const FileRegion& file_region,
 // primary を生成する．
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name,
-			PtExprArray index_array)
+			PuHierName* hname,
+			const PtExprArray* index_array)
 {
   ++ mNumPrimaryHI;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryHI))};
-  auto obj{new (p) CptPrimaryHI(file_region, nb_array, tail_name,
-				index_array)};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
+  auto obj{new (p) CptPrimaryHI(file_region, nb_array, tail_name, index_array)};
   return obj;
 }
 
 // primary を生成する．
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name,
+			PuHierName* hname,
 			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHR;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryHR))};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHR(file_region, nb_array, tail_name, mode,
 				left, right)};
   return obj;
@@ -531,15 +535,16 @@ CptFactory::new_Primary(const FileRegion& file_region,
 // primary を生成する．
 const PtExpr*
 CptFactory::new_Primary(const FileRegion& file_region,
-			PtNameBranchArray nb_array,
-			const char* tail_name,
-			PtExprArray index_array,
+			PuHierName* hname,
+			const PtExprArray* index_array,
 			VpiRangeMode mode,
 			const PtExpr* left,
 			const PtExpr* right)
 {
   ++ mNumPrimaryHIR;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryHIR))};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHIR(file_region, nb_array, tail_name,
 				 index_array, mode, left, right)};
   return obj;
@@ -549,7 +554,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_CPrimary(const FileRegion& file_region,
 			 const char* name,
-			 PtExprArray index_array)
+			 const PtExprArray* index_array)
 {
   ++ mNumPrimaryCI;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryCI))};
@@ -574,12 +579,13 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 // primary を生成する．
 const PtExpr*
 CptFactory::new_CPrimary(const FileRegion& file_region,
-			 PtNameBranchArray nb_array,
-			 const char* tail_name,
-			 PtExprArray index_array)
+			 PuHierName* hname,
+			 const PtExprArray* index_array)
 {
   ++ mNumPrimaryHCI;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryCI))};
+  auto nb_array = hname->name_branch(mAlloc);
+  auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHCI(file_region, nb_array, tail_name, index_array)};
   return obj;
 }

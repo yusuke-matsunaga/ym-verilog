@@ -18,6 +18,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 template <typename T1,
 	  typename T2>
 class PtrList;
+class PtAlloc;
 
 //////////////////////////////////////////////////////////////////////
 /// @class PtrListCell PtrList.h "PtrList.h"
@@ -152,9 +153,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を配列にコピーする．
+  /// @param[in] alloc メモリアロケータ
   /// @note この処理の後ではリストは空になる．
-  PtArray<T2>
-  to_array();
+  const PtArray<T2>*
+  to_array(PtAlloc& alloc);
 
   /// @brief 内容をvectorにコピーする．
   /// @note この処理の後ではリストは空になる．
@@ -310,7 +312,7 @@ inline
 void
 PtrList<T1, T2>::push_back(T1* elem)
 {
-  Cell* cell{new Cell{elem, nullptr}};
+  auto cell{new Cell{elem, nullptr}};
   if ( mEnd ) {
     mEnd->mLink = cell;
   }
@@ -393,15 +395,16 @@ PtrList<T1, T2>::back() const
 }
 
 // @brief 内容を配列にコピーする．
-// @param[in] array 対象の配列
+// @param[in] alloc メモリアロケータ
 // @note この処理の後ではリストは空になる．
 template <typename T1,
 	  typename T2>
 inline
-PtArray<T2>
-PtrList<T1, T2>::to_array()
+const PtArray<T2>*
+PtrList<T1, T2>::to_array(PtAlloc& alloc)
 {
-  return PtArray<T2>{to_vector()};
+  void* p{alloc.get_memory(sizeof(PtArray<T2>))};
+  return new (p) PtArray<T2>{alloc, to_vector()};
 }
 
 // @brief 内容を配列にコピーする．

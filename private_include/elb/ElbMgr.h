@@ -218,7 +218,7 @@ public:
   /// 見付からなかったら nullptr を返す．
   ElbObjHandle*
   find_obj_up(const VlNamedObj* base_scope,
-	      PtNameBranchArray nb_array,
+	      const PtNameBranchArray* nb_array,
 	      const char* name,
 	      const VlNamedObj* ulimit);
 
@@ -368,7 +368,7 @@ private:
   /// なければ親のスコープに対して同様の探索を繰り返す．
   const VlNamedObj*
   find_scope_up(const VlNamedObj* base_scope,
-		PtNameBranchArray nb_array,
+		const PtNameBranchArray* nb_array,
 		const VlNamedObj* ulimit);
 
 

@@ -19,8 +19,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-SptGenBody::SptGenBody(PtDeclHeadArray declhead_array,
-		       PtItemArray item_array) :
+SptGenBody::SptGenBody(const PtDeclHeadArray* declhead_array,
+		       const PtItemArray* item_array) :
   mDeclArray{declhead_array},
   mItemArray{item_array}
 {
@@ -40,8 +40,8 @@ SptGenBody::~SptGenBody()
 SptGenerate::SptGenerate(const FileRegion& file_region,
 			 PtItemType type,
 			 const char* name,
-			 PtDeclHeadArray declhead_array,
-			 PtItemArray item_array) :
+			 const PtDeclHeadArray* declhead_array,
+			 const PtItemArray* item_array) :
   SptItem{file_region, type},
   mName{name},
   mBody{declhead_array, item_array}
@@ -61,14 +61,14 @@ SptGenerate::name() const
 }
 
 // @brief 宣言のリストの取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 SptGenerate::declhead_array() const
 {
   return mBody.declhead_array();
 }
 
 // @brief item リストの取得
-PtItemArray
+const PtItemArray*
 SptGenerate::item_array() const
 {
   return mBody.item_array();
@@ -82,10 +82,10 @@ SptGenerate::item_array() const
 // コンストラクタ
 SptGenIf::SptGenIf(const FileRegion& file_region,
 		   const PtExpr* cond,
-		   PtDeclHeadArray then_declhead_array,
-		   PtItemArray then_item_array,
-		   PtDeclHeadArray else_declhead_array,
-		   PtItemArray else_item_array) :
+		   const PtDeclHeadArray* then_declhead_array,
+		   const PtItemArray* then_item_array,
+		   const PtDeclHeadArray* else_declhead_array,
+		   const PtItemArray* else_item_array) :
   SptItem{file_region, PtItemType::GenIf},
   mCond{cond},
   mThenBody{then_declhead_array, then_item_array},
@@ -106,28 +106,28 @@ SptGenIf::expr() const
 }
 
 // @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 SptGenIf::then_declhead_array() const
 {
   return mThenBody.declhead_array();
 }
 
 // @brief 条件が成り立ったときに生成される item 配列の取得
-PtItemArray
+const PtItemArray*
 SptGenIf::then_item_array() const
 {
   return mThenBody.item_array();
 }
 
 // @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 SptGenIf::else_declhead_array() const
 {
   return mElseBody.declhead_array();
 }
 
 // @brief 条件が成り立たなかったときに生成される item 配列の取得
-PtItemArray
+const PtItemArray*
 SptGenIf::else_item_array() const
 {
   return mElseBody.item_array();
@@ -140,9 +140,9 @@ SptGenIf::else_item_array() const
 
 // コンストラクタ
 SptGenCaseItem::SptGenCaseItem(const FileRegion& file_region,
-			       PtExprArray label_array,
-			       PtDeclHeadArray declhead_array,
-			       PtItemArray item_array) :
+			       const PtExprArray* label_array,
+			       const PtDeclHeadArray* declhead_array,
+			       const PtItemArray* item_array) :
   mFileRegion{file_region},
   mLabelArray{label_array},
   mBody{declhead_array, item_array}
@@ -162,21 +162,21 @@ SptGenCaseItem::file_region() const
 }
 
 // @brief ラベルのリストの取得
-PtExprArray
+const PtExprArray*
 SptGenCaseItem::label_list() const
 {
   return mLabelArray;
 }
 
 // @brief 宣言のリストの取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 SptGenCaseItem::declhead_array() const
 {
   return mBody.declhead_array();
 }
 
 // @brief item リストの取得
-PtItemArray
+const PtItemArray*
 SptGenCaseItem::item_array() const
 {
   return mBody.item_array();
@@ -190,7 +190,7 @@ SptGenCaseItem::item_array() const
 // コンストラクタ
 SptGenCase::SptGenCase(const FileRegion& file_region,
 		       const PtExpr* expr,
-		       PtGenCaseItemArray item_array) :
+		       const PtGenCaseItemArray* item_array) :
   SptItem{file_region, PtItemType::GenCase},
   mExpr{expr},
   mCaseItemArray{item_array}
@@ -210,7 +210,7 @@ SptGenCase::expr() const
 }
 
 // case item のリストを返す．
-PtGenCaseItemArray
+const PtGenCaseItemArray*
 SptGenCase::caseitem_list() const
 {
   return mCaseItemArray;
@@ -228,8 +228,8 @@ SptGenFor::SptGenFor(const FileRegion& file_region,
 		     const PtExpr* cond,
 		     const PtExpr* next_expr,
 		     const char* block_name,
-		     PtDeclHeadArray declhead_array,
-		     PtItemArray item_array) :
+		     const PtDeclHeadArray* declhead_array,
+		     const PtItemArray* item_array) :
   SptItem{file_region, PtItemType::GenFor},
   mName{block_name},
   mLoopVar{loop_var},
@@ -253,14 +253,14 @@ SptGenFor::name() const
 }
 
 // @brief 宣言のリストの取得
-PtDeclHeadArray
+const PtDeclHeadArray*
 SptGenFor::declhead_array() const
 {
   return mBody.declhead_array();
 }
 
 // @brief item リストの取得
-PtItemArray
+const PtItemArray*
 SptGenFor::item_array() const
 {
   return mBody.item_array();
@@ -306,8 +306,8 @@ SptGenFor::next_expr() const
 // @return 生成された generate 文
 const PtItem*
 SptFactory::new_Generate(const FileRegion& file_region,
-			 PtDeclHeadArray declhead_array,
-			 PtItemArray item_array)
+			 const PtDeclHeadArray* declhead_array,
+			 const PtItemArray* item_array)
 {
   auto node = new SptGenerate(file_region, PtItemType::Generate, nullptr,
 			      declhead_array, item_array);
@@ -321,8 +321,8 @@ SptFactory::new_Generate(const FileRegion& file_region,
 // @return 生成された generate block 文
 const PtItem*
 SptFactory::new_GenBlock(const FileRegion& file_region,
-			 PtDeclHeadArray declhead_array,
-			 PtItemArray item_array)
+			 const PtDeclHeadArray* declhead_array,
+			 const PtItemArray* item_array)
 {
   auto node = new SptGenerate(file_region, PtItemType::GenBlock, nullptr,
 			      declhead_array, item_array);
@@ -338,8 +338,8 @@ SptFactory::new_GenBlock(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_GenBlock(const FileRegion& file_region,
 			 const char* name,
-			 PtDeclHeadArray declhead_array,
-			 PtItemArray item_array)
+			 const PtDeclHeadArray* declhead_array,
+			 const PtItemArray* item_array)
 {
   auto node = new SptGenerate(file_region, PtItemType::GenBlock, name,
 			      declhead_array, item_array);
@@ -357,10 +357,10 @@ SptFactory::new_GenBlock(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_GenIf(const FileRegion& file_region,
 		      const PtExpr* cond,
-		      PtDeclHeadArray then_declhead_array,
-		      PtItemArray then_item_array,
-		      PtDeclHeadArray else_declhead_array,
-		      PtItemArray else_item_array)
+		      const PtDeclHeadArray* then_declhead_array,
+		      const PtItemArray* then_item_array,
+		      const PtDeclHeadArray* else_declhead_array,
+		      const PtItemArray* else_item_array)
 {
   auto node = new SptGenIf(file_region, cond,
 			   then_declhead_array, then_item_array,
@@ -376,7 +376,7 @@ SptFactory::new_GenIf(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_GenCase(const FileRegion& file_region,
 			const PtExpr* expr,
-			PtGenCaseItemArray item_array)
+			const PtGenCaseItemArray* item_array)
 {
   auto node = new SptGenCase(file_region, expr, item_array);
   return node;
@@ -390,9 +390,9 @@ SptFactory::new_GenCase(const FileRegion& file_region,
 // @return 生成された generate case item
 const PtGenCaseItem*
 SptFactory::new_GenCaseItem(const FileRegion& file_region,
-			    PtExprArray label_array,
-			    PtDeclHeadArray declhead_array,
-			    PtItemArray item_array)
+			    const PtExprArray* label_array,
+			    const PtDeclHeadArray* declhead_array,
+			    const PtItemArray* item_array)
 {
   auto node = new SptGenCaseItem(file_region, label_array,
 				 declhead_array, item_array);
@@ -416,8 +416,8 @@ SptFactory::new_GenFor(const FileRegion& file_region,
 		       const PtExpr* cond,
 		       const PtExpr* next_expr,
 		       const char* block_name,
-		       PtDeclHeadArray declhead_array,
-		       PtItemArray item_array)
+		       const PtDeclHeadArray* declhead_array,
+		       const PtItemArray* item_array)
 {
   auto node = new SptGenFor(file_region, loop_var, init_expr, cond,
 			    next_expr, block_name,

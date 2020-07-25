@@ -209,7 +209,7 @@ set (parser_SOURCES
   )
 
 set (alloc_SOURCES
-  c++-src/alloc/Alloc.cc
+  c++-src/alloc/PtAlloc.cc
   c++-src/alloc/SimpleAlloc.cc
   )
 

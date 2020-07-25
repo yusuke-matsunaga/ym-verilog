@@ -103,7 +103,7 @@ public:
   delay() const override;
 
   /// @brief 要素のリストの取得
-  PtDeclItemArray
+  const PtDeclItemArray*
   item_list() const override;
 
 
@@ -115,7 +115,7 @@ private:
   /// @brief 要素リストの設定
   /// @param[in] elem_array 要素リスト(配列)
   void
-  set_elem(PtDeclItemArray elem_array) override;
+  set_elem(const PtDeclItemArray* elem_array) override;
 
 
 private:
@@ -127,7 +127,7 @@ private:
   FileRegion mFileRegion;
 
   // 要素の配列
-  PtDeclItemArray mItemArray;
+  const PtDeclItemArray* mItemArray;
 
 };
 
@@ -1266,7 +1266,7 @@ public:
   dimension_list_size() const override;
 
   /// 範囲のリストの取得
-  PtRangeArray
+  const PtRangeArray*
   range_list() const override;
 
   /// @brief 初期値を取り出す．
@@ -1344,7 +1344,7 @@ protected:
   /// @param[in] range_array 範囲のリスト
   CptDeclItemR(const FileRegion& file_region,
 	       const char* name,
-	       PtRangeArray range_array);
+	       const PtRangeArray* range_array);
 
   /// @brief デストラクタ
   ~CptDeclItemR();
@@ -1366,7 +1366,7 @@ public:
   dimension_list_size() const override;
 
   /// 範囲のリストの取得
-  PtRangeArray
+  const PtRangeArray*
   range_list() const override;
 
 
@@ -1379,7 +1379,7 @@ private:
   FileRegion mFileRegion;
 
   // 範囲の配列
-  PtRangeArray mRangeArray;
+  const PtRangeArray* mRangeArray;
 
 };
 

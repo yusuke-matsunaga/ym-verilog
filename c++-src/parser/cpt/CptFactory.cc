@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // コンストラクタ
 // @param[in] alloc メモリアロケータ
-CptFactory::CptFactory(Alloc& alloc) :
+CptFactory::CptFactory(PtAlloc& alloc) :
   PtiFactory(alloc)
 {
 }

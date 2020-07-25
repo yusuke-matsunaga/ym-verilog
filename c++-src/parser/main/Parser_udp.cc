@@ -62,8 +62,8 @@ Parser::new_Udp1995(const FileRegion& file_region,
 		    const PtExpr* init_value,
 		    PtrList<const PtAttrInst>* ai_list)
 {
-  PtIOHeadArray iohead_array = get_module_io_array();
-  PtDeclHeadArray decl_array = get_module_decl_array();
+  auto iohead_array = get_module_io_array();
+  auto decl_array = get_module_decl_array();
 
   const PtIOItem* out_item = nullptr;
   bool is_seq = false;
@@ -78,7 +78,8 @@ Parser::new_Udp1995(const FileRegion& file_region,
   // まず portdecl_list の各要素を名前をキーにした連想配列に格納する．
   // ついでに output の数を数える．
   unordered_map<string, const PtIOItem*> iomap;
-  for ( auto io: iohead_array ) {
+  for ( auto io: *iohead_array ) {
+    auto& item_list{*io->item_list()};
     if ( io->direction() == VpiDir::Output ) {
       if ( out_item ) {
 	// 複数の出力宣言があった．
@@ -92,15 +93,15 @@ Parser::new_Udp1995(const FileRegion& file_region,
       }
 
       // これは YACC の文法が正しくかけていれば成り立つはず．
-      ASSERT_COND( io->item_list().size() == 1 );
+      ASSERT_COND( item_list.size() == 1 );
 
-      out_item = io->item_list()[0];
+      out_item = item_list[0];
 
       if ( io->aux_type() == VpiAuxType::Reg ) {
 	is_seq = true;
       }
     }
-    for ( auto elem: io->item_list() ) {
+    for ( auto elem: item_list ) {
       if ( iomap.count(elem->name()) > 0 ) {
 	// 二重登録
 	ostringstream buf;
@@ -170,22 +171,22 @@ Parser::new_Udp1995(const FileRegion& file_region,
   // 次に decl_list の要素数が1以下であり，
   // さらにその要素が REG で名前が出力名と一致することを確認する．
   // ちなみに YACC の文法から REG 以外の宣言要素はありえない．
-  if ( decl_array.size() > 1 ) {
+  if ( decl_array->size() > 1 ) {
     // 二つ以上の reg 宣言があった．
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    decl_array[1]->file_region(),
+		    (*decl_array)[1]->file_region(),
 		    MsgType::Error,
 		    "PARS",
 		    "More than two 'reg' declarations.");
     sane = false;
   }
-  else if ( decl_array.size() == 1 ) {
-    auto reghead = decl_array[0];
+  else if ( decl_array->size() == 1 ) {
+    auto reghead = (*decl_array)[0];
     if ( reghead ) {
       is_seq = true;
       ASSERT_COND(reghead->type() == PtDeclType::Reg );
-      ASSERT_COND(reghead->item_list().size() == 1 );
-      auto regitem = reghead->item_list()[0];
+      ASSERT_COND(reghead->item_list()->size() == 1 );
+      auto regitem = (*reghead->item_list())[0];
       ASSERT_COND(regitem );
       if ( strcmp(regitem->name(), out_item->name()) != 0 ) {
 	// output と名前が違う
@@ -204,7 +205,7 @@ Parser::new_Udp1995(const FileRegion& file_region,
   }
 
   if ( sane ) {
-    PtPortArray port_array = new_PortArray(port_vector);
+    auto port_array = new_array2<const PtPort, PtiPort>(port_vector);
 
     new_Udp(file_region,
 	    udp_name,
@@ -229,17 +230,17 @@ Parser::new_Udp2001(const FileRegion& file_region,
 		    const PtExpr* init_value,
 		    PtrList<const PtAttrInst>* ai_list)
 {
-  PtIOHeadArray iohead_array = get_module_io_array();
+  auto iohead_array = get_module_io_array();
 
   bool is_seq = false;
 
   // YACC の文法が正しく書かれていれば最初のヘッダが出力で
   // 要素数が1となっているはず．
-  ASSERT_COND(iohead_array.size() > 0 );
-  auto out_head = iohead_array[0];
+  ASSERT_COND(iohead_array->size() > 0 );
+  auto out_head = (*iohead_array)[0];
   ASSERT_COND( out_head->direction() == VpiDir::Output );
-  ASSERT_COND( out_head->item_list().size() == 1 );
-  auto out_item = out_head->item_list()[0];
+  ASSERT_COND( out_head->item_list()->size() == 1 );
+  auto out_item = (*out_head->item_list())[0];
 
   if ( out_head->aux_type() == VpiAuxType::Reg ) {
     is_seq = true;
@@ -247,7 +248,7 @@ Parser::new_Udp2001(const FileRegion& file_region,
   // 残りの要素は入力になっているはず．
 
   // iohead_array から port_array を生成する．
-  PtPortArray port_array = new_PortArray(iohead_array);
+  auto port_array = new_PortArray(iohead_array);
 
   new_Udp(file_region,
 	  udp_name,
@@ -272,8 +273,8 @@ Parser::new_Udp(const FileRegion& file_region,
 		PtrList<const PtAttrInst>* ai_list,
 		bool is_seq,
 		const PtIOItem* out_item,
-		PtPortArray port_array,
-		PtIOHeadArray iohead_array)
+		const PtPortArray* port_array,
+		const PtIOHeadArray* iohead_array)
 {
   const PtUdp* udp = nullptr;
   if ( is_seq ) {
@@ -382,10 +383,10 @@ Parser::add_udp_entry(const PtUdpEntry* entry)
 
 // @brief UdpEntry のリストを配列に変換する．
 inline
-PtUdpEntryArray
+const PtUdpEntryArray*
 Parser::get_udp_entry_array()
 {
-  return mUdpEntryList.to_array();
+  return new_array<const PtUdpEntry>(mUdpEntryList);
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成

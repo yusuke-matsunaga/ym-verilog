@@ -59,10 +59,10 @@ DeclGen::~DeclGen()
 // @param[in] force_to_local true なら parameter を localparam にする．
 void
 DeclGen::phase1_decl(const VlNamedObj* parent,
-		     PtDeclHeadArray pt_head_array,
+		     const PtDeclHeadArray* pt_head_array,
 		     bool force_to_local)
 {
-  for ( auto pt_head: pt_head_array ) {
+  for ( auto pt_head: *pt_head_array ) {
     switch ( pt_head->type() ) {
     case PtDeclType::Param:
       instantiate_param_head(parent, pt_head, force_to_local);
@@ -90,7 +90,7 @@ DeclGen::phase1_decl(const VlNamedObj* parent,
 void
 DeclGen::instantiate_iodecl(ElbModule* module,
 			    ElbTaskFunc* taskfunc,
-			    PtIOHeadArray pt_head_array)
+			    const PtIOHeadArray* pt_head_array)
 {
   // module と taskfunc は排他的
   ASSERT_COND( module != nullptr || taskfunc != nullptr );
@@ -109,7 +109,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
   }
 
   int index = 0;
-  for ( auto pt_head: pt_head_array ) {
+  for ( auto pt_head: *pt_head_array ) {
     VpiAuxType def_aux_type = pt_head->aux_type();
     bool sign = pt_head->is_signed();
     const PtExpr* pt_left = pt_head->left_range();
@@ -141,7 +141,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     }
     ASSERT_COND( head != nullptr );
 
-    for ( auto pt_item: pt_head->item_list() ) {
+    for ( auto pt_item: *pt_head->item_list() ) {
       // IO定義と変数/ネット定義が一致しているか調べる．
       ElbObjHandle* handle = find_obj(namedobj, pt_item->name());
       ElbDecl* decl = nullptr;
@@ -390,10 +390,10 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 // @param[in] pt_head_array 宣言ヘッダの配列
 void
 DeclGen::instantiate_decl(const VlNamedObj* parent,
-			  PtDeclHeadArray pt_head_array)
+			  const PtDeclHeadArray* pt_head_array)
 {
-  for (ymuint i = 0; i < pt_head_array.size(); ++ i) {
-    const PtDeclHead* pt_head = pt_head_array[i];
+  for (ymuint i = 0; i < pt_head_array->size(); ++ i) {
+    const PtDeclHead* pt_head = (*pt_head_array)[i];
     switch ( pt_head->type() ) {
     case PtDeclType::Param:
     case PtDeclType::LocalParam:
@@ -460,7 +460,7 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
     param_head = factory().new_ParamHead(module, pt_head);
   }
 
-  for ( auto pt_item: pt_head->item_list() ) {
+  for ( auto pt_item: *pt_head->item_list() ) {
     const FileRegion& file_region = pt_item->file_region();
 
     ElbParameter* param = factory().new_Parameter(param_head,
@@ -535,7 +535,7 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
 			     net_head, pt_delay));
   }
 
-  for ( auto pt_item: pt_head->item_list() ) {
+  for ( auto pt_item: *pt_head->item_list() ) {
     // init_value() が 0 でなければ初期割り当てを持つということ．
     const PtExpr* pt_init = pt_item->init_value();
 
@@ -666,7 +666,7 @@ DeclGen::instantiate_reg_head(const VlNamedObj* parent,
   }
   ASSERT_COND( reg_head != nullptr );
 
-  for ( auto pt_item: pt_head->item_list() ) {
+  for ( auto pt_item: *pt_head->item_list() ) {
     const PtExpr* pt_init = pt_item->init_value();
     SizeType dim_size = pt_item->dimension_list_size();
     if ( dim_size > 0 ) {
@@ -744,7 +744,7 @@ DeclGen::instantiate_var_head(const VlNamedObj* parent,
 
   ElbDeclHead* var_head = factory().new_DeclHead(parent, pt_head);
 
-  for ( auto pt_item: pt_head->item_list() ) {
+  for ( auto pt_item: *pt_head->item_list() ) {
     const PtExpr* pt_init = pt_item->init_value();
     SizeType dim_size = pt_item->dimension_list_size();
     if ( dim_size > 0 ) {
@@ -820,7 +820,7 @@ DeclGen::instantiate_event_head(const VlNamedObj* parent,
 {
   ElbDeclHead* event_head = factory().new_DeclHead(parent, pt_head);
 
-  for ( auto pt_item: pt_head->item_list() ) {
+  for ( auto pt_item: *pt_head->item_list() ) {
     SizeType dim_size = pt_item->dimension_list_size();
     if ( dim_size > 0 ) {
       // 配列
@@ -882,7 +882,7 @@ void
 DeclGen::instantiate_genvar_head(const VlNamedObj* parent,
 				 const PtDeclHead* pt_head)
 {
-  for ( auto pt_item: pt_head->item_list() ) {
+  for ( auto pt_item: *pt_head->item_list() ) {
     ElbGenvar* genvar = factory().new_Genvar(parent, pt_item, 0);
     reg_genvar(genvar);
 
@@ -909,7 +909,7 @@ DeclGen::instantiate_dimension_list(const VlNamedObj*  parent,
   range_src.reserve(n);
 
   bool ok = true;
-  for ( auto pt_range: pt_item->range_list() ) {
+  for ( auto pt_range: *pt_item->range_list() ) {
     const PtExpr* pt_left = pt_range->left();
     const PtExpr* pt_right = pt_range->right();
     int left_val = 0;

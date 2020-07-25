@@ -45,7 +45,7 @@ public:
 
   /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  PtExprArray
+  const PtExprArray*
   event_list() const override;
 
   /// @brief 繰り返し数の取得
@@ -121,7 +121,7 @@ private:
 
   /// @brief コンストラクタ
   CptEventControl(const FileRegion& file_region,
-		  PtExprArray event_array);
+		  const PtExprArray* event_array);
 
   /// @brief デストラクタ
   ~CptEventControl();
@@ -143,7 +143,7 @@ public:
 
   /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  PtExprArray
+  const PtExprArray*
   event_list() const override;
 
 
@@ -156,7 +156,7 @@ private:
   FileRegion mFileRegion;
 
   // イベントの配列
-  PtExprArray mEventArray;
+  const PtExprArray* mEventArray;
 
 };
 
@@ -174,7 +174,7 @@ private:
   /// @brief コンストラクタ
   CptRepeatControl(const FileRegion& file_region,
 		   const PtExpr* expr,
-		   PtExprArray event_array);
+		   const PtExprArray* event_array);
 
   /// @brief デストラクタ
   ~CptRepeatControl();
@@ -200,7 +200,7 @@ public:
 
   /// @brief イベントリストの取得
   /// @note event control/repeat control の場合のみ意味を持つ
-  PtExprArray
+  const PtExprArray*
   event_list() const override;
 
 
@@ -216,7 +216,7 @@ private:
   const PtExpr* mRepExpr;
 
   // イベントのリスト
-  PtExprArray mEventArray;
+  const PtExprArray* mEventArray;
 
 };
 
@@ -549,7 +549,7 @@ class CptAttrInst :
 private:
 
   /// @brief コンストラクタ
-  CptAttrInst(PtAttrSpecArray as_array);
+  CptAttrInst(const PtAttrSpecArray* as_array);
 
   /// @brief デストラクタ
   ~CptAttrInst();
@@ -565,7 +565,7 @@ public:
   file_region() const override;
 
   /// @brief 要素のリストの取得
-  PtAttrSpecArray
+  const PtAttrSpecArray*
   attrspec_list() const override;
 
 
@@ -575,7 +575,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // attr spec のリスト
-  PtAttrSpecArray mAttrSpecArray;
+  const PtAttrSpecArray* mAttrSpecArray;
 
 };
 

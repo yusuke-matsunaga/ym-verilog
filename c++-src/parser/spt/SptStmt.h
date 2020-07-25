@@ -40,11 +40,11 @@ private:
 	  const PtExpr* expr2 = nullptr,
 	  const PtControl* control = nullptr,
 	  const char* name = nullptr,
-	  PtNameBranchArray nb_array = PtNameBranchArray(),
-	  PtCaseItemArray caseitem_array = PtCaseItemArray(),
-	  PtDeclHeadArray decl_array = PtDeclHeadArray(),
-	  PtStmtArray stmt_array = PtStmtArray(),
-	  PtExprArray expr_array = PtExprArray());
+	  const PtNameBranchArray* nb_array = nullptr,
+	  const PtCaseItemArray* caseitem_array = nullptr,
+	  const PtDeclHeadArray* decl_array = nullptr,
+	  const PtStmtArray* stmt_array = nullptr,
+	  const PtExprArray* expr_array = nullptr);
 
   /// デストラクタ
   ~SptStmt();
@@ -69,7 +69,7 @@ public:
   stmt_name() const override;
 
   /// 階層ブランチの取得
-  PtNameBranchArray
+  const PtNameBranchArray*
   namebranch_array() const override;
 
   /// 名前の取得
@@ -77,7 +77,7 @@ public:
   name() const override;
 
   /// @brief 引数のリストの取得
-  PtExprArray
+  const PtExprArray*
   arg_list() const override;
 
   /// コントロールの取得
@@ -109,7 +109,7 @@ public:
   else_body() const override;
 
   /// @brief case item のリストの取得
-  PtCaseItemArray
+  const PtCaseItemArray*
   caseitem_list() const override;
 
   /// 初期化代入文の取得
@@ -122,12 +122,12 @@ public:
 
   /// @brief 宣言ヘッダ配列の取得
   /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
-  PtDeclHeadArray
+  const PtDeclHeadArray*
   declhead_array() const override;
 
   /// @brief 子供のステートメント配列の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
-  PtStmtArray
+  const PtStmtArray*
   stmt_array() const override;
 
 
@@ -143,7 +143,7 @@ private:
   PtStmtType mType;
 
   // 階層ブランチの配列
-  PtNameBranchArray mNbArray;
+  const PtNameBranchArray* mNbArray;
 
   // 名前
   const char* mName;
@@ -167,16 +167,16 @@ private:
   const PtExpr* mExpr2;
 
   // case item の配列
-  PtCaseItemArray mCaseItemArray;
+  const PtCaseItemArray* mCaseItemArray;
 
   // 宣言の配列
-  PtDeclHeadArray mDeclArray;
+  const PtDeclHeadArray* mDeclArray;
 
   // ステートメントの配列
-  PtStmtArray mStmtArray;
+  const PtStmtArray* mStmtArray;
 
   // 式の配列
-  PtExprArray mArgArray;
+  const PtExprArray* mArgArray;
 
 };
 
@@ -196,7 +196,7 @@ private:
 
   /// コンストラクタ
   SptCaseItem(const FileRegion& file_region,
-	      PtExprArray label_array,
+	      const PtExprArray* label_array,
 	      const PtStmt* body);
 
   /// デストラクタ
@@ -213,7 +213,7 @@ public:
   file_region() const override;
 
   /// @brief ラベルのリストの取得
-  PtExprArray
+  const PtExprArray*
   label_list() const override;
 
   /// 本体のステートメントの取得
@@ -230,7 +230,7 @@ private:
   FileRegion mFileRegion;
 
   // ラベルのリスト
-  PtExprArray mLabelArray;
+  const PtExprArray* mLabelArray;
 
   // ラベルが一致したときに実行されるステートメント
   const PtStmt* mBody;

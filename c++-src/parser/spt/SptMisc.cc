@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 SptControl::SptControl(const FileRegion& file_region,
 		       PtCtrlType type,
 		       const PtExpr* expr,
-		       PtExprArray event_array) :
+		       const PtExprArray* event_array) :
   mFileRegion{file_region},
   mType{type},
   mExpr{expr},
@@ -74,7 +74,7 @@ SptControl::delay() const
 
 // @brief イベントリストの取得
 // @note event control/repeat control の場合のみ意味を持つ
-PtExprArray
+const PtExprArray*
 SptControl::event_list() const
 {
   return mEventArray;
@@ -335,7 +335,7 @@ SptNameBranch::index() const
 
 // コンストラクタ
 // @param as_array attr_spec のリスト
-SptAttrInst::SptAttrInst(PtAttrSpecArray as_array) :
+SptAttrInst::SptAttrInst(const PtAttrSpecArray* as_array) :
   mAttrSpecArray{as_array}
 {
 }
@@ -349,17 +349,18 @@ SptAttrInst::~SptAttrInst()
 FileRegion
 SptAttrInst::file_region() const
 {
-  SizeType n = mAttrSpecArray.size();
+  SizeType n = mAttrSpecArray->size();
   if ( n == 0 ) {
     return FileRegion();
   }
   else {
-    return FileRegion{mAttrSpecArray[0]->file_region(), mAttrSpecArray[n - 1]->file_region()};
+    return FileRegion{(*mAttrSpecArray)[0]->file_region(),
+			(*mAttrSpecArray)[n - 1]->file_region()};
   }
 }
 
 // @brief 要素のリストの取得
-PtAttrSpecArray
+const PtAttrSpecArray*
 SptAttrInst::attrspec_list() const
 {
   return mAttrSpecArray;
@@ -427,7 +428,7 @@ SptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
   auto node = new SptControl(file_region, PtCtrlType::Delay,
-			     value, PtExprArray());
+			     value, nullptr);
   return node;
 }
 
@@ -437,7 +438,7 @@ SptFactory::new_DelayControl(const FileRegion& file_region,
 // @return 生成されたイベントコントロール
 const PtControl*
 SptFactory::new_EventControl(const FileRegion& file_region,
-			     PtExprArray event_array)
+			     const PtExprArray* event_array)
 {
   auto node = new SptControl(file_region, PtCtrlType::Event,
 			     nullptr, event_array);
@@ -452,7 +453,7 @@ SptFactory::new_EventControl(const FileRegion& file_region,
 const PtControl*
 SptFactory::new_RepeatControl(const FileRegion& file_region,
 			      const PtExpr* expr,
-			      PtExprArray event_array)
+			      const PtExprArray* event_array)
 {
   auto node = new SptControl(file_region, PtCtrlType::Repeat,
 			     expr, event_array);
@@ -600,7 +601,7 @@ SptFactory::new_NameBranch(const char* name,
 // @return 生成された attribute instance
 const PtAttrInst*
 SptFactory::new_AttrInst(const FileRegion& file_region,
-			 PtAttrSpecArray as_array)
+			 const PtAttrSpecArray* as_array)
 {
   // file_region は不要
   auto node = new SptAttrInst(as_array);
