@@ -16,7 +16,6 @@
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 
 #include "ym/vl/VlModule.h"
 
@@ -60,10 +59,9 @@ ItemGen::~ItemGen()
 // @param[in] pt_item_array 要素定義の配列
 void
 ItemGen::phase1_item(const VlNamedObj* parent,
-		     const PtItemArray* pt_item_array)
+		     const vector<const PtItem*>& pt_item_array)
 {
-  for (ymuint i = 0; i < pt_item_array->size(); ++ i) {
-    const PtItem* pt_item = (*pt_item_array)[i];
+  for ( auto pt_item: pt_item_array ) {
     switch ( pt_item->type() ) {
     case PtItemType::DefParam:
       // 実際には登録するだけ
@@ -145,18 +143,14 @@ ItemGen::defparam_override(const VlModule* module,
 {
   const FileRegion& fr = pt_defparam->file_region();
 
-  const PtNameBranchArray* nb_array = pt_defparam->namebranch_array();
-  const char* name = pt_defparam->name();
-
-  ElbObjHandle* handle = find_obj_up(module, nb_array, name, ulimit);
+  ElbObjHandle* handle = find_obj_up(module, pt_defparam, ulimit);
   if ( !handle ) {
     return false;
   }
   ElbParameter* param = handle->parameter();
   if ( !param ) {
     ostringstream buf;
-    buf << "\"" << expand_full_name(nb_array, name)
-	<< "\" is not a parameter.";
+    buf << "\"" << pt_defparam->fullname() << "\" is not a parameter.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
 		    MsgType::Error,
@@ -222,7 +216,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 
   ElbEnv env;
   ElbNetLhsEnv env1(env);
-  for ( auto pt_elem: *pt_header->contassign_list() ) {
+  for ( auto pt_elem: pt_header->contassign_list() ) {
     // 左辺式の生成
     const PtExpr* pt_lhs = pt_elem->lhs();
     ElbExpr* lhs = instantiate_lhs(parent, env1, pt_lhs);
@@ -276,8 +270,8 @@ ItemGen::phase1_generate(const VlNamedObj* parent,
 			 const PtItem* pt_generate)
 {
   phase1_genitem(parent,
-		 pt_generate->declhead_array(),
-		 pt_generate->item_array());
+		 pt_generate->declhead_list(),
+		 pt_generate->item_list());
 }
 
 // @brief PtGenBlock に対応するインスタンスの生成を行う
@@ -310,13 +304,13 @@ ItemGen::phase1_genif(const VlNamedObj* parent,
   }
   if ( cond ) {
     phase1_genitem(parent,
-		   pt_genif->then_declhead_array(),
-		   pt_genif->then_item_array());
+		   pt_genif->then_declhead_list(),
+		   pt_genif->then_item_list());
   }
   else {
     phase1_genitem(parent,
-		   pt_genif->else_declhead_array(),
-		   pt_genif->else_item_array());
+		   pt_genif->else_declhead_list(),
+		   pt_genif->else_item_list());
   }
 }
 
@@ -333,11 +327,11 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
   }
 
   bool found = false;
-  for ( auto pt_caseitem: *pt_gencase->caseitem_list() ) {
+  for ( auto pt_caseitem: pt_gencase->caseitem_list() ) {
     // default(ラベルリストが空) なら常にマッチする．
-    SizeType n = pt_caseitem->label_list()->size();
+    SizeType n = pt_caseitem->label_num();
     bool match = (n == 0);
-    for ( auto pt_expr: *pt_caseitem->label_list() ) {
+    for ( auto pt_expr: pt_caseitem->label_list() ) {
       BitVector label_val;
       if ( !evaluate_bitvector(parent, pt_expr, label_val, true) ) {
 	continue;
@@ -357,7 +351,9 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
 	return;
       }
       found = true;
-      phase1_genitem(parent, pt_caseitem->declhead_array(), pt_caseitem->item_array());
+      phase1_genitem(parent,
+		     pt_caseitem->declhead_list(),
+		     pt_caseitem->item_list());
     }
   }
 }
@@ -480,13 +476,16 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
 // @param[in] pt_item_array パース木の要素の配列
 void
 ItemGen::phase1_genitem(const VlNamedObj* parent,
-			const PtDeclHeadArray* pt_decl_array,
-			const PtItemArray* pt_item_array)
+			const vector<const PtDeclHead*>& pt_decl_array,
+			const vector<const PtItem*>& pt_item_array)
 {
   phase1_item(parent, pt_item_array);
-  add_phase2stub(make_stub(static_cast<ElbProxy*>(this),
-			   &ElbProxy::instantiate_decl,
-			   parent, pt_decl_array));
+  auto stub{make_stub<ElbProxy,
+	    const VlNamedObj*,
+	    const vector<const PtDeclHead*>&>(static_cast<ElbProxy*>(this),
+					      &ElbProxy::instantiate_decl,
+					      parent, pt_decl_array)};
+  add_phase2stub(stub);
 }
 
 END_NAMESPACE_YM_VERILOG

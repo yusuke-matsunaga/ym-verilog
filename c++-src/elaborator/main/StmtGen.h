@@ -296,7 +296,7 @@ private:
   /// @brief ブロックスコープ内の宣言要素の生成を行う．
   void
   phase2_namedblock(const VlNamedObj* parent,
-		    const PtDeclHeadArray* pt_head_array);
+		    const vector<const PtDeclHead*>& pt_head_array);
 
   /// @brief 名前つき parallel block のインスタンス化を行う．
   /// @param[in] parent 親のスコープ

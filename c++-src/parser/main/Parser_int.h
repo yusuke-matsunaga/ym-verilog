@@ -18,15 +18,20 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] new_declhead 新しく設定する declhead
 inline
 void
-Parser::push_declhead_list(vector<PtiDeclHead*>* new_declhead)
+Parser::push_declhead_list()
 {
+#if 0
   mDeclHeadListStack.push_back(mCurDeclHeadList);
   if ( new_declhead == nullptr ) {
     new_declhead = new vector<PtiDeclHead*>();
   }
   mCurDeclHeadList = new_declhead;
+#else
+  mDeclHeadListStack.push_back(vector<PtiDeclHead*>());
+#endif
 }
 
+#if 0
 // @brief スタックの末尾を declhead リストに戻す．
 // @param[in] delete_top true なら昔の declhead を削除する．
 inline
@@ -37,22 +42,37 @@ Parser::pop_declhead_list(bool delete_top)
     delete mCurDeclHeadList;
   }
   mCurDeclHeadList = mDeclHeadListStack.back();
-  mDeclHeadListStack.pop_back();
 }
+#else
+// @brief スタックのトップを取り出す．
+inline
+vector<const PtDeclHead*>
+Parser::pop_declhead_list()
+{
+  auto vec{convert<const PtDeclHead*, PtiDeclHead*>(cur_declhead_list())};
+  mDeclHeadListStack.pop_back();
+  return vec;
+}
+#endif
 
 // @brief 現在の item リストをスタックに積む．
 // @param[in] new_item 新しく設定する item リスト
 inline
 void
-Parser::push_item_list(vector<const PtItem*>* new_item)
+Parser::push_item_list()
 {
+#if 0
   mItemListStack.push_back(mCurItemList);
   if ( new_item == nullptr ) {
     new_item = new vector<const PtItem*>();
   }
   mCurItemList = new_item;
+#else
+  mItemListStack.push_back(vector<const PtItem*>());
+#endif
 }
 
+#if 0
 // @brief スタックの末尾を item リストに戻す．
 // @param[in] delete_top true なら昔の item を削除する．
 inline
@@ -65,22 +85,37 @@ Parser::pop_item_list(bool delete_top)
   mCurItemList = mItemListStack.back();
   mItemListStack.pop_back();
 }
+#else
+inline
+// @brief スタックのトップを取り出す．
+vector<const PtItem*>
+Parser::pop_item_list()
+{
+  auto vec{cur_item_list()};
+  mItemListStack.pop_back();
+  return vec;
+}
+#endif
 
+#if 0
 // @brief 宣言リストを配列に変換する．
 inline
-const PtDeclHeadArray*
+vector<const PtDeclHead*>
 Parser::get_decl_array()
 {
-  return new_array2<const PtDeclHead, PtiDeclHead>(*mCurDeclHeadList);
+  return convert<const PtDeclHead*, PtiDeclHead*>(*mCurDeclHeadList);
 }
+#endif
 
+#if 0
 // @brief item リストを配列に変換する．
 inline
-const PtItemArray*
+vector<const PtItem*>
 Parser::get_item_array()
 {
-  return new_array<const PtItem>(*mCurItemList);
+  return *mCurItemList;
 }
+#endif
 
 END_NAMESPACE_YM_VERILOG
 

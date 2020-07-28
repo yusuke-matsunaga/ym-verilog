@@ -48,7 +48,7 @@ public:
   /// @param[in] force_to_local true なら parameter を localparam にする．
   void
   phase1_decl(const VlNamedObj* parent,
-	      const PtDeclHeadArray* pt_head_array,
+	      const vector<const PtDeclHead*>& pt_head_array,
 	      bool force_to_local);
 
   /// @brief IO宣言要素を実体化する．
@@ -59,14 +59,14 @@ public:
   void
   instantiate_iodecl(ElbModule* module,
 		     ElbTaskFunc* taskfunc,
-		     const PtIOHeadArray* pt_head_array);
+		     const vector<const PtIOHead*>& pt_head_array);
 
   /// @brief 宣言要素のリストをインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head_array 宣言ヘッダの配列
   void
   instantiate_decl(const VlNamedObj* parent,
-		   const PtDeclHeadArray* pt_head_array);
+		   const vector<const PtDeclHead*>& pt_head_array);
 
 
 private:

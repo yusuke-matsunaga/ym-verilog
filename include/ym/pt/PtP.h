@@ -111,6 +111,7 @@ enum class PtCtrlType {
 // in PtBase.h
 class PtBase;
 class PtNamedBase;
+class PtHierNamedBase;
 
 // in PtUdp.h
 class PtUdp;
@@ -154,31 +155,6 @@ class PtConnection;
 class PtNameBranch;
 class PtAttrInst;
 class PtAttrSpec;
-
-// in PtArray.h
-template <typename T>
-class PtArray;
-
-using PtAttrInstArray = PtArray<const PtAttrInst>;
-using PtAttrSpecArray = PtArray<const PtAttrSpec>;
-using PtCaseItemArray = PtArray<const PtCaseItem>;
-using PtConnectionArray = PtArray<const PtConnection>;
-using PtContAssignArray = PtArray<const PtContAssign>;
-using PtDeclHeadArray = PtArray<const PtDeclHead>;
-using PtDeclItemArray = PtArray<const PtDeclItem>;
-using PtDefParamArray = PtArray<const PtDefParam>;
-using PtExprArray = PtArray<const PtExpr>;
-using PtGenCaseItemArray = PtArray<const PtGenCaseItem>;
-using PtInstArray = PtArray<const PtInst>;
-using PtIOHeadArray = PtArray<const PtIOHead>;
-using PtIOItemArray = PtArray<const PtIOItem>;
-using PtItemArray = PtArray<const PtItem>;
-using PtNameBranchArray = PtArray<const PtNameBranch>;
-using PtRangeArray = PtArray<const PtRange>;
-using PtPortArray = PtArray<const PtPort>;
-using PtStmtArray = PtArray<const PtStmt>;
-using PtUdpEntryArray = PtArray<const PtUdpEntry>;
-using PtUdpValueArray = PtArray<const PtUdpValue>;
 
 END_NAMESPACE_YM_VERILOG
 

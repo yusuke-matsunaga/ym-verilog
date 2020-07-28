@@ -10,11 +10,10 @@
 
 
 #include "ym/pt/PtModule.h"
-#include "ym/pt/PtArray.h"
 #include "ym/pt/PtP.h"
-
 #include "ym/FileRegion.h"
 
+#include "parser/PtiArray.h"
 #include "parser/PtiDecl.h"
 
 
@@ -48,11 +47,11 @@ private:
 	    const string& config,
 	    const string& library,
 	    const string& cell,
-	    const PtDeclHeadArray* paramport_array,
-	    const PtPortArray* port_array,
-	    const PtIOHeadArray* iohead_array,
-	    const PtDeclHeadArray* declhead_array,
-	    const PtItemArray* item_array);
+	    PtiDeclHeadArray&& paramport_array,
+	    PtiPortArray&& port_array,
+	    PtiIOHeadArray&& iohead_array,
+	    PtiDeclHeadArray&& declhead_array,
+	    PtiItemArray&& item_array);
 
   /// @brief デストラクタ
   ~CptModule();
@@ -127,30 +126,55 @@ public:
   const string&
   cell() const override;
 
-  /// @brief パラメータポート宣言配列の取得
-  const PtDeclHeadArray*
-  paramport_array() const override;
+  /// @brief パラメータポート宣言配列の要素数の取得
+  SizeType
+  paramport_num() const override;
 
-  /// @brief ポートのリストを取り出す．
-  const PtPortArray*
-  port_list() const override;
+  /// @brief パラメータポート宣言の取得
+  /// @param[in] pos 位置 ( 0 <= pos < paramport_num() )
+  const PtDeclHead*
+  paramport(SizeType pos) const override;
 
-  /// @brief 入出力宣言ヘッダ配列の取得
-  const PtIOHeadArray*
-  iohead_array() const override;
+  /// @brief ポート数を取り出す．
+  SizeType
+  port_num() const override;
+
+  /// @brief ポートを取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
+  const PtPort*
+  port(SizeType pos) const override;
+
+  /// @brief 入出力宣言ヘッダ配列の要素数の取得
+  SizeType
+  iohead_num() const override;
+
+  /// @brief 入出力宣言の取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+  const PtIOHead*
+  iohead(SizeType pos) const override;
 
   /// @brief 入出力宣言の要素数の取得
   /// @note 個々のヘッダが持つ要素数の総和を計算する．
   SizeType
   iodecl_num() const override;
 
-  /// @brief 宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief 宣言ヘッダ配列の要素数の取得
+  SizeType
+  declhead_num() const override;
 
-  /// @brief item 配列の取得
-  const PtItemArray*
-  item_array() const override;
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
+
+  /// @brief item 配列の要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  item(SizeType pos) const override;
 
   /// @brief 関数名から関数の検索
   const PtItem*
@@ -218,22 +242,22 @@ private:
   string mCell;
 
   // パラメータポート宣言のリスト
-  const PtDeclHeadArray* mParamPortArray;
+  PtiDeclHeadArray mParamPortArray;
 
   // ポートの配列
-  const PtPortArray* mPortArray;
+  PtiPortArray mPortArray;
 
   // 入出力宣言リスト
-  const PtIOHeadArray* mIOHeadArray;
+  PtiIOHeadArray mIOHeadArray;
 
   // 入出力宣言の要素数
   int mIODeclNum;
 
   // 宣言リスト
-  const PtDeclHeadArray* mDeclHeadArray;
+  PtiDeclHeadArray mDeclHeadArray;
 
   // 要素のリスト
-  const PtItemArray* mItemArray;
+  PtiItemArray mItemArray;
 
   // 関数定義の辞書
   //unordered_map<string, const PtItem*> mFuncDic;
@@ -404,7 +428,7 @@ private:
   /// @brief コンストラクタ
   CptPort2(const FileRegion& file_region,
 	   const PtExpr* portref,
-	   const PtExprArray* portref_array,
+	   PtiExprArray&& portref_array,
 	   const char* ext_name,
 	   void* q);
 
@@ -451,7 +475,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ポート参照式の配列
-  const PtExprArray* mPortRefArray;
+  PtiExprArray mPortRefArray;
 
   // 方向の配列
   VpiDir* mDirArray;

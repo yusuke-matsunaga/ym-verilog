@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @brief statement の共通の親クラス
 //////////////////////////////////////////////////////////////////////
 class PtStmt :
-  public PtBase
+  public PtHierNamedBase
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -40,24 +40,20 @@ public:
   const char*
   stmt_name() const = 0;
 
-  /// @brief 階層ブランチの先頭の取得
-  /// @return 階層ブランチの先頭
-  /// @note kDisable/kEnable/kSysEnable で意味のある関数
+  /// @brief 引数の数の取得
   virtual
-  const PtNameBranchArray*
-  namebranch_array() const = 0;
+  SizeType
+  arg_num() const = 0;
 
-  /// @brief 名前の取得
-  /// @return 名前
-  /// @note kDisable/kEnable/kSysEnable/kParBlock/kSeqBlock で意味のある関数
+  /// @brief 引数の取得
+  /// @param[in] pos 位置 ( 0 <= pos < arg_num() )
   virtual
-  const char*
-  name() const = 0;
+  const PtExpr*
+  arg(SizeType pos) const = 0;
 
   /// @brief 引数のリストの取得
-  virtual
-  const PtExprArray*
-  arg_list() const = 0;
+  vector<const PtExpr*>
+  arg_list() const;
 
   /// @brief コントロールの取得
   /// @return ディレイ/イベントコントロール
@@ -108,10 +104,20 @@ public:
   const PtStmt*
   else_body() const = 0;
 
-  /// @brief case item のリストの取得
+  /// @brief case item のリストの要素数の取得
   virtual
-  const PtCaseItemArray*
-  caseitem_list() const = 0;
+  SizeType
+  caseitem_num() const = 0;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+  virtual
+  const PtCaseItem*
+  caseitem(SizeType pos) const = 0;
+
+  /// @brief case item のリストの取得
+  vector<const PtCaseItem*>
+  caseitem_list() const;
 
   /// @brief 初期化代入文の取得
   /// @return 初期化代入文
@@ -127,17 +133,39 @@ public:
   const PtStmt*
   next_stmt() const = 0;
 
-  /// @brief 宣言ヘッダ配列の取得
+  /// @brief 宣言ヘッダ配列の要素数の取得
   /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   virtual
-  const PtDeclHeadArray*
-  declhead_array() const = 0;
+  SizeType
+  declhead_num() const = 0;
 
-  /// @brief 子供のステートメント配列の取得
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+  virtual
+  const PtDeclHead*
+  declhead(SizeType pos) const = 0;
+
+  /// @brief 宣言ヘッダのリストの取得
+  vector<const PtDeclHead*>
+  declhead_list() const;
+
+  /// @brief 子供のステートメント配列の要素数の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
   virtual
-  const PtStmtArray*
-  stmt_array() const = 0;
+  SizeType
+  stmt_num() const = 0;
+
+  /// @brief 子供のステートメントの取得
+  /// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
+  /// @note kParBlock/kSeqBlock で意味のある関数
+  virtual
+  const PtStmt*
+  stmt(SizeType pos) const = 0;
+
+  /// @brief 子供のステートメントのリストの取得
+  vector<const PtStmt*>
+  stmt_list() const;
 
 };
 
@@ -156,10 +184,20 @@ public:
   // PtCaseItem の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ラベルのリストの取得
+  /// @brief ラベルのリストの要素数の取得
   virtual
-  const PtExprArray*
-  label_list() const = 0;
+  SizeType
+  label_num() const = 0;
+
+  /// @brief ラベルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
+  virtual
+  const PtExpr*
+  label(SizeType pos) const = 0;
+
+  /// @brief ラベルリストの取得
+  vector<const PtExpr*>
+  label_list() const;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント
@@ -168,6 +206,76 @@ public:
   body() const = 0;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 引数のリストの取得
+inline
+vector<const PtExpr*>
+PtStmt::arg_list() const
+{
+  SizeType n = arg_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = arg(i);
+  }
+  return vec;
+}
+
+// @brief case item のリストの取得
+inline
+vector<const PtCaseItem*>
+PtStmt::caseitem_list() const
+{
+  SizeType n = caseitem_num();
+  vector<const PtCaseItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = caseitem(i);
+  }
+  return vec;
+}
+
+// @brief 宣言ヘッダのリストの取得
+inline
+vector<const PtDeclHead*>
+PtStmt::declhead_list() const
+{
+  SizeType n = declhead_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = declhead(i);
+  }
+  return vec;
+}
+
+// @brief 子供のステートメントのリストの取得
+inline
+vector<const PtStmt*>
+PtStmt::stmt_list() const
+{
+  SizeType n = stmt_num();
+  vector<const PtStmt*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = stmt(i);
+  }
+  return vec;
+}
+
+// @brief ラベルリストの取得
+inline
+vector<const PtExpr*>
+PtCaseItem::label_list() const
+{
+  SizeType n = label_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = label(i);
+  }
+  return vec;
+}
 
 END_NAMESPACE_YM_VERILOG
 

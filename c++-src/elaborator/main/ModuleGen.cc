@@ -16,7 +16,6 @@
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 
 #include "elb/ElbModule.h"
 #include "elb/ElbDecl.h"
@@ -107,15 +106,13 @@ ModuleGen::phase1_module_item(ElbModule* module,
   pt_module->set_in_use();
 
   // パラメータポートを実体化する．
-  auto& paramport_array = *pt_module->paramport_array();
-  bool has_paramportdecl = (paramport_array.size() > 0);
+  bool has_paramportdecl = (pt_module->paramport_num() > 0);
   if ( has_paramportdecl ) {
-    phase1_decl(module, pt_module->paramport_array(), false);
+    phase1_decl(module, pt_module->paramport_list(), false);
   }
 
   // parameter と genvar を実体化する．
-  auto& declhead_array = *pt_module->declhead_array();
-  phase1_decl(module, pt_module->declhead_array(), has_paramportdecl);
+  phase1_decl(module, pt_module->declhead_list(), has_paramportdecl);
 
   // パラメータの割り当てを作る．
   if ( param_con ) {
@@ -153,18 +150,16 @@ ModuleGen::phase1_module_item(ElbModule* module,
       // パラメータポートリストの名前を現れた順番に paramport_list に入れる．
       vector<const char*> paramport_list;
       if ( has_paramportdecl ) {
-	for ( int i = 0; i < paramport_array.size(); ++ i ) {
-	  const PtDeclHead* pt_param = paramport_array[i];
-	  for ( auto pt_item: *pt_param->item_list() ) {
+	for ( auto pt_param: pt_module->paramport_list() ) {
+	  for ( auto pt_item: pt_param->item_list() ) {
 	    paramport_list.push_back(pt_item->name());
 	  }
 	}
       }
       else {
-	for ( int i = 0; i < declhead_array.size(); ++ i ) {
-	  const PtDeclHead* pt_decl = declhead_array[i];
+	for ( auto pt_decl: pt_module->declhead_list() ) {
 	  if ( pt_decl->type() == PtDeclType::Param ) {
-	    for ( auto pt_item: *pt_decl->item_list() ) {
+	    for ( auto pt_item: pt_decl->item_list() ) {
 	      paramport_list.push_back(pt_item->name());
 	    }
 	  }
@@ -199,7 +194,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
   }
 
   // それ以外の要素を実体化する．
-  phase1_item(module, pt_module->item_array());
+  phase1_item(module, pt_module->item_list());
 
   // phase2 で行う処理を登録しておく．
   add_phase2stub(module, pt_module);
@@ -216,10 +211,10 @@ ModuleGen::phase2_module_item(ElbModule* module,
 			      const PtModule* pt_module)
 {
   // 宣言要素を実体化する．
-  instantiate_decl(module, pt_module->declhead_array());
+  instantiate_decl(module, pt_module->declhead_list());
 
   // IODecl を実体化する．
-  instantiate_iodecl(module, nullptr, pt_module->iohead_array());
+  instantiate_iodecl(module, nullptr, pt_module->iohead_list());
 
   // ポートを実体化する
   instantiate_port(module, pt_module);
@@ -231,7 +226,7 @@ ModuleGen::instantiate_port(ElbModule* module,
 			    const PtModule* pt_module)
 {
   int index = 0;
-  for ( auto pt_port: *pt_module->port_list() ) {
+  for ( auto pt_port: pt_module->port_list() ) {
     // 内側の接続と向きを作る．
     SizeType n = pt_port->portref_size();
 

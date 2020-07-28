@@ -10,7 +10,6 @@
 #include "elb/ElbMgr.h"
 
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 
 #include "elb/ElbUdp.h"
 #include "elb/ElbModule.h"
@@ -26,6 +25,7 @@
 #include "elb/ElbUserSystf.h"
 #include "elb/ElbGenvar.h"
 
+#include "parser/PtiArray.h"
 
 #define dout cerr
 
@@ -433,31 +433,29 @@ ElbMgr::find_obj(const VlNamedObj* scope,
 
 // @brief 名前によるオブジェクトの探索
 // @param[in] base_scope 起点となるスコープ
-// @param[in] nb_array 階層名の上部 (nullptr の場合も有りうる)
-// @param[in] name 末尾の名前
+// @param[in] pt_objy 階層名付きのオブジェクト
 // @param[in] ulimit 探索する名前空間の上限
 // @return 見付かったオブジェクトを返す．
 // 見付からなかったら nullptr を返す．
 ElbObjHandle*
 ElbMgr::find_obj_up(const VlNamedObj* base_scope,
-		    const PtNameBranchArray* nb_array,
-		    const char* name,
+		    const PtHierNamedBase* pt_obj,
 		    const VlNamedObj* ulimit)
 {
   // まず nb の部分の解決を行う．
-  base_scope = find_scope_up(base_scope, nb_array, ulimit);
+  base_scope = find_scope_up(base_scope, pt_obj, ulimit);
   if ( base_scope == nullptr ) {
     return nullptr;
   }
 
   if ( debug & debug_find_scope ) {
-    dout << "find_obj_up( " << name << " )@"
+    dout << "find_obj_up( " << pt_obj->name() << " )@"
 	 << base_scope->full_name() << endl;
   }
 
   // base_scope を起点として name というオブジェクトを探す．
   for ( ; base_scope; base_scope = base_scope->parent()) {
-    ElbObjHandle* handle = find_obj(base_scope, name);
+    ElbObjHandle* handle = find_obj(base_scope, pt_obj->name());
     if ( handle ) {
       // 見つけた
       if ( debug & debug_find_scope ) {
@@ -482,20 +480,20 @@ ElbMgr::find_obj_up(const VlNamedObj* base_scope,
 // なければ親のスコープに対して同様の探索を繰り返す．
 const VlNamedObj*
 ElbMgr::find_scope_up(const VlNamedObj* base_scope,
-		      const PtNameBranchArray* nb_array,
+		      const PtHierNamedBase* pt_obj,
 		      const VlNamedObj* ulimit)
 {
   if ( debug & debug_find_scope ) {
     dout << "find_scope_up( "
-	 << expand_full_name(nb_array, nullptr)
+	 << pt_obj->fullname()
 	 << " ) @"
 	 << base_scope->full_name() << endl;
   }
 
-  int n = nb_array->size();
+  SizeType n = pt_obj->namebranch_num();
   const VlNamedObj* cur_scope = base_scope;
-  for ( int i = 0; i < n; ) {
-    const PtNameBranch* name_branch = (*nb_array)[i];
+  for ( SizeType i = 0; i < n; ) {
+    const PtNameBranch* name_branch = pt_obj->namebranch(i);
     const char* top_name = name_branch->name();
     const VlNamedObj* top_scope = nullptr;
     // まず普通に探す．

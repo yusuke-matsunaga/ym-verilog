@@ -12,7 +12,6 @@
 #include "ym/verilog.h"
 #include "ym/VlValue.h"
 #include "ym/pt/PtP.h"
-#include "ym/pt/PtArray.h"
 #include "ym/ClibCellLibrary.h"
 #include "elb/Elaborator.h"
 #include "elb/ElbMgr.h"
@@ -107,15 +106,13 @@ protected:
 
   /// @brief 名前によるオブジェクトの探索
   /// @param[in] base_scope 起点となるスコープ
-  /// @param[in] nb_array 階層名の上部 (nullptr の場合も有りうる)
-  /// @param[in] name 末尾の名前
+  /// @param[in] pt_obj 階層名付きのオブジェクト
   /// @param[in] ulimit 探索する名前空間の上限
   /// @return 見付かったオブジェクトを返す．
   /// 見付からなかったら nullptr を返す．
   ElbObjHandle*
   find_obj_up(const VlNamedObj* base_scope,
-	      const PtNameBranchArray* nb_array,
-	      const char* name,
+	      const PtHierNamedBase* pt_obj,
 	      const VlNamedObj* ulimit);
 
   /// @brief 名前からモジュール定義を取り出す．
@@ -386,7 +383,7 @@ public:
   /// @param[in] force_to_local true なら parameter を localparam にする．
   void
   phase1_decl(const VlNamedObj* parent,
-	      const PtDeclHeadArray* pt_head_array,
+	      const vector<const PtDeclHead*>& pt_head_array,
 	      bool force_to_local);
 
   /// @brief IO宣言要素を実体化する．
@@ -397,14 +394,14 @@ public:
   void
   instantiate_iodecl(ElbModule* module,
 		     ElbTaskFunc* taskfunc,
-		     const PtIOHeadArray* pt_head_array);
+		     const vector<const PtIOHead*>& pt_head_array);
 
   /// @brief 宣言要素のリストをインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head_array 宣言ヘッダの配列
   void
   instantiate_decl(const VlNamedObj* parent,
-		   const PtDeclHeadArray* pt_head_array);
+		   const vector<const PtDeclHead*>& pt_head_array);
 
 
 protected:
@@ -417,7 +414,7 @@ protected:
   /// @param[in] pt_item_array 要素定義の配列
   void
   phase1_item(const VlNamedObj* parent,
-	      const PtItemArray* pt_item_array);
+	      const vector<const PtItem*>& pt_item_array);
 
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ
@@ -628,7 +625,7 @@ protected:
   /// @param[in] def 定義側の属性の時 true とするフラグ
   /// @param[in] obj 付加する対象のオブジェクト
   void
-  instantiate_attribute(const PtAttrInstArray* pt_attr_array,
+  instantiate_attribute(const PtAttrInst* pt_attr,
 			bool def,
 			const VlObj* obj);
 
@@ -727,11 +724,10 @@ ElbProxy::find_obj(const VlNamedObj* parent,
 inline
 ElbObjHandle*
 ElbProxy::find_obj_up(const VlNamedObj* base_scope,
-		      const PtNameBranchArray* nb_array,
-		      const char* name,
+		      const PtHierNamedBase* pt_obj,
 		      const VlNamedObj* ulimit)
 {
-  return mMgr.find_obj_up(base_scope, nb_array, name, ulimit);
+  return mMgr.find_obj_up(base_scope, pt_obj, ulimit);
 }
 
 // @brief セルの探索

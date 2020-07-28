@@ -55,7 +55,7 @@ public:
   /// @param[in] elem_array 要素の配列
   virtual
   void
-  set_elem(const PtIOItemArray* elem_array) = 0;
+  set_elem(PtiIOItemArray&& elem_array) = 0;
 
 };
 
@@ -76,7 +76,7 @@ public:
   /// @param[in] elem_array 要素の配列
   virtual
   void
-  set_elem(const PtDeclItemArray* elem_array) = 0;
+  set_elem(PtiDeclItemArray&& elem_array) = 0;
 
 };
 

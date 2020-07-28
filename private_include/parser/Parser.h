@@ -5,7 +5,7 @@
 /// @brief Parser のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -136,8 +136,8 @@ private:
 	  PtrList<const PtAttrInst>* ai_list,
 	  bool is_seq,
 	  const PtIOItem* out_item,
-	  const PtPortArray* port_array,
-	  const PtIOHeadArray* iohead_array);
+	  const vector<const PtPort*>& port_array,
+	  const vector<const PtIOHead*>& iohead_array);
 
 
 public:
@@ -167,15 +167,15 @@ public:
 
   /// @brief 入出力宣言中の重複チェックを行う．
   bool
-  check_PortArray(const PtIOHeadArray* iohead_array);
+  check_PortArray(const vector<const PtIOHead*>& iohead_array);
 
   /// @brief PtiPort の vector からポート配列を作る．
-  const PtPortArray*
+  vector<const PtPort*>
   new_PortArray(const vector<PtiPort*>& port_vector);
 
   /// @brief 入出力宣言からポートを作る．
-  const PtPortArray*
-  new_PortArray(const PtIOHeadArray* iohead_array);
+  vector<const PtPort*>
+  new_PortArray(const vector<const PtIOHead*>& iohead_array);
 
   /// @brief 空のポートの生成
   void
@@ -2083,7 +2083,7 @@ public:
   add_port(PtiPort* port);
 
   /// @brief ポートリストをvectorに変換する．
-  const vector<PtiPort*>&
+  vector<const PtPort*>
   get_port_vector();
 
   /// @brief ポート参照リストを初期化する．
@@ -2103,8 +2103,8 @@ public:
   void
   flush_paramport();
 
-  /// @brief parameter port リストを配列に変換する．
-  const PtDeclHeadArray*
+  /// @brief parameter port リストを得る．
+  vector<const PtDeclHead*>
   get_paramport_array();
 
   /// @brief IOポート宣言リストにIO宣言ヘッダを追加する．
@@ -2125,75 +2125,47 @@ public:
   void
   add_io_item(const PtIOItem* item);
 
-  /// @brief module用の IO宣言リストを配列に変換する．
-  const PtIOHeadArray*
+  /// @brief module用の IO宣言リストを得る．
+  vector<const PtIOHead*>
   get_module_io_array();
 
-  /// @brief task/function 用の IO宣言リストを配列に変換する．
-  const PtIOHeadArray*
+  /// @brief task/function 用の IO宣言リストを得る．
+  vector<const PtIOHead*>
   get_tf_io_array();
 
-  /// @brief module 用の parameter リストを配列に変換する．
-  const PtDeclHeadArray*
+  /// @brief module 用の parameter リストを得る．
+  vector<const PtDeclHead*>
   get_module_param_array();
 
-  /// @brief task/function 用の parameter リストを配列に変換する．
-  const PtDeclHeadArray*
+  /// @brief task/function 用の parameter リストを得る．
+  vector<const PtDeclHead*>
   get_tf_param_array();
 
-  /// @brief module 用の localparam リストを配列に変換する．
-  const PtDeclHeadArray*
+  /// @brief module 用の localparam リストを得る．
+  vector<const PtDeclHead*>
   get_module_localparam_array();
 
-  /// @brief task/function 用の localparam リストを配列に変換する．
-  const PtDeclHeadArray*
+  /// @brief task/function 用の localparam リストを得る．
+  vector<const PtDeclHead*>
   get_tf_localparam_array();
 
   /// @brief 宣言リストに宣言ヘッダを追加する．
   void
   add_decl_head(PtiDeclHead* head,
-		PtrList<const PtAttrInst>* attr_list);
+		PtrList<const PtAttrInst>* attr_list = nullptr);
 
   /// @brief 宣言リストに宣言要素を追加する．
   void
   add_decl_item(const PtDeclItem* item);
 
-  /// @brief 宣言リストを配列に変換する．
-  const PtDeclHeadArray*
-  get_decl_array();
-
-  /// @brief module 用の宣言リストを配列に変換する．
-  const PtDeclHeadArray*
-  get_module_decl_array();
-
-  /// @brief task/function 用の宣言リストを配列に変換する．
-  const PtDeclHeadArray*
-  get_tf_decl_array();
-
   /// @brief item リストに要素を追加する．
   void
   add_item(const PtItem* item,
-	   PtrList<const PtAttrInst>* attr_list);
-
-  /// @brief item リストを配列に変換する．
-  const PtItemArray*
-  get_item_array();
-
-  /// @brief module 用の item リストを配列に変換する．
-  const PtItemArray*
-  get_module_item_array();
-
-  /// @brief task/function 用の item リストを配列に変換する．
-  const PtItemArray*
-  get_tf_item_array();
+	   PtrList<const PtAttrInst>* attr_list = nullptr);
 
   /// @brief UdpEntry を追加する．
   void
   add_udp_entry(const PtUdpEntry* entry);
-
-  /// @brief UdpEntry のリストを配列に変換する．
-  const PtUdpEntryArray*
-  get_udp_entry_array();
 
   /// @brief UdpValue のリストを初期化する．
   void
@@ -2203,8 +2175,8 @@ public:
   void
   add_udp_value(const PtUdpValue* value);
 
-  /// @brief UdpValue のリストを配列に変換する．
-  const PtUdpValueArray*
+  /// @brief UdpValue のリストを得る．
+  vector<const PtUdpValue*>
   get_udp_value_array();
 
   /// @brief defparam リストを初期化する．
@@ -2215,10 +2187,6 @@ public:
   void
   add_defparam(const PtDefParam* defparam);
 
-  /// @brief defparam リストを配列に変換する．
-  const PtDefParamArray*
-  get_defparam_array();
-
   /// @brief contassign リストを初期化する．
   void
   init_contassign();
@@ -2227,10 +2195,6 @@ public:
   void
   add_contassign(const PtContAssign* contassign);
 
-  /// @brief contassign リストを配列に変換する．
-  const PtContAssignArray*
-  get_contassign_array();
-
   /// @brief instance リストを初期化する．
   void
   init_inst();
@@ -2238,10 +2202,6 @@ public:
   /// @brief instance リストに要素を追加する．
   void
   add_inst(const PtInst* inst);
-
-  /// @brief instance リストを配列に変換する．
-  const PtInstArray*
-  get_inst_array();
 
 
 public:
@@ -2253,27 +2213,6 @@ public:
   template <typename T>
   PtrList<T, T>*
   new_list();
-
-  // 要素を一つ持つ配列を作る．
-  template <typename T>
-  const PtArray<T>*
-  new_array(T* elem);
-
-  // vector から配列を作る．
-  template <typename T>
-  const PtArray<T>*
-  new_array(const vector<T*>& vec);
-
-  // vector から配列を作る．
-  template <typename T,
-	    typename T1>
-  const PtArray<T>*
-  new_array2(const vector<T1*>& vec);
-
-  // リストから配列を作る．
-  template <typename T>
-  const PtArray<T>*
-  new_array(PtrList<T, T>* list);
 
 
 public:
@@ -2319,25 +2258,28 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 現在の declhead リストをスタックに積む．
-  /// @param[in] new_declhead 新しく設定する declhead
-  /// @note new_declhead が nullptr の場合，新たに生成する．
   void
-  push_declhead_list(vector<PtiDeclHead*>* new_declhead);
+  push_declhead_list();
 
-  /// @brief スタックの末尾を declhead リストに戻す．
-  /// @param[in] delete_top true なら昔の declhead を削除する．
-  void
-  pop_declhead_list(bool delete_top);
+  /// @brief スタックのトップを取り出す．
+  vector<const PtDeclHead*>
+  pop_declhead_list();
 
   /// @brief 現在の item リストをスタックに積む．
-  /// @param[in] new_item 新しく設定する item リスト
   void
-  push_item_list(vector<const PtItem*>* new_item);
+  push_item_list();
 
-  /// @brief スタックの末尾を item リストに戻す．
-  /// @param[in] delete_top true なら昔の declhead を削除する．
-  void
-  pop_item_list(bool delete_top);
+  /// @brief スタックのトップを取り出す．
+  vector<const PtItem*>
+  pop_item_list();
+
+  /// @brief 現在の宣言ヘッダのリストを返す．
+  vector<PtiDeclHead*>&
+  cur_declhead_list();
+
+  /// @brief 現在の item リストを返す．
+  vector<const PtItem*>&
+  cur_item_list();
 
   /// @brief 階層名の生成
   /// @param[in] head_name 階層の上位部分
@@ -2346,6 +2288,25 @@ private:
   PuHierName*
   new_HierName(const PtNameBranch* nb,
 	       const char* name);
+
+  /// @brief メモリアロケータを返す．
+  PtAlloc&
+  alloc();
+
+  /// @brief vector を基底クラスの vector に変換する．
+  template <typename T1,
+	    typename T2>
+  static
+  vector<T1>
+  convert(const vector<T2>& src)
+  {
+    SizeType n = src.size();
+    vector<T1> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = src[i];
+    }
+    return vec;
+  }
 
 
 private:
@@ -2383,15 +2344,6 @@ public:
   // task/function 用 IO宣言ヘッダリスト
   vector<PtiIOHead*> mTfIOHeadList;
 
-  // モジュール用の宣言ヘッダリスト
-  vector<PtiDeclHead*> mModuleDeclHeadList;
-
-  // task/function 用の宣言ヘッダリスト
-  vector<PtiDeclHead*> mTfDeclHeadList;
-
-  // モジュール用の item リスト
-  vector<const PtItem*> mModuleItemList;
-
   // IO宣言要素リスト
   vector<const PtIOItem*> mIOItemList;
 
@@ -2414,7 +2366,7 @@ public:
   vector<const PtInst*> mInstList;
 
 
-public:
+private:
   //////////////////////////////////////////////////////////////////////
   // 現在，登録対象となっているリストを指すポインタ
   //////////////////////////////////////////////////////////////////////
@@ -2423,29 +2375,25 @@ public:
   // 実際には mModuleIOHeadList か mTfIOHeadList を指す．
   vector<PtiIOHead*>* mCurIOHeadList;
 
-  // 現在の宣言ヘッダリスト
-  vector<PtiDeclHead*>* mCurDeclHeadList;
-
-  // 現在の item リスト
-  vector<const PtItem*>* mCurItemList;
-
   // 現在の宣言ヘッダの配列
-  const PtDeclHeadArray* mCurDeclArray;
+  // スタックから取り出された最終結果
+  vector<const PtDeclHead*> mCurDeclArray;
 
   // 現在の item の配列
-  const PtItemArray* mCurItemArray;
+  // スタックから取り出された最終結果
+  vector<const PtItem*> mCurItemArray;
 
   // generate-if の then 節の宣言ヘッダリスト
-  const PtDeclHeadArray* mGenThenDeclArray;
+  vector<const PtDeclHead*> mGenThenDeclArray;
 
   // generate-if の then 節の item リスト
-  const PtItemArray* mGenThenItemArray;
+  vector<const PtItem*> mGenThenItemArray;
 
   // generate-if の else 節の宣言ヘッダリスト
-  const PtDeclHeadArray* mGenElseDeclArray;
+  vector<const PtDeclHead*> mGenElseDeclArray;
 
   // generate-if の else 節の item リスト
-  const PtItemArray* mGenElseItemArray;
+  vector<const PtItem*> mGenElseItemArray;
 
 
 public:
@@ -2454,10 +2402,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 宣言ヘッダリストのスタック
-  vector<vector<PtiDeclHead*>*> mDeclHeadListStack;
+  vector<vector<PtiDeclHead*>> mDeclHeadListStack;
 
   // item リストのスタック
-  vector<vector<const PtItem*>*> mItemListStack;
+  vector<vector<const PtItem*>> mItemListStack;
 
 };
 
@@ -2483,93 +2431,28 @@ Parser::new_list()
   return new PtrList<T, T>();
 }
 
-// 要素を一つ持つ配列を作る．
-template <typename T>
-inline
-const PtArray<T>*
-Parser::new_array(T* elem)
-{
-  void* p{mPtMgr.alloc().get_memory(sizeof(PtArray<T>))};
-  auto array{new (p) PtArray<T>(mPtMgr.alloc(), elem)};
-  return array;
-}
-
-// vector から配列を作る．
-template <typename T>
-inline
-const PtArray<T>*
-Parser::new_array(const vector<T*>& vec)
-{
-  void* p{mPtMgr.alloc().get_memory(sizeof(PtArray<T>))};
-  auto array{new (p) PtArray<T>(mPtMgr.alloc(), vec)};
-  return array;
-}
-
-// vector から配列を作る．
-template <typename T,
-	  typename T1>
-inline
-const PtArray<T>*
-Parser::new_array2(const vector<T1*>& vec)
-{
-  SizeType n{vec.size()};
-  vector<T*> tmp_vec(n);
-  for ( int i = 0; i < n; ++ i ) {
-    tmp_vec[i] = vec[i];
-  }
-  void* p{mPtMgr.alloc().get_memory(sizeof(PtArray<T>))};
-  auto array{new (p) PtArray<T>(mPtMgr.alloc(), tmp_vec)};
-  return array;
-}
-
-template <typename T>
-inline
-const PtArray<T>*
-Parser::new_array(PtrList<T, T>* list)
-{
-  auto array{list->to_array(mPtMgr.alloc())};
-  delete list;
-  return array;
-}
-
 // @brief ポートリストをvectorに変換する．
 inline
-const vector<PtiPort*>&
+vector<const PtPort*>
 Parser::get_port_vector()
 {
-  return mPortList;
+  return convert<const PtPort*, PtiPort*>(mPortList);
 }
 
-// @brief IO宣言リストを配列に変換する．
+// @brief parameter port リストを得る．
 inline
-const PtIOHeadArray*
-Parser::get_module_io_array()
-{
-  return new_array2<const PtIOHead, PtiIOHead>(mModuleIOHeadList);
-}
-
-// @brief parameter port リストを配列に変換する．
-inline
-const PtDeclHeadArray*
+vector<const PtDeclHead*>
 Parser::get_paramport_array()
 {
-  return new_array2<const PtDeclHead, PtiDeclHead>(mParamPortHeadList);
+  return convert<const PtDeclHead*, PtiDeclHead*>(mParamPortHeadList);
 }
 
-// @brief module 用の宣言リストを配列に変換する．
+// @brief IO宣言リストを得る．
 inline
-const PtDeclHeadArray*
-Parser::get_module_decl_array()
+vector<const PtIOHead*>
+Parser::get_module_io_array()
 {
-  return new_array2<const PtDeclHead, PtiDeclHead>(mModuleDeclHeadList);
-}
-
-// @brief module 用の item リストを配列に変換する．
-inline
-const PtItemArray*
-Parser::get_module_item_array()
-{
-  return new_array<const PtItem>(mModuleItemList);
+  return convert<const PtIOHead*, PtiIOHead*>(mModuleIOHeadList);
 }
 
 // @brief UdpValue を追加する．
@@ -2580,12 +2463,36 @@ Parser::add_udp_value(const PtUdpValue* value)
   mUdpValueList.push_back(value);
 }
 
-// @brief UdpValue のリストを配列に変換する．
+// @brief UdpValue のリストを得る．
 inline
-const PtUdpValueArray*
+vector<const PtUdpValue*>
 Parser::get_udp_value_array()
 {
-  return new_array<const PtUdpValue>(mUdpValueList);
+  return mUdpValueList;
+}
+
+// @brief メモリアロケータを返す．
+inline
+PtAlloc&
+Parser::alloc()
+{
+  return mPtMgr.alloc();
+}
+
+// @brief 現在の宣言ヘッダのリストを返す．
+inline
+vector<PtiDeclHead*>&
+Parser::cur_declhead_list()
+{
+  return mDeclHeadListStack.back();
+}
+
+// @brief 現在の item リストを返す．
+inline
+vector<const PtItem*>&
+Parser::cur_item_list()
+{
+  return mItemListStack.back();
 }
 
 END_NAMESPACE_YM_VERILOG

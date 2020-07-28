@@ -118,19 +118,27 @@ SptIOHead::right_range() const
   return mRightRange;
 }
 
-// @brief 要素のリストの取得
-const PtIOItemArray*
-SptIOHead::item_list() const
+// @brief 要素数の取得
+SizeType
+SptIOHead::item_num() const
 {
-  return mItemArray;
+  return mItemArray.size();
 }
 
-// 要素リストの設定
-// @param elem_array 要素の配列
-void
-SptIOHead::set_elem(const PtIOItemArray* elem_array)
+// @brief 要素の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+const PtIOItem*
+SptIOHead::item(SizeType pos) const
 {
-  mItemArray = elem_array;
+  return mItemArray[pos];
+}
+
+// @brief 要素リストの設定
+// @param[in] elem_array 要素の配列
+void
+SptIOHead::set_elem(PtiIOItemArray&& elem_array)
+{
+  mItemArray = move(elem_array);
 }
 
 
@@ -315,19 +323,27 @@ SptDeclHead::delay() const
   return mDelay;
 }
 
-// @brief 要素のリストの取得
-const PtDeclItemArray*
-SptDeclHead::item_list() const
+// @brief 要素数の取得
+SizeType
+SptDeclHead::item_num() const
 {
-  return mItemArray;
+  return mItemArray.size();
 }
 
-// 要素リストの設定
-// @param elem_array 要素の配列
-void
-SptDeclHead::set_elem(const PtDeclItemArray* elem_array)
+// @brief 要素の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+const PtDeclItem*
+SptDeclHead::item(SizeType pos) const
 {
-  mItemArray = elem_array;
+  return mItemArray[pos];
+}
+
+// @brief 要素リストの設定
+// @param[in] elem_array 要素の配列
+void
+SptDeclHead::set_elem(PtiDeclItemArray&& elem_array)
+{
+  mItemArray = move(elem_array);
 }
 
 
@@ -344,11 +360,11 @@ SptDeclHead::set_elem(const PtDeclItemArray* elem_array)
 // どちらか一方は必ず nullptr である．両方 nullptr の場合もあり得る．
 SptDeclItem::SptDeclItem(const FileRegion& file_region,
 			 const char* name,
-			 const PtRangeArray* range_array,
+			 PtiRangeArray&& range_array,
 			 const PtExpr* init_value) :
   mFileRegion{file_region},
   mName{name},
-  mRangeArray{range_array},
+  mRangeArray{move(range_array)},
   mInitValue{init_value}
 {
 }
@@ -374,19 +390,19 @@ SptDeclItem::name() const
   return mName;
 }
 
-// dimension list のサイズの取得
-// @return dimension list のサイズ
-int
-SptDeclItem::dimension_list_size() const
+// @brief dimension list のサイズの取得
+SizeType
+SptDeclItem::range_num() const
 {
-  return mRangeArray->size();
+  return mRangeArray.size();
 }
 
-// 範囲のリストの取得
-const PtRangeArray*
-SptDeclItem::range_list() const
+// @brief 範囲の取得
+// @param[in] pos 位置 ( 0 <= pos < range_num() )
+const PtRange*
+SptDeclItem::range(SizeType pos) const
 {
-  return mRangeArray;
+  return mRangeArray[pos];
 }
 
 // 初期値の取得
@@ -1025,7 +1041,9 @@ const PtDeclItem*
 SptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name)
 {
-  auto node = new SptDeclItem(file_region, name, nullptr, nullptr);
+  auto node = new SptDeclItem(file_region, name,
+			      PtiArray<const PtRange>(),
+			      nullptr);
   return node;
 }
 
@@ -1039,7 +1057,9 @@ SptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* init_value)
 {
-  auto node = new SptDeclItem(file_region, name, nullptr, init_value);
+  auto node = new SptDeclItem(file_region, name,
+			      PtiArray<const PtRange>(),
+			      init_value);
   return node;
 }
 
@@ -1051,9 +1071,11 @@ SptFactory::new_DeclItem(const FileRegion& file_region,
 const PtDeclItem*
 SptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name,
-			 const PtRangeArray* range_array)
+			 const vector<const PtRange*>& range_array)
 {
-  auto node = new SptDeclItem(file_region, name, range_array, nullptr);
+  auto node = new SptDeclItem(file_region, name,
+			      PtiArray<const PtRange>(mAlloc, range_array),
+			      nullptr);
   return node;
 }
 

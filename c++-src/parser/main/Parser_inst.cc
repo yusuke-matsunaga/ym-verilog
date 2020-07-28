@@ -24,7 +24,7 @@ const PtItem*
 Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type)
 {
-  auto item{mFactory.new_GateH(fr, type, get_inst_array())};
+  auto item{mFactory.new_GateH(fr, type, mInstList)};
   return item;
 }
 
@@ -37,7 +37,7 @@ Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type,
 		  const PtStrength* strength)
 {
-  auto item{mFactory.new_GateH(fr, type, strength, get_inst_array())};
+  auto item{mFactory.new_GateH(fr, type, strength, mInstList)};
   return item;
 }
 
@@ -50,7 +50,7 @@ Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type,
 		  const PtDelay* delay)
 {
-  auto item{mFactory.new_GateH(fr, type, delay, get_inst_array())};
+  auto item{mFactory.new_GateH(fr, type, delay, mInstList)};
   return item;
 }
 
@@ -65,7 +65,7 @@ Parser::new_GateH(const FileRegion& fr,
 		  const PtStrength* strength,
 		  const PtDelay* delay)
 {
-  auto item{mFactory.new_GateH(fr, type, strength, delay, get_inst_array())};
+  auto item{mFactory.new_GateH(fr, type, strength, delay, mInstList)};
   return item;
 }
 
@@ -76,7 +76,7 @@ const PtItem*
 Parser::new_MuH(const FileRegion& fr,
 		const char* def_name)
 {
-  auto item{mFactory.new_MuH(fr, def_name, get_inst_array())};
+  auto item{mFactory.new_MuH(fr, def_name, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -90,7 +90,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		const PtStrength* strength)
 {
-  auto item{mFactory.new_MuH(fr, def_name, strength, get_inst_array())};
+  auto item{mFactory.new_MuH(fr, def_name, strength, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -104,7 +104,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		const PtDelay* delay)
 {
-  auto item{mFactory.new_MuH(fr, def_name, delay, get_inst_array())};
+  auto item{mFactory.new_MuH(fr, def_name, delay, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -120,7 +120,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const PtStrength* strength,
 		const PtDelay* delay)
 {
-  auto item{mFactory.new_MuH(fr, def_name, strength, delay, get_inst_array())};
+  auto item{mFactory.new_MuH(fr, def_name, strength, delay, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -134,7 +134,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_MuH(fr, def_name, new_array(con_list), get_inst_array())};
+  auto item{mFactory.new_MuH(fr, def_name, con_list->to_vector(), mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -153,7 +153,7 @@ void
 Parser::new_Inst(const FileRegion& fr,
 		 PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_Inst(fr, new_array(con_list))};
+  auto item{mFactory.new_Inst(fr, con_list->to_vector())};
   add_inst(item);
 }
 
@@ -216,7 +216,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const char* name,
 		  PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_InstN(fr, name, new_array(con_list))};
+  auto item{mFactory.new_InstN(fr, name, con_list->to_vector())};
   add_inst(item);
 }
 
@@ -291,7 +291,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* right,
 		  PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, new_array(con_list))};
+  auto item{mFactory.new_InstV(fr, name, left, right, con_list->to_vector())};
   add_inst(item);
 }
 
@@ -375,14 +375,6 @@ void
 Parser::add_inst(const PtInst* inst)
 {
   mInstList.push_back(inst);
-}
-
-// @brief instance リストを配列に変換する．
-inline
-const PtInstArray*
-Parser::get_inst_array()
-{
-  return new_array<const PtInst>(mInstList);
 }
 
 END_NAMESPACE_YM_VERILOG

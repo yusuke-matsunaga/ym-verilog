@@ -10,8 +10,8 @@
 
 
 #include "parser/PtiExpr.h"
-#include "ym/pt/PtArray.h"
-
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 #include "ym/FileRegion.h"
 
 
@@ -28,22 +28,24 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
+  /// @brief 階層ブランチの取得
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
+
+  // 末尾の名前を返す．
+  const char*
+  name() const override;
+
   /// @brief 演算子の種類の取得
   /// @return 演算子の種類
   /// @note このクラスでは vpiNullOp を返す．
   VpiOpType
   op_type() const override;
-
-  /// @brief 階層ブランチの取得
-  /// @note このクラスでは nullptr を返す．
-  const PtNameBranchArray*
-  namebranch_array() const override;
-
-  /// @brief 末尾の名前の取得
-  /// @return 末尾の名前
-  /// @note このクラスでは nullptr を返す．
-  const char*
-  name() const override;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
@@ -412,7 +414,7 @@ protected:
 
   // コンストラクタ
   CptConcat(const FileRegion& file_region,
-	    const PtExprArray* expr_array);
+	    PtiExprArray&& expr_array);
 
   // デストラクタ
   ~CptConcat();
@@ -468,7 +470,7 @@ private:
   FileRegion mFileRegion;
 
   // 結合する式の配列
-  const PtExprArray* mExprArray;
+  PtiExprArray mExprArray;
 
 };
 
@@ -485,7 +487,7 @@ protected:
 
   // コンストラクタ
   CptMultiConcat(const FileRegion& file_region,
-		 const PtExprArray* expr_array);
+		 PtiExprArray&& expr_array);
 
   // デストラクタ
   ~CptMultiConcat();
@@ -587,7 +589,7 @@ protected:
   // コンストラクタ
   CptFuncCallBase(const FileRegion& file_region,
 		  const char* name,
-		  const PtExprArray* arg_array);
+		  PtiExprArray&& arg_array);
 
   // デストラクタ
   ~CptFuncCallBase();
@@ -642,7 +644,7 @@ private:
   const char* mName;
 
   // 引数の配列
-  const PtExprArray* mArgArray;
+  PtiExprArray mArgArray;
 
 };
 
@@ -660,7 +662,7 @@ protected:
   // コンストラクタ
   CptFuncCall(const FileRegion& file_region,
 	      const char* name,
-	      const PtExprArray* arg_array);
+	      PtiExprArray&& arg_array);
 
   // デストラクタ
   ~CptFuncCall();
@@ -691,9 +693,9 @@ protected:
 
   // コンストラクタ
   CptFuncCallH(const FileRegion& file_region,
-	       const PtNameBranchArray* nb_array,
+	       PtiNameBranchArray&& nb_array,
 	       const char* tail_name,
-	       const PtExprArray* arg_array);
+	       PtiExprArray&& arg_array);
 
   // デストラクタ
   ~CptFuncCallH();
@@ -704,9 +706,14 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -715,7 +722,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 
@@ -733,7 +740,7 @@ protected:
   // コンストラクタ
   CptSysFuncCall(const FileRegion& file_region,
 		 const char* name,
-		 const PtExprArray* arg_array);
+		 PtiExprArray&& arg_array);
 
   // デストラクタ
   ~CptSysFuncCall();
@@ -886,7 +893,7 @@ protected:
   // コンストラクタ
   CptPrimaryI(const FileRegion& file_region,
 	      const char* name,
-	      const PtExprArray* index_array);
+	      PtiExprArray&& index_array);
 
   // デストラクタ
   ~CptPrimaryI();
@@ -925,7 +932,7 @@ private:
   FileRegion mFileRegion;
 
   // インデックスの配列
-  const PtExprArray* mIndexArray;
+  PtiExprArray mIndexArray;
 
 };
 
@@ -943,7 +950,7 @@ protected:
   // コンストラクタ
   CptPrimaryCI(const FileRegion& file_region,
 	       const char* name,
-	       const PtExprArray* index_array);
+	       PtiExprArray&& index_array);
 
   // デストラクタ
   ~CptPrimaryCI();
@@ -1074,7 +1081,7 @@ protected:
   // コンストラクタ
   CptPrimaryIR(const FileRegion& file_region,
 	       const char* name,
-	       const PtExprArray* index_array,
+	       PtiExprArray&& index_array,
 	       VpiRangeMode mode,
 	       const PtExpr* left,
 	       const PtExpr* right);
@@ -1130,7 +1137,7 @@ protected:
 
   // コンストラクタ
   CptPrimaryH(const FileRegion& file_region,
-	      const PtNameBranchArray* nb_array,
+	      PtiNameBranchArray&& nb_array,
 	      const char* tail_name);
 
   // デストラクタ
@@ -1146,9 +1153,14 @@ public:
   FileRegion
   file_region() const override;
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -1160,7 +1172,7 @@ private:
   FileRegion mFileRegion;
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 
@@ -1177,9 +1189,9 @@ protected:
 
   // コンストラクタ
   CptPrimaryHI(const FileRegion& file_region,
-	       const PtNameBranchArray* nb_array,
+	       PtiNameBranchArray&& nb_array,
 	       const char* tail_name,
-	       const PtExprArray* index_array);
+	       PtiExprArray&& index_array);
 
   // デストラクタ
   ~CptPrimaryHI();
@@ -1190,9 +1202,14 @@ public:
   // PtPrimary の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -1201,7 +1218,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 
@@ -1218,9 +1235,9 @@ protected:
 
   // コンストラクタ
   CptPrimaryHCI(const FileRegion& file_region,
-		const PtNameBranchArray* nb_array,
+		PtiNameBranchArray&& nb_array,
 		const char* tail_name,
-		const PtExprArray* index_array);
+		PtiExprArray&& index_array);
 
   // デストラクタ
   ~CptPrimaryHCI();
@@ -1250,7 +1267,7 @@ protected:
 
   // コンストラクタ
   CptPrimaryHR(const FileRegion& file_region,
-	       const PtNameBranchArray* nb_array,
+	       PtiNameBranchArray&& nb_array,
 	       const char* tail_name,
 	       VpiRangeMode mode,
 	       const PtExpr* left,
@@ -1265,9 +1282,14 @@ public:
   // PtPrimary の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -1276,7 +1298,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 
@@ -1293,9 +1315,9 @@ protected:
 
   // コンストラクタ
   CptPrimaryHIR(const FileRegion& file_region,
-		const PtNameBranchArray* nb_array,
+		PtiNameBranchArray&& nb_array,
 		const char* tail_name,
-		const PtExprArray* index_array,
+		PtiExprArray&& index_array,
 		VpiRangeMode mode,
 		const PtExpr* left,
 		const PtExpr* right);
@@ -1309,10 +1331,14 @@ public:
   // PtPrimary の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  /// @note kDisable/kEnable/kSysEnable で意味のある関数
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -1321,7 +1347,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 

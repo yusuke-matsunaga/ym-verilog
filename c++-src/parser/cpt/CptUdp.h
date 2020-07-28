@@ -10,10 +10,11 @@
 
 
 #include "ym/pt/PtUdp.h"
-#include "ym/pt/PtArray.h"
 #include "ym/pt/PtP.h"
 #include "ym/VlUdpVal.h"
 #include "ym/FileRegion.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -31,11 +32,11 @@ private:
   /// @brief コンストラクタ
   CptUdp(const FileRegion& file_region,
 	 const char* name,
-	 const PtPortArray* port_array,
-	 const PtIOHeadArray* iohead_array,
+	 PtiPortArray&& port_array,
+	 PtiIOHeadArray&& iohead_array,
 	 bool is_seq,
 	 const PtExpr* init_value,
-	 const PtUdpEntryArray* entry_array);
+	 PtiUdpEntryArray&& entry_array);
 
   /// @brief デストラクタ
   ~CptUdp();
@@ -58,21 +59,36 @@ public:
   const char*
   name() const override;
 
-  /// @brief ポートのリストを取り出す．
-  const PtPortArray*
-  port_list() const override;
+  /// @brief ポート数を取り出す．
+  SizeType
+  port_num() const override;
 
-  /// @brief 入出力宣言ヘッダ配列の取得
-  const PtIOHeadArray*
-  iohead_array() const override;
+  /// @brief ポートを取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
+  const PtPort*
+  port(SizeType pos) const override;
+
+  /// @brief 入出力宣言ヘッダ配列の要素数の取得
+  SizeType
+  iohead_num() const override;
+
+  /// @brief 入出力宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+  const PtIOHead*
+  iohead(SizeType pos) const override;
 
   /// @brief 初期値を取出す．
   const PtExpr*
   init_value() const override;
 
-  /// @brief テーブルを取り出す．
-  const PtUdpEntryArray*
-  table_array() const override;
+  /// @brief テーブルの要素数を取り出す．
+  SizeType
+  table_num() const override;
+
+  /// @brief テーブルの要素を取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < table_num() )
+  const PtUdpEntry*
+  table(SizeType pos) const override;
 
 
 private:
@@ -87,10 +103,10 @@ private:
   const char* mName;
 
   // ポートの配列
-  const PtPortArray* mPortArray;
+  PtiPortArray mPortArray;
 
   // 入出力宣言の配列
-  const PtIOHeadArray* mIOHeadArray;
+  PtiIOHeadArray mIOHeadArray;
 
   // sequential primitive の時 true
   bool mSeq;
@@ -99,7 +115,7 @@ private:
   const PtExpr* mInitValue;
 
   // テーブル要素の配列
-  const PtUdpEntryArray* mTableArray;
+  PtiUdpEntryArray mTableArray;
 
 };
 
@@ -116,7 +132,7 @@ protected:
 
   /// @brief コンストラクタ
   CptUdpEntry(const FileRegion& file_region,
-	      const PtUdpValueArray* input_array,
+	      PtiUdpValueArray&& input_array,
 	      const PtUdpValue* output);
 
   /// @brief デストラクタ
@@ -132,9 +148,14 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief 入力値の配列を取り出す．
-  const PtUdpValueArray*
-  input_array() const override;
+  /// @brief 入力値の配列の要素数を取り出す．
+  SizeType
+  input_num() const override;
+
+  /// @brief 入力値を取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
+  const PtUdpValue*
+  input(SizeType pos) const override;
 
   /// @brief 現状態の値を取り出す．
   /// @note このクラスでは nullptr を返す．
@@ -155,7 +176,7 @@ private:
   FileRegion mFileRegion;
 
   // 入力パタンの配列
-  const PtUdpValueArray* mInputArray;
+  PtiUdpValueArray mInputArray;
 
   // 出力のパタン
   const PtUdpValue* mOutput;
@@ -175,7 +196,7 @@ private:
 
   /// @brief コンストラクタ
   CptUdpEntryS(const FileRegion& file_region,
-	       const PtUdpValueArray* input_array,
+	       PtiUdpValueArray&& input_array,
 	       const PtUdpValue* current,
 	       const PtUdpValue* output);
 

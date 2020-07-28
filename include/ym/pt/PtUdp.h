@@ -5,7 +5,7 @@
 /// @brief PtUdp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -33,25 +33,55 @@ public:
   VpiPrimType
   prim_type() const = 0;
 
-  /// @brief ポートのリストを取り出す．
+  /// @brief ポート数を取り出す．
   virtual
-  const PtPortArray*
-  port_list() const = 0;
+  SizeType
+  port_num() const = 0;
 
-  /// @brief 入出力宣言ヘッダ配列の取得
+  /// @brief ポートを取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   virtual
-  const PtIOHeadArray*
-  iohead_array() const = 0;
+  const PtPort*
+  port(SizeType pos) const = 0;
+
+  /// @brief ポートのリストを取り出す．
+  vector<const PtPort*>
+  port_list() const;
+
+  /// @brief 入出力宣言ヘッダ配列の要素数の取得
+  virtual
+  SizeType
+  iohead_num() const = 0;
+
+  /// @brief 入出力宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+  virtual
+  const PtIOHead*
+  iohead(SizeType pos) const = 0;
+
+  /// @brief 入出力のリストの取得
+  vector<const PtIOHead*>
+  iohead_list() const;
 
   /// @brief 初期値を取出す．
   virtual
   const PtExpr*
   init_value() const = 0;
 
-  /// @brief テーブルを取り出す．
+  /// @brief テーブルの要素数を取り出す．
   virtual
-  const PtUdpEntryArray*
-  table_array() const = 0;
+  SizeType
+  table_num() const = 0;
+
+  /// @brief テーブルの要素を取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < table_num() )
+  virtual
+  const PtUdpEntry*
+  table(SizeType pos) const = 0;
+
+  /// @brief テーブルのリストを返す．
+  vector<const PtUdpEntry*>
+  table_list() const;
 
 };
 
@@ -70,10 +100,20 @@ public:
   // PtUdpEntry の継承クラスが実装しなければならない仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 入力値の配列を取り出す．
+  /// @brief 入力値の配列の要素数を取り出す．
   virtual
-  const PtUdpValueArray*
-  input_array() const = 0;
+  SizeType
+  input_num() const = 0;
+
+  /// @brief 入力値を取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
+  virtual
+  const PtUdpValue*
+  input(SizeType pos) const = 0;
+
+  /// @brief 入力値のリストを取り出す．
+  vector<const PtUdpValue*>
+  input_list() const;
 
   /// @brief 現状態の値を取り出す．
   virtual
@@ -108,6 +148,63 @@ public:
   symbol() const = 0;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief ポートのリストを取り出す．
+inline
+vector<const PtPort*>
+PtUdp::port_list() const
+{
+  SizeType n = port_num();
+  vector<const PtPort*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = port(i);
+  }
+  return vec;
+}
+
+// @brief 入出力のリストの取得
+inline
+vector<const PtIOHead*>
+PtUdp::iohead_list() const
+{
+  SizeType n = iohead_num();
+  vector<const PtIOHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = iohead(i);
+  }
+  return vec;
+}
+
+// @brief テーブルのリストを返す．
+inline
+vector<const PtUdpEntry*>
+PtUdp::table_list() const
+{
+  SizeType n = table_num();
+  vector<const PtUdpEntry*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = table(i);
+  }
+  return vec;
+}
+
+// @brief 入力値のリストを取り出す．
+inline
+vector<const PtUdpValue*>
+PtUdpEntry::input_list() const
+{
+  SizeType n = input_num();
+  vector<const PtUdpValue*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = input(i);
+  }
+  return vec;
+}
 
 END_NAMESPACE_YM_VERILOG
 

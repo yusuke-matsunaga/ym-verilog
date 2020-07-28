@@ -17,7 +17,6 @@
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 #include "ym/VlUdpVal.h"
 
 #include "ym/StrBuff.h"
@@ -133,21 +132,21 @@ PtDumper::put(const PtUdp* udp)
 
   put("mName", udp->name());
 
-  for ( auto port: *udp->port_list() ) {
+  for ( auto port: udp->port_list() ) {
     put("mPort", port->ext_name());
   }
-  for ( auto io: *udp->iohead_array() ) {
+  for ( auto io: udp->iohead_list() ) {
     put("mIO", io);
   }
 
   put("mInitial", udp->init_value());
 
-  for ( auto entry: *udp->table_array() ) {
+  for ( auto entry: udp->table_list() ) {
     PtHeader x(*this, "mTable", "UdpEntry");
 
     put("mFileRegion", entry->file_region());
 
-    for ( auto v: *entry->input_array() ) {
+    for ( auto v: entry->input_list() ) {
       put("mInput", v);
     }
     put("mCurrent", entry->current());
@@ -233,11 +232,11 @@ PtDumper::put(const PtModule* m)
   put("library", m->library());
   put("cell", m->cell());
 
-  for ( auto param: *m->paramport_array() ) {
+  for ( auto param: m->paramport_list() ) {
     put("mParamPort", param);
   }
 
-  for ( auto port: *m->port_list() ) {
+  for ( auto port: m->port_list() ) {
     PtHeader x(*this, "mPort", "Port");
 
     put("mFileRegion", port->file_region());
@@ -266,8 +265,8 @@ PtDumper::put(const PtModule* m)
     }
   }
 
-  put_decls(m->iohead_array(), m->declhead_array());
-  for ( auto item: *m->item_array() ) {
+  put_decls(m->iohead_list(), m->declhead_list());
+  for ( auto item: m->item_list() ) {
     put("mItem", item);
   }
 }
@@ -301,7 +300,7 @@ PtDumper::put(const char* label,
   put("mLeftRange", io->left_range());
   put("mRightRange", io->right_range());
 
-  for ( auto item: *io->item_list() ) {
+  for ( auto item: io->item_list() ) {
     PtHeader x(*this, "mElem", "IOElem");
 
     put("mFileRegion", item->file_region());
@@ -386,12 +385,12 @@ PtDumper::put(const char* label,
   put("mStrength", decl->strength());
   put("mDelay", decl->delay());
 
-  for ( auto item: *decl->item_list() ) {
+  for ( auto item: decl->item_list() ) {
     PtHeader x(*this, "mElem", "DeclItem");
 
     put("mFileRegion", item->file_region());
     put("mName", item->name());
-    for ( auto range: *item->range_list() ) {
+    for ( auto range: item->range_list() ) {
       PtHeader x(*this, "mDimension", "Range");
 
       put("mLeftRange", range->left());
@@ -456,11 +455,11 @@ PtDumper::put(const char* label,
 
   switch ( item->type() ) {
   case PtItemType::DefParam:
-    for ( auto dp: *item->defparam_list() ) {
+    for ( auto dp: item->defparam_list() ) {
       PtHeader x(*this, "mElem", "DefParam");
 
       put("mFileRegion", dp->file_region());
-      put(dp->namebranch_array());
+      put(dp->namebranch_list());
       put("mName", dp->name());
       put("mValue", dp->expr());
     }
@@ -469,7 +468,7 @@ PtDumper::put(const char* label,
   case PtItemType::ContAssign:
     put("mStrength", item->strength());
     put("mDelay", item->delay());
-    for ( auto ca: *item->contassign_list() ) {
+    for ( auto ca: item->contassign_list() ) {
       PtHeader x(*this, "mElem", "ContAssign");
 
       put("mFileRegion", ca->file_region());
@@ -492,8 +491,8 @@ PtDumper::put(const char* label,
       put("mRightRange", item->right_range());
     }
     put("mName", item->name());
-    put_decls(item->iohead_array(),
-	      item->declhead_array());
+    put_decls(item->iohead_list(),
+	      item->declhead_list());
     put("mBody", item->body());
     break;
 
@@ -501,7 +500,7 @@ PtDumper::put(const char* label,
     put("mPrimType", item->prim_type());
     put("mStrength", item->strength());
     put("mDelay", item->delay());
-    for ( auto gi: *item->inst_list() ) {
+    for ( auto gi: item->inst_list() ) {
       PtHeader x(*this, "mElem", "GateInst");
 
       put("mFileRegion", gi->file_region());
@@ -512,7 +511,7 @@ PtDumper::put(const char* label,
 	put("mLeftRange", gi->left_range());
 	put("mRightrange", gi->right_range());
       }
-      for ( auto con: *gi->port_list() ) {
+      for ( auto con: gi->port_list() ) {
 	put("mPortCon", con);
       }
     }
@@ -520,12 +519,12 @@ PtDumper::put(const char* label,
 
   case PtItemType::MuInst:
     put("mDefName", item->name());
-    for ( auto con: *item->paramassign_array() ) {
+    for ( auto con: item->paramassign_list() ) {
       put("mParamCon", con);
     }
     put("mStrength", item->strength());
     put("mDelay", item->delay());
-    for ( auto mui: *item->inst_list() ) {
+    for ( auto mui: item->inst_list() ) {
       PtHeader x(*this, "mElem", "MuInst");
 
       put("mFileRegion", mui->file_region());
@@ -534,14 +533,14 @@ PtDumper::put(const char* label,
 	put("mLeftRange", mui->left_range());
 	put("mRightRange", mui->right_range());
       }
-      for ( auto con: *mui->port_list() ) {
+      for ( auto con: mui->port_list() ) {
 	put("mPortCon", con);
       }
     }
     break;
 
   case PtItemType::SpecItem:
-    for ( auto expr: *item->terminal_list() ) {
+    for ( auto expr: item->terminal_list() ) {
       put("mTerminal", expr);
     }
     break;
@@ -572,25 +571,25 @@ PtDumper::put(const char* label,
     if ( item->name() != nullptr ) {
       put("mName", item->name());
     }
-    put_decl_item("mBody", item->declhead_array(), item->item_array());
+    put_decl_item("mBody", item->declhead_list(), item->item_list());
     break;
 
   case PtItemType::GenIf:
     put("mCond", item->expr());
-    put_decl_item("mThenBody", item->then_declhead_array(), item->then_item_array());
-    put_decl_item("mElseBody", item->else_declhead_array(), item->else_item_array());
+    put_decl_item("mThenBody", item->then_declhead_list(), item->then_item_list());
+    put_decl_item("mElseBody", item->else_declhead_list(), item->else_item_list());
     break;
 
   case PtItemType::GenCase:
     put("mExpr", item->expr());
-    for ( auto gci: *item->caseitem_list() ) {
+    for ( auto gci: item->caseitem_list() ) {
       PtHeader x(*this, "mCaseItem", "GenCaseItem");
 
       put("mFileRegion", gci->file_region());
-      for ( auto expr: *gci->label_list() ) {
+      for ( auto expr: gci->label_list() ) {
 	put("mLabel", expr);
       }
-      put_decl_item("mBody", gci->declhead_array(), gci->item_array());
+      put_decl_item("mBody", gci->declhead_list(), gci->item_list());
     }
     break;
 
@@ -600,7 +599,7 @@ PtDumper::put(const char* label,
     put("mCond", item->expr());
     put("mNext", item->next_expr());
     put("mName", item->name());
-    put_decl_item("mBody", item->declhead_array(), item->item_array());
+    put_decl_item("mBody", item->declhead_list(), item->item_list());
     break;
 
   default: ASSERT_NOT_REACHED; break;
@@ -738,15 +737,15 @@ PtDumper::put(const char* label,
 
   switch ( stmt->type() ) {
   case PtStmtType::Disable:
-    put(stmt->namebranch_array());
+    put(stmt->namebranch_list());
     put("mName", stmt->name());
     break;
 
   case PtStmtType::Enable:
   case PtStmtType::SysEnable:
-    put(stmt->namebranch_array());
+    put(stmt->namebranch_list());
     put("mName", stmt->name());
-    for ( auto arg: *stmt->arg_list() ) {
+    for ( auto arg: stmt->arg_list() ) {
       if ( arg ) {
 	put("mArg", arg);
       }
@@ -795,11 +794,11 @@ PtDumper::put(const char* label,
   case PtStmtType::CaseX:
   case PtStmtType::CaseZ:
     put("mExpr", stmt->expr());
-    for ( auto ci: *stmt->caseitem_list() ) {
+    for ( auto ci: stmt->caseitem_list() ) {
       PtHeader x(*this, "mCaseItem", "CaseItem");
 
       put("mFileRegion", ci->file_region());
-      for ( auto expr: *ci->label_list() ) {
+      for ( auto expr: ci->label_list() ) {
 	put("mLabel", expr);
       }
       put("mBody", ci->body());
@@ -823,10 +822,10 @@ PtDumper::put(const char* label,
 
   case PtStmtType::ParBlock:
   case PtStmtType::SeqBlock:
-    for ( auto head: *stmt->declhead_array() ) {
+    for ( auto head: stmt->declhead_list() ) {
       put("mDecl", head);
     }
-    for ( auto stmt1: *stmt->stmt_array() ) {
+    for ( auto stmt1: stmt->stmt_list() ) {
       put("mStatement", stmt1);
     }
     break;
@@ -903,7 +902,7 @@ PtDumper::put(const char* label,
 #if 0
       put("mAttrInst", expr->attr_top());
 #endif
-      put(expr->namebranch_array());
+      put(expr->namebranch_list());
       put("mName", expr->name());
       for ( int i = 0; i < expr->operand_num(); ++ i ) {
 	const PtExpr* opr = expr->operand(i);
@@ -922,7 +921,7 @@ PtDumper::put(const char* label,
       PtHeader x(*this, label, "Primary");
 
       put("mFileRegion", expr->file_region());
-      put(expr->namebranch_array());
+      put(expr->namebranch_list());
       put("mName", expr->name());
       for ( int i = 0; i < expr->index_num(); ++ i ) {
 	const PtExpr* index = expr->index(i);
@@ -945,6 +944,7 @@ PtDumper::put(const char* label,
 void
 PtDumper::put_parent_file(const FileLoc& file_loc)
 {
+  cout << "file_loc = " << file_loc << endl;
   vector<FileLoc> file_list;
   file_loc.parent_loc_list(file_list);
   for ( auto loc: file_list ) {
@@ -956,13 +956,13 @@ PtDumper::put_parent_file(const FileLoc& file_loc)
 
 /// @brief 宣言を出力する．
 void
-PtDumper::put_decls(const PtIOHeadArray* iohead_array,
-		    const PtDeclHeadArray* declhead_array)
+PtDumper::put_decls(const vector<const PtIOHead*>& iohead_array,
+		    const vector<const PtDeclHead*>& declhead_array)
 {
-  for ( auto io: *iohead_array ) {
+  for ( auto io: iohead_array ) {
     put("mIODecl", io);
   }
-  for ( auto decl: *declhead_array ) {
+  for ( auto decl: declhead_array ) {
     put("mDecl", decl);
   }
 }
@@ -973,24 +973,24 @@ PtDumper::put_decls(const PtIOHeadArray* iohead_array,
 // @param[in] item_array 要素の配列
 void
 PtDumper::put_decl_item(const char* label,
-			const PtDeclHeadArray* decl_array,
-			const PtItemArray* item_array)
+			const vector<const PtDeclHead*>& decl_array,
+			const vector<const PtItem*>& item_array)
 {
   PtHeader x(*this, label, "GenBlock");
 
-  for ( auto decl: *decl_array ) {
+  for ( auto decl: decl_array ) {
     put("mDecl", decl);
   }
-  for ( auto item: *item_array ) {
+  for ( auto item: item_array ) {
     put("mItem", item);
   }
 }
 
 // @brief 階層名の出力
 void
-PtDumper::put(const PtNameBranchArray* nb_array)
+PtDumper::put(const vector<const PtNameBranch*>& nb_array)
 {
-  for ( auto nb: *nb_array ) {
+  for ( auto nb: nb_array ) {
     put("mNameBranch", nb);
   }
 }
@@ -1470,7 +1470,7 @@ PtDumper::put(const char* label,
   put("mFileRegion", ctrl->file_region());
   put("mDelay", ctrl->delay());
   put("mRepExpr", ctrl->rep_expr());
-  for ( auto expr: *ctrl->event_list() ) {
+  for ( auto expr: ctrl->event_list() ) {
     put("mEvent", expr);
   }
 }

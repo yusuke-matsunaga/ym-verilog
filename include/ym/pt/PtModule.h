@@ -116,20 +116,50 @@ public:
   const string&
   cell() const = 0;
 
-  /// @brief パラメータポート宣言配列の取得
+  /// @brief パラメータポート宣言配列の要素数の取得
   virtual
-  const PtDeclHeadArray*
-  paramport_array() const = 0;
+  SizeType
+  paramport_num() const = 0;
 
-  /// @brief ポートのリストを取り出す．
+  /// @brief パラメータポート宣言の取得
+  /// @param[in] pos 位置 ( 0 <= pos < paramport_num() )
   virtual
-  const PtPortArray*
-  port_list() const = 0;
+  const PtDeclHead*
+  paramport(SizeType pos) const = 0;
 
-  /// @brief 入出力宣言ヘッダ配列の取得
+  /// @brief パラメータポート宣言のリストを返す．
+  vector<const PtDeclHead*>
+  paramport_list() const;
+
+  /// @brief ポート数を取り出す．
   virtual
-  const PtIOHeadArray*
-  iohead_array() const = 0;
+  SizeType
+  port_num() const = 0;
+
+  /// @brief ポートを取り出す．
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
+  virtual
+  const PtPort*
+  port(SizeType pos) const = 0;
+
+  /// @brief ポートのリストを返す．
+  vector<const PtPort*>
+  port_list() const;
+
+  /// @brief 入出力宣言ヘッダ配列の要素数の取得
+  virtual
+  SizeType
+  iohead_num() const = 0;
+
+  /// @brief 入出力宣言の取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+  virtual
+  const PtIOHead*
+  iohead(SizeType pos) const = 0;
+
+  /// @brief 入出力宣言のヘッダのリストを返す．
+  vector<const PtIOHead*>
+  iohead_list() const;
 
   /// @brief 入出力宣言の要素数の取得
   /// @note 個々のヘッダが持つ要素数の総和を計算する．
@@ -137,15 +167,35 @@ public:
   SizeType
   iodecl_num() const = 0;
 
-  /// @brief 宣言ヘッダ配列の取得
+  /// @brief 宣言ヘッダ配列の要素数の取得
   virtual
-  const PtDeclHeadArray*
-  declhead_array() const = 0;
+  SizeType
+  declhead_num() const = 0;
 
-  /// @brief item 配列の取得
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   virtual
-  const PtItemArray*
-  item_array() const = 0;
+  const PtDeclHead*
+  declhead(SizeType pos) const = 0;
+
+  /// @brief 宣言ヘッダのリストを返す．
+  vector<const PtDeclHead*>
+  declhead_list() const;
+
+  /// @brief item 配列の要素数の取得
+  virtual
+  SizeType
+  item_num() const = 0;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  virtual
+  const PtItem*
+  item(SizeType pos) const = 0;
+
+  /// @brief item のリストを返す．
+  vector<const PtItem*>
+  item_list() const;
 
   /// @brief 関数名から関数の検索
   /// @param[in] name 検索対象の関数名
@@ -182,6 +232,76 @@ public:
   is_in_use() const = 0;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief パラメータポート宣言のリストを返す．
+inline
+vector<const PtDeclHead*>
+PtModule::paramport_list() const
+{
+  SizeType n = paramport_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = paramport(i);
+  }
+  return vec;
+}
+
+// @brief ポートのリストを返す．
+inline
+vector<const PtPort*>
+PtModule::port_list() const
+{
+  SizeType n = port_num();
+  vector<const PtPort*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = port(i);
+  }
+  return vec;
+}
+
+// @brief 入出力宣言のヘッダのリストを返す．
+inline
+vector<const PtIOHead*>
+PtModule::iohead_list() const
+{
+  SizeType n = iohead_num();
+  vector<const PtIOHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = iohead(i);
+  }
+  return vec;
+}
+
+// @brief 宣言ヘッダのリストを返す．
+inline
+vector<const PtDeclHead*>
+PtModule::declhead_list() const
+{
+  SizeType n = declhead_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = declhead(i);
+  }
+  return vec;
+}
+
+// @brief item のリストを返す．
+inline
+vector<const PtItem*>
+PtModule::item_list() const
+{
+  SizeType n = item_num();
+  vector<const PtItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = item(i);
+  }
+  return vec;
+}
 
 END_NAMESPACE_YM_VERILOG
 

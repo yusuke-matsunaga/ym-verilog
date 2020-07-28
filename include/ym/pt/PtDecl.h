@@ -73,10 +73,20 @@ public:
   const PtExpr*
   right_range() const = 0;
 
-  /// @brief 要素のリストの取得
+  /// @brief 要素数の取得
   virtual
-  const PtIOItemArray*
-  item_list() const = 0;
+  SizeType
+  item_num() const = 0;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  virtual
+  const PtIOItem*
+  item(SizeType pos) const = 0;
+
+  /// @brief 要素のリストを返す．
+  vector<const PtIOItem*>
+  item_list() const;
 
 };
 
@@ -182,10 +192,20 @@ public:
   const PtDelay*
   delay() const = 0;
 
-  /// @brief 要素のリストの取得
+  /// @brief 要素数の取得
   virtual
-  const PtDeclItemArray*
-  item_list() const = 0;
+  SizeType
+  item_num() const = 0;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  virtual
+  const PtDeclItem*
+  item(SizeType pos) const = 0;
+
+  /// @brief 要素のリストを返す．
+  vector<const PtDeclItem*>
+  item_list() const;
 
 };
 
@@ -205,15 +225,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief dimension list のサイズの取得
-  /// @return dimension list のサイズ
   virtual
-  int
-  dimension_list_size() const = 0;
+  SizeType
+  range_num() const = 0;
 
-  /// @brief 範囲のリストの取得
+  /// @brief 範囲の取得
+  /// @param[in] pos 位置 ( 0 <= pos < range_num() )
   virtual
-  const PtRangeArray*
-  range_list() const = 0;
+  const PtRange*
+  range(SizeType pos) const = 0;
+
+  /// @brief 要素のリストを返す．
+  vector<const PtRange*>
+  range_list() const;
 
   /// @brief 初期値の取得
   /// @retval 初期値
@@ -250,6 +274,50 @@ public:
   right() const = 0;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 要素のリストを返す．
+inline
+vector<const PtIOItem*>
+PtIOHead::item_list() const
+{
+  SizeType n = item_num();
+  vector<const PtIOItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = item(i);
+  }
+  return vec;
+}
+
+// @brief 要素のリストを返す．
+inline
+vector<const PtDeclItem*>
+PtDeclHead::item_list() const
+{
+  SizeType n = item_num();
+  vector<const PtDeclItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = item(i);
+  }
+  return vec;
+}
+
+// @brief 要素のリストを返す．
+inline
+vector<const PtRange*>
+PtDeclItem::range_list() const
+{
+  SizeType n = range_num();
+  vector<const PtRange*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = range(i);
+  }
+  return vec;
+}
 
 END_NAMESPACE_YM_VERILOG
 

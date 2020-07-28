@@ -111,19 +111,27 @@ CptIOHBase::right_range() const
   return nullptr;
 }
 
-// @brief 要素のリストの取得
-const PtIOItemArray*
-CptIOHBase::item_list() const
+// @brief 要素数の取得
+SizeType
+CptIOHBase::item_num() const
 {
-  return mItemArray;
+  return mItemArray.size();
+}
+
+// @brief 要素の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+const PtIOItem*
+CptIOHBase::item(SizeType pos) const
+{
+  return mItemArray[pos];
 }
 
 // @brief 要素リストの設定
-// @param[in] elem_array 要素リスト
+// @param[in] elem_array 要素の配列
 void
-CptIOHBase::set_elem(const PtIOItemArray* elem_array)
+CptIOHBase::set_elem(PtiIOItemArray&& elem_array)
 {
-  mItemArray = elem_array;
+  mItemArray = move(elem_array);
 }
 
 

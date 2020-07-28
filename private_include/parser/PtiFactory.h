@@ -15,8 +15,6 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-class PtAlloc;
-
 //////////////////////////////////////////////////////////////////////
 /// @class PtiFactory PtiFactory.h "PtiFactory.h"
 /// @brief Verilog-HDL のパース木を生成するファクトリクラス
@@ -61,9 +59,9 @@ public:
   const PtUdp*
   new_CmbUdp(const FileRegion& fr,
 	     const char* name,
-	     const PtPortArray* port_array,
-	     const PtIOHeadArray* io_array,
-	     const PtUdpEntryArray* entry_array) = 0;
+	     const vector<const PtPort*>& port_array,
+	     const vector<const PtIOHead*>& io_array,
+	     const vector<const PtUdpEntry*>& entry_array) = 0;
 
   /// @brief sequential UDP の生成
   /// @param[in] fr ファイル位置の情報
@@ -77,10 +75,10 @@ public:
   const PtUdp*
   new_SeqUdp(const FileRegion& fr,
 	     const char* name,
-	     const PtPortArray* port_array,
-	     const PtIOHeadArray* io_array,
+	     const vector<const PtPort*>& port_array,
+	     const vector<const PtIOHead*>& io_array,
 	     const PtExpr* init_value,
-	     const PtUdpEntryArray* entry_array) = 0;
+	     const vector<const PtUdpEntry*>& entry_array) = 0;
 
   /// @brief combinational UDP 用のテーブルエントリの生成
   /// @param[in] fr ファイル位置の情報
@@ -90,7 +88,7 @@ public:
   virtual
   const PtUdpEntry*
   new_UdpEntry(const FileRegion& fr,
-	       const PtUdpValueArray* input_array,
+	       const vector<const PtUdpValue*>& input_array,
 	       const PtUdpValue* output) = 0;
 
   /// @brief sequential UDP 用のテーブルエントリの生成
@@ -102,7 +100,7 @@ public:
   virtual
   const PtUdpEntry*
   new_UdpEntry(const FileRegion& fr,
-	       const PtUdpValueArray* input_array,
+	       const vector<const PtUdpValue*>& input_array,
 	       const PtUdpValue* current,
 	       const PtUdpValue* output) = 0;
 
@@ -179,11 +177,11 @@ public:
 	     const string& config,
 	     const string& library,
 	     const string& cell,
-	     const PtDeclHeadArray* paramport_array,
-	     const PtPortArray* port_array,
-	     const PtIOHeadArray* iodecl_array,
-	     const PtDeclHeadArray* decl_array,
-	     const PtItemArray* item_array) = 0;
+	     const vector<const PtDeclHead*>& paramport_array,
+	     const vector<const PtPort*>& port_array,
+	     const vector<const PtIOHead*>& iodecl_array,
+	     const vector<const PtDeclHead*>& decl_array,
+	     const vector<const PtItem*>& item_array) = 0;
 
 
   //////////////////////////////////////////////////////////////////////
@@ -220,7 +218,7 @@ public:
   PtiPort*
   new_Port(const FileRegion& fr,
 	   const PtExpr* portref,
-	   const PtExprArray* portref_array,
+	   const vector<const PtExpr*>& portref_array,
 	   const char* ext_name) = 0;
 
 
@@ -624,7 +622,7 @@ public:
   const PtDeclItem*
   new_DeclItem(const FileRegion& fr,
 	       const char* name,
-	       const PtRangeArray* range_array) = 0;
+	       const vector<const PtRange*>& range_array) = 0;
 
   /// @brief 範囲の生成
   /// @param[in] msb MSB を表す式
@@ -647,7 +645,7 @@ public:
   virtual
   const PtItem*
   new_DefParamH(const FileRegion& fr,
-		const PtDefParamArray* elem_array) = 0;
+		const vector<const PtDefParam*>& elem_array) = 0;
 
   /// @brief defparam 文の要素の生成
   /// @param[in] fr ファイル位置の情報
@@ -679,7 +677,7 @@ public:
   virtual
   const PtItem*
   new_ContAssignH(const FileRegion& fr,
-		  const PtContAssignArray* elem_array) = 0;
+		  const vector<const PtContAssign*>& elem_array) = 0;
 
   /// @brief continuous assign 文のヘッダの生成 (strengthつき)
   /// @param[in] fr ファイル位置の情報
@@ -690,7 +688,7 @@ public:
   const PtItem*
   new_ContAssignH(const FileRegion& fr,
 		  const PtStrength* strength,
-		  const PtContAssignArray* elem_array) = 0;
+		  const vector<const PtContAssign*>& elem_array) = 0;
 
   /// @brief continuous assign 文のヘッダの生成 (遅延付き)
   /// @param[in] fr ファイル位置の情報
@@ -701,7 +699,7 @@ public:
   const PtItem*
   new_ContAssignH(const FileRegion& fr,
 		  const PtDelay* delay,
-		  const PtContAssignArray* elem_array) = 0;
+		  const vector<const PtContAssign*>& elem_array) = 0;
 
   /// @brief continuous assign 文のヘッダの生成 (strength, 遅延付き)
   /// @param[in] fr ファイル位置の情報
@@ -714,7 +712,7 @@ public:
   new_ContAssignH(const FileRegion& fr,
 		  const PtStrength* strength,
 		  const PtDelay* delay,
-		  const PtContAssignArray* elem_array) = 0;
+		  const vector<const PtContAssign*>& elem_array) = 0;
 
   /// @brief continuous assign 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -758,8 +756,8 @@ public:
   new_Task(const FileRegion& fr,
 	   const char* name,
 	   bool automatic,
-	   const PtIOHeadArray* iodecl_array,
-	   const PtDeclHeadArray* decl_array,
+	   const vector<const PtIOHead*>& iodecl_array,
+	   const vector<const PtDeclHead*>& decl_array,
 	   const PtStmt* stmt) = 0;
 
   /// @brief 1ビット型 function 文の生成
@@ -777,8 +775,8 @@ public:
 	       const char* name,
 	       bool automatic,
 	       bool sign,
-	       const PtIOHeadArray* iodecl_array,
-	       const PtDeclHeadArray* decl_array,
+	       const vector<const PtIOHead*>& iodecl_array,
+	       const vector<const PtDeclHead*>& decl_array,
 	       const PtStmt* stmt) = 0;
 
   /// @brief 範囲指定型 function 文の生成
@@ -800,8 +798,8 @@ public:
 		bool sign,
 		const PtExpr* left,
 		const PtExpr* right,
-		const PtIOHeadArray* iodecl_array,
-		const PtDeclHeadArray* decl_array,
+		const vector<const PtIOHead*>& iodecl_array,
+		const vector<const PtDeclHead*>& decl_array,
 		const PtStmt* stmt) = 0;
 
   /// @brief 組み込み型 function 文の生成
@@ -821,8 +819,8 @@ public:
 		bool automatic,
 		bool sign,
 		VpiVarType func_type,
-		const PtIOHeadArray* iodecl_array,
-		const PtDeclHeadArray* decl_array,
+		const vector<const PtIOHead*>& iodecl_array,
+		const vector<const PtDeclHead*>& decl_array,
 		const PtStmt* stmt) = 0;
 
   /// @brief gate instance 文のヘッダの生成
@@ -834,7 +832,7 @@ public:
   const PtItem*
   new_GateH(const FileRegion& fr,
 	    VpiPrimType type,
-	    const PtInstArray* elem_array) = 0;
+	    const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief gate instance 文のヘッダの生成 (strength付き)
   /// @param[in] fr ファイル位置の情報
@@ -847,7 +845,7 @@ public:
   new_GateH(const FileRegion& fr,
 	    VpiPrimType type,
 	    const PtStrength* strength,
-	    const PtInstArray* elem_array) = 0;
+	    const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief gate instance 文のヘッダの生成 (遅延付き)
   /// @param[in] fr ファイル位置の情報
@@ -860,7 +858,7 @@ public:
   new_GateH(const FileRegion& fr,
 	    VpiPrimType type,
 	    const PtDelay* delay,
-	    const PtInstArray* elem_array) = 0;
+	    const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief gate instance 文のヘッダの生成 (strength, 遅延付き)
   /// @param[in] fr ファイル位置の情報
@@ -875,7 +873,7 @@ public:
 	    VpiPrimType type,
 	    const PtStrength* strength,
 	    const PtDelay* delay,
-	    const PtInstArray* elem_array) = 0;
+	    const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief module instance/UDP instance 文のヘッダの生成
   /// @param[in] fr ファイル位置の情報
@@ -886,7 +884,7 @@ public:
   const PtItem*
   new_MuH(const FileRegion& fr,
 	  const char* def_name,
-	  const PtInstArray* elem_array) = 0;
+	  const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief module instance/UDP instance 文のヘッダの生成 (strength付き)
   /// @param[in] fr ファイル位置の情報
@@ -899,7 +897,7 @@ public:
   new_MuH(const FileRegion& fr,
 	  const char* def_name,
 	  const PtStrength* strength,
-	  const PtInstArray* elem_array) = 0;
+	  const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief module instance/UDP instance 文のヘッダの生成 (遅延付き)
   /// @param[in] fr ファイル位置の情報
@@ -912,7 +910,7 @@ public:
   new_MuH(const FileRegion& fr,
 	  const char* def_name,
 	  const PtDelay* delay,
-	  const PtInstArray* elem_array) = 0;
+	  const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief module instance/UDP instance 文のヘッダの生成 (strength, 遅延付き)
   /// @param[in] fr ファイル位置の情報
@@ -927,7 +925,7 @@ public:
 	  const char* def_name,
 	  const PtStrength* strength,
 	  const PtDelay* delay,
-	  const PtInstArray* elem_array) = 0;
+	  const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief module instance/UDP instance 文のヘッダの生成
   /// @param[in] fr ファイル位置の情報
@@ -939,8 +937,8 @@ public:
   const PtItem*
   new_MuH(const FileRegion& fr,
 	  const char* def_name,
-	  const PtConnectionArray* con_array,
-	  const PtInstArray* elem_array) = 0;
+	  const vector<const PtConnection*>& con_array,
+	  const vector<const PtInst*>& elem_array) = 0;
 
   /// @brief module instance/UDP/gate instance の要素の生成
   /// @param[in] fr ファイル位置の情報
@@ -949,7 +947,7 @@ public:
   virtual
   const PtInst*
   new_Inst(const FileRegion& fr,
-	   const PtConnectionArray* con_array) = 0;
+	   const vector<const PtConnection*>& con_array) = 0;
 
   /// @brief module instance/UDP/gate instance の要素の生成
   /// @param[in] fr ファイル位置の情報
@@ -1002,7 +1000,7 @@ public:
   const PtInst*
   new_InstN(const FileRegion& fr,
 	    const char* name,
-	    const PtConnectionArray* con_array) = 0;
+	    const vector<const PtConnection*>& con_array) = 0;
 
   /// @brief 名前付き module instance/UDP/gate instance の要素の生成
   /// @param[in] fr ファイル位置の情報
@@ -1067,7 +1065,7 @@ public:
 	    const char* name,
 	    const PtExpr* left,
 	    const PtExpr* right,
-	    const PtConnectionArray* con_array) = 0;
+	    const vector<const PtConnection*>& con_array) = 0;
 
   /// @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
   /// @param[in] fr ファイル位置の情報
@@ -1143,8 +1141,8 @@ public:
   virtual
   const PtItem*
   new_Generate(const FileRegion& fr,
-	       const PtDeclHeadArray* decl_array,
-	       const PtItemArray* item_array) = 0;
+	       const vector<const PtDeclHead*>& decl_array,
+	       const vector<const PtItem*>& item_array) = 0;
 
   /// @brief generate block 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1154,8 +1152,8 @@ public:
   virtual
   const PtItem*
   new_GenBlock(const FileRegion& fr,
-	       const PtDeclHeadArray* decl_array,
-	       const PtItemArray* item_array) = 0;
+	       const vector<const PtDeclHead*>& decl_array,
+	       const vector<const PtItem*>& item_array) = 0;
 
   /// @brief 名前付き generate block 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1167,8 +1165,8 @@ public:
   const PtItem*
   new_GenBlock(const FileRegion& fr,
 	       const char* name,
-	       const PtDeclHeadArray* decl_array,
-	       const PtItemArray* item_array) = 0;
+	       const vector<const PtDeclHead*>& decl_array,
+	       const vector<const PtItem*>& item_array) = 0;
 
   /// @brief generate if 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1182,10 +1180,10 @@ public:
   const PtItem*
   new_GenIf(const FileRegion& fr,
 	    const PtExpr* cond,
-	    const PtDeclHeadArray* then_decl_array,
-	    const PtItemArray* then_item_array,
-	    const PtDeclHeadArray* else_decl_array,
-	    const PtItemArray* else_item_array) = 0;
+	    const vector<const PtDeclHead*>& then_decl_array,
+	    const vector<const PtItem*>& then_item_array,
+	    const vector<const PtDeclHead*>& else_decl_array,
+	    const vector<const PtItem*>& else_item_array) = 0;
 
   /// @brief generate case 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1196,7 +1194,7 @@ public:
   const PtItem*
   new_GenCase(const FileRegion& fr,
 	      const PtExpr* expr,
-	      const PtGenCaseItemArray* item_array) = 0;
+	      const vector<const PtGenCaseItem*>& item_array) = 0;
 
   /// @brief generate case の要素の生成
   /// @param[in] fr ファイル位置の情報
@@ -1207,9 +1205,9 @@ public:
   virtual
   const PtGenCaseItem*
   new_GenCaseItem(const FileRegion& fr,
-		  const PtExprArray* label_array,
-		  const PtDeclHeadArray* decl_array,
-		  const PtItemArray* item_array) = 0;
+		  const vector<const PtExpr*>& label_array,
+		  const vector<const PtDeclHead*>& decl_array,
+		  const vector<const PtItem*>& item_array) = 0;
 
   /// @brief generate for 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1229,8 +1227,8 @@ public:
 	     const PtExpr* cond,
 	     const PtExpr* next_expr,
 	     const char* block_name,
-	     const PtDeclHeadArray* decl_array,
-	     const PtItemArray* item_array) = 0;
+	     const vector<const PtDeclHead*>& decl_array,
+	     const vector<const PtItem*>& item_array) = 0;
 
   /// @brief specify block item の生成
   /// @param[in] fr ファイル位置の情報
@@ -1241,7 +1239,7 @@ public:
   const PtItem*
   new_SpecItem(const FileRegion& fr,
 	       VpiSpecItemType id,
-	       const PtExprArray* terminal_array) = 0;
+	       const vector<const PtExpr*>& terminal_array) = 0;
 
   /// @brief path 仕様を生成する．
   /// @param[in] fr ファイル位置の情報
@@ -1271,10 +1269,10 @@ public:
   const PtPathDecl*
   new_PathDecl(const FileRegion& fr,
 	       int edge,
-	       const PtExprArray* input_array,
+	       const vector<const PtExpr*>& input_array,
 	       int input_pol,
 	       VpiPathType op,
-	       const PtExprArray* output_array,
+	       const vector<const PtExpr*>& output_array,
 	       int output_pol,
 	       const PtExpr* expr,
 	       const PtPathDelay* path_delay) = 0;
@@ -1294,7 +1292,7 @@ public:
   const PtPathDecl*
   new_PathDecl(const FileRegion& fr,
 	       int edge,
-	       const PtExprArray* input_array,
+	       const vector<const PtExpr*>& input_array,
 	       int input_pol,
 	       VpiPathType op,
 	       const PtExpr* output,
@@ -1418,7 +1416,7 @@ public:
   const PtStmt*
   new_Enable(const FileRegion& fr,
 	     const char* name,
-	     const PtExprArray* arg_array) = 0;
+	     const vector<const PtExpr*>& arg_array) = 0;
 
   /// @brief enable 文の生成 (階層付き識別子)
   /// @param[in] fr ファイル位置の情報
@@ -1430,7 +1428,7 @@ public:
   const PtStmt*
   new_Enable(const FileRegion& fr,
 	     PuHierName* hname,
-	     const PtExprArray* arg_array) = 0;
+	     const vector<const PtExpr*>& arg_array) = 0;
 
   /// @brief system task enable 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1441,7 +1439,7 @@ public:
   const PtStmt*
   new_SysEnable(const FileRegion& fr,
 		const char* name,
-		const PtExprArray* arg_array) = 0;
+		const vector<const PtExpr*>& arg_array) = 0;
 
   /// @brief delay control 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1573,7 +1571,7 @@ public:
   const PtStmt*
   new_Case(const FileRegion& fr,
 	   const PtExpr* expr,
-	   const PtCaseItemArray* caseitem_array) = 0;
+	   const vector<const PtCaseItem*>& caseitem_array) = 0;
 
   /// @brief casex 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1584,7 +1582,7 @@ public:
   const PtStmt*
   new_CaseX(const FileRegion& fr,
 	    const PtExpr* expr,
-	    const PtCaseItemArray* caseitem_array) = 0;
+	    const vector<const PtCaseItem*>& caseitem_array) = 0;
 
   /// @brief casez 文の生成
   /// @param[in] fr ファイル位置の情報
@@ -1595,7 +1593,7 @@ public:
   const PtStmt*
   new_CaseZ(const FileRegion& fr,
 	    const PtExpr* expr,
-	    const PtCaseItemArray* caseitem_array) = 0;
+	    const vector<const PtCaseItem*>& caseitem_array) = 0;
 
   /// @brief case item の生成
   /// @param[in] fr ファイル位置の情報
@@ -1605,7 +1603,7 @@ public:
   virtual
   const PtCaseItem*
   new_CaseItem(const FileRegion& fr,
-	       const PtExprArray* label_array,
+	       const vector<const PtExpr*>& label_array,
 	       const PtStmt* body) = 0;
 
   /// @brief forever 文の生成
@@ -1701,7 +1699,7 @@ public:
   virtual
   const PtStmt*
   new_ParBlock(const FileRegion& fr,
-	       const PtStmtArray* stmt_lit) = 0;
+	       const vector<const PtStmt*>& stmt_lit) = 0;
 
   /// @brief 名前付き parallel block の生成
   /// @param[in] fr ファイル位置の情報
@@ -1713,8 +1711,8 @@ public:
   const PtStmt*
   new_NamedParBlock(const FileRegion& fr,
 		    const char* name,
-		    const PtDeclHeadArray* decl_array,
-		    const PtStmtArray* stmt_lit) = 0;
+		    const vector<const PtDeclHead*>& decl_array,
+		    const vector<const PtStmt*>& stmt_lit) = 0;
 
   /// @brief sequential block の生成
   /// @param[in] fr ファイル位置の情報
@@ -1723,7 +1721,7 @@ public:
   virtual
   const PtStmt*
   new_SeqBlock(const FileRegion& fr,
-	       const PtStmtArray* stmt_lit) = 0;
+	       const vector<const PtStmt*>& stmt_lit) = 0;
 
   /// @brief 名前付き sequential block の生成
   /// @param[in] fr ファイル位置の情報
@@ -1735,8 +1733,8 @@ public:
   const PtStmt*
   new_NamedSeqBlock(const FileRegion& fr,
 		    const char* name,
-		    const PtDeclHeadArray* decl_array,
-		    const PtStmtArray* stmt_lit) = 0;
+		    const vector<const PtDeclHead*>& decl_array,
+		    const vector<const PtStmt*>& stmt_lit) = 0;
 
 
   //////////////////////////////////////////////////////////////////////
@@ -1789,7 +1787,7 @@ public:
   virtual
   const PtExpr*
   new_Concat(const FileRegion& fr,
-	     const PtExprArray* expr_array) = 0;
+	     const vector<const PtExpr*>& expr_array) = 0;
 
   /// @brief multi-concatination 演算子の生成
   /// @param[in] fr ファイル位置の情報
@@ -1798,7 +1796,7 @@ public:
   virtual
   const PtExpr*
   new_MultiConcat(const FileRegion& fr,
-		  const PtExprArray* expr_array) = 0;
+		  const vector<const PtExpr*>& expr_array) = 0;
 
   /// @brief min/typ/max delay 演算子の生成
   /// @param[in] fr ファイル位置の情報
@@ -1831,7 +1829,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& fr,
 	      const char* name,
-	      const PtExprArray* index_array) = 0;
+	      const vector<const PtExpr*>& index_array) = 0;
 
   /// @brief 範囲指定付き primary の生成
   /// @param[in] fr ファイル位置の情報
@@ -1860,7 +1858,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& fr,
 	      const char* name,
-	      const PtExprArray* index_array,
+	      const vector<const PtExpr*>& index_array,
 	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) = 0;
@@ -1885,7 +1883,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& fr,
 	      PuHierName* hname,
-	      const PtExprArray* index_array) = 0;
+	      const vector<const PtExpr*>& index_array) = 0;
 
   /// @brief 範囲指定付き primary の生成 (階層付き)
   /// @param[in] fr ファイル位置の情報
@@ -1916,7 +1914,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& fr,
 	      PuHierName* hname,
-	      const PtExprArray* index_array,
+	      const vector<const PtExpr*>& index_array,
 	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) = 0;
@@ -1941,7 +1939,7 @@ public:
   const PtExpr*
   new_CPrimary(const FileRegion& fr,
 	       const char* name,
-	       const PtExprArray* index_array) = 0;
+	       const vector<const PtExpr*>& index_array) = 0;
 
   /// @brief 範囲指定付き constant primary の生成
   /// @param[in] fr ファイル位置の情報
@@ -1968,7 +1966,7 @@ public:
   const PtExpr*
   new_CPrimary(const FileRegion& fr,
 	       PuHierName* hname,
-	       const PtExprArray* index_array) = 0;
+	       const vector<const PtExpr*>& index_array) = 0;
 
   /// @brief function call の生成
   /// @param[in] fr ファイル位置の情報
@@ -1979,7 +1977,7 @@ public:
   const PtExpr*
   new_FuncCall(const FileRegion& fr,
 	       const char* name,
-	       const PtExprArray* arg_array) = 0;
+	       const vector<const PtExpr*>& arg_array) = 0;
 
   /// @brief function call の生成 (階層付き)
   /// @param[in] fr ファイル位置の情報
@@ -1991,7 +1989,7 @@ public:
   const PtExpr*
   new_FuncCall(const FileRegion& fr,
 	       PuHierName* hname,
-	       const PtExprArray* arg_array) = 0;
+	       const vector<const PtExpr*>& arg_array) = 0;
 
   /// @brief system function call の生成
   /// @param[in] fr ファイル位置の情報
@@ -2002,7 +2000,7 @@ public:
   const PtExpr*
   new_SysFuncCall(const FileRegion& fr,
 		  const char* name,
-		  const PtExprArray* arg_array) = 0;
+		  const vector<const PtExpr*>& arg_array) = 0;
 
   /// @brief 整数型の定数の生成
   /// @param[in] fr ファイル位置の情報
@@ -2101,7 +2099,7 @@ public:
   virtual
   const PtControl*
   new_EventControl(const FileRegion& fr,
-		   const PtExprArray* event_array) = 0;
+		   const vector<const PtExpr*>& event_array) = 0;
 
   /// @brief リピートコントロールの生成
   /// @param[in] fr ファイル位置の情報
@@ -2132,7 +2130,7 @@ public:
   const PtControl*
   new_RepeatControl(const FileRegion& fr,
 		    const PtExpr* expr,
-		    const PtExprArray* event_array) = 0;
+		    const vector<const PtExpr*>& event_array) = 0;
 
   /// @brief 順序つき結合子の生成
   /// @param[in] expr 結合する式
@@ -2230,38 +2228,6 @@ public:
   new_NameBranch(const char* name,
 		 int index) = 0;
 
-  /// @brief 順序付き結合子の配列の生成
-  /// @param[in] expr1 結合する式
-  const PtConnectionArray*
-  new_PtConArray(const PtExpr* expr1);
-
-  /// @brief 順序付き結合子の配列の生成
-  /// @param[in] expr1 結合する式
-  /// @param[in] expr2 結合する式
-  const PtConnectionArray*
-  new_PtConArray(const PtExpr* expr1,
-		 const PtExpr* expr2);
-
-  /// @brief 順序付き結合子の配列の生成
-  /// @param[in] expr1 結合する式
-  /// @param[in] expr2 結合する式
-  /// @param[in] expr3 結合する式
-  const PtConnectionArray*
-  new_PtConArray(const PtExpr* expr1,
-		 const PtExpr* expr2,
-		 const PtExpr* expr3);
-
-  /// @brief 順序付き結合子の配列の生成
-  /// @param[in] expr1 結合する式
-  /// @param[in] expr2 結合する式
-  /// @param[in] expr3 結合する式
-  /// @param[in] expr4 結合する式
-  const PtConnectionArray*
-  new_PtConArray(const PtExpr* expr1,
-		 const PtExpr* expr2,
-		 const PtExpr* expr3,
-		 const PtExpr* expr4);
-
 
   //////////////////////////////////////////////////////////////////////
   // attribute instance 関係
@@ -2274,7 +2240,7 @@ public:
   virtual
   const PtAttrInst*
   new_AttrInst(const FileRegion& fr,
-	       const PtAttrSpecArray* as_array) = 0;
+	       const vector<const PtAttrSpec*>& as_array) = 0;
 
   /// @brief attribute spec の生成
   /// @param[in] fr ファイル位置の情報
@@ -2298,18 +2264,6 @@ public:
   virtual
   void
   dump_profile(ostream& s) const = 0;
-
-
-protected:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
-
-  const PtExprArray*
-  new_PtExprArray();
-
-  const PtExprArray*
-  new_PtExprArray(const PtExpr* expr);
 
 
 protected:

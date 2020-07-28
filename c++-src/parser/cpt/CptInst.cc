@@ -9,7 +9,7 @@
 
 #include "CptInst.h"
 #include "parser/CptFactory.h"
-#include "ym/pt/PtAlloc.h"
+#include "parser/PtiArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -22,10 +22,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptGateH::CptGateH(const FileRegion& file_region,
 		   VpiPrimType prim_type,
-		   const PtInstArray* inst_array) :
+		   PtiInstArray&& inst_array) :
   mFileRegion(file_region),
   mPrimType(prim_type),
-  mInstArray(inst_array)
+  mInstArray{move(inst_array)}
 {
 }
 
@@ -55,11 +55,19 @@ CptGateH::prim_type() const
   return mPrimType;
 }
 
-// @brief module/UDP/gate instance リストの取得
-const PtInstArray*
-CptGateH::inst_list() const
+// @brief module/UDP/gate instance の要素数の取得
+SizeType
+CptGateH::inst_num() const
 {
-  return mInstArray;
+  return mInstArray.size();
+}
+
+// @brief module/UDP/gate instance の取得
+// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+const PtInst*
+CptGateH::inst(SizeType pos) const
+{
+  return mInstArray[pos];
 }
 
 
@@ -71,8 +79,8 @@ CptGateH::inst_list() const
 CptGateHS::CptGateHS(const FileRegion& file_region,
 		     VpiPrimType prim_type,
 		     const PtStrength* strength,
-		     const PtInstArray* inst_array) :
-  CptGateH(file_region, prim_type, inst_array),
+		     PtiInstArray&& inst_array) :
+  CptGateH(file_region, prim_type, move(inst_array)),
   mStrength(strength)
 {
 }
@@ -98,8 +106,8 @@ CptGateHS::strength() const
 CptGateHD::CptGateHD(const FileRegion& file_region,
 		     VpiPrimType prim_type,
 		     const PtDelay* delay,
-		     const PtInstArray* inst_array) :
-  CptGateH(file_region, prim_type, inst_array),
+		     PtiInstArray&& inst_array) :
+  CptGateH(file_region, prim_type, move(inst_array)),
   mDelay(delay)
 {
 }
@@ -126,8 +134,8 @@ CptGateHSD::CptGateHSD(const FileRegion& file_region,
 		       VpiPrimType prim_type,
 		       const PtStrength* strength,
 		       const PtDelay* delay,
-		       const PtInstArray* inst_array) :
-  CptGateH(file_region, prim_type, inst_array),
+		       PtiInstArray&& inst_array) :
+  CptGateH(file_region, prim_type, move(inst_array)),
   mStrength(strength),
   mDelay(delay)
 {
@@ -160,10 +168,10 @@ CptGateHSD::delay() const
 // コンストラクタ
 CptMuH::CptMuH(const FileRegion& file_region,
 	       const char* def_name,
-	       const PtInstArray* inst_array) :
+	       PtiInstArray&& inst_array) :
   mFileRegion(file_region),
   mName(def_name),
-  mInstArray(inst_array)
+  mInstArray{move(inst_array)}
 {
 }
 
@@ -193,11 +201,19 @@ CptMuH::name() const
   return mName;
 }
 
-// @brief module/UDP/gate instance リストの取得
-const PtInstArray*
-CptMuH::inst_list() const
+// @brief module/UDP/gate instance の要素数の取得
+SizeType
+CptMuH::inst_num() const
 {
-  return mInstArray;
+  return mInstArray.size();
+}
+
+// @brief module/UDP/gate instance の取得
+// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+const PtInst*
+CptMuH::inst(SizeType pos) const
+{
+  return mInstArray[pos];
 }
 
 
@@ -208,10 +224,10 @@ CptMuH::inst_list() const
 // コンストラクタ
 CptMuHP::CptMuHP(const FileRegion& file_region,
 		 const char* def_name,
-		 const PtConnectionArray* con_array,
-		 const PtInstArray* inst_array) :
-  CptMuH(file_region, def_name, inst_array),
-  mParamAssignArray(con_array)
+		 PtiConnectionArray&& con_array,
+		 PtiInstArray&& inst_array) :
+  CptMuH(file_region, def_name, move(inst_array)),
+  mParamAssignArray{move(con_array)}
 {
 }
 
@@ -220,11 +236,19 @@ CptMuHP::~CptMuHP()
 {
 }
 
-// @brief パラメータ割り当てリストの取得
-const PtConnectionArray*
-CptMuHP::paramassign_array() const
+// @brief パラメータ割り当て数の取得
+SizeType
+CptMuHP::paramassign_num() const
 {
-  return mParamAssignArray;
+  return mParamAssignArray.size();
+}
+
+// @brief パラメータ割り当ての取得
+// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
+const PtConnection*
+CptMuHP::paramassign(SizeType pos) const
+{
+  return mParamAssignArray[pos];
 }
 
 
@@ -236,8 +260,8 @@ CptMuHP::paramassign_array() const
 CptMuHS::CptMuHS(const FileRegion& file_region,
 		 const char* def_name,
 		 const PtStrength* strength,
-		 const PtInstArray* inst_array) :
-  CptMuH(file_region, def_name, inst_array),
+		 PtiInstArray&& inst_array) :
+  CptMuH(file_region, def_name, move(inst_array)),
   mStrength(strength)
 {
 }
@@ -263,8 +287,8 @@ CptMuHS::strength() const
 CptMuHD::CptMuHD(const FileRegion& file_region,
 		 const char* def_name,
 		 const PtDelay* delay,
-		 const PtInstArray* inst_array) :
-  CptMuH(file_region, def_name, inst_array),
+		 PtiInstArray&& inst_array) :
+  CptMuH(file_region, def_name, move(inst_array)),
   mDelay(delay)
 {
 }
@@ -291,8 +315,8 @@ CptMuHSD::CptMuHSD(const FileRegion& file_region,
 		   const char* def_name,
 		   const PtStrength* strength,
 		   const PtDelay* delay,
-		   const PtInstArray* inst_array) :
-  CptMuH(file_region, def_name, inst_array),
+		   PtiInstArray&& inst_array) :
+  CptMuH(file_region, def_name, move(inst_array)),
   mStrength(strength),
   mDelay(delay)
 {
@@ -324,9 +348,9 @@ CptMuHSD::delay() const
 
 // コンストラクタ
 CptInst::CptInst(const FileRegion& file_region,
-		 const PtConnectionArray* con_array) :
+		 PtiConnectionArray&& con_array) :
   mFileRegion(file_region),
-  mPortArray(con_array)
+  mPortArray{move(con_array)}
 {
 }
 
@@ -369,11 +393,19 @@ CptInst::right_range() const
   return nullptr;
 }
 
-// @brief ポートのリストの取得
-const PtConnectionArray*
-CptInst::port_list() const
+// @brief ポートの要素数の取得
+SizeType
+CptInst::port_num() const
 {
-  return mPortArray;
+  return mPortArray.size();
+}
+
+// @brief ポートの取得
+// @param[in] pos 位置 ( 0 <= pos < port_num() )
+const PtConnection*
+CptInst::port(SizeType pos) const
+{
+  return mPortArray[pos];
 }
 
 
@@ -384,8 +416,8 @@ CptInst::port_list() const
 // コンストラクタ
 CptInstN::CptInstN(const FileRegion& file_region,
 		   const char* name,
-		   const PtConnectionArray* con_array) :
-  CptInst(file_region, con_array),
+		   PtiConnectionArray&& con_array) :
+  CptInst(file_region, move(con_array)),
   mName(name)
 {
 }
@@ -412,8 +444,8 @@ CptInstR::CptInstR(const FileRegion& file_region,
 		   const char* name,
 		   const PtExpr* left,
 		   const PtExpr* right,
-		   const PtConnectionArray* con_array) :
-  CptInstN(file_region, name, con_array),
+		   PtiConnectionArray&& con_array) :
+  CptInstN(file_region, name, move(con_array)),
   mLeftRange(left),
   mRightRange(right)
 {
@@ -447,11 +479,12 @@ CptInstR::right_range() const
 const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
-		      const PtInstArray* inst_array)
+		      const vector<const PtInst*>& inst_array)
 {
   ++ mNumGateH;
   void* p{mAlloc.get_memory(sizeof(CptGateH))};
-  auto obj{new (p) CptGateH(file_region, type, inst_array)};
+  auto obj{new (p) CptGateH(file_region, type,
+			    PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -460,12 +493,12 @@ const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtStrength* strength,
-		      const PtInstArray* inst_array)
+		      const vector<const PtInst*>& inst_array)
 {
   ++ mNumGateHS;
   void* p{mAlloc.get_memory(sizeof(CptGateHS))};
   auto obj{new (p) CptGateHS(file_region, type, strength,
-			     inst_array)};
+			     PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -474,12 +507,12 @@ const PtItem*
 CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtDelay* delay,
-		      const PtInstArray* inst_array)
+		      const vector<const PtInst*>& inst_array)
 {
   ++ mNumGateHD;
   void* p{mAlloc.get_memory(sizeof(CptGateHD))};
   auto obj{new (p) CptGateHD(file_region, type, delay,
-			     inst_array)};
+			     PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -489,12 +522,12 @@ CptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtStrength* strength,
 		      const PtDelay* delay,
-		      const PtInstArray* inst_array)
+		      const vector<const PtInst*>& inst_array)
 {
   ++ mNumGateHSD;
   void* p{mAlloc.get_memory(sizeof(CptGateHSD))};
   auto obj{new (p) CptGateHSD(file_region, type, strength, delay,
-			      inst_array)};
+			      PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -502,11 +535,12 @@ CptFactory::new_GateH(const FileRegion& file_region,
 const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
-		    const PtInstArray* inst_array)
+		    const vector<const PtInst*>& inst_array)
 {
   ++ mNumMuH;
   void* p{mAlloc.get_memory(sizeof(CptMuH))};
-  auto obj{new (p) CptMuH(file_region, def_name, inst_array)};
+  auto obj{new (p) CptMuH(file_region, def_name,
+			  PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -515,12 +549,12 @@ const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtStrength* strength,
-		    const PtInstArray* inst_array)
+		    const vector<const PtInst*>& inst_array)
 {
   ++ mNumMuHS;
   void* p{mAlloc.get_memory(sizeof(CptMuHS))};
   auto obj{new (p) CptMuHS(file_region, def_name, strength,
-			   inst_array)};
+			   PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -529,12 +563,12 @@ const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtDelay* delay,
-		    const PtInstArray* inst_array)
+		    const vector<const PtInst*>& inst_array)
 {
   ++ mNumMuHD;
   void* p{mAlloc.get_memory(sizeof(CptMuHD))};
   auto obj{new (p) CptMuHD(file_region, def_name, delay,
-			   inst_array)};
+			   PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -544,12 +578,12 @@ CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtStrength* strength,
 		    const PtDelay* delay,
-		    const PtInstArray* inst_array)
+		    const vector<const PtInst*>& inst_array)
 {
   ++ mNumMuHSD;
   void* p{mAlloc.get_memory(sizeof(CptMuHSD))};
   auto obj{new (p) CptMuHSD(file_region, def_name, strength, delay,
-			    inst_array)};
+			    PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
@@ -557,24 +591,26 @@ CptFactory::new_MuH(const FileRegion& file_region,
 const PtItem*
 CptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
-		    const PtConnectionArray* con_array,
-		    const PtInstArray* inst_array)
+		    const vector<const PtConnection*>& con_array,
+		    const vector<const PtInst*>& inst_array)
 {
   ++ mNumMuHP;
   void* p{mAlloc.get_memory(sizeof(CptMuHP))};
-  auto obj{new (p) CptMuHP(file_region, def_name, con_array,
-			   inst_array)};
+  auto obj{new (p) CptMuHP(file_region, def_name,
+			   PtiArray<const PtConnection>(mAlloc, con_array),
+			   PtiArray<const PtInst>(mAlloc, inst_array))};
   return obj;
 }
 
 // module instance/UDP instance の要素を生成する．
 const PtInst*
 CptFactory::new_Inst(const FileRegion& file_region,
-		     const PtConnectionArray* con_array)
+		     const vector<const PtConnection*>& con_array)
 {
   ++ mNumInst;
   void* p{mAlloc.get_memory(sizeof(CptInst))};
-  auto obj{new (p) CptInst(file_region, con_array)};
+  auto obj{new (p) CptInst(file_region,
+			   PtiArray<const PtConnection>(mAlloc, con_array))};
   return obj;
 }
 
@@ -582,11 +618,12 @@ CptFactory::new_Inst(const FileRegion& file_region,
 const PtInst*
 CptFactory::new_InstN(const FileRegion& file_region,
 		      const char* name,
-		      const PtConnectionArray* con_array)
+		      const vector<const PtConnection*>& con_array)
 {
   ++ mNumInstN;
   void* p{mAlloc.get_memory(sizeof(CptInstN))};
-  auto obj{new (p) CptInstN(file_region, name, con_array)};
+  auto obj{new (p) CptInstN(file_region, name,
+			    PtiArray<const PtConnection>(mAlloc, con_array))};
   return obj;
 }
 
@@ -596,12 +633,12 @@ CptFactory::new_InstV(const FileRegion& file_region,
 		      const char* name,
 		      const PtExpr* left,
 		      const PtExpr* right,
-		      const PtConnectionArray* con_array)
+		      const vector<const PtConnection*>& con_array)
 {
   ++ mNumInstR;
   void* p{mAlloc.get_memory(sizeof(CptInstR))};
   auto obj{new (p) CptInstR(file_region, name, left, right,
-			    con_array)};
+			    PtiArray<const PtConnection>(mAlloc, con_array))};
   return obj;
 }
 

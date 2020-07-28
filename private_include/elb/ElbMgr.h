@@ -22,6 +22,8 @@
 #include "ElbDecl.h"
 #include "ElbPrimitive.h"
 
+#include "parser/PtiFwd.h"
+
 
 BEGIN_NAMESPACE_YM_VERILOG
 
@@ -211,15 +213,13 @@ public:
 
   /// @brief スコープと階層名から要素を取り出す．
   /// @param[in] base_scope 起点となるスコープ
-  /// @param[in] nb_array 階層名の上部 (nullptr の場合も有りうる)
-  /// @param[in] name 末尾の名前
+  /// @param[in] pt_objy 階層名付きのオブジェクト
   /// @param[in] ulimit 探索する名前空間の上限
   /// @return 見付かったオブジェクトを返す．
   /// 見付からなかったら nullptr を返す．
   ElbObjHandle*
   find_obj_up(const VlNamedObj* base_scope,
-	      const PtNameBranchArray* nb_array,
-	      const char* name,
+	      const PtHierNamedBase* pt_obj,
 	      const VlNamedObj* ulimit);
 
 
@@ -368,7 +368,7 @@ private:
   /// なければ親のスコープに対して同様の探索を繰り返す．
   const VlNamedObj*
   find_scope_up(const VlNamedObj* base_scope,
-		const PtNameBranchArray* nb_array,
+		const PtHierNamedBase* pt_obj,
 		const VlNamedObj* ulimit);
 
 

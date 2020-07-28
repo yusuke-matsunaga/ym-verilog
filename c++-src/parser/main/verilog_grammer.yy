@@ -4,7 +4,7 @@
 /// @brief Verilog-HDL (IEEE1364-2001) パーサ
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -38,12 +38,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 
 // 字句解析関数
+extern
 int
 yylex(YYSTYPE*,
       YYLTYPE*,
       Parser&);
 
 // エラー報告関数
+extern
 int
 yyerror(YYLTYPE*,
 	Parser&,

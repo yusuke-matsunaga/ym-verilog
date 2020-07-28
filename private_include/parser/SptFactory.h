@@ -5,7 +5,7 @@
 /// @brief SptFactory のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -47,9 +47,9 @@ public:
   const PtUdp*
   new_CmbUdp(const FileRegion& file_region,
 	     const char* name,
-	     const PtPortArray* port_array,
-	     const PtIOHeadArray* iohead_array,
-	     const PtUdpEntryArray* entry_array) override;
+	     const vector<const PtPort*>& port_array,
+	     const vector<const PtIOHead*>& iohead_array,
+	     const vector<const PtUdpEntry*>& entry_array) override;
 
   /// @brief sequential UDP の生成
   /// @param[in] file_region ファイル位置の情報
@@ -62,10 +62,10 @@ public:
   const PtUdp*
   new_SeqUdp(const FileRegion& file_region,
 	     const char* name,
-	     const PtPortArray* port_array,
-	     const PtIOHeadArray* iohead_array,
+	     const vector<const PtPort*>& port_array,
+	     const vector<const PtIOHead*>& iohead_array,
 	     const PtExpr* init_value,
-	     const PtUdpEntryArray* entry_array) override;
+	     const vector<const PtUdpEntry*>& entry_array) override;
 
   /// @brief combinational UDP 用のテーブルエントリの生成
   /// @param[in] file_region ファイル位置の情報
@@ -74,7 +74,7 @@ public:
   /// @return 生成されたテーブルエントリ
   const PtUdpEntry*
   new_UdpEntry(const FileRegion& file_region,
-	       const PtUdpValueArray* input_array,
+	       const vector<const PtUdpValue*>& input_array,
 	       const PtUdpValue* output) override;
 
   /// @brief sequential UDP 用のテーブルエントリの生成
@@ -85,7 +85,7 @@ public:
   /// @return 生成されたテーブルエントリ
   const PtUdpEntry*
   new_UdpEntry(const FileRegion& file_region,
-	       const PtUdpValueArray* input_array,
+	       const vector<const PtUdpValue*>& input_array,
 	       const PtUdpValue* current,
 	       const PtUdpValue* output) override;
 
@@ -159,11 +159,11 @@ public:
 	     const string& config,
 	     const string& library,
 	     const string& cell,
-	     const PtDeclHeadArray* paramport_array,
-	     const PtPortArray* port_array,
-	     const PtIOHeadArray* iodecl_array,
-	     const PtDeclHeadArray* decl_array,
-	     const PtItemArray* item_array) override;
+	     const vector<const PtDeclHead*>& paramport_array,
+	     const vector<const PtPort*>& port_array,
+	     const vector<const PtIOHead*>& iodecl_array,
+	     const vector<const PtDeclHead*>& decl_array,
+	     const vector<const PtItem*>& item_array) override;
 
 
   //////////////////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ public:
   PtiPort*
   new_Port(const FileRegion& fr,
 	   const PtExpr* portref,
-	   const PtExprArray* portref_array,
+	   const vector<const PtExpr*>& portref_array,
 	   const char* ext_name) override;
 
 
@@ -568,7 +568,7 @@ public:
   const PtDeclItem*
   new_DeclItem(const FileRegion& file_region,
 	       const char* name,
-	       const PtRangeArray* range_array) override;
+	       const vector<const PtRange*>& range_array) override;
 
   /// @brief 範囲の生成
   /// @param[in] file_region ファイル位置の情報
@@ -590,7 +590,7 @@ public:
   /// @return 生成された defparam ヘッダ
   const PtItem*
   new_DefParamH(const FileRegion& file_region,
-		const PtDefParamArray* elem_array) override;
+		const vector<const PtDefParam*>& elem_array) override;
 
   /// @brief defparam 文の要素の生成
   /// @param[in] file_region ファイル位置の情報
@@ -619,7 +619,7 @@ public:
   /// @return 生成された continuous assign 文のヘッダ
   const PtItem*
   new_ContAssignH(const FileRegion& file_region,
-		  const PtContAssignArray* elem_array) override;
+		  const vector<const PtContAssign*>& elem_array) override;
 
   /// @brief continuous assign 文のヘッダの生成 (strengthつき)
   /// @param[in] file_region ファイル位置の情報
@@ -629,7 +629,7 @@ public:
   const PtItem*
   new_ContAssignH(const FileRegion& file_region,
 		  const PtStrength* strength,
-		  const PtContAssignArray* elem_array) override;
+		  const vector<const PtContAssign*>& elem_array) override;
 
   /// @brief continuous assign 文のヘッダの生成 (遅延付き)
   /// @param[in] file_region ファイル位置の情報
@@ -639,7 +639,7 @@ public:
   const PtItem*
   new_ContAssignH(const FileRegion& file_region,
 		  const PtDelay* delay,
-		  const PtContAssignArray* elem_array) override;
+		  const vector<const PtContAssign*>& elem_array) override;
 
   /// @brief continuous assign 文のヘッダの生成 (strength, 遅延付き)
   /// @param[in] file_region ファイル位置の情報
@@ -651,7 +651,7 @@ public:
   new_ContAssignH(const FileRegion& file_region,
 		  const PtStrength* strength,
 		  const PtDelay* delay,
-		  const PtContAssignArray* elem_array) override;
+		  const vector<const PtContAssign*>& elem_array) override;
 
   /// @brief continuous assign 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -691,8 +691,8 @@ public:
   new_Task(const FileRegion& file_region,
 	   const char* name,
 	   bool automatic,
-	   const PtIOHeadArray* iohead_array,
-	   const PtDeclHeadArray* decl_array,
+	   const vector<const PtIOHead*>& iohead_array,
+	   const vector<const PtDeclHead*>& decl_array,
 	   const PtStmt* stmt) override;
 
   /// @brief 1ビット型 function 文の生成
@@ -709,8 +709,8 @@ public:
 	       const char* name,
 	       bool automatic,
 	       bool sign,
-	       const PtIOHeadArray* iohead_array,
-	       const PtDeclHeadArray* decl_array,
+	       const vector<const PtIOHead*>& iohead_array,
+	       const vector<const PtDeclHead*>& decl_array,
 	       const PtStmt* stmt) override;
 
   /// @brief 範囲指定型 function 文の生成
@@ -731,8 +731,8 @@ public:
 		bool sign,
 		const PtExpr* left,
 		const PtExpr* right,
-		const PtIOHeadArray* iohead_array,
-		const PtDeclHeadArray* decl_array,
+		const vector<const PtIOHead*>& iohead_array,
+		const vector<const PtDeclHead*>& decl_array,
 		const PtStmt* stmt) override;
 
   /// @brief 組み込み型 function 文の生成
@@ -753,8 +753,8 @@ public:
 		bool automatic,
 		bool sign,
 		VpiVarType func_type,
-		const PtIOHeadArray* iohead_array,
-		const PtDeclHeadArray* decl_array,
+		const vector<const PtIOHead*>& iohead_array,
+		const vector<const PtDeclHead*>& decl_array,
 		const PtStmt* stmt) override;
 
   /// @brief gate instance 文のヘッダの生成
@@ -765,7 +765,7 @@ public:
   const PtItem*
   new_GateH(const FileRegion& file_region,
 	    VpiPrimType type,
-	    const PtInstArray* elem_array) override;
+	    const vector<const PtInst*>& elem_array) override;
 
   /// @brief gate instance 文のヘッダの生成 (strength付き)
   /// @param[in] file_region ファイル位置の情報
@@ -777,7 +777,7 @@ public:
   new_GateH(const FileRegion& file_region,
 	    VpiPrimType type,
 	    const PtStrength* strength,
-	    const PtInstArray* elem_array) override;
+	    const vector<const PtInst*>& elem_array) override;
 
   /// @brief gate instance 文のヘッダの生成 (遅延付き)
   /// @param[in] file_region ファイル位置の情報
@@ -789,7 +789,7 @@ public:
   new_GateH(const FileRegion& file_region,
 	    VpiPrimType type,
 	    const PtDelay* delay,
-	    const PtInstArray* elem_array) override;
+	    const vector<const PtInst*>& elem_array) override;
 
   /// @brief gate instance 文のヘッダの生成 (strength, 遅延付き)
   /// @param[in] file_region ファイル位置の情報
@@ -803,7 +803,7 @@ public:
 	    VpiPrimType type,
 	    const PtStrength* strength,
 	    const PtDelay* delay,
-	    const PtInstArray* elem_array) override;
+	    const vector<const PtInst*>& elem_array) override;
 
   /// @brief module instance/UDP instance 文のヘッダの生成
   /// @param[in] file_region ファイル位置の情報
@@ -813,7 +813,7 @@ public:
   const PtItem*
   new_MuH(const FileRegion& file_region,
 	  const char* def_name,
-	  const PtInstArray* elem_array) override;
+	  const vector<const PtInst*>& elem_array) override;
 
   /// @brief module instance/UDP instance 文のヘッダの生成 (strength付き)
   /// @param[in] file_region ファイル位置の情報
@@ -825,7 +825,7 @@ public:
   new_MuH(const FileRegion& file_region,
 	  const char* def_name,
 	  const PtStrength* strength,
-	  const PtInstArray* elem_array) override;
+	  const vector<const PtInst*>& elem_array) override;
 
   /// @brief module instance/UDP instance 文のヘッダの生成 (遅延付き)
   /// @param[in] file_region ファイル位置の情報
@@ -837,7 +837,7 @@ public:
   new_MuH(const FileRegion& file_region,
 	  const char* def_name,
 	  const PtDelay* delay,
-	  const PtInstArray* elem_array) override;
+	  const vector<const PtInst*>& elem_array) override;
 
   /// @brief module instance/UDP instance 文のヘッダの生成 (strength, 遅延付き)
   /// @param[in] file_region ファイル位置の情報
@@ -851,7 +851,7 @@ public:
 	  const char* def_name,
 	  const PtStrength* strength,
 	  const PtDelay* delay,
-	  const PtInstArray* elem_array) override;
+	  const vector<const PtInst*>& elem_array) override;
 
   /// @brief module instance/UDP instance 文のヘッダの生成
   /// @param[in] file_region ファイル位置の情報
@@ -862,8 +862,8 @@ public:
   const PtItem*
   new_MuH(const FileRegion& file_region,
 	  const char* def_name,
-	  const PtConnectionArray* con_array,
-	  const PtInstArray* elem_array) override;
+	  const vector<const PtConnection*>& con_array,
+	  const vector<const PtInst*>& elem_array) override;
 
   /// @brief module instance/UDP instance の要素の生成
   /// @param[in] file_region ファイル位置の情報
@@ -871,7 +871,7 @@ public:
   /// @return 生成された module instance/UDP instance の要素
   const PtInst*
   new_Inst(const FileRegion& file_region,
-	   const PtConnectionArray* con_array) override;
+	   const vector<const PtConnection*>& con_array) override;
 
   /// @brief 名前付き module instance/UDP instance の要素の生成
   /// @param[in] file_region ファイル位置の情報
@@ -881,7 +881,7 @@ public:
   const PtInst*
   new_InstN(const FileRegion& file_region,
 	    const char* name,
-	    const PtConnectionArray* con_array) override;
+	    const vector<const PtConnection*>& con_array) override;
 
   /// @brief 名前と範囲付き module instance/UDP instance の要素の生成
   /// @param[in] file_region ファイル位置の情報
@@ -895,7 +895,7 @@ public:
 	    const char* name,
 	    const PtExpr* left,
 	    const PtExpr* right,
-	    const PtConnectionArray* con_array) override;
+	    const vector<const PtConnection*>& con_array) override;
 
   /// @brief generate 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -904,8 +904,8 @@ public:
   /// @return 生成された generate 文
   const PtItem*
   new_Generate(const FileRegion& file_region,
-	       const PtDeclHeadArray* declhead_array,
-	       const PtItemArray* item_array) override;
+	       const vector<const PtDeclHead*>& declhead_array,
+	       const vector<const PtItem*>& item_array) override;
 
   /// @brief generate block 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -914,8 +914,8 @@ public:
   /// @return 生成された generate block 文
   const PtItem*
   new_GenBlock(const FileRegion& file_region,
-	       const PtDeclHeadArray* declhead_array,
-	       const PtItemArray* item_array) override;
+	       const vector<const PtDeclHead*>& declhead_array,
+	       const vector<const PtItem*>& item_array) override;
 
   /// @brief 名前付き generate block 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -926,8 +926,8 @@ public:
   const PtItem*
   new_GenBlock(const FileRegion& file_region,
 	       const char* name,
-	       const PtDeclHeadArray* declhead_array,
-	       const PtItemArray* item_array) override;
+	       const vector<const PtDeclHead*>& declhead_array,
+	       const vector<const PtItem*>& item_array) override;
 
   /// @brief generate if 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -941,10 +941,10 @@ public:
   const PtItem*
   new_GenIf(const FileRegion& file_region,
 	    const PtExpr* cond,
-	    const PtDeclHeadArray* then_declhead_array,
-	    const PtItemArray* then_item_array,
-	    const PtDeclHeadArray* else_declhead_array,
-	    const PtItemArray* else_item_array) override;
+	    const vector<const PtDeclHead*>& then_declhead_array,
+	    const vector<const PtItem*>& then_item_array,
+	    const vector<const PtDeclHead*>& else_declhead_array,
+	    const vector<const PtItem*>& else_item_array) override;
 
   /// @brief generate case 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -954,7 +954,7 @@ public:
   const PtItem*
   new_GenCase(const FileRegion& file_region,
 	      const PtExpr* expr,
-	      const PtGenCaseItemArray* item_array) override;
+	      const vector<const PtGenCaseItem*>& item_array) override;
 
   /// @brief generate case の要素の生成
   /// @param[in] file_region ファイル位置の情報
@@ -964,9 +964,9 @@ public:
   /// @return 生成された generate case item
   const PtGenCaseItem*
   new_GenCaseItem(const FileRegion& file_region,
-		  const PtExprArray* label_array,
-		  const PtDeclHeadArray* declhead_array,
-		  const PtItemArray* item_array) override;
+		  const vector<const PtExpr*>& label_array,
+		  const vector<const PtDeclHead*>& declhead_array,
+		  const vector<const PtItem*>& item_array) override;
 
   /// @brief generate for 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -985,8 +985,8 @@ public:
 	     const PtExpr* cond,
 	     const PtExpr* next_expr,
 	     const char* block_name,
-	     const PtDeclHeadArray* declhead_array,
-	     const PtItemArray* item_array) override;
+	     const vector<const PtDeclHead*>& declhead_array,
+	     const vector<const PtItem*>& item_array) override;
 
   /// @brief specify block item の生成
   /// @param[in] file_region ファイル位置の情報
@@ -996,7 +996,7 @@ public:
   const PtItem*
   new_SpecItem(const FileRegion& file_region,
 	       VpiSpecItemType id,
-	       const PtExprArray* terminal_array) override;
+	       const vector<const PtExpr*>& terminal_array) override;
 
   /// @brief path 仕様を生成する．
   /// @param[in] file_region ファイル位置の情報
@@ -1024,10 +1024,10 @@ public:
   const PtPathDecl*
   new_PathDecl(const FileRegion& file_region,
 	       int edge,
-	       const PtExprArray* input_array,
+	       const vector<const PtExpr*>& input_array,
 	       int input_pol,
 	       VpiPathType op,
-	       const PtExprArray* output_array,
+	       const vector<const PtExpr*>& output_array,
 	       int output_pol,
 	       const PtExpr* expr,
 	       const PtPathDelay* path_delay) override;
@@ -1140,7 +1140,7 @@ public:
   const PtStmt*
   new_Enable(const FileRegion& file_region,
 	     const char* name,
-	     const PtExprArray* arg_array) override;
+	     const vector<const PtExpr*>& arg_array) override;
 
   /// @brief enable 文の生成 (階層付き識別子)
   /// @param[in] file_region ファイル位置の情報
@@ -1151,7 +1151,7 @@ public:
   const PtStmt*
   new_Enable(const FileRegion& file_region,
 	     PuHierName* hname,
-	     const PtExprArray* arg_array) override;
+	     const vector<const PtExpr*>& arg_array) override;
 
   /// @brief system task enable 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1161,7 +1161,7 @@ public:
   const PtStmt*
   new_SysEnable(const FileRegion& file_region,
 		const char* name,
-		const PtExprArray* arg_array) override;
+		const vector<const PtExpr*>& arg_array) override;
 
   /// @brief delay control 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1281,7 +1281,7 @@ public:
   const PtStmt*
   new_Case(const FileRegion& file_region,
 	   const PtExpr* expr,
-	   const PtCaseItemArray* caseitem_array) override;
+	   const vector<const PtCaseItem*>& caseitem_array) override;
 
   /// @brief casex 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1291,7 +1291,7 @@ public:
   const PtStmt*
   new_CaseX(const FileRegion& file_region,
 	    const PtExpr* expr,
-	    const PtCaseItemArray* caseitem_array) override;
+	    const vector<const PtCaseItem*>& caseitem_array) override;
 
   /// @brief casez 文の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1301,7 +1301,7 @@ public:
   const PtStmt*
   new_CaseZ(const FileRegion& file_region,
 	    const PtExpr* expr,
-	    const PtCaseItemArray* caseitem_array) override;
+	    const vector<const PtCaseItem*>& caseitem_array) override;
 
   /// @brief case item の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1310,7 +1310,7 @@ public:
   /// @return 生成された case item
   const PtCaseItem*
   new_CaseItem(const FileRegion& file_region,
-	       const PtExprArray* label_array,
+	       const vector<const PtExpr*>& label_array,
 	       const PtStmt* body) override;
 
   /// @brief forever 文の生成
@@ -1397,7 +1397,7 @@ public:
   /// @return 生成された parallel block
   const PtStmt*
   new_ParBlock(const FileRegion& file_region,
-	       const PtStmtArray* stmt_array) override;
+	       const vector<const PtStmt*>& stmt_array) override;
 
   /// @brief 名前付き parallel block の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1408,8 +1408,8 @@ public:
   const PtStmt*
   new_NamedParBlock(const FileRegion& file_region,
 		    const char* name,
-		    const PtDeclHeadArray* declhead_array,
-		    const PtStmtArray* stmt_array) override;
+		    const vector<const PtDeclHead*>& declhead_array,
+		    const vector<const PtStmt*>& stmt_array) override;
 
   /// @brief sequential block の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1417,7 +1417,7 @@ public:
   /// @return 生成された sequential block
   const PtStmt*
   new_SeqBlock(const FileRegion& file_region,
-	       const PtStmtArray* stmt_array) override;
+	       const vector<const PtStmt*>& stmt_array) override;
 
   /// @brief 名前付き sequential block の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1428,8 +1428,8 @@ public:
   const PtStmt*
   new_NamedSeqBlock(const FileRegion& file_region,
 		    const char* name,
-		    const PtDeclHeadArray* declhead_array,
-		    const PtStmtArray* stmt_array) override;
+		    const vector<const PtDeclHead*>& declhead_array,
+		    const vector<const PtStmt*>& stmt_array) override;
 
 
   //////////////////////////////////////////////////////////////////////
@@ -1478,7 +1478,7 @@ public:
   /// @return 生成された concatination 演算子
   const PtExpr*
   new_Concat(const FileRegion& file_region,
-	     const PtExprArray* expr_array) override;
+	     const vector<const PtExpr*>& expr_array) override;
 
   /// @brief multi-concatination 演算子の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1486,7 +1486,7 @@ public:
   /// @return 生成された multi-concatination 演算子
   const PtExpr*
   new_MultiConcat(const FileRegion& file_region,
-		  const PtExprArray* expr_array) override;
+		  const vector<const PtExpr*>& expr_array) override;
 
   /// @brief min/typ/max delay 演算子の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1516,7 +1516,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& file_region,
 	      const char* name,
-	      const PtExprArray* index_array) override;
+	      const vector<const PtExpr*>& index_array) override;
 
   /// @brief 範囲指定付き primary の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1543,7 +1543,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& file_region,
 	      const char* name,
-	      const PtExprArray* index_array,
+	      const vector<const PtExpr*>& index_array,
 	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) override;
@@ -1566,7 +1566,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& file_region,
 	      PuHierName* hname,
-	      const PtExprArray* index_array) override;
+	      const vector<const PtExpr*>& index_array) override;
 
   /// @brief 範囲指定付き primary の生成 (階層付き)
   /// @param[in] file_region ファイル位置の情報
@@ -1595,7 +1595,7 @@ public:
   const PtExpr*
   new_Primary(const FileRegion& file_region,
 	      PuHierName* hname,
-	      const PtExprArray* index_array,
+	      const vector<const PtExpr*>& index_array,
 	      VpiRangeMode mode,
 	      const PtExpr* left,
 	      const PtExpr* right) override;
@@ -1608,7 +1608,7 @@ public:
   const PtExpr*
   new_CPrimary(const FileRegion& file_region,
 	       const char* name,
-	       const PtExprArray* index_array) override;
+	       const vector<const PtExpr*>& index_array) override;
 
   /// @brief 範囲指定付き constant primary の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1633,7 +1633,7 @@ public:
   const PtExpr*
   new_CPrimary(const FileRegion& file_region,
 	       PuHierName* hname,
-	       const PtExprArray* index_array) override;
+	       const vector<const PtExpr*>& index_array) override;
 
   /// @brief function call の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1643,7 +1643,7 @@ public:
   const PtExpr*
   new_FuncCall(const FileRegion& file_region,
 	       const char* name,
-	       const PtExprArray* arg_array) override;
+	       const vector<const PtExpr*>& arg_array) override;
 
   /// @brief function call の生成 (階層付き)
   /// @param[in] file_region ファイル位置の情報
@@ -1654,7 +1654,7 @@ public:
   const PtExpr*
   new_FuncCall(const FileRegion& file_region,
 	       PuHierName* hname,
-	       const PtExprArray* arg_array) override;
+	       const vector<const PtExpr*>& arg_array) override;
 
   /// @brief system function call の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1664,7 +1664,7 @@ public:
   const PtExpr*
   new_SysFuncCall(const FileRegion& file_region,
 		  const char* name,
-		  const PtExprArray* arg_array) override;
+		  const vector<const PtExpr*>& arg_array) override;
 
   /// @brief 整数型の定数の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1739,7 +1739,7 @@ public:
   /// @return 生成されたイベントコントロール
   const PtControl*
   new_EventControl(const FileRegion& file_region,
-		   const PtExprArray* event_array) override;
+		   const vector<const PtExpr*>& event_array) override;
 
   /// @brief リピートコントロールの生成
   /// @param[in] file_region ファイル位置の情報
@@ -1749,7 +1749,7 @@ public:
   const PtControl*
   new_RepeatControl(const FileRegion& file_region,
 		    const PtExpr* expr,
-		    const PtExprArray* event_array) override;
+		    const vector<const PtExpr*>& event_array) override;
 
   /// @brief 順序つき結合子の生成
   /// @param[in] file_region ファイル位置の情報
@@ -1848,7 +1848,7 @@ public:
   /// @return 生成された attribute instance
   const PtAttrInst*
   new_AttrInst(const FileRegion& file_region,
-	       const PtAttrSpecArray* as_array) override;
+	       const vector<const PtAttrSpec*>& as_array) override;
 
   /// @brief attribute spec の生成
   /// @param[in] file_region ファイル位置の情報

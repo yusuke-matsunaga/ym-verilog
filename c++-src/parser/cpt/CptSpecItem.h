@@ -10,6 +10,8 @@
 
 
 #include "CptItem.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -27,7 +29,7 @@ protected:
   /// @brief コンストラクタ
   CptSpecItem(const FileRegion& file_region,
 	      VpiSpecItemType id,
-	      const PtExprArray* terminal_array);
+	      PtiExprArray&& terminal_array);
 
   /// @brief デストラクタ
   ~CptSpecItem();
@@ -51,9 +53,15 @@ public:
   VpiSpecItemType
   specitem_type() const override;
 
-  /// @brief ターミナルリストの取得
-  const PtExprArray*
-  terminal_list() const override;
+  /// @brief ターミナルの要素数の取得
+  SizeType
+  terminal_num() const override;
+
+  /// @brief ターミナルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+  virtual
+  const PtExpr*
+  terminal(SizeType pos) const override;
 
 
 private:
@@ -68,7 +76,7 @@ private:
   VpiSpecItemType mId;
 
   // ターミナルの配列
-  const PtExprArray* mTerminalArray;
+  PtiExprArray mTerminalArray;
 
 };
 
@@ -153,10 +161,10 @@ protected:
   /// @brief コンストラクタ
   CptPathDecl(const FileRegion& file_region,
 	      int edge,
-	      const PtExprArray* input_array,
+	      PtiExprArray&& input_array,
 	      int input_pol,
 	      VpiPathType op,
-	      const PtExprArray* output_array,
+	      PtiExprArray&& output_array,
 	      int output_pol,
 	      const PtExpr* expr,
 	      const PtPathDelay* path_delay);
@@ -179,9 +187,14 @@ public:
   int
   edge() const override;
 
-  /// @brief 入力のリストの取得
-  const PtExprArray*
-  input_list() const override;
+  /// @brief 入力のリストの要素数の取得
+  SizeType
+  input_num() const override;
+
+  /// @brief 入力の取得
+  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
+  const PtExpr*
+  input(SizeType pos) const override;
 
   /// @brief 入力の極性を取り出す．
   /// @note 0の場合もありうる．
@@ -192,9 +205,14 @@ public:
   VpiPathType
   op() const override;
 
-  /// @brief 出力のリストの取得
-  const PtExprArray*
-  output_list() const override;
+  /// @brief 出力のリストの要素数の取得
+  SizeType
+  output_num() const override;
+
+  /// @brief 出力の取得
+  /// @param[in] pos 位置 ( 0 <= pos < output_num() )
+  const PtExpr*
+  output(SizeType pos) const override;
 
   /// @brief 出力の極性を取り出す．
   /// @note 0の場合もありうる．
@@ -220,10 +238,10 @@ private:
   FileRegion mFileRegion;
 
   int mEdge;
-  const PtExprArray* mInputArray;
+  PtiExprArray mInputArray;
   int mInputPol;
   VpiPathType mOp;
-  const PtExprArray* mOutputArray;
+  PtiExprArray mOutputArray;
   int mOutputPol;
   const PtExpr* mExpr;
   const PtPathDelay* mPathDelay;

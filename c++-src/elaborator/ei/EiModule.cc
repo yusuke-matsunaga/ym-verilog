@@ -16,7 +16,6 @@
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtDecl.h"
 #include "ym/pt/PtItem.h"
-#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -37,7 +36,7 @@ EiFactory::new_Module(const VlNamedObj* parent,
 		      const PtInst* pt_inst)
 {
 
-  SizeType port_num = pt_module->port_list()->size();
+  SizeType port_num = pt_module->port_num();
   auto port_array{new EiPort[port_num]};
 
   SizeType io_num = pt_module->iodecl_num();
@@ -83,7 +82,7 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
 				      range,
 				      chunk)};
 
-  SizeType port_num = pt_module->port_list()->size();
+  SizeType port_num = pt_module->port_num();
   SizeType io_num = pt_module->iodecl_num();
   for ( int i = 0; i < n; ++ i ) {
     auto port_array{new EiPort[port_num]};
@@ -174,7 +173,7 @@ EiModuleHead::def_name() const
 int
 EiModuleHead::port_num() const
 {
-  return mPtModule->port_list()->size();
+  return mPtModule->port_num();
 }
 
 /// @brief 入出力宣言数を返す．

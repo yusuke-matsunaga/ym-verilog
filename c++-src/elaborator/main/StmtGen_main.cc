@@ -95,15 +95,14 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   case PtStmtType::Case:
   case PtStmtType::CaseX:
   case PtStmtType::CaseZ:
-    for ( auto pt_item: *pt_stmt->caseitem_list() ) {
+    for ( auto pt_item: pt_stmt->caseitem_list() ) {
       phase1_stmt(parent, pt_item->body());
     }
     break;
 
   case PtStmtType::ParBlock:
   case PtStmtType::SeqBlock:
-    for ( int i = 0; i < pt_stmt->stmt_array()->size(); ++ i ) {
-      const PtStmt* pt_stmt1 = (*pt_stmt->stmt_array())[i];
+    for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
       phase1_stmt(parent, pt_stmt1);
     }
     break;
@@ -114,17 +113,20 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
       ElbScope* block_scope = factory().new_StmtScope(parent, pt_stmt);
       reg_internalscope(block_scope);
 
-      for ( int i = 0; i < pt_stmt->stmt_array()->size(); ++ i ) {
-	const PtStmt* pt_stmt1 = (*pt_stmt->stmt_array())[i];
+      for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
 	phase1_stmt(block_scope, pt_stmt1);
       }
       if ( cf ) {
-	phase2_namedblock(block_scope, pt_stmt->declhead_array());
+	phase2_namedblock(block_scope, pt_stmt->declhead_list());
       }
       else {
-	add_phase2stub(make_stub(this, &StmtGen::phase2_namedblock,
-				 static_cast<const VlNamedObj*>(block_scope),
-				 pt_stmt->declhead_array()));
+	auto stub{make_stub<StmtGen,
+		  const VlNamedObj*,
+		  const vector<const PtDeclHead*>&>(this,
+						    &StmtGen::phase2_namedblock,
+						    static_cast<const VlNamedObj*>(block_scope),
+						    pt_stmt->declhead_list())};
+	add_phase2stub(stub);
       }
     }
     break;
@@ -350,17 +352,15 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 			     const PtStmt* pt_stmt)
 {
   const FileRegion& fr = pt_stmt->file_region();
-  auto nb_array = pt_stmt->namebranch_array();
-  const char* name = pt_stmt->name();
 
   ElbObjHandle* handle = nullptr;
 
   // disable はモジュール境界を越えない？ 要チェック ##TODO##TODO##
   // 仕様書には何も書いていないのでたぶん越えられる．
-  handle = find_obj_up(parent, nb_array, name, nullptr);
+  handle = find_obj_up(parent, pt_stmt, nullptr);
   if ( !handle ) {
     ostringstream buf;
-    buf << expand_full_name(nb_array, name) << " : Not found.";
+    buf << pt_stmt->fullname() << " : Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
 		    MsgType::Error,
@@ -402,15 +402,13 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 			    const PtStmt* pt_stmt)
 {
   const FileRegion& fr = pt_stmt->file_region();
-  auto nb_array = pt_stmt->namebranch_array();
-  const char* name = pt_stmt->name();
 
   // タスクを探し出して設定する．
   // タスク名の探索はモジュール境界を越える．
-  ElbObjHandle* cell = find_obj_up(parent, nb_array, name, nullptr);
+  ElbObjHandle* cell = find_obj_up(parent, pt_stmt, nullptr);
   if ( !cell ) {
     ostringstream buf;
-    buf << expand_full_name(nb_array, name) << " : Not found.";
+    buf << pt_stmt->fullname() << " : Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
 		    MsgType::Error,
@@ -420,7 +418,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
   }
   if ( cell->type() != VpiObjType::Task ) {
     ostringstream buf;
-    buf << expand_full_name(nb_array, name) << " : Not a task.";
+    buf << pt_stmt->fullname() << " : Not a task.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
 		    MsgType::Error,
@@ -431,9 +429,9 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list()->size());
+  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_num());
   SizeType wpos = 0;
-  for ( auto pt_expr: *pt_stmt->arg_list() ) {
+  for ( auto pt_expr: pt_stmt->arg_list() ) {
     ElbExpr* expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       // エラーが起った．
@@ -479,9 +477,9 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   }
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_list()->size());
+  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_num());
   SizeType wpos = 0;
-  for ( auto pt_expr: *pt_stmt->arg_list() ) {
+  for ( auto pt_expr: pt_stmt->arg_list() ) {
     ElbExpr* arg = nullptr;
     // 空の引数があるのでエラーと区別する．
     if ( pt_expr ) {
@@ -545,11 +543,10 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
   }
 
   // イベントリストの生成を行う．
-  auto& pt_event_list{*pt_control->event_list()};
-  SizeType event_num = pt_event_list.size();
+  SizeType event_num = pt_control->event_num();
   ElbExpr** event_list = factory().new_ExprList(event_num);
   for ( SizeType i = 0; i < event_num; ++ i ) {
-    const PtExpr* pt_expr = pt_event_list[i];
+    const PtExpr* pt_expr = pt_control->event(i);
     ElbExpr* expr = instantiate_event_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;

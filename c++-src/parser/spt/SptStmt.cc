@@ -42,14 +42,14 @@ SptStmt::SptStmt(const FileRegion& file_region,
 		 const PtExpr* expr2,
 		 const PtControl* control,
 		 const char* name,
-		 const PtNameBranchArray* nb_array,
-		 const PtCaseItemArray* caseitem_array,
-		 const PtDeclHeadArray* decl_array,
-		 const PtStmtArray* stmt_array,
-		 const PtExprArray* arg_array) :
+		 PtiNameBranchArray&& nb_array,
+		 PtiCaseItemArray&& caseitem_array,
+		 PtiDeclHeadArray&& decl_array,
+		 PtiStmtArray&& stmt_array,
+		 PtiExprArray&& arg_array) :
   mFileRegion{file_region},
   mType{type},
-  mNbArray{nb_array},
+  mNbArray{move(nb_array)},
   mName{name},
   mControl{control},
   mBody1{body1},
@@ -57,10 +57,10 @@ SptStmt::SptStmt(const FileRegion& file_region,
   mBody3{body3},
   mExpr1{expr1},
   mExpr2{expr2},
-  mCaseItemArray{caseitem_array},
-  mDeclArray{decl_array},
-  mStmtArray{stmt_array},
-  mArgArray{arg_array}
+  mCaseItemArray{move(caseitem_array)},
+  mDeclArray{move(decl_array)},
+  mStmtArray{move(stmt_array)},
+  mArgArray{move(arg_array)}
 {
 }
 
@@ -121,12 +121,19 @@ SptStmt::stmt_name() const
   return "";
 }
 
-// 階層ブランチの取得
-// kDisable/kEnable/kSysEnable で意味のある関数
-const PtNameBranchArray*
-SptStmt::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+SptStmt::namebranch_num() const
 {
-  return mNbArray;
+  return mNbArray.size();
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+SptStmt::namebranch(SizeType pos) const
+{
+  return mNbArray[pos];
 }
 
 // 名前の取得
@@ -138,11 +145,19 @@ SptStmt::name() const
   return mName;
 }
 
-// @brief 引数のリストの取得
-const PtExprArray*
-SptStmt::arg_list() const
+// @brief 引数の数の取得
+SizeType
+SptStmt::arg_num() const
 {
-  return mArgArray;
+  return mArgArray.size();
+}
+
+// @brief 引数の取得
+// @param[in] pos 位置 ( 0 <= pos < arg_num() )
+const PtExpr*
+SptStmt::arg(SizeType pos) const
+{
+  return mArgArray[pos];
 }
 
 // コントロールの取得
@@ -208,11 +223,19 @@ SptStmt::else_body() const
   return mBody2;
 }
 
-// @brief case item のリストの取得
-const PtCaseItemArray*
-SptStmt::caseitem_list() const
+// @brief case item のリストの要素数の取得
+SizeType
+SptStmt::caseitem_num() const
 {
-  return mCaseItemArray;
+  return mCaseItemArray.size();
+}
+
+// @brief case item の取得
+// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+const PtCaseItem*
+SptStmt::caseitem(SizeType pos) const
+{
+  return mCaseItemArray[pos];
 }
 
 // 初期化代入文の取得
@@ -233,20 +256,38 @@ SptStmt::next_stmt() const
   return mBody3;
 }
 
-// @brief 宣言ヘッダ配列の取得
+// @brief 宣言ヘッダ配列の要素数の取得
 // @note kNamedParBlock/kNamedSeqBlock で意味のある関数
-const PtDeclHeadArray*
-SptStmt::declhead_array() const
+SizeType
+SptStmt::declhead_num() const
 {
-  return mDeclArray;
+  return mDeclArray.size();
 }
 
-// @brief 子供のステートメント配列の取得
-// @note kParBlock/kSeqBlock で意味のある関数
-const PtStmtArray*
-SptStmt::stmt_array() const
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+const PtDeclHead*
+SptStmt::declhead(SizeType pos) const
 {
-  return mStmtArray;
+  return mDeclArray[pos];
+}
+
+// @brief 子供のステートメント配列の要素数の取得
+// @note kParBlock/kSeqBlock で意味のある関数
+SizeType
+SptStmt::stmt_num() const
+{
+  return mStmtArray.size();
+}
+
+// @brief 子供のステートメントの取得
+// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
+// @note kParBlock/kSeqBlock で意味のある関数
+const PtStmt*
+SptStmt::stmt(SizeType pos) const
+{
+  return mStmtArray[pos];
 }
 
 
@@ -256,10 +297,10 @@ SptStmt::stmt_array() const
 
 // コンストラクタ
 SptCaseItem::SptCaseItem(const FileRegion& file_region,
-			 const PtExprArray* label_array,
+			 PtiExprArray&& label_array,
 			 const PtStmt* body) :
   mFileRegion{file_region},
-  mLabelArray{label_array},
+  mLabelArray{move(label_array)},
   mBody{body}
 {
   ASSERT_COND( body );
@@ -277,11 +318,19 @@ SptCaseItem::file_region() const
   return mFileRegion;
 }
 
-// @brief ラベルのリストの取得
-const PtExprArray*
-SptCaseItem::label_list() const
+// @brief ラベルのリストの要素数の取得
+SizeType
+SptCaseItem::label_num() const
 {
-  return mLabelArray;
+  return mLabelArray.size();
+}
+
+// @brief ラベルの取得
+// @param[in] pos 位置 ( 0 <= pos < label_num() )
+const PtExpr*
+SptCaseItem::label(SizeType pos) const
+{
+  return mLabelArray[pos];
 }
 
 // 本体のステートメント得る．
@@ -322,7 +371,7 @@ const PtStmt*
 SptFactory::new_Disable(const FileRegion& file_region,
 			PuHierName* hname)
 {
-  auto nb_array = hname->name_branch(mAlloc);
+  auto nb_array = hname->name_branch();
   auto tail_name = hname->tail_name();
   auto node = new SptStmt(file_region,
 			  PtStmtType::Disable,
@@ -330,7 +379,7 @@ SptFactory::new_Disable(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  tail_name,
-			  nb_array);
+			  PtiNameBranchArray(mAlloc, nb_array));
   return node;
 }
 
@@ -342,7 +391,7 @@ SptFactory::new_Disable(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_Enable(const FileRegion& file_region,
 		       const char* name,
-		       const PtExprArray* arg_array)
+		       const vector<const PtExpr*>& arg_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Enable,
@@ -350,11 +399,11 @@ SptFactory::new_Enable(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  arg_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(),
+			  PtiStmtArray(),
+			  PtiExprArray(mAlloc, arg_array));
   return node;
 }
 
@@ -367,9 +416,9 @@ SptFactory::new_Enable(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_Enable(const FileRegion& file_region,
 		       PuHierName* hname,
-		       const PtExprArray* arg_array)
+		       const vector<const PtExpr*>& arg_array)
 {
-  auto nb_array = hname->name_branch(mAlloc);
+  auto nb_array = hname->name_branch();
   auto tail_name = hname->tail_name();
   auto node = new SptStmt(file_region,
 			  PtStmtType::Enable,
@@ -377,11 +426,11 @@ SptFactory::new_Enable(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  tail_name,
-			  nb_array,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  arg_array);
+			  PtiNameBranchArray(mAlloc, nb_array),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(),
+			  PtiStmtArray(),
+			  PtiExprArray(mAlloc, arg_array));
   return node;
 }
 
@@ -393,7 +442,7 @@ SptFactory::new_Enable(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_SysEnable(const FileRegion& file_region,
 			  const char* name,
-			  const PtExprArray* arg_array)
+			  const vector<const PtExpr*>& arg_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::SysEnable,
@@ -401,11 +450,11 @@ SptFactory::new_SysEnable(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  arg_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(),
+			  PtiStmtArray(),
+			  PtiExprArray(mAlloc, arg_array));
   return node;
 }
 
@@ -607,7 +656,7 @@ SptFactory::new_If(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_Case(const FileRegion& file_region,
 		     const PtExpr* expr,
-		     const PtCaseItemArray* caseitem_array)
+		     const vector<const PtCaseItem*>& caseitem_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Case,
@@ -615,8 +664,8 @@ SptFactory::new_Case(const FileRegion& file_region,
 			  expr, nullptr,
 			  nullptr,
 			  nullptr,
-			  nullptr,
-			  caseitem_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(mAlloc, caseitem_array));
   return node;
 }
 
@@ -628,7 +677,7 @@ SptFactory::new_Case(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_CaseX(const FileRegion& file_region,
 		      const PtExpr* expr,
-		      const PtCaseItemArray* caseitem_array)
+		      const vector<const PtCaseItem*>& caseitem_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::CaseX,
@@ -636,8 +685,8 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 			  expr, nullptr,
 			  nullptr,
 			  nullptr,
-			  nullptr,
-			  caseitem_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(mAlloc, caseitem_array));
   return node;
 }
 
@@ -649,7 +698,7 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_CaseZ(const FileRegion& file_region,
 		      const PtExpr* expr,
-		      const PtCaseItemArray* caseitem_array)
+		      const vector<const PtCaseItem*>& caseitem_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::CaseZ,
@@ -657,8 +706,8 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 			  expr, nullptr,
 			  nullptr,
 			  nullptr,
-			  nullptr,
-			  caseitem_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(mAlloc, caseitem_array));
   return node;
 }
 
@@ -669,10 +718,12 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 // @return 生成された case item
 const PtCaseItem*
 SptFactory::new_CaseItem(const FileRegion& file_region,
-			 const PtExprArray* label_array,
+			 const vector<const PtExpr*>& label_array,
 			 const PtStmt* body)
 {
-  auto node = new SptCaseItem(file_region, label_array, body);
+  auto node = new SptCaseItem(file_region,
+			      PtiExprArray(mAlloc, label_array),
+			      body);
   return node;
 }
 
@@ -815,7 +866,7 @@ SptFactory::new_Release(const FileRegion& file_region,
 // @return 生成された parallel block
 const PtStmt*
 SptFactory::new_ParBlock(const FileRegion& file_region,
-			 const PtStmtArray* stmt_array)
+			 const vector<const PtStmt*>& stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::ParBlock,
@@ -823,10 +874,10 @@ SptFactory::new_ParBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  nullptr,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  stmt_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(),
+			  PtiStmtArray(mAlloc, stmt_array));
   return node;
 }
 
@@ -839,8 +890,8 @@ SptFactory::new_ParBlock(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      const char* name,
-			      const PtDeclHeadArray* decl_array,
-			      const PtStmtArray* stmt_array)
+			      const vector<const PtDeclHead*>& decl_array,
+			      const vector<const PtStmt*>& stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NamedParBlock,
@@ -848,10 +899,10 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  nullptr,
-			  nullptr,
-			  decl_array,
-			  stmt_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(mAlloc, decl_array),
+			  PtiStmtArray(mAlloc, stmt_array));
   return node;
 }
 
@@ -861,7 +912,7 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 // @return 生成された sequential block
 const PtStmt*
 SptFactory::new_SeqBlock(const FileRegion& file_region,
-			 const PtStmtArray* stmt_array)
+			 const vector<const PtStmt*>& stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::SeqBlock,
@@ -869,10 +920,10 @@ SptFactory::new_SeqBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  nullptr,
-			  nullptr,
-			  nullptr,
-			  nullptr,
-			  stmt_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(mAlloc, PtiDeclHeadArray()),
+			  PtiStmtArray(mAlloc, stmt_array));
   return node;
 }
 
@@ -885,8 +936,8 @@ SptFactory::new_SeqBlock(const FileRegion& file_region,
 const PtStmt*
 SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      const char* name,
-			      const PtDeclHeadArray* decl_array,
-			      const PtStmtArray* stmt_array)
+			      const vector<const PtDeclHead*>& decl_array,
+			      const vector<const PtStmt*>& stmt_array)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NamedSeqBlock,
@@ -894,10 +945,10 @@ SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			  nullptr, nullptr,
 			  nullptr,
 			  name,
-			  nullptr,
-			  nullptr,
-			  decl_array,
-			  stmt_array);
+			  PtiNameBranchArray(),
+			  PtiCaseItemArray(),
+			  PtiDeclHeadArray(mAlloc, decl_array),
+			  PtiStmtArray(mAlloc, stmt_array));
   return node;
 }
 

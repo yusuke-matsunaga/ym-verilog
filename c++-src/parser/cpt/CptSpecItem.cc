@@ -9,7 +9,6 @@
 
 #include "CptSpecItem.h"
 #include "parser/CptFactory.h"
-#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -21,10 +20,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptSpecItem::CptSpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 const PtExprArray* terminal_array) :
+			 PtiExprArray&& terminal_array) :
   mFileRegion(file_region),
   mId(id),
-  mTerminalArray(terminal_array)
+  mTerminalArray{move(terminal_array)}
 {
 }
 
@@ -54,11 +53,19 @@ CptSpecItem::specitem_type() const
   return mId;
 }
 
-// @brief ターミナルリストの取得
-const PtExprArray*
-CptSpecItem::terminal_list() const
+// @brief ターミナルの要素数の取得
+SizeType
+CptSpecItem::terminal_num() const
 {
-  return mTerminalArray;
+  return mTerminalArray.size();
+}
+
+// @brief ターミナルの取得
+// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+const PtExpr*
+CptSpecItem::terminal(SizeType pos) const
+{
+  return mTerminalArray[pos];
 }
 
 
@@ -126,19 +133,19 @@ CptSpecPath::path_decl() const
 // コンストラクタ
 CptPathDecl::CptPathDecl(const FileRegion& file_region,
 			 int edge,
-			 const PtExprArray* input_array,
+			 PtiExprArray&& input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 const PtExprArray* output_array,
+			 PtiExprArray&& output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay) :
   mFileRegion{file_region},
   mEdge{edge},
-  mInputArray{input_array},
+  mInputArray{move(input_array)},
   mInputPol{input_pol},
   mOp{op},
-  mOutputArray{output_array},
+  mOutputArray{move(output_array)},
   mOutputPol{output_pol},
   mExpr{expr},
   mPathDelay{path_delay}
@@ -165,11 +172,19 @@ CptPathDecl::edge() const
   return mEdge;
 }
 
-// @brief 入力のリストの取得
-const PtExprArray*
-CptPathDecl::input_list() const
+// @brief 入力のリストの要素数の取得
+SizeType
+CptPathDecl::input_num() const
 {
-  return mInputArray;
+  return mInputArray.size();
+}
+
+// @brief 入力の取得
+// @param[in] pos 位置 ( 0 <= pos < input_num() )
+const PtExpr*
+CptPathDecl::input(SizeType pos) const
+{
+  return mInputArray[pos];
 }
 
 // 入力の極性を取り出す．
@@ -187,11 +202,19 @@ CptPathDecl::op() const
   return mOp;
 }
 
-// @brief 出力のリストの取得
-const PtExprArray*
-CptPathDecl::output_list() const
+// @brief 出力のリストの要素数の取得
+SizeType
+CptPathDecl::output_num() const
 {
-  return mOutputArray;
+  return mOutputArray.size();
+}
+
+// @brief 出力の取得
+// @param[in] pos 位置 ( 0 <= pos < output_num() )
+const PtExpr*
+CptPathDecl::output(SizeType pos) const
+{
+  return mOutputArray[pos];
 }
 
 // 出力の極性を取り出す．
@@ -326,11 +349,12 @@ CptPathDelay::value(SizeType pos) const
 const PtItem*
 CptFactory::new_SpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 const PtExprArray* terminal_array)
+			 const vector<const PtExpr*>& terminal_array)
 {
   ++ mNumSpecItem;
   void* p{mAlloc.get_memory(sizeof(CptSpecItem))};
-  auto obj{new (p) CptSpecItem(file_region, id, terminal_array)};
+  auto obj{new (p) CptSpecItem(file_region, id,
+			       PtiArray<const PtExpr>(mAlloc, terminal_array))};
   return obj;
 }
 
@@ -351,18 +375,22 @@ CptFactory::new_SpecPath(const FileRegion& file_region,
 const PtPathDecl*
 CptFactory::new_PathDecl(const FileRegion& file_region,
 			 int edge,
-			 const PtExprArray* input_array,
+			 const vector<const PtExpr*>& input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 const PtExprArray* output_array,
+			 const vector<const PtExpr*>& output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay)
 {
   ++ mNumPathDecl;
   void* p{mAlloc.get_memory(sizeof(CptPathDecl))};
-  auto obj{new (p) CptPathDecl(file_region, edge, input_array, input_pol,
-			       op, output_array, output_pol,
+  auto obj{new (p) CptPathDecl(file_region, edge,
+			       PtiArray<const PtExpr>(mAlloc, input_array),
+			       input_pol,
+			       op,
+			       PtiArray<const PtExpr>(mAlloc, output_array),
+			       output_pol,
 			       expr, path_delay)};
   return obj;
 }

@@ -58,8 +58,8 @@ public:
   /// @brief 階層ブランチを PtNameBranchArray の形で取り出す．
   ///
   /// この関数を呼ぶと mNbList は破壊される．
-  const PtNameBranchArray*
-  name_branch(PtAlloc& alloc);
+  vector<const PtNameBranch*>
+  name_branch();
 
   /// @brief 最下層の名前を取り出す．
   /// @return 最下層の名前
@@ -73,7 +73,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  PtrList<const PtNameBranch> mNbList;
+  PtrList<const PtNameBranch>* mNbList;
 
   // 最下層の名前
   const char* mTailName;
@@ -92,15 +92,17 @@ private:
 inline
 PuHierName::PuHierName(const PtNameBranch* nb,
 		       const char* name) :
+  mNbList{new PtrList<const PtNameBranch>},
   mTailName(name)
 {
-  mNbList.push_back(nb);
+  mNbList->push_back(nb);
 }
 
 // @brief デストラクタ
 inline
 PuHierName::~PuHierName()
 {
+  delete mNbList;
 }
 
 // 今の tail_name を階層名のブランチとしてその下に tail_name を
@@ -110,7 +112,7 @@ void
 PuHierName::add(const PtNameBranch* nb,
 		const char* tail_name)
 {
-  mNbList.push_back(nb);
+  mNbList->push_back(nb);
   mTailName = tail_name;
 }
 
@@ -118,10 +120,13 @@ PuHierName::add(const PtNameBranch* nb,
 //
 // この関数を呼ぶと mNbList は破壊される．
 inline
-const PtNameBranchArray*
-PuHierName::name_branch(PtAlloc& alloc)
+vector<const PtNameBranch*>
+PuHierName::name_branch()
 {
-  return mNbList.to_array(alloc);
+  auto ans{mNbList->to_vector()};
+  delete mNbList;
+  mNbList = nullptr;
+  return ans;
 }
 
 // @brief 最下層の名前を取り出す．

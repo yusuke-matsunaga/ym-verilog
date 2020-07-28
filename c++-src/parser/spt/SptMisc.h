@@ -5,14 +5,15 @@
 /// @brief その他の部品クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/FileRegion.h"
 
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -31,7 +32,7 @@ private:
   SptControl(const FileRegion& file_region,
 	     PtCtrlType type,
 	     const PtExpr* expr,
-	     const PtExprArray* event_array);
+	     PtiExprArray&& event_array);
 
   /// デストラクタ
   ~SptControl();
@@ -54,10 +55,18 @@ public:
   const PtExpr*
   delay() const override;
 
-  /// @brief イベントリストの取得
-  /// @note event control/repeat control の場合のみ意味を持つ
-  const PtExprArray*
-  event_list() const override;
+  /// @brief イベントリストの要素数の取得
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  SizeType
+  event_num() const override;
+
+  /// @brief イベントリストの要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  const PtExpr*
+  event(SizeType pos) const override;
 
   /// 繰り返し数の取得
   const PtExpr*
@@ -79,7 +88,7 @@ private:
   const PtExpr* mExpr;
 
   // イベントの配列
-  const PtExprArray* mEventArray;
+  PtiExprArray mEventArray;
 
 };
 
@@ -317,7 +326,7 @@ class SptAttrInst :
 private:
 
   /// コンストラクタ
-  SptAttrInst(const PtAttrSpecArray* as_array);
+  SptAttrInst(PtiAttrSpecArray&& as_array);
 
   /// デストラクタ
   ~SptAttrInst();
@@ -332,9 +341,14 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief 要素のリストの取得
-  const PtAttrSpecArray*
-  attrspec_list() const override;
+  /// @brief 要素数の取得
+  SizeType
+  attrspec_num() const override;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
+  const PtAttrSpec*
+  attrspec(SizeType pos) const override;
 
 
 private:
@@ -343,7 +357,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // attr spec の配列
-  const PtAttrSpecArray* mAttrSpecArray;
+  PtiAttrSpecArray mAttrSpecArray;
 
 };
 

@@ -29,11 +29,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 SptControl::SptControl(const FileRegion& file_region,
 		       PtCtrlType type,
 		       const PtExpr* expr,
-		       const PtExprArray* event_array) :
+		       PtiExprArray&& event_array) :
   mFileRegion{file_region},
   mType{type},
   mExpr{expr},
-  mEventArray{event_array}
+  mEventArray{move(event_array)}
 {
 }
 
@@ -72,12 +72,23 @@ SptControl::delay() const
   }
 }
 
-// @brief イベントリストの取得
-// @note event control/repeat control の場合のみ意味を持つ
-const PtExprArray*
-SptControl::event_list() const
+// @brief イベントリストの要素数の取得
+//
+// event control/repeat control の場合のみ意味を持つ
+SizeType
+SptControl::event_num() const
 {
-  return mEventArray;
+  return mEventArray.size();
+}
+
+// @brief イベントリストの要素の取得
+// @param[in] pos 位置 ( 0 <= pos < event_num() )
+//
+// event control/repeat control の場合のみ意味を持つ
+const PtExpr*
+SptControl::event(SizeType pos) const
+{
+  return mEventArray[pos];
 }
 
 // 繰り返し数の取得
@@ -335,8 +346,8 @@ SptNameBranch::index() const
 
 // コンストラクタ
 // @param as_array attr_spec のリスト
-SptAttrInst::SptAttrInst(const PtAttrSpecArray* as_array) :
-  mAttrSpecArray{as_array}
+SptAttrInst::SptAttrInst(PtiAttrSpecArray&& as_array) :
+  mAttrSpecArray{move(as_array)}
 {
 }
 
@@ -349,21 +360,29 @@ SptAttrInst::~SptAttrInst()
 FileRegion
 SptAttrInst::file_region() const
 {
-  SizeType n = mAttrSpecArray->size();
+  SizeType n = mAttrSpecArray.size();
   if ( n == 0 ) {
     return FileRegion();
   }
   else {
-    return FileRegion{(*mAttrSpecArray)[0]->file_region(),
-			(*mAttrSpecArray)[n - 1]->file_region()};
+    return FileRegion{mAttrSpecArray[0]->file_region(),
+			mAttrSpecArray[n - 1]->file_region()};
   }
 }
 
-// @brief 要素のリストの取得
-const PtAttrSpecArray*
-SptAttrInst::attrspec_list() const
+// @brief 要素数の取得
+SizeType
+SptAttrInst::attrspec_num() const
 {
-  return mAttrSpecArray;
+  return mAttrSpecArray.size();
+}
+
+// @brief 要素の取得
+// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
+const PtAttrSpec*
+SptAttrInst::attrspec(SizeType pos) const
+{
+  return mAttrSpecArray[pos];
 }
 
 
@@ -428,7 +447,8 @@ SptFactory::new_DelayControl(const FileRegion& file_region,
 			     const PtExpr* value)
 {
   auto node = new SptControl(file_region, PtCtrlType::Delay,
-			     value, nullptr);
+			     value,
+			     PtiExprArray());
   return node;
 }
 
@@ -438,10 +458,11 @@ SptFactory::new_DelayControl(const FileRegion& file_region,
 // @return 生成されたイベントコントロール
 const PtControl*
 SptFactory::new_EventControl(const FileRegion& file_region,
-			     const PtExprArray* event_array)
+			     const vector<const PtExpr*>& event_array)
 {
   auto node = new SptControl(file_region, PtCtrlType::Event,
-			     nullptr, event_array);
+			     nullptr,
+			     PtiExprArray(mAlloc, event_array));
   return node;
 }
 
@@ -453,10 +474,11 @@ SptFactory::new_EventControl(const FileRegion& file_region,
 const PtControl*
 SptFactory::new_RepeatControl(const FileRegion& file_region,
 			      const PtExpr* expr,
-			      const PtExprArray* event_array)
+			      const vector<const PtExpr*>& event_array)
 {
   auto node = new SptControl(file_region, PtCtrlType::Repeat,
-			     expr, event_array);
+			     expr,
+			     PtiExprArray(mAlloc, event_array));
   return node;
 }
 
@@ -601,10 +623,10 @@ SptFactory::new_NameBranch(const char* name,
 // @return 生成された attribute instance
 const PtAttrInst*
 SptFactory::new_AttrInst(const FileRegion& file_region,
-			 const PtAttrSpecArray* as_array)
+			 const vector<const PtAttrSpec*>& as_array)
 {
   // file_region は不要
-  auto node = new SptAttrInst(as_array);
+  auto node = new SptAttrInst(PtiAttrSpecArray(mAlloc, as_array));
   return node;
 }
 

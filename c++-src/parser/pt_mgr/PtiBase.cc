@@ -10,7 +10,6 @@
 #include "parser/PtiDecl.h"
 #include "parser/PtiExpr.h"
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -317,7 +316,7 @@ decompile_impl(const PtExpr* expr,
 
   case PtExprType::Primary:
     {
-      string ans(expand_full_name(expr->namebranch_array(), expr->name()));
+      string ans{expr->fullname()};
       ymuint n = expr->index_num();
       for (ymuint i = 0; i < n; ++ i) {
 	ans += "[" + expr->index(i)->decompile() + "]";
@@ -360,27 +359,19 @@ PtiExpr::decompile() const
 // 適当な場所がないのでここに置いている．
 //////////////////////////////////////////////////////////////////////
 
-// @brief 階層名を作り出す関数
-// @param[in] nb 階層ブランチリストの先頭
-// @param[in] name 末尾の名前
-// @return 階層名を展開したものを返す．
+// @brief 階層名を展開する．
 string
-expand_full_name(const PtNameBranchArray* nb_array,
-		 const char* name)
+PtHierNamedBase::fullname() const
 {
   ostringstream buf;
   const char* period = "";
-  for ( auto nb: *nb_array ) {
-    buf << period << nb->name();
-    if ( nb->has_index() ) {
-      buf << "[" << nb->index() << "]";
-    }
+  for ( auto nb: namebranch_list() ) {
+    buf << period << nb->expand_name();
     period = ".";
   }
-  if ( name != nullptr ) {
-    buf << period << name;
+  if ( name() != nullptr ) {
+    buf << period << name();
   }
-  buf.flush();
   return buf.str();
 }
 

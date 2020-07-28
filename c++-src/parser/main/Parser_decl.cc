@@ -10,6 +10,8 @@
 
 #include "parser/PtiFactory.h"
 #include "parser/PtiDecl.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -150,8 +152,7 @@ Parser::flush_io()
   if ( !mIOItemList.empty() ) {
     ASSERT_COND( !mCurIOHeadList->empty() );
     auto last{mCurIOHeadList->back()};
-    auto item_array{new_array<const PtIOItem>(mIOItemList)};
-    last->set_elem(item_array);
+    last->set_elem(PtiIOItemArray(alloc(), mIOItemList));
     mIOItemList.clear();
   }
 }
@@ -260,8 +261,7 @@ Parser::flush_paramport()
   if ( !mDeclItemList.empty() ) {
     ASSERT_COND( !mParamPortHeadList.empty() );
     auto last{mParamPortHeadList.back()};
-    auto item_array{new_array<const PtDeclItem>(mDeclItemList)};
-    last->set_elem(item_array);
+    last->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
     mDeclItemList.clear();
   }
 }
@@ -541,10 +541,9 @@ Parser::add_decl_head(PtiDeclHead* head,
 {
   if ( head ) {
     reg_attrinst(head, attr_list);
-    mCurDeclHeadList->push_back(head);
+    cur_declhead_list().push_back(head);
     if ( !mDeclItemList.empty() ) {
-      auto item_array{new_array<const PtDeclItem>(mDeclItemList)};
-      head->set_elem(item_array);
+      head->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
     }
   }
   mDeclItemList.clear();
@@ -588,7 +587,7 @@ Parser::new_DeclItem(const FileRegion& fr,
 		     const char* name,
 		     PtrList<const PtRange>* range_list)
 {
-  auto item{mFactory.new_DeclItem(fr, name, new_array(range_list))};
+  auto item{mFactory.new_DeclItem(fr, name, range_list->to_vector())};
   add_decl_item(item);
 }
 

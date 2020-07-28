@@ -5,13 +5,14 @@
 /// @brief CptMisc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 #include "ym/FileRegion.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -43,10 +44,18 @@ public:
   const PtExpr*
   delay() const override;
 
-  /// @brief イベントリストの取得
-  /// @note event control/repeat control の場合のみ意味を持つ
-  const PtExprArray*
-  event_list() const override;
+  /// @brief イベントリストの要素数の取得
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  SizeType
+  event_num() const override;
+
+  /// @brief イベントリストの要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  const PtExpr*
+  event(SizeType pos) const override;
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
@@ -117,11 +126,11 @@ class CptEventControl :
 {
   friend class CptFactory;
 
-private:
+protected:
 
   /// @brief コンストラクタ
   CptEventControl(const FileRegion& file_region,
-		  const PtExprArray* event_array);
+		  PtiExprArray&& event_array);
 
   /// @brief デストラクタ
   ~CptEventControl();
@@ -141,10 +150,18 @@ public:
   PtCtrlType
   type() const override;
 
-  /// @brief イベントリストの取得
-  /// @note event control/repeat control の場合のみ意味を持つ
-  const PtExprArray*
-  event_list() const override;
+  /// @brief イベントリストの要素数の取得
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  SizeType
+  event_num() const override;
+
+  /// @brief イベントリストの要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  const PtExpr*
+  event(SizeType pos) const override;
 
 
 private:
@@ -156,7 +173,7 @@ private:
   FileRegion mFileRegion;
 
   // イベントの配列
-  const PtExprArray* mEventArray;
+  PtiExprArray mEventArray;
 
 };
 
@@ -165,7 +182,7 @@ private:
 /// @brief repeat 形式の event を表すクラス
 //////////////////////////////////////////////////////////////////////
 class CptRepeatControl :
-  public CptControl
+  public CptEventControl
 {
   friend class CptFactory;
 
@@ -174,7 +191,7 @@ private:
   /// @brief コンストラクタ
   CptRepeatControl(const FileRegion& file_region,
 		   const PtExpr* expr,
-		   const PtExprArray* event_array);
+		   PtiExprArray&& event_array);
 
   /// @brief デストラクタ
   ~CptRepeatControl();
@@ -185,10 +202,6 @@ public:
   // PtControl の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ファイル位置を返す．
-  FileRegion
-  file_region() const override;
-
   /// @brief 型を返す．
   /// @note ここでは PtCtrlType::Repeat を返す．
   PtCtrlType
@@ -198,25 +211,14 @@ public:
   const PtExpr*
   rep_expr() const override;
 
-  /// @brief イベントリストの取得
-  /// @note event control/repeat control の場合のみ意味を持つ
-  const PtExprArray*
-  event_list() const override;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // ファイル位置
-  FileRegion mFileRegion;
-
   // 繰り返し数を表す式
   const PtExpr* mRepExpr;
-
-  // イベントのリスト
-  const PtExprArray* mEventArray;
 
 };
 
@@ -549,7 +551,7 @@ class CptAttrInst :
 private:
 
   /// @brief コンストラクタ
-  CptAttrInst(const PtAttrSpecArray* as_array);
+  CptAttrInst(PtiAttrSpecArray&& as_array);
 
   /// @brief デストラクタ
   ~CptAttrInst();
@@ -564,9 +566,14 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief 要素のリストの取得
-  const PtAttrSpecArray*
-  attrspec_list() const override;
+  /// @brief 要素数の取得
+  SizeType
+  attrspec_num() const override;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
+  const PtAttrSpec*
+  attrspec(SizeType pos) const override;
 
 
 private:
@@ -575,7 +582,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // attr spec のリスト
-  const PtAttrSpecArray* mAttrSpecArray;
+  PtiAttrSpecArray mAttrSpecArray;
 
 };
 

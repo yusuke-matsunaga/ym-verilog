@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 const PtItem*
 Parser::new_DefParamH(const FileRegion& fr)
 {
-  auto item{mFactory.new_DefParamH(fr, get_defparam_array())};
+  auto item{mFactory.new_DefParamH(fr, mDefParamList)};
   return item;
 }
 
@@ -67,14 +67,6 @@ Parser::add_defparam(const PtDefParam* defparam)
   mDefParamList.push_back(defparam);
 }
 
-// @brief defparam リストを配列に変換する．
-inline
-const PtDefParamArray*
-Parser::get_defparam_array()
-{
-  return new_array<const PtDefParam>(mDefParamList);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // continuous assign の生成
@@ -85,7 +77,7 @@ Parser::get_defparam_array()
 const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr)
 {
-  auto item{mFactory.new_ContAssignH(fr, get_contassign_array())};
+  auto item{mFactory.new_ContAssignH(fr, mContAssignList)};
 
   return item;
 }
@@ -97,7 +89,7 @@ const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr,
 			const PtStrength* strength)
 {
-  auto item{mFactory.new_ContAssignH(fr, strength, get_contassign_array())};
+  auto item{mFactory.new_ContAssignH(fr, strength, mContAssignList)};
   return item;
 }
 
@@ -108,7 +100,7 @@ const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr,
 			const PtDelay* delay)
 {
-  auto item{mFactory.new_ContAssignH(fr, delay, get_contassign_array())};
+  auto item{mFactory.new_ContAssignH(fr, delay, mContAssignList)};
   return item;
 }
 
@@ -122,7 +114,7 @@ Parser::new_ContAssignH(const FileRegion& fr,
 			const PtStrength* strength,
 			const PtDelay* delay)
 {
-  auto item{mFactory.new_ContAssignH(fr, strength, delay, get_contassign_array())};
+  auto item{mFactory.new_ContAssignH(fr, strength, delay, mContAssignList)};
   return item;
 }
 
@@ -152,14 +144,6 @@ void
 Parser::add_contassign(const PtContAssign* contassign)
 {
   mContAssignList.push_back(contassign);
-}
-
-// @brief contassign リストを配列に変換する．
-inline
-const PtContAssignArray*
-Parser::get_contassign_array()
-{
-  return new_array<const PtContAssign>(mContAssignList);
 }
 
 
@@ -204,13 +188,11 @@ void
 Parser::init_tf()
 {
   mCurIOHeadList = &mTfIOHeadList;
-
-  push_declhead_list(&mTfDeclHeadList);
+  push_declhead_list();
 
   mCurIOHeadList->clear();
   mIOItemList.clear();
-
-  mCurDeclHeadList->clear();
+  cur_declhead_list().clear();
   mDeclItemList.clear();
 }
 
@@ -219,10 +201,7 @@ void
 Parser::end_tf()
 {
   mCurIOHeadList = &mModuleIOHeadList;
-
-  mCurDeclArray = get_decl_array();
-
-  pop_declhead_list(false);
+  mCurDeclArray = pop_declhead_list();
 }
 
 // @brief task 文の生成
@@ -238,7 +217,7 @@ Parser::new_Task(const FileRegion& fr,
 {
   auto item{mFactory.new_Task(fr, name, automatic,
 			      get_tf_io_array(),
-			      get_tf_decl_array(),
+			      mCurDeclArray,
 			      stmt)};
   return item;
 }
@@ -259,7 +238,7 @@ Parser::new_Function(const FileRegion& fr,
   auto item{mFactory.new_Function(fr, name, automatic,
 				  sign,
 				  get_tf_io_array(),
-				  get_tf_decl_array(),
+				  mCurDeclArray,
 				  stmt)};
   return item;
 }
@@ -284,7 +263,7 @@ Parser::new_SizedFunc(const FileRegion& fr,
   auto item{mFactory.new_SizedFunc(fr, name, automatic,
 				   sign, left, right,
 				   get_tf_io_array(),
-				   get_tf_decl_array(),
+				   mCurDeclArray,
 				   stmt)};
   return item;
 }
@@ -307,7 +286,7 @@ Parser::new_TypedFunc(const FileRegion& fr,
   auto item{mFactory.new_TypedFunc(fr, name, automatic,
 				   sign, func_type,
 				   get_tf_io_array(),
-				   get_tf_decl_array(),
+				   mCurDeclArray,
 				   stmt)};
   return item;
 }
@@ -326,8 +305,8 @@ Parser::new_SpecItem(const FileRegion& fr,
 		     VpiSpecItemType id,
 		     PtrList<const PtExpr>* terminal_list)
 {
-  auto item{mFactory.new_SpecItem(fr, id, new_array(terminal_list))};
-  mCurItemList->push_back(item);
+  auto item{mFactory.new_SpecItem(fr, id, terminal_list->to_vector())};
+  add_item(item);
 }
 
 // @brief path 仕様を生成する．
@@ -342,7 +321,7 @@ Parser::new_SpecPath(const FileRegion& fr,
 		     const PtPathDecl* path_decl)
 {
   auto item{mFactory.new_SpecPath(fr, id, expr, path_decl)};
-  mCurItemList->push_back(item);
+  add_item(item);
 }
 
 // @brief パス記述の生成
@@ -367,9 +346,9 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     const PtPathDelay* path_delay)
 {
   auto item{mFactory.new_PathDecl(fr, edge,
-				  new_array(input_list), input_pol,
+				  input_list->to_vector(), input_pol,
 				  op,
-				  new_array(output_list), output_pol,
+				  output_list->to_vector(), output_pol,
 				  expr, path_delay)};
   return item;
 }
@@ -396,7 +375,7 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     const PtPathDelay* path_delay)
 {
   auto item{mFactory.new_PathDecl(fr, edge,
-				  new_array(input_list), input_pol,
+				  input_list->to_vector(), input_pol,
 				  op,
 				  output, output_pol,
 				  expr, path_delay)};
@@ -509,18 +488,10 @@ Parser::new_PathDelay(const FileRegion& fr,
 
 // @brief task/function 用の IO宣言リストを配列に変換する．
 inline
-const PtIOHeadArray*
+vector<const PtIOHead*>
 Parser::get_tf_io_array()
 {
-  return new_array2<const PtIOHead>(mTfIOHeadList);
-}
-
-// @brief task/function 用の宣言リストを配列に変換する．
-inline
-const PtDeclHeadArray*
-Parser::get_tf_decl_array()
-{
-  return new_array2<const PtDeclHead, PtiDeclHead>(mTfDeclHeadList);
+  return convert<const PtIOHead*, PtiIOHead*>(mTfIOHeadList);
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -360,8 +360,7 @@ ExprGen::error_with_hname(const PtExpr* pt_expr,
 			  const char* msg)
 {
   ostringstream buf;
-  buf << expand_full_name(pt_expr->namebranch_array(), pt_expr->name())
-      << " : " << msg;
+  buf << pt_expr->fullname() << " : " << msg;
   error_common(pt_expr, label, buf.str().c_str());
 }
 

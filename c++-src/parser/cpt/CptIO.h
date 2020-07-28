@@ -10,10 +10,8 @@
 
 
 #include "ym/pt/PtDecl.h"
-#include "ym/pt/PtArray.h"
-
 #include "ym/FileRegion.h"
-
+#include "parser/PtiArray.h"
 #include "parser/PtiDecl.h"
 
 
@@ -90,9 +88,14 @@ public:
   const PtExpr*
   right_range() const override;
 
-  /// @brief 要素のリストの取得
-  const PtIOItemArray*
-  item_list() const override;
+  /// @brief 要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtIOItem*
+  item(SizeType pos) const override;
 
 
 private:
@@ -101,9 +104,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素リスト
+  /// @param[in] elem_array 要素の配列
   void
-  set_elem(const PtIOItemArray* elem_array) override;
+  set_elem(PtiIOItemArray&& elem_array) override;
 
 
 private:
@@ -118,7 +121,7 @@ private:
   ymuint32 mAttr;
 
   // 要素の配列
-  const PtIOItemArray* mItemArray;
+  PtiIOItemArray mItemArray;
 
 };
 

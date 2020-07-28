@@ -75,7 +75,7 @@ const PtExpr*
 Parser::new_Concat(const FileRegion& fr,
 		   PtrList<const PtExpr>* expr_list)
 {
-  auto expr{mFactory.new_Concat(fr, new_array(expr_list))};
+  auto expr{mFactory.new_Concat(fr, expr_list->to_vector())};
   return expr;
 }
 
@@ -98,9 +98,7 @@ Parser::new_MultiConcat(const FileRegion& fr,
     ++ i;
   }
 
-  void* p{mPtMgr.alloc().get_memory(sizeof(PtExprArray))};
-  auto expr_array{new (p) PtExprArray(mPtMgr.alloc(), vec)};
-  auto expr{mFactory.new_MultiConcat(fr, expr_array)};
+  auto expr{mFactory.new_MultiConcat(fr, vec)};
   return expr;
 }
 
@@ -142,7 +140,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const char* name,
 		    PtrList<const PtExpr>* index_array)
 {
-  auto expr{mFactory.new_Primary(fr, name, new_array(index_array))};
+  auto expr{mFactory.new_Primary(fr, name, index_array->to_vector())};
   return expr;
 }
 
@@ -180,7 +178,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  auto expr{mFactory.new_Primary(fr, name, new_array(index_list),
+  auto expr{mFactory.new_Primary(fr, name, index_list->to_vector(),
 				 mode, left, right)};
   return expr;
 }
@@ -207,7 +205,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    PuHierName* hname,
 		    PtrList<const PtExpr>* index_list)
 {
-  auto expr{mFactory.new_Primary(fr, hname, new_array(index_list))};
+  auto expr{mFactory.new_Primary(fr, hname, index_list->to_vector())};
   return expr;
 }
 
@@ -245,7 +243,7 @@ Parser::new_Primary(const FileRegion& fr,
 		    const PtExpr* left,
 		    const PtExpr* right)
 {
-  auto expr{mFactory.new_Primary(fr, hname, new_array(index_list),
+  auto expr{mFactory.new_Primary(fr, hname, index_list->to_vector(),
 				 mode, left, right)};
   return expr;
 }
@@ -274,7 +272,7 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     const char* name,
 		     PtrList<const PtExpr>* index_list)
 {
-  auto expr{mFactory.new_CPrimary(fr, name, new_array(index_list))};
+  auto expr{mFactory.new_CPrimary(fr, name, index_list->to_vector())};
   return expr;
 }
 
@@ -306,7 +304,7 @@ Parser::new_CPrimary(const FileRegion& fr,
 		     PuHierName* hname,
 		     PtrList<const PtExpr>* index_list)
 {
-  auto expr{mFactory.new_CPrimary(fr, hname, new_array(index_list))};
+  auto expr{mFactory.new_CPrimary(fr, hname, index_list->to_vector())};
   return expr;
 }
 
@@ -321,7 +319,7 @@ Parser::new_FuncCall(const FileRegion& fr,
 		     PtrList<const PtExpr>* arg_list,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  auto expr{mFactory.new_FuncCall(fr, name, new_array(arg_list))};
+  auto expr{mFactory.new_FuncCall(fr, name, arg_list->to_vector())};
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -337,7 +335,7 @@ Parser::new_FuncCall(const FileRegion& fr,
 		     PtrList<const PtExpr>* arg_list,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  auto expr{mFactory.new_FuncCall(fr, hname, new_array(arg_list))};
+  auto expr{mFactory.new_FuncCall(fr, hname, arg_list->to_vector())};
   reg_attrinst(expr, ai_list);
   return expr;
 }
@@ -352,7 +350,7 @@ Parser::new_SysFuncCall(const FileRegion& fr,
 			const char* name,
 			PtrList<const PtExpr>* arg_list)
 {
-  auto expr{mFactory.new_SysFuncCall(fr, name, new_array(arg_list))};
+  auto expr{mFactory.new_SysFuncCall(fr, name, arg_list->to_vector())};
   return expr;
 }
 

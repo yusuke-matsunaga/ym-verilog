@@ -12,7 +12,8 @@
 #include "ym/FileRegion.h"
 
 #include "ym/pt/PtItem.h"
-#include "ym/pt/PtArray.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -64,21 +65,41 @@ public:
   const PtDelay*
   delay() const override;
 
-  /// @brief パラメータ割り当てリストの取得
-  const PtConnectionArray*
-  paramassign_array() const override;
+  /// @brief パラメータ割り当て数の取得
+  SizeType
+  paramassign_num() const override;
 
-  /// @brief defparam のリストの取得
-  const PtDefParamArray*
-  defparam_list() const override;
+  /// @brief パラメータ割り当ての取得
+  /// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
+  const PtConnection*
+  paramassign(SizeType pos) const override;
 
-  /// @brief continuous assign のリストの取得
-  const PtContAssignArray*
-  contassign_list() const override;
+  /// @brief defparam の要素数の取得
+  SizeType
+  defparam_num() const override;
 
-  /// @brief module/UDP/gate instance リストの取得
-  const PtInstArray*
-  inst_list() const override;
+  /// @brief defparam の取得
+  /// @param[in] pos 位置 ( 0 <= pos < defparam_num() )
+  const PtDefParam*
+  defparam(SizeType pos) const override;
+
+  /// @brief continuous assign の要素数の取得
+  SizeType
+  contassign_num() const override;
+
+  /// @brief continuous assign の取得
+  /// @param[in] pos 位置 ( 0 <= pos < contassign_num() )
+  const PtContAssign*
+  contassign(SizeType pos) const override;
+
+  /// @brief module/UDP/gate instance の要素数の取得
+  SizeType
+  inst_num() const override;
+
+  /// @brief module/UDP/gate instance の取得
+  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+  const PtInst*
+  inst(SizeType pos) const override;
 
   /// @brief 名前の取得
   /// @return 名前
@@ -94,20 +115,35 @@ public:
   automatic() const override;
 
   /// @brief IO宣言の要素数の取得
-  int
+  SizeType
   ioitem_num() const override;
 
-  /// @brief IO宣言リストの配列の取得
-  const PtIOHeadArray*
-  iohead_array() const override;
+  /// @brief IO宣言ヘッダリストの要素数の取得
+  SizeType
+  iohead_num() const override;
 
-  /// @brief 宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief IO宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+  const PtIOHead*
+  iohead(SizeType pos) const override;
 
-  /// @brief item 配列の取得
-  const PtItemArray*
-  item_array() const override;
+  /// @brief 宣言ヘッダの要素数の取得
+  SizeType
+  declhead_num() const override;
+
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
+
+  /// @brief item リストの要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  item(SizeType pos) const override;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント
@@ -168,9 +204,14 @@ public:
   VpiSpecPathType
   specpath_type() const override;
 
-  /// @brief ターミナルのリストの取得
-  const PtExprArray*
-  terminal_list() const override;
+  /// @brief ターミナルの要素数の取得
+  SizeType
+  terminal_num() const override;
+
+  /// @brief ターミナルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+  const PtExpr*
+  terminal(SizeType pos) const override;
 
   /// @brief パス記述の取得
   /// @return パス記述
@@ -184,25 +225,50 @@ public:
   const PtExpr*
   expr() const override;
 
-  /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  then_declhead_array() const override;
+  /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の要素数の取得
+  SizeType
+  then_declhead_num() const override;
 
-  /// @brief 条件が成り立ったときに生成される item 配列の取得
-  const PtItemArray*
-  then_item_array() const override;
+  /// @brief 条件が成り立ったときに生成される宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < then_declhead_num() )
+  const PtDeclHead*
+  then_declhead(SizeType pos) const override;
 
-  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  else_declhead_array() const override;
+  /// @brief 条件が成り立ったときに生成される item 配列の要素数の取得
+  SizeType
+  then_item_num() const override;
 
-  /// @brief 条件が成り立たなかったときに生成される item 配列の取得
-  const PtItemArray*
-  else_item_array() const override;
+  /// @brief 条件が成り立ったときに生成される item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < then_item_num() )
+  const PtItem*
+  then_item(SizeType pos) const override;
 
-  /// @brief case item のリストの取得
-  const PtGenCaseItemArray*
-  caseitem_list() const override;
+  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の要素数の取得
+  SizeType
+  else_declhead_num() const override;
+
+  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < else_declhead_num() )
+  const PtDeclHead*
+  else_declhead(SizeType pos) const override;
+
+  /// @brief 条件が成り立たなかったときに生成される item 配列の要素数の取得
+  SizeType
+  else_item_num() const override;
+
+  /// @brief 条件が成り立たなかったときに生成される item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < else_item_num() )
+  const PtItem*
+  else_item(SizeType pos) const override;
+
+  /// @brief case item のリストの要素数の取得
+  SizeType
+  caseitem_num() const override;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+  const PtGenCaseItem*
+  caseitem(SizeType pos) const override;
 
   /// @brief 繰り返し制御用の変数名の取得
   /// @return 繰り返し制御用の変数名
@@ -249,7 +315,7 @@ private:
 
   /// コンストラクタ
   SptDefParamH(const FileRegion& file_region,
-	       const PtDefParamArray* dp_array);
+	       PtiDefParamArray&& dp_array);
 
   /// デストラクタ
   ~SptDefParamH();
@@ -260,9 +326,14 @@ public:
   // PtItem の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief defparam リストの取得
-  const PtDefParamArray*
-  defparam_list() const override;
+  /// @brief defparam の要素数の取得
+  SizeType
+  defparam_num() const override;
+
+  /// @brief defparam の取得
+  /// @param[in] pos 位置 ( 0 <= pos < defparam_num() )
+  const PtDefParam*
+  defparam(SizeType pos) const override;
 
 
 private:
@@ -271,7 +342,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素の配列
-  const PtDefParamArray* mArray;
+  PtiDefParamArray mArray;
 
 };
 
@@ -289,7 +360,7 @@ private:
   // コンストラクタ
   // value は常に定数式
   SptDefParam(const FileRegion& file_region,
-	      const PtNameBranchArray* nb_array,
+	      PtiNameBranchArray&& nb_array,
 	      const char* tail_name,
 	      const PtExpr* value);
 
@@ -306,9 +377,14 @@ public:
   FileRegion
   file_region() const override;
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
   // 末尾の名前を返す．
   const char*
@@ -328,7 +404,7 @@ private:
   FileRegion mFileRegion;
 
   // 階層ブランチの配列
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray&& mNbArray;
 
   // 末尾の名前
   const char* mName;
@@ -353,7 +429,7 @@ private:
   SptContAssignH(const FileRegion& file_region,
 		 const PtStrength* strength,
 		 const PtDelay* delay,
-		 const PtContAssignArray* ca_array);
+		 PtiContAssignArray&& ca_array);
 
   // デストラクタ
   ~SptContAssignH();
@@ -372,9 +448,14 @@ public:
   const PtDelay*
   delay() const override;
 
-  /// @brief continuous assign リストの取得
-  const PtContAssignArray*
-  contassign_list() const override;
+  /// @brief continuous assign の要素数の取得
+  SizeType
+  contassign_num() const override;
+
+  /// @brief continuous assign の取得
+  /// @param[in] pos 位置 ( 0 <= pos < contassign_num() )
+  const PtContAssign*
+  contassign(SizeType pos) const override;
 
 
 private:
@@ -389,7 +470,7 @@ private:
   const PtDelay* mDelay;
 
   // 要素の配列
-  const PtContAssignArray* mArray;
+  PtiContAssignArray mArray;
 
 };
 
@@ -518,8 +599,8 @@ private:
 	const PtExpr* left,
 	const PtExpr* right,
 	VpiVarType var_type,
-	const PtIOHeadArray* iohead_array,
-	const PtDeclHeadArray* declhead_array,
+	PtiIOHeadArray&& iohead_array,
+	PtiDeclHeadArray&& declhead_array,
 	const PtStmt* stmt);
 
   // デストラクタ
@@ -540,16 +621,26 @@ public:
   automatic() const override;
 
   /// @brief IO宣言の要素数の取得
-  int
+  SizeType
   ioitem_num() const override;
 
-  /// @brief IO宣言リストの配列の取得
-  const PtIOHeadArray*
-  iohead_array() const override;
+  /// @brief IO宣言ヘッダリストの要素数の取得
+  SizeType
+  iohead_num() const override;
 
-  /// @brief 宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief IO宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+  const PtIOHead*
+  iohead(SizeType pos) const override;
+
+  /// @brief 宣言ヘッダの要素数の取得
+  SizeType
+  declhead_num() const override;
+
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
 
   // 本体を取り出す．
   const PtStmt*
@@ -611,10 +702,10 @@ private:
   int mIOItemNum;
 
   // IO宣言の配列
-  const PtIOHeadArray* mIOHeadArray;
+  PtiIOHeadArray mIOHeadArray;
 
   // その他の宣言の配列
-  const PtDeclHeadArray* mDeclHeadArray;
+  PtiDeclHeadArray mDeclHeadArray;
 
   // 本体
   const PtStmt* mBody;
@@ -641,7 +732,7 @@ private:
 	   VpiPrimType prim_type,
 	   const PtStrength* strength,
 	   const PtDelay* delay,
-	   const PtInstArray* elem_array);
+	   PtiInstArray&& elem_array);
 
   // デストラクタ
   ~SptGateH();
@@ -664,9 +755,14 @@ public:
   const PtDelay*
   delay() const override;
 
-  /// @brief module/UDP/gate instance リストの取得
-  const PtInstArray*
-  inst_list() const override;
+  /// @brief module/UDP/gate instance の要素数の取得
+  SizeType
+  inst_num() const override;
+
+  /// @brief module/UDP/gate instance の取得
+  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+  const PtInst*
+  inst(SizeType pos) const override;
 
 
 private:
@@ -684,7 +780,7 @@ private:
   const PtDelay* mDelay;
 
   // 要素の配列
-  const PtInstArray* mElemArray;
+  PtiInstArray mElemArray;
 
 };
 
@@ -702,10 +798,10 @@ private:
   // コンストラクタ
   SptMuH(const FileRegion& file_region,
 	 const char* def_name,
-	 const PtConnectionArray* con_array,
+	 PtiConnectionArray&& con_array,
 	 const PtStrength* strength,
 	 const PtDelay* delay,
-	 const PtInstArray* elem_array);
+	 PtiInstArray&& elem_array);
 
   // デストラクタ
   ~SptMuH();
@@ -728,14 +824,23 @@ public:
   const PtDelay*
   delay() const override;
 
-  /// @brief パラメータ割り当てリストの取得
-  const PtConnectionArray*
-  paramassign_array() const override;
+  /// @brief パラメータ割り当て数の取得
+  SizeType
+  paramassign_num() const override;
 
-  /// @brief module/UDP/gate instance リストの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < size() )
-  const PtInstArray*
-  inst_list() const override;
+  /// @brief パラメータ割り当ての取得
+  /// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
+  const PtConnection*
+  paramassign(SizeType pos) const override;
+
+  /// @brief module/UDP/gate instance の要素数の取得
+  SizeType
+  inst_num() const override;
+
+  /// @brief module/UDP/gate instance の取得
+  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+  const PtInst*
+  inst(SizeType pos) const override;
 
 
 private:
@@ -747,7 +852,7 @@ private:
   const char* mName;
 
   // パラメータ割り当ての配列
-  const PtConnectionArray* mParamArray;
+  PtiConnectionArray mParamArray;
 
   // strength
   const PtStrength* mStrength;
@@ -756,7 +861,7 @@ private:
   const PtDelay* mDelay;
 
   // 要素のリスト
-  const PtInstArray* mElemArray;
+  PtiInstArray mElemArray;
 
 };
 
@@ -776,7 +881,7 @@ private:
 	  const char* name,
 	  const PtExpr* left,
 	  const PtExpr* right,
-	  const PtConnectionArray* con_array);
+	  PtiConnectionArray&& con_array);
 
   // デストラクタ
   ~SptInst();
@@ -803,9 +908,14 @@ public:
   const PtExpr*
   right_range() const override;
 
-  /// @brief ポートのリストの取得
-  const PtConnectionArray*
-  port_list() const override;
+  /// @brief ポートの要素数の取得
+  SizeType
+  port_num() const override;
+
+  /// @brief ポートの取得
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
+  const PtConnection*
+  port(SizeType pos) const override;
 
 
 private:
@@ -826,7 +936,7 @@ private:
   const PtExpr* mRightRange;
 
   // ポート割り当ての配列
-  const PtConnectionArray* mPortArray;
+  PtiConnectionArray mPortArray;
 
 };
 
@@ -839,8 +949,8 @@ class SptGenBody
 public:
 
   // コンストラクタ
-  SptGenBody(const PtDeclHeadArray* decl_array,
-	     const PtItemArray* item_array);
+  SptGenBody(PtiDeclHeadArray&& decl_array,
+	     PtiItemArray&& item_array);
 
   // デストラクタ
   ~SptGenBody();
@@ -848,13 +958,23 @@ public:
 
 public:
 
-  /// @brief 宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  declhead_array() const { return mDeclArray; }
+  /// @brief 宣言ヘッダの要素数の取得
+  SizeType
+  declhead_num() const;
 
-  /// @brief item 配列の取得
-  const PtItemArray*
-  item_array() const { return mItemArray; }
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const;
+
+  /// @brief item リストの要素数の取得
+  SizeType
+  item_num() const;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  item(SizeType pos) const;
 
 
 private:
@@ -863,10 +983,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 宣言の配列
-  const PtDeclHeadArray* mDeclArray;
+  PtiDeclHeadArray mDeclArray;
 
   // 要素の配列
-  const PtItemArray* mItemArray;
+  PtiItemArray mItemArray;
 
 };
 
@@ -885,8 +1005,8 @@ private:
   SptGenerate(const FileRegion& file_region,
 	      PtItemType type,
 	      const char* name,
-	      const PtDeclHeadArray* decl_array,
-	      const PtItemArray* item_array);
+	      PtiDeclHeadArray&& decl_array,
+	      PtiItemArray&& item_array);
 
   // デストラクタ
   ~SptGenerate();
@@ -901,13 +1021,23 @@ public:
   const char*
   name() const override;
 
-  /// @brief 宣言のリストの取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief 宣言ヘッダの要素数の取得
+  SizeType
+  declhead_num() const override;
 
-  /// @brief item リストの取得
-  const PtItemArray*
-  item_array() const override;
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
+
+  /// @brief item リストの要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  item(SizeType pos) const override;
 
 
 private:
@@ -937,10 +1067,10 @@ private:
   // コンストラクタ
   SptGenIf(const FileRegion& file_region,
 	   const PtExpr* cond,
-	   const PtDeclHeadArray* then_decl_array,
-	   const PtItemArray* then_item_array,
-	   const PtDeclHeadArray* else_decl_array,
-	   const PtItemArray* else_item_array);
+	   PtiDeclHeadArray&& then_decl_array,
+	   PtiItemArray&& then_item_array,
+	   PtiDeclHeadArray&& else_decl_array,
+	   PtiItemArray&& else_item_array);
 
   // デストラクタ
   ~SptGenIf();
@@ -955,21 +1085,42 @@ public:
   const PtExpr*
   expr() const override;
 
-  /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  then_declhead_array() const override;
+  /// @brief 条件が成り立ったときに生成される宣言ヘッダの要素数の取得
+  SizeType
+  then_declhead_num() const override;
 
-  /// @brief 条件が成り立ったときに生成される item 配列の取得
-  const PtItemArray*
-  then_item_array() const override;
+  /// @brief 条件が成り立ったときに生成される宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  then_declhead(SizeType pos) const override;
 
-  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  else_declhead_array() const override;
+  /// @brief 条件が成り立ったときに生成される item リストの要素数の取得
+  SizeType
+  then_item_num() const override;
 
-  /// @brief 条件が成り立たなかったときに生成される item 配列の取得
-  const PtItemArray*
-  else_item_array() const override;
+  /// @brief 条件が成り立ったときに生成される item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  then_item(SizeType pos) const override;
+
+
+  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの要素数の取得
+  SizeType
+  else_declhead_num() const override;
+
+  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  else_declhead(SizeType pos) const override;
+
+  /// @brief 条件が成り立たなかったときに生成される item リストの要素数の取得
+  SizeType
+  else_item_num() const override;
+
+  /// @brief 条件が成り立たなかったときに生成される item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  else_item(SizeType pos) const override;
 
 
 private:
@@ -1002,7 +1153,7 @@ private:
   // コンストラクタ
   SptGenCase(const FileRegion& file_region,
 	     const PtExpr* expr,
-	     const PtGenCaseItemArray* item_array);
+	     PtiGenCaseItemArray&& item_array);
 
   // デストラクタ
   ~SptGenCase();
@@ -1017,9 +1168,14 @@ public:
   const PtExpr*
   expr() const override;
 
-  // case item のリストを返す．
-  const PtGenCaseItemArray*
-  caseitem_list() const override;
+  /// @brief case item のリストの要素数の取得
+  SizeType
+  caseitem_num() const override;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+  const PtGenCaseItem*
+  caseitem(SizeType pos) const override;
 
 
 private:
@@ -1031,7 +1187,7 @@ private:
   const PtExpr* mExpr;
 
   // case item の配列
-  const PtGenCaseItemArray* mCaseItemArray;
+  PtiGenCaseItemArray mCaseItemArray;
 
 };
 
@@ -1048,9 +1204,9 @@ private:
 
   // コンストラクタ
   SptGenCaseItem(const FileRegion& file_region,
-		 const PtExprArray* label_array,
-		 const PtDeclHeadArray* decl_array,
-		 const PtItemArray* item_array);
+		 PtiExprArray&& label_array,
+		 PtiDeclHeadArray&& decl_array,
+		 PtiItemArray&& item_array);
 
   // デストラクタ
   ~SptGenCaseItem();
@@ -1065,17 +1221,32 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief ラベルのリストの取得
-  const PtExprArray*
-  label_list() const override;
+  /// @brief ラベルの要素数の取得
+  SizeType
+  label_num() const override;
 
-  /// @brief 宣言のリストの取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief ラベルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
+  const PtExpr*
+  label(SizeType pos) const override;
 
-  /// @brief item リストの取得
-  const PtItemArray*
-  item_array() const override;
+  /// @brief 宣言ヘッダの要素数の取得
+  SizeType
+  declhead_num() const override;
+
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
+
+  /// @brief item リストの要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  item(SizeType pos) const override;
 
 
 private:
@@ -1087,7 +1258,7 @@ private:
   FileRegion mFileRegion;
 
   // ラベルの配列
-  const PtExprArray* mLabelArray;
+  PtiExprArray mLabelArray;
 
   // 生成される本体
   SptGenBody mBody;
@@ -1112,8 +1283,8 @@ private:
 	    const PtExpr* cond,
 	    const PtExpr* next_expr,
 	    const char* block_name,
-	    const PtDeclHeadArray* decl_array,
-	    const PtItemArray* item_array);
+	    PtiDeclHeadArray&& decl_array,
+	    PtiItemArray&& item_array);
 
   // デストラクタ
   ~SptGenFor();
@@ -1128,13 +1299,23 @@ public:
   const char*
   name() const override;
 
-  /// @brief 宣言のリストの取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief 宣言ヘッダの要素数の取得
+  SizeType
+  declhead_num() const override;
 
-  /// @brief item リストの取得
-  const PtItemArray*
-  item_array() const override;
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
+
+  /// @brief item リストの要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtItem*
+  item(SizeType pos) const override;
 
   // 繰り返し制御用の変数名を返す．
   const char*
@@ -1192,7 +1373,7 @@ private:
   // コンストラクタ
   SptSpecItem(const FileRegion& file_region,
 	      VpiSpecItemType id,
-	      const PtExprArray* terminal_array);
+	      PtiExprArray&& terminal_array);
 
   // デストラクタ
   ~SptSpecItem();
@@ -1207,9 +1388,14 @@ public:
   VpiSpecItemType
   specitem_type() const override;
 
-  /// @brief ターミナルリストの取得
-  const PtExprArray*
-  terminal_list() const override;
+  /// @brief ターミナルの要素数の取得
+  SizeType
+  terminal_num() const override;
+
+  /// @brief ターミナルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+  const PtExpr*
+  terminal(SizeType pos) const override;
 
 
 private:
@@ -1221,7 +1407,7 @@ private:
   VpiSpecItemType mId;
 
   // ターミナルリスト
-  const PtExprArray* mTerminals;
+  PtiExprArray mTerminals;
 
 };
 
@@ -1294,10 +1480,10 @@ private:
   // コンストラクタ
   SptPathDecl(const FileRegion& file_region,
 	      int edge,
-	      const PtExprArray* input_array,
+	      PtiExprArray&& input_array,
 	      int input_pol,
 	      VpiPathType op,
-	      const PtExprArray* output_array,
+	      PtiExprArray&& output_array,
 	      int output_pol,
 	      const PtExpr* expr,
 	      const PtPathDelay* path_delay);
@@ -1320,9 +1506,14 @@ public:
   int
   edge() const override;
 
-  /// @brief 入力のリストの取得
-  const PtExprArray*
-  input_list() const override;
+  /// @brief 入力のリストの要素数の取得
+  SizeType
+  input_num() const override;
+
+  /// @brief 入力の取得
+  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
+  const PtExpr*
+  input(SizeType pos) const override;
 
   // 入力の極性を取り出す．
   // 0の場合もありうる．
@@ -1333,9 +1524,14 @@ public:
   VpiPathType
   op() const override;
 
-  /// @brief 出力のリストの取得
-  const PtExprArray*
-  output_list() const override;
+  /// @brief 出力のリストの要素数の取得
+  SizeType
+  output_num() const override;
+
+  /// @brief 出力の取得
+  /// @param[in] pos 位置 ( 0 <= pos < output_num() )
+  const PtExpr*
+  output(SizeType pos) const override;
 
   // 出力の極性を取り出す．
   // 0の場合もありうる．
@@ -1361,10 +1557,10 @@ private:
   FileRegion mFileRegion;
 
   int mEdge;
-  const PtExprArray* mInputs;
+  PtiExprArray&& mInputs;
   int mInputPol;
   VpiPathType mOp;
-  const PtExprArray* mOutputs;
+  PtiExprArray&& mOutputs;
   int mOutputPol;
   const PtExpr* mExpr;
   const PtPathDelay* mPathDelay;
@@ -1447,6 +1643,45 @@ private:
   const PtExpr* mValues[12];
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 宣言ヘッダの要素数の取得
+inline
+SizeType
+SptGenBody::declhead_num() const
+{
+  return mDeclArray.size();
+}
+
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+inline
+const PtDeclHead*
+SptGenBody::declhead(SizeType pos) const
+{
+  return mDeclArray[pos];
+}
+
+// @brief item リストの要素数の取得
+inline
+SizeType
+SptGenBody::item_num() const
+{
+  return mItemArray.size();
+}
+
+// @brief item の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+inline
+const PtItem*
+SptGenBody::item(SizeType pos) const
+{
+  return mItemArray[pos];
+}
 
 END_NAMESPACE_YM_VERILOG
 

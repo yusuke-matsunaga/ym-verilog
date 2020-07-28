@@ -27,7 +27,7 @@ protected:
   /// @brief コンストラクタ
   CptGateH(const FileRegion& file_region,
 	   VpiPrimType prim_type,
-	   const PtInstArray* inst_array);
+	   PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptGateH();
@@ -51,9 +51,14 @@ public:
   VpiPrimType
   prim_type() const override;
 
-  /// @brief module/UDP/gate instance リストの取得
-  const PtInstArray*
-  inst_list() const override;
+  /// @brief module/UDP/gate instance の要素数の取得
+  SizeType
+  inst_num() const override;
+
+  /// @brief module/UDP/gate instance の取得
+  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+  const PtInst*
+  inst(SizeType pos) const override;
 
 
 private:
@@ -68,7 +73,7 @@ private:
   VpiPrimType mPrimType;
 
   // 要素の配列
-  const PtInstArray* mInstArray;
+  PtiInstArray mInstArray;
 
 };
 
@@ -87,7 +92,7 @@ protected:
   CptGateHS(const FileRegion& file_region,
 	    VpiPrimType prim_type,
 	    const PtStrength* strength,
-	    const PtInstArray* inst_array);
+	    PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptGateHS();
@@ -128,7 +133,7 @@ protected:
   CptGateHD(const FileRegion& file_region,
 	    VpiPrimType prim_type,
 	    const PtDelay* delay,
-	    const PtInstArray* inst_array);
+	    PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptGateHD();
@@ -170,7 +175,7 @@ protected:
 	     VpiPrimType prim_type,
 	     const PtStrength* strength,
 	     const PtDelay* delay,
-	     const PtInstArray* inst_array);
+	     PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptGateHSD();
@@ -217,7 +222,7 @@ protected:
   /// @brief コンストラクタ
   CptMuH(const FileRegion& file_region,
 	 const char* def_name,
-	 const PtInstArray* inst_array);
+	 PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptMuH() override;
@@ -241,9 +246,14 @@ public:
   const char*
   name() const override;
 
-  /// @brief module/UDP/gate instance リストの取得
-  const PtInstArray*
-  inst_list() const override;
+  /// @brief module/UDP/gate instance の要素数の取得
+  SizeType
+  inst_num() const override;
+
+  /// @brief module/UDP/gate instance の取得
+  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+  const PtInst*
+  inst(SizeType pos) const override;
 
 
 private:
@@ -258,7 +268,7 @@ private:
   const char* mName;
 
   // 要素の配列
-  const PtInstArray* mInstArray;
+  PtiInstArray mInstArray;
 
 };
 
@@ -276,8 +286,8 @@ protected:
   /// @brief コンストラクタ
   CptMuHP(const FileRegion& file_region,
 	  const char* def_name,
-	  const PtConnectionArray* con_array,
-	  const PtInstArray* inst_array);
+	  PtiConnectionArray&& con_array,
+	  PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptMuHP();
@@ -288,9 +298,14 @@ public:
   // PtItem の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief パラメータ割り当てリストの取得
-  const PtConnectionArray*
-  paramassign_array() const override;
+  /// @brief パラメータ割り当て数の取得
+  SizeType
+  paramassign_num() const override;
+
+  /// @brief パラメータ割り当ての取得
+  /// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
+  const PtConnection*
+  paramassign(SizeType pos) const override;
 
 
 private:
@@ -299,7 +314,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // パラメータ割り当ての配列
-  const PtConnectionArray* mParamAssignArray;
+  PtiConnectionArray mParamAssignArray;
 
 };
 
@@ -318,7 +333,7 @@ protected:
   CptMuHS(const FileRegion& file_region,
 	  const char* def_name,
 	  const PtStrength* strength,
-	  const PtInstArray* inst_array);
+	  PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptMuHS();
@@ -359,7 +374,7 @@ protected:
   CptMuHD(const FileRegion& file_region,
 	  const char* def_name,
 	  const PtDelay* delay,
-	  const PtInstArray* inst_array);
+	  PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptMuHD();
@@ -401,7 +416,7 @@ protected:
 	   const char* def_name,
 	   const PtStrength* strength,
 	   const PtDelay* delay,
-	   const PtInstArray* inst_array);
+	   PtiInstArray&& inst_array);
 
   /// @brief デストラクタ
   ~CptMuHSD();
@@ -447,7 +462,7 @@ protected:
 
   /// @brief コンストラクタ
   CptInst(const FileRegion& file_region,
-	  const PtConnectionArray* con_array);
+	  PtiConnectionArray&& con_array);
 
   /// @brief デストラクタ
   ~CptInst();
@@ -480,9 +495,14 @@ public:
   const PtExpr*
   right_range() const override;
 
-  /// @brief ポートのリストの取得
-  const PtConnectionArray*
-  port_list() const override;
+  /// @brief ポートの要素数の取得
+  SizeType
+  port_num() const override;
+
+  /// @brief ポートの取得
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
+  const PtConnection*
+  port(SizeType pos) const override;
 
 
 private:
@@ -494,7 +514,7 @@ private:
   FileRegion mFileRegion;
 
   // ポート割り当ての配列
-  const PtConnectionArray* mPortArray;
+  PtiConnectionArray mPortArray;
 
 };
 
@@ -512,7 +532,7 @@ protected:
   /// @brief コンストラクタ
   CptInstN(const FileRegion& file_region,
 	   const char* name,
-	   const PtConnectionArray* con_array);
+	   PtiConnectionArray&& con_array);
 
   /// @brief デストラクタ
   ~CptInstN();
@@ -554,7 +574,7 @@ protected:
 	   const char* name,
 	   const PtExpr* left,
 	   const PtExpr* right,
-	   const PtConnectionArray* con_array);
+	   PtiConnectionArray&& con_array);
 
   /// @brief デストラクタ
   ~CptInstR();

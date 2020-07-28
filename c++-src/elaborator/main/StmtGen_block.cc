@@ -29,7 +29,7 @@ END_NONAMESPACE
 // @brief ブロックスコープ内の宣言要素の生成を行う．
 void
 StmtGen::phase2_namedblock(const VlNamedObj* parent,
-			   const PtDeclHeadArray* pt_head_array)
+			   const vector<const PtDeclHead*>& pt_head_array)
 {
   if ( debug ) {
     dout << endl
@@ -59,11 +59,10 @@ StmtGen::instantiate_parblock(const VlNamedObj* parent,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  auto& pt_stmt_array = *pt_stmt->stmt_array();
-  int stmt_num = pt_stmt_array.size();
+  int stmt_num = pt_stmt->stmt_num();
   ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
   for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt_array[i];
+    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
     ElbStmt* stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
     if ( !stmt1 ) {
       return nullptr;
@@ -87,11 +86,10 @@ StmtGen::instantiate_seqblock(const VlNamedObj* parent,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  auto& pt_stmt_array = *pt_stmt->stmt_array();
-  int stmt_num = pt_stmt_array.size();
+  int stmt_num = pt_stmt->stmt_num();
   ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
   for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt_array[i];
+    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
     ElbStmt* stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
     if ( !stmt1 ) {
       return nullptr;
@@ -119,11 +117,10 @@ StmtGen::instantiate_namedparblock(const VlNamedObj* parent,
   ASSERT_COND(handle );
   const VlNamedObj* block = handle->obj();
 
-  auto& pt_stmt_array = *pt_stmt->stmt_array();
-  SizeType stmt_num = pt_stmt_array.size();
+  SizeType stmt_num = pt_stmt->stmt_num();
   ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
   for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt_array[i];
+    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
     ElbStmt* stmt1 = instantiate_stmt(block, process, env,
 				      pt_stmt1);
     if ( !stmt1 ) {
@@ -153,11 +150,10 @@ StmtGen::instantiate_namedseqblock(const VlNamedObj* parent,
   ASSERT_COND(handle );
   const VlNamedObj* block = handle->obj();
 
-  auto& pt_stmt_array = *pt_stmt->stmt_array();
-  SizeType stmt_num = pt_stmt_array.size();
+  SizeType stmt_num = pt_stmt->stmt_num();
   ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
   for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt_array[i];
+    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
     ElbStmt* stmt1 = instantiate_stmt(block, process, env, pt_stmt1);
     if ( !stmt1 ) {
       return nullptr;

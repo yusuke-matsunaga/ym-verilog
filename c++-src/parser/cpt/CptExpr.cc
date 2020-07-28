@@ -28,10 +28,19 @@ CptExpr::op_type() const
   return VpiOpType::Null;
 }
 
-// @brief 階層ブランチの取得
-const PtNameBranchArray*
-CptExpr::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+CptExpr::namebranch_num() const
 {
+  return 0;
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+CptExpr::namebranch(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -493,9 +502,9 @@ CptOpr3::operand(SizeType pos) const
 
 // コンストラクタ
 CptConcat::CptConcat(const FileRegion& file_region,
-		     const PtExprArray* expr_array) :
+		     PtiExprArray&& expr_array) :
   mFileRegion(file_region),
-  mExprArray(expr_array)
+  mExprArray{move(expr_array)}
 {
 }
 
@@ -530,7 +539,7 @@ CptConcat::op_type() const
 SizeType
 CptConcat::operand_num() const
 {
-  return mExprArray->size();
+  return mExprArray.size();
 }
 
 // @brief 0番目のオペランドの取得
@@ -538,7 +547,7 @@ const PtExpr*
 CptConcat::operand0() const
 {
   if ( operand_num() > 0 ) {
-    return (*mExprArray)[0];
+    return mExprArray[0];
   }
   else {
     return nullptr;
@@ -550,7 +559,7 @@ const PtExpr*
 CptConcat::operand1() const
 {
   if ( operand_num() > 1 ) {
-    return (*mExprArray)[1];
+    return mExprArray[1];
   }
   else {
     return nullptr;
@@ -562,7 +571,7 @@ const PtExpr*
 CptConcat::operand2() const
 {
   if ( operand_num() > 2 ) {
-    return (*mExprArray)[2];
+    return mExprArray[2];
   }
   else {
     return nullptr;
@@ -576,7 +585,7 @@ const PtExpr*
 CptConcat::operand(SizeType pos) const
 {
   if ( operand_num() > pos ) {
-    return (*mExprArray)[pos];
+    return mExprArray[pos];
   }
   else {
     return nullptr;
@@ -590,8 +599,8 @@ CptConcat::operand(SizeType pos) const
 
 // コンストラクタ
 CptMultiConcat::CptMultiConcat(const FileRegion& file_region,
-			       const PtExprArray* expr_array) :
-  CptConcat(file_region, expr_array)
+			       PtiExprArray&& expr_array) :
+  CptConcat(file_region, move(expr_array))
 {
 }
 
@@ -700,10 +709,10 @@ CptMinTypMax::operand(SizeType idx) const
 // コンストラクタ
 CptFuncCallBase::CptFuncCallBase(const FileRegion& file_region,
 				 const char* name,
-				 const PtExprArray* arg_array) :
+				 PtiExprArray&& arg_array) :
   mFileRegion(file_region),
   mName(name),
-  mArgArray(arg_array)
+  mArgArray{move(arg_array)}
 {
 }
 
@@ -731,7 +740,7 @@ CptFuncCallBase::name() const
 SizeType
 CptFuncCallBase::operand_num() const
 {
-  return mArgArray->size();
+  return mArgArray.size();
 }
 
 // @brief 0番目のオペランドの取得
@@ -739,7 +748,7 @@ const PtExpr*
 CptFuncCallBase::operand0() const
 {
   if ( operand_num() > 0 ) {
-    return (*mArgArray)[0];
+    return mArgArray[0];
   }
   else {
     return nullptr;
@@ -751,7 +760,7 @@ const PtExpr*
 CptFuncCallBase::operand1() const
 {
   if ( operand_num() > 1 ) {
-    return (*mArgArray)[1];
+    return mArgArray[1];
   }
   else {
     return nullptr;
@@ -763,7 +772,7 @@ const PtExpr*
 CptFuncCallBase::operand2() const
 {
   if ( operand_num() > 2 ) {
-    return (*mArgArray)[2];
+    return mArgArray[2];
   }
   else {
     return nullptr;
@@ -777,7 +786,7 @@ const PtExpr*
 CptFuncCallBase::operand(SizeType pos) const
 {
   if ( operand_num() > pos ) {
-    return (*mArgArray)[pos];
+    return mArgArray[pos];
   }
   else {
     return nullptr;
@@ -792,8 +801,8 @@ CptFuncCallBase::operand(SizeType pos) const
 // コンストラクタ
 CptFuncCall::CptFuncCall(const FileRegion& file_region,
 			 const char* name,
-			 const PtExprArray* arg_array) :
-  CptFuncCallBase(file_region, name, arg_array)
+			 PtiExprArray&& arg_array) :
+  CptFuncCallBase(file_region, name, move(arg_array))
 {
 }
 
@@ -816,11 +825,11 @@ CptFuncCall::type() const
 
 // コンストラクタ
 CptFuncCallH::CptFuncCallH(const FileRegion& file_region,
-			   const PtNameBranchArray* nb_array,
+			   PtiNameBranchArray&& nb_array,
 			   const char* tail_name,
-			   const PtExprArray* arg_array) :
-  CptFuncCall(file_region, tail_name, arg_array),
-  mNbArray(nb_array)
+			   PtiExprArray&& arg_array) :
+  CptFuncCall(file_region, tail_name, move(arg_array)),
+  mNbArray{move(nb_array)}
 {
 }
 
@@ -829,11 +838,19 @@ CptFuncCallH::~CptFuncCallH()
 {
 }
 
-// @brief 階層ブランチの取得
-const PtNameBranchArray*
-CptFuncCallH::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+CptFuncCallH::namebranch_num() const
 {
-  return mNbArray;
+  return mNbArray.size();
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+CptFuncCallH::namebranch(SizeType pos) const
+{
+  return mNbArray[pos];
 }
 
 
@@ -844,8 +861,8 @@ CptFuncCallH::namebranch_array() const
 // コンストラクタ
 CptSysFuncCall::CptSysFuncCall(const FileRegion& file_region,
 			       const char* name,
-			       const PtExprArray* arg_array) :
-  CptFuncCallBase(file_region, name, arg_array)
+			       PtiExprArray&& arg_array) :
+  CptFuncCallBase(file_region, name, move(arg_array))
 {
 }
 
@@ -1118,22 +1135,22 @@ CptFactory::new_Opr(const FileRegion& file_region,
 // concatination を生成する．
 const PtExpr*
 CptFactory::new_Concat(const FileRegion& file_region,
-		       const PtExprArray* expr_array)
+		       const vector<const PtExpr*>& expr_array)
 {
   ++ mNumConcat;
   auto p{mAlloc.get_memory(sizeof(CptConcat))};
-  auto obj{new (p) CptConcat(file_region, expr_array)};
+  auto obj{new (p) CptConcat(file_region, PtiArray<const PtExpr>(mAlloc, expr_array))};
   return obj;
 }
 
 // multiple concatenation を生成する．
 const PtExpr*
 CptFactory::new_MultiConcat(const FileRegion& file_region,
-			    const PtExprArray* expr_array)
+			    const vector<const PtExpr*>& expr_array)
 {
   ++ mNumMultiConcat;
   auto p{mAlloc.get_memory(sizeof(CptMultiConcat))};
-  auto obj{new (p) CptMultiConcat(file_region, expr_array)};
+  auto obj{new (p) CptMultiConcat(file_region, PtiArray<const PtExpr>(mAlloc, expr_array))};
   return obj;
 }
 
@@ -1155,11 +1172,12 @@ CptFactory::new_MinTypMax(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_FuncCall(const FileRegion& file_region,
 			 const char* name,
-			 const PtExprArray* arg_array)
+			 const vector<const PtExpr*>& arg_array)
 {
   ++ mNumFuncCall;
   auto p{mAlloc.get_memory(sizeof(CptFuncCall))};
-  auto obj{new (p) CptFuncCall(file_region, name, arg_array)};
+  auto obj{new (p) CptFuncCall(file_region, name,
+			       PtiArray<const PtExpr>(mAlloc, arg_array))};
   return obj;
 }
 
@@ -1167,13 +1185,16 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_FuncCall(const FileRegion& file_region,
 			 PuHierName* hname,
-			 const PtExprArray* arg_array)
+			 const vector<const PtExpr*>& arg_array)
 {
   ++ mNumFuncCallH;
   auto p{mAlloc.get_memory(sizeof(CptFuncCallH))};
-  auto nb_array = hname->name_branch(mAlloc);
+  auto nb_array = hname->name_branch();
   auto tail_name = hname->tail_name();
-  auto obj{new (p) CptFuncCallH(file_region, nb_array, tail_name, arg_array)};
+  auto obj{new (p) CptFuncCallH(file_region,
+				PtiArray<const PtNameBranch>(mAlloc, nb_array),
+				tail_name,
+				PtiArray<const PtExpr>(mAlloc, arg_array))};
   return obj;
 }
 
@@ -1181,11 +1202,12 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 const PtExpr*
 CptFactory::new_SysFuncCall(const FileRegion& file_region,
 			    const char* name,
-			    const PtExprArray* arg_array)
+			    const vector<const PtExpr*>& arg_array)
 {
   ++ mNumSysFuncCall;
   auto p{mAlloc.get_memory(sizeof(CptSysFuncCall))};
-  auto obj{new (p) CptSysFuncCall(file_region, name, arg_array)};
+  auto obj{new (p) CptSysFuncCall(file_region, name,
+				  PtiArray<const PtExpr>(mAlloc, arg_array))};
   return obj;
 }
 

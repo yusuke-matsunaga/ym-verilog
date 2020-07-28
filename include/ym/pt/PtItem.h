@@ -52,25 +52,65 @@ public:
   const PtDelay*
   delay() const = 0;
 
-  /// @brief パラメータ割り当てリストの取得
+  /// @brief パラメータ割り当て数の取得
   virtual
-  const PtConnectionArray*
-  paramassign_array() const = 0;
+  SizeType
+  paramassign_num() const = 0;
 
-  /// @brief defparam のリストの取得
+  /// @brief パラメータ割り当ての取得
+  /// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
   virtual
-  const PtDefParamArray*
-  defparam_list() const = 0;
+  const PtConnection*
+  paramassign(SizeType pos) const = 0;
 
-  /// @brief continuous assign のリストの取得
+  /// @brief パラメータ割り当てのリストの取得
+  vector<const PtConnection*>
+  paramassign_list() const;
+
+  /// @brief defparam の要素数の取得
   virtual
-  const PtContAssignArray*
-  contassign_list() const = 0;
+  SizeType
+  defparam_num() const = 0;
+
+  /// @brief defparam の取得
+  /// @param[in] pos 位置 ( 0 <= pos < defparam_num() )
+  virtual
+  const PtDefParam*
+  defparam(SizeType pos) const = 0;
+
+  /// @brief defparam リストの取得
+  vector<const PtDefParam*>
+  defparam_list() const;
+
+  /// @brief continuous assign の要素数の取得
+  virtual
+  SizeType
+  contassign_num() const = 0;
+
+  /// @brief continuous assign の取得
+  /// @param[in] pos 位置 ( 0 <= pos < contassign_num() )
+  virtual
+  const PtContAssign*
+  contassign(SizeType pos) const = 0;
+
+  /// @brief continuous assign リストの取得
+  vector<const PtContAssign*>
+  contassign_list() const;
+
+  /// @brief module/UDP/gate instance の要素数の取得
+  virtual
+  SizeType
+  inst_num() const = 0;
+
+  /// @brief module/UDP/gate instance の取得
+  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+  virtual
+  const PtInst*
+  inst(SizeType pos) const = 0;
 
   /// @brief module/UDP/gate instance リストの取得
-  virtual
-  const PtInstArray*
-  inst_list() const = 0;
+  vector<const PtInst*>
+  inst_list() const;
 
   /// @brief automatic 情報の取得
   /// @retval true automatic 宣言された task/function
@@ -81,23 +121,53 @@ public:
 
   /// @brief IO宣言の要素数の取得
   virtual
-  int
+  SizeType
   ioitem_num() const = 0;
 
-  /// @brief IO宣言リストの配列の取得
+  /// @brief IO宣言ヘッダリストの要素数の取得
   virtual
-  const PtIOHeadArray*
-  iohead_array() const = 0;
+  SizeType
+  iohead_num() const = 0;
 
-  /// @brief 宣言ヘッダ配列の取得
+  /// @brief IO宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
   virtual
-  const PtDeclHeadArray*
-  declhead_array() const = 0;
+  const PtIOHead*
+  iohead(SizeType pos) const = 0;
 
-  /// @brief item 配列の取得
+  /// @brief IO宣言ヘッダリストの取得
+  vector<const PtIOHead*>
+  iohead_list() const;
+
+  /// @brief 宣言ヘッダの要素数の取得
   virtual
-  const PtItemArray*
-  item_array() const = 0;
+  SizeType
+  declhead_num() const = 0;
+
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  virtual
+  const PtDeclHead*
+  declhead(SizeType pos) const = 0;
+
+  /// @brief 宣言ヘッダリストの取得
+  vector<const PtDeclHead*>
+  declhead_list() const;
+
+  /// @brief item リストの要素数の取得
+  virtual
+  SizeType
+  item_num() const = 0;
+
+  /// @brief item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  virtual
+  const PtItem*
+  item(SizeType pos) const = 0;
+
+  /// @brief item リストの取得
+  vector<const PtItem*>
+  item_list() const;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント
@@ -158,10 +228,20 @@ public:
   VpiSpecPathType
   specpath_type() const = 0;
 
-  /// @brief ターミナルのリストの取得
+  /// @brief ターミナルの要素数の取得
   virtual
-  const PtExprArray*
-  terminal_list() const = 0;
+  SizeType
+  terminal_num() const = 0;
+
+  /// @brief ターミナルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+  virtual
+  const PtExpr*
+  terminal(SizeType pos) const = 0;
+
+  /// @brief ターミナルリストの取得
+  vector<const PtExpr*>
+  terminal_list() const;
 
   /// @brief パス記述の取得
   /// @return パス記述
@@ -175,30 +255,80 @@ public:
   const PtExpr*
   expr() const = 0;
 
-  /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
+  /// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の要素数の取得
   virtual
-  const PtDeclHeadArray*
-  then_declhead_array() const = 0;
+  SizeType
+  then_declhead_num() const = 0;
 
-  /// @brief 条件が成り立ったときに生成される item 配列の取得
+  /// @brief 条件が成り立ったときに生成される宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < then_declhead_num() )
   virtual
-  const PtItemArray*
-  then_item_array() const = 0;
+  const PtDeclHead*
+  then_declhead(SizeType pos) const = 0;
 
-  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-  virtual
-  const PtDeclHeadArray*
-  else_declhead_array() const = 0;
+  /// @brief 条件が成り立った時に生成される宣言ヘッダリストの取得
+  vector<const PtDeclHead*>
+  then_declhead_list() const;
 
-  /// @brief 条件が成り立たなかったときに生成される item 配列の取得
+  /// @brief 条件が成り立ったときに生成される item 配列の要素数の取得
   virtual
-  const PtItemArray*
-  else_item_array() const = 0;
+  SizeType
+  then_item_num() const = 0;
 
-  /// @brief case item のリストの取得
+  /// @brief 条件が成り立ったときに生成される item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < then_item_num() )
   virtual
-  const PtGenCaseItemArray*
-  caseitem_list() const = 0;
+  const PtItem*
+  then_item(SizeType pos) const = 0;
+
+  /// @brief 条件が成り立った時に生成されるitemリストの取得
+  vector<const PtItem*>
+  then_item_list() const;
+
+  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の要素数の取得
+  virtual
+  SizeType
+  else_declhead_num() const = 0;
+
+  /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < else_declhead_num() )
+  virtual
+  const PtDeclHead*
+  else_declhead(SizeType pos) const = 0;
+
+  /// @brief 条件が成り立たなかった時に生成される宣言ヘッダリストの取得
+  vector<const PtDeclHead*>
+  else_declhead_list() const;
+
+  /// @brief 条件が成り立たなかったときに生成される item 配列の要素数の取得
+  virtual
+  SizeType
+  else_item_num() const = 0;
+
+  /// @brief 条件が成り立たなかったときに生成される item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < else_item_num() )
+  virtual
+  const PtItem*
+  else_item(SizeType pos) const = 0;
+
+  /// @brief 条件が成り立たなかった時に生成されるitemリストの取得
+  vector<const PtItem*>
+  else_item_list() const;
+
+  /// @brief case item のリストの要素数の取得
+  virtual
+  SizeType
+  caseitem_num() const = 0;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+  virtual
+  const PtGenCaseItem*
+  caseitem(SizeType pos) const = 0;
+
+  /// @brief case item リストの取得
+  vector<const PtGenCaseItem*>
+  caseitem_list() const;
 
   /// @brief 繰り返し制御用の変数名の取得
   /// @return 繰り返し制御用の変数名
@@ -228,23 +358,12 @@ public:
 /// @brief defparam 文を表すクラス
 //////////////////////////////////////////////////////////////////////
 class PtDefParam :
-  public PtBase
+  public PtHierNamedBase
 {
 public:
   //////////////////////////////////////////////////////////////////////
   // PtDefParam の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 階層ブランチの取得
-  virtual
-  const PtNameBranchArray*
-  namebranch_array() const = 0;
-
-  /// @brief 末尾の名前の取得
-  /// @return 末尾の名前
-  virtual
-  const char*
-  name() const = 0;
 
   /// @brief 値の取得
   /// @return 値を表す式
@@ -264,13 +383,6 @@ public:
 class PtContAssign :
   public PtBase
 {
-public:
-
-  /// @brief 仮想デストラクタ
-  virtual
-  ~PtContAssign() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // PtContAssign の継承クラスが実装する仮想関数
@@ -317,11 +429,20 @@ public:
   const PtExpr*
   right_range() const = 0;
 
-  /// @brief ポートのリストの取得
+  /// @brief ポートの要素数の取得
   virtual
-  const PtConnectionArray*
-  port_list() const = 0;
+  SizeType
+  port_num() const = 0;
 
+  /// @brief ポートの取得
+  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
+  virtual
+  const PtConnection*
+  port(SizeType pos) const = 0;
+
+  /// @brief ポートリストの取得
+  vector<const PtConnection*>
+  port_list() const;
 
 };
 
@@ -340,20 +461,48 @@ public:
   // PtGenCaseItem の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ラベルのリストの取得
+  /// @brief ラベルの要素数の取得
   virtual
-  const PtExprArray*
-  label_list() const = 0;
+  SizeType
+  label_num() const = 0;
 
-  /// @brief 宣言のリストの取得
+  /// @brief ラベルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
   virtual
-  const PtDeclHeadArray*
-  declhead_array() const = 0;
+  const PtExpr*
+  label(SizeType pos) const = 0;
+
+  /// @brief ラベルリストの取得
+  vector<const PtExpr*>
+  label_list() const;
+
+  /// @brief 宣言の要素数の取得
+  virtual
+  SizeType
+  declhead_num() const = 0;
+
+  /// @brief 宣言の取得
+  virtual
+  const PtDeclHead*
+  declhead(SizeType pos) const = 0;
+
+  /// @brief 宣言リストの取得
+  vector<const PtDeclHead*>
+  declhead_list() const;
+
+  /// @brief item の要素数の取得
+  virtual
+  SizeType
+  item_num() const = 0;
+
+  /// @brief item の取得
+  virtual
+  const PtItem*
+  item(SizeType pos) const = 0;
 
   /// @brief item リストの取得
-  virtual
-  const PtItemArray*
-  item_array() const = 0;
+  vector<const PtItem*>
+  item_list() const;
 
 };
 
@@ -379,10 +528,20 @@ public:
   int
   edge() const = 0;
 
-  /// @brief 入力のリストの取得
+  /// @brief 入力のリストの要素数の取得
   virtual
-  const PtExprArray*
-  input_list() const = 0;
+  SizeType
+  input_num() const = 0;
+
+  /// @brief 入力の取得
+  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
+  virtual
+  const PtExpr*
+  input(SizeType pos) const = 0;
+
+  /// @brief 入力のリストの取得
+  vector<const PtExpr*>
+  input_list() const;
 
   /// @brief 入力の極性の取得
   /// @return 入力の極性\n
@@ -397,10 +556,20 @@ public:
   VpiPathType
   op() const = 0;
 
-  /// @brief 出力のリストの取得
+  /// @brief 出力のリストの要素数の取得
   virtual
-  const PtExprArray*
-  output_list() const = 0;
+  SizeType
+  output_num() const = 0;
+
+  /// @brief 出力の取得
+  /// @param[in] pos 位置 ( 0 <= pos < output_num() )
+  virtual
+  const PtExpr*
+  output(SizeType pos) const = 0;
+
+  /// @brief 出力リストの取得
+  vector<const PtExpr*>
+  output_list() const;
 
   /// @brief 出力の極性の取得
   /// @return 出力の極性\n
@@ -446,6 +615,258 @@ public:
   value(SizeType pos) const = 0;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief パラメータ割り当てのリストの取得
+inline
+vector<const PtConnection*>
+PtItem::paramassign_list() const
+{
+  SizeType n = paramassign_num();
+  vector<const PtConnection*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = paramassign(i);
+  }
+  return vec;
+}
+
+// @brief defparam リストの取得
+inline
+vector<const PtDefParam*>
+PtItem::defparam_list() const
+{
+  SizeType n = defparam_num();
+  vector<const PtDefParam*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = defparam(i);
+  }
+  return vec;
+}
+
+// @brief continuous assign リストの取得
+inline
+vector<const PtContAssign*>
+PtItem::contassign_list() const
+{
+  SizeType n = contassign_num();
+  vector<const PtContAssign*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = contassign(i);
+  }
+  return vec;
+}
+
+// @brief module/UDP/gate instance リストの取得
+inline
+vector<const PtInst*>
+PtItem::inst_list() const
+{
+  SizeType n = inst_num();
+  vector<const PtInst*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = inst(i);
+  }
+  return vec;
+}
+
+// @brief IO宣言ヘッダリストの取得
+inline
+vector<const PtIOHead*>
+PtItem::iohead_list() const
+{
+  SizeType n = iohead_num();
+  vector<const PtIOHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = iohead(i);
+  }
+  return vec;
+}
+
+// @brief 宣言ヘッダリストの取得
+inline
+vector<const PtDeclHead*>
+PtItem::declhead_list() const
+{
+  SizeType n = declhead_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = declhead(i);
+  }
+  return vec;
+}
+
+// @brief item リストの取得
+inline
+vector<const PtItem*>
+PtItem::item_list() const
+{
+  SizeType n = item_num();
+  vector<const PtItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = item(i);
+  }
+  return vec;
+}
+
+// @brief ターミナルリストの取得
+inline
+vector<const PtExpr*>
+PtItem::terminal_list() const
+{
+  SizeType n = terminal_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = terminal(i);
+  }
+  return vec;
+}
+
+// @brief 条件が成り立った時に生成される宣言ヘッダリストの取得
+inline
+vector<const PtDeclHead*>
+PtItem::then_declhead_list() const
+{
+  SizeType n = then_declhead_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = then_declhead(i);
+  }
+  return vec;
+}
+
+// @brief 条件が成り立った時に生成されるitemリストの取得
+inline
+vector<const PtItem*>
+PtItem::then_item_list() const
+{
+  SizeType n = then_item_num();
+  vector<const PtItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = then_item(i);
+  }
+  return vec;
+}
+
+// @brief 条件が成り立たなかった時に生成される宣言ヘッダリストの取得
+inline
+vector<const PtDeclHead*>
+PtItem::else_declhead_list() const
+{
+  SizeType n = else_declhead_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = else_declhead(i);
+  }
+  return vec;
+}
+
+// @brief 条件が成り立たなかった時に生成されるitemリストの取得
+inline
+vector<const PtItem*>
+PtItem::else_item_list() const
+{
+  SizeType n = then_item_num();
+  vector<const PtItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = else_item(i);
+  }
+  return vec;
+}
+
+// @brief case item リストの取得
+inline
+vector<const PtGenCaseItem*>
+PtItem::caseitem_list() const
+{
+  SizeType n = caseitem_num();
+  vector<const PtGenCaseItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = caseitem(i);
+  }
+  return vec;
+}
+
+// @brief ポートリストの取得
+inline
+vector<const PtConnection*>
+PtInst::port_list() const
+{
+  SizeType n = port_num();
+  vector<const PtConnection*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = port(i);
+  }
+  return vec;
+}
+
+// @brief ラベルリストの取得
+inline
+vector<const PtExpr*>
+PtGenCaseItem::label_list() const
+{
+  SizeType n = label_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = label(i);
+  }
+  return vec;
+}
+
+// @brief 宣言リストの取得
+inline
+vector<const PtDeclHead*>
+PtGenCaseItem::declhead_list() const
+{
+  SizeType n = declhead_num();
+  vector<const PtDeclHead*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = declhead(i);
+  }
+  return vec;
+}
+
+// @brief item リストの取得
+inline
+vector<const PtItem*>
+PtGenCaseItem::item_list() const
+{
+  SizeType n = item_num();
+  vector<const PtItem*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = item(i);
+  }
+  return vec;
+}
+
+// @brief 入力のリストの取得
+inline
+vector<const PtExpr*>
+PtPathDecl::input_list() const
+{
+  SizeType n = input_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = input(i);
+  }
+  return vec;
+}
+
+// @brief 出力リストの取得
+inline
+vector<const PtExpr*>
+PtPathDecl::output_list() const
+{
+  SizeType n = output_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = output(i);
+  }
+  return vec;
+}
 
 END_NAMESPACE_YM_VERILOG
 

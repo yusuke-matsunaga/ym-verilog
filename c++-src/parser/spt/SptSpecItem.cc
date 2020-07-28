@@ -20,10 +20,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 SptSpecItem::SptSpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 const PtExprArray* terminal_array) :
+			 PtiExprArray&& terminal_array) :
   SptItem{file_region, PtItemType::SpecItem},
   mId{id},
-  mTerminals{terminal_array}
+  mTerminals{move(terminal_array)}
 {
 }
 
@@ -39,11 +39,19 @@ SptSpecItem::specitem_type() const
   return mId;
 }
 
-// @brief ターミナルリストの取得
-const PtExprArray*
-SptSpecItem::terminal_list() const
+// @brief ターミナルの要素数の取得
+SizeType
+SptSpecItem::terminal_num() const
 {
-  return mTerminals;
+  return mTerminals.size();
+}
+
+// @brief ターミナルの取得
+// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+const PtExpr*
+SptSpecItem::terminal(SizeType pos) const
+{
+  return mTerminals[pos];
 }
 
 
@@ -97,19 +105,19 @@ SptSpecPath::path_decl() const
 // コンストラクタ
 SptPathDecl::SptPathDecl(const FileRegion& file_region,
 			 int edge,
-			 const PtExprArray* input_array,
+			 PtiExprArray&& input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 const PtExprArray* output_array,
+			 PtiExprArray&& output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay) :
   mFileRegion{file_region},
   mEdge{edge},
-  mInputs{input_array},
+  mInputs{move(input_array)},
   mInputPol{input_pol},
   mOp{op},
-  mOutputs{output_array},
+  mOutputs{move(output_array)},
   mOutputPol{output_pol},
   mExpr{expr},
   mPathDelay{path_delay}
@@ -136,11 +144,19 @@ SptPathDecl::edge() const
   return mEdge;
 }
 
-// @brief 入力のリストの取得
-const PtExprArray*
-SptPathDecl::input_list() const
+// @brief 入力のリストの要素数の取得
+SizeType
+SptPathDecl::input_num() const
 {
-  return mInputs;
+  return mInputs.size();
+}
+
+// @brief 入力の取得
+// @param[in] pos 位置 ( 0 <= pos < input_num() )
+const PtExpr*
+SptPathDecl::input(SizeType pos) const
+{
+  return mInputs[pos];
 }
 
 // 入力の極性を取り出す．
@@ -158,11 +174,19 @@ SptPathDecl::op() const
   return mOp;
 }
 
-// @brief 出力のリストの取得
-const PtExprArray*
-SptPathDecl::output_list() const
+// @brief 出力のリストの要素数の取得
+SizeType
+SptPathDecl::output_num() const
 {
-  return mOutputs;
+  return mOutputs.size();
+}
+
+// @brief 出力の取得
+// @param[in] pos 位置 ( 0 <= pos < output_num() )
+const PtExpr*
+SptPathDecl::output(SizeType pos) const
+{
+  return mOutputs[pos];
 }
 
 // 出力の極性を取り出す．
@@ -296,9 +320,10 @@ SptPathDelay::value(SizeType pos) const
 const PtItem*
 SptFactory::new_SpecItem(const FileRegion& file_region,
 			 VpiSpecItemType id,
-			 const PtExprArray* terminal_array)
+			 const vector<const PtExpr*>& terminal_array)
 {
-  auto node = new SptSpecItem(file_region, id, terminal_array);
+  auto node = new SptSpecItem(file_region, id,
+			      PtiExprArray(mAlloc, terminal_array));
   return node;
 }
 
@@ -332,16 +357,20 @@ SptFactory::new_SpecPath(const FileRegion& file_region,
 const PtPathDecl*
 SptFactory::new_PathDecl(const FileRegion& file_region,
 			 int edge,
-			 const PtExprArray* input_array,
+			 const vector<const PtExpr*>& input_array,
 			 int input_pol,
 			 VpiPathType op,
-			 const PtExprArray* output_array,
+			 const vector<const PtExpr*>& output_array,
 			 int output_pol,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay)
 {
-  auto node = new SptPathDecl(file_region, edge, input_array, input_pol,
-			      op, output_array, output_pol,
+  auto node = new SptPathDecl(file_region, edge,
+			      PtiExprArray(mAlloc, input_array),
+			      input_pol,
+			      op,
+			      PtiExprArray(mAlloc, output_array),
+			      output_pol,
 			      expr, path_delay);
   return node;
 }

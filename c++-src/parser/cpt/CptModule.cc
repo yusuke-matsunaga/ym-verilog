@@ -38,22 +38,22 @@ CptModule::CptModule(const FileRegion& file_region,
 		     const string& config,
 		     const string& library,
 		     const string& cell,
-		     const PtDeclHeadArray* paramport_array,
-		     const PtPortArray* port_array,
-		     const PtIOHeadArray* iohead_array,
-		     const PtDeclHeadArray* declhead_array,
-		     const PtItemArray* item_array) :
+		     PtiDeclHeadArray&& paramport_array,
+		     PtiPortArray&& port_array,
+		     PtiIOHeadArray&& iohead_array,
+		     PtiDeclHeadArray&& declhead_array,
+		     PtiItemArray&& item_array) :
   mFileRegion{file_region},
   mName{name},
   mDefDecayTime{decay},
   mConfig{config},
   mLibrary{library},
   mCell{cell},
-  mParamPortArray{paramport_array},
-  mPortArray{port_array},
-  mIOHeadArray{iohead_array},
-  mDeclHeadArray{declhead_array},
-  mItemArray{item_array}
+  mParamPortArray{move(paramport_array)},
+  mPortArray{move(port_array)},
+  mIOHeadArray{move(iohead_array)},
+  mDeclHeadArray{move(declhead_array)},
+  mItemArray{move(item_array)}
 {
   mFlags =
     static_cast<ymuint32>(is_cell)
@@ -71,8 +71,8 @@ CptModule::CptModule(const FileRegion& file_region,
     ;
 
   mIODeclNum = 0;
-  for ( auto head: *mIOHeadArray ) {
-    mIODeclNum += head->item_list()->size();
+  for ( auto head: mIOHeadArray ) {
+    mIODeclNum += head->item_num();
   }
 
 #if 0
@@ -103,25 +103,49 @@ CptModule::name() const
   return mName;
 }
 
-// @brief パラメータポート宣言配列の取得
-const PtDeclHeadArray*
-CptModule::paramport_array() const
+// @brief パラメータポート宣言配列の要素数の取得
+SizeType
+CptModule::paramport_num() const
 {
-  return mParamPortArray;
+  return mParamPortArray.size();
 }
 
-// @brief ポートのリストを取り出す．
-const PtPortArray*
-CptModule::port_list() const
+// @brief パラメータポート宣言の取得
+// @param[in] pos 位置 ( 0 <= pos < paramport_num() )
+const PtDeclHead*
+CptModule::paramport(SizeType pos) const
 {
-  return mPortArray;
+  return mParamPortArray[pos];
 }
 
-// @brief 入出力宣言ヘッダ配列の取得
-const PtIOHeadArray*
-CptModule::iohead_array() const
+// @brief ポート数を取り出す．
+SizeType
+CptModule::port_num() const
 {
-  return mIOHeadArray;
+  return mPortArray.size();
+}
+
+// @brief ポートを取り出す．
+// @param[in] pos 位置 ( 0 <= pos < port_num() )
+const PtPort*
+CptModule::port(SizeType pos) const
+{
+  return mPortArray[pos];
+}
+
+// @brief 入出力宣言ヘッダ配列の要素数の取得
+SizeType
+CptModule::iohead_num() const
+{
+  return mIOHeadArray.size();
+}
+
+// @brief 入出力宣言の取得
+// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+const PtIOHead*
+CptModule::iohead(SizeType pos) const
+{
+  return mIOHeadArray[pos];
 }
 
 // @brief 入出力宣言の要素数の取得
@@ -133,18 +157,34 @@ CptModule::iodecl_num() const
   return mIODeclNum;
 }
 
-// @brief 宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-CptModule::declhead_array() const
+// @brief 宣言ヘッダ配列の要素数の取得
+SizeType
+CptModule::declhead_num() const
 {
-  return mDeclHeadArray;
+  return mDeclHeadArray.size();
 }
 
-// @brief item 配列の取得
-const PtItemArray*
-CptModule::item_array() const
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+const PtDeclHead*
+CptModule::declhead(SizeType pos) const
 {
-  return mItemArray;
+  return mDeclHeadArray[pos];
+}
+
+// @brief item 配列の要素数の取得
+SizeType
+CptModule::item_num() const
+{
+  return mItemArray.size();
+}
+
+// @brief item の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+const PtItem*
+CptModule::item(SizeType pos) const
+{
+  return mItemArray[pos];
 }
 
 // macromodule の時 true を返す．
@@ -464,26 +504,25 @@ CptPort1::_set_portref_dir(int pos,
 // コンストラクタ
 CptPort2::CptPort2(const FileRegion& file_region,
 		   const PtExpr* portref,
-		   const PtExprArray* portref_array,
+		   PtiExprArray&& portref_array,
 		   const char* ext_name,
 		   void* q) :
   CptPort1(file_region, portref, ext_name),
-  mPortRefArray(portref_array),
-  mDirArray{new (q) VpiDir[portref_array->size()]}
+  mPortRefArray{move(portref_array)},
+  mDirArray{new (q) VpiDir[mPortRefArray.size()]}
 {
 }
 
 // デストラクタ
 CptPort2::~CptPort2()
 {
-  delete [] mDirArray;
 }
 
 // @brief 内部のポート結線リストのサイズの取得
 int
 CptPort2::portref_size() const
 {
-  return mPortRefArray->size();
+  return mPortRefArray.size();
 }
 
 // @brief 内部のポート結線リストの取得
@@ -491,8 +530,7 @@ CptPort2::portref_size() const
 const PtExpr*
 CptPort2::portref_elem(int pos) const
 {
-  ASSERT_COND( 0 <= pos && pos < portref_size() );
-  return (*mPortRefArray)[pos];
+  return mPortRefArray[pos];
 }
 
 // @brief 内部ポート結線の方向の取得
@@ -567,11 +605,11 @@ CptFactory::new_Module(const FileRegion& file_region,
 		       const string& config,
 		       const string& library,
 		       const string& cell,
-		       const PtDeclHeadArray* paramport_array,
-		       const PtPortArray* port_array,
-		       const PtIOHeadArray* iohead_array,
-		       const PtDeclHeadArray* declhead_array,
-		       const PtItemArray* item_array)
+		       const vector<const PtDeclHead*>& paramport_array,
+		       const vector<const PtPort*>& port_array,
+		       const vector<const PtIOHead*>& iohead_array,
+		       const vector<const PtDeclHead*>& declhead_array,
+		       const vector<const PtItem*>& item_array)
 {
   ++ mNumModule;
   void* p{mAlloc.get_memory(sizeof(CptModule))};
@@ -583,11 +621,11 @@ CptFactory::new_Module(const FileRegion& file_region,
 			     explicit_name,
 			     portfaults, suppress_faults,
 			     config, library, cell,
-			     paramport_array,
-			     port_array,
-			     iohead_array,
-			     declhead_array,
-			     item_array)};
+			     PtiArray<const PtDeclHead>(mAlloc, paramport_array),
+			     PtiArray<const PtPort>(mAlloc, port_array),
+			     PtiArray<const PtIOHead>(mAlloc, iohead_array),
+			     PtiArray<const PtDeclHead>(mAlloc, declhead_array),
+			     PtiArray<const PtItem>(mAlloc, item_array))};
   return obj;
 }
 
@@ -635,13 +673,15 @@ CptFactory::new_Port(const FileRegion& file_region,
 PtiPort*
 CptFactory::new_Port(const FileRegion& file_region,
 		     const PtExpr* portref,
-		     const PtExprArray* portref_array,
+		     const vector<const PtExpr*>& portref_array,
 		     const char* ext_name)
 {
   ++ mNumPort;
   void* p{mAlloc.get_memory(sizeof(CptPort2))};
-  void* q{mAlloc.get_memory(sizeof(VpiDir) * portref_array->size())};
-  auto obj{new (p) CptPort2(file_region, portref, portref_array, ext_name, q)};
+  void* q{mAlloc.get_memory(sizeof(VpiDir) * portref_array.size())};
+  auto obj{new (p) CptPort2(file_region, portref,
+			    PtiArray<const PtExpr>(mAlloc, portref_array),
+			    ext_name, q)};
   return obj;
 }
 

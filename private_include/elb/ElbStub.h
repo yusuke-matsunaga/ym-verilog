@@ -119,7 +119,7 @@ class ElbStubT1 :
 public:
 
   /// @brief 引数が1つの ElbMgrImpl のメンバ関数
-  typedef void (T::*ElbFunc)(A);
+  using ElbFunc = void (T::*)(A);
 
 public:
 
@@ -132,14 +132,12 @@ public:
 	    A a);
 
   /// @brief デストラクタ
-  virtual
   ~ElbStubT1();
 
   /// @brief 処理を行う．
   /// @note obj->memfunc(a) を実行する．
-  virtual
   void
-  eval();
+  eval() override;
 
 
 private:
@@ -169,7 +167,7 @@ class ElbStubT2 :
 public:
 
   /// @brief 引数が2つの ElbMgrImpl のメンバ関数
-  typedef void (T::*ElbFunc)(A, B);
+  using ElbFunc = void(T::*)(A, B);
 
 public:
 
@@ -183,14 +181,12 @@ public:
 	    B b);
 
   /// @brief デストラクタ
-  virtual
   ~ElbStubT2();
 
   /// @brief 処理を行う．
   /// @note obj->memfunc(a, b) を実行する．
-  virtual
   void
-  eval();
+  eval() override;
 
 
 private:
@@ -221,7 +217,7 @@ class ElbStubT3 :
 public:
 
   /// @brief 引数が3つの ElbMgrImpl のメンバ関数
-  typedef void (T::*ElbFunc)(A, B, C);
+  using ElbFunc = void (T::*)(A, B, C);
 
 public:
 
@@ -236,14 +232,12 @@ public:
 	    C c);
 
   /// @brief デストラクタ
-  virtual
   ~ElbStubT3();
 
   /// @brief 処理を行う．
   /// @note obj->memfunc(a, b, c) を実行する．
-  virtual
   void
-  eval();
+  eval() override;
 
 
 private:
@@ -276,7 +270,7 @@ class ElbStubT4 :
 public:
 
   /// @brief 引数が4つの ElbMgrImpl のメンバ関数
-  typedef void (T::*ElbFunc)(A, B, C, D);
+  using ElbFunc = void (T::*)(A, B, C, D);
 
 public:
 
@@ -292,14 +286,12 @@ public:
 	    D d);
 
   /// @brief デストラクタ
-  virtual
   ~ElbStubT4();
 
   /// @brief 処理を行う．
   /// @note obj->memfunc(a, b, c, d) を実行する．
-  virtual
   void
-  eval();
+  eval() override;
 
 
 private:
@@ -330,7 +322,7 @@ private:
 // @brief コンストラクタ
 inline
 ElbStub::ElbStub() :
-  mNextLink(nullptr)
+  mNextLink{nullptr}
 {
 }
 
@@ -343,8 +335,8 @@ ElbStub::~ElbStub()
 // @brief コンストラクタ
 inline
 ElbStubList::ElbStubList() :
-  mTop(nullptr),
-  mTail(nullptr)
+  mTop{nullptr},
+  mTail{nullptr}
 {
 }
 
@@ -395,8 +387,8 @@ inline
 void
 ElbStubList::eval()
 {
-  for (ElbStub* stub = mTop; stub; ) {
-    ElbStub* next = stub->mNextLink;
+  for ( auto stub = mTop; stub; ) {
+    auto next = stub->mNextLink;
     stub->eval();
     stub = next;
   }
@@ -423,9 +415,9 @@ template<typename T,
 ElbStubT1<T, A>::ElbStubT1(T* obj,
 			   ElbFunc memfunc,
 			   A a) :
-  mObj(obj),
-  mMemFunc(memfunc),
-  mA(a)
+  mObj{obj},
+  mMemFunc{memfunc},
+  mA{a}
 {
 }
 
@@ -456,10 +448,10 @@ ElbStubT2<T, A, B>::ElbStubT2(T* obj,
 			      ElbFunc memfunc,
 			      A a,
 			      B b) :
-  mObj(obj),
-  mMemFunc(memfunc),
-  mA(a),
-  mB(b)
+  mObj{obj},
+  mMemFunc{memfunc},
+  mA{a},
+  mB{b}
 {
 }
 
@@ -494,11 +486,11 @@ ElbStubT3<T, A, B, C>::ElbStubT3(T* obj,
 				 A a,
 				 B b,
 				 C c) :
-  mObj(obj),
-  mMemFunc(memfunc),
-  mA(a),
-  mB(b),
-  mC(c)
+  mObj{obj},
+  mMemFunc{memfunc},
+  mA{a},
+  mB{b},
+  mC{c}
 {
 }
 
@@ -537,12 +529,12 @@ ElbStubT4<T, A, B, C, D>::ElbStubT4(T* obj,
 				    B b,
 				    C c,
 				    D d) :
-  mObj(obj),
-  mMemFunc(memfunc),
-  mA(a),
-  mB(b),
-  mC(c),
-  mD(d)
+  mObj{obj},
+  mMemFunc{memfunc},
+  mA{a},
+  mB{b},
+  mC{c},
+  mD{d}
 {
 }
 

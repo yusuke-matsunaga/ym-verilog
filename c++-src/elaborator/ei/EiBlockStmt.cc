@@ -12,7 +12,6 @@
 #include "EiBlockScope.h"
 
 #include "ym/pt/PtStmt.h"
-#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -32,7 +31,7 @@ EiFactory::new_Begin(const VlNamedObj* parent,
 		     const PtStmt* pt_stmt,
 		     ElbStmt** stmt_list)
 {
-  SizeType stmt_num = pt_stmt->stmt_array()->size();
+  SizeType stmt_num = pt_stmt->stmt_num();
   EiBegin* stmt = new EiBegin(parent, process, pt_stmt,
 			      stmt_num, stmt_list);
 
@@ -50,7 +49,7 @@ EiFactory::new_Fork(const VlNamedObj* parent,
 		    const PtStmt* pt_stmt,
 		    ElbStmt** stmt_list)
 {
-  SizeType stmt_num = pt_stmt->stmt_array()->size();
+  SizeType stmt_num = pt_stmt->stmt_num();
   EiFork* stmt = new EiFork(parent, process, pt_stmt,
 			    stmt_num, stmt_list);
 
@@ -68,7 +67,7 @@ EiFactory::new_NamedBegin(const VlNamedObj* block,
 			  const PtStmt* pt_stmt,
 			  ElbStmt** stmt_list)
 {
-  SizeType stmt_num = pt_stmt->stmt_array()->size();
+  SizeType stmt_num = pt_stmt->stmt_num();
   EiNamedBegin* stmt = new EiNamedBegin(block, process,
 					stmt_num, stmt_list);
 
@@ -86,7 +85,7 @@ EiFactory::new_NamedFork(const VlNamedObj* block,
 			 const PtStmt* pt_stmt,
 			 ElbStmt** stmt_list)
 {
-  SizeType stmt_num = pt_stmt->stmt_array()->size();
+  SizeType stmt_num = pt_stmt->stmt_num();
   EiNamedFork* stmt = new EiNamedFork(block, process,
 				      stmt_num, stmt_list);
 

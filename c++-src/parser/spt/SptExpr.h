@@ -10,9 +10,9 @@
 
 
 #include "ym/FileRegion.h"
-
 #include "parser/PtiExpr.h"
-#include "ym/pt/PtArray.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -53,10 +53,14 @@ public:
   VpiOpType
   op_type() const override;
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  /// system function call の場合は常に nullptr
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
   /// @brief 末尾の名前の取得
   /// @return 末尾の名前
@@ -278,7 +282,7 @@ private:
   /// コンストラクタ
   SptOpr2(const FileRegion& file_region,
 	  VpiOpType op_type,
-	  const PtExprArray* opr_array);
+	  PtiExprArray&& opr_array);
 
   /// デストラクタ
   ~SptOpr2();
@@ -332,7 +336,7 @@ private:
   VpiOpType mOpType;
 
   // オペランドのリスト
-  const PtExprArray* mExprArray;
+  PtiExprArray mExprArray;
 
 };
 
@@ -350,9 +354,9 @@ protected:
   /// コンストラクタ
   SptFuncCall(const FileRegion& file_region,
 	      PtExprType type,
-	      const PtNameBranchArray* nb_array,
+	      PtiNameBranchArray&& nb_array,
 	      const char* name,
-	      const PtExprArray* arg_array);
+	      PtiExprArray&& arg_array);
 
   /// デストラクタ
   ~SptFuncCall();
@@ -363,9 +367,14 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// 階層ブランチを返す．
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
+  /// @brief 階層ブランチの取得
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
   /// 末尾の名前を返す．
   const char*
@@ -401,13 +410,13 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチの配列
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
   // 末尾の名前
   const char* mName;
 
   // 引数リスト
-  const PtExprArray* mArgArray;
+  PtiExprArray mArgArray;
 
 };
 
@@ -424,10 +433,10 @@ private:
 
   /// コンストラクタ
   SptPrimary(const FileRegion& file_region,
-	     const PtNameBranchArray* nb_array,
+	     PtiNameBranchArray&& nb_array,
 	     const char* tail_name,
 	     bool const_index,
-	     const PtExprArray* index_array = nullptr,
+	     PtiExprArray&& index_array = PtiExprArray(),
 	     VpiRangeMode mode = VpiRangeMode::No,
 	     const PtExpr* left = nullptr,
 	     const PtExpr* right = nullptr);
@@ -441,9 +450,14 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// 階層ブランチを取り出す．
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
+  /// @brief 階層ブランチの取得
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
   /// 末尾の名前を取り出す．
   const char*
@@ -482,7 +496,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
   // 末尾の名前
   const char* mName;
@@ -491,7 +505,7 @@ private:
   bool mConstIndex;
 
   // インデックスの配列
-  const PtExprArray* mIndexArray;
+  PtiExprArray mIndexArray;
 
   // 範囲のモード
   VpiRangeMode mMode;

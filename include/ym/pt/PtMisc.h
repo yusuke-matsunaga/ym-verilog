@@ -41,11 +41,24 @@ public:
   const PtExpr*
   delay() const = 0;
 
-  /// @brief イベントリストの取得
-  /// @note event control/repeat control の場合のみ意味を持つ
+  /// @brief イベントリストの要素数の取得
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
   virtual
-  const PtExprArray*
-  event_list() const = 0;
+  SizeType
+  event_num() const = 0;
+
+  /// @brief イベントリストの要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
+  ///
+  /// event control/repeat control の場合のみ意味を持つ
+  virtual
+  const PtExpr*
+  event(SizeType pos) const = 0;
+
+  /// @brief イベントリストの取得
+  vector<const PtExpr*>
+  event_list() const;
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
@@ -185,16 +198,11 @@ public:
   int
   index() const = 0;
 
-};
+  /// @brief インデックスを含めた名前を返す．
+  string
+  expand_name() const;
 
-/// @relates PtNameBranch
-/// @brief 階層名を作り出す関数
-/// @param[in] nb_array 階層ブランチリスト
-/// @param[in] name 末尾の名前
-/// @return 階層名を展開したものを返す．
-string
-expand_full_name(const PtNameBranchArray* nb_array,
-		 const char* name);
+};
 
 
 //////////////////////////////////////////////////////////////////////
@@ -211,10 +219,20 @@ public:
   // PtAttrInst の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 要素のリストの取得
+  /// @brief 要素数の取得
   virtual
-  const PtAttrSpecArray*
-  attrspec_list() const = 0;
+  SizeType
+  attrspec_num() const = 0;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
+  virtual
+  const PtAttrSpec*
+  attrspec(SizeType pos) const = 0;
+
+  /// @brief 要素のリストの取得
+  vector<const PtAttrSpec*>
+  attrspec_list() const;
 
 };
 
@@ -246,6 +264,50 @@ public:
   expr() const = 0;
 
 };
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief インデックスを含めた名前を返す．
+inline
+string
+PtNameBranch::expand_name() const
+{
+  ostringstream buf;
+  buf << name();
+  if ( has_index() ) {
+    buf << "[" << index() << "]";
+  }
+  return buf.str();
+}
+
+// @brief イベントリストの取得
+inline
+vector<const PtExpr*>
+PtControl::event_list() const
+{
+  SizeType n = event_num();
+  vector<const PtExpr*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = event(i);
+  }
+  return vec;
+}
+
+// @brief 要素のリストの取得
+inline
+vector<const PtAttrSpec*>
+PtAttrInst::attrspec_list() const
+{
+  SizeType n = attrspec_num();
+  vector<const PtAttrSpec*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = attrspec(i);
+  }
+  return vec;
+}
 
 END_NAMESPACE_YM_VERILOG
 

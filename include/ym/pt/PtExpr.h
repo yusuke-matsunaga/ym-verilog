@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @brief expression を表すクラスの共通の親クラス
 //////////////////////////////////////////////////////////////////////
 class PtExpr :
-  public PtBase
+  public PtHierNamedBase
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -39,16 +39,6 @@ public:
   virtual
   VpiOpType
   op_type() const = 0;
-
-  /// @brief 階層ブランチの取得
-  virtual
-  const PtNameBranchArray*
-  namebranch_array() const = 0;
-
-  /// @brief 名前を返す．
-  virtual
-  const char*
-  name() const = 0;
 
   /// @brief オペランドの数の取得
   /// @return 子供の数
@@ -122,7 +112,8 @@ public:
   const_type() const = 0;
 
   /// @brief 整数型の定数のサイズの取得
-  /// @return サイズ\n
+  /// @return サイズ
+  ///
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   virtual
   int

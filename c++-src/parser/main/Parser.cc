@@ -85,8 +85,6 @@ Parser::read_file(const string& filename,
 
   int stat = yyparse(*this);
 
-  FileInfo::clear();
-
   return (stat == 0);
 }
 
@@ -172,7 +170,7 @@ Parser::check_function_statement(const PtStmt* stmt)
   case PtStmtType::Case:
   case PtStmtType::CaseX:
   case PtStmtType::CaseZ:
-    for ( auto item: *stmt->caseitem_list() ) {
+    for ( auto item: stmt->caseitem_list() ) {
       if ( !check_function_statement(item->body()) ) {
 	return false;
       }
@@ -197,7 +195,7 @@ Parser::check_function_statement(const PtStmt* stmt)
 
   case PtStmtType::SeqBlock:
   case PtStmtType::NamedSeqBlock:
-    for ( auto stmt1: *stmt->stmt_array() ) {
+    for ( auto stmt1: stmt->stmt_list() ) {
       if ( !check_function_statement(stmt1) ) {
 	return false;
       }
@@ -224,7 +222,7 @@ Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
 {
   int n = 0;
   for ( auto ci: *ci_list ) {
-    if ( ci->label_list()->size() == 0 ) {
+    if ( ci->label_num() == 0 ) {
       ++ n;
       if ( n > 1 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -309,7 +307,7 @@ Parser::add_item(const PtItem* item,
 {
   if ( item ) {
     reg_attrinst(item, attr_list);
-    mCurItemList->push_back(item);
+    cur_item_list().push_back(item);
   }
 }
 
@@ -317,16 +315,14 @@ Parser::add_item(const PtItem* item,
 void
 Parser::init_block()
 {
-  push_declhead_list(nullptr);
+  push_declhead_list();
 }
 
 // @brief block-statement の終了
 void
 Parser::end_block()
 {
-  mCurDeclArray = get_decl_array();
-
-  pop_declhead_list(true);
+  mCurDeclArray = pop_declhead_list();
 }
 
 END_NAMESPACE_YM_VERILOG

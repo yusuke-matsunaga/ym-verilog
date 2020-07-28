@@ -22,18 +22,18 @@ BEGIN_NAMESPACE_YM_VERILOG
 // コンストラクタ
 CptUdp::CptUdp(const FileRegion& file_region,
 	       const char* name,
-	       const PtPortArray* port_array,
-	       const PtIOHeadArray* iohead_array,
+	       PtiPortArray&& port_array,
+	       PtiIOHeadArray&& iohead_array,
 	       bool is_seq,
 	       const PtExpr* init_value,
-	       const PtUdpEntryArray* entry_array) :
+	       PtiUdpEntryArray&& entry_array) :
   mFileRegion{file_region},
   mName{name},
-  mPortArray{port_array},
-  mIOHeadArray{iohead_array},
+  mPortArray{move(port_array)},
+  mIOHeadArray{move(iohead_array)},
   mSeq{is_seq},
   mInitValue{init_value},
-  mTableArray{entry_array}
+  mTableArray{move(entry_array)}
 {
 }
 
@@ -68,18 +68,34 @@ CptUdp::name() const
   return mName;
 }
 
-// @brief ポートのリストを取り出す．
-const PtPortArray*
-CptUdp::port_list() const
+// @brief ポート数を取り出す．
+SizeType
+CptUdp::port_num() const
 {
-  return mPortArray;
+  return mPortArray.size();
 }
 
-// @brief 入出力宣言ヘッダ配列の取得
-const PtIOHeadArray*
-CptUdp::iohead_array() const
+// @brief ポートを取り出す．
+// @param[in] pos 位置 ( 0 <= pos < port_num() )
+const PtPort*
+CptUdp::port(SizeType pos) const
 {
-  return mIOHeadArray;
+  return mPortArray[pos];
+}
+
+// @brief 入出力宣言ヘッダ配列の要素数の取得
+SizeType
+CptUdp::iohead_num() const
+{
+  return mIOHeadArray.size();
+}
+
+// @brief 入出力宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+const PtIOHead*
+CptUdp::iohead(SizeType pos) const
+{
+  return mIOHeadArray[pos];
 }
 
 // 初期値を取出す．
@@ -89,11 +105,19 @@ CptUdp::init_value() const
   return mInitValue;
 }
 
-// @brief テーブルを取り出す．
-const PtUdpEntryArray*
-CptUdp::table_array() const
+// @brief テーブルの要素数を取り出す．
+SizeType
+CptUdp::table_num() const
 {
-  return mTableArray;
+  return mTableArray.size();
+}
+
+// @brief テーブルの要素を取り出す．
+// @param[in] pos 位置 ( 0 <= pos < table_num() )
+const PtUdpEntry*
+CptUdp::table(SizeType pos) const
+{
+  return mTableArray[pos];
 }
 
 
@@ -103,10 +127,10 @@ CptUdp::table_array() const
 
 // コンストラクタ
 CptUdpEntry::CptUdpEntry(const FileRegion& file_region,
-			 const PtUdpValueArray* input_array,
+			 PtiUdpValueArray&& input_array,
 			 const PtUdpValue* output) :
   mFileRegion{file_region},
-  mInputArray{input_array},
+  mInputArray{move(input_array)},
   mOutput{output}
 {
 }
@@ -123,11 +147,19 @@ CptUdpEntry::file_region() const
   return mFileRegion;
 }
 
-// @brief 入力値の配列を取り出す．
-const PtUdpValueArray*
-CptUdpEntry::input_array() const
+// @brief 入力値の配列の要素数を取り出す．
+SizeType
+CptUdpEntry::input_num() const
 {
-  return mInputArray;
+  return mInputArray.size();
+}
+
+// @brief 入力値を取り出す．
+// @param[in] pos 位置 ( 0 <= pos < input_num() )
+const PtUdpValue*
+CptUdpEntry::input(SizeType pos) const
+{
+  return mInputArray[pos];
 }
 
 // @brief 現状態の値を取り出す．
@@ -152,10 +184,10 @@ CptUdpEntry::output() const
 
 // コンストラクタ
 CptUdpEntryS::CptUdpEntryS(const FileRegion& file_region,
-			   const PtUdpValueArray* input_array,
+			   PtiUdpValueArray&& input_array,
 			   const PtUdpValue* current,
 			   const PtUdpValue* output) :
-  CptUdpEntry(file_region, input_array, output),
+  CptUdpEntry(file_region, move(input_array), output),
   mCurrent{current}
 {
 }
@@ -228,18 +260,18 @@ CptUdpValue::symbol() const
 const PtUdp*
 CptFactory::new_CmbUdp(const FileRegion& file_region,
 		       const char* name,
-		       const PtPortArray* port_array,
-		       const PtIOHeadArray* iohead_array,
-		       const PtUdpEntryArray* entry_array)
+		       const vector<const PtPort*>& port_array,
+		       const vector<const PtIOHead*>& iohead_array,
+		       const vector<const PtUdpEntry*>& entry_array)
 {
   ++ mNumUdp;
   void* p{mAlloc.get_memory(sizeof(CptUdp))};
   auto obj{new (p) CptUdp(file_region,
 			  name,
-			  port_array,
-			  iohead_array,
+			  PtiArray<const PtPort>(mAlloc, port_array),
+			  PtiArray<const PtIOHead>(mAlloc, iohead_array),
 			  false, nullptr,
-			  entry_array)};
+			  PtiArray<const PtUdpEntry>(mAlloc, entry_array))};
   return obj;
 }
 
@@ -255,20 +287,20 @@ CptFactory::new_CmbUdp(const FileRegion& file_region,
 const PtUdp*
 CptFactory::new_SeqUdp(const FileRegion& file_region,
 		       const char* name,
-		       const PtPortArray* port_array,
-		       const PtIOHeadArray* iohead_array,
+		       const vector<const PtPort*>& port_array,
+		       const vector<const PtIOHead*>& iohead_array,
 		       const PtExpr* init_value,
-		       const PtUdpEntryArray* entry_array)
+		       const vector<const PtUdpEntry*>& entry_array)
 {
   ++ mNumUdp;
   void* p{mAlloc.get_memory(sizeof(CptUdp))};
   auto obj{new (p) CptUdp(file_region,
 			  name,
-			  port_array,
-			  iohead_array,
+			  PtiArray<const PtPort>(mAlloc, port_array),
+			  PtiArray<const PtIOHead>(mAlloc, iohead_array),
 			  true,
 			  init_value,
-			  entry_array)};
+			  PtiArray<const PtUdpEntry>(mAlloc, entry_array))};
   return obj;
 }
 
@@ -279,13 +311,13 @@ CptFactory::new_SeqUdp(const FileRegion& file_region,
 // @return 生成されたテーブルエントリ
 const PtUdpEntry*
 CptFactory::new_UdpEntry(const FileRegion& file_region,
-			 const PtUdpValueArray* input_array,
+			 const vector<const PtUdpValue*>& input_array,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntry;
   void* p{mAlloc.get_memory(sizeof(CptUdpEntry))};
   auto obj{new (p) CptUdpEntry(file_region,
-			       input_array,
+			       PtiArray<const PtUdpValue>(mAlloc, input_array),
 			       output)};
   return obj;
 }
@@ -298,14 +330,14 @@ CptFactory::new_UdpEntry(const FileRegion& file_region,
 // @return 生成されたテーブルエントリ
 const PtUdpEntry*
 CptFactory::new_UdpEntry(const FileRegion& file_region,
-			 const PtUdpValueArray* input_array,
+			 const vector<const PtUdpValue*>& input_array,
 			 const PtUdpValue* current,
 			 const PtUdpValue* output)
 {
   ++ mNumUdpEntryS;
   void* p{mAlloc.get_memory(sizeof(CptUdpEntryS))};
   auto obj{new (p) CptUdpEntryS(file_region,
-				input_array,
+				PtiArray<const PtUdpValue>(mAlloc, input_array),
 				current,
 				output)};
   return obj;

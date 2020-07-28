@@ -76,31 +76,67 @@ SptItem::delay() const
   return nullptr;
 }
 
-// @brief パラメータ割り当てリストの取得
-const PtConnectionArray*
-SptItem::paramassign_array() const
+// @brief パラメータ割り当て数の取得
+SizeType
+SptItem::paramassign_num() const
 {
+  return 0;
+}
+
+// @brief パラメータ割り当ての取得
+// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
+const PtConnection*
+SptItem::paramassign(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief defparam のリストの取得
-const PtDefParamArray*
-SptItem::defparam_list() const
+// @brief defparam の要素数の取得
+SizeType
+SptItem::defparam_num() const
 {
+  return 0;
+}
+
+// @brief defparam の取得
+// @param[in] pos 位置 ( 0 <= pos < defparam_num() )
+const PtDefParam*
+SptItem::defparam(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief continuous assign のリストの取得
-const PtContAssignArray*
-SptItem::contassign_list() const
+// @brief continuous assign の要素数の取得
+SizeType
+SptItem::contassign_num() const
 {
+  return 0;
+}
+
+// @brief continuous assign の取得
+// @param[in] pos 位置 ( 0 <= pos < contassign_num() )
+const PtContAssign*
+SptItem::contassign(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief module/UDP/gate instance リストの取得
-const PtInstArray*
-SptItem::inst_list() const
+// @brief module/UDP/gate instance の要素数の取得
+SizeType
+SptItem::inst_num() const
 {
+  return 0;
+}
+
+// @brief module/UDP/gate instance の取得
+// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+const PtInst*
+SptItem::inst(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -124,30 +160,57 @@ SptItem::automatic() const
 }
 
 // @brief IO宣言の要素数の取得
-int
+SizeType
 SptItem::ioitem_num() const
 {
   return 0;
 }
 
-// @brief IO宣言リストの配列の取得
-const PtIOHeadArray*
-SptItem::iohead_array() const
+// @brief IO宣言ヘッダリストの要素数の取得
+SizeType
+SptItem::iohead_num() const
 {
+  return 0;
+}
+
+// @brief IO宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+const PtIOHead*
+SptItem::iohead(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief 宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-SptItem::declhead_array() const
+// @brief 宣言ヘッダの要素数の取得
+SizeType
+SptItem::declhead_num() const
 {
+  return 0;
+}
+
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+const PtDeclHead*
+SptItem::declhead(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief item 配列の取得
-const PtItemArray*
-SptItem::item_array() const
+// @brief item リストの要素数の取得
+SizeType
+SptItem::item_num() const
 {
+  return 0;
+}
+
+// @brief item の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+const PtItem*
+SptItem::item(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -238,10 +301,19 @@ SptItem::specpath_type() const
   return VpiSpecPathType::Null; // ダミー
 }
 
-// @brief ターミナルのリストの取得
-const PtExprArray*
-SptItem::terminal_list() const
+// @brief ターミナルの要素数の取得
+SizeType
+SptItem::terminal_num() const
 {
+  return 0;
+}
+
+// @brief ターミナルの取得
+// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
+const PtExpr*
+SptItem::terminal(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -263,38 +335,83 @@ SptItem::expr() const
   return nullptr;
 }
 
-// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-SptItem::then_declhead_array() const
+// @brief 条件が成り立ったときに生成される宣言ヘッダ配列の要素数の取得
+SizeType
+SptItem::then_declhead_num() const
 {
+  return 0;
+}
+
+// @brief 条件が成り立ったときに生成される宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < then_declhead_num() )
+const PtDeclHead*
+SptItem::then_declhead(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief 条件が成り立ったときに生成される item 配列の取得
-const PtItemArray*
-SptItem::then_item_array() const
+// @brief 条件が成り立ったときに生成される item 配列の要素数の取得
+SizeType
+SptItem::then_item_num() const
 {
+  return 0;
+}
+
+// @brief 条件が成り立ったときに生成される item の取得
+// @param[in] pos 位置 ( 0 <= pos < then_item_num() )
+const PtItem*
+SptItem::then_item(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-SptItem::else_declhead_array() const
+// @brief 条件が成り立たなかったときに生成される宣言ヘッダ配列の要素数の取得
+SizeType
+SptItem::else_declhead_num() const
 {
+  return 0;
+}
+
+// @brief 条件が成り立たなかったときに生成される宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < else_declhead_num() )
+const PtDeclHead*
+SptItem::else_declhead(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-/// @brief 条件が成り立たなかったときに生成される item 配列の取得
-const PtItemArray*
-SptItem::else_item_array() const
+// @brief 条件が成り立たなかったときに生成される item 配列の要素数の取得
+SizeType
+SptItem::else_item_num() const
 {
+  return 0;
+}
+
+// @brief 条件が成り立たなかったときに生成される item の取得
+// @param[in] pos 位置 ( 0 <= pos < else_item_num() )
+const PtItem*
+SptItem::else_item(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief case item のリストの取得
-const PtGenCaseItemArray*
-SptItem::caseitem_list() const
+// @brief case item のリストの要素数の取得
+SizeType
+SptItem::caseitem_num() const
 {
+  return 0;
+}
+
+// @brief case item の取得
+// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+const PtGenCaseItem*
+SptItem::caseitem(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -335,9 +452,9 @@ SptItem::next_expr() const
 // @param dplist defparam のリスト
 // dplist は削除される．
 SptDefParamH::SptDefParamH(const FileRegion& file_region,
-			   const PtDefParamArray* dp_array) :
+			   PtiDefParamArray&& dp_array) :
   SptItem{file_region, PtItemType::DefParam},
-  mArray{dp_array}
+  mArray{move(dp_array)}
 {
 }
 
@@ -346,11 +463,19 @@ SptDefParamH::~SptDefParamH()
 {
 }
 
-// @brief defparam リストの取得
-const PtDefParamArray*
-SptDefParamH::defparam_list() const
+// @brief defparam の要素数の取得
+SizeType
+SptDefParamH::defparam_num() const
 {
-  return mArray;
+  return mArray.size();
+}
+
+// @brief defparam の取得
+// @param[in] pos 位置 ( 0 <= pos < defparam_num() )
+const PtDefParam*
+SptDefParamH::defparam(SizeType pos) const
+{
+  return mArray[pos];
 }
 
 
@@ -364,11 +489,11 @@ SptDefParamH::defparam_list() const
 // @param tail_name 末尾の名前
 // @param value 値を表す式
 SptDefParam::SptDefParam(const FileRegion& file_region,
-			 const PtNameBranchArray* nb_array,
+			 PtiNameBranchArray&& nb_array,
 			 const char* tail_name,
 			 const PtExpr* value) :
   mFileRegion{file_region},
-  mNbArray{nb_array},
+  mNbArray{move(nb_array)},
   mName{tail_name},
   mExpr{value}
 {
@@ -388,11 +513,19 @@ SptDefParam::file_region() const
   return mFileRegion;
 }
 
-// @brief 階層ブランチの取得
-const PtNameBranchArray*
-SptDefParam::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+SptDefParam::namebranch_num() const
 {
-  return mNbArray;
+  return mNbArray.size();
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+SptDefParam::namebranch(SizeType pos) const
+{
+  return mNbArray[pos];
 }
 
 // 末尾の名前の取得
@@ -424,11 +557,11 @@ SptDefParam::expr() const
 SptContAssignH::SptContAssignH(const FileRegion& file_region,
 			       const PtStrength* strength,
 			       const PtDelay* delay,
-			       const PtContAssignArray* ca_array) :
+			       PtiContAssignArray&& ca_array) :
   SptItem{file_region, PtItemType::ContAssign},
   mStrength{strength},
   mDelay{delay},
-  mArray{ca_array}
+  mArray{move(ca_array)}
 {
 }
 
@@ -453,11 +586,19 @@ SptContAssignH::delay() const
   return mDelay;
 }
 
-// @brief continuous assign リストの取得
-const PtContAssignArray*
-SptContAssignH::contassign_list() const
+// @brief continuous assign の要素数の取得
+SizeType
+SptContAssignH::contassign_num() const
 {
-  return mArray;
+  return mArray.size();
+}
+
+// @brief continuous assign の取得
+// @param[in] pos 位置 ( 0 <= pos < contassign_num() )
+const PtContAssign*
+SptContAssignH::contassign(SizeType pos) const
+{
+  return mArray[pos];
 }
 
 
@@ -563,8 +704,8 @@ SptTf::SptTf(const FileRegion& file_region,
 	     const PtExpr* left,
 	     const PtExpr* right,
 	     VpiVarType data_type,
-	     const PtIOHeadArray* iohead_array,
-	     const PtDeclHeadArray* declhead_array,
+	     PtiIOHeadArray&& iohead_array,
+	     PtiDeclHeadArray&& declhead_array,
 	     const PtStmt* stmt) :
   SptItem{file_region, type},
   mName{name},
@@ -573,14 +714,14 @@ SptTf::SptTf(const FileRegion& file_region,
   mLeftRange{left},
   mRightRange{right},
   mDataType{data_type},
-  mIOHeadArray{iohead_array},
-  mDeclHeadArray{declhead_array},
+  mIOHeadArray{move(iohead_array)},
+  mDeclHeadArray{move(declhead_array)},
   mBody{stmt}
 {
   mInUse = false;
   mIOItemNum = 0;
-  for ( auto head: *iohead_array ) {
-    mIOItemNum += head->item_list()->size();
+  for ( auto head: mIOHeadArray ) {
+    mIOItemNum += head->item_num();
   }
 }
 
@@ -607,24 +748,40 @@ SptTf::automatic() const
 }
 
 // @brief IO宣言の要素数の取得
-int
+SizeType
 SptTf::ioitem_num() const
 {
   return mIOItemNum;
 }
 
-// @brief IO宣言リストの配列の取得
-const PtIOHeadArray*
-SptTf::iohead_array() const
+// @brief IO宣言ヘッダリストの要素数の取得
+SizeType
+SptTf::iohead_num() const
 {
-  return mIOHeadArray;
+  return mIOHeadArray.size();
 }
 
-// @brief 宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-SptTf::declhead_array() const
+// @brief IO宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
+const PtIOHead*
+SptTf::iohead(SizeType pos) const
 {
-  return mDeclHeadArray;
+  return mIOHeadArray[pos];
+}
+
+// @brief 宣言ヘッダの要素数の取得
+SizeType
+SptTf::declhead_num() const
+{
+  return mDeclHeadArray.size();
+}
+
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+const PtDeclHead*
+SptTf::declhead(SizeType pos) const
+{
+  return mDeclHeadArray[pos];
 }
 
 // 本体のステートメントの取得
@@ -706,12 +863,12 @@ SptGateH::SptGateH(const FileRegion& file_region,
 		   VpiPrimType prim_type,
 		   const PtStrength* strength,
 		   const PtDelay* delay,
-		   const PtInstArray* elem_array) :
+		   PtiInstArray&& elem_array) :
   SptItem{file_region, PtItemType::GateInst},
   mPrimType{prim_type},
   mStrength{strength},
   mDelay{delay},
-  mElemArray{elem_array}
+  mElemArray{move(elem_array)}
 {
 }
 
@@ -744,11 +901,19 @@ SptGateH::delay() const
   return mDelay;
 }
 
-// @brief module/UDP/gate instance リストの取得
-const PtInstArray*
-SptGateH::inst_list() const
+// @brief module/UDP/gate instance の要素数の取得
+SizeType
+SptGateH::inst_num() const
 {
-  return mElemArray;
+  return mElemArray.size();
+}
+
+// @brief module/UDP/gate instance の取得
+// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+const PtInst*
+SptGateH::inst(SizeType pos) const
+{
+  return mElemArray[pos];
 }
 
 
@@ -765,16 +930,16 @@ SptGateH::inst_list() const
 // @param elem_list
 SptMuH::SptMuH(const FileRegion& file_region,
 	       const char* def_name,
-	       const PtConnectionArray* con_array,
+	       PtiConnectionArray&& con_array,
 	       const PtStrength* strength,
 	       const PtDelay* delay,
-	       const PtInstArray* elem_array) :
+	       PtiInstArray&& elem_array) :
   SptItem{file_region, PtItemType::MuInst},
   mName{def_name},
-  mParamArray{con_array},
+  mParamArray{move(con_array)},
   mStrength{strength},
   mDelay{delay},
-  mElemArray{elem_array}
+  mElemArray{move(elem_array)}
 {
 }
 
@@ -807,18 +972,34 @@ SptMuH::delay() const
   return mDelay;
 }
 
-// @brief パラメータ割り当てリストの取得
-const PtConnectionArray*
-SptMuH::paramassign_array() const
+// @brief パラメータ割り当て数の取得
+SizeType
+SptMuH::paramassign_num() const
 {
-  return mParamArray;
+  return mParamArray.size();
 }
 
-// @brief module/UDP/gate instance リストの取得
-const PtInstArray*
-SptMuH::inst_list() const
+// @brief パラメータ割り当ての取得
+// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
+const PtConnection*
+SptMuH::paramassign(SizeType pos) const
 {
-  return mElemArray;
+  return mParamArray[pos];
+}
+
+// @brief module/UDP/gate instance の要素数の取得
+SizeType
+SptMuH::inst_num() const
+{
+  return mElemArray.size();
+}
+
+// @brief module/UDP/gate instance の取得
+// @param[in] pos 位置 ( 0 <= pos < inst_num() )
+const PtInst*
+SptMuH::inst(SizeType pos) const
+{
+  return mElemArray[pos];
 }
 
 
@@ -836,12 +1017,12 @@ SptInst::SptInst(const FileRegion& file_region,
 		 const char* name,
 		 const PtExpr* left,
 		 const PtExpr* right,
-		 const PtConnectionArray* con_array) :
+		 PtiConnectionArray&& con_array) :
   mFileRegion{file_region},
   mName{name},
   mLeftRange{left},
   mRightRange{right},
-  mPortArray{con_array}
+  mPortArray{move(con_array)}
 {
 }
 
@@ -882,11 +1063,19 @@ SptInst::right_range() const
   return mRightRange;
 }
 
-// @brief ポートのリストの取得
-const PtConnectionArray*
-SptInst::port_list() const
+// @brief ポートの要素数の取得
+SizeType
+SptInst::port_num() const
 {
-  return mPortArray;
+  return mPortArray.size();
+}
+
+// @brief ポートの取得
+// @param[in] pos 位置 ( 0 <= pos < port_num() )
+const PtConnection*
+SptInst::port(SizeType pos) const
+{
+  return mPortArray[pos];
 }
 
 
@@ -900,9 +1089,10 @@ SptInst::port_list() const
 // @return 生成された defparam ヘッダ
 const PtItem*
 SptFactory::new_DefParamH(const FileRegion& file_region,
-			  const PtDefParamArray* elem_array)
+			  const vector<const PtDefParam*>& elem_array)
 {
-  auto node = new SptDefParamH(file_region, elem_array);
+  auto node = new SptDefParamH(file_region,
+			       PtiDefParamArray(mAlloc, elem_array));
   return node;
 }
 
@@ -916,7 +1106,9 @@ SptFactory::new_DefParam(const FileRegion& file_region,
 			 const char* name,
 			 const PtExpr* value)
 {
-  auto node = new SptDefParam(file_region, nullptr, name, value);
+  auto node = new SptDefParam(file_region,
+			      PtiNameBranchArray(),
+			      name, value);
   return node;
 }
 
@@ -931,9 +1123,11 @@ SptFactory::new_DefParam(const FileRegion& file_region,
 			 PuHierName* hname,
 			 const PtExpr* value)
 {
-  auto nb_array = hname->name_branch(mAlloc);
+  auto nb_array = hname->name_branch();
   auto tail_name = hname->tail_name();
-  auto node = new SptDefParam(file_region, nb_array, tail_name, value);
+  auto node = new SptDefParam(file_region,
+			      PtiNameBranchArray(mAlloc, nb_array),
+			      tail_name, value);
   return node;
 }
 
@@ -943,9 +1137,10 @@ SptFactory::new_DefParam(const FileRegion& file_region,
 // @return 生成された continuous assign 文のヘッダ
 const PtItem*
 SptFactory::new_ContAssignH(const FileRegion& file_region,
-			    const PtContAssignArray* elem_array)
+			    const vector<const PtContAssign*>& elem_array)
 {
-  auto node = new SptContAssignH(file_region, nullptr, nullptr, elem_array);
+  auto node = new SptContAssignH(file_region, nullptr, nullptr,
+				 PtiContAssignArray(mAlloc, elem_array));
   return node;
 }
 
@@ -957,9 +1152,10 @@ SptFactory::new_ContAssignH(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtStrength* strength,
-			    const PtContAssignArray* elem_array)
+			    const vector<const PtContAssign*>& elem_array)
 {
-  auto node = new SptContAssignH(file_region, strength, nullptr, elem_array);
+  auto node = new SptContAssignH(file_region, strength, nullptr,
+				 PtiContAssignArray(mAlloc, elem_array));
   return node;
 }
 
@@ -971,9 +1167,10 @@ SptFactory::new_ContAssignH(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtDelay* delay,
-			    const PtContAssignArray* elem_array)
+			    const vector<const PtContAssign*>& elem_array)
 {
-  auto node = new SptContAssignH(file_region, nullptr, delay, elem_array);
+  auto node = new SptContAssignH(file_region, nullptr, delay,
+				 PtiContAssignArray(mAlloc, elem_array));
   return node;
 }
 
@@ -987,9 +1184,10 @@ const PtItem*
 SptFactory::new_ContAssignH(const FileRegion& file_region,
 			    const PtStrength* strength,
 			    const PtDelay* delay,
-			    const PtContAssignArray* elem_array)
+			    const vector<const PtContAssign*>& elem_array)
 {
-  auto node = new SptContAssignH(file_region, strength, delay, elem_array);
+  auto node = new SptContAssignH(file_region, strength, delay,
+				 PtiContAssignArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1049,8 +1247,8 @@ const PtItem*
 SptFactory::new_Task(const FileRegion& file_region,
 		     const char* name,
 		     bool automatic,
-		     const PtIOHeadArray* iohead_array,
-		     const PtDeclHeadArray* declhead_array,
+		     const vector<const PtIOHead*>& iohead_array,
+		     const vector<const PtDeclHead*>& declhead_array,
 		     const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
@@ -1058,8 +1256,8 @@ SptFactory::new_Task(const FileRegion& file_region,
 			name, automatic,
 			false, nullptr, nullptr,
 			VpiVarType::None,
-			iohead_array,
-			declhead_array,
+			PtiIOHeadArray(mAlloc, iohead_array),
+			PtiDeclHeadArray(mAlloc, declhead_array),
 			stmt);
   return node;
 }
@@ -1080,8 +1278,8 @@ SptFactory::new_Function(const FileRegion& file_region,
 			 const char* name,
 			 bool automatic,
 			 bool sign,
-			 const PtIOHeadArray* iohead_array,
-			 const PtDeclHeadArray* declhead_array,
+			 const vector<const PtIOHead*>& iohead_array,
+			 const vector<const PtDeclHead*>& declhead_array,
 			 const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
@@ -1089,8 +1287,8 @@ SptFactory::new_Function(const FileRegion& file_region,
 			name, automatic,
 			sign, nullptr, nullptr,
 			VpiVarType::None,
-			iohead_array,
-			declhead_array,
+			PtiIOHeadArray(mAlloc, iohead_array),
+			PtiDeclHeadArray(mAlloc, declhead_array),
 			stmt);
   return node;
 }
@@ -1115,8 +1313,8 @@ SptFactory::new_SizedFunc(const FileRegion& file_region,
 			  bool sign,
 			  const PtExpr* left,
 			  const PtExpr* right,
-			  const PtIOHeadArray* iohead_array,
-			  const PtDeclHeadArray* declhead_array,
+			  const vector<const PtIOHead*>& iohead_array,
+			  const vector<const PtDeclHead*>& declhead_array,
 			  const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
@@ -1124,8 +1322,8 @@ SptFactory::new_SizedFunc(const FileRegion& file_region,
 			name, automatic,
 			sign, left, right,
 			VpiVarType::None,
-			iohead_array,
-			declhead_array,
+			PtiIOHeadArray(mAlloc, iohead_array),
+			PtiDeclHeadArray(mAlloc, declhead_array),
 			stmt);
   return node;
 }
@@ -1148,8 +1346,8 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 			  bool automatic,
 			  bool sign,
 			  VpiVarType func_type,
-			  const PtIOHeadArray* iohead_array,
-			  const PtDeclHeadArray* declhead_array,
+			  const vector<const PtIOHead*>& iohead_array,
+			  const vector<const PtDeclHead*>& declhead_array,
 			  const PtStmt* stmt)
 {
   auto node = new SptTf(file_region,
@@ -1157,8 +1355,8 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 			name, automatic,
 			sign, nullptr, nullptr,
 			func_type,
-			iohead_array,
-			declhead_array,
+			PtiIOHeadArray(mAlloc, iohead_array),
+			PtiDeclHeadArray(mAlloc, declhead_array),
 			stmt);
   return node;
 }
@@ -1171,12 +1369,12 @@ SptFactory::new_TypedFunc(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
-		      const PtInstArray* elem_array)
+		      const vector<const PtInst*>& elem_array)
 {
   auto node = new SptGateH(file_region,
 			   type,
 			   nullptr, nullptr,
-			   elem_array);
+			   PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1190,12 +1388,12 @@ const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtStrength* strength,
-		      const PtInstArray* elem_array)
+		      const vector<const PtInst*>& elem_array)
 {
   auto node = new SptGateH(file_region,
 			   type,
 			   strength, nullptr,
-			   elem_array);
+			   PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1209,12 +1407,12 @@ const PtItem*
 SptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtDelay* delay,
-		      const PtInstArray* elem_array)
+		      const vector<const PtInst*>& elem_array)
 {
   auto node = new SptGateH(file_region,
 			   type,
 			   nullptr, delay,
-			   elem_array);
+			   PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1230,12 +1428,12 @@ SptFactory::new_GateH(const FileRegion& file_region,
 		      VpiPrimType type,
 		      const PtStrength* strength,
 		      const PtDelay* delay,
-		      const PtInstArray* elem_array)
+		      const vector<const PtInst*>& elem_array)
 {
   auto node = new SptGateH(file_region,
 			   type,
 			   strength, delay,
-			   elem_array);
+			   PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1247,12 +1445,12 @@ SptFactory::new_GateH(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
-		    const PtInstArray* elem_array)
+		    const vector<const PtInst*>& elem_array)
 {
   auto node = new SptMuH(file_region, def_name,
-			 nullptr,
+			 PtiConnectionArray(),
 			 nullptr, nullptr,
-			 elem_array);
+			 PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1266,12 +1464,12 @@ const PtItem*
 SptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtStrength* strength,
-		    const PtInstArray* elem_array)
+		    const vector<const PtInst*>& elem_array)
 {
   auto node = new SptMuH(file_region, def_name,
-			 nullptr,
+			 PtiConnectionArray(),
 			 strength, nullptr,
-			 elem_array);
+			 PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1285,12 +1483,12 @@ const PtItem*
 SptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtDelay* delay,
-		    const PtInstArray* elem_array)
+		    const vector<const PtInst*>& elem_array)
 {
   auto node = new SptMuH(file_region, def_name,
-			 nullptr,
+			 PtiConnectionArray(),
 			 nullptr, delay,
-			 elem_array);
+			 PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1306,12 +1504,12 @@ SptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
 		    const PtStrength* strength,
 		    const PtDelay* delay,
-		    const PtInstArray* elem_array)
+		    const vector<const PtInst*>& elem_array)
 {
   auto node = new SptMuH(file_region, def_name,
-			 nullptr,
+			 PtiConnectionArray(),
 			 strength, delay,
-			 elem_array);
+			 PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1324,13 +1522,13 @@ SptFactory::new_MuH(const FileRegion& file_region,
 const PtItem*
 SptFactory::new_MuH(const FileRegion& file_region,
 		    const char* def_name,
-		    const PtConnectionArray* con_array,
-		    const PtInstArray* elem_array)
+		    const vector<const PtConnection*>& con_array,
+		    const vector<const PtInst*>& elem_array)
 {
   auto node = new SptMuH(file_region, def_name,
-			 con_array,
+			 PtiConnectionArray(mAlloc, con_array),
 			 nullptr, nullptr,
-			 elem_array);
+			 PtiInstArray(mAlloc, elem_array));
   return node;
 }
 
@@ -1340,9 +1538,10 @@ SptFactory::new_MuH(const FileRegion& file_region,
 // @return 生成された module instance/UDP instance の要素
 const PtInst*
 SptFactory::new_Inst(const FileRegion& file_region,
-		     const PtConnectionArray* con_array)
+		     const vector<const PtConnection*>& con_array)
 {
-  auto node = new SptInst(file_region, nullptr, nullptr, nullptr, con_array);
+  auto node = new SptInst(file_region, nullptr, nullptr, nullptr,
+			  PtiConnectionArray(mAlloc, con_array));
   return node;
 }
 
@@ -1354,9 +1553,10 @@ SptFactory::new_Inst(const FileRegion& file_region,
 const PtInst*
 SptFactory::new_InstN(const FileRegion& file_region,
 		      const char* name,
-		      const PtConnectionArray* con_array)
+		      const vector<const PtConnection*>& con_array)
 {
-  auto node = new SptInst(file_region, name, nullptr, nullptr, con_array);
+  auto node = new SptInst(file_region, name, nullptr, nullptr,
+			  PtiConnectionArray(mAlloc, con_array));
   return node;
 }
 
@@ -1372,9 +1572,10 @@ SptFactory::new_InstV(const FileRegion& file_region,
 		      const char* name,
 		      const PtExpr* left,
 		      const PtExpr* right,
-		      const PtConnectionArray* con_array)
+		      const vector<const PtConnection*>& con_array)
 {
-  auto node = new SptInst(file_region, name, left, right, con_array);
+  auto node = new SptInst(file_region, name, left, right,
+			  PtiConnectionArray(mAlloc, con_array));
   return node;
 }
 

@@ -73,6 +73,8 @@ PtMgr::clear()
   mStringPool.clear();
 
   mAlloc.destroy();
+
+  FileInfo::clear();
 }
 
 // UDP の登録

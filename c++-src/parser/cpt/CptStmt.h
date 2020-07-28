@@ -5,14 +5,14 @@
 /// @brief CptStmt のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/pt/PtStmt.h"
-#include "ym/pt/PtArray.h"
-
 #include "ym/FileRegion.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -42,16 +42,14 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief ステートメントの種類を表す文字列の取得
-  /// @return ステートメントの種類を表す文字列
-  const char*
-  stmt_name() const override;
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @note kDisable/kEnable/kSysEnable で意味のある関数
-  /// @note このクラスでは nullptr を返す．
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
   /// @brief 名前の取得
   /// @return 名前
@@ -60,9 +58,19 @@ public:
   const char*
   name() const override;
 
-  /// @brief 引数のリストの取得
-  const PtExprArray*
-  arg_list() const override;
+  /// @brief ステートメントの種類を表す文字列の取得
+  /// @return ステートメントの種類を表す文字列
+  const char*
+  stmt_name() const override;
+
+  /// @brief 引数の数の取得
+  SizeType
+  arg_num() const override;
+
+  /// @brief 引数の取得
+  /// @param[in] pos 位置 ( 0 <= pos < arg_num() )
+  const PtExpr*
+  arg(SizeType pos) const override;
 
   /// @brief コントロールの取得
   /// @return ディレイ/イベントコントロール
@@ -113,9 +121,14 @@ public:
   const PtStmt*
   else_body() const override;
 
-  /// @brief case item のリストの取得
-  const PtCaseItemArray*
-  caseitem_list() const override;
+  /// @brief case item のリストの要素数の取得
+  SizeType
+  caseitem_num() const override;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+  const PtCaseItem*
+  caseitem(SizeType pos) const override;
 
   /// @brief 初期化代入文の取得
   /// @return 初期化代入文
@@ -131,14 +144,27 @@ public:
   const PtStmt*
   next_stmt() const override;
 
-  /// @brief 宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief 宣言ヘッダ配列の要素数の取得
+  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+  SizeType
+  declhead_num() const override;
 
-  /// @brief 子供のステートメント配列の取得
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
+
+  /// @brief 子供のステートメント配列の要素数の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
-  const PtStmtArray*
-  stmt_array() const override;
+  SizeType
+  stmt_num() const override;
+
+  /// @brief 子供のステートメントの取得
+  /// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
+  /// @note kParBlock/kSeqBlock で意味のある関数
+  const PtStmt*
+  stmt(SizeType pos) const override;
 
 
 private:
@@ -214,7 +240,7 @@ protected:
 
   /// @brief コンストラクタ
   CptDisableH(const FileRegion& file_region,
-	      const PtNameBranchArray* nb_array,
+	      PtiNameBranchArray&& nb_array,
 	      const char* tail_name);
 
   /// @brief デストラクタ
@@ -226,9 +252,14 @@ public:
   // PtStmt の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -237,7 +268,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 
@@ -253,7 +284,7 @@ protected:
   /// @brief コンストラクタ
   CptEnableBase(const FileRegion& file_region,
 		const char* name,
-		const PtExprArray* arg_array);
+		PtiExprArray&& arg_array);
 
   /// @brief デストラクタ
   ~CptEnableBase();
@@ -268,9 +299,14 @@ public:
   const char*
   name() const override;
 
-  /// @brief 引数のリストの取得
-  const PtExprArray*
-  arg_list() const override;
+  /// @brief 引数の数の取得
+  SizeType
+  arg_num() const override;
+
+  /// @brief 引数の取得
+  /// @param[in] pos 位置 ( 0 <= pos < arg_num() )
+  const PtExpr*
+  arg(SizeType pos) const override;
 
 
 private:
@@ -282,7 +318,7 @@ private:
   const char* mName;
 
   // 引数の配列
-  const PtExprArray* mArgArray;
+  PtiExprArray mArgArray;
 
 };
 
@@ -300,7 +336,7 @@ protected:
   /// @brief コンストラクタ
   CptEnable(const FileRegion& file_region,
 	    const char* name,
-	    const PtExprArray* arg_array);
+	    PtiExprArray&& arg_array);
 
   /// @brief デストラクタ
   ~CptEnable();
@@ -331,9 +367,9 @@ protected:
 
   /// @brief コンストラクタ
   CptEnableH(const FileRegion& file_region,
-	     const PtNameBranchArray* nb_array,
+	     PtiNameBranchArray&& nb_array,
 	     const char* tail_name,
-	     const PtExprArray* arg_array);
+	     PtiExprArray&& arg_array);
 
   /// @brief デストラクタ
   ~CptEnableH();
@@ -344,9 +380,14 @@ public:
   // PtStmt の仮想関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief 階層ブランチの要素数の取得
+  SizeType
+  namebranch_num() const override;
+
   /// @brief 階層ブランチの取得
-  const PtNameBranchArray*
-  namebranch_array() const override;
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  const PtNameBranch*
+  namebranch(SizeType pos) const override;
 
 
 private:
@@ -355,7 +396,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 階層ブランチのリスト
-  const PtNameBranchArray* mNbArray;
+  PtiNameBranchArray mNbArray;
 
 };
 
@@ -373,7 +414,7 @@ private:
   /// @brief コンストラクタ
   CptSysEnable(const FileRegion& file_region,
 	       const char* task_name,
-	       const PtExprArray* arg_array);
+	       PtiExprArray&& arg_array);
 
   /// @brief デストラクタ
   ~CptSysEnable();
@@ -1059,7 +1100,7 @@ private:
 
   /// @brief コンストラクタ
   CptCaseItem(const FileRegion& file_region,
-	      const PtExprArray* label_array,
+	      PtiExprArray&& label_array,
 	      const PtStmt* body);
 
   /// @brief デストラクタ
@@ -1075,9 +1116,14 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief ラベルのリストの取得
-  const PtExprArray*
-  label_list() const override;
+  /// @brief ラベルのリストの要素数の取得
+  SizeType
+  label_num() const override;
+
+  /// @brief ラベルの取得
+  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
+  const PtExpr*
+  label(SizeType pos) const override;
 
   /// @brief 本体のステートメント得る．
   const PtStmt*
@@ -1093,7 +1139,7 @@ private:
   FileRegion mFileRegion;
 
   // ラベルの配列
-  const PtExprArray* mLabelArray;
+  PtiExprArray mLabelArray;
 
   // ラベルが一致したときに実行されるステートメント
   const PtStmt* mBody;
@@ -1114,7 +1160,7 @@ protected:
   /// @brief コンストラクタ
   CptCase(const FileRegion& file_region,
 	  const PtExpr* expr,
-	  const PtCaseItemArray* caseitem_array);
+	  PtiCaseItemArray&& caseitem_array);
 
   /// @brief デストラクタ
   ~CptCase();
@@ -1134,9 +1180,14 @@ public:
   const PtExpr*
   expr() const override;
 
-  /// @brief case item のリストの取得
-  const PtCaseItemArray*
-  caseitem_list() const override;
+  /// @brief case item のリストの要素数の取得
+  SizeType
+  caseitem_num() const override;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+  const PtCaseItem*
+  caseitem(SizeType pos) const override;
 
 
 private:
@@ -1148,7 +1199,7 @@ private:
   const PtExpr* mExpr;
 
   // case item の配列
-  const PtCaseItemArray* mCaseItemArray;
+  PtiCaseItemArray mCaseItemArray;
 
 };
 
@@ -1166,7 +1217,7 @@ protected:
   /// @brief コンストラクタ
   CptCaseX(const FileRegion& file_region,
 	   const PtExpr* expr,
-	   const PtCaseItemArray* caseitem_array);
+	   PtiCaseItemArray&& caseitem_array);
 
   /// @brief デストラクタ
   ~CptCaseX();
@@ -1198,7 +1249,7 @@ protected:
   /// @brief コンストラクタ
   CptCaseZ(const FileRegion& file_region,
 	   const PtExpr* expr,
-	   const PtCaseItemArray* caseitem_array);
+	   PtiCaseItemArray&& caseitem_array);
 
   /// @brief デストラクタ
   ~CptCaseZ();
@@ -1426,7 +1477,7 @@ protected:
 
   /// @brief コンストラクタ
   CptStmtBlock(const FileRegion& file_region,
-	       const PtStmtArray* stmt_array);
+	       PtiStmtArray&& stmt_array);
 
   /// @brief デストラクタ
   ~CptStmtBlock();
@@ -1437,10 +1488,16 @@ public:
   // PtStmtBlock の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 子供のステートメント配列の取得
+  /// @brief 子供のステートメント配列の要素数の取得
   /// @note kParBlock/kSeqBlock で意味のある関数
-  const PtStmtArray*
-  stmt_array() const override;
+  SizeType
+  stmt_num() const override;
+
+  /// @brief 子供のステートメントの取得
+  /// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
+  /// @note kParBlock/kSeqBlock で意味のある関数
+  const PtStmt*
+  stmt(SizeType pos) const override;
 
 
 private:
@@ -1449,7 +1506,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ステートメントの配列
-  const PtStmtArray* mStmtArray;
+  PtiStmtArray mStmtArray;
 
 };
 
@@ -1467,8 +1524,8 @@ protected:
   /// @brief コンストラクタ
   CptStmtBlockN(const FileRegion& file_region,
 		const char* name,
-		const PtDeclHeadArray* declhead_array,
-		const PtStmtArray* stmt_array);
+		PtiDeclHeadArray&& declhead_array,
+		PtiStmtArray&& stmt_array);
 
   /// @brief デストラクタ
   ~CptStmtBlockN();
@@ -1483,9 +1540,16 @@ public:
   const char*
   name() const override;
 
-  /// @brief 宣言ヘッダ配列の取得
-  const PtDeclHeadArray*
-  declhead_array() const override;
+  /// @brief 宣言ヘッダ配列の要素数の取得
+  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+  SizeType
+  declhead_num() const override;
+
+  /// @brief 宣言ヘッダの取得
+  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+  const PtDeclHead*
+  declhead(SizeType pos) const override;
 
 
 private:
@@ -1497,7 +1561,7 @@ private:
   const char* mName;
 
   // 宣言の配列
-  const PtDeclHeadArray* mDeclHeadArray;
+  PtiDeclHeadArray mDeclHeadArray;
 
 };
 
@@ -1514,7 +1578,7 @@ protected:
 
   /// @brief コンストラクタ
   CptParBlock(const FileRegion& file_region,
-	      const PtStmtArray* stmt_array);
+	      PtiStmtArray&& stmt_array);
 
   /// @brief デストラクタ
   ~CptParBlock();
@@ -1546,8 +1610,8 @@ protected:
   /// @brief コンストラクタ
   CptParBlockN(const FileRegion& file_region,
 	       const char* name,
-	       const PtDeclHeadArray* declhead_array,
-	       const PtStmtArray* stmt_array);
+	       PtiDeclHeadArray&& declhead_array,
+	       PtiStmtArray&& stmt_array);
 
   /// @brief デストラクタ
   ~CptParBlockN();
@@ -1578,7 +1642,7 @@ protected:
 
   /// @brief コンストラクタ
   CptSeqBlock(const FileRegion& file_region,
-	      const PtStmtArray* stmt_array);
+	      PtiStmtArray&& stmt_array);
 
   /// @brief デストラクタ
   ~CptSeqBlock();
@@ -1610,8 +1674,8 @@ protected:
   /// @brief コンストラクタ
   CptSeqBlockN(const FileRegion& file_region,
 	       const char* name,
-	       const PtDeclHeadArray* declhead_array,
-	       const PtStmtArray* stmt_array);
+	       PtiDeclHeadArray&& declhead_array,
+	       PtiStmtArray&& stmt_array);
 
   /// @brief デストラクタ
   ~CptSeqBlockN();

@@ -24,7 +24,7 @@ void
 Parser::new_Port()
 {
   auto port{mFactory.new_Port(FileRegion())};
-  //add_port(port);
+  add_port(port);
 }
 
 // @brief ポートの生成 (内側の式のみ指定するタイプ)
@@ -46,9 +46,8 @@ Parser::new_Port1(const FileRegion& file_region)
     add_port(port);
   }
   else {
-    auto portref_array = new_array<const PtExpr>(mPortRefList);
-    auto portref{mFactory.new_Concat(file_region, portref_array)};
-    auto port{mFactory.new_Port(file_region, portref, portref_array, nullptr)};
+    auto portref{mFactory.new_Concat(file_region, mPortRefList)};
+    auto port{mFactory.new_Port(file_region, portref, mPortRefList, nullptr)};
     add_port(port);
   }
 }
@@ -77,9 +76,8 @@ Parser::new_Port3(const FileRegion& file_region,
     mPortRefList.clear();
   }
   else {
-    auto portref_array = new_array<const PtExpr>(mPortRefList);
-    auto portref{mFactory.new_Concat(file_region, portref_array)};
-    auto port{mFactory.new_Port(file_region, portref, portref_array, name)};
+    auto portref{mFactory.new_Concat(file_region, mPortRefList)};
+    auto port{mFactory.new_Port(file_region, portref, mPortRefList, name)};
     add_port(port);
   }
 }
@@ -99,11 +97,11 @@ Parser::add_port(PtiPort* port)
 
 // @brief 入出力宣言中の重複チェックを行う．
 bool
-Parser::check_PortArray(const PtIOHeadArray* iohead_array)
+Parser::check_PortArray(const vector<const PtIOHead*>& iohead_array)
 {
   unordered_set<string> portref_dic;
-  for ( auto head: *iohead_array ) {
-    for ( auto elem: *head->item_list() ) {
+  for ( auto head: iohead_array ) {
+    for ( auto elem: head->item_list() ) {
       auto name = elem->name();
       if ( portref_dic.count(name) > 0 ) {
 	ostringstream buf;
@@ -122,19 +120,19 @@ Parser::check_PortArray(const PtIOHeadArray* iohead_array)
 }
 
 // @brief 入出力宣言からポートを作る．
-const PtPortArray*
-Parser::new_PortArray(const PtIOHeadArray* iohead_array)
+vector<const PtPort*>
+Parser::new_PortArray(const vector<const PtIOHead*>& iohead_array)
 {
   SizeType num = 0;
-  for ( auto head: *iohead_array ) {
-    num += head->item_list()->size();
+  for ( auto head: iohead_array ) {
+    num += head->item_num();
   }
 
   // ポートを生成し vec に格納する．
   SizeType i = 0;
   vector<const PtPort*> vec(num);
-  for ( auto head: *iohead_array ) {
-    for ( auto elem: *head->item_list() ) {
+  for ( auto head: iohead_array ) {
+    for ( auto elem: head->item_list() ) {
       auto name = elem->name();
       auto portref{mFactory.new_Primary(elem->file_region(), name)};
       auto port{mFactory.new_Port(elem->file_region(), portref, name)};
@@ -144,7 +142,7 @@ Parser::new_PortArray(const PtIOHeadArray* iohead_array)
       ++ i;
     }
   }
-  return new_array<const PtPort>(vec);
+  return vec;
 }
 
 
@@ -172,8 +170,7 @@ Parser::new_PortRef(const FileRegion& fr,
 		    const char* name,
 		    const PtExpr* index)
 {
-  auto index_array{new_array(index)};
-  auto primary{mFactory.new_Primary(fr, name, index_array)};
+  auto primary{mFactory.new_Primary(fr, name, vector<const PtExpr*>{index})};
   add_portref(primary);
 }
 

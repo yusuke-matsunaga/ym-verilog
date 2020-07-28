@@ -76,7 +76,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
       return;
     }
 
-    for ( auto pt_inst: *pt_head->inst_list() ) {
+    for ( auto pt_inst: pt_head->inst_list() ) {
       const char* name = pt_inst->name();
       if ( name == nullptr ) {
 	// 名無しのモジュールインスタンスはない
@@ -120,7 +120,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
 			buf.str());
 
 	// パラメータ割り当て式の生成
-	auto& pa_array = *pt_head->paramassign_array();
+	auto pa_array = pt_head->paramassign_list();
 	int n = pa_array.size();
 	bool named_con = false;
 	if ( n > 0 && pa_array[0]->name() != nullptr ) {
@@ -147,7 +147,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
   if ( udpdefn ) {
     // ただしこの場合, mParamList は空でなければならない．
     // 問題は delay が mParamList に見える場合があるということ．
-    auto& pa_array = *pt_head->paramassign_array();
+    auto pa_array = pt_head->paramassign_list();
     int param_size = pa_array.size();
     const PtDelay* pt_delay = pt_head->delay();
     if ( param_size > 0 && pa_array[0]->name() != nullptr ) {
@@ -177,7 +177,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
   int cell_id = find_cell_id(defname);
   if ( cell_id != -1 ) {
     // ただしこの場合, mParamList は空でなければならない．
-    auto& pa_array = *pt_head->paramassign_array();
+    auto pa_array = pt_head->paramassign_list();
     int param_size = pa_array.size();
     if ( param_size > 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -250,7 +250,7 @@ ItemGen::phase1_module_array(const VlNamedObj* parent,
 			   module_array, pt_module, pt_inst));
 
   // パラメータ割り当て式の生成
-  auto& pa_array = *pt_head->paramassign_array();
+  auto pa_array = pt_head->paramassign_list();
   int param_num = pa_array.size();
   bool named_con = false;
   if ( param_num > 0 && pa_array[0]->name() != nullptr ) {
@@ -305,7 +305,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   ElbModule* module0 = module_array->_module(0);
   SizeType port_num = module0->port_num();
 
-  auto& port_list = *pt_inst->port_list();
+  auto port_list = pt_inst->port_list();
   SizeType n = port_list.size();
   // ポートの割り当てを行う．
   // 例外: ポートを一つも取らないモジュールの場合
@@ -340,7 +340,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   if ( conn_by_name ) {
     // ポート名とインデックスの辞書を作る．
     int index = 0;
-    for ( auto pt_port: *pt_module->port_list() ) {
+    for ( auto pt_port: pt_module->port_list() ) {
       const char* name = pt_port->ext_name();
       if ( name != nullptr ) {
 	port_index[string(name)] = index;
@@ -352,7 +352,7 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
   // ポートに接続する式を生成する．
   ElbEnv env;
   int pos = 0;
-  for ( auto pt_con: *pt_inst->port_list() ) {
+  for ( auto pt_con: pt_inst->port_list() ) {
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
       continue;
@@ -525,7 +525,7 @@ ItemGen::link_module(ElbModule* module,
 
   SizeType port_num = module->port_num();
 
-  auto& port_list = *(pt_inst->port_list());
+  auto port_list = pt_inst->port_list();
   SizeType n = port_list.size();
   // ポートの割り当てを行う．
   // 例外: ポートを一つも取らないモジュールの場合
@@ -560,7 +560,7 @@ ItemGen::link_module(ElbModule* module,
   if ( conn_by_name ) {
     // ポート名とインデックスの辞書を作る．
     int index = 0;
-    for ( auto pt_port: *pt_module->port_list() ) {
+    for ( auto pt_port: pt_module->port_list() ) {
       const char* name = pt_port->ext_name();
       if ( name != nullptr ) {
 	port_index[string(name)] = index;
@@ -572,7 +572,7 @@ ItemGen::link_module(ElbModule* module,
   // ポートに接続する式を生成する．
   ElbEnv env;
   SizeType pos = 0;
-  for ( auto pt_con: *pt_inst->port_list() ) {
+  for ( auto pt_con: pt_inst->port_list() ) {
     const PtExpr* pt_expr = pt_con->expr();
     if ( !pt_expr ) {
       continue;

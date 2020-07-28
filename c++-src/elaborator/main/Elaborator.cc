@@ -190,9 +190,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     for ( auto stub: mDefParamStubList ) {
       auto pt_defparam = stub.mPtDefparam;
       ostringstream buf;
-      buf << expand_full_name(pt_defparam->namebranch_array(),
-			      pt_defparam->name())
-	  << " : not found.";
+      buf << pt_defparam->fullname() << " : not found.";
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_defparam->file_region(),
 		      MsgType::Error,
@@ -238,7 +236,8 @@ void
 Elaborator::add_defparamstub(const VlModule* module,
 			     const PtItem* pt_header)
 {
-  for ( auto pt_defparam: *pt_header->defparam_list() ) {
+  for ( SizeType i = 0; i < pt_header->defparam_num(); ++ i ) {
+    auto pt_defparam = pt_header->defparam(i);
     mDefParamStubList.push_back(DefParamStub(module, pt_header, pt_defparam));
   }
 }

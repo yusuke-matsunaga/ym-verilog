@@ -10,7 +10,6 @@
 #include "CptStmt.h"
 #include "parser/CptFactory.h"
 #include "parser/PuHierName.h"
-#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -73,12 +72,19 @@ CptStmt::stmt_name() const
   return "";
 }
 
-// @brief 階層ブランチの取得
-// @note kDisable/kEnable/kSysEnable で意味のある関数
-// @note このクラスでは nullptr を返す．
-const PtNameBranchArray*
-CptStmt::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+CptStmt::namebranch_num() const
 {
+  return 0;
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+CptStmt::namebranch(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -92,10 +98,19 @@ CptStmt::name() const
   return nullptr;
 }
 
-// @brief 引数のリストの取得
-const PtExprArray*
-CptStmt::arg_list() const
+// @brief 引数の数の取得
+SizeType
+CptStmt::arg_num() const
 {
+  return 0;
+}
+
+// @brief 引数の取得
+// @param[in] pos 位置 ( 0 <= pos < arg_num() )
+const PtExpr*
+CptStmt::arg(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -169,10 +184,19 @@ CptStmt::else_body() const
   return nullptr;
 }
 
-// @brief case item のリストの取得
-const PtCaseItemArray*
-CptStmt::caseitem_list() const
+// @brief case item のリストの要素数の取得
+SizeType
+CptStmt::caseitem_num() const
 {
+  return 0;
+}
+
+// @brief case item の取得
+// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+const PtCaseItem*
+CptStmt::caseitem(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -196,18 +220,39 @@ CptStmt::next_stmt() const
   return nullptr;
 }
 
-// @brief 宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-CptStmt::declhead_array() const
+// @brief 宣言ヘッダ配列の要素数の取得
+// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+SizeType
+CptStmt::declhead_num() const
 {
+  return 0;
+}
+
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+const PtDeclHead*
+CptStmt::declhead(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
-// @brief 子供のステートメント配列の取得
+// @brief 子供のステートメント配列の要素数の取得
 // @note kParBlock/kSeqBlock で意味のある関数
-const PtStmtArray*
-CptStmt::stmt_array() const
+SizeType
+CptStmt::stmt_num() const
 {
+  return 0;
+}
+
+// @brief 子供のステートメントの取得
+// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
+// @note kParBlock/kSeqBlock で意味のある関数
+const PtStmt*
+CptStmt::stmt(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -250,10 +295,10 @@ CptDisable::name() const
 
 // コンストラクタ
 CptDisableH::CptDisableH(const FileRegion& file_region,
-			 const PtNameBranchArray* nb_array,
+			 PtiNameBranchArray&& nb_array,
 			 const char* tail_name) :
   CptDisable(file_region, tail_name),
-  mNbArray{nb_array}
+  mNbArray{move(nb_array)}
 {
 }
 
@@ -262,13 +307,19 @@ CptDisableH::~CptDisableH()
 {
 }
 
-// @brief 階層ブランチの取得
-// @note kDisable/kEnable/kSysEnable で意味のある関数
-// @note このクラスでは nullptr を返す．
-const PtNameBranchArray*
-CptDisableH::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+CptDisableH::namebranch_num() const
 {
-  return mNbArray;
+  return mNbArray.size();
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+CptDisableH::namebranch(SizeType pos) const
+{
+  return mNbArray[pos];
 }
 
 
@@ -279,10 +330,10 @@ CptDisableH::namebranch_array() const
 // コンストラクタ
 CptEnableBase::CptEnableBase(const FileRegion& file_region,
 			     const char* name,
-			     const PtExprArray* arg_array) :
+			     PtiExprArray&& arg_array) :
   CptStmt(file_region),
   mName{name},
-  mArgArray{arg_array}
+  mArgArray{move(arg_array)}
 {
 }
 
@@ -298,11 +349,19 @@ CptEnableBase::name() const
   return mName;
 }
 
-// @brief 引数のリストの取得
-const PtExprArray*
-CptEnableBase::arg_list() const
+// @brief 引数の数の取得
+SizeType
+CptEnableBase::arg_num() const
 {
-  return mArgArray;
+  return mArgArray.size();
+}
+
+// @brief 引数の取得
+// @param[in] pos 位置 ( 0 <= pos < arg_num() )
+const PtExpr*
+CptEnableBase::arg(SizeType pos) const
+{
+  return mArgArray[pos];
 }
 
 
@@ -313,8 +372,8 @@ CptEnableBase::arg_list() const
 // コンストラクタ
 CptEnable::CptEnable(const FileRegion& file_region,
 		     const char* name,
-		     const PtExprArray* arg_array) :
-  CptEnableBase(file_region, name, arg_array)
+		     PtiExprArray&& arg_array) :
+  CptEnableBase(file_region, name, move(arg_array))
 {
 }
 
@@ -337,11 +396,11 @@ CptEnable::type() const
 
 // コンストラクタ
 CptEnableH::CptEnableH(const FileRegion& file_region,
-		       const PtNameBranchArray* nb_array,
+		       PtiNameBranchArray&& nb_array,
 		       const char* tail_name,
-		       const PtExprArray* arg_array) :
-  CptEnable(file_region, tail_name, arg_array),
-  mNbArray{nb_array}
+		       PtiExprArray&& arg_array) :
+  CptEnable(file_region, tail_name, move(arg_array)),
+  mNbArray{move(nb_array)}
 {
 }
 
@@ -350,11 +409,19 @@ CptEnableH::~CptEnableH()
 {
 }
 
-// @brief 階層ブランチの取得
-const PtNameBranchArray*
-CptEnableH::namebranch_array() const
+// @brief 階層ブランチの要素数の取得
+SizeType
+CptEnableH::namebranch_num() const
 {
-  return mNbArray;
+  return mNbArray.size();
+}
+
+// @brief 階層ブランチの取得
+// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+const PtNameBranch*
+CptEnableH::namebranch(SizeType pos) const
+{
+  return mNbArray[pos];
 }
 
 
@@ -365,8 +432,8 @@ CptEnableH::namebranch_array() const
 // コンストラクタ
 CptSysEnable::CptSysEnable(const FileRegion& file_region,
 			   const char* task_name,
-			   const PtExprArray* arg_array) :
-  CptEnableBase(file_region, task_name, arg_array)
+			   PtiExprArray&& arg_array) :
+  CptEnableBase(file_region, task_name, move(arg_array))
 {
 }
 
@@ -891,10 +958,10 @@ CptIfElse::else_body() const
 // コンストラクタ
 CptCase::CptCase(const FileRegion& file_region,
 		 const PtExpr* expr,
-		 const PtCaseItemArray* caseitem_array) :
+		 PtiCaseItemArray&& caseitem_array) :
   CptStmt(file_region),
   mExpr{expr},
-  mCaseItemArray{caseitem_array}
+  mCaseItemArray{move(caseitem_array)}
 {
   ASSERT_COND( expr );
 }
@@ -918,11 +985,19 @@ CptCase::expr() const
   return mExpr;
 }
 
-// @brief case item のリストの取得
-const PtCaseItemArray*
-CptCase::caseitem_list() const
+// @brief case item のリストの要素数の取得
+SizeType
+CptCase::caseitem_num() const
 {
-  return mCaseItemArray;
+  return mCaseItemArray.size();
+}
+
+// @brief case item の取得
+// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
+const PtCaseItem*
+CptCase::caseitem(SizeType pos) const
+{
+  return mCaseItemArray[pos];
 }
 
 
@@ -933,8 +1008,8 @@ CptCase::caseitem_list() const
 // コンストラクタ
 CptCaseX::CptCaseX(const FileRegion& file_region,
 		   const PtExpr* expr,
-		   const PtCaseItemArray* caseitem_array) :
-  CptCase(file_region, expr, caseitem_array)
+		   PtiCaseItemArray&& caseitem_array) :
+  CptCase(file_region, expr, move(caseitem_array))
 {
 }
 
@@ -958,8 +1033,8 @@ CptCaseX::type() const
 // コンストラクタ
 CptCaseZ::CptCaseZ(const FileRegion& file_region,
 		   const PtExpr* expr,
-		   const PtCaseItemArray* caseitem_array) :
-  CptCase(file_region, expr, caseitem_array)
+		   PtiCaseItemArray&& caseitem_array) :
+  CptCase(file_region, expr, move(caseitem_array))
 {
 }
 
@@ -982,10 +1057,10 @@ CptCaseZ::type() const
 
 // コンストラクタ
 CptCaseItem::CptCaseItem(const FileRegion& file_region,
-			 const PtExprArray* label_array,
+			 PtiExprArray&& label_array,
 			 const PtStmt* body) :
   mFileRegion{file_region},
-  mLabelArray{label_array},
+  mLabelArray{move(label_array)},
   mBody{body}
 {
   ASSERT_COND( body );
@@ -1003,11 +1078,19 @@ CptCaseItem::file_region() const
   return mFileRegion;
 }
 
-// @brief ラベルのリストの取得
-const PtExprArray*
-CptCaseItem::label_list() const
+// @brief ラベルのリストの要素数の取得
+SizeType
+CptCaseItem::label_num() const
 {
-  return mLabelArray;
+  return mLabelArray.size();
+}
+
+// @brief ラベルの取得
+// @param[in] pos 位置 ( 0 <= pos < label_num() )
+const PtExpr*
+CptCaseItem::label(SizeType pos) const
+{
+  return mLabelArray[pos];
 }
 
 // 本体のステートメント得る．
@@ -1178,9 +1261,9 @@ CptFor::next_stmt() const
 
 // コンストラクタ
 CptStmtBlock::CptStmtBlock(const FileRegion& file_region,
-			   const PtStmtArray* stmt_array) :
+			   PtiStmtArray&& stmt_array) :
   CptStmt(file_region),
-  mStmtArray{stmt_array}
+  mStmtArray{move(stmt_array)}
 {
 }
 
@@ -1189,11 +1272,21 @@ CptStmtBlock::~CptStmtBlock()
 {
 }
 
-// @brief 子供のステートメント配列の取得
-const PtStmtArray*
-CptStmtBlock::stmt_array() const
+// @brief 子供のステートメント配列の要素数の取得
+// @note kParBlock/kSeqBlock で意味のある関数
+SizeType
+CptStmtBlock::stmt_num() const
 {
-  return mStmtArray;
+  return mStmtArray.size();
+}
+
+// @brief 子供のステートメントの取得
+// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
+// @note kParBlock/kSeqBlock で意味のある関数
+const PtStmt*
+CptStmtBlock::stmt(SizeType pos) const
+{
+  return mStmtArray[pos];
 }
 
 
@@ -1204,11 +1297,11 @@ CptStmtBlock::stmt_array() const
 // コンストラクタ
 CptStmtBlockN::CptStmtBlockN(const FileRegion& file_region,
 			     const char* name,
-			     const PtDeclHeadArray* declhead_array,
-			     const PtStmtArray* stmt_array) :
-  CptStmtBlock(file_region, stmt_array),
+			     PtiDeclHeadArray&& declhead_array,
+			     PtiStmtArray&& stmt_array) :
+  CptStmtBlock(file_region, move(stmt_array)),
   mName{name},
-  mDeclHeadArray{declhead_array}
+  mDeclHeadArray{move(declhead_array)}
 {
 }
 
@@ -1224,11 +1317,21 @@ CptStmtBlockN::name() const
   return mName;
 }
 
-// @brief 宣言ヘッダ配列の取得
-const PtDeclHeadArray*
-CptStmtBlockN::declhead_array() const
+// @brief 宣言ヘッダ配列の要素数の取得
+// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+SizeType
+CptStmtBlockN::declhead_num() const
 {
-  return mDeclHeadArray;
+  return mDeclHeadArray.size();
+}
+
+// @brief 宣言ヘッダの取得
+// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
+// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
+const PtDeclHead*
+CptStmtBlockN::declhead(SizeType pos) const
+{
+  return mDeclHeadArray[pos];
 }
 
 
@@ -1238,8 +1341,8 @@ CptStmtBlockN::declhead_array() const
 
 // コンストラクタ
 CptParBlock::CptParBlock(const FileRegion& file_region,
-			 const PtStmtArray* stmt_array) :
-  CptStmtBlock(file_region, stmt_array)
+			 PtiStmtArray&& stmt_array) :
+  CptStmtBlock(file_region, move(stmt_array))
 {
 }
 
@@ -1263,9 +1366,9 @@ CptParBlock::type() const
 // コンストラクタ
 CptParBlockN::CptParBlockN(const FileRegion& file_region,
 			   const char* name,
-			   const PtDeclHeadArray* declhead_array,
-			   const PtStmtArray* stmt_array) :
-  CptStmtBlockN(file_region, name, declhead_array, stmt_array)
+			   PtiDeclHeadArray&& declhead_array,
+			   PtiStmtArray&& stmt_array) :
+  CptStmtBlockN(file_region, name, move(declhead_array), move(stmt_array))
 {
 }
 
@@ -1288,8 +1391,8 @@ CptParBlockN::type() const
 
 // コンストラクタ
 CptSeqBlock::CptSeqBlock(const FileRegion& file_region,
-			 const PtStmtArray* stmt_array) :
-  CptStmtBlock(file_region, stmt_array)
+			 PtiStmtArray&& stmt_array) :
+  CptStmtBlock(file_region, move(stmt_array))
 {
 }
 
@@ -1313,9 +1416,9 @@ CptSeqBlock::type() const
 // コンストラクタ
 CptSeqBlockN::CptSeqBlockN(const FileRegion& file_region,
 			   const char* name,
-			   const PtDeclHeadArray* declhead_array,
-			   const PtStmtArray* stmt_array) :
-  CptStmtBlockN(file_region, name, declhead_array, stmt_array)
+			   PtiDeclHeadArray&& declhead_array,
+			   PtiStmtArray&& stmt_array) :
+  CptStmtBlockN(file_region, name, move(declhead_array), move(stmt_array))
 {
 }
 
@@ -1353,9 +1456,11 @@ CptFactory::new_Disable(const FileRegion& file_region,
 {
   ++ mNumDisableH;
   void* p{mAlloc.get_memory(sizeof(CptDisableH))};
-  auto nb_array = hname->name_branch(mAlloc);
+  auto nb_array = hname->name_branch();
   auto tail_name = hname->tail_name();
-  auto obj{new (p) CptDisableH(file_region, nb_array, tail_name)};
+  auto obj{new (p) CptDisableH(file_region,
+			       PtiArray<const PtNameBranch>(mAlloc, nb_array),
+			       tail_name)};
   return obj;
 }
 
@@ -1363,24 +1468,28 @@ CptFactory::new_Disable(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_Enable(const FileRegion& file_region,
 		       const char* name,
-		       const PtExprArray* arg_array)
+		       const vector<const PtExpr*>& arg_array)
 {
   ++ mNumEnable;
   void* p{mAlloc.get_memory(sizeof(CptEnable))};
-  auto obj{new (p) CptEnable(file_region, name, arg_array)};
+  auto obj{new (p) CptEnable(file_region, name,
+			     PtiArray<const PtExpr>(mAlloc, arg_array))};
   return obj;
 }
 
 const PtStmt*
 CptFactory::new_Enable(const FileRegion& file_region,
 		       PuHierName* hname,
-		       const PtExprArray* arg_array)
+		       const vector<const PtExpr*>& arg_array)
 {
   ++ mNumEnableH;
   void* p{mAlloc.get_memory(sizeof(CptEnableH))};
-  auto nb_array = hname->name_branch(mAlloc);
+  auto nb_array = hname->name_branch();
   auto tail_name = hname->tail_name();
-  auto obj{new (p) CptEnableH(file_region, nb_array, tail_name, arg_array)};
+  auto obj{new (p) CptEnableH(file_region,
+			      PtiArray<const PtNameBranch>(mAlloc, nb_array),
+			      tail_name,
+			      PtiArray<const PtExpr>(mAlloc, arg_array))};
   return obj;
 }
 
@@ -1388,11 +1497,12 @@ CptFactory::new_Enable(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_SysEnable(const FileRegion& file_region,
 			  const char* task_name,
-			  const PtExprArray* arg_array)
+			  const vector<const PtExpr*>& arg_array)
 {
   ++ mNumSysEnable;
   void* p{mAlloc.get_memory(sizeof(CptSysEnable))};
-  auto obj{new (p) CptSysEnable(file_region, task_name, arg_array)};
+  auto obj{new (p) CptSysEnable(file_region, task_name,
+				PtiArray<const PtExpr>(mAlloc, arg_array))};
   return obj;
 }
 
@@ -1532,11 +1642,12 @@ CptFactory::new_If(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_Case(const FileRegion& file_region,
 		     const PtExpr* expr,
-		     const PtCaseItemArray* caseitem_array)
+		     const vector<const PtCaseItem*>& caseitem_array)
 {
   ++ mNumCase;
   void* p{mAlloc.get_memory(sizeof(CptCase))};
-  auto obj{new (p) CptCase(file_region, expr, caseitem_array)};
+  auto obj{new (p) CptCase(file_region, expr,
+			   PtiArray<const PtCaseItem>(mAlloc, caseitem_array))};
   return obj;
 }
 
@@ -1544,11 +1655,12 @@ CptFactory::new_Case(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_CaseX(const FileRegion& file_region,
 		      const PtExpr* expr,
-		      const PtCaseItemArray* caseitem_array)
+		      const vector<const PtCaseItem*>& caseitem_array)
 {
   ++ mNumCaseX;
   void* p{mAlloc.get_memory(sizeof(CptCaseX))};
-  auto obj{new (p) CptCaseX(file_region, expr, caseitem_array)};
+  auto obj{new (p) CptCaseX(file_region, expr,
+			    PtiArray<const PtCaseItem>(mAlloc, caseitem_array))};
   return obj;
 }
 
@@ -1556,23 +1668,26 @@ CptFactory::new_CaseX(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_CaseZ(const FileRegion& file_region,
 		      const PtExpr* expr,
-		      const PtCaseItemArray* caseitem_array)
+		      const vector<const PtCaseItem*>& caseitem_array)
 {
   ++ mNumCaseZ;
   void* p{mAlloc.get_memory(sizeof(CptCaseZ))};
-  auto obj{new (p) CptCaseZ(file_region, expr, caseitem_array)};
+  auto obj{new (p) CptCaseZ(file_region, expr,
+			    PtiArray<const PtCaseItem>(mAlloc, caseitem_array))};
   return obj;
 }
 
 // case item を生成する．
 const PtCaseItem*
 CptFactory::new_CaseItem(const FileRegion& file_region,
-			 const PtExprArray* label_array,
+			 const vector<const PtExpr*>& label_array,
 			 const PtStmt* body)
 {
   ++ mNumCaseItem;
   void* p{mAlloc.get_memory(sizeof(CptCaseItem))};
-  auto obj{new (p) CptCaseItem(file_region, label_array, body)};
+  auto obj{new (p) CptCaseItem(file_region,
+			       PtiArray<const PtExpr>(mAlloc, label_array),
+			       body)};
   return obj;
 }
 
@@ -1674,11 +1789,12 @@ CptFactory::new_Release(const FileRegion& file_region,
 // par block を生成する．
 const PtStmt*
 CptFactory::new_ParBlock(const FileRegion& file_region,
-			 const PtStmtArray* stmt_array)
+			 const vector<const PtStmt*>& stmt_array)
 {
   ++ mNumParBlock;
   void* p{mAlloc.get_memory(sizeof(CptParBlock))};
-  auto obj{new (p) CptParBlock(file_region, stmt_array)};
+  auto obj{new (p) CptParBlock(file_region,
+			       PtiArray<const PtStmt>(mAlloc, stmt_array))};
   return obj;
 }
 
@@ -1686,24 +1802,26 @@ CptFactory::new_ParBlock(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_NamedParBlock(const FileRegion& file_region,
 			      const char* name,
-			      const PtDeclHeadArray* declhead_array,
-			      const PtStmtArray* stmt_array)
+			      const vector<const PtDeclHead*>& declhead_array,
+			      const vector<const PtStmt*>& stmt_array)
 {
   ++ mNumParBlockN;
   void* p{mAlloc.get_memory(sizeof(CptParBlockN))};
   auto obj{new (p) CptParBlockN(file_region, name,
-				declhead_array, stmt_array)};
+				PtiArray<const PtDeclHead>(mAlloc, declhead_array),
+				PtiArray<const PtStmt>(mAlloc, stmt_array))};
   return obj;
 }
 
 // seq block を生成する．
 const PtStmt*
 CptFactory::new_SeqBlock(const FileRegion& file_region,
-			 const PtStmtArray* stmt_array)
+			 const vector<const PtStmt*>& stmt_array)
 {
   ++ mNumSeqBlock;
   void* p{mAlloc.get_memory(sizeof(CptSeqBlock))};
-  auto obj{new (p) CptSeqBlock(file_region, stmt_array)};
+  auto obj{new (p) CptSeqBlock(file_region,
+			       PtiArray<const PtStmt>(mAlloc, stmt_array))};
   return obj;
 }
 
@@ -1711,13 +1829,14 @@ CptFactory::new_SeqBlock(const FileRegion& file_region,
 const PtStmt*
 CptFactory::new_NamedSeqBlock(const FileRegion& file_region,
 			      const char* name,
-			      const PtDeclHeadArray* declhead_array,
-			      const PtStmtArray* stmt_array)
+			      const vector<const PtDeclHead*>& declhead_array,
+			      const vector<const PtStmt*>& stmt_array)
 {
   ++ mNumSeqBlockN;
   void* p{mAlloc.get_memory(sizeof(CptSeqBlockN))};
   auto obj{new (p) CptSeqBlockN(file_region, name,
-				declhead_array, stmt_array)};
+				PtiArray<const PtDeclHead>(mAlloc, declhead_array),
+				PtiArray<const PtStmt>(mAlloc, stmt_array))};
   return obj;
 }
 

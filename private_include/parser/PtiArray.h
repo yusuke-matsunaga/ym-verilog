@@ -1,11 +1,11 @@
-﻿#ifndef YM_PT_PTARRAY_H
-#define YM_PT_PTARRAY_H
+﻿#ifndef PTIARRAY_H
+#define PTIARRAY_H
 
-/// @file ym/pt/PtArray.h
-/// @brief PtArray のヘッダファイル
+/// @file PtiArray.h
+/// @brief PtiArray のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -16,11 +16,11 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class PtArray PtArray.h <ym/pt/PtArray.h>
+/// @class PtiArray PtiArray.h PtiArray.h
 /// @brief ポインタ配列のテンプレートクラス
 //////////////////////////////////////////////////////////////////////
 template <typename T>
-class PtArray
+class PtiArray
 {
 public:
 
@@ -32,30 +32,30 @@ public:
   /// @brief 空のコンストラクタ
   ///
   /// 要素を持たない配列を表す．
-  PtArray();
+  PtiArray();
 
   /// @breif 内容を指定したコンストラクタ
   /// @param[in] alloc メモリアロケータ
   /// @param[in] src ソース
   explicit
-  PtArray(PtAlloc& alloc,
-	  const vector<T*>& src);
+  PtiArray(PtAlloc& alloc,
+	   const vector<T*>& src);
 
   /// @brief 1つの要素からなるコンストラクタ
   /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   explicit
-  PtArray(PtAlloc& alloc,
-	  T* elem1);
+  PtiArray(PtAlloc& alloc,
+	   T* elem1);
 
   /// @brief 2つの要素からなるコンストラクタ
   /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   /// @param[in] elem2 要素2
   explicit
-  PtArray(PtAlloc& alloc,
-	  T* elem1,
-	  T* elem2);
+  PtiArray(PtAlloc& alloc,
+	   T* elem1,
+	   T* elem2);
 
   /// @brief 3つの要素からなるコンストラクタ
   /// @param[in] alloc メモリアロケータ
@@ -63,10 +63,10 @@ public:
   /// @param[in] elem2 要素2
   /// @param[in] elem3 要素3
   explicit
-  PtArray(PtAlloc& alloc,
-	  T* elem1,
-	  T* elem2,
-	  T* elem3);
+  PtiArray(PtAlloc& alloc,
+	   T* elem1,
+	   T* elem2,
+	   T* elem3);
 
   /// @brief 4つの要素からなるコンストラクタ
   /// @param[in] alloc メモリアロケータ
@@ -75,34 +75,34 @@ public:
   /// @param[in] elem3 要素3
   /// @param[in] elem4 要素4
   explicit
-  PtArray(PtAlloc& alloc,
-	  T* elem1,
-	  T* elem2,
-	  T* elem3,
-	  T* elem4);
+  PtiArray(PtAlloc& alloc,
+	   T* elem1,
+	   T* elem2,
+	   T* elem3,
+	   T* elem4);
 
   /// コピーコンストラクタ
   /// @param[in] alloc メモリアロケータ
   /// @param[in] src ソース
-  PtArray(PtAlloc& alloc,
-	  const PtArray& src);
+  PtiArray(PtAlloc& alloc,
+	   const PtiArray& src);
 
   /// @brief コピー代入演算子は禁止
   /// @param[in] src ソース
-  PtArray&
-  operator=(const PtArray& src) = delete;
+  PtiArray&
+  operator=(const PtiArray& src) = delete;
 
   /// @brief ムーブコンストラクタ
   /// @param[in] src ムーブ元
-  PtArray(PtArray&& src);
+  PtiArray(PtiArray&& src);
 
   /// @brief ムーブ代入演算子
   /// @param[in] src ムーブ元
-  PtArray&
-  operator=(PtArray&& src);
+  PtiArray&
+  operator=(PtiArray&& src);
 
   /// @brief デストラクタ
-  ~PtArray();
+  ~PtiArray();
 
 
 public:
@@ -148,13 +148,13 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-// PtArray のインライン関数の定義
+// PtiArray のインライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
 // @brief 空のコンストラクタ
 template <typename T>
 inline
-PtArray<T>::PtArray() :
+PtiArray<T>::PtiArray() :
   mNum{0},
   mArray{nullptr}
 {
@@ -165,8 +165,8 @@ PtArray<T>::PtArray() :
 // @param[in] src ソース
 template <typename T>
 inline
-PtArray<T>::PtArray(PtAlloc& alloc,
-		    const vector<T*>& src) :
+PtiArray<T>::PtiArray(PtAlloc& alloc,
+		      const vector<T*>& src) :
   mNum{src.size()},
   mArray{alloc.get_array<T*>(mNum)}
 {
@@ -180,8 +180,8 @@ PtArray<T>::PtArray(PtAlloc& alloc,
 // @param[in] elem1 要素1
 template <typename T>
 inline
-PtArray<T>::PtArray(PtAlloc& alloc,
-		    T* elem1) :
+PtiArray<T>::PtiArray(PtAlloc& alloc,
+		      T* elem1) :
   mNum{1},
   mArray{alloc.get_array<T*>(1)}
 {
@@ -194,9 +194,9 @@ PtArray<T>::PtArray(PtAlloc& alloc,
 // @param[in] elem2 要素2
 template <typename T>
 inline
-PtArray<T>::PtArray(PtAlloc& alloc,
-		    T* elem1,
-		    T* elem2) :
+PtiArray<T>::PtiArray(PtAlloc& alloc,
+		      T* elem1,
+		      T* elem2) :
   mNum{2},
   mArray{alloc.get_array<T*>(2)}
 {
@@ -211,10 +211,10 @@ PtArray<T>::PtArray(PtAlloc& alloc,
 // @param[in] elem3 要素3
 template <typename T>
 inline
-PtArray<T>::PtArray(PtAlloc& alloc,
-		    T* elem1,
-		    T* elem2,
-		    T* elem3) :
+PtiArray<T>::PtiArray(PtAlloc& alloc,
+		      T* elem1,
+		      T* elem2,
+		      T* elem3) :
   mNum{3},
   mArray{alloc.get_array<T*>(3)}
 {
@@ -231,11 +231,11 @@ PtArray<T>::PtArray(PtAlloc& alloc,
 // @param[in] elem4 要素4
 template <typename T>
 inline
-PtArray<T>::PtArray(PtAlloc& alloc,
-		    T* elem1,
-		    T* elem2,
-		    T* elem3,
-		    T* elem4) :
+PtiArray<T>::PtiArray(PtAlloc& alloc,
+		      T* elem1,
+		      T* elem2,
+		      T* elem3,
+		      T* elem4) :
   mNum{4},
   mArray{alloc.get_array<T*>(4)}
 {
@@ -250,8 +250,8 @@ PtArray<T>::PtArray(PtAlloc& alloc,
 // @param[in] src ソース
 template <typename T>
 inline
-PtArray<T>::PtArray(PtAlloc& alloc,
-		    const PtArray& src) :
+PtiArray<T>::PtiArray(PtAlloc& alloc,
+		      const PtiArray& src) :
   mNum{src.mNum},
   mArray{alloc.get_array<T*>(mNum)}
 {
@@ -264,7 +264,7 @@ PtArray<T>::PtArray(PtAlloc& alloc,
 // @param[in] src ムーブ元
 template <typename T>
 inline
-PtArray<T>::PtArray(PtArray&& src) :
+PtiArray<T>::PtiArray(PtiArray&& src) :
   mNum{src.mNum},
   mArray{src.mArray}
 {
@@ -276,8 +276,8 @@ PtArray<T>::PtArray(PtArray&& src) :
 // @param[in] src ムーブ元
 template <typename T>
 inline
-PtArray<T>&
-PtArray<T>::operator=(PtArray&& src)
+PtiArray<T>&
+PtiArray<T>::operator=(PtiArray&& src)
 {
   mNum = src.mNum;
   mArray = src.mArray;
@@ -289,7 +289,7 @@ PtArray<T>::operator=(PtArray&& src)
 // @brief デストラクタ
 template <typename T>
 inline
-PtArray<T>::~PtArray()
+PtiArray<T>::~PtiArray()
 {
   // mArray は alloc の管理下にある．
 }
@@ -299,7 +299,7 @@ PtArray<T>::~PtArray()
 template <typename T>
 inline
 SizeType
-PtArray<T>::size() const
+PtiArray<T>::size() const
 {
   return mNum;
 }
@@ -309,18 +309,20 @@ PtArray<T>::size() const
 template <typename T>
 inline
 T*
-PtArray<T>::operator[](SizeType pos) const
+PtiArray<T>::operator[](SizeType pos) const
 {
+  if ( pos >= size() ) {
+    abort();
+  }
   ASSERT_COND( 0 <= pos && pos < size() );
-
   return mArray[pos];
 }
 
 // @brief 先頭の反復子を返す．
 template <typename T>
 inline
-typename PtArray<T>::iterator
-PtArray<T>::begin() const
+typename PtiArray<T>::iterator
+PtiArray<T>::begin() const
 {
   return &mArray[0];
 }
@@ -328,8 +330,8 @@ PtArray<T>::begin() const
 // @brief 末尾の反復子を返す．
 template <typename T>
 inline
-typename PtArray<T>::iterator
-PtArray<T>::end() const
+typename PtiArray<T>::iterator
+PtiArray<T>::end() const
 {
   return &mArray[mNum];
 }
@@ -338,11 +340,11 @@ PtArray<T>::end() const
 template <typename T>
 inline
 T**
-PtArray<T>::_body() const
+PtiArray<T>::_body() const
 {
   return mArray;
 }
 
 END_NAMESPACE_YM_VERILOG
 
-#endif // YM_PT_PTARRAY_H
+#endif // PTIARRAY_H

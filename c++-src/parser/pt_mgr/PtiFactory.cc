@@ -10,7 +10,6 @@
 #include "parser/PtiFactory.h"
 #include "parser/CptFactory.h"
 #include "parser/SptFactory.h"
-#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -54,7 +53,7 @@ PtiFactory::~PtiFactory()
 const PtPathDecl*
 PtiFactory::new_PathDecl(const FileRegion& fr,
 			 int edge,
-			 const PtExprArray* input_array,
+			 const vector<const PtExpr*>& input_array,
 			 int input_pol,
 			 VpiPathType op,
 			 const PtExpr* output,
@@ -62,9 +61,8 @@ PtiFactory::new_PathDecl(const FileRegion& fr,
 			 const PtExpr* expr,
 			 const PtPathDelay* path_delay)
 {
-  auto output_array{new_PtExprArray(output)};
   return new_PathDecl(fr, edge, input_array, input_pol,
-		      op, output_array, output_pol,
+		      op, vector<const PtExpr*>{output}, output_pol,
 		      expr, path_delay);
 }
 
@@ -78,8 +76,7 @@ PtiFactory::new_CPrimary(const FileRegion& fr,
 			 const char* name,
 			 const PtExpr* index)
 {
-  auto index_array{new_PtExprArray(index)};
-  return new_CPrimary(fr, name, index_array);
+  return new_CPrimary(fr, name, vector<const PtExpr*>{index});
 }
 
 // @brief イベントコントロールの生成
@@ -88,8 +85,7 @@ PtiFactory::new_CPrimary(const FileRegion& fr,
 const PtControl*
 PtiFactory::new_EventControl(const FileRegion& fr)
 {
-  auto event_array{new_PtExprArray()};
-  return new_EventControl(fr, event_array);
+  return new_EventControl(fr, vector<const PtExpr*>());
 }
 
 // @brief イベントコントロールの生成
@@ -100,8 +96,7 @@ const PtControl*
 PtiFactory::new_EventControl(const FileRegion& fr,
 			     const PtExpr* event)
 {
-  auto event_array{new_PtExprArray(event)};
-  return new_EventControl(fr, event_array);
+  return new_EventControl(fr, vector<const PtExpr*>{event});
 }
 
 // @brief リピートコントロールの生成
@@ -112,8 +107,7 @@ const PtControl*
 PtiFactory::new_RepeatControl(const FileRegion& fr,
 			      const PtExpr* expr)
 {
-  auto event_array{new_PtExprArray()};
-  return new_RepeatControl(fr, expr, event_array);
+  return new_RepeatControl(fr, expr, vector<const PtExpr*>());
 }
 
 // @brief リピートコントロールの生成
@@ -126,8 +120,7 @@ PtiFactory::new_RepeatControl(const FileRegion& fr,
 			      const PtExpr* expr,
 			      const PtExpr* event)
 {
-  auto event_array{new_PtExprArray(event)};
-  return new_RepeatControl(fr, expr, event_array);
+  return new_RepeatControl(fr, expr, vector<const PtExpr*>{event});
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -138,7 +131,8 @@ const PtInst*
 PtiFactory::new_Inst(const FileRegion& fr,
 		     const PtExpr* expr1)
 {
-  return new_Inst(fr, new_PtConArray(expr1));
+  return new_Inst(fr,
+		  vector<const PtConnection*>{new_OrderedCon(expr1)});
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -150,7 +144,9 @@ PtiFactory::new_Inst(const FileRegion& fr,
 		     const PtExpr* expr1,
 		     const PtExpr* expr2)
 {
-  return new_Inst(fr, new_PtConArray(expr1, expr2));
+  return new_Inst(fr,
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+ 					      new_OrderedCon(expr2)});
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -163,7 +159,10 @@ PtiFactory::new_Inst(const FileRegion& fr,
 		     const PtExpr* expr2,
 		     const PtExpr* expr3)
 {
-  return new_Inst(fr, new_PtConArray(expr1, expr2, expr3));
+  return new_Inst(fr,
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+					      new_OrderedCon(expr2),
+ 					      new_OrderedCon(expr3)});
 }
 
 // @brief module instance/UDP/gate instance の要素の生成
@@ -177,7 +176,11 @@ PtiFactory::new_Inst(const FileRegion& fr,
 		     const PtExpr* expr3,
 		     const PtExpr* expr4)
 {
-  return new_Inst(fr, new_PtConArray(expr1, expr2, expr3, expr4));
+  return new_Inst(fr,
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+					      new_OrderedCon(expr2),
+					      new_OrderedCon(expr3),
+ 					      new_OrderedCon(expr4)});
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -190,7 +193,9 @@ PtiFactory::new_InstN(const FileRegion& fr,
 		      const char* name,
 		      const PtExpr* expr1)
 {
-  return new_InstN(fr, name, new_PtConArray(expr1));
+  return new_InstN(fr, name,
+		   vector<const PtConnection*>{new_OrderedCon(expr1)});
+
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -204,7 +209,9 @@ PtiFactory::new_InstN(const FileRegion& fr,
 		      const PtExpr* expr1,
 		      const PtExpr* expr2)
 {
-  return new_InstN(fr, name, new_PtConArray(expr1, expr2));
+  return new_InstN(fr, name,
+		   vector<const PtConnection*>{new_OrderedCon(expr1),
+						new_OrderedCon(expr2)});
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -219,7 +226,10 @@ PtiFactory::new_InstN(const FileRegion& fr,
 		      const PtExpr* expr2,
 		      const PtExpr* expr3)
 {
-  return new_InstN(fr, name, new_PtConArray(expr1, expr2, expr3));
+  return new_InstN(fr, name,
+		   vector<const PtConnection*>{new_OrderedCon(expr1),
+						 new_OrderedCon(expr2),
+						 new_OrderedCon(expr3)});
 }
 
 // @brief 名前付き module instance/UDP/gate instance の要素の生成
@@ -235,7 +245,11 @@ PtiFactory::new_InstN(const FileRegion& fr,
 		      const PtExpr* expr3,
 		      const PtExpr* expr4)
 {
-  return new_InstN(fr, name, new_PtConArray(expr1, expr2, expr3, expr4));
+  return new_InstN(fr, name,
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+					      new_OrderedCon(expr2),
+					      new_OrderedCon(expr3),
+ 					      new_OrderedCon(expr4)});
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -252,7 +266,8 @@ PtiFactory::new_InstV(const FileRegion& fr,
 		      const PtExpr* right,
 		      const PtExpr* expr1)
 {
-  return new_InstV(fr, name, left, right, new_PtConArray(expr1));
+  return new_InstV(fr, name, left, right,
+		   vector<const PtConnection*>{new_OrderedCon(expr1)});
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -270,7 +285,9 @@ PtiFactory::new_InstV(const FileRegion& fr,
 		      const PtExpr* expr1,
 		      const PtExpr* expr2)
 {
-  return new_InstV(fr, name, left, right, new_PtConArray(expr1, expr2));
+  return new_InstV(fr, name, left, right,
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+ 					      new_OrderedCon(expr2)});
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -289,7 +306,11 @@ PtiFactory::new_InstV(const FileRegion& fr,
 		      const PtExpr* expr2,
 		      const PtExpr* expr3)
 {
-  return new_InstV(fr, name, left, right, new_PtConArray(expr1, expr2, expr3));
+  return new_InstV(fr, name, left, right,
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+					      new_OrderedCon(expr2),
+ 					      new_OrderedCon(expr3)});
+
 }
 
 // @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
@@ -310,81 +331,10 @@ PtiFactory::new_InstV(const FileRegion& fr,
 		      const PtExpr* expr4)
 {
   return new_InstV(fr, name, left, right,
-		   new_PtConArray(expr1, expr2, expr3, expr4));
-}
-
-// @brief 順序付き結合子の配列の生成
-// @param[in] expr1 結合する式
-const PtConnectionArray*
-PtiFactory::new_PtConArray(const PtExpr* expr1)
-{
-  auto con{new_OrderedCon(expr1)};
-  void* p{mAlloc.get_memory(sizeof(PtConnectionArray))};
-  return new (p) PtConnectionArray(mAlloc, con);
-}
-
-// @brief 順序付き結合子の配列の生成
-// @param[in] expr1 結合する式
-// @param[in] expr2 結合する式
-const PtConnectionArray*
-PtiFactory::new_PtConArray(const PtExpr* expr1,
-			   const PtExpr* expr2)
-{
-  auto con1{new_OrderedCon(expr1)};
-  auto con2{new_OrderedCon(expr2)};
-  void* p{mAlloc.get_memory(sizeof(PtConnectionArray))};
-  return new (p) PtConnectionArray(mAlloc, con1, con2);
-}
-
-// @brief 順序付き結合子の配列の生成
-// @param[in] expr1 結合する式
-// @param[in] expr2 結合する式
-// @param[in] expr3 結合する式
-const PtConnectionArray*
-PtiFactory::new_PtConArray(const PtExpr* expr1,
-			   const PtExpr* expr2,
-			   const PtExpr* expr3)
-{
-  auto con1{new_OrderedCon(expr1)};
-  auto con2{new_OrderedCon(expr2)};
-  auto con3{new_OrderedCon(expr3)};
-  void* p{mAlloc.get_memory(sizeof(PtConnectionArray))};
-  return new (p) PtConnectionArray(mAlloc, con1, con2, con3);
-}
-
-// @brief 順序付き結合子の配列の生成
-// @param[in] expr1 結合する式
-// @param[in] expr2 結合する式
-// @param[in] expr3 結合する式
-// @param[in] expr4 結合する式
-const PtConnectionArray*
-PtiFactory::new_PtConArray(const PtExpr* expr1,
-			   const PtExpr* expr2,
-			   const PtExpr* expr3,
-			   const PtExpr* expr4)
-{
-  auto con1{new_OrderedCon(expr1)};
-  auto con2{new_OrderedCon(expr2)};
-  auto con3{new_OrderedCon(expr3)};
-  auto con4{new_OrderedCon(expr4)};
-  void* p{mAlloc.get_memory(sizeof(PtConnectionArray))};
-  return new (p) PtConnectionArray(mAlloc, con1, con2, con3, con4);
-}
-
-const PtExprArray*
-PtiFactory::new_PtExprArray()
-{
-  void* p{mAlloc.get_memory(sizeof(PtExprArray))};
-  auto expr_array{new (p) PtExprArray()};
-  return expr_array;
-}
-
-const PtExprArray*
-PtiFactory::new_PtExprArray(const PtExpr* expr)
-{
-  void* p{mAlloc.get_memory(sizeof(PtExprArray))};
-  auto expr_array{new (p) PtExprArray(mAlloc, expr)};
-  return expr_array;
+		  vector<const PtConnection*>{new_OrderedCon(expr1),
+					      new_OrderedCon(expr2),
+					      new_OrderedCon(expr3),
+ 					      new_OrderedCon(expr4)});
 }
 
 END_NAMESPACE_YM_VERILOG

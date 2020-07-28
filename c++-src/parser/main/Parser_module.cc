@@ -38,26 +38,26 @@ BEGIN_NAMESPACE_YM_VERILOG
 void
 Parser::init_module()
 {
-  mPortList.clear();
-  mParamPortHeadList.clear();
 
   mCurIOHeadList = &mModuleIOHeadList;
-  mCurDeclHeadList = &mModuleDeclHeadList;
-  mCurItemList = &mModuleItemList;
+  push_declhead_list();
+  push_item_list();
 
+  mPortList.clear();
+  mParamPortHeadList.clear();
   mCurIOHeadList->clear();
   mIOItemList.clear();
-
-  mCurDeclHeadList->clear();
+  cur_declhead_list().clear();
   mDeclItemList.clear();
-
-  mCurItemList->clear();
+  cur_item_list().clear();
 }
 
 // @brief モジュール定義の終了
 void
 Parser::end_module()
 {
+  mCurDeclArray = pop_declhead_list();
+  mCurItemArray = pop_item_list();
 }
 
 // Verilog1995 タイプのモジュールを生成する．
@@ -67,11 +67,9 @@ Parser::new_Module1995(const FileRegion& file_region,
 		       const char* module_name,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  auto& port_vector = get_port_vector();
-  const PtDeclHeadArray* paramport_array = get_paramport_array();
-  const PtIOHeadArray* iohead_array = get_module_io_array();
-  const PtDeclHeadArray* declhead_array = get_module_decl_array();
-  const PtItemArray* item_array = get_module_item_array();
+  auto port_vector = get_port_vector();
+  auto paramport_array = get_paramport_array();
+  auto iohead_array = get_module_io_array();
 
   bool is_cell = lex().cell_define();
   bool is_protected = false; // これどうやって決めるの？
@@ -110,10 +108,10 @@ Parser::new_Module1995(const FileRegion& file_region,
   // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
   // 持たない場合にはデフォルトタイプのネットを生成する．
   unordered_map<string, VpiDir> iodecl_dirs;
-  for ( auto io_head: *iohead_array ) {
+  for ( auto io_head: iohead_array ) {
     // 名前をキーにして方向を記録しておく
     VpiDir dir = io_head->direction();
-    for ( auto elem: *io_head->item_list() ) {
+    for ( auto elem: io_head->item_list() ) {
       auto elem_name = elem->name();
 
       // まず未定義/多重定義のエラーをチェックする．
@@ -148,7 +146,7 @@ Parser::new_Module1995(const FileRegion& file_region,
   // 調べる．
   // 同時に名無しのポートがあるかどうかしらべる．
   bool named_port = true;
-  for ( auto port: port_vector ) {
+  for ( auto port: mPortList ) {
     if ( port->ext_name() == nullptr ) {
       // 1つでも名前を持たないポートがあったら名前での結合はできない．
       named_port = false;
@@ -174,7 +172,6 @@ Parser::new_Module1995(const FileRegion& file_region,
     }
   }
 
-  auto port_array = new_array2<const PtPort, PtiPort>(port_vector);
   auto module{mFactory.new_Module(file_region,
 				  module_name,
 				  is_macro,
@@ -187,10 +184,10 @@ Parser::new_Module1995(const FileRegion& file_region,
 				  portfaults, suppress_faults,
 				  config, library, cell,
 				  paramport_array,
-				  port_array,
+				  port_vector,
 				  iohead_array,
-				  declhead_array,
-				  item_array)};
+				  mCurDeclArray,
+				  mCurItemArray)};
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list);
 }
@@ -202,10 +199,8 @@ Parser::new_Module2001(const FileRegion& file_region,
 		       const char* module_name,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  const PtDeclHeadArray* paramport_array = get_paramport_array();
-  const PtIOHeadArray* iohead_array = get_module_io_array();
-  const PtDeclHeadArray* declhead_array = get_module_decl_array();
-  const PtItemArray* item_array = get_module_item_array();
+  auto paramport_array = get_paramport_array();
+  auto iohead_array = get_module_io_array();
 
   bool is_cell = lex().cell_define();
   bool is_protected = false; // これどうやって決めるの？
@@ -245,8 +240,8 @@ Parser::new_Module2001(const FileRegion& file_region,
 				  paramport_array,
 				  port_array,
 				  iohead_array,
-				  declhead_array,
-				  item_array)};
+				  mCurDeclArray,
+				  mCurItemArray)};
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list);
 }

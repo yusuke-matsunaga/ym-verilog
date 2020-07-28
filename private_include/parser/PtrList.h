@@ -10,7 +10,6 @@
 
 
 #include "PtiFwd.h"
-#include "ym/pt/PtArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -151,12 +150,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   /// 特別な関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容を配列にコピーする．
-  /// @param[in] alloc メモリアロケータ
-  /// @note この処理の後ではリストは空になる．
-  const PtArray<T2>*
-  to_array(PtAlloc& alloc);
 
   /// @brief 内容をvectorにコピーする．
   /// @note この処理の後ではリストは空になる．
@@ -395,19 +388,6 @@ PtrList<T1, T2>::back() const
 }
 
 // @brief 内容を配列にコピーする．
-// @param[in] alloc メモリアロケータ
-// @note この処理の後ではリストは空になる．
-template <typename T1,
-	  typename T2>
-inline
-const PtArray<T2>*
-PtrList<T1, T2>::to_array(PtAlloc& alloc)
-{
-  void* p{alloc.get_memory(sizeof(PtArray<T2>))};
-  return new (p) PtArray<T2>{alloc, to_vector()};
-}
-
-// @brief 内容を配列にコピーする．
 // @param[in] array 対象の配列
 // @note この処理の後ではリストは空になる．
 template <typename T1,
@@ -421,6 +401,7 @@ PtrList<T1, T2>::to_vector()
     vec.push_back(elem);
   }
   clear();
+  delete this;
   return vec;
 }
 

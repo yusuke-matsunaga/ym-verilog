@@ -67,6 +67,60 @@ public:
 
 };
 
+
+//////////////////////////////////////////////////////////////////////
+/// @class PtHierNamedBase PtBase.h <ym/pt/PtBase.h>
+/// @ingroup VlParser
+/// @ingroup PtGroup
+/// @brief 階層付き名前を持つ PtBase
+//////////////////////////////////////////////////////////////////////
+class PtHierNamedBase :
+  public PtNamedBase
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // PtHierNamedBase の継承クラスが実装する仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 階層ブランチの要素数の取得
+  virtual
+  SizeType
+  namebranch_num() const = 0;
+
+  /// @brief 階層ブランチの取得
+  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
+  virtual
+  const PtNameBranch*
+  namebranch(SizeType pos) const = 0;
+
+  /// @brief 階層名を展開する．
+  string
+  fullname() const;
+
+  /// @brief 階層ブランチのリストを返す．
+  vector<const PtNameBranch*>
+  namebranch_list() const;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+// インライン関数の定義
+//////////////////////////////////////////////////////////////////////
+
+// @brief 階層ブランチのリストを返す．
+inline
+vector<const PtNameBranch*>
+PtHierNamedBase::namebranch_list() const
+{
+  SizeType n = namebranch_num();
+  vector<const PtNameBranch*> vec(n);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    vec[i] = namebranch(i);
+  }
+  return vec;
+}
+
 END_NAMESPACE_YM_VERILOG
 
 #endif // YM_PT_PTBASE_H

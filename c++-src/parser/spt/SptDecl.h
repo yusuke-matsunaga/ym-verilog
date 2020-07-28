@@ -10,9 +10,9 @@
 
 
 #include "ym/FileRegion.h"
-#include "ym/pt/PtArray.h"
-
 #include "parser/PtiDecl.h"
+#include "parser/PtiArray.h"
+#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -78,9 +78,14 @@ public:
   const PtExpr*
   right_range() const override;
 
-  /// @brief 要素のリストの取得
-  const PtIOItemArray*
-  item_list() const override;
+  /// @brief 要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtIOItem*
+  item(SizeType pos) const override;
 
 
 private:
@@ -89,9 +94,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素リスト
+  /// @param[in] elem_array 要素の配列
   void
-  set_elem(const PtIOItemArray* elem_array) override;
+  set_elem(PtiIOItemArray&& elem_array) override;
 
 
 private:
@@ -124,7 +129,7 @@ private:
   const PtExpr* mRightRange;
 
   // 要素の配列
-  const PtIOItemArray* mItemArray;
+  PtiIOItemArray mItemArray;
 
 };
 
@@ -255,9 +260,14 @@ public:
   const PtDelay*
   delay() const override;
 
-  /// @brief 要素のリストの取得
-  const PtDeclItemArray*
-  item_list() const override;
+  /// @brief 要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtDeclItem*
+  item(SizeType pos) const override;
 
 
 private:
@@ -266,9 +276,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素リスト(配列)
+  /// @param[in] elem_array 要素の配列
   void
-  set_elem(const PtDeclItemArray* elem_array) override;
+  set_elem(PtiDeclItemArray&& elem_array) override;
 
 
 private:
@@ -307,7 +317,7 @@ private:
   const PtDelay* mDelay;
 
   // 要素の配列
-  const PtDeclItemArray* mItemArray;
+  PtiDeclItemArray mItemArray;
 
 };
 
@@ -326,7 +336,7 @@ private:
   /// コンストラクタ
   SptDeclItem(const FileRegion& file_region,
 	      const char* name,
-	      const PtRangeArray* range_array,
+	      PtiRangeArray&& range_array,
 	      const PtExpr* init_value);
 
   /// デストラクタ
@@ -346,13 +356,14 @@ public:
   const char*
   name() const override;
 
-  /// dimension list のサイズの取得
-  int
-  dimension_list_size() const override;
+  /// @brief dimension list のサイズの取得
+  SizeType
+  range_num() const override;
 
-  /// 範囲のリストの取得
-  const PtRangeArray*
-  range_list() const override;
+  /// @brief 範囲の取得
+  /// @param[in] pos 位置 ( 0 <= pos < range_num() )
+  const PtRange*
+  range(SizeType pos) const override;
 
   /// 初期値の取得
   const PtExpr*
@@ -371,7 +382,7 @@ private:
   const char* mName;
 
   // 範囲の配列
-  const PtRangeArray* mRangeArray;
+  PtiRangeArray mRangeArray;
 
   // 初期値
   const PtExpr* mInitValue;

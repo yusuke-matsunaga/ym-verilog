@@ -5,15 +5,13 @@
 /// @brief CptDecl のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/pt/PtDecl.h"
-#include "ym/pt/PtArray.h"
-
 #include "ym/FileRegion.h"
-
+#include "parser/PtiArray.h"
 #include "parser/PtiDecl.h"
 
 
@@ -102,9 +100,14 @@ public:
   const PtDelay*
   delay() const override;
 
-  /// @brief 要素のリストの取得
-  const PtDeclItemArray*
-  item_list() const override;
+  /// @brief 要素数の取得
+  SizeType
+  item_num() const override;
+
+  /// @brief 要素の取得
+  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
+  const PtDeclItem*
+  item(SizeType pos) const override;
 
 
 private:
@@ -113,9 +116,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素リスト(配列)
+  /// @param[in] elem_array 要素の配列
   void
-  set_elem(const PtDeclItemArray* elem_array) override;
+  set_elem(PtiDeclItemArray&& elem_array) override;
 
 
 private:
@@ -127,7 +130,7 @@ private:
   FileRegion mFileRegion;
 
   // 要素の配列
-  const PtDeclItemArray* mItemArray;
+  PtiDeclItemArray mItemArray;
 
 };
 
@@ -1260,14 +1263,14 @@ public:
   const char*
   name() const override;
 
-  /// @brief dimension list のサイズを取り出す．
-  /// @return ここでは常に 0 を返す．
-  int
-  dimension_list_size() const override;
+  /// @brief 範囲リストのサイズの取得
+  SizeType
+  range_num() const override;
 
-  /// 範囲のリストの取得
-  const PtRangeArray*
-  range_list() const override;
+  /// @brief 範囲の取得
+  /// @param[in] pos 位置 ( 0 <= pos < range_num() )
+  const PtRange*
+  range(SizeType pos) const override;
 
   /// @brief 初期値を取り出す．
   /// @return ここでは常に nullptr を返す．
@@ -1344,7 +1347,7 @@ protected:
   /// @param[in] range_array 範囲のリスト
   CptDeclItemR(const FileRegion& file_region,
 	       const char* name,
-	       const PtRangeArray* range_array);
+	       PtiRangeArray&& range_array);
 
   /// @brief デストラクタ
   ~CptDeclItemR();
@@ -1360,14 +1363,14 @@ public:
   FileRegion
   file_region() const override;
 
-  /// @brief dimension list のサイズを取り出す．
-  /// @return dimension list のサイズ
-  int
-  dimension_list_size() const override;
+  /// @brief dimension list のサイズの取得
+  SizeType
+  range_num() const override;
 
-  /// 範囲のリストの取得
-  const PtRangeArray*
-  range_list() const override;
+  /// @brief 範囲の取得
+  /// @param[in] pos 位置 ( 0 <= pos < range_num() )
+  const PtRange*
+  range(SizeType pos) const override;
 
 
 private:
@@ -1379,7 +1382,7 @@ private:
   FileRegion mFileRegion;
 
   // 範囲の配列
-  const PtRangeArray* mRangeArray;
+  PtiRangeArray mRangeArray;
 
 };
 

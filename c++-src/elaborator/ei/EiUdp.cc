@@ -14,7 +14,6 @@
 
 #include "ym/pt/PtUdp.h"
 #include "ym/pt/PtDecl.h"
-#include "ym/pt/PtArray.h"
 #include "ym/pt/PtExpr.h"
 
 
@@ -31,9 +30,9 @@ ElbUdpDefn*
 EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 		       bool is_protected)
 {
-  SizeType port_num = pt_udp->port_list()->size();
+  SizeType port_num = pt_udp->port_num();
   EiUdpIO* iodecl = new EiUdpIO[port_num];
-  SizeType table_size = pt_udp->table_array()->size();
+  SizeType table_size = pt_udp->table_num();
   EiTableEntry* table = new EiTableEntry[table_size];
 
   SizeType row_size = port_num;

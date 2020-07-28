@@ -16,7 +16,6 @@
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
-#include "ym/pt/PtArray.h"
 
 #include "ym/ClibCell.h"
 #include "ym/ClibCellPin.h"
@@ -89,7 +88,7 @@ ElbPrimitive*
 EiFactory::new_Primitive(ElbPrimHead* head,
 			 const PtInst* pt_inst)
 {
-  SizeType port_num = pt_inst->port_list()->size();
+  SizeType port_num = pt_inst->port_num();
   EiPrimTerm* term_array = new EiPrimTerm[port_num];
   EiPrimitive* prim = new EiPrimitive2(head, pt_inst, term_array);
 
@@ -116,7 +115,7 @@ EiFactory::new_PrimitiveArray(ElbPrimHead* head,
   SizeType n = range.size();
   EiPrimitive1* array = new EiPrimitive1[n];
 
-  SizeType nt = n * pt_inst->port_list()->size();
+  SizeType nt = n * pt_inst->port_num();
   EiPrimTerm* term_array = new EiPrimTerm[nt];
   EiPrimArray* prim_array = new EiPrimArray(head, pt_inst, range,
 					    array, term_array);
@@ -133,7 +132,7 @@ EiFactory::new_CellPrimitive(ElbPrimHead* head,
 			     const ClibCell& cell,
 			     const PtInst* pt_inst)
 {
-  SizeType port_num = pt_inst->port_list()->size();
+  SizeType port_num = pt_inst->port_num();
   EiPrimTerm* term_array = new EiPrimTerm[port_num];
   EiPrimitive* prim = new EiPrimitive2(head, cell, pt_inst, term_array);
 
@@ -162,7 +161,7 @@ EiFactory::new_CellPrimitiveArray(ElbPrimHead* head,
   SizeType n = range.size();
   EiPrimitive1* array = new EiPrimitive1[n];
 
-  SizeType nt = n * pt_inst->port_list()->size();
+  SizeType nt = n * pt_inst->port_num();
   EiPrimTerm* term_array = new EiPrimTerm[nt];
   EiPrimArray* prim_array = new EiPrimArray(head, cell, pt_inst, range,
 					    array, term_array);
@@ -472,7 +471,7 @@ EiPrimArray::EiPrimArray(ElbPrimHead* head,
   mArray(elem_array)
 {
   SizeType n = mRange.size();
-  SizeType port_num = pt_inst->port_list()->size();
+  SizeType port_num = pt_inst->port_num();
   for ( int i = 0; i < n; ++ i ) {
     int index = mRange.index(i);
     mArray[i].init(this, index, term_array);
@@ -499,7 +498,7 @@ EiPrimArray::EiPrimArray(ElbPrimHead* head,
   mArray(elem_array)
 {
   SizeType n = mRange.size();
-  SizeType port_num = pt_inst->port_list()->size();
+  SizeType port_num = pt_inst->port_num();
   for ( int i = 0; i < n; ++ i ) {
     int index = mRange.index(i);
     mArray[i].init(this, index, term_array);
@@ -785,7 +784,7 @@ EiPrimitive::delay() const
 SizeType
 EiPrimitive::port_num() const
 {
-  return pt_inst()->port_list()->size();
+  return pt_inst()->port_num();
 }
 
 // @brief ポート端子を得る．

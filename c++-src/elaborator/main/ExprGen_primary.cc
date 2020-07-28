@@ -39,8 +39,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 			     const PtExpr* pt_expr)
 {
   // 識別子の階層
-  const PtNameBranchArray* nb_array = pt_expr->namebranch_array();
-  bool has_hname = (nb_array->size() > 0);
+  bool has_hname = (pt_expr->namebranch_num() > 0);
   if ( has_hname ) {
     if ( env.is_constant() ) {
       // 階層つき識別子はだめ
@@ -72,7 +71,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
   }
   else if ( env.inside_constant_function() ) {
     // まず関数内の識別子を探索する．
-    handle = find_obj_up(parent, nb_array, name, env.constant_function());
+    handle = find_obj_up(parent, pt_expr, env.constant_function());
     if ( handle == nullptr && !env.is_lhs() ) {
       // 右辺ならモジュール内の定数識別子を探索する．
       handle = find_const_handle(parent, pt_expr);
@@ -86,8 +85,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
   else {
     // 通常のスコープで探索する．
     // たぶんモジュール内でいいはず．
-    handle = find_obj_up(parent, nb_array, name,
-			 parent->parent_module());
+    handle = find_obj_up(parent, pt_expr,  parent->parent_module());
     if ( handle == nullptr ) {
       // 見つからなくてもデフォルトネットタイプが kVpiNone でないかぎり
       // 暗黙の1ビットネット宣言を行う．
@@ -388,14 +386,8 @@ ExprGen::instantiate_namedevent(const VlNamedObj* parent,
   ASSERT_COND(pt_expr->left_range() == nullptr );
   ASSERT_COND(pt_expr->right_range() == nullptr );
 
-  // 識別子の階層
-  const PtNameBranchArray* nb_array = pt_expr->namebranch_array();
-
-  // 識別子の名前
-  const char* name = pt_expr->name();
-
   // 名前に対応したオブジェクトのハンドルを求める．
-  ElbObjHandle* handle = find_obj_up(parent, nb_array, name, nullptr);
+  ElbObjHandle* handle = find_obj_up(parent, pt_expr, nullptr);
   if ( handle == nullptr ) {
     // 見つからなかった．
     error_not_found(pt_expr);
@@ -445,15 +437,8 @@ ElbObjHandle*
 ExprGen::find_const_handle(const VlNamedObj* parent,
 			   const PtExpr* pt_expr)
 {
-  // 識別子の階層
-  const PtNameBranchArray* nb_array = pt_expr->namebranch_array();
-
-  // 識別子の名前
-  const char* name = pt_expr->name();
-
   // モジュール内の識別子を探索する．
-  ElbObjHandle* handle = find_obj_up(parent, nb_array, name,
-				     parent->parent_module());
+  ElbObjHandle* handle = find_obj_up(parent, pt_expr, parent->parent_module());
   if ( handle == nullptr ) {
     // 見つからなかった．
     error_not_found(pt_expr);
@@ -739,8 +724,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 			  bool put_error)
 {
   // 識別子の階層
-  const PtNameBranchArray* nb_array = pt_expr->namebranch_array();
-  if ( nb_array->size() > 0 ) {
+  if ( pt_expr->namebranch_num() > 0 ) {
     // 階層つき識別子はだめ
     if ( put_error ) {
       error_hname_in_ce(pt_expr);
@@ -777,11 +761,8 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
     }
   }
 
-  // 識別子の名前
-  const char* name = pt_expr->name();
-
   // モジュール内の識別子を探索する．
-  ElbObjHandle* handle = find_obj_up(parent, nullptr, name, parent->parent_module());
+  ElbObjHandle* handle = find_obj_up(parent, pt_expr, parent->parent_module());
   if ( !handle ) {
     // 見つからなかった．
     if ( put_error ) {

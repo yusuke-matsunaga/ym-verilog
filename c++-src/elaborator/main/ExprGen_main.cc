@@ -571,11 +571,11 @@ ElbDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtItem* pt_header)
 {
-  SizeType n = pt_header->paramassign_array()->size();
+  SizeType n = pt_header->paramassign_num();
   ASSERT_COND( n == 1 );
 
   const PtExpr* expr_array[1];
-  const PtConnection* pt_con = (*pt_header->paramassign_array())[0];
+  const PtConnection* pt_con = pt_header->paramassign(0);
   expr_array[0] = pt_con->expr();
   return instantiate_delay_sub(parent, pt_header, 1, expr_array);
 }

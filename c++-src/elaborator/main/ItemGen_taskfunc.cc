@@ -84,7 +84,7 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
   }
 
   // parameter の生成
-  phase1_decl(taskfunc, pt_item->declhead_array(), false);
+  phase1_decl(taskfunc, pt_item->declhead_list(), false);
 
 #if 0
   // attribute instance の生成
@@ -133,10 +133,10 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
   }
 
   // 宣言要素の生成
-  instantiate_decl(taskfunc, pt_item->declhead_array());
+  instantiate_decl(taskfunc, pt_item->declhead_list());
 
   // 入出力の生成
-  instantiate_iodecl(nullptr, taskfunc, pt_item->iohead_array());
+  instantiate_iodecl(nullptr, taskfunc, pt_item->iohead_list());
 
   if ( taskfunc->type() == VpiObjType::Function ) {
     // 関数名と同名の変数の生成
@@ -250,10 +250,10 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
   reg_constant_function(parent, pt_function->name(), func);
 
   // parameter の生成
-  phase1_decl(func, pt_function->declhead_array(), false);
+  phase1_decl(func, pt_function->declhead_list(), false);
 
   // 宣言要素の生成
-  instantiate_decl(func, pt_function->declhead_array());
+  instantiate_decl(func, pt_function->declhead_list());
 
   // 関数名と同名の変数の生成
   ElbDecl* decl = factory().new_Decl(head, pt_function);
@@ -266,7 +266,7 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
   func->set_ovar(decl);
 
   // 入出力の生成
-  instantiate_iodecl(nullptr, func, pt_function->iohead_array());
+  instantiate_iodecl(nullptr, func, pt_function->iohead_list());
 
   // 本体のステートメント内部のスコープの生成
   const PtStmt* pt_body = pt_function->body();

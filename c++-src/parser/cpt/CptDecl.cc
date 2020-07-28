@@ -119,19 +119,27 @@ CptDeclHead::delay() const
   return nullptr;
 }
 
-// @brief 要素のリストの取得
-const PtDeclItemArray*
-CptDeclHead::item_list() const
+// @brief 要素数の取得
+SizeType
+CptDeclHead::item_num() const
 {
-  return mItemArray;
+  return mItemArray.size();
+}
+
+// @brief 要素の取得
+// @param[in] pos 位置 ( 0 <= pos < item_num() )
+const PtDeclItem*
+CptDeclHead::item(SizeType pos) const
+{
+  return mItemArray[pos];
 }
 
 // @brief 要素リストの設定
-// @param[in] elem_array 要素リスト(配列)
+// @param[in] elem_array 要素の配列
 void
-CptDeclHead::set_elem(const PtDeclItemArray* item_array)
+CptDeclHead::set_elem(PtiDeclItemArray&& elem_array)
 {
-  mItemArray = item_array;
+  mItemArray = move(elem_array);
 }
 
 
@@ -1026,18 +1034,19 @@ CptDeclItemBase::name() const
   return mName;
 }
 
-// dimension list のサイズの取得
-// @return ここでは常に 0 を返す．
-int
-CptDeclItemBase::dimension_list_size() const
+// @brief 範囲リストのサイズの取得
+SizeType
+CptDeclItemBase::range_num() const
 {
   return 0;
 }
 
-// 範囲のリストの取得
-const PtRangeArray*
-CptDeclItemBase::range_list() const
+// @brief 範囲の取得
+// @param[in] pos 位置 ( 0 <= pos < range_num() )
+const PtRange*
+CptDeclItemBase::range(SizeType pos) const
 {
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -1087,10 +1096,10 @@ CptDeclItem::file_region() const
 // @param range_array 範囲のリスト
 CptDeclItemR::CptDeclItemR(const FileRegion& file_region,
 			   const char* name,
-			   const PtRangeArray* range_array) :
+			   PtiRangeArray&& range_array) :
   CptDeclItemBase(name),
   mFileRegion(file_region),
-  mRangeArray(range_array)
+  mRangeArray{move(range_array)}
 {
 }
 
@@ -1106,18 +1115,19 @@ CptDeclItemR::file_region() const
   return mFileRegion;
 }
 
-// dimension list のサイズの取得
-int
-CptDeclItemR::dimension_list_size() const
+// @brief 範囲リストのサイズの取得
+SizeType
+CptDeclItemR::range_num() const
 {
-  return mRangeArray->size();
+  return mRangeArray.size();
 }
 
-// 範囲のリストの取得
-const PtRangeArray*
-CptDeclItemR::range_list() const
+// @brief 範囲の取得
+// @param[in] pos 位置 ( 0 <= pos < range_num() )
+const PtRange*
+CptDeclItemR::range(SizeType pos) const
 {
-  return mRangeArray;
+  return mRangeArray[pos];
 }
 
 
@@ -1533,11 +1543,12 @@ CptFactory::new_DeclItem(const FileRegion& file_region,
 const PtDeclItem*
 CptFactory::new_DeclItem(const FileRegion& file_region,
 			 const char* name,
-			 const PtRangeArray* range_array)
+			 const vector<const PtRange*>& range_array)
 {
   ++ mNumDeclItemR;
   void* p{mAlloc.get_memory(sizeof(CptDeclItemR))};
-  auto obj{new (p) CptDeclItemR(file_region, name, range_array)};
+  auto obj{new (p) CptDeclItemR(file_region, name,
+				PtiArray<const PtRange>(mAlloc, range_array))};
   return obj;
 }
 

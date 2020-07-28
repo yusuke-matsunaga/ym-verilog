@@ -39,11 +39,23 @@ CptControl::delay() const
   return nullptr;
 }
 
-// @brief イベントリストの取得
-// @note event control/repeat control の場合のみ意味を持つ
-const PtExprArray*
-CptControl::event_list() const
+// @brief イベントリストの要素数の取得
+//
+// event control/repeat control の場合のみ意味を持つ
+SizeType
+CptControl::event_num() const
 {
+  return 0;
+}
+
+// @brief イベントリストの要素の取得
+// @param[in] pos 位置 ( 0 <= pos < event_num() )
+//
+// event control/repeat control の場合のみ意味を持つ
+const PtExpr*
+CptControl::event(SizeType pos) const
+{
+  ASSERT_NOT_REACHED;
   return nullptr;
 }
 
@@ -104,9 +116,9 @@ CptDelayControl::delay() const
 
 // コンストラクタ
 CptEventControl::CptEventControl(const FileRegion& file_region,
-				 const PtExprArray* event_array) :
+				 PtiExprArray&& event_array) :
   mFileRegion(file_region),
-  mEventArray(event_array)
+  mEventArray{move(event_array)}
 {
 }
 
@@ -129,12 +141,23 @@ CptEventControl::type() const
   return PtCtrlType::Event;
 }
 
-// @brief イベントリストの取得
-// @note event control/repeat control の場合のみ意味を持つ
-const PtExprArray*
-CptEventControl::event_list() const
+// @brief イベントリストの要素数の取得
+//
+// event control/repeat control の場合のみ意味を持つ
+SizeType
+CptEventControl::event_num() const
 {
-  return mEventArray;
+  return mEventArray.size();
+}
+
+// @brief イベントリストの要素の取得
+// @param[in] pos 位置 ( 0 <= pos < event_num() )
+//
+// event control/repeat control の場合のみ意味を持つ
+const PtExpr*
+CptEventControl::event(SizeType pos) const
+{
+  return mEventArray[pos];
 }
 
 
@@ -145,10 +168,9 @@ CptEventControl::event_list() const
 // コンストラクタ
 CptRepeatControl::CptRepeatControl(const FileRegion& file_region,
 				   const PtExpr* expr,
-				   const PtExprArray* event_array) :
-  mFileRegion(file_region),
-  mRepExpr(expr),
-  mEventArray(event_array)
+				   PtiExprArray&& event_array) :
+  CptEventControl(file_region, move(event_array)),
+  mRepExpr(expr)
 {
   ASSERT_COND( expr );
 }
@@ -156,13 +178,6 @@ CptRepeatControl::CptRepeatControl(const FileRegion& file_region,
 // デストラクタ
 CptRepeatControl::~CptRepeatControl()
 {
-}
-
-// ファイル位置を返す．
-FileRegion
-CptRepeatControl::file_region() const
-{
-  return mFileRegion;
 }
 
 // 型を返す．
@@ -177,14 +192,6 @@ const PtExpr*
 CptRepeatControl::rep_expr() const
 {
   return mRepExpr;
-}
-
-// @brief イベントリストの取得
-// @note event control/repeat control の場合のみ意味を持つ
-const PtExprArray*
-CptRepeatControl::event_list() const
-{
-  return mEventArray;
 }
 
 
@@ -461,8 +468,8 @@ CptNameBranchI::index() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptAttrInst::CptAttrInst(const PtAttrSpecArray* as_array) :
-  mAttrSpecArray(as_array)
+CptAttrInst::CptAttrInst(PtiAttrSpecArray&& as_array) :
+  mAttrSpecArray{move(as_array)}
 {
 }
 
@@ -475,21 +482,29 @@ CptAttrInst::~CptAttrInst()
 FileRegion
 CptAttrInst::file_region() const
 {
-  SizeType n = mAttrSpecArray->size();
+  SizeType n = mAttrSpecArray.size();
   if ( n == 0 ) {
     return FileRegion();
   }
   else {
-    return FileRegion{(*mAttrSpecArray)[0]->file_region(),
-			(*mAttrSpecArray)[n - 1]->file_region()};
+    return FileRegion{mAttrSpecArray[0]->file_region(),
+			mAttrSpecArray[n - 1]->file_region()};
   }
 }
 
-// @brief 要素のリストの取得
-const PtAttrSpecArray*
-CptAttrInst::attrspec_list() const
+// @brief 要素数の取得
+SizeType
+CptAttrInst::attrspec_num() const
 {
-  return mAttrSpecArray;
+  return mAttrSpecArray.size();
+}
+
+// @brief 要素の取得
+// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
+const PtAttrSpec*
+CptAttrInst::attrspec(SizeType pos) const
+{
+  return mAttrSpecArray[pos];
 }
 
 
@@ -552,11 +567,12 @@ CptFactory::new_DelayControl(const FileRegion& file_region,
 // イベントコントロールを生成する．
 const PtControl*
 CptFactory::new_EventControl(const FileRegion& file_region,
-			     const PtExprArray* event_array)
+			     const vector<const PtExpr*>& event_array)
 {
   ++ mNumEventControl;
   void* p{mAlloc.get_memory(sizeof(CptEventControl))};
-  auto obj{new (p) CptEventControl(file_region, event_array)};
+  auto obj{new (p) CptEventControl(file_region,
+				   PtiArray<const PtExpr>(mAlloc, event_array))};
   return obj;
 }
 
@@ -564,11 +580,12 @@ CptFactory::new_EventControl(const FileRegion& file_region,
 const PtControl*
 CptFactory::new_RepeatControl(const FileRegion& file_region,
 			      const PtExpr* expr,
-			      const PtExprArray* event_array)
+			      const vector<const PtExpr*>& event_array)
 {
   ++ mNumRepeatControl;
   void* p{mAlloc.get_memory(sizeof(CptRepeatControl))};
-  auto obj{new (p) CptRepeatControl(file_region, expr, event_array)};
+  auto obj{new (p) CptRepeatControl(file_region, expr,
+				    PtiArray<const PtExpr>(mAlloc, event_array))};
   return obj;
 }
 
@@ -697,12 +714,12 @@ CptFactory::new_NameBranch(const char* name,
 // attribute instance を生成する．
 const PtAttrInst*
 CptFactory::new_AttrInst(const FileRegion& file_region,
-			 const PtAttrSpecArray* as_array)
+			 const vector<const PtAttrSpec*>& as_array)
 {
   // file_region は不要
   ++ mNumAttrInst;
   void* p{mAlloc.get_memory(sizeof(CptAttrInst))};
-  auto obj{new (p) CptAttrInst(as_array)};
+  auto obj{new (p) CptAttrInst(PtiArray<const PtAttrSpec>(mAlloc, as_array))};
   return obj;
 }
 
