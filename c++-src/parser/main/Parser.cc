@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "Parser_int.h"
+#include "parser/Parser.h"
 #include "scanner/Lex.h"
 #include "parser/PtiFactory.h"
 #include "parser/PtMgr.h"

@@ -2495,6 +2495,42 @@ Parser::cur_item_list()
   return mItemListStack.back();
 }
 
+// @brief 現在の declhead リストをスタックに積む．
+// @param[in] new_declhead 新しく設定する declhead
+inline
+void
+Parser::push_declhead_list()
+{
+  mDeclHeadListStack.push_back(vector<PtiDeclHead*>());
+}
+// @brief スタックのトップを取り出す．
+inline
+vector<const PtDeclHead*>
+Parser::pop_declhead_list()
+{
+  auto vec{convert<const PtDeclHead*, PtiDeclHead*>(cur_declhead_list())};
+  mDeclHeadListStack.pop_back();
+  return vec;
+}
+
+// @brief 現在の item リストをスタックに積む．
+// @param[in] new_item 新しく設定する item リスト
+inline
+void
+Parser::push_item_list()
+{
+  mItemListStack.push_back(vector<const PtItem*>());
+}
+inline
+// @brief スタックのトップを取り出す．
+vector<const PtItem*>
+Parser::pop_item_list()
+{
+  auto vec{cur_item_list()};
+  mItemListStack.pop_back();
+  return vec;
+}
+
 END_NAMESPACE_YM_VERILOG
 
 #endif // PARSER_H
