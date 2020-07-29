@@ -7,11 +7,7 @@
 
 
 #include "parser/Parser.h"
-
 #include "parser/PtiFactory.h"
-#include "parser/PuHierName.h"
-#include "ym/pt/PtStmt.h"
-#include "ym/pt/PtExpr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

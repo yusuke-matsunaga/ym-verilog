@@ -8,7 +8,6 @@
 
 #include "parser/Parser.h"
 #include "parser/PtiFactory.h"
-#include "ym/pt/PtItem.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

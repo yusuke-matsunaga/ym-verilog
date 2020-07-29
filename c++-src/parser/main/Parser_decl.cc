@@ -7,11 +7,7 @@
 
 
 #include "parser/Parser.h"
-
 #include "parser/PtiFactory.h"
-#include "parser/PtiDecl.h"
-#include "parser/PtiArray.h"
-#include "parser/PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -134,38 +130,6 @@ Parser::new_NetIOHead(const FileRegion& fr,
   return decl;
 }
 
-// @brief IOポート宣言リストにIO宣言ヘッダを追加する．
-void
-Parser::add_ioport_head(PtiIOHead* head,
-			PtrList<const PtAttrInst>* attr_list)
-{
-  if ( head ) {
-    reg_attrinst(head, attr_list);
-    mCurIOHeadList->push_back(head);
-  }
-}
-
-// @brief IO宣言の終わり
-void
-Parser::flush_io()
-{
-  if ( !mIOItemList.empty() ) {
-    ASSERT_COND( !mCurIOHeadList->empty() );
-    auto last{mCurIOHeadList->back()};
-    last->set_elem(PtiIOItemArray(alloc(), mIOItemList));
-    mIOItemList.clear();
-  }
-}
-
-// @brief IO宣言リストにIO宣言ヘッダを追加する．
-void
-Parser::add_io_head(PtiIOHead* head,
-		    PtrList<const PtAttrInst>* attr_list)
-{
-  add_ioport_head(head, attr_list);
-  flush_io();
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // PtIOItem の生成
@@ -193,14 +157,6 @@ Parser::new_IOItem(const FileRegion& fr,
 {
   auto item{mFactory.new_IOItem(fr, name, init_value)};
   add_io_item(item);
-}
-
-// @brief IO宣言リストにIO宣言要素を追加する．
-inline
-void
-Parser::add_io_item(const PtIOItem* item)
-{
-  mIOItemList.push_back(item);
 }
 
 
@@ -241,29 +197,6 @@ Parser::new_ParamH(const FileRegion& fr,
 {
   auto decl{mFactory.new_ParamH(fr, var_type)};
   return decl;
-}
-
-// @brief parameter port 宣言ヘッダを追加する．
-void
-Parser::add_paramport_head(PtiDeclHead* head,
-			   PtrList<const PtAttrInst>* attr_list)
-{
-  if ( head ) {
-    reg_attrinst(head, attr_list);
-    mParamPortHeadList.push_back(head);
-  }
-}
-
-// @brief parameter port 宣言の終わり
-void
-Parser::flush_paramport()
-{
-  if ( !mDeclItemList.empty() ) {
-    ASSERT_COND( !mParamPortHeadList.empty() );
-    auto last{mParamPortHeadList.back()};
-    last->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
-    mDeclItemList.clear();
-  }
 }
 
 
@@ -534,21 +467,6 @@ Parser::new_NetH(const FileRegion& fr,
   return decl;
 }
 
-// @brief 宣言リストに宣言ヘッダを追加する．
-void
-Parser::add_decl_head(PtiDeclHead* head,
-		      PtrList<const PtAttrInst>* attr_list)
-{
-  if ( head ) {
-    reg_attrinst(head, attr_list);
-    cur_declhead_list().push_back(head);
-    if ( !mDeclItemList.empty() ) {
-      head->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
-    }
-  }
-  mDeclItemList.clear();
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // PtDeclItem の生成
@@ -589,14 +507,6 @@ Parser::new_DeclItem(const FileRegion& fr,
 {
   auto item{mFactory.new_DeclItem(fr, name, range_list->to_vector())};
   add_decl_item(item);
-}
-
-// @brief 宣言リストに宣言要素を追加する．
-inline
-void
-Parser::add_decl_item(const PtDeclItem* item)
-{
-  mDeclItemList.push_back(item);
 }
 
 

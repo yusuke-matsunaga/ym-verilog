@@ -3,13 +3,14 @@
 /// @brief Parser の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "parser/Parser.h"
 #include "scanner/Lex.h"
 #include "parser/PtiFactory.h"
+#include "parser/PtiArray.h"
 #include "parser/PtMgr.h"
 #include "parser/PuHierName.h"
 
@@ -64,7 +65,8 @@ Parser::read_file(const string& filename,
 		  const SearchPathList& searchpath,
 		  const vector<VlLineWatcher*>& watcher_list)
 {
-  int yyparse(Parser&);
+  // YACC の生成するパーズ関数
+  extern int yyparse(Parser&);
 
   lex().set_searchpath(searchpath);
 
@@ -104,6 +106,7 @@ Parser::yylex(YYSTYPE& lval,
   case STRING:
   case UNUMBER:
   case UNUM_BIG:
+    // 文字列領域は PtMgr が管理する．
     lval.strtype = mPtMgr.save_string(lex().cur_string());
     break;
 
@@ -271,7 +274,7 @@ PuHierName*
 Parser::new_HierName(const PtNameBranch* nb,
 		     const char* name)
 {
-  void* p{mPtMgr.alloc().get_memory(sizeof(PuHierName))};
+  void* p{alloc().get_memory(sizeof(PuHierName))};
   auto hname{new (p) PuHierName(nb, name)};
   return hname;
 }
@@ -298,6 +301,90 @@ Parser::add_HierName(PuHierName* hname,
 {
   auto nb{mFactory.new_NameBranch(hname->tail_name(), index)};
   hname->add(nb, name);
+}
+
+// @brief parameter port 宣言ヘッダを追加する．
+void
+Parser::add_paramport_head(PtiDeclHead* head,
+			   PtrList<const PtAttrInst>* attr_list)
+{
+  if ( head ) {
+    reg_attrinst(head, attr_list);
+    mParamPortHeadList.push_back(head);
+  }
+}
+
+// @brief parameter port 宣言の終わり
+void
+Parser::flush_paramport()
+{
+  if ( !mDeclItemList.empty() ) {
+    ASSERT_COND( !mParamPortHeadList.empty() );
+    auto last{mParamPortHeadList.back()};
+    last->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
+    mDeclItemList.clear();
+  }
+}
+
+// @brief IOポート宣言リストにIO宣言ヘッダを追加する．
+void
+Parser::add_ioport_head(PtiIOHead* head,
+			PtrList<const PtAttrInst>* attr_list)
+{
+  if ( head ) {
+    reg_attrinst(head, attr_list);
+    mCurIOHeadList->push_back(head);
+  }
+}
+
+// @brief IO宣言の終わり
+void
+Parser::flush_io()
+{
+  if ( !mIOItemList.empty() ) {
+    ASSERT_COND( !mCurIOHeadList->empty() );
+    auto last{mCurIOHeadList->back()};
+    last->set_elem(PtiIOItemArray(alloc(), mIOItemList));
+    mIOItemList.clear();
+  }
+}
+
+// @brief IO宣言リストにIO宣言ヘッダを追加する．
+void
+Parser::add_io_head(PtiIOHead* head,
+		    PtrList<const PtAttrInst>* attr_list)
+{
+  add_ioport_head(head, attr_list);
+  flush_io();
+}
+
+// @brief IO宣言リストにIO宣言要素を追加する．
+void
+Parser::add_io_item(const PtIOItem* item)
+{
+  mIOItemList.push_back(item);
+}
+
+// @brief 宣言リストに宣言ヘッダを追加する．
+void
+Parser::add_decl_head(PtiDeclHead* head,
+		      PtrList<const PtAttrInst>* attr_list)
+{
+  if ( head ) {
+    reg_attrinst(head, attr_list);
+    cur_declhead_list().push_back(head);
+    if ( !mDeclItemList.empty() ) {
+      head->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
+    }
+  }
+  mDeclItemList.clear();
+}
+
+// @brief 宣言リストに宣言要素を追加する．
+void
+Parser::add_decl_item(const PtDeclItem* item)
+{
+  mDeclItemList.push_back(item);
 }
 
 // @brief item リストに要素を追加する．

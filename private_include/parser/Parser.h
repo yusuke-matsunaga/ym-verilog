@@ -2211,7 +2211,7 @@ public:
 
   // 要素を持たないリストを作る．
   template <typename T>
-  PtrList<T, T>*
+  PtrList<T>*
   new_list();
 
 
@@ -2425,10 +2425,10 @@ Parser::lex()
 
 template <typename T>
 inline
-PtrList<T, T>*
+PtrList<T>*
 Parser::new_list()
 {
-  return new PtrList<T, T>();
+  return new PtrList<T>();
 }
 
 // @brief ポートリストをvectorに変換する．

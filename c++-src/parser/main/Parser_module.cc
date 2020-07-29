@@ -13,7 +13,6 @@
 
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
-#include "parser/PtiDecl.h"
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtExpr.h"
 

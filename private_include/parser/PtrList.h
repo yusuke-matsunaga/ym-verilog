@@ -115,7 +115,11 @@ public:
   void
   clear();
 
-  /// @brief 要素の追加
+  /// @brief 要素を先頭に追加
+  void
+  push_front(T1* elem);
+
+  /// @brief 要素を末尾に追加
   /// @param[in] elem 追加する要素
   void
   push_back(T1* elem);
@@ -295,6 +299,22 @@ PtrList<T1, T2>::clear()
   mTop = nullptr;
   mEnd = nullptr;
   mNum = 0;
+}
+
+// @brief 要素を先頭に追加
+template <typename T1,
+	  typename T2>
+inline
+void
+PtrList<T1, T2>::push_front(T1* elem)
+{
+  auto cell{new Cell{elem, nullptr}};
+  cell->mLink = mTop;
+  mTop = cell;
+  if ( mEnd == nullptr ) {
+    mEnd = cell;
+  }
+  ++ mNum;
 }
 
 // @brief 要素の追加

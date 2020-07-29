@@ -7,7 +7,6 @@
 
 
 #include "parser/Parser.h"
-#include "parser/PtiDecl.h"
 #include "parser/PtiExpr.h"
 
 #include "ym/MsgMgr.h"

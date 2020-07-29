@@ -89,16 +89,8 @@ Parser::new_MultiConcat(const FileRegion& fr,
 			const PtExpr* rep,
 			PtrList<const PtExpr>* expr_list)
 {
-  SizeType n = expr_list->size();
-  vector<const PtExpr*> vec(n + 1);
-  vec[0] = rep;
-  int i = 1;
-  for ( auto expr: *expr_list ) {
-    vec[i] = expr;
-    ++ i;
-  }
-
-  auto expr{mFactory.new_MultiConcat(fr, vec)};
+  expr_list->push_front(rep);
+  auto expr{mFactory.new_MultiConcat(fr, expr_list->to_vector())};
   return expr;
 }
 

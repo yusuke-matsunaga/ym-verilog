@@ -9,8 +9,6 @@
 #include "parser/Parser.h"
 #include "parser/PtiFactory.h"
 
-#include "ym/pt/PtItem.h"
-
 #include "ym/MsgMgr.h"
 
 
