@@ -17,14 +17,15 @@ void
 rawlex_mode(const vector<string>& filename_list,
 	    const char* spath,
 	    int watch_line,
+	    int loop,
 	    bool verbose,
 	    bool dump_token);
 void
 lex_mode(const vector<string>& filename_list,
 	 const char* spath,
 	 int watch_line,
-	 bool verbose,
 	 int loop,
+	 bool verbose,
 	 bool dump_token);
 
 END_NAMESPACE_YM_VERILOG
@@ -244,6 +245,7 @@ main(int argc,
     rawlex_mode(filename_list,
 		spath,
 		watch_line,
+		loop,
 		verbose,
 		dump);
     break;
@@ -252,8 +254,8 @@ main(int argc,
     lex_mode(filename_list,
 	     spath,
 	     watch_line,
-	     verbose,
 	     loop,
+	     verbose,
 	     dump);
     break;
   }

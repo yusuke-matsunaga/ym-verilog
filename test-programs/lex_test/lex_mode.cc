@@ -25,8 +25,8 @@ void
 lex_mode(const vector<string>& filename_list,
 	 const char* spath,
 	 int watch_line,
-	 bool verbose,
 	 int loop,
+	 bool verbose,
 	 bool dump_token)
 {
   MsgHandler* handler = new StreamMsgHandler(&cerr);
@@ -102,8 +102,6 @@ lex_mode(const vector<string>& filename_list,
       }
     }
 
-    sleep(10);
-
     timer.stop();
     USTime time = timer.time();
 
@@ -119,6 +117,8 @@ lex_mode(const vector<string>& filename_list,
 	   << "Time: " << time << endl;
     }
   }
+
+  sleep(10);
 }
 
 END_NAMESPACE_YM_VERILOG
