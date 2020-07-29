@@ -72,6 +72,8 @@ rawlex_mode(const vector<string>& filename_list,
       USTime time = timer.time();
       cout << "Time: " << time << endl;
     }
+
+    FileInfo::clear();
   }
 
   sleep(10);

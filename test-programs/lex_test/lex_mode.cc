@@ -116,6 +116,8 @@ lex_mode(const vector<string>& filename_list,
 	   << "      " << setw(10) << ns << " symbols" << endl
 	   << "Time: " << time << endl;
     }
+
+    FileInfo::clear();
   }
 
   sleep(10);
