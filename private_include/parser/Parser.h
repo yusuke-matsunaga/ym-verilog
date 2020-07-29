@@ -165,10 +165,6 @@ public:
   // ポート関連の要素の生成関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 入出力宣言中の重複チェックを行う．
-  bool
-  check_PortArray(const vector<const PtIOHead*>& iohead_array);
-
   /// @brief PtiPort の vector からポート配列を作る．
   vector<const PtPort*>
   new_PortArray(const vector<PtiPort*>& port_vector);
@@ -2288,6 +2284,19 @@ private:
   PuHierName*
   new_HierName(const PtNameBranch* nb,
 	       const char* name);
+
+  /// @brief 入出力宣言中の重複チェックを行う．
+  bool
+  check_PortArray(const vector<const PtIOHead*>& iohead_array);
+
+  /// @brief ポート宣言とIO宣言の齟齬をチェックする．
+  /// @param[in] port_vector ポート宣言のリスト
+  /// @param[in] iohead_array IO宣言のリスト
+  /// @param[out] iodecl_dirs IO宣言名をキーとして向きを保持する辞書
+  void
+  check_IO(const vector<const PtPort*>& port_array,
+	   const vector<const PtIOHead*>& iohead_array,
+	   unordered_map<string, VpiDir>& iodecl_dirs);
 
   /// @brief メモリアロケータを返す．
   PtAlloc&

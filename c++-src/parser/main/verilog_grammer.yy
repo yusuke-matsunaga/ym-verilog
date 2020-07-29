@@ -587,6 +587,14 @@ module_declaration
 {
   parser.new_Module2001(@$, $2, $3, $1);
 }
+| ai_list module_keyword IDENTIFIER
+  module_parameter_port_list
+  '(' ')' ';'
+  list_of_module_items
+  endmodule
+{ // list_of_ports が空の場合
+  parser.new_Module1995(@$, $2, $3, $1);
+}
 | ai_list module_keyword error endmodule
 {
   yyerrok;
@@ -684,7 +692,7 @@ paramport_assignment
 
 // [SPEC] list_of_ports ::= '(' port {',' port} ')'
 list_of_ports
-:                   { parser.init_portref_list(); } port
+:                   { parser.init_portref_list(); } nonnull_port
 | list_of_ports ',' { parser.init_portref_list(); } port
 ;
 
@@ -698,7 +706,12 @@ port
   // でも NULL を返さない．
   parser.new_Port();
 }
-| port_expression
+| nonnull_port
+;
+
+// 空でない port
+nonnull_port
+: port_expression
 {
   // 内側の式のみ指定するタイプ
   parser.new_Port1(@$);

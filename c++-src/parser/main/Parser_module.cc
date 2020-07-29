@@ -91,55 +91,9 @@ Parser::new_Module1995(const FileRegion& file_region,
   string library; // ?
   string cell;    // ?
 
-  // port_vector をスキャンして中で用いられている名前を portref_dic
-  // に登録する．
-  unordered_set<string> portref_dic;
-  for ( auto port: port_vector ) {
-    SizeType n = port->portref_size();
-    for ( int i = 0; i < n; ++ i ) {
-      auto portref = port->portref_elem(i);
-      auto name = portref->name();
-      portref_dic.insert(name);
-    }
-  }
-
-  // 入出力ポート宣言に現れる名前を iodecl_names に入れる．
-  // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
-  // 持たない場合にはデフォルトタイプのネットを生成する．
+  // ポート宣言とIO宣言のチェックを行う．
   unordered_map<string, VpiDir> iodecl_dirs;
-  for ( auto io_head: iohead_array ) {
-    // 名前をキーにして方向を記録しておく
-    VpiDir dir = io_head->direction();
-    for ( auto elem: io_head->item_list() ) {
-      auto elem_name = elem->name();
-
-      // まず未定義/多重定義のエラーをチェックする．
-      if ( portref_dic.count(elem_name) == 0 ) {
-	// port expression に現れない信号線名
-	// 未定義エラー
-	ostringstream buf;
-	buf << "\"" << elem_name << "\" is not defined in the port list.";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			elem->file_region(),
-			MsgType::Error,
-			"ELAB",
-			buf.str());
-      }
-      if ( iodecl_dirs.count(elem_name) > 0 ) {
-	// 二重登録エラー
-	ostringstream buf;
-	buf << "\"" << elem_name << "\" is redefined.";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			elem->file_region(),
-			MsgType::Error,
-			"ELAB",
-			buf.str());
-      }
-      else {
-	iodecl_dirs[elem_name] = dir;
-      }
-    }
-  }
+  check_IO(port_vector, iohead_array, iodecl_dirs);
 
   // 今度はポートリストに現れている信号線が入出力ポート宣言されているか
   // 調べる．
@@ -228,6 +182,7 @@ Parser::new_Module2001(const FileRegion& file_region,
 
   // iohead_array からポートの配列を作る．
   auto port_array = new_PortArray(iohead_array);
+
   auto module{mFactory.new_Module(file_region,
 				  module_name,
 				  is_macro, is_cell, is_protected,
@@ -243,6 +198,65 @@ Parser::new_Module2001(const FileRegion& file_region,
 				  mCurItemArray)};
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list);
+}
+
+// @brief ポート宣言とIO宣言の齟齬をチェックする．
+// @param[in] port_vector ポート宣言のリスト
+// @param[in] iohead_array IO宣言のリスト
+// @param[out] iodecl_dirs IO宣言名をキーとして向きを保持する辞書
+void
+Parser::check_IO(const vector<const PtPort*>& port_array,
+		 const vector<const PtIOHead*>& iohead_array,
+		 unordered_map<string, VpiDir>& iodecl_dirs)
+{
+  // port_array をスキャンして中で用いられている名前を portref_dic
+  // に登録する．
+  unordered_set<string> portref_dic;
+  for ( auto port: port_array ) {
+    SizeType n = port->portref_size();
+    for ( int i = 0; i < n; ++ i ) {
+      auto portref = port->portref_elem(i);
+      auto name = portref->name();
+      portref_dic.insert(name);
+    }
+  }
+
+  // 入出力ポート宣言に現れる名前を iodecl_names に入れる．
+  // ポート宣言が型を持つ場合にはモジュール内部の宣言要素を生成する．
+  // 持たない場合にはデフォルトタイプのネットを生成する．
+  for ( auto io_head: iohead_array ) {
+    // 名前をキーにして方向を記録しておく
+    VpiDir dir = io_head->direction();
+    for ( auto elem: io_head->item_list() ) {
+      auto elem_name = elem->name();
+
+      // まず未定義/多重定義のエラーをチェックする．
+      if ( portref_dic.count(elem_name) == 0 ) {
+	// port expression に現れない信号線名
+	// 未定義エラー
+	ostringstream buf;
+	buf << "\"" << elem_name << "\" is not defined in the port list.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			elem->file_region(),
+			MsgType::Error,
+			"ELAB",
+			buf.str());
+      }
+      if ( iodecl_dirs.count(elem_name) > 0 ) {
+	// 二重登録エラー
+	ostringstream buf;
+	buf << "\"" << elem_name << "\" is redefined.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			elem->file_region(),
+			MsgType::Error,
+			"ELAB",
+			buf.str());
+      }
+      else {
+	iodecl_dirs[elem_name] = dir;
+      }
+    }
+  }
 }
 
 END_NAMESPACE_YM_VERILOG
