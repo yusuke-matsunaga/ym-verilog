@@ -22,7 +22,6 @@
 #include "elb/ElbParameter.h"
 #include "elb/ElbContAssign.h"
 #include "elb/ElbProcess.h"
-#include "elb/ElbScope.h"
 #include "elb/ElbGfRoot.h"
 #include "elb/ElbGenvar.h"
 #include "elb/ElbExpr.h"
@@ -176,7 +175,6 @@ ItemGen::defparam_override(const VlModule* module,
   }
 
   const PtExpr* rhs_expr = pt_defparam->expr();
-  VlValue rhs_value = evaluate_expr(module, rhs_expr, true);
 
   ostringstream buf;
   buf << "instantiating defparam: " << param->full_name()
@@ -187,12 +185,15 @@ ItemGen::defparam_override(const VlModule* module,
 		  "ELAB",
 		  buf.str());
 
-  param->set_expr(rhs_expr, rhs_value);
+  auto value = evaluate_expr(module, rhs_expr, true);
+  param->set_expr(rhs_expr, value);
 
-  ElbDefParam* dp = factory().new_DefParam(module,
-					   pt_header,
-					   pt_defparam,
-					   param, rhs_expr, rhs_value);
+
+  auto dp = factory().new_DefParam(module,
+				   pt_header,
+				   pt_defparam,
+				   param, rhs_expr,
+				   value);
   reg_defparam(dp);
 
   return true;
@@ -206,7 +207,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 				 const PtItem* pt_header)
 {
   const PtDelay* pt_delay = pt_header->delay();
-  ElbDelay* delay = nullptr;
+  const VlDelay* delay = nullptr;
   if ( pt_delay ) {
     delay = instantiate_delay(parent, pt_delay);
   }
@@ -231,8 +232,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
       return;
     }
 
-    ElbContAssign* ca = factory().new_ContAssign(ca_head, pt_elem,
-						 lhs, rhs);
+    auto ca = factory().new_ContAssign(ca_head, pt_elem, lhs, rhs);
     reg_contassign(ca);
 
     ostringstream buf;
@@ -283,7 +283,7 @@ ItemGen::phase1_genblock(const VlNamedObj* parent,
 {
   const char* name = pt_genblock->name();
   if ( name != nullptr ) {
-    ElbScope* genblock = factory().new_GenBlock(parent, pt_genblock);
+    const VlNamedObj* genblock = factory().new_GenBlock(parent, pt_genblock);
     reg_internalscope(genblock);
 
     parent = genblock;
@@ -438,7 +438,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
     // スコープ名生成のために genvar の値を取得
     {
       int gvi = genvar->value();
-      ElbScope* genblock = factory().new_GfBlock(parent, pt_genfor, gvi);
+      const VlNamedObj* genblock = factory().new_GfBlock(parent, pt_genfor, gvi);
       gfroot->add(gvi, genblock);
       reg_internalscope(genblock);
 

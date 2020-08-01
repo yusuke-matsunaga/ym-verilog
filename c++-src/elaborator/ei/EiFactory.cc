@@ -58,7 +58,7 @@ EiFactory::new_StmtList(SizeType stmt_num)
 ElbExpr**
 EiFactory::new_ExprList(SizeType elem_num)
 {
-  ElbExpr** expr_array = new ElbExpr*[elem_num];
+  auto expr_array = new ElbExpr*[elem_num];
 
   return expr_array;
 }

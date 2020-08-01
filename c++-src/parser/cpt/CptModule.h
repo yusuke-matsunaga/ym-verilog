@@ -176,10 +176,6 @@ public:
   const PtItem*
   item(SizeType pos) const override;
 
-  /// @brief 関数名から関数の検索
-  const PtItem*
-  find_function(const char* name) const override;
-
   /// @brief top_module フラグを下ろす．
   void
   clear_topmodule() const override;
@@ -258,9 +254,6 @@ private:
 
   // 要素のリスト
   PtiItemArray mItemArray;
-
-  // 関数定義の辞書
-  //unordered_map<string, const PtItem*> mFuncDic;
 
 };
 

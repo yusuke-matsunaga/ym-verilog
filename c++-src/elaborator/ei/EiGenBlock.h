@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbScope.h"
+#include "ym/vl/VlNamedObj.h"
 #include "elb/ElbGfRoot.h"
 
 #include "ym/pt/PtP.h"
@@ -25,7 +25,7 @@ class EiGfBlock;
 /// @brief elaboration 中の generate block を表すクラス
 //////////////////////////////////////////////////////////////////////
 class EiGenBlock :
-  public ElbScope
+  public VlNamedObj
 {
   friend class EiFactory;
 

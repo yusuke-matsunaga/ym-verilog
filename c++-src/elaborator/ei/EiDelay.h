@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbDelay.h"
+#include "ym/vl/VlDelay.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -19,7 +19,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @brief ElbDelay の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiDelay :
-  public ElbDelay
+  public VlDelay
 {
   friend class EiFactory;
 

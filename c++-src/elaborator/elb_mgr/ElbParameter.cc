@@ -32,17 +32,6 @@ ElbParamHead::~ElbParamHead()
 // クラス ElbParameter
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-ElbParameter::ElbParameter() :
-  mNext(nullptr)
-{
-}
-
-// @brief デストラクタ
-ElbParameter::~ElbParameter()
-{
-}
-
 // @brief 定数値を持つ型のときに true を返す．
 bool
 ElbParameter::is_consttype() const

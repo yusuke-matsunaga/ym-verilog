@@ -8,6 +8,7 @@
 
 
 #include "elb/ObjDict.h"
+#include "ElbObjHandle.h"
 
 #include "ym/vl/VlNamedObj.h"
 
@@ -25,16 +26,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 // クラス ElbObjHandle
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-ElbObjHandle::ElbObjHandle()
-{
-}
-
-// @brief デストラクタ
-ElbObjHandle::~ElbObjHandle()
-{
-}
 
 // @brief オブジェクトの型を返す．
 VpiObjType
@@ -144,7 +135,7 @@ ElbObjHandle::genvar()
 
 // @brief コンストラクタ
 ElbTaskFuncHandle::ElbTaskFuncHandle(ElbTaskFunc* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -174,7 +165,7 @@ ElbTaskFuncHandle::taskfunc()
 
 // @brief コンストラクタ
 ElbDeclHandle::ElbDeclHandle(ElbDecl* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -204,7 +195,7 @@ ElbDeclHandle::decl()
 
 // @brief コンストラクタ
 ElbDeclArrayHandle::ElbDeclArrayHandle(ElbDeclArray* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -234,7 +225,7 @@ ElbDeclArrayHandle::declarray()
 
 // @brief コンストラクタ
 ElbParamHandle::ElbParamHandle(ElbParameter* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -264,7 +255,7 @@ ElbParamHandle::parameter()
 
 // @brief コンストラクタ
 ElbModuleArrayHandle::ElbModuleArrayHandle(ElbModuleArray* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -301,7 +292,7 @@ ElbModuleArrayHandle::module_array()
 
 // @brief コンストラクタ
 ElbPrimArrayHandle::ElbPrimArrayHandle(ElbPrimArray* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -331,7 +322,7 @@ ElbPrimArrayHandle::prim_array()
 
 // @brief コンストラクタ
 ElbPrimitiveHandle::ElbPrimitiveHandle(ElbPrimitive* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -356,23 +347,23 @@ ElbPrimitiveHandle::primitive()
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス ElbScopeHandle
+// クラス ElbNamedObjHandle
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbScopeHandle::ElbScopeHandle(const VlNamedObj* obj) :
-  mObj(obj)
+ElbNamedObjHandle::ElbNamedObjHandle(const VlNamedObj* obj) :
+  mObj{obj}
 {
 }
 
 // @brief デストラクタ
-ElbScopeHandle::~ElbScopeHandle()
+ElbNamedObjHandle::~ElbNamedObjHandle()
 {
 }
 
 // @brief VlNamedObj を返す．
 const VlNamedObj*
-ElbScopeHandle::obj()
+ElbNamedObjHandle::obj()
 {
   return mObj;
 }
@@ -384,7 +375,7 @@ ElbScopeHandle::obj()
 
 // @brief コンストラクタ
 ElbGfRootHandle::ElbGfRootHandle(ElbGfRoot* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -421,7 +412,7 @@ ElbGfRootHandle::gfroot()
 
 // @brief コンストラクタ
 ElbGenvarHandle::ElbGenvarHandle(ElbGenvar* obj) :
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -461,7 +452,7 @@ ObjDict::clear()
 void
 ObjDict::add(const VlNamedObj* obj)
 {
-  auto handle = new ElbScopeHandle(obj);
+  auto handle = new ElbNamedObjHandle(obj);
   add_handle(obj->parent(), obj->name(), handle);
 }
 

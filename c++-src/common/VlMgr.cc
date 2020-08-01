@@ -123,184 +123,129 @@ VlMgr::find_user_systf(const char* name) const
   return mElbMgr->find_user_systf(name);
 }
 
-// @brief スコープと名前から名前付き要素を取り出す．
-// @param[in] parent 検索対象のスコープ
-// @param[in] name 名前
-// @return parent というスコープ内の name という要素を返す．
-// @return なければ nullptr を返す．
-const VlNamedObj*
-VlMgr::find_obj(const VlNamedObj* parent,
-		const char* name) const
-{
-  ElbObjHandle* handle = mElbMgr->find_obj(parent, name);
-  if ( handle ) {
-    return handle->obj();
-  }
-  return nullptr;
-}
-
 // @brief スコープに属する internal scope のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] scope_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_internalscope_list(const VlNamedObj* parent,
-			       vector<const VlNamedObj*>& scope_list) const
+// @return 結果のリストを返す．
+vector<const VlNamedObj*>
+VlMgr::find_internalscope_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_internalscope_list(parent, scope_list);
+  return mElbMgr->find_internalscope_list(parent);
 }
 
 // @brief スコープとタグから宣言要素を取り出す．
 // @param[in] parent 検索対象のスコープ
 // @param[in] tag タグ
-// @param[out] decl_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-// @note scope というスコープ内の tag というタグを持つ宣言要素を
-// decl_list に入れる．
-bool
+// @return 結果のリストを返す．
+//
+// parent のスコープ内の tag というタグを持つ要素のリストを返す．
+vector<const VlDecl*>
 VlMgr::find_decl_list(const VlNamedObj* parent,
-		      int tag,
-		      vector<const VlDecl*>& decl_list) const
+		      int tag) const
 {
-  return mElbMgr->find_decl_list(parent, tag, decl_list);
+  return mElbMgr->find_decl_list(parent, tag);
 }
 
 // @brief スコープとタグから宣言要素の配列を取り出す．
 // @param[in] parent 検索対象のスコープ
 // @param[in] tag タグ
-// @param[out] declarray_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-// @note scope というスコープ内の tag というタグを持つ宣言要素を
-// decl_list に入れる．
-bool
+// @retrun 結果のリストを返す．
+//
+// parent というスコープ内の tag というタグを持つ要素のリストを返す．
+vector<const VlDeclArray*>
 VlMgr::find_declarray_list(const VlNamedObj* parent,
-			    int tag,
-			    vector<const VlDeclArray*>& declarray_list) const
+			   int tag) const
 {
-  return mElbMgr->find_declarray_list(parent, tag, declarray_list);
+  return mElbMgr->find_declarray_list(parent, tag);
 }
 
 // @brief スコープに属する defparam のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] defparam_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_defparam_list(const VlNamedObj* parent,
-			  vector<const VlDefParam*>& defparam_list) const
+// @return 結果のリストを返す．
+vector<const VlDefParam*>
+VlMgr::find_defparam_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_defparam_list(parent, defparam_list);
+  return mElbMgr->find_defparam_list(parent);
 }
 
 // @brief スコープに属する param assign のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] paramassign_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_paramassign_list(const VlNamedObj* parent,
-			     vector<const VlParamAssign*>& paramassign_list) const
+// @return 結果のリストを返す．
+vector<const VlParamAssign*>
+VlMgr::find_paramassign_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_paramassign_list(parent, paramassign_list);
+  return mElbMgr->find_paramassign_list(parent);
 }
 
 // @brief スコープに属する module のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] module_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_module_list(const VlNamedObj* parent,
-			vector<const VlModule*>& module_list) const
+// @return 結果のリストを返す．
+vector<const VlModule*>
+VlMgr::find_module_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_module_list(parent, module_list);
+  return mElbMgr->find_module_list(parent);
 }
 
 // @brief スコープに属する module arrayのリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] modulearray_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_modulearray_list(const VlNamedObj* parent,
-			     vector<const VlModuleArray*>& modulearray_list) const
+// @return 結果のリストを返す．
+vector<const VlModuleArray*>
+VlMgr::find_modulearray_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_modulearray_list(parent, modulearray_list);
+  return mElbMgr->find_modulearray_list(parent);
 }
 
 // @brief スコープに属する primitive のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] primtive_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_primitive_list(const VlNamedObj* parent,
-			   vector<const VlPrimitive*>& primitive_list) const
+// @return 結果のリストを返す．
+vector<const VlPrimitive*>
+VlMgr::find_primitive_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_primitive_list(parent, primitive_list);
+  return mElbMgr->find_primitive_list(parent);
 }
 
 // @brief スコープに属する primitive array のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] primarray_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_primarray_list(const VlNamedObj* parent,
-			   vector<const VlPrimArray*>& primarray_list) const
+// @return 結果のリストを返す．
+vector<const VlPrimArray*>
+VlMgr::find_primarray_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_primarray_list(parent, primarray_list);
+  return mElbMgr->find_primarray_list(parent);
 }
 
 // @brief スコープに属するタスクのリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] task_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_task_list(const VlNamedObj* parent,
-		      vector<const VlTaskFunc*>& task_list) const
+// @return 結果のリストを返す．
+vector<const VlTaskFunc*>
+VlMgr::find_task_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_task_list(parent, task_list);
+  return mElbMgr->find_task_list(parent);
 }
 
 // @brief スコープに属する関数のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] func_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_function_list(const VlNamedObj* parent,
-			  vector<const VlTaskFunc*>& func_list) const
+// @return 結果のリストを返す．
+vector<const VlTaskFunc*>
+VlMgr::find_function_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_function_list(parent, func_list);
+  return mElbMgr->find_function_list(parent);
 }
 
 // @brief スコープに属する continuous assignment のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] contassign_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_contassign_list(const VlNamedObj* parent,
-			    vector<const VlContAssign*>& contassign_list) const
+// @return 結果のリストを返す．
+vector<const VlContAssign*>
+VlMgr::find_contassign_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_contassign_list(parent, contassign_list);
+  return mElbMgr->find_contassign_list(parent);
 }
 
 // @brief スコープに属する process のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
-// @param[out] process_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
-bool
-VlMgr::find_process_list(const VlNamedObj* parent,
-			 vector<const VlProcess*>& process_list) const
+// @return 結果のリストを返す．
+vector<const VlProcess*>
+VlMgr::find_process_list(const VlNamedObj* parent) const
 {
-  return mElbMgr->find_process_list(parent, process_list);
+  return mElbMgr->find_process_list(parent);
 }
 
 // @brief 属性リストを得る．

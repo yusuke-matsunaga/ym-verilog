@@ -60,7 +60,7 @@ public:
 
   /// @brief UDP 定義を返す．
   /// @note このクラスでは nullptr を返す．
-  const ElbUdpDefn*
+  const VlUdpDefn*
   udp_defn() const override;
 
   /// @brief セル番号を返す．
@@ -77,13 +77,13 @@ public:
 
   /// @brief 遅延式を得る．
   /// @note このクラスでは nullptr を返す．
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
   /// @brief 遅延式を設定する．
   /// @note このクラスではなにもしない．
   void
-  set_delay(ElbDelay* expr) override;
+  set_delay(const VlDelay* expr) override;
 
 
 private:
@@ -127,12 +127,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式を得る．
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
   /// @brief 遅延式を設定する．
   void
-  set_delay(ElbDelay* expr) override;
+  set_delay(const VlDelay* expr) override;
 
 
 private:
@@ -141,7 +141,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 遅延値
-  ElbDelay* mDelay;
+  const VlDelay* mDelay;
 
 };
 
@@ -163,7 +163,7 @@ protected:
   /// @param[in] udp UDP 定義
   EiPrimHeadU(const VlNamedObj* parent,
 	      const PtItem* pt_header,
-	      const ElbUdpDefn* udp);
+	      const VlUdpDefn* udp);
 
   /// @brief デストラクタ
   ~EiPrimHeadU();
@@ -183,7 +183,7 @@ public:
   def_name() const override;
 
   /// @brief UDP 定義を返す．
-  const ElbUdpDefn*
+  const VlUdpDefn*
   udp_defn() const override;
 
 
@@ -193,7 +193,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // UDP 定義
-  const ElbUdpDefn* mUdp;
+  const VlUdpDefn* mUdp;
 
 };
 
@@ -215,7 +215,7 @@ private:
   /// @param[in] udp UDP 定義
   EiPrimHeadUD(const VlNamedObj* parent,
 	       const PtItem* pt_header,
-	       const ElbUdpDefn* udp);
+	       const VlUdpDefn* udp);
 
   /// @brief デストラクタ
   ~EiPrimHeadUD();
@@ -227,12 +227,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式を得る．
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
   /// @brief 遅延式を設定する．
   void
-  set_delay(ElbDelay* expr) override;
+  set_delay(const VlDelay* expr) override;
 
 
 private:
@@ -241,7 +241,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 遅延値
-  ElbDelay* mDelay;
+  const VlDelay* mDelay;
 
 };
 
@@ -393,7 +393,7 @@ public:
   /// @param[in] expr 接続する式
   void
   connect(int pos,
-	  ElbExpr* expr) override;
+	  const VlExpr* expr) override;
 
 
 protected:
@@ -849,7 +849,7 @@ private:
   int mIndexDir;
 
   // 接続している式
-  ElbExpr* mExpr;
+  const VlExpr* mExpr;
 
 };
 

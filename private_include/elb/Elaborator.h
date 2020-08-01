@@ -14,6 +14,8 @@
 #include "ym/vl/VlFwd.h"
 #include "ym/ClibCellLibrary.h"
 
+#include "ObjDict.h"
+#include "ModuleHash.h"
 #include "CfDict.h"
 #include "AttrDict.h"
 #include "ElbStub.h"
@@ -110,6 +112,13 @@ private:
   const PtModule*
   find_moduledef(const char* name) const;
 
+  /// @brief 関数定義を探す．
+  /// @param[in] parent 親のモジュール
+  /// @param[in] name 関数名
+  const PtItem*
+  find_funcdef(const VlNamedObj* parent,
+	       const char* name) const;
+
   /// @brief constant function を取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @param[in] name 名前
@@ -133,6 +142,92 @@ private:
   // 要素を登録する関数
   //////////////////////////////////////////////////////////////////////
 
+  /// @brief internal scope を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_internalscope(const VlNamedObj* obj);
+
+  /// @brief タスクを登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_task(ElbTaskFunc* obj);
+
+  /// @brief 関数を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_function(ElbTaskFunc* obj);
+
+  /// @brief 宣言要素を登録する．
+  /// @param[in] tag タグ
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_decl(int tag,
+	   ElbDecl* obj);
+
+  /// @brief 配列型の宣言要素を登録する．
+  /// @param[in] tag タグ
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_declarray(int tag,
+		ElbDeclArray* obj);
+
+  /// @brief パラメータを登録する．
+  /// @param[in] tag タグ
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_parameter(int tag,
+		ElbParameter* obj);
+
+  /// @brief モジュール配列を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_modulearray(ElbModuleArray* obj);
+
+  /// @brief ElbModule を登録する．
+  /// @param[in] module 登録するモジュール
+  void
+  reg_module(ElbModule* module);
+
+  /// @brief プリミティブ配列を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_primarray(ElbPrimArray* obj);
+
+  /// @brief プリミティブを登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_primitive(ElbPrimitive* obj);
+
+  /// @brief defparam を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_defparam(const VlDefParam* obj);
+
+  /// @brief paramassign を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_paramassign(const VlParamAssign* obj);
+
+  /// @brief continuous assignment を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_contassign(const VlContAssign* obj);
+
+  /// @brief process を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_process(ElbProcess* obj);
+
+  /// @brief genvar を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_genvar(ElbGenvar* obj);
+
+  /// @brief gfroot を登録する．
+  /// @param[in] obj 登録するオブジェクト
+  void
+  reg_gfroot(ElbGfRoot* obj);
+
   /// @brief constant function を登録する．
   /// @param[in] parent 親のスコープ
   /// @param[in] name 名前
@@ -143,6 +238,45 @@ private:
 			ElbTaskFunc* func);
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 検索関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief スコープと名前から名前付き要素を取り出す．
+  /// @param[in] parent 検索対象のスコープ
+  /// @param[in] name 名前
+  /// @return parent というスコープ内の name という要素を返す．
+  /// @return なければ nullptr を返す．
+  ElbObjHandle*
+  find_obj(const VlNamedObj* parent,
+	   const char* name) const;
+
+  /// @brief スコープと階層名から要素を取り出す．
+  /// @param[in] base_scope 起点となるスコープ
+  /// @param[in] pt_objy 階層名付きのオブジェクト
+  /// @param[in] ulimit 探索する名前空間の上限
+  /// @return 見付かったオブジェクトを返す．
+  /// 見付からなかったら nullptr を返す．
+  ElbObjHandle*
+  find_obj_up(const VlNamedObj* base_scope,
+	      const PtHierNamedBase* pt_obj,
+	      const VlNamedObj* ulimit);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 検索の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief base_scope を起点として (nb, "") という名前のスコープを探す．
+  /// なければ親のスコープに対して同様の探索を繰り返す．
+  const VlNamedObj*
+  find_scope_up(const VlNamedObj* base_scope,
+		const PtHierNamedBase* pt_obj,
+		const VlNamedObj* ulimit);
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる型定義
@@ -150,15 +284,6 @@ private:
 
   struct DefParamStub
   {
-    /// @brief コンストラクタ
-    DefParamStub(const VlModule* module,
-		 const PtItem* pt_head,
-		 const PtDefParam* pt_defparam) :
-      mModule(module),
-      mPtHeader(pt_head),
-      mPtDefparam(pt_defparam)
-    {
-    }
 
     /// @brief 対象のモジュール
     const VlModule* mModule;
@@ -186,25 +311,34 @@ private:
   ClibCellLibrary mCellLibrary;
 
   // UDP 生成用のオブジェクト
-  UdpGen* mUdpGen;
+  unique_ptr<UdpGen> mUdpGen;
 
   // モジュール生成用のオブジェクト
-  ModuleGen* mModuleGen;
+  unique_ptr<ModuleGen> mModuleGen;
 
   // 宣言要素生成用のオブジェクト
-  DeclGen* mDeclGen;
+  unique_ptr<DeclGen> mDeclGen;
 
   // 構成要素生成用のオブジェクト
-  ItemGen* mItemGen;
+  unique_ptr<ItemGen> mItemGen;
 
   // ステートメント生成用のオブジェクト
-  StmtGen* mStmtGen;
+  unique_ptr<StmtGen> mStmtGen;
 
   // 式生成用のオブジェクト
-  ExprGen* mExprGen;
+  unique_ptr<ExprGen> mExprGen;
 
   // attribute instance 生成用のオブジェクト
-  AttrGen* mAttrGen;
+  unique_ptr<AttrGen> mAttrGen;
+
+  // 関数定義の辞書
+  unordered_map<string, const PtItem*> mFuncDict;
+
+  // 名前をキーにしたオブジェクトの辞書
+  ObjDict mObjDict;
+
+  // モジュール名をキーにしたモジュールインスタンスの辞書
+  ModuleHash mModInstDict;
 
   // constant function の辞書
   CfDict mCfDict;

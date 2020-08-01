@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 void
 VlDumperImpl::put_primarray_list(const char* label,
 				 const VlMgr& mgr,
-				 vector<const VlPrimArray*>& primarray_list)
+				 const vector<const VlPrimArray*>& primarray_list)
 {
   VlDumpHeader x(this, label, "PrimitiveArrayList");
 

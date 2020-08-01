@@ -164,7 +164,7 @@ public:
   /// @brief PtDelay から ElbExpr を生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_delay 遅延を表すパース木
-  ElbDelay*
+  const VlDelay*
   instantiate_delay(const VlNamedObj* parent,
 		    const PtDelay* pt_delay);
 
@@ -173,7 +173,7 @@ public:
   /// @param[in] pt_head 順序付き割り当て式
   /// これは PtInst の前にある # つきの式がパラメータ割り当てなのか
   /// 遅延なのかわからないので PtOrderedCon で表していることによる．
-  ElbDelay*
+  const VlDelay*
   instantiate_delay(const VlNamedObj* parent,
 		    const PtItem* pt_head);
 
@@ -184,7 +184,7 @@ public:
   /// @param[in] expr_array 遅延式の配列
   /// @note pt_obj は PtDelay か PtItem のどちらか
   /// @note n は最大で 3
-  ElbDelay*
+  const VlDelay*
   instantiate_delay_sub(const VlNamedObj* parent,
 			const PtBase* pt_obj,
 			SizeType n,

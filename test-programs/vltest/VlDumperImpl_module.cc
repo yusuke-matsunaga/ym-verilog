@@ -113,10 +113,8 @@ VlDumperImpl::put_module(const char* label,
 
   put_scope_sub(mgr, module);
 
-  vector<const VlProcess*> process_list;
-  if ( mgr.find_process_list(module, process_list) ) {
-    put_process_list("vpiProcess", mgr, process_list);
-  }
+  vector<const VlProcess*> process_list = mgr.find_process_list(module);
+  put_process_list("vpiProcess", mgr, process_list);
 }
 
 // module array の内容を出力する関数

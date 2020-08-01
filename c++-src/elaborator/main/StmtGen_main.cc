@@ -16,7 +16,6 @@
 
 #include "elb/ElbStmt.h"
 #include "elb/ElbTaskFunc.h"
-#include "elb/ElbScope.h"
 
 #include "elb/ElbStub.h"
 
@@ -110,7 +109,7 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   case PtStmtType::NamedParBlock:
   case PtStmtType::NamedSeqBlock:
     {
-      ElbScope* block_scope = factory().new_StmtScope(parent, pt_stmt);
+      const VlNamedObj* block_scope = factory().new_StmtScope(parent, pt_stmt);
       reg_internalscope(block_scope);
 
       for ( auto pt_stmt1: pt_stmt->stmt_list() ) {

@@ -10,7 +10,6 @@
 #include "EiFactory.h"
 #include "EiDeclArray.h"
 
-#include "elb/ElbDelay.h"
 #include "elb/ElbExpr.h"
 
 #include "ym/pt/PtDecl.h"

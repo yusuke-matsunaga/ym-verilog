@@ -266,7 +266,7 @@ ElbProxy::instantiate_namedevent(const VlNamedObj* parent,
 // @brief PtDelay から ElbExpr を生成する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_delay 遅延を表すパース木
-ElbDelay*
+const VlDelay*
 ElbProxy::instantiate_delay(const VlNamedObj* parent,
 			    const PtDelay* pt_delay)
 {
@@ -278,7 +278,7 @@ ElbProxy::instantiate_delay(const VlNamedObj* parent,
 // @param[in] pt_head 順序付きわりあて式
 // これは PtInst の前にある # つきの式がパラメータ割り当てなのか
 // 遅延なのかわからないので PtOrderedCon で表していることによる．
-ElbDelay*
+const VlDelay*
 ElbProxy::instantiate_delay(const VlNamedObj* parent,
 			    const PtItem* pt_head)
 {

@@ -9,8 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbParamAssign.h"
-
+#include "ym/vl/VlParamAssign.h"
 #include "ym/VlValue.h"
 
 
@@ -18,10 +17,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
 /// @class EiParamAssign EiParamAssign.h "EiParamAssign.h"
-/// @brief ElbParamAssign の実装クラス
+/// @brief VlParamAssign の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiParamAssign :
-  public ElbParamAssign
+  public VlParamAssign
 {
   friend class EiFactory;
 
@@ -148,10 +147,10 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 /// @class ElbDefParam EiParamAssign.h "EiParamAssign.h"
-/// @brief ElbDefParam の実装クラス
+/// @brief VlDefParam の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiDefParam :
-  public ElbDefParam
+  public VlDefParam
 {
   friend class EiFactory;
 
@@ -191,7 +190,7 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbDefParam の仮想関数
+  // VlDefParam の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．

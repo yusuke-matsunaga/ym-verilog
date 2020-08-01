@@ -62,6 +62,7 @@ set (common_SOURCES
   c++-src/common/VlMgr.cc
   c++-src/common/VlUdpVal.cc
   c++-src/common/VlValue.cc
+  c++-src/common/VlValueRep.cc
   )
 
 set (elaborator_SOURCES
@@ -106,19 +107,13 @@ set (elaborator_SOURCES
   c++-src/elaborator/ei/EiUnaryOp.cc
 
   c++-src/elaborator/elb_mgr/AttrHash.cc
-  c++-src/elaborator/elb_mgr/ElbContAssign.cc
   c++-src/elaborator/elb_mgr/ElbDecl.cc
   c++-src/elaborator/elb_mgr/ElbExpr.cc
   c++-src/elaborator/elb_mgr/ElbMgr.cc
-  c++-src/elaborator/elb_mgr/ElbParamAssign.cc
   c++-src/elaborator/elb_mgr/ElbParameter.cc
   c++-src/elaborator/elb_mgr/ElbPrimitive.cc
-  c++-src/elaborator/elb_mgr/ElbProcess.cc
-  c++-src/elaborator/elb_mgr/ElbScope.cc
   c++-src/elaborator/elb_mgr/ElbStmt.cc
   c++-src/elaborator/elb_mgr/ElbUserSystf.cc
-  c++-src/elaborator/elb_mgr/ModuleHash.cc
-  c++-src/elaborator/elb_mgr/ObjDict.cc
   c++-src/elaborator/elb_mgr/TagDict.cc
   c++-src/elaborator/elb_mgr/VlNamedObj.cc
 
@@ -139,6 +134,8 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/ItemGen_primitive.cc
   c++-src/elaborator/main/ItemGen_taskfunc.cc
   c++-src/elaborator/main/ModuleGen.cc
+  c++-src/elaborator/main/ModuleHash.cc
+  c++-src/elaborator/main/ObjDict.cc
   c++-src/elaborator/main/StmtGen_assign.cc
   c++-src/elaborator/main/StmtGen_block.cc
   c++-src/elaborator/main/StmtGen_cond.cc

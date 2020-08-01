@@ -217,7 +217,7 @@ public:
   /// @brief 遅延式の取得
   /// @retval delay
   /// @retval nullptr delay の指定なし
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
 
@@ -228,7 +228,7 @@ public:
 
   /// @brief 遅延式の設定
   void
-  set_delay(ElbDelay* delay) override;
+  set_delay(const VlDelay* delay) override;
 
 
 private:
@@ -237,7 +237,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 遅延式
-  ElbDelay* mDelay;
+  const VlDelay* mDelay;
 
 };
 
@@ -374,7 +374,7 @@ public:
   /// @brief delay の取得
   /// @retval delay
   /// @retval nullptr delay の指定なし
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
 
@@ -385,7 +385,7 @@ public:
 
   /// @brief 遅延式の設定
   void
-  set_delay(ElbDelay* delay) override;
+  set_delay(const VlDelay* delay) override;
 
 
 private:
@@ -394,7 +394,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 遅延式
-  ElbDelay* mDelay;
+  const VlDelay* mDelay;
 
 };
 

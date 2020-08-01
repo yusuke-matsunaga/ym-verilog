@@ -16,7 +16,6 @@
 
 #include "ym/vl/VlModule.h"
 
-#include "elb/ElbParamAssign.h"
 #include "elb/ElbContAssign.h"
 #include "elb/ElbDecl.h"
 #include "elb/ElbParameter.h"
@@ -458,6 +457,7 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
     param_head = factory().new_ParamHead(module, pt_head);
   }
 
+
   for ( auto pt_item: pt_head->item_list() ) {
     const FileRegion& file_region = pt_item->file_region();
 
@@ -483,16 +483,15 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
 		    buf.str());
 
     // 右辺の式は constant expression のはずなので今つくる．
-    const PtExpr* pt_init_expr = pt_item->init_value();
-    VlValue value = evaluate_expr(parent, pt_init_expr, true);
-
+    auto pt_init_expr = pt_item->init_value();
+    auto value = evaluate_expr(parent, pt_init_expr, true);
     param->set_expr(pt_init_expr, value);
 
     // ダブっている感じがするけど同じことを表す parameter assign 文
     // をつくってモジュールに追加する．
-    ElbParamAssign* pa = factory().new_NamedParamAssign(module, pt_item,
-							param, pt_init_expr,
-							value);
+    auto pa = factory().new_NamedParamAssign(module, pt_item,
+					     param, pt_init_expr,
+					     value);
     reg_paramassign(pa);
   }
 }
@@ -504,9 +503,9 @@ void
 DeclGen::instantiate_net_head(const VlNamedObj* parent,
 			      const PtDeclHead* pt_head)
 {
-  const PtExpr* pt_left = pt_head->left_range();
-  const PtExpr* pt_right = pt_head->right_range();
-  const PtDelay* pt_delay = pt_head->delay();
+  auto pt_left = pt_head->left_range();
+  auto pt_right = pt_head->right_range();
+  auto pt_delay = pt_head->delay();
 
   bool has_delay = (pt_delay != nullptr);
 
@@ -536,7 +535,7 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
   for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
     auto pt_item = pt_head->item(i);
     // init_value() が 0 でなければ初期割り当てを持つということ．
-    const PtExpr* pt_init = pt_item->init_value();
+    auto pt_init = pt_item->init_value();
 
     SizeType dim_size = pt_item->range_num();
     if ( dim_size > 0 ) {
@@ -551,9 +550,7 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
 	continue;
       }
 
-      ElbDeclArray* net_array = factory().new_DeclArray(net_head,
-							pt_item,
-							range_src);
+      auto net_array = factory().new_DeclArray(net_head, pt_item, range_src);
       reg_declarray(vpiNetArray, net_array);
 
 #if 0
@@ -608,8 +605,8 @@ void
 DeclGen::link_net_delay(ElbDeclHead* net_head,
 			const PtDelay* pt_delay)
 {
-  const VlNamedObj* parent = net_head->parent();
-  ElbDelay* delay = instantiate_delay(parent, pt_delay);
+  auto parent = net_head->parent();
+  auto delay = instantiate_delay(parent, pt_delay);
   if ( delay ) {
     net_head->set_delay(delay);
   }
@@ -623,18 +620,17 @@ DeclGen::link_net_assign(ElbDecl* net,
 			 const PtDeclItem* pt_item)
 {
   // 実際には対応する continuous assign 文を作る．
-  ElbExpr* lhs = factory().new_Primary(pt_item, net);
+  auto lhs = factory().new_Primary(pt_item, net);
 
-  const VlNamedObj* parent = net->parent();
-  const PtExpr* pt_init = pt_item->init_value();
-  ElbExpr* rhs = instantiate_rhs(parent, ElbEnv(), pt_init, lhs);
+  auto parent = net->parent();
+  auto pt_init = pt_item->init_value();
+  auto rhs = instantiate_rhs(parent, ElbEnv(), pt_init, lhs);
   if ( !rhs ) {
     return;
   }
 
-  const VlModule* module = parent->parent_module();
-  ElbContAssign* ca = factory().new_ContAssign(module, pt_item,
-					       lhs, rhs);
+  auto module = parent->parent_module();
+  auto ca = factory().new_ContAssign(module, pt_item, lhs, rhs);
   reg_contassign(ca);
 }
 

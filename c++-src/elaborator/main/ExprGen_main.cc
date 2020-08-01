@@ -369,7 +369,7 @@ ExprGen::evaluate_int(const VlNamedObj* parent,
 		      bool put_error)
 {
   VlValue val = evaluate_expr(parent, pt_expr, put_error);
-  if ( !val.is_int_conv() ) {
+  if ( !val.is_int_compat() ) {
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_expr->file_region(),
@@ -431,7 +431,7 @@ ExprGen::evaluate_bitvector(const VlNamedObj* parent,
 			    bool put_error)
 {
   VlValue val = evaluate_expr(parent, pt_expr, put_error);
-  if ( !val.is_bitvector_conv() ) {
+  if ( !val.is_bitvector_compat() ) {
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_expr->file_region(),
@@ -546,7 +546,7 @@ ExprGen::evaluate_const(const VlNamedObj* parent,
 // @brief PtDelay から ElbExpr を生成する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_delay 遅延を表すパース木
-ElbDelay*
+const VlDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtDelay* pt_delay)
 {
@@ -567,7 +567,7 @@ ExprGen::instantiate_delay(const VlNamedObj* parent,
 // @param[in] pt_head 順序付き割り当て式
 // これは PtInst の前にある # つきの式がパラメータ割り当てなのか
 // 遅延なのかわからないので PtOrderedCon で表していることによる．
-ElbDelay*
+const VlDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtItem* pt_header)
 {
@@ -587,7 +587,7 @@ ExprGen::instantiate_delay(const VlNamedObj* parent,
 // @param[in] expr_array 遅延式の配列
 // @note pt_obj は PtDelay か PtItem のどちらか
 // @note n は最大で 3
-ElbDelay*
+const VlDelay*
 ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
 			       const PtBase* pt_obj,
 			       SizeType n,
@@ -597,17 +597,17 @@ ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
 
   // TODO : 環境の条件をチェック
   ElbEnv env;
-  ElbExpr** expr_list = factory().new_ExprList(n);
+  auto expr_list = factory().new_ExprList(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    const PtExpr* pt_expr = expr_array[i];
-    ElbExpr* expr = instantiate_expr(parent, env, pt_expr);
+    auto pt_expr = expr_array[i];
+    auto expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;
     }
     expr_list[i] = expr;
   }
 
-  ElbDelay* delay = factory().new_Delay(pt_obj, n, expr_list);
+  auto delay = factory().new_Delay(pt_obj, n, expr_list);
 
   return delay;
 }

@@ -95,12 +95,6 @@ SptModule::SptModule(const FileRegion& file_region,
   for ( auto head: mIOHeadArray ) {
     mIODeclNum += head->item_num();
   }
-
-  for ( auto item: mItemArray ) {
-    if ( item->type() == PtItemType::Func ) {
-      mFuncDic[item->name()] = item;
-    }
-  }
 }
 
 // デストラクタ
@@ -356,21 +350,6 @@ const string&
 SptModule::cell() const
 {
   return mCell;
-}
-
-// 関数名から関数の検索
-// @param name 検索対象の関数名
-// @return 該当する関数
-// @return なければ nullptr を返す．
-const PtItem*
-SptModule::find_function(const char* name) const
-{
-  if ( mFuncDic.count(name) > 0 ) {
-    return mFuncDic.at(name);
-  }
-  else {
-    return nullptr;
-  }
 }
 
 // 名無しのポートを持つことを記録する．

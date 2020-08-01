@@ -10,10 +10,8 @@
 #include "EiFactory.h"
 #include "EiPrimitive.h"
 
-#include "elb/ElbUdp.h"
-#include "elb/ElbExpr.h"
-#include "elb/ElbDelay.h"
 
+#include "ym/vl/VlUdp.h"
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
 
@@ -55,7 +53,7 @@ EiFactory::new_PrimHead(const VlNamedObj* parent,
 ElbPrimHead*
 EiFactory::new_UdpHead(const VlNamedObj* parent,
 		       const PtItem* pt_header,
-		       const ElbUdpDefn* udp,
+		       const VlUdpDefn* udp,
 		       bool has_delay)
 {
   EiPrimHead* head = nullptr;
@@ -246,7 +244,7 @@ EiPrimHead::def_name() const
 
 // @brief UDP 定義を返す．
 // @note このクラスでは nullptr を返す．
-const ElbUdpDefn*
+const VlUdpDefn*
 EiPrimHead::udp_defn() const
 {
   return nullptr;
@@ -281,7 +279,7 @@ EiPrimHead::drive1() const
 
 // @brief 遅延式を得る．
 // @note このクラスでは nullptr を返す．
-ElbDelay*
+const VlDelay*
 EiPrimHead::delay() const
 {
   return nullptr;
@@ -289,7 +287,7 @@ EiPrimHead::delay() const
 
 // @brief 遅延式を設定する．
 void
-EiPrimHead::set_delay(ElbDelay* expr)
+EiPrimHead::set_delay(const VlDelay* expr)
 {
 }
 
@@ -313,7 +311,7 @@ EiPrimHeadD::~EiPrimHeadD()
 }
 
 // @brief 遅延式を得る．
-ElbDelay*
+const VlDelay*
 EiPrimHeadD::delay() const
 {
   return mDelay;
@@ -321,7 +319,7 @@ EiPrimHeadD::delay() const
 
 // @brief 遅延式を設定する．
 void
-EiPrimHeadD::set_delay(ElbDelay* expr)
+EiPrimHeadD::set_delay(const VlDelay* expr)
 {
   mDelay = expr;
 }
@@ -337,7 +335,7 @@ EiPrimHeadD::set_delay(ElbDelay* expr)
 // @param[in] udp UDP 定義
 EiPrimHeadU::EiPrimHeadU(const VlNamedObj* parent,
 			 const PtItem* pt_header,
-			 const ElbUdpDefn* udp) :
+			 const VlUdpDefn* udp) :
   EiPrimHead(parent, pt_header),
   mUdp(udp)
 {
@@ -363,7 +361,7 @@ EiPrimHeadU::def_name() const
 }
 
 // @brief UDP 定義を返す．
-const ElbUdpDefn*
+const VlUdpDefn*
 EiPrimHeadU::udp_defn() const
 {
   return mUdp;
@@ -380,7 +378,7 @@ EiPrimHeadU::udp_defn() const
 // @param[in] udp UDP 定義
 EiPrimHeadUD::EiPrimHeadUD(const VlNamedObj* parent,
 			   const PtItem* pt_header,
-			   const ElbUdpDefn* udp) :
+			   const VlUdpDefn* udp) :
   EiPrimHeadU(parent, pt_header, udp)
 {
 }
@@ -391,7 +389,7 @@ EiPrimHeadUD::~EiPrimHeadUD()
 }
 
 // @brief 遅延式を得る．
-ElbDelay*
+const VlDelay*
 EiPrimHeadUD::delay() const
 {
   return mDelay;
@@ -399,7 +397,7 @@ EiPrimHeadUD::delay() const
 
 // @brief 遅延式を設定する．
 void
-EiPrimHeadUD::set_delay(ElbDelay* expr)
+EiPrimHeadUD::set_delay(const VlDelay* expr)
 {
   mDelay = expr;
 }
@@ -853,7 +851,7 @@ EiPrimitive::init_port(EiPrimTerm* term_array,
 // @param[in] expr 接続する式
 void
 EiPrimitive::connect(int pos,
-		     ElbExpr* expr)
+		     const VlExpr* expr)
 {
   mPortArray[pos].mExpr = expr;
 }

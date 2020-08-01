@@ -18,16 +18,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 // クラス ElbDeclHead
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-ElbDeclHead::ElbDeclHead()
-{
-}
-
-// @brief デストラクタ
-ElbDeclHead::~ElbDeclHead()
-{
-}
-
 // @brief データ型の取得
 // @retval データ型 kParam, kLocalParam, kVar の場合
 // @retval kVpiVarNone 上記以外
@@ -93,7 +83,7 @@ ElbDeclHead::charge() const
 // @retval delay
 // @retval nullptr delay の指定なし
 // @note このクラスでは nullptr を返す．
-ElbDelay*
+const VlDelay*
 ElbDeclHead::delay() const
 {
   return nullptr;
@@ -102,7 +92,7 @@ ElbDeclHead::delay() const
 // @brief 遅延式の設定
 // @note このクラスではなにもしない．
 void
-ElbDeclHead::set_delay(ElbDelay* delay)
+ElbDeclHead::set_delay(const VlDelay* delay)
 {
 }
 
@@ -110,17 +100,6 @@ ElbDeclHead::set_delay(ElbDelay* delay)
 //////////////////////////////////////////////////////////////////////
 // クラス ElbDecl
 //////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-ElbDecl::ElbDecl() :
-  mNext(nullptr)
-{
-}
-
-// @brief デストラクタ
-ElbDecl::~ElbDecl()
-{
-}
 
 // @brief 定数値を持つ型のときに true を返す．
 // @note このクラスは false を返す．
@@ -142,23 +121,7 @@ ElbDecl::is_local_param() const
 // @param[in] expr 初期値
 // @note このクラスではなにもしない．
 void
-ElbDecl::set_init(ElbExpr* expr)
-{
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス ElbDeclArray
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-ElbDeclArray::ElbDeclArray() :
-  mNext(nullptr)
-{
-}
-
-// @brief デストラクタ
-ElbDeclArray::~ElbDeclArray()
+ElbDecl::set_init(const VlExpr* expr)
 {
 }
 

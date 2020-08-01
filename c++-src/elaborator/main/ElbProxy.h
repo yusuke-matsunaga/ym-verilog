@@ -85,7 +85,7 @@ protected:
   /// @param[in] name 名前
   /// @return name という名の UDP を返す．
   /// @return なければ nullptr を返す．
-  const ElbUdpDefn*
+  const VlUdpDefn*
   find_udp(const char* name) const;
 
   /// @brief 名前から UserSystf を取出す．
@@ -121,6 +121,13 @@ protected:
   /// @return なければ nullptr を返す．
   const PtModule*
   find_moduledef(const char* name) const;
+
+  /// @brief 関数定義を探す．
+  /// @param[in] parent 親のモジュール
+  /// @param[in] name 関数名
+  const PtItem*
+  find_funcdef(const VlNamedObj* parent,
+	       const char* name) const;
 
   /// @brief constant function を取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -160,24 +167,12 @@ protected:
   /// @param[in] udp 登録する UDP
   void
   reg_udp(const char* def_name,
-	  const ElbUdpDefn* udp);
-
-#if 0
-  /// @brief generate block を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_genblock(ElbScope* obj);
-
-  /// @brief block scope を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_blockscope(ElbScope* obj);
-#endif
+	  const VlUdpDefn* udp);
 
   /// @brief internal scope を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_internalscope(ElbScope* obj);
+  reg_internalscope(const VlNamedObj* obj);
 
   /// @brief タスクを登録する．
   /// @param[in] obj 登録するオブジェクト
@@ -233,17 +228,17 @@ protected:
   /// @brief defparam を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_defparam(ElbDefParam* obj);
+  reg_defparam(const VlDefParam* obj);
 
   /// @brief paramassign を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_paramassign(ElbParamAssign* obj);
+  reg_paramassign(const VlParamAssign* obj);
 
   /// @brief continuous assignment を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_contassign(ElbContAssign* obj);
+  reg_contassign(const VlContAssign* obj);
 
   /// @brief process を登録する．
   /// @param[in] obj 登録するオブジェクト
@@ -531,7 +526,7 @@ protected:
   /// @brief PtDelay から ElbExpr を生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_delay 遅延を表すパース木
-  ElbDelay*
+  const VlDelay*
   instantiate_delay(const VlNamedObj* parent,
 		    const PtDelay* pt_delay);
 
@@ -540,7 +535,7 @@ protected:
   /// @param[in] pt_head 順序付きわりあて式
   /// これは PtInst の前にある # つきの式がパラメータ割り当てなのか
   /// 遅延なのかわからないので PtOrderedCon で表していることによる．
-  ElbDelay*
+  const VlDelay*
   instantiate_delay(const VlNamedObj* parent,
 		    const PtItem* pt_head);
 
@@ -684,7 +679,7 @@ private:
 // @return name という名の UDP を返す．
 // @return なければ nullptr を返す．
 inline
-const ElbUdpDefn*
+const VlUdpDefn*
 ElbProxy::find_udp(const char* name) const
 {
   return mMgr.find_udp(name);
@@ -711,7 +706,7 @@ ElbObjHandle*
 ElbProxy::find_obj(const VlNamedObj* parent,
 		   const char* name) const
 {
-  return mMgr.find_obj(parent, name);
+  return mElaborator.find_obj(parent, name);
 }
 
 // @brief 名前によるオブジェクトの探索
@@ -727,7 +722,7 @@ ElbProxy::find_obj_up(const VlNamedObj* base_scope,
 		      const PtHierNamedBase* pt_obj,
 		      const VlNamedObj* ulimit)
 {
-  return mMgr.find_obj_up(base_scope, pt_obj, ulimit);
+  return mElaborator.find_obj_up(base_scope, pt_obj, ulimit);
 }
 
 // @brief セルの探索
@@ -757,38 +752,18 @@ ElbProxy::get_cell(int cell_id) const
 inline
 void
 ElbProxy::reg_udp(const char* def_name,
-		  const ElbUdpDefn* udp)
+		  const VlUdpDefn* udp)
 {
   mMgr.reg_udp(def_name, udp);
 }
-
-#if 0
-// @brief generate block を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_genblock(ElbScope* obj)
-{
-  mMgr.reg_genblock(obj);
-}
-
-// @brief block scope を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_blockscope(ElbScope* obj)
-{
-  mMgr.reg_blockscope(obj);
-}
-#endif
 
 // @brief internal scope を登録する．
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_internalscope(ElbScope* obj)
+ElbProxy::reg_internalscope(const VlNamedObj* obj)
 {
-  mMgr.reg_internalscope(obj);
+  mElaborator.reg_internalscope(obj);
 }
 
 // @brief タスクを登録する．
@@ -797,7 +772,7 @@ inline
 void
 ElbProxy::reg_task(ElbTaskFunc* obj)
 {
-  mMgr.reg_task(obj);
+  mElaborator.reg_task(obj);
 }
 
 // @brief 関数を登録する．
@@ -806,7 +781,7 @@ inline
 void
 ElbProxy::reg_function(ElbTaskFunc* obj)
 {
-  mMgr.reg_function(obj);
+  mElaborator.reg_function(obj);
 }
 
 // @brief 宣言要素を登録する．
@@ -817,7 +792,7 @@ void
 ElbProxy::reg_decl(int tag,
 		   ElbDecl* obj)
 {
-  mMgr.reg_decl(tag, obj);
+  mElaborator.reg_decl(tag, obj);
 }
 
 // @brief 配列型の宣言要素を登録する．
@@ -828,7 +803,7 @@ void
 ElbProxy::reg_declarray(int tag,
 			ElbDeclArray* obj)
 {
-  mMgr.reg_declarray(tag, obj);
+  mElaborator.reg_declarray(tag, obj);
 }
 
 // @brief パラメータを登録する．
@@ -839,7 +814,7 @@ void
 ElbProxy::reg_parameter(int tag,
 			ElbParameter* obj)
 {
-  mMgr.reg_parameter(tag, obj);
+  mElaborator.reg_parameter(tag, obj);
 }
 
 // @brief モジュール配列を登録する．
@@ -848,7 +823,7 @@ inline
 void
 ElbProxy::reg_modulearray(ElbModuleArray* obj)
 {
-  mMgr.reg_modulearray(obj);
+  mElaborator.reg_modulearray(obj);
 }
 
 // @brief モジュールを登録する．
@@ -857,7 +832,7 @@ inline
 void
 ElbProxy::reg_module(ElbModule* module)
 {
-  mMgr.reg_module(module);
+  mElaborator.reg_module(module);
 }
 
 // @brief プリミティブ配列を登録する．
@@ -866,7 +841,7 @@ inline
 void
 ElbProxy::reg_primarray(ElbPrimArray* obj)
 {
-  mMgr.reg_primarray(obj);
+  mElaborator.reg_primarray(obj);
 }
 
 // @brief プリミティブを登録する．
@@ -875,34 +850,34 @@ inline
 void
 ElbProxy::reg_primitive(ElbPrimitive* obj)
 {
-  mMgr.reg_primitive(obj);
+  mElaborator.reg_primitive(obj);
 }
 
 // @brief defparam を登録する．
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_defparam(ElbDefParam* obj)
+ElbProxy::reg_defparam(const VlDefParam* obj)
 {
-  mMgr.reg_defparam(obj);
+  mElaborator.reg_defparam(obj);
 }
 
 // @brief paramassign を登録する．
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_paramassign(ElbParamAssign* obj)
+ElbProxy::reg_paramassign(const VlParamAssign* obj)
 {
-  mMgr.reg_paramassign(obj);
+  mElaborator.reg_paramassign(obj);
 }
 
 // @brief continuous assignment を登録する．
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_contassign(ElbContAssign* obj)
+ElbProxy::reg_contassign(const VlContAssign* obj)
 {
-  mMgr.reg_contassign(obj);
+  mElaborator.reg_contassign(obj);
 }
 
 // @brief process を登録する．
@@ -911,7 +886,7 @@ inline
 void
 ElbProxy::reg_process(ElbProcess* obj)
 {
-  mMgr.reg_process(obj);
+  mElaborator.reg_process(obj);
 }
 
 // @brief genvar を登録する．
@@ -920,7 +895,7 @@ inline
 void
 ElbProxy::reg_genvar(ElbGenvar* obj)
 {
-  mMgr.reg_genvar(obj);
+  mElaborator.reg_genvar(obj);
 }
 
 // @brief gfroot を登録する．
@@ -929,7 +904,7 @@ inline
 void
 ElbProxy::reg_gfroot(ElbGfRoot* obj)
 {
-  mMgr.reg_gfroot(obj);
+  mElaborator.reg_gfroot(obj);
 }
 
 // @brief 名前からモジュール定義を取り出す．
@@ -941,6 +916,17 @@ const PtModule*
 ElbProxy::find_moduledef(const char* name) const
 {
   return mElaborator.find_moduledef(name);
+}
+
+// @brief 関数定義を探す．
+// @param[in] parent 親のモジュール
+// @param[in] name 関数名
+inline
+const PtItem*
+ElbProxy::find_funcdef(const VlNamedObj* parent,
+		       const char* name) const
+{
+  return mElaborator.find_funcdef(parent, name);
 }
 
 // @brief constant function を取り出す．

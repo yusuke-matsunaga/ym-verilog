@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 
+#include "ym/vl/VlContAssign.h"
 #include "elb/ElbContAssign.h"
 
 
@@ -54,7 +55,7 @@ public:
 
   /// @brief 遅延を表す式を返す．
   /// @note このクラスでは nullptr を返す．
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
 
@@ -89,7 +90,7 @@ private:
   /// @param[in] delay 遅延値
   EiCaHeadD(const VlModule* module,
 	    const PtItem* pt_head,
-	    ElbDelay* delay);
+	    const VlDelay* delay);
 
   /// @brief デストラクタ
   ~EiCaHeadD();
@@ -101,7 +102,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延を表す式を返す．
-  ElbDelay*
+  const VlDelay*
   delay() const override;
 
 
@@ -111,7 +112,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 遅延値
-  ElbDelay* mDelay;
+  const VlDelay* mDelay;
 
 };
 
@@ -121,7 +122,7 @@ private:
 /// @brief 継続的代入文の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiContAssign :
-  public ElbContAssign
+  public VlContAssign
 {
 protected:
 

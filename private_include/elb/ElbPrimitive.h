@@ -25,11 +25,11 @@ class ElbPrimHead
 protected:
 
   /// @brief コンストラクタ
-  ElbPrimHead();
+  ElbPrimHead() = default;
 
   /// @brief デストラクタ
   virtual
-  ~ElbPrimHead();
+  ~ElbPrimHead() = default;
 
 
 public:
@@ -54,7 +54,7 @@ public:
 
   /// @brief UDP 定義を返す．
   virtual
-  const ElbUdpDefn*
+  const VlUdpDefn*
   udp_defn() const = 0;
 
   /// @brief セル番号を返す．
@@ -74,13 +74,13 @@ public:
 
   /// @brief 遅延式を得る．
   virtual
-  ElbDelay*
+  const VlDelay*
   delay() const = 0;
 
   /// @brief 遅延式を設定する．
   virtual
   void
-  set_delay(ElbDelay* expr) = 0;
+  set_delay(const VlDelay* expr) = 0;
 
 };
 
@@ -93,15 +93,13 @@ public:
 class ElbPrimArray :
   public VlPrimArray
 {
-  friend class CellPrimArray;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbPrimArray();
+  ElbPrimArray() = default;
 
   /// @brief デストラクタ
-  ~ElbPrimArray();
+  ~ElbPrimArray() = default;
 
 
 public:
@@ -124,25 +122,6 @@ public:
   ElbPrimHead*
   head() const = 0;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbPrimArray の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次の要素を得る．
-  const ElbPrimArray*
-  next() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbPrimArray* mNext;
-
 };
 
 
@@ -153,15 +132,13 @@ private:
 class ElbPrimitive :
   public VlPrimitive
 {
-  friend class CellPrimitive;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbPrimitive();
+  ElbPrimitive() = default;
 
   /// @brief デストラクタ
-  ~ElbPrimitive();
+  ~ElbPrimitive() = default;
 
 
 public:
@@ -175,22 +152,12 @@ public:
   virtual
   void
   connect(int pos,
-	  ElbExpr* expr) = 0;
+	  const VlExpr* expr) = 0;
 
   /// @brief ヘッダを得る．
   virtual
   ElbPrimHead*
   head() const = 0;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbPrimitive の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次の要素を得る．
-  const ElbPrimitive*
-  next() const;
 
 
 public:
@@ -215,15 +182,6 @@ public:
 		SizeType& inout_num,
 		SizeType& input_num);
 
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbPrimitive* mNext;
-
 };
 
 
@@ -238,10 +196,10 @@ class ElbPrimTerm :
 protected:
 
   /// @brief コンストラクタ
-  ElbPrimTerm() { }
+  ElbPrimTerm() = default;
 
   /// @brief デストラクタ
-  ~ElbPrimTerm() { }
+  ~ElbPrimTerm() = default;
 
 
 public:
@@ -257,28 +215,6 @@ public:
       VpiDir dir) = 0;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 次の要素を得る．
-inline
-const ElbPrimArray*
-ElbPrimArray::next() const
-{
-  return mNext;
-}
-
-// @brief 次の要素を得る．
-inline
-const ElbPrimitive*
-ElbPrimitive::next() const
-{
-  return mNext;
-}
-
 
 END_NAMESPACE_YM_VERILOG
 

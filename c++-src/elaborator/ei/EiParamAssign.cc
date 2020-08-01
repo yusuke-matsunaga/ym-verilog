@@ -30,7 +30,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] rhs_expr 割り当て式の右辺
 // @param[in] rhs_value 右辺の値
 // @param[in] named_con 名前による割り当ての時 true
-ElbParamAssign*
+const VlParamAssign*
 EiFactory::new_ParamAssign(const VlModule* module,
 			   const PtBase* pt_obj,
 			   ElbParameter* param,
@@ -46,7 +46,7 @@ EiFactory::new_ParamAssign(const VlModule* module,
 // @param[in] rhs_expr 割り当て式の右辺
 // @param[in] rhs_value 右辺の値
 // @param[in] named_con 名前による割り当ての時 true
-ElbParamAssign*
+const VlParamAssign*
 EiFactory::new_NamedParamAssign(const VlModule* module,
 				const PtBase* pt_obj,
 				ElbParameter* param,
@@ -63,7 +63,7 @@ EiFactory::new_NamedParamAssign(const VlModule* module,
 // @param[in] param 対象の parameter
 // @param[in] rhs_expr 割り当て式の右辺
 // @param[in] rhs_value 右辺の値
-ElbDefParam*
+const VlDefParam*
 EiFactory::new_DefParam(const VlModule* module,
 			const PtItem* pt_header,
 			const PtDefParam* pt_defparam,

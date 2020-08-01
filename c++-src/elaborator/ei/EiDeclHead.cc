@@ -491,7 +491,7 @@ EiDeclHeadPtD::~EiDeclHeadPtD()
 // @brief 遅延式の取得
 // @retval delay
 // @retval nullptr delay の指定なし
-ElbDelay*
+const VlDelay*
 EiDeclHeadPtD::delay() const
 {
   return mDelay;
@@ -499,7 +499,7 @@ EiDeclHeadPtD::delay() const
 
 // @brief 遅延式の設定
 void
-EiDeclHeadPtD::set_delay(ElbDelay* delay)
+EiDeclHeadPtD::set_delay(const VlDelay* delay)
 {
   mDelay = delay;
 }
@@ -635,7 +635,7 @@ EiDeclHeadPtVD::~EiDeclHeadPtVD()
 // @brief delay の取得
 // @retval delay
 // @retval nullptr delay の指定なし
-ElbDelay*
+const VlDelay*
 EiDeclHeadPtVD::delay() const
 {
   return mDelay;
@@ -643,7 +643,7 @@ EiDeclHeadPtVD::delay() const
 
 // @brief 遅延式の設定
 void
-EiDeclHeadPtVD::set_delay(ElbDelay* delay)
+EiDeclHeadPtVD::set_delay(const VlDelay* delay)
 {
   mDelay = delay;
 }

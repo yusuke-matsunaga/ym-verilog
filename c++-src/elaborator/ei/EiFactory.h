@@ -52,7 +52,7 @@ public:
   /// @brief generate block を生成する．
   /// @param[in] parent 親のスコープ環境
   /// @param[in] pt_item 対応するパース木の要素
-  ElbScope*
+  const VlNamedObj*
   new_GenBlock(const VlNamedObj* parent,
 	       const PtItem* pt_item) override;
 
@@ -65,7 +65,7 @@ public:
   /// @param[in] parent 親のスコープ環境
   /// @param[in] pt_item 対応するパース木の要素
   /// @param[in] int gvi 対応する genvar の値
-  ElbScope*
+  const VlNamedObj*
   new_GfBlock(const VlNamedObj* parent,
 	      const PtItem* pt_item,
 	      int gvi) override;
@@ -283,14 +283,14 @@ public:
   ElbCaHead*
   new_CaHead(const VlModule* module,
 	     const PtItem* pt_head,
-	     ElbDelay* delay = nullptr) override;
+	     const VlDelay* delay = nullptr) override;
 
   /// @brief continuous assignment を生成する．
   /// @param[in] head ヘッダ
   /// @param[in] pt_obj 対応するパース木中の定義要素
   /// @param[in] lhs 左辺式
   /// @param[in] rhs 右辺式
-  ElbContAssign*
+  const VlContAssign*
   new_ContAssign(ElbCaHead* head,
 		 const PtBase* pt_obj,
 		 ElbExpr* lhs,
@@ -301,7 +301,7 @@ public:
   /// @param[in] pt_obj パース木の定義要素
   /// @param[in] lhs 左辺式
   /// @param[in] rhs 右辺式
-  ElbContAssign*
+  const VlContAssign*
   new_ContAssign(const VlModule* module,
 		 const PtBase* pt_obj,
 		 ElbExpr* lhs,
@@ -312,7 +312,7 @@ public:
   /// @param[in] param 対象の parameter
   /// @param[in] rhs_expr 割り当て式の右辺
   /// @param[in] rhs_value 右辺の値
-  ElbParamAssign*
+  const VlParamAssign*
   new_ParamAssign(const VlModule* module,
 		  const PtBase* pt_obj,
 		  ElbParameter* param,
@@ -324,7 +324,7 @@ public:
   /// @param[in] param 対象の parameter
   /// @param[in] rhs_expr 割り当て式の右辺
   /// @param[in] rhs_value 右辺の値
-  ElbParamAssign*
+  const VlParamAssign*
   new_NamedParamAssign(const VlModule* module,
 		       const PtBase* pt_obj,
 		       ElbParameter* param,
@@ -338,7 +338,7 @@ public:
   /// @param[in] param 対象の parameter
   /// @param[in] rhs_expr 割り当て式の右辺
   /// @param[in] rhs_value 右辺の値
-  ElbDefParam*
+  const VlDefParam*
   new_DefParam(const VlModule* module,
 	       const PtItem* pt_header,
 	       const PtDefParam* pt_defparam,
@@ -363,7 +363,7 @@ public:
   ElbPrimHead*
   new_UdpHead(const VlNamedObj* parent,
 	      const PtItem* pt_header,
-	      const ElbUdpDefn* udp,
+	      const VlUdpDefn* udp,
 	      bool has_delay) override;
 
   /// @brief セルプリミティブのヘッダを生成する．
@@ -554,7 +554,7 @@ public:
   /// @breif statement block を生成する．
   /// @param[in] parent 親のスコープ環境
   /// @param[in] pt_stmt 対応するパース木の要素
-  ElbScope*
+  const VlNamedObj*
   new_StmtScope(const VlNamedObj* parent,
 		const PtStmt* pt_stmt) override;
 
@@ -1016,7 +1016,7 @@ public:
   /// @param[in] pt_obj パース木の定義要素
   /// @param[in] elem_num 要素数
   /// @param[in] expr_list 式の配列
-  ElbDelay*
+  const VlDelay*
   new_Delay(const PtBase* pt_obj,
 	    SizeType elem_num,
 	    ElbExpr** expr_list) override;

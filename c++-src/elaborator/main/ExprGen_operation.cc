@@ -232,7 +232,7 @@ ExprGen::evaluate_opr(const VlNamedObj* parent,
   case VpiOpType::MultiConcat:
     // この演算はビットベクタ型に変換できなければならない．
     for ( SizeType i = 0; i < op_size; ++ i ) {
-      if ( !val[i].is_bitvector_conv() ) {
+      if ( !val[i].is_bitvector_compat() ) {
 	if ( put_error ) {
 	  error_illegal_real_type(pt_expr->operand(i));
 	}

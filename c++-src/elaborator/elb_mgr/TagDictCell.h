@@ -10,8 +10,7 @@
 
 
 #include "ym/verilog.h"
-
-#include "elb/ElbFwd.h"
+#include "ym/vl/VlFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -30,159 +29,135 @@ public:
   /// @brief  宣言要素を追加する．
   virtual
   void
-  add_decl(ElbDecl* obj);
+  add_decl(const VlDecl* obj);
 
-  /// @brief  宣言要素の先頭を得る．
+  /// @brief  宣言要素のリストを得る．
   virtual
-  const ElbDecl*
-  decl();
+  vector<const VlDecl*>
+  decl_list();
 
-  /// @brief  宣言要素を追加する．
-  virtual
-  void
-  add_declarray(ElbDeclArray* obj);
-
-  /// @brief  宣言要素の先頭を得る．
-  virtual
-  const ElbDeclArray*
-  declarray();
-
-  /// @brief  パラメータを追加する．
+  /// @brief  配列型宣言要素を追加する．
   virtual
   void
-  add_parameter(ElbParameter* obj);
+  add_declarray(const VlDeclArray* obj);
 
-  /// @brief  パラメータの先頭を得る．
+  /// @brief  配列型宣言要素のリストを得る．
   virtual
-  const ElbParameter*
-  parameter();
+  vector<const VlDeclArray*>
+  declarray_list();
 
   /// @brief  defparam を追加する．
   virtual
   void
-  add_defparam(ElbDefParam* obj);
+  add_defparam(const VlDefParam* obj);
 
-  /// @brief  defparam の先頭を得る．
+  /// @brief  defparam のリストを得る．
   virtual
-  const ElbDefParam*
-  defparam();
+  vector<const VlDefParam*>
+  defparam_list();
 
   /// @brief  param assign を追加する．
   virtual
   void
-  add_paramassign(ElbParamAssign* obj);
+  add_paramassign(const VlParamAssign* obj);
 
-  /// @brief  param assign の先頭を得る．
+  /// @brief  param assign のリストを得る．
   virtual
-  const ElbParamAssign*
-  paramassign();
+  vector<const VlParamAssign*>
+  paramassign_list();
 
   /// @brief module array を追加する．
   virtual
   void
-  add_modulearray(ElbModuleArray* obj);
+  add_modulearray(const VlModuleArray* obj);
 
-  /// @brief module array の先頭を得る．
+  /// @brief module array のリストを得る．
   virtual
-  const ElbModuleArray*
-  modulearray();
+  vector<const VlModuleArray*>
+  modulearray_list();
 
   /// @brief  module を追加する．
   virtual
   void
-  add_module(ElbModule* obj);
+  add_module(const VlModule* obj);
 
-  /// @brief  module の先頭を得る．
+  /// @brief  module のリストを得る．
   virtual
-  const ElbModule*
-  module();
+  vector<const VlModule*>
+  module_list();
 
   /// @brief  primitive array を追加する．
   virtual
   void
-  add_primarray(ElbPrimArray* obj);
+  add_primarray(const VlPrimArray* obj);
 
-  /// @brief  primitive array の先頭を得る．
+  /// @brief  primitive array のリストを得る．
   virtual
-  const ElbPrimArray*
-  primarray();
+  vector<const VlPrimArray*>
+  primarray_list();
 
   /// @brief  primitive を追加する．
   virtual
   void
-  add_primitive(ElbPrimitive* obj);
+  add_primitive(const VlPrimitive* obj);
 
-  /// @brief  primitive の先頭を得る．
+  /// @brief  primitive のリストを得る．
   virtual
-  const ElbPrimitive*
-  primitive();
+  vector<const VlPrimitive*>
+  primitive_list();
 
-  /// @brief タスクを追加する．
-  virtual
-  void
-  add_task(ElbTaskFunc* obj);
-
-  /// @brief タスクの先頭を得る．
-  virtual
-  const ElbTaskFunc*
-  task();
-
-  /// @brief 関数を追加する．
+  /// @brief タスク/関数を追加する．
   virtual
   void
-  add_function(ElbTaskFunc* obj);
+  add_taskfunc(const VlTaskFunc* obj);
 
-  /// @brief 関数の先頭を得る．
+  /// @brief タスク/関数のリストを得る．
   virtual
-  const ElbTaskFunc*
-  function();
+  vector<const VlTaskFunc*>
+  taskfunc_list();
 
   /// @brief continuous assignment を追加する．
   virtual
   void
-  add_contassign(ElbContAssign* obj);
+  add_contassign(const VlContAssign* obj);
 
-  /// @brief  continuous assignment の先頭を得る．
+  /// @brief  continuous assignment のリストを得る．
   virtual
-  const ElbContAssign*
-  contassign();
+  vector<const VlContAssign*>
+  contassign_list();
 
   /// @brief  process を追加する．
   virtual
   void
-  add_process(ElbProcess* process);
+  add_process(const VlProcess* process);
 
-  /// @brief  process の先頭を得る．
+  /// @brief  process のリストを得る．
   virtual
-  const ElbProcess*
-  process();
+  vector<const VlProcess*>
+  process_list();
 
   /// @brief internal scope を追加する．
   virtual
   void
-  add_internalscope(ElbScope* obj);
+  add_internalscope(const VlNamedObj* obj);
 
-  /// @brief internal scope の先頭を得る．
+  /// @brief internal scope のリストを得る．
   virtual
-  const ElbScope*
-  internalscope();
-
-  /// @brief  要素数を得る．
-  virtual
-  int
-  num() = 0;
+  vector<const VlNamedObj*>
+  internalscope_list();
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
+#if 0
   // 親のスコープ
   const VlNamedObj* mParent;
 
   // タグの値
   int mTag;
+#endif
 
 };
 

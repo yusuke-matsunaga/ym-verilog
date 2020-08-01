@@ -12,7 +12,6 @@
 #include "ym/VlValueType.h"
 #include "ym/vl/VlDecl.h"
 #include "ym/vl/VlDeclArray.h"
-#include "ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -26,11 +25,11 @@ class ElbDeclHead
 protected:
 
   /// @brief コンストラクタ
-  ElbDeclHead();
+  ElbDeclHead() = default;
 
   /// @brief デストラクタ
   virtual
-  ~ElbDeclHead();
+  ~ElbDeclHead() = default;
 
 
 public:
@@ -163,7 +162,7 @@ public:
   /// @retval nullptr delay の指定なし
   /// @note このクラスでは nullptr を返す．
   virtual
-  ElbDelay*
+  const VlDelay*
   delay() const;
 
 
@@ -176,7 +175,7 @@ public:
   /// @note このクラスではなにもしない．
   virtual
   void
-  set_delay(ElbDelay* delay);
+  set_delay(const VlDelay* delay);
 
 };
 
@@ -193,15 +192,13 @@ public:
 class ElbDecl :
   public VlDecl
 {
-  friend class CellDecl;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbDecl();
+  ElbDecl() = default;
 
   /// @brief デストラクタ
-  ~ElbDecl();
+  ~ElbDecl() = default;
 
 
 public:
@@ -310,7 +307,7 @@ public:
   /// このクラスでは何もしない．
   virtual
   void
-  set_init(ElbExpr* expr);
+  set_init(const VlExpr* expr);
 
 
 public:
@@ -346,15 +343,13 @@ private:
 class ElbDeclArray :
   public VlDeclArray
 {
-  friend class CellDeclArray;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbDeclArray();
+  ElbDeclArray() = default;
 
   /// @brief デストラクタ
-  ~ElbDeclArray();
+  ~ElbDeclArray() = default;
 
 
 public:
@@ -461,47 +456,7 @@ public:
 		 int right,
 		 const BitVector& val) = 0;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbDeclArray の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次の要素を返す．
-  const ElbDeclArray*
-  next() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbDeclArray* mNext;
-
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 次の要素を返す．
-inline
-const ElbDecl*
-ElbDecl::next() const
-{
-  return mNext;
-}
-
-// @brief 次の要素を返す．
-inline
-const ElbDeclArray*
-ElbDeclArray::next() const
-{
-  return mNext;
-}
 
 END_NAMESPACE_YM_VERILOG
 

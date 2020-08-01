@@ -9,9 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiDelay.h"
-
 #include "elb/ElbExpr.h"
-
+#include "ym/vl/VlExpr.h"
 #include "ym/pt/PtBase.h"
 
 
@@ -25,7 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] pt_obj パース木の定義要素
 // @param[in] elem_num 要素数
 // @param[in] expr_list 式の配列
-ElbDelay*
+const VlDelay*
 EiFactory::new_Delay(const PtBase* pt_obj,
 		     SizeType elem_num,
 		     ElbExpr** expr_list)

@@ -10,7 +10,7 @@
 
 
 #include "ym/verilog.h"
-#include "ElbFwd.h"
+#include "ym/vl/VlFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -38,206 +38,160 @@ public:
   void
   clear();
 
+  /// @brief internal scope を追加する．
+  /// @param[in] scope 登録する要素
+  void
+  add_internalscope(const VlNamedObj* scope);
+
+  /// @brief internal scope のリストを取り出す．
+  /// @param[in] parent 親のスコープ
+  /// @return 結果のリストを返す．
+  vector<const VlNamedObj*>
+  find_internalscope_list(const VlNamedObj* parent) const;
+
   /// @brief 宣言要素を追加する．
   /// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
   /// @param[in] decl 登録する要素
   void
   add_decl(int tag,
-	   ElbDecl* decl);
+	   const VlDecl* decl);
 
   /// @brief タグから該当する宣言要素のリストを返す．
   /// @param[in] parent 親のスコープ
   /// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-  /// @param[out] decl_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  /// @note scope というスコープ内の tag というタグを持つ要素を
-  /// decl_list に入れる．
-  bool
+  /// @return 結果のリストを返す．
+  ///
+  /// parent のスコープ内の tag というタグを持つ要素のリストを返す．
+  vector<const VlDecl*>
   find_decl_list(const VlNamedObj* parent,
-		 int tag,
-		 vector<const VlDecl*>& decl_list) const;
+		 int tag) const;
 
   /// @brief 宣言要素を追加する．
   /// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
   /// @param[in] decl 登録する要素
   void
   add_declarray(int tag,
-		ElbDeclArray* decl);
+		const VlDeclArray* decl);
 
   /// @brief タグから該当する宣言要素のリストを返す．
   /// @param[in] parent 親のスコープ
   /// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-  /// @param[out] declarray_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  /// @note scope というスコープ内の tag というタグを持つ要素を
-  /// decl_list に入れる．
-  bool
+  /// @retrun 結果のリストを返す．
+  ///
+  /// parent というスコープ内の tag というタグを持つ要素のリストを返す．
+  vector<const VlDeclArray*>
   find_declarray_list(const VlNamedObj* parent,
-		      int tag,
-		      vector<const VlDeclArray*>& declarray_list) const;
-
-  /// @brief パラメータを追加する．
-  /// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-  /// @param[in] decl 登録する要素
-  void
-  add_parameter(int tag,
-		ElbParameter* decl);
+		      int tag) const;
 
   /// @brief defparam を追加する．
   /// @param[in] defparam 登録する要素
   void
-  add_defparam(ElbDefParam* defparam);
+  add_defparam(const VlDefParam* defparam);
 
   /// @brief defparam のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] defparam_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_defparam_list(const VlNamedObj* parent,
-		     vector<const VlDefParam*>& defparam_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlDefParam*>
+  find_defparam_list(const VlNamedObj* parent) const;
 
   /// @brief param assign を追加する．
   /// @param[in] paramassign 登録する要素
   void
-  add_paramassign(ElbParamAssign* paramassign);
+  add_paramassign(const VlParamAssign* paramassign);
 
   /// @brief param assign のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] paramassign_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_paramassign_list(const VlNamedObj* parent,
-			vector<const VlParamAssign*>& paramassign_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlParamAssign*>
+  find_paramassign_list(const VlNamedObj* parent) const;
 
   /// @brief module array を追加する．
   /// @param[in] modulearray 登録する要素
   void
-  add_modulearray(ElbModuleArray* modulearray);
+  add_modulearray(const VlModuleArray* modulearray);
 
   /// @brief module array のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] modulearray_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_modulearray_list(const VlNamedObj* parent,
-			vector<const VlModuleArray*>& modulearray_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlModuleArray*>
+  find_modulearray_list(const VlNamedObj* parent) const;
 
   /// @brief module を追加する．
   /// @param[in] module 登録する要素
   void
-  add_module(ElbModule* module);
+  add_module(const VlModule* module);
 
   /// @brief module のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] module_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_module_list(const VlNamedObj* parent,
-		   vector<const VlModule*>& module_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlModule*>
+  find_module_list(const VlNamedObj* parent) const;
 
   /// @brief primitive array を追加する．
   /// @param[in] primarray 登録する要素
   void
-  add_primarray(ElbPrimArray* primarray);
+  add_primarray(const VlPrimArray* primarray);
 
   /// @brief primitive array のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] primarray_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_primarray_list(const VlNamedObj* parent,
-		      vector<const VlPrimArray*>& primarray_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlPrimArray*>
+  find_primarray_list(const VlNamedObj* parent) const;
 
   /// @brief primitive を追加する．
   /// @param[in] primitive 登録する要素
   void
-  add_primitive(ElbPrimitive* primitive);
+  add_primitive(const VlPrimitive* primitive);
 
   /// @brief primitive のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] primitive_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_primitive_list(const VlNamedObj* parent,
-		      vector<const VlPrimitive*>& primitive_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlPrimitive*>
+  find_primitive_list(const VlNamedObj* parent) const;
 
   /// @brief タスクを追加する．
   /// @param[in] task 追加する要素
   void
-  add_task(ElbTaskFunc* task);
+  add_task(const VlTaskFunc* task);
 
   /// @brief タスクのリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] task_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_task_list(const VlNamedObj* parent,
-		 vector<const VlTaskFunc*>& task_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlTaskFunc*>
+  find_task_list(const VlNamedObj* parent) const;
 
   /// @brief 関数を追加する．
   /// @param[in] func 追加する要素
   void
-  add_function(ElbTaskFunc* func);
+  add_function(const VlTaskFunc* func);
 
   /// @brief 関数のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] func_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_function_list(const VlNamedObj* parent,
-		     vector<const VlTaskFunc*>& func_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlTaskFunc*>
+  find_function_list(const VlNamedObj* parent) const;
 
   /// @brief continuous assignment を追加する．
   /// @param[in] contassign 登録する要素
   void
-  add_contassign(ElbContAssign* contassign);
+  add_contassign(const VlContAssign* contassign);
 
   /// @brief continuous assignment のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] contassign_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_contassign_list(const VlNamedObj* parent,
-		       vector<const VlContAssign*>& contassign_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlContAssign*>
+  find_contassign_list(const VlNamedObj* parent) const;
 
   /// @brief process を追加する．
   /// @param[in] process 登録する要素
   void
-  add_process(ElbProcess* process);
+  add_process(const VlProcess* process);
 
   /// @brief process のリストを取り出す．
   /// @param[in] parent 親のスコープ
-  /// @param[out] process_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_process_list(const VlNamedObj* parent,
-		    vector<const VlProcess*>& process_list) const;
-
-  /// @brief internal scope を追加する．
-  /// @param[in] scope 登録する要素
-  void
-  add_internalscope(ElbScope* scope);
-
-  /// @brief internal scope のリストを取り出す．
-  /// @param[in] parent 親のスコープ
-  /// @param[out] scope_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_internalscope_list(const VlNamedObj* parent,
-			  vector<const VlNamedObj*>& scope_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlProcess*>
+  find_process_list(const VlNamedObj* parent) const;
 
 
 private:
@@ -274,6 +228,15 @@ private:
 
   };
 
+  struct Hash
+  {
+    SizeType
+    operator()(const Key& key) const
+    {
+      return ((reinterpret_cast<ympuint>(key.mParent) * key.mTag) >> 8);
+    }
+  };
+
   struct Eq
   {
     bool
@@ -281,15 +244,6 @@ private:
 	       const Key& right) const
     {
       return left.mParent == right.mParent && left.mTag == right.mTag;
-    }
-  };
-
-  struct Hash
-  {
-    SizeType
-    operator()(const Key& key) const
-    {
-      return ((reinterpret_cast<ympuint>(key.mParent) * key.mTag) >> 8);
     }
   };
 

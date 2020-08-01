@@ -74,14 +74,6 @@ CptModule::CptModule(const FileRegion& file_region,
   for ( auto head: mIOHeadArray ) {
     mIODeclNum += head->item_num();
   }
-
-#if 0
-  for ( auto item: *mItemArray ) {
-    if ( item->type() == PtItemType::Func ) {
-      mFuncDic[item->name()] = item;
-    }
-  }
-#endif
 }
 
 // デストラクタ
@@ -341,23 +333,6 @@ const string&
 CptModule::cell() const
 {
   return mCell;
-}
-
-// 関数名から関数を検索する．
-// なければ nullptr を返す．
-const PtItem*
-CptModule::find_function(const char* name) const
-{
-#if 0
-  if ( mFuncDic.count(name) > 0 ) {
-    return mFuncDic.at(name);
-  }
-  else {
-    return nullptr;
-  }
-#else
-  return nullptr;
-#endif
 }
 
 

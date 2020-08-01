@@ -11,7 +11,8 @@
 #include "EiContAssign.h"
 
 #include "elb/ElbExpr.h"
-#include "elb/ElbDelay.h"
+
+#include "ym/vl/VlDelay.h"
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
@@ -31,7 +32,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbCaHead*
 EiFactory::new_CaHead(const VlModule* module,
 		      const PtItem* pt_head,
-		      ElbDelay* delay)
+		      const VlDelay* delay)
 {
   EiCaHead* head = nullptr;
   if ( delay ) {
@@ -48,7 +49,7 @@ EiFactory::new_CaHead(const VlModule* module,
 // @param[in] pt_obj 対応するパース木中の定義要素
 // @param[in] lhs 左辺式
 // @param[in] rhs 右辺式
-ElbContAssign*
+const VlContAssign*
 EiFactory::new_ContAssign(ElbCaHead* head,
 			  const PtBase* pt_obj,
 			  ElbExpr* lhs,
@@ -64,7 +65,7 @@ EiFactory::new_ContAssign(ElbCaHead* head,
 // @param[in] pt_obj パース木の定義要素
 // @param[in] lhs 左辺式
 // @param[in] rhs 右辺式
-ElbContAssign*
+const VlContAssign*
 EiFactory::new_ContAssign(const VlModule* module,
 			  const PtBase* pt_obj,
 			  ElbExpr* lhs,
@@ -124,7 +125,7 @@ EiCaHead::drive1() const
 
 // @brief 遅延を表す式を返す．
 // @note このクラスでは nullptr を返す．
-ElbDelay*
+const VlDelay*
 EiCaHead::delay() const
 {
   return nullptr;
@@ -141,7 +142,7 @@ EiCaHead::delay() const
 // @param[in] delay 遅延値
 EiCaHeadD::EiCaHeadD(const VlModule* module,
 		     const PtItem* pt_head,
-		     ElbDelay* delay) :
+		     const VlDelay* delay) :
   EiCaHead(module, pt_head),
   mDelay(delay)
 {
@@ -153,7 +154,7 @@ EiCaHeadD::~EiCaHeadD()
 }
 
 // @brief 遅延を表す式を返す．
-ElbDelay*
+const VlDelay*
 EiCaHeadD::delay() const
 {
   return mDelay;

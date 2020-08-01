@@ -100,7 +100,8 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 	reg_decl(vpiNet, decl);
 
 	handle = find_obj(parent, name);
-	ASSERT_COND(handle );
+	ASSERT_COND( handle );
+	cout << handle->obj()->name() << endl;
       }
     }
     if ( handle == nullptr ) {
@@ -108,6 +109,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
       return nullptr;
     }
   }
+
 
   if ( env.is_system_tf_arg() ) {
     // システム関数/タスクの引数の場合
@@ -522,66 +524,69 @@ ExprGen::instantiate_primary_sub(ElbObjHandle* handle,
 
   // 答え
   ElbExpr* primary = nullptr;
-
-  ElbParameter* param = handle->parameter();
-  ElbDecl* decl = handle->decl();
-  ElbDeclArray* declarray = handle->declarray();
   VlValueType value_type;
-  if ( param != nullptr ) {
+  if ( handle->type() == VpiObjType::Parameter ) {
+    // パラメータの場合
+    auto param = handle->parameter();
     primary = factory().new_Primary(pt_expr, param);
     is_array = false;
     value_type = param->value_type();
   }
-  else if ( decl != nullptr ) {
-    primary = factory().new_Primary(pt_expr, decl);
-    is_array = false;
-    value_type = decl->value_type();
-  }
-  else if ( declarray != nullptr ) {
-    // 配列の次元
-    dsize = declarray->dimension();
-    if ( isize != dsize && (isize != dsize + 1 || has_range_select) ) {
-      // 次元が合わない．
-      error_dimension_mismatch(pt_expr);
-      return nullptr;
+  else {
+    // それ以外の宣言要素の場合
+    ElbDecl* decl = handle->decl();
+    ElbDeclArray* declarray = handle->declarray();
+    if ( decl != nullptr ) {
+      primary = factory().new_Primary(pt_expr, decl);
+      is_array = false;
+      value_type = decl->value_type();
     }
-
-    is_array = true;
-    value_type = declarray->value_type();
-
-    // 添字が定数ならオフセットを計算する．
-    int offset = 0;
-    int mlt = 1;
-    bool const_index = true;
-    for ( int i = 0; i < dsize; ++ i ) {
-      int j = dsize - i - 1;
-      const PtExpr* pt_expr1 = pt_expr->index(j);
-      int index_val;
-      bool stat = evaluate_int(parent, pt_expr1, index_val, false);
-      if ( !stat ) {
-	const_index = false;
-	break;
+    else if ( declarray != nullptr ) {
+      // 配列の次元
+      dsize = declarray->dimension();
+      if ( isize != dsize && (isize != dsize + 1 || has_range_select) ) {
+	// 次元が合わない．
+	error_dimension_mismatch(pt_expr);
+	return nullptr;
       }
-      offset += index_val * mlt;
-      mlt *= declarray->range(j)->size();
-    }
-    if ( const_index ) {
-      primary = factory().new_Primary(pt_expr, declarray, offset);
-    }
-    else {
-      // 添字の式を生成する．
-      vector<ElbExpr*> index_list;
-      index_list.reserve(dsize);
+
+      is_array = true;
+      value_type = declarray->value_type();
+
+      // 添字が定数ならオフセットを計算する．
+      int offset = 0;
+      int mlt = 1;
+      bool const_index = true;
       for ( int i = 0; i < dsize; ++ i ) {
-	const PtExpr* pt_expr1 = pt_expr->index(i);
-	ElbExpr* expr1 = instantiate_expr(parent, env, pt_expr1);
-	if ( !expr1 ) {
-	  return nullptr;
+	int j = dsize - i - 1;
+	const PtExpr* pt_expr1 = pt_expr->index(j);
+	int index_val;
+	bool stat = evaluate_int(parent, pt_expr1, index_val, false);
+	if ( !stat ) {
+	  const_index = false;
+	  break;
 	}
-	index_list.push_back(expr1);
+	offset += index_val * mlt;
+	mlt *= declarray->range(j)->size();
       }
+      if ( const_index ) {
+	primary = factory().new_Primary(pt_expr, declarray, offset);
+      }
+      else {
+	// 添字の式を生成する．
+	vector<ElbExpr*> index_list;
+	index_list.reserve(dsize);
+	for ( int i = 0; i < dsize; ++ i ) {
+	  const PtExpr* pt_expr1 = pt_expr->index(i);
+	  ElbExpr* expr1 = instantiate_expr(parent, env, pt_expr1);
+	  if ( !expr1 ) {
+	    return nullptr;
+	  }
+	  index_list.push_back(expr1);
+	}
 
-      primary = factory().new_Primary(pt_expr, declarray, index_list);
+	primary = factory().new_Primary(pt_expr, declarray, index_list);
+      }
     }
   }
   if ( primary == nullptr ) {
@@ -797,7 +802,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
 
   // それ以外の宣言要素の場合
   // しかしこの場合には parameter でなければならない．
-  ElbParameter* param = handle->parameter();
+  auto param = handle->parameter();
   if ( !param ) {
     if ( put_error ) {
       error_not_a_parameter(pt_expr);
@@ -816,7 +821,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
   else {
     if ( has_bit_select ) {
       // ビット選択
-      if ( !val.is_bitvector_conv() ) {
+      if ( !val.is_bitvector_compat() ) {
 	if ( put_error ) {
 	  error_illegal_real_type(pt_expr);
 	}
@@ -831,7 +836,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
       return VlValue(val.bitvector_value().bit_select(offset));
     }
     else if ( has_range_select ) {
-      if ( !val.is_bitvector_conv() ) {
+      if ( !val.is_bitvector_compat() ) {
 	if ( put_error ) {
 	  error_illegal_real_type(pt_expr);
 	}

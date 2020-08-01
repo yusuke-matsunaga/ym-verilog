@@ -22,17 +22,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 class ElbTaskFunc :
   public VlTaskFunc
 {
-  friend class CellTask;
-  friend class CellFunction;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbTaskFunc();
+  ElbTaskFunc() = default;
 
   /// @brief デストラクタ
-  virtual
-  ~ElbTaskFunc();
+  ~ElbTaskFunc() = default;
 
 
 public:
@@ -87,52 +83,7 @@ public:
   bool
   is_constant_function() const = 0;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbTaskFunc の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次の要素を返す．
-  const ElbTaskFunc*
-  next() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbTaskFunc* mNext;
-
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-inline
-ElbTaskFunc::ElbTaskFunc() :
-  mNext(nullptr)
-{
-}
-
-// @brief デストラクタ
-inline
-ElbTaskFunc::~ElbTaskFunc()
-{
-}
-
-// @brief 次の要素を返す．
-inline
-const ElbTaskFunc*
-ElbTaskFunc::next() const
-{
-  return mNext;
-}
 
 END_NAMESPACE_YM_VERILOG
 

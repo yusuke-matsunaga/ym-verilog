@@ -91,8 +91,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
     // constant function はモジュール直下にしかあり得ない
     // <- generated scope 内の関数は constant function ではない．
     const VlModule* module = parent->parent_module();
-    const PtModule* pt_module = find_moduledef(module->def_name());
-    const PtItem* pt_func = pt_module->find_function(name);
+    const PtItem* pt_func = find_funcdef(module, name);
     if ( !pt_func ) {
       error_no_such_function(pt_expr);
       return nullptr;
@@ -137,10 +136,10 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
     return nullptr;
   }
 
-  ElbExpr** arg_list = factory().new_ExprList(n);
+  auto arg_list = factory().new_ExprList(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     const PtExpr* pt_expr1 = pt_expr->operand(i);
-    ElbExpr* expr1 = instantiate_expr(parent, env, pt_expr1);
+    auto expr1 = instantiate_expr(parent, env, pt_expr1);
     if ( !expr1 ) {
       // エラーが起った．
       return nullptr;
@@ -196,7 +195,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
 
   // 引数の生成
   SizeType n = pt_expr->operand_num();
-  ElbExpr** arg_list = factory().new_ExprList(n);
+  auto arg_list = factory().new_ExprList(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     const PtExpr* pt_expr1 = pt_expr->operand(i);
     ElbExpr* arg = nullptr;

@@ -160,7 +160,7 @@ ItemGen::instantiate_gateheader(const VlNamedObj* parent,
 void
 ItemGen::instantiate_udpheader(const VlNamedObj* parent,
 			       const PtItem* pt_head,
-			       const ElbUdpDefn* udpdefn)
+			       const VlUdpDefn* udpdefn)
 {
   SizeType param_size = pt_head->paramassign_num();
   const PtDelay* pt_delay = pt_head->delay();
@@ -344,7 +344,7 @@ ItemGen::link_gate_delay(ElbPrimHead* prim_head,
 			 const PtDelay* pt_delay)
 {
   const VlNamedObj* parent = prim_head->parent();
-  ElbDelay* delay = instantiate_delay(parent, pt_delay);
+  auto delay = instantiate_delay(parent, pt_delay);
   prim_head->set_delay(delay);
 }
 
@@ -359,7 +359,7 @@ ItemGen::link_udp_delay(ElbPrimHead* prim_head,
   const VlNamedObj* parent = prim_head->parent();
   SizeType param_size = pt_head->paramassign_num();
   const PtDelay* pt_delay = pt_head->delay();
-  ElbDelay* delay = nullptr;
+  const VlDelay* delay = nullptr;
   if ( pt_delay ) {
     delay = instantiate_delay(parent, pt_delay);
   }

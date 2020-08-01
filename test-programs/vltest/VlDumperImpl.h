@@ -183,7 +183,7 @@ public:
   void
   put_primarray_list(const char* label,
 		     const VlMgr& mgr,
-		     vector<const VlPrimArray*>& primarray_list);
+		     const vector<const VlPrimArray*>& primarray_list);
 
   /// @brief primitive の内容を出力する関数
   void

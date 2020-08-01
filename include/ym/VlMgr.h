@@ -105,139 +105,92 @@ public:
   const VlUserSystf*
   find_user_systf(const char* name) const;
 
-  /// @brief スコープと名前から名前付き要素を取り出す．
-  /// @param[in] parent 検索対象のスコープ
-  /// @param[in] name 名前
-  /// @return scope というスコープ内の name という要素を返す．
-  /// @return なければ nullptr を返す．
-  const VlNamedObj*
-  find_obj(const VlNamedObj* parent,
-	   const char* name) const;
-
   /// @brief スコープに属する internal scope のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] scope_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_internalscope_list(const VlNamedObj* parent,
-			  vector<const VlNamedObj*>& scope_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlNamedObj*>
+  find_internalscope_list(const VlNamedObj* parent) const;
 
   /// @brief スコープとタグから宣言要素を取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @param[in] tag タグ
-  /// @param[out] decl_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  /// @note scope というスコープ内の tag というタグを持つ宣言要素を
-  /// decl_list に入れる．
-  bool
+  /// @param[in] tag タグ
+  /// @return 結果のリストを返す．
+  ///
+  /// parent のスコープ内の tag というタグを持つ要素のリストを返す．
+  vector<const VlDecl*>
   find_decl_list(const VlNamedObj* parent,
-		 int tag,
-		 vector<const VlDecl*>& decl_list) const;
+		 int tag) const;
 
   /// @brief スコープとタグから宣言要素の配列を取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @param[in] tag タグ
-  /// @param[out] declarray_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  /// @note scope というスコープ内の tag というタグを持つ宣言要素を
-  /// decl_list に入れる．
-  bool
+  /// @retrun 結果のリストを返す．
+  ///
+  /// parent というスコープ内の tag というタグを持つ要素のリストを返す．
+  vector<const VlDeclArray*>
   find_declarray_list(const VlNamedObj* parent,
-		      int tag,
-		      vector<const VlDeclArray*>& declarray_list) const;
+		      int tag) const;
 
   /// @brief スコープに属する defparam のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] defparam_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_defparam_list(const VlNamedObj* parent,
-		     vector<const VlDefParam*>& defparam_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlDefParam*>
+  find_defparam_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する param assign のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] paramassign_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_paramassign_list(const VlNamedObj* parent,
-			vector<const VlParamAssign*>& paramassign_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlParamAssign*>
+  find_paramassign_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する module のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] module_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_module_list(const VlNamedObj* parent,
-		   vector<const VlModule*>& module_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlModule*>
+  find_module_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する module arrayのリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] modulearray_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_modulearray_list(const VlNamedObj* parent,
-			vector<const VlModuleArray*>& modulearray_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlModuleArray*>
+  find_modulearray_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する primitive のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] primitive_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_primitive_list(const VlNamedObj* parent,
-		      vector<const VlPrimitive*>& primitive_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlPrimitive*>
+  find_primitive_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する primitive array のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] primarray_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_primarray_list(const VlNamedObj* parent,
-		      vector<const VlPrimArray*>& primarray_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlPrimArray*>
+  find_primarray_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属するタスクのリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] task_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_task_list(const VlNamedObj* parent,
-		 vector<const VlTaskFunc*>& task_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlTaskFunc*>
+  find_task_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する関数のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] func_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_function_list(const VlNamedObj* parent,
-		     vector<const VlTaskFunc*>& func_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlTaskFunc*>
+  find_function_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する continuous assignment のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] contassign_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_contassign_list(const VlNamedObj* parent,
-		       vector<const VlContAssign*>& contassign_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlContAssign*>
+  find_contassign_list(const VlNamedObj* parent) const;
 
   /// @brief スコープに属する process のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
-  /// @param[out] process_list 結果を格納するリスト
-  /// @retval true 該当する要素が1つ以上あった．
-  /// @retval false 該当する要素がなかった．
-  bool
-  find_process_list(const VlNamedObj* parent,
-		    vector<const VlProcess*>& process_list) const;
+  /// @return 結果のリストを返す．
+  vector<const VlProcess*>
+  find_process_list(const VlNamedObj* parent) const;
 
   /// @brief 属性リストを得る．
   /// @param[in] obj 対象のオブジェクト

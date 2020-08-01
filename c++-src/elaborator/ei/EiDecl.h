@@ -644,7 +644,7 @@ public:
   /// @brief 初期値の設定
   /// @param[in] expr 初期値
   void
-  set_init(ElbExpr* expr) override;
+  set_init(const VlExpr* expr) override;
 
 
 private:
@@ -653,7 +653,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 初期値
-  ElbExpr* mInit;
+  const VlExpr* mInit;
 
 };
 
@@ -701,7 +701,7 @@ public:
   /// @brief 初期値の設定
   /// @param[in] expr 初期値
   void
-  set_init(ElbExpr* expr) override;
+  set_init(const VlExpr* expr) override;
 
 
 private:
@@ -710,7 +710,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 初期値
-  ElbExpr* mInit;
+  const VlExpr* mInit;
 
 };
 
@@ -758,7 +758,7 @@ public:
   /// @brief 初期値の設定
   /// @param[in] expr 初期値
   void
-  set_init(ElbExpr* expr) override;
+  set_init(const VlExpr* expr) override;
 
 
 private:
@@ -767,7 +767,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 初期値
-  ElbExpr* mInit;
+  const VlExpr* mInit;
 
 };
 

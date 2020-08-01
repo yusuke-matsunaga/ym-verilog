@@ -10,7 +10,6 @@
 #include "EiFactory.h"
 #include "EiDecl.h"
 
-#include "elb/ElbDelay.h"
 #include "elb/ElbExpr.h"
 
 #include "ym/pt/PtDecl.h"
@@ -867,7 +866,7 @@ EiDeclIS::init_value() const
 // @brief 初期値の設定
 // @param[in] expr 初期値
 void
-EiDeclIS::set_init(ElbExpr* expr)
+EiDeclIS::set_init(const VlExpr* expr)
 {
   mInit = expr;
 }
@@ -906,7 +905,7 @@ EiDeclIR::init_value() const
 // @brief 初期値の設定
 // @param[in] expr 初期値
 void
-EiDeclIR::set_init(ElbExpr* expr)
+EiDeclIR::set_init(const VlExpr* expr)
 {
   mInit = expr;
 }
@@ -945,7 +944,7 @@ EiDeclIV::init_value() const
 // @brief 初期値の設定
 // @param[in] expr 初期値
 void
-EiDeclIV::set_init(ElbExpr* expr)
+EiDeclIV::set_init(const VlExpr* expr)
 {
   mInit = expr;
 }

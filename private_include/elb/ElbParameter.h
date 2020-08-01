@@ -138,16 +138,14 @@ public:
 class ElbParameter :
   public VlDecl
 {
-  friend class CellParam;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbParameter();
+  ElbParameter() = default;
 
   /// @brief デストラクタ
   virtual
-  ~ElbParameter();
+  ~ElbParameter() = default;
 
 
 public:
@@ -261,33 +259,7 @@ public:
   set_expr(const PtExpr* expr,
 	   const VlValue& val) = 0;
 
-  /// @brief 次の要素を返す．
-  const ElbParameter*
-  next() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbParameter* mNext;
-
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 次の要素を返す．
-inline
-const ElbParameter*
-ElbParameter::next() const
-{
-  return mNext;
-}
 
 END_NAMESPACE_YM_VERILOG
 

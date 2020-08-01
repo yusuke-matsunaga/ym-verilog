@@ -156,7 +156,7 @@ private:
   void
   instantiate_udpheader(const VlNamedObj* parent,
 			const PtItem* pt_head,
-			const ElbUdpDefn* udpdefn);
+			const VlUdpDefn* udpdefn);
 
   /// @brief セル instance の生成を行う
   /// @param[in] parent 親のスコープ

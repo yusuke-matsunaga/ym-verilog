@@ -72,7 +72,7 @@ EiConcatOp::EiConcatOp(const PtExpr* pt_expr,
   SizeType n = operand_num();
   mSize = 0;
   for ( SizeType i = 0; i < n; ++ i ) {
-    ElbExpr* expr = _operand(i);
+    auto expr = _operand(i);
     VlValueType type1 = expr->value_type();
     ASSERT_COND( !type1.is_real_type() );
     SizeType size1 = type1.size();

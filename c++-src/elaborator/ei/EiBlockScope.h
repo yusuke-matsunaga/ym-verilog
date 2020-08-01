@@ -9,8 +9,8 @@
 /// All rights reserved.
 
 
+#include "ym/vl/VlNamedObj.h"
 #include "ym/pt/PtP.h"
-#include "elb/ElbScope.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @brief elaboration 中の statement block を表すクラス
 //////////////////////////////////////////////////////////////////////
 class EiBlockScope :
-  public ElbScope
+  public VlNamedObj
 {
   friend class EiFactory;
 

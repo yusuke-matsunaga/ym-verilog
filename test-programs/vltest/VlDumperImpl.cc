@@ -123,20 +123,16 @@ VlDumperImpl::put(const VlMgr& mgr)
     tmp_queue.pop();
     put_module("MODULE", mgr, module);
 
-    vector<const VlModule*> module_list;
-    if ( mgr.find_module_list(module, module_list) ) {
-      for ( auto module1: module_list ) {
-	tmp_queue.push(module1);
-      }
+    vector<const VlModule*> module_list = mgr.find_module_list(module);
+    for ( auto module1: module_list ) {
+      tmp_queue.push(module1);
     }
-    vector<const VlModuleArray*> modulearray_list;
-    if ( mgr.find_modulearray_list(module, modulearray_list) ) {
-      for ( auto module_array: modulearray_list ) {
-	SizeType n = module_array->elem_num();
-	for ( SizeType i = 0; i < n; ++ i ) {
-	  const VlModule* module1 = module_array->elem_by_offset(i);
-	  tmp_queue.push(module1);
-	}
+    vector<const VlModuleArray*> modulearray_list = mgr.find_modulearray_list(module);
+    for ( auto module_array: modulearray_list ) {
+      SizeType n = module_array->elem_num();
+      for ( SizeType i = 0; i < n; ++ i ) {
+	const VlModule* module1 = module_array->elem_by_offset(i);
+	tmp_queue.push(module1);
       }
     }
   }
@@ -266,31 +262,31 @@ VlDumperImpl::put(const char* label,
 {
   VlDumpHeader x(this, label, "VlValue");
   switch ( value.type() ) {
-  case VlValue::kIntType:
+  case VlValue::INT:
     put("int_value()", value.int_value());
     break;
 
-  case VlValue::kUintType:
+  case VlValue::UINT:
     put("uint_value()", value.uint_value());
     break;
 
-  case VlValue::kScalarType:
+  case VlValue::SCALAR:
     put("scalar_value()", value.scalar_value());
     break;
 
-  case VlValue::kRealType:
+  case VlValue::REAL:
     put("real_value()", value.real_value());
     break;
 
-  case VlValue::kTimeType:
+  case VlValue::TIME:
     put("time_value()", value.time_value());
     break;
 
-  case VlValue::kBitVectorType:
+  case VlValue::BITVECTOR:
     put("bitvector_value()", value.bitvector_value());
     break;
 
-  case VlValue::kErrorType:
+  case VlValue::ERROR:
     mStream << "ErrorType";
     break;
   }

@@ -10,7 +10,6 @@
 
 
 #include "ym/vl/VlContAssign.h"
-#include "ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -24,11 +23,11 @@ class ElbCaHead
 protected:
 
   /// @brief コンストラクタ
-  ElbCaHead();
+  ElbCaHead() = default;
 
   /// @brief デストラクタ
   virtual
-  ~ElbCaHead();
+  ~ElbCaHead() = default;
 
 
 public:
@@ -53,64 +52,10 @@ public:
 
   /// @brief 遅延を表す式を返す．
   virtual
-  ElbDelay*
+  const VlDelay*
   delay() const = 0;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class ElbContAssign ElbContAssign.h "ElbContAssign.h"
-/// @brief 継続的代入文を表すクラス
-/// IEEE Std 1364-2001 26.6.24 Continuous assignment
-//////////////////////////////////////////////////////////////////////
-class ElbContAssign :
-  public VlContAssign
-{
-  friend class CellContAssign;
-
-protected:
-
-  /// @brief コンストラクタ
-  ElbContAssign();
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbContAssign();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbContAssign の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次の要素を得る．
-  const ElbContAssign*
-  next() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbContAssign* mNext;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 次の要素を得る．
-inline
-const ElbContAssign*
-ElbContAssign::next() const
-{
-  return mNext;
-}
 
 END_NAMESPACE_YM_VERILOG
 

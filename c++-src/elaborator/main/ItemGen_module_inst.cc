@@ -143,7 +143,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
   }
 
   // 次に udp を探す．
-  const ElbUdpDefn* udpdefn = find_udp(defname);
+  const VlUdpDefn* udpdefn = find_udp(defname);
   if ( udpdefn ) {
     // ただしこの場合, mParamList は空でなければならない．
     // 問題は delay が mParamList に見える場合があるということ．

@@ -197,6 +197,7 @@ public:
   vector<const PtItem*>
   item_list() const;
 
+#if 0
   /// @brief 関数名から関数の検索
   /// @param[in] name 検索対象の関数名
   /// @return 該当する関数
@@ -204,6 +205,7 @@ public:
   virtual
   const PtItem*
   find_function(const char* name) const = 0;
+#endif
 
   /// @brief top_module フラグを下ろす
   virtual

@@ -22,7 +22,7 @@ class VlNamedObj;
 class HierName
 {
 public:
-
+#if 0
   /// @brief コンストラクタ
   /// @param[in] parent 親のスコープ
   /// @param[in] name 名前
@@ -31,13 +31,14 @@ public:
 
   /// @brief デストラクタ
   ~HierName() = default;
-
+#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
+#if 0
   /// @brief 親のスコープを返す．
   const VlNamedObj*
   parent() const;
@@ -45,6 +46,7 @@ public:
   /// @brief 名前を返す．
   const char*
   name() const;
+#endif
 
   /// @brief 等価比較演算子
   bool
@@ -57,7 +59,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
 
-private:
+public:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
@@ -115,6 +117,7 @@ private:
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
 
+#if 0
 // @brief コンストラクタ
 // @param[in] parent 親のスコープ
 // @param[in] name 名前
@@ -142,6 +145,7 @@ HierName::name() const
 {
   return mName;
 }
+#endif
 
 // @brief 等価比較演算子
 inline
@@ -158,10 +162,11 @@ HierNameHash::operator()(const HierName& hname) const
 {
   SizeType h = 0;
   SizeType c;
-  for ( auto name = hname.name(); (c = static_cast<SizeType>(*name)); ++ name ) {
+  auto name = hname.mName;
+  for ( auto p = name; (c = static_cast<SizeType>(*p)); ++ p ) {
     h = h * 37 + c;
   }
-  return ((reinterpret_cast<ympuint>(hname.parent()) * h) >> 8);
+  return ((reinterpret_cast<ympuint>(hname.mParent) * h) >> 8);
 }
 
 END_NAMESPACE_YM_VERILOG

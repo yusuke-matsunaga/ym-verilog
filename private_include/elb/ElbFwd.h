@@ -14,9 +14,6 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-// in ElbScopeHandle.h
-class ElbScopeHandle;
-
 // in ElbModule.h
 class ElbModule;
 class ElbModuleArray;
@@ -37,13 +34,8 @@ class ElbDeclArray;
 class ElbParamHead;
 class ElbParameter;
 
-// in ElbParamAssign.h
-class ElbParamAssign;
-class ElbDefParam;
-
 // in ElbContAssign.h
 class ElbCaHead;
-class ElbContAssign;
 
 // in ElbTaskFunc.h
 class ElbTaskFunc;
@@ -57,9 +49,6 @@ class ElbPrimTerm;
 // in ElbProcess.h
 class ElbProcess;
 
-// in ElbScope.h
-class ElbScope;
-
 // in ElbStmt.h
 class ElbStmt;
 class ElbCaseItem;
@@ -69,9 +58,6 @@ class ElbControl;
 
 // in ElbExpr.h
 class ElbExpr;
-
-// in ElbDelay.h
-class ElbDelay;
 
 // in ElbRange.h
 class ElbRange;

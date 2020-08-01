@@ -23,16 +23,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 class ElbProcess :
   public VlProcess
 {
-  friend class CellProcess;
-
 protected:
 
   /// @brief コンストラクタ
-  ElbProcess();
+  ElbProcess() = default;
 
   /// @brief デストラクタ
-  virtual
-  ~ElbProcess();
+  ~ElbProcess() = default;
 
 
 public:
@@ -46,38 +43,7 @@ public:
   void
   set_stmt(ElbStmt* stmt) = 0;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbProcess の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 次の要素を得る．
-  const ElbProcess*
-  next() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 次の要素を指すポインタ
-  ElbProcess* mNext;
-
 };
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 次の要素を得る．
-inline
-const ElbProcess*
-ElbProcess::next() const
-{
-  return mNext;
-}
 
 END_NAMESPACE_YM_VERILOG
 
