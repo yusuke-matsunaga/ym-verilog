@@ -142,7 +142,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
       auto pt_item = pt_head->item(i);
       // IO定義と変数/ネット定義が一致しているか調べる．
-      ElbObjHandle* handle = find_obj(namedobj, pt_item->name());
+      auto handle = find_obj(namedobj, pt_item->name());
       ElbDecl* decl = nullptr;
       if ( handle ) {
 	// 同名の要素が見つかった．

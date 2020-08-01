@@ -256,7 +256,7 @@ private:
   /// @brief 定数識別子を探す．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
-  ElbObjHandle*
+  ObjHandle*
   find_const_handle(const VlNamedObj* parent,
 		    const PtExpr* pt_expr);
 
@@ -279,7 +279,7 @@ private:
   /// @param[out] has_range_select 範囲指定を持っていたら true を返す．
   /// @param[out] has_bit_select ビット指定を持っていたら true を返す．
   ElbExpr*
-  instantiate_primary_sub(ElbObjHandle* handle,
+  instantiate_primary_sub(ObjHandle* handle,
 			  const VlNamedObj* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr,

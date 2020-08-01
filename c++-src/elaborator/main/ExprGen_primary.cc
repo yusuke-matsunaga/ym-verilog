@@ -59,7 +59,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
   int isize = pt_expr->index_num();
 
   // 名前に対応したオブジェクトのハンドル
-  ElbObjHandle* handle = nullptr;
+  ObjHandle* handle = nullptr;
 
   if ( env.is_constant() ) {
     handle = find_const_handle(parent, pt_expr);
@@ -389,7 +389,7 @@ ExprGen::instantiate_namedevent(const VlNamedObj* parent,
   ASSERT_COND(pt_expr->right_range() == nullptr );
 
   // 名前に対応したオブジェクトのハンドルを求める．
-  ElbObjHandle* handle = find_obj_up(parent, pt_expr, nullptr);
+  ObjHandle* handle = find_obj_up(parent, pt_expr, nullptr);
   if ( handle == nullptr ) {
     // 見つからなかった．
     error_not_found(pt_expr);
@@ -435,12 +435,12 @@ ExprGen::instantiate_namedevent(const VlNamedObj* parent,
 // @brief 定数識別子を探す．
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
-ElbObjHandle*
+ObjHandle*
 ExprGen::find_const_handle(const VlNamedObj* parent,
 			   const PtExpr* pt_expr)
 {
   // モジュール内の識別子を探索する．
-  ElbObjHandle* handle = find_obj_up(parent, pt_expr, parent->parent_module());
+  ObjHandle* handle = find_obj_up(parent, pt_expr, parent->parent_module());
   if ( handle == nullptr ) {
     // 見つからなかった．
     error_not_found(pt_expr);
@@ -506,7 +506,7 @@ ExprGen::instantiate_genvar(const VlNamedObj* parent,
 // @param[out] has_range_select 範囲指定を持っていたら true を返す．
 // @param[out] has_bit_select ビット指定を持っていたら true を返す．
 ElbExpr*
-ExprGen::instantiate_primary_sub(ElbObjHandle* handle,
+ExprGen::instantiate_primary_sub(ObjHandle* handle,
 				 const VlNamedObj* parent,
 				 const ElbEnv& env,
 				 const PtExpr* pt_expr,
@@ -767,7 +767,7 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
   }
 
   // モジュール内の識別子を探索する．
-  ElbObjHandle* handle = find_obj_up(parent, pt_expr, parent->parent_module());
+  ObjHandle* handle = find_obj_up(parent, pt_expr, parent->parent_module());
   if ( !handle ) {
     // 見つからなかった．
     if ( put_error ) {

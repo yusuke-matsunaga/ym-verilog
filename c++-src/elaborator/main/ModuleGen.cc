@@ -120,7 +120,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
       // 名前による割り当て
       for ( int i = 0; i < n; ++ i ) {
 	const PtConnection* pt_con = param_con->pt_con(i);
-	ElbObjHandle* handle = find_obj(module, pt_con->name());
+	ObjHandle* handle = find_obj(module, pt_con->name());
 	if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
 	  ostringstream buf;
 	  buf << param_con->name(i) << " : No such parameter.";
@@ -175,7 +175,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
 	for ( int i = 0; i < n; ++ i ) {
 	  const PtConnection* pt_con = param_con->pt_con(i);
 	  const char* tmp_name = paramport_list[i];
-	  ElbObjHandle* handle = find_obj(module, tmp_name);
+	  ObjHandle* handle = find_obj(module, tmp_name);
 	  ASSERT_COND( handle );
 
 	  ElbParameter* param = handle->parameter();
@@ -274,7 +274,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
 			       const PtExpr* pt_portref)
 {
   const char* name = pt_portref->name();
-  ElbObjHandle* handle = find_obj(module, name);
+  ObjHandle* handle = find_obj(module, name);
   if ( !handle ) {
     ostringstream buf;
     buf << name

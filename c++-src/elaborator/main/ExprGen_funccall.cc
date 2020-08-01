@@ -116,7 +116,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
   }
   else {
     // 関数本体を探し出す．
-    ElbObjHandle* handle = find_obj_up(parent, pt_expr, nullptr);
+    ObjHandle* handle = find_obj_up(parent, pt_expr, nullptr);
     if ( handle == nullptr ) {
       error_no_such_function(pt_expr);
       return nullptr;

@@ -142,7 +142,7 @@ ItemGen::defparam_override(const VlModule* module,
 {
   const FileRegion& fr = pt_defparam->file_region();
 
-  ElbObjHandle* handle = find_obj_up(module, pt_defparam, ulimit);
+  ObjHandle* handle = find_obj_up(module, pt_defparam, ulimit);
   if ( !handle ) {
     return false;
   }
@@ -370,7 +370,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
   const char* name0 = pt_genfor->name();
   ASSERT_COND(name0 != nullptr );
 
-  ElbObjHandle* handle = find_obj(parent, pt_genfor->loop_var());
+  ObjHandle* handle = find_obj(parent, pt_genfor->loop_var());
   if ( !handle ) {
     ostringstream buf;
     buf << pt_genfor->loop_var() << " : Not found.";

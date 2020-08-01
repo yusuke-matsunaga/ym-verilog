@@ -352,7 +352,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 {
   const FileRegion& fr = pt_stmt->file_region();
 
-  ElbObjHandle* handle = nullptr;
+  ObjHandle* handle = nullptr;
 
   // disable はモジュール境界を越えない？ 要チェック ##TODO##TODO##
   // 仕様書には何も書いていないのでたぶん越えられる．
@@ -404,7 +404,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 
   // タスクを探し出して設定する．
   // タスク名の探索はモジュール境界を越える．
-  ElbObjHandle* cell = find_obj_up(parent, pt_stmt, nullptr);
+  ObjHandle* cell = find_obj_up(parent, pt_stmt, nullptr);
   if ( !cell ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";

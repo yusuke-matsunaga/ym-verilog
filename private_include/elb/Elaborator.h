@@ -248,7 +248,7 @@ public:
   /// @param[in] name 名前
   /// @return parent というスコープ内の name という要素を返す．
   /// @return なければ nullptr を返す．
-  ElbObjHandle*
+  ObjHandle*
   find_obj(const VlNamedObj* parent,
 	   const char* name) const;
 
@@ -258,7 +258,7 @@ public:
   /// @param[in] ulimit 探索する名前空間の上限
   /// @return 見付かったオブジェクトを返す．
   /// 見付からなかったら nullptr を返す．
-  ElbObjHandle*
+  ObjHandle*
   find_obj_up(const VlNamedObj* base_scope,
 	      const PtHierNamedBase* pt_obj,
 	      const VlNamedObj* ulimit);

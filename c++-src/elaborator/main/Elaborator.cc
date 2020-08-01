@@ -615,7 +615,7 @@ Elaborator::find_cell_id(const char* name) const
 // @param[in] name 名前
 // @return parent というスコープ内の name という要素を返す．
 // @return なければ nullptr を返す．
-ElbObjHandle*
+ObjHandle*
 Elaborator::find_obj(const VlNamedObj* scope,
 		     const char* name) const
 {
@@ -627,7 +627,7 @@ Elaborator::find_obj(const VlNamedObj* scope,
 	 << "] )" << endl << endl;
   }
 
-  ElbObjHandle* handle = mObjDict.find(scope, name);
+  ObjHandle* handle = mObjDict.find(scope, name);
 
   if ( handle == nullptr ) {
     if ( debug & debug_find_scope ) {
@@ -652,7 +652,7 @@ Elaborator::find_obj(const VlNamedObj* scope,
 // @param[in] ulimit 探索する名前空間の上限
 // @return 見付かったオブジェクトを返す．
 // 見付からなかったら nullptr を返す．
-ElbObjHandle*
+ObjHandle*
 Elaborator::find_obj_up(const VlNamedObj* base_scope,
 			const PtHierNamedBase* pt_obj,
 			const VlNamedObj* ulimit)
@@ -670,7 +670,7 @@ Elaborator::find_obj_up(const VlNamedObj* base_scope,
 
   // base_scope を起点として name というオブジェクトを探す．
   for ( ; base_scope; base_scope = base_scope->parent()) {
-    ElbObjHandle* handle = find_obj(base_scope, pt_obj->name());
+    ObjHandle* handle = find_obj(base_scope, pt_obj->name());
     if ( handle ) {
       // 見つけた
       if ( debug & debug_find_scope ) {
@@ -712,7 +712,7 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
     const char* top_name = name_branch->name();
     const VlNamedObj* top_scope = nullptr;
     // まず普通に探す．
-    ElbObjHandle* handle = find_obj(cur_scope, top_name);
+    ObjHandle* handle = find_obj(cur_scope, top_name);
     if ( handle ) {
       if ( name_branch->has_index() ) {
 	top_scope = handle->array_elem(name_branch->index());

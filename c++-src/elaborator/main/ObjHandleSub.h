@@ -1,27 +1,93 @@
-﻿#ifndef ELBOBJHANDLE_H
-#define ELBOBJHANDLE_H
+﻿#ifndef OBJHANDLESUB_H
+#define OBJHANDLESUB_H
 
-/// @file ElbObjHandle.h
-/// @brief ElbObjHandle のヘッダファイル
+/// @file ObjHandleSub.h
+/// @brief ObjHandleSub のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/verilog.h"
-#include "ym/FileRegion.h"
-#include "ym/vl/VlFwd.h"
-#include "elb/HierName.h"
+#include "elb/ObjHandle.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
+/// @class KeyObjHandle KeyObjHandle.h "KeyObjHandle.h"
+/// @brief 検索用のキーを表すクラス
+//////////////////////////////////////////////////////////////////////
+class KeyObjHandle :
+  public ObjHandle
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @param[in] parent 親のスコープ
+  /// @param[in] name 名前
+  KeyObjHandle(const VlNamedObj* parent,
+	       const char* name);
+
+  /// @brief デストラクタ
+  ~KeyObjHandle() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief VlNamedObj を返す．
+  const VlNamedObj*
+  obj() const override;
+
+  /// @brief 親のスコープを返す．
+  const VlNamedObj*
+  parent() const override;
+
+  /// @brief オブジェクトの名前を返す．
+  const char*
+  name() const override;
+
+  /// @brief オブジェクトの型を返す．
+  VpiObjType
+  type() const override;
+
+  /// @brief ファイル位置の取得
+  FileRegion
+  file_region() const override;
+
+  /// @brief オブジェクトの階層付き名前を返す．
+  string
+  full_name() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 親のスコープ
+  const VlNamedObj* mParent;
+
+  // 名前
+  const char* mName;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class ElbTaskFuncHandle
 //////////////////////////////////////////////////////////////////////
 class ElbTaskFuncHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -29,18 +95,18 @@ public:
   ElbTaskFuncHandle(ElbTaskFunc* obj);
 
   /// @brief デストラクタ
-  ~ElbTaskFuncHandle();
+  ~ElbTaskFuncHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbTaskFunc を返す．
   ElbTaskFunc*
-  taskfunc() override;
+  taskfunc() const override;
 
 
 private:
@@ -58,7 +124,7 @@ private:
 /// @class ElbDeclHandle
 //////////////////////////////////////////////////////////////////////
 class ElbDeclHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -66,18 +132,18 @@ public:
   ElbDeclHandle(ElbDecl* obj);
 
   /// @brief デストラクタ
-  ~ElbDeclHandle();
+  ~ElbDeclHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbDecl を返す．
   ElbDecl*
-  decl() override;
+  decl() const override;
 
 
 private:
@@ -95,7 +161,7 @@ private:
 /// @class ElbDeclArrayHandle
 //////////////////////////////////////////////////////////////////////
 class ElbDeclArrayHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -103,18 +169,18 @@ public:
   ElbDeclArrayHandle(ElbDeclArray* obj);
 
   /// @brief デストラクタ
-  ~ElbDeclArrayHandle();
+  ~ElbDeclArrayHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbDeclArray を返す．
   ElbDeclArray*
-  declarray() override;
+  declarray() const override;
 
 
 private:
@@ -132,7 +198,7 @@ private:
 /// @class ElbParamHandle
 //////////////////////////////////////////////////////////////////////
 class ElbParamHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -140,18 +206,18 @@ public:
   ElbParamHandle(ElbParameter* obj);
 
   /// @brief デストラクタ
-  ~ElbParamHandle();
+  ~ElbParamHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbParameterを返す．
   ElbParameter*
-  parameter() override;
+  parameter() const override;
 
 
 private:
@@ -169,7 +235,7 @@ private:
 /// @class ElbModuleArrayHandle
 //////////////////////////////////////////////////////////////////////
 class ElbModuleArrayHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -177,23 +243,22 @@ public:
   ElbModuleArrayHandle(ElbModuleArray* obj);
 
   /// @brief デストラクタ
-  virtual
-  ~ElbModuleArrayHandle();
+  ~ElbModuleArrayHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief 配列要素を返す．
   const VlNamedObj*
-  array_elem(int index) override;
+  array_elem(int index) const override;
 
   /// @brief ElbModuleArray を返す．
   ElbModuleArray*
-  module_array() override;
+  module_array() const override;
 
 
 private:
@@ -211,7 +276,7 @@ private:
 /// @class ElbPrimArrayHandle
 //////////////////////////////////////////////////////////////////////
 class ElbPrimArrayHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -219,19 +284,18 @@ public:
   ElbPrimArrayHandle(ElbPrimArray* obj);
 
   /// @brief デストラクタ
-  virtual
-  ~ElbPrimArrayHandle();
+  ~ElbPrimArrayHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbPrimArray を返す．
   ElbPrimArray*
-  prim_array() override;
+  prim_array() const override;
 
 
 private:
@@ -249,7 +313,7 @@ private:
 /// @class ElbPrimitiveHandle
 //////////////////////////////////////////////////////////////////////
 class ElbPrimitiveHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -257,19 +321,18 @@ public:
   ElbPrimitiveHandle(ElbPrimitive* obj);
 
   /// @brief デストラクタ
-  virtual
-  ~ElbPrimitiveHandle();
+  ~ElbPrimitiveHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbPrimitive を返す．
   ElbPrimitive*
-  primitive() override;
+  primitive() const override;
 
 
 private:
@@ -287,7 +350,7 @@ private:
 /// @class ElbNamedObjHandle
 //////////////////////////////////////////////////////////////////////
 class ElbNamedObjHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -295,15 +358,14 @@ public:
   ElbNamedObjHandle(const VlNamedObj* obj);
 
   /// @brief デストラクタ
-  virtual
-  ~ElbNamedObjHandle();
+  ~ElbNamedObjHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
 
 private:
@@ -321,7 +383,7 @@ private:
 /// @class ElbGfRootHandle
 //////////////////////////////////////////////////////////////////////
 class ElbGfRootHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -329,23 +391,22 @@ public:
   ElbGfRootHandle(ElbGfRoot* obj);
 
   /// @brief デストラクタ
-  virtual
-  ~ElbGfRootHandle();
+  ~ElbGfRootHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief 配列要素を返す．
   const VlNamedObj*
-  array_elem(int index) override;
+  array_elem(int index) const override;
 
   /// @brief ElbGfRoot を返す．
   ElbGfRoot*
-  gfroot() override;
+  gfroot() const override;
 
 
 private:
@@ -363,7 +424,7 @@ private:
 /// @class ElbGenvarHandle
 //////////////////////////////////////////////////////////////////////
 class ElbGenvarHandle :
-  public ElbObjHandle
+  public ObjHandle
 {
 public:
 
@@ -371,19 +432,18 @@ public:
   ElbGenvarHandle(ElbGenvar* obj);
 
   /// @brief デストラクタ
-  virtual
-  ~ElbGenvarHandle();
+  ~ElbGenvarHandle() = default;
 
 
 public:
 
   /// @brief VlNamedObj を返す．
   const VlNamedObj*
-  obj() override;
+  obj() const override;
 
   /// @brief ElbGenvar を返す．
   ElbGenvar*
-  genvar() override;
+  genvar() const override;
 
 
 private:
@@ -396,7 +456,6 @@ private:
 
 };
 
-
 END_NAMESPACE_YM_VERILOG
 
-#endif // ELBOBJHANDLE_H
+#endif // OBJHANDLESUB_H

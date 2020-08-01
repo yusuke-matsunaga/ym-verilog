@@ -113,7 +113,7 @@ StmtGen::instantiate_namedparblock(const VlNamedObj* parent,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  ElbObjHandle* handle = find_obj(parent, pt_stmt->name());
+  ObjHandle* handle = find_obj(parent, pt_stmt->name());
   ASSERT_COND(handle );
   const VlNamedObj* block = handle->obj();
 
@@ -146,7 +146,7 @@ StmtGen::instantiate_namedseqblock(const VlNamedObj* parent,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  ElbObjHandle* handle = find_obj(parent, pt_stmt->name());
+  ObjHandle* handle = find_obj(parent, pt_stmt->name());
   ASSERT_COND(handle );
   const VlNamedObj* block = handle->obj();
 
