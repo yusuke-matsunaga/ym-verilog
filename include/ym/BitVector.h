@@ -915,8 +915,8 @@ private:
   // 値を保持するベクタ
   // サイズは block(mSize)
   // mVal0:Val1 の組み合わせで値を表す．
-  uword* mVal0;
-  uword* mVal1;
+  unique_ptr<uword> mVal0;
+  unique_ptr<uword> mVal1;
 
 
 private:
@@ -1794,7 +1794,7 @@ inline
 ymuint32
 BitVector::to_uint32() const
 {
-  return static_cast<ymuint32>(mVal1[0]);
+  return static_cast<ymuint32>(mVal1.get()[0]);
 }
 
 // int の数値に変換可能なら true を返す．
@@ -1813,7 +1813,7 @@ inline
 int
 BitVector::to_int() const
 {
-  return static_cast<int>(mVal1[0]);
+  return static_cast<int>(mVal1.get()[0]);
 }
 
 // 1ビットのスカラー値に変換する．
@@ -1847,8 +1847,8 @@ inline
 VlTime
 BitVector::to_time() const
 {
-  PLI_UINT32 l = static_cast<PLI_UINT32>(mVal1[0]);
-  PLI_UINT32 h = static_cast<PLI_UINT32>(mVal1[1]);
+  PLI_UINT32 l = static_cast<PLI_UINT32>(mVal1.get()[0]);
+  PLI_UINT32 h = static_cast<PLI_UINT32>(mVal1.get()[1]);
   return VlTime(l, h);
 }
 

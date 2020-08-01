@@ -13,75 +13,63 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-BEGIN_NONAMESPACE
-
-VlValueRep* error_rep = nullptr;
-
-END_NONAMESPACE
-
-
 //////////////////////////////////////////////////////////////////////
 // クラス VlValue
 //////////////////////////////////////////////////////////////////////
 
 // @brief 空のコンストラクタ
 // @param[in] 値は不定
-VlValue::VlValue()
+VlValue::VlValue() :
+  mRep{new VlValueError()}
 {
-  if ( error_rep == nullptr ) {
-    error_rep = new VlValueError();
-    error_rep->inc();
-  }
-  mRep = error_rep;
 }
 
 // @brief コピーコンストラクタ
 VlValue::VlValue(const VlValue& src) :
-  mRep(src.mRep)
+  mRep{src.mRep}
 {
-  mRep->inc();
+}
+
+// @brief ムーブコンストラクタ
+VlValue::VlValue(VlValue&& src) :
+  mRep{move(src.mRep)}
+{
 }
 
 // @brief 整数値からのコンストラクタ
 VlValue::VlValue(int val) :
-  mRep(new VlValueInt(val))
+  mRep{new VlValueInt(val)}
 {
-  mRep->inc();
 }
 
 // @brief ymuint からのコンストラクタ
 VlValue::VlValue(ymuint val) :
-  mRep(new VlValueUint(val))
+  mRep{new VlValueUint(val)}
 {
-  mRep->inc();
 }
 
 // @brief スカラー値からのコンストラクタ
 VlValue::VlValue(const VlScalarVal& val) :
-  mRep(new VlValueScalar(val))
+  mRep{new VlValueScalar(val)}
 {
-  mRep->inc();
 }
 
 // @brief time からのコンストラクタ
 VlValue::VlValue(VlTime val) :
-  mRep(new VlValueTime(val))
+  mRep{new VlValueTime(val)}
 {
-  mRep->inc();
 }
 
 // @brief 実数からのコンストラクタ
 VlValue::VlValue(double val) :
-  mRep(new VlValueReal(val))
+  mRep{new VlValueReal(val)}
 {
-  mRep->inc();
 }
 
 // @brief ビットベクタからのコンストラクタ
 VlValue::VlValue(const BitVector& val) :
-  mRep(new VlValueBitVector(val))
+  mRep{new VlValueBitVector(val)}
 {
-  mRep->inc();
 }
 
 // @brief 型変換を伴うコンストラクタ
@@ -89,93 +77,125 @@ VlValue::VlValue(const VlValue& src,
 		 const VlValueType& value_type)
 {
   if ( value_type.is_int_type() ) {
-    mRep = new VlValueInt(src.int_value());
+    mRep = shared_ptr<VlValueRep>{new VlValueInt(src.int_value())};
   }
   else if ( value_type.is_real_type() ) {
-    mRep = new VlValueReal(src.real_value());
+    mRep = shared_ptr<VlValueRep>{new VlValueReal(src.real_value())};
   }
   else if ( value_type.is_time_type() ) {
-    mRep = new VlValueTime(src.time_value());
+    mRep = shared_ptr<VlValueRep>{new VlValueTime(src.time_value())};
   }
   else if ( value_type.is_no_type() ) {
     mRep = src.mRep;
   }
   else if ( value_type.is_bitvector_type() ) {
     const BitVector& src_bv = src.bitvector_value();
-    mRep = new VlValueBitVector(BitVector(src_bv,
-					  value_type.size(),
-					  value_type.is_sized(),
-					  value_type.is_signed(),
-					  src_bv.base()));
+    auto value_p{new VlValueBitVector(BitVector(src_bv,
+						value_type.size(),
+						value_type.is_sized(),
+						value_type.is_signed(),
+						src_bv.base()))};
+    mRep = shared_ptr<VlValueRep>{value_p};
   }
   else {
     ASSERT_NOT_REACHED;
   }
-  mRep->inc();
 }
 
-// @brief 代入演算子
+// @brief 型変換を伴うコンストラクタ
+VlValue::VlValue(VlValue&& src,
+		 const VlValueType& value_type)
+{
+  if ( this->value_type() == value_type || value_type.is_no_type() ) {
+    // 型が同じ場合だけムーブを使う．
+    mRep = move(src.mRep);
+  }
+  else {
+    if ( value_type.is_int_type() ) {
+      mRep = shared_ptr<VlValueRep>{new VlValueInt(src.int_value())};
+    }
+    else if ( value_type.is_real_type() ) {
+      mRep = shared_ptr<VlValueRep>{new VlValueReal(src.real_value())};
+    }
+    else if ( value_type.is_time_type() ) {
+      mRep = shared_ptr<VlValueRep>{new VlValueTime(src.time_value())};
+    }
+    else if ( value_type.is_bitvector_type() ) {
+      const BitVector& src_bv = src.bitvector_value();
+      auto value_p{new VlValueBitVector(BitVector(src_bv,
+						value_type.size(),
+						value_type.is_sized(),
+						value_type.is_signed(),
+						src_bv.base()))};
+      mRep = shared_ptr<VlValueRep>{value_p};
+    }
+    else {
+      ASSERT_NOT_REACHED;
+    }
+  }
+}
+
+// @brief コピー代入演算子
 const VlValue&
 VlValue::operator=(const VlValue& src)
 {
-  src.mRep->inc();
-  mRep->dec();
   mRep = src.mRep;
+  return *this;
+}
+
+// @brief ムーブ代入演算子
+const VlValue&
+VlValue::operator=(VlValue&& src)
+{
+  mRep = move(src.mRep);
   return *this;
 }
 
 // @brief デストラクタ
 VlValue::~VlValue()
 {
-  mRep->dec();
 }
 
 // @brief 整数値を設定する．
 void
 VlValue::set(int val)
 {
-  mRep = new VlValueInt(val);
-  mRep->dec();
+  mRep = shared_ptr<VlValueRep>{new VlValueInt(val)};
 }
 
 // @brief ymuint の値をセットする．
 void
 VlValue::set(ymuint val)
 {
-  mRep = new VlValueUint(val);
-  mRep->dec();
+  mRep = shared_ptr<VlValueRep>{new VlValueUint(val)};
 }
 
 // @brief スカラー値をセットする．
 void
 VlValue::set(const VlScalarVal& val)
 {
-  mRep = new VlValueScalar(val);
-  mRep->dec();
+  mRep = shared_ptr<VlValueRep>{new VlValueScalar(val)};
 }
 
 // @brief time の値をセットする．
 void
 VlValue::set(VlTime val)
 {
-  mRep = new VlValueTime(val);
-  mRep->dec();
+  mRep = shared_ptr<VlValueRep>{new VlValueTime(val)};
 }
 
 // @brief 実数値をセットする．
 void
 VlValue::set(double val)
 {
-  mRep = new VlValueReal(val);
-  mRep->dec();
+  mRep = shared_ptr<VlValueRep>{new VlValueReal(val)};
 }
 
 // @brief ビットベクタの値をセットする．
 void
 VlValue::set(const BitVector& val)
 {
-  mRep = new VlValueBitVector(val);
-  mRep->dec();
+  mRep = shared_ptr<VlValueRep>{new VlValueBitVector(val)};
 }
 
 // @relates VlValue
@@ -189,22 +209,22 @@ VlValue
 operator-(const VlValue& src)
 {
   switch ( src.type() ) {
-  case VlValue::kIntType:
+  case VlValue::INT:
     return VlValue( - src.int_value() );
 
-  case VlValue::kUintType:
-  case VlValue::kScalarType:
+  case VlValue::UINT:
+  case VlValue::SCALAR:
     return VlValue( static_cast<ymuint>(- src.int_value()) );
 
-  case VlValue::kRealType:
+  case VlValue::REAL:
     return VlValue( - src.real_value() );
 
-  case VlValue::kTimeType:
+  case VlValue::TIME:
     // これは意味があるとは思えないのでビットベクタに変換する．
-  case VlValue::kBitVectorType:
+  case VlValue::BITVECTOR:
     return VlValue( - src.bitvector_value() );
 
-  case VlValue::kErrorType:
+  case VlValue::ERROR:
     return src;
   }
   ASSERT_NOT_REACHED;
@@ -222,23 +242,23 @@ operator+(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_uint_type() ) {
-    if ( src2.is_uint_type() ) {
+  if ( src1.is_uint() ) {
+    if ( src2.is_uint() ) {
       return VlValue( src1.uint_value() + src2.uint_value() );
     }
-    if ( src2.is_int_type() ) {
+    if ( src2.is_int() ) {
       return VlValue( src1.int_value() + src2.int_value() );
     }
   }
-  if ( src1.is_int_type() ) {
-    if ( src2.is_int_type() || src2.is_int_type() ) {
+  if ( src1.is_int() ) {
+    if ( src2.is_int() || src2.is_int() ) {
       return VlValue( src1.int_value() + src2.int_value() );
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     return VlValue( src1.real_value() + src2.real_value() );
   }
-  if ( src1.is_time_type() && src2.is_time_type() ) {
+  if ( src1.is_time() && src2.is_time() ) {
     return VlValue( src1.time_value() + src2.time_value() );
   }
   return VlValue( src1.bitvector_value() + src2.bitvector_value() );
@@ -255,20 +275,20 @@ operator-(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_uint_type() ) {
-    if ( src2.is_uint_type() ) {
+  if ( src1.is_uint() ) {
+    if ( src2.is_uint() ) {
       return VlValue( src1.uint_value() - src2.uint_value() );
     }
-    if ( src2.is_int_type() ) {
+    if ( src2.is_int() ) {
       return VlValue( src1.int_value() - src2.int_value() );
     }
   }
-  if ( src1.is_int_type() ) {
-    if ( src2.is_int_type() || src2.is_int_type() ) {
+  if ( src1.is_int() ) {
+    if ( src2.is_int() || src2.is_int() ) {
       return VlValue( src1.int_value() - src2.int_value() );
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     return VlValue( src1.real_value() - src2.real_value() );
   }
   return VlValue( src1.bitvector_value() - src2.bitvector_value() );
@@ -285,20 +305,20 @@ operator*(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_uint_type() ) {
-    if ( src2.is_uint_type() ) {
+  if ( src1.is_uint() ) {
+    if ( src2.is_uint() ) {
       return VlValue( src1.uint_value() * src2.uint_value() );
     }
-    if ( src2.is_int_type() ) {
+    if ( src2.is_int() ) {
       return VlValue( src1.int_value() * src2.int_value() );
     }
   }
-  if ( src1.is_int_type() ) {
-    if ( src2.is_int_type() || src2.is_int_type() ) {
+  if ( src1.is_int() ) {
+    if ( src2.is_int() || src2.is_int() ) {
       return VlValue( src1.int_value() * src2.int_value() );
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     return VlValue( src1.real_value() * src2.real_value() );
   }
   return VlValue( src1.bitvector_value() * src2.bitvector_value() );
@@ -315,20 +335,20 @@ operator/(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_uint_type() ) {
-    if ( src2.is_uint_type() ) {
+  if ( src1.is_uint() ) {
+    if ( src2.is_uint() ) {
       return VlValue( src1.uint_value() / src2.uint_value() );
     }
-    if ( src2.is_int_type() ) {
+    if ( src2.is_int() ) {
       return VlValue( src1.int_value() / src2.int_value() );
     }
   }
-  if ( src1.is_int_type() ) {
-    if ( src2.is_int_type() || src2.is_int_type() ) {
+  if ( src1.is_int() ) {
+    if ( src2.is_int() || src2.is_int() ) {
       return VlValue( src1.int_value() / src2.int_value() );
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     return VlValue( src1.real_value() / src2.real_value() );
   }
   return VlValue( src1.bitvector_value() / src2.bitvector_value() );
@@ -345,20 +365,20 @@ operator%(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_uint_type() ) {
-    if ( src2.is_uint_type() ) {
+  if ( src1.is_uint() ) {
+    if ( src2.is_uint() ) {
       return VlValue( src1.uint_value() % src2.uint_value() );
     }
-    if ( src2.is_int_type() ) {
+    if ( src2.is_int() ) {
       return VlValue( src1.int_value() % src2.int_value() );
     }
   }
-  if ( src1.is_int_type() ) {
-    if ( src2.is_int_type() || src2.is_int_type() ) {
+  if ( src1.is_int() ) {
+    if ( src2.is_int() || src2.is_int() ) {
       return VlValue( src1.int_value() % src2.int_value() );
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() % src2.bitvector_value() );
@@ -375,8 +395,8 @@ power(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_real_type() || src1.is_int_type() ||
-       src2.is_real_type() || src2.is_int_type() ) {
+  if ( src1.is_real() || src1.is_int() ||
+       src2.is_real() || src2.is_int() ) {
     double v1 = src1.real_value();
     double v2 = src2.real_value();
     if ( (v1 == 0.0 && v2 <= 0.0) || (v1 < 0.0 && rint(v2) != v2) ) {
@@ -400,8 +420,8 @@ lt(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( src1.is_int_type() ) {
-    if ( src2.is_int_type() || src2.is_uint_type() ) {
+  if ( src1.is_int() ) {
+    if ( src2.is_int() || src2.is_uint() ) {
       if ( src1.int_value() < src2.int_value() ) {
 	return VlValue(VlScalarVal::one());
       }
@@ -410,8 +430,8 @@ lt(const VlValue& src1,
       }
     }
   }
-  else if ( src1.is_uint_type() ) {
-    if ( src2.is_int_type() ) {
+  else if ( src1.is_uint() ) {
+    if ( src2.is_int() ) {
       if ( src1.int_value() < src2.int_value() ) {
 	return VlValue(VlScalarVal::one());
       }
@@ -419,7 +439,7 @@ lt(const VlValue& src1,
 	return VlValue(VlScalarVal::zero());
       }
     }
-    else if ( src2.is_uint_type() ) {
+    else if ( src2.is_uint() ) {
       if ( src1.uint_value() < src2.uint_value() ) {
 	return VlValue(VlScalarVal::one());
       }
@@ -428,7 +448,7 @@ lt(const VlValue& src1,
       }
     }
   }
-  else if ( src1.is_real_type() || src2.is_real_type() ) {
+  else if ( src1.is_real() || src2.is_real() ) {
     if ( src1.real_value() < src2.real_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -491,8 +511,8 @@ eq(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( (src1.is_int_type() || src1.is_uint_type()) &&
-       (src2.is_int_type() || src2.is_uint_type()) ) {
+  if ( (src1.is_int() || src1.is_uint()) &&
+       (src2.is_int() || src2.is_uint()) ) {
     if ( src1.int_value() == src2.int_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -500,7 +520,7 @@ eq(const VlValue& src1,
       return VlValue(VlScalarVal::zero());
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     if ( src1.real_value() == src2.real_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -522,8 +542,8 @@ eq_with_x(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( (src1.is_int_type() || src1.is_uint_type()) &&
-       (src2.is_int_type() || src2.is_uint_type()) ) {
+  if ( (src1.is_int() || src1.is_uint()) &&
+       (src2.is_int() || src2.is_uint()) ) {
     if ( src1.int_value() == src2.int_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -531,7 +551,7 @@ eq_with_x(const VlValue& src1,
       return VlValue(VlScalarVal::zero());
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     if ( src1.real_value() == src2.real_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -553,8 +573,8 @@ eq_with_xz(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( (src1.is_int_type() || src1.is_uint_type()) &&
-       (src2.is_int_type() || src2.is_uint_type()) ) {
+  if ( (src1.is_int() || src1.is_uint()) &&
+       (src2.is_int() || src2.is_uint()) ) {
     if ( src1.int_value() == src2.int_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -562,7 +582,7 @@ eq_with_xz(const VlValue& src1,
       return VlValue(VlScalarVal::zero());
     }
   }
-  if ( src1.is_real_type() || src2.is_real_type() ) {
+  if ( src1.is_real() || src2.is_real() ) {
     if ( src1.real_value() == src2.real_value() ) {
       return VlValue(VlScalarVal::one());
     }
@@ -643,7 +663,7 @@ bit_negate(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( ~src.bitvector_value() );
@@ -660,7 +680,7 @@ bit_and(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() & src2.bitvector_value() );
@@ -677,7 +697,7 @@ bit_or(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() | src2.bitvector_value() );
@@ -694,7 +714,7 @@ bit_xor(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() ^ src2.bitvector_value() );
@@ -711,7 +731,7 @@ bit_xnor(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( ~(src1.bitvector_value() ^ src2.bitvector_value()) );
@@ -726,7 +746,7 @@ reduction_and(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src.bitvector_value().reduction_and() );
@@ -741,7 +761,7 @@ reduction_or(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src.bitvector_value().reduction_or() );
@@ -756,7 +776,7 @@ reduction_xor(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src.bitvector_value().reduction_xor() );
@@ -771,7 +791,7 @@ reduction_nand(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src.bitvector_value().reduction_nand() );
@@ -786,7 +806,7 @@ reduction_nor(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src.bitvector_value().reduction_nor() );
@@ -801,7 +821,7 @@ reduction_xnor(const VlValue& src)
   if ( src.is_error() ) {
     return VlValue();
   }
-  if ( !src.is_bitvector_conv() ) {
+  if ( !src.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src.bitvector_value().reduction_xnor() );
@@ -819,7 +839,7 @@ operator<<(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() << src2.bitvector_value() );
@@ -837,7 +857,7 @@ operator<<(const VlValue& src1,
   if ( src1.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() << src2 );
@@ -855,7 +875,7 @@ operator>>(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() >> src2.bitvector_value() );
@@ -873,7 +893,7 @@ operator>>(const VlValue& src1,
   if ( src1.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( src1.bitvector_value() >> src2 );
@@ -892,7 +912,7 @@ alshift(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( alshift(src1.bitvector_value(), src2.bitvector_value()) );
@@ -910,7 +930,7 @@ alshift(const VlValue& src1,
   if ( src1.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( alshift(src1.bitvector_value(), src2) );
@@ -928,7 +948,7 @@ arshift(const VlValue& src1,
   if ( src1.is_error() || src2.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() || !src2.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() || !src2.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( arshift(src1.bitvector_value(), src2.bitvector_value()) );
@@ -946,7 +966,7 @@ arshift(const VlValue& src1,
   if ( src1.is_error() ) {
     return VlValue();
   }
-  if ( !src1.is_bitvector_conv() ) {
+  if ( !src1.is_bitvector_compat() ) {
     return VlValue();
   }
   return VlValue( arshift(src1.bitvector_value(), src2) );
@@ -1000,7 +1020,7 @@ concat(const list<VlValue>& src_list)
   vector<BitVector> bv_array;
   bv_array.reserve(src_list.size());
   for ( const auto& v: src_list ) {
-    if ( !v.is_bitvector_conv() ) {
+    if ( !v.is_bitvector_compat() ) {
       return VlValue();
     }
     bv_array.push_back(v.bitvector_value());
@@ -1018,7 +1038,7 @@ concat(const vector<VlValue>& src_list)
   vector<BitVector> bv_array;
   bv_array.reserve(src_list.size());
   for ( const auto& v: src_list ) {
-    if ( !v.is_bitvector_conv() ) {
+    if ( !v.is_bitvector_compat() ) {
       return VlValue();
     }
     bv_array.push_back(v.bitvector_value());
@@ -1037,12 +1057,12 @@ multi_concat(const list<VlValue>& src_list)
   bv_array.reserve(src_list.size());
   auto p = src_list.begin();
   const auto& v0 = *p;
-  if ( !v0.is_bitvector_conv() ) {
+  if ( !v0.is_bitvector_compat() ) {
     return VlValue();
   }
   for (++ p; p != src_list.end(); ++ p) {
     const auto& v = *p;
-    if ( v.is_bitvector_conv() ) {
+    if ( v.is_bitvector_compat() ) {
       return VlValue();
     }
     bv_array.push_back(v.bitvector_value());
@@ -1062,808 +1082,17 @@ multi_concat(const vector<VlValue>& src_list)
   bv_array.reserve(src_list.size());
   auto p = src_list.begin();
   const auto& v0 = *p;
-  if ( !v0.is_bitvector_conv() ) {
+  if ( !v0.is_bitvector_compat() ) {
     return VlValue();
   }
   for (++ p; p != src_list.end(); ++ p) {
     const auto& v = *p;
-    if ( v.is_bitvector_conv() ) {
+    if ( v.is_bitvector_compat() ) {
       return VlValue();
     }
     bv_array.push_back(v.bitvector_value());
   }
   return VlValue( multi_concat(v0.bitvector_value(), bv_array) );
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueError
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueError::VlValueError()
-{
-}
-
-// @brief デストラクタ
-VlValueError::~VlValueError()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueError::type() const
-{
-  return VlValue::kErrorType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueError::is_int_conv() const
-{
-  return false;
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueError::is_uint_conv() const
-{
-  return false;
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueError::is_real_conv() const
-{
-  return false;
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueError::is_time_conv() const
-{
-  return false;
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueError::is_bitvector_conv() const
-{
-  return false;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueError::int_value() const
-{
-  return 0;
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueError::uint_value() const
-{
-  return 0;
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueError::scalar_value() const
-{
-  return VlScalarVal::x();
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueError::logic_value() const
-{
-  return VlScalarVal::x();
-}
-
-// @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-double
-VlValueError::real_value() const
-{
-  return 0.0;
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueError::time_value() const
-{
-  return VlTime();
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueError::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector();
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueInt
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueInt::VlValueInt(int val) :
-  mVal(val)
-{
-}
-
-// @brief デストラクタ
-VlValueInt::~VlValueInt()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueInt::type() const
-{
-  return VlValue::kIntType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueInt::is_int_conv() const
-{
-  return true;
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueInt::is_uint_conv() const
-{
-  return true;
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueInt::is_real_conv() const
-{
-  return true;
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueInt::is_time_conv() const
-{
-  return true;
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueInt::is_bitvector_conv() const
-{
-  return true;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueInt::int_value() const
-{
-  return mVal;
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueInt::uint_value() const
-{
-  return static_cast<ymuint>(mVal);
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueInt::scalar_value() const
-{
-  return VlScalarVal(mVal);
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueInt::logic_value() const
-{
-  if ( mVal != 0 ) {
-    return VlScalarVal::one();
-  }
-  return VlScalarVal::zero();
-}
-
-// @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-double
-VlValueInt::real_value() const
-{
-  return static_cast<double>(mVal);
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueInt::time_value() const
-{
-  return VlTime(uint_value());
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueInt::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector(mVal).coerce(req_type);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueUint
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueUint::VlValueUint(ymuint val) :
-  mVal(val)
-{
-}
-
-// @brief デストラクタ
-VlValueUint::~VlValueUint()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueUint::type() const
-{
-  return VlValue::kUintType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueUint::is_int_conv() const
-{
-  return true;
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueUint::is_uint_conv() const
-{
-  return true;
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueUint::is_real_conv() const
-{
-  return true;
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueUint::is_time_conv() const
-{
-  return true;
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueUint::is_bitvector_conv() const
-{
-  return true;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueUint::int_value() const
-{
-  return static_cast<int>(mVal);
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueUint::uint_value() const
-{
-  return mVal;
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueUint::scalar_value() const
-{
-  return VlScalarVal(mVal);
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueUint::logic_value() const
-{
-  if ( mVal != 0 ) {
-    return VlScalarVal::one();
-  }
-  return VlScalarVal::zero();
-}
-
-// @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-double
-VlValueUint::real_value() const
-{
-  return static_cast<double>(mVal);
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueUint::time_value() const
-{
-  return VlTime(mVal);
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueUint::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector(mVal).coerce(req_type);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueScalar
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueScalar::VlValueScalar(const VlScalarVal& val) :
-  mVal(val)
-{
-}
-
-// @brief デストラクタ
-VlValueScalar::~VlValueScalar()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueScalar::type() const
-{
-  return VlValue::kScalarType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueScalar::is_int_conv() const
-{
-  return !mVal.is_xz();
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueScalar::is_uint_conv() const
-{
-  return is_int_conv();
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueScalar::is_real_conv() const
-{
-  return is_int_conv();
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueScalar::is_time_conv() const
-{
-  return is_int_conv();
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueScalar::is_bitvector_conv() const
-{
-  return true;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueScalar::int_value() const
-{
-  return mVal.to_int();
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueScalar::uint_value() const
-{
-  return static_cast<ymuint>(int_value());
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueScalar::scalar_value() const
-{
-  return mVal;
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueScalar::logic_value() const
-{
-  if ( mVal.is_z() ) {
-    return VlScalarVal::x();
-  }
-  return mVal;
-}
-
-// @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-double
-VlValueScalar::real_value() const
-{
-  return static_cast<double>(int_value());
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueScalar::time_value() const
-{
-  return VlTime(uint_value());
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueScalar::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector(mVal).coerce(req_type);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueReal
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueReal::VlValueReal(double val) :
-  mVal(val)
-{
-}
-
-// @brief デストラクタ
-VlValueReal::~VlValueReal()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueReal::type() const
-{
-  return VlValue::kRealType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueReal::is_int_conv() const
-{
-  return true;
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueReal::is_uint_conv() const
-{
-  return true;
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueReal::is_real_conv() const
-{
-  return true;
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueReal::is_time_conv() const
-{
-  return true;
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueReal::is_bitvector_conv() const
-{
-  return false;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueReal::int_value() const
-{
-  return static_cast<int>(mVal);
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueReal::uint_value() const
-{
-  return static_cast<ymuint>(mVal);
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueReal::scalar_value() const
-{
-  return VlScalarVal(mVal);
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueReal::logic_value() const
-{
-  if ( mVal != 0.0 ) {
-    return VlScalarVal::one();
-  }
-  return VlScalarVal::zero();
-}
-
-// @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-double
-VlValueReal::real_value() const
-{
-  return mVal;
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueReal::time_value() const
-{
-  return VlTime(mVal);
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueReal::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector();
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueTime
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueTime::VlValueTime(VlTime val) :
-  mVal(val)
-{
-}
-
-// @brief デストラクタ
-VlValueTime::~VlValueTime()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueTime::type() const
-{
-  return VlValue::kTimeType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueTime::is_int_conv() const
-{
-  return mVal.value() <= 0x7FFFFFFFUL;
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueTime::is_uint_conv() const
-{
-  return mVal.value() <= 0xFFFFFFFFUL;
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueTime::is_real_conv() const
-{
-  return true;
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueTime::is_time_conv() const
-{
-  return true;
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueTime::is_bitvector_conv() const
-{
-  return true;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueTime::int_value() const
-{
-  return static_cast<int>(mVal.to_uint());
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueTime::uint_value() const
-{
-  return mVal.to_uint();
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueTime::scalar_value() const
-{
-  return VlScalarVal(mVal.low());
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueTime::logic_value() const
-{
-  if ( mVal.value() != 0UL ) {
-    return VlScalarVal::one();
-  }
-  return VlScalarVal::zero();
-}
-
-// @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-double
-VlValueTime::real_value() const
-{
-  return mVal.to_real();
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueTime::time_value() const
-{
-  return mVal;
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueTime::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector(mVal).coerce(req_type);
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス VlValueBitVector
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-VlValueBitVector::VlValueBitVector(const BitVector& val) :
-  mVal(val)
-{
-}
-
-// @brief デストラクタ
-VlValueBitVector::~VlValueBitVector()
-{
-}
-
-// @brief 型を返す．
-VlValue::tType
-VlValueBitVector::type() const
-{
-  return VlValue::kBitVectorType;
-}
-
-// @brief 整数型に変換可能な時に true を返す．
-bool
-VlValueBitVector::is_int_conv() const
-{
-  return mVal.is_int();
-}
-
-// @brief ymuint 型に変換可能な時に true を返す．
-bool
-VlValueBitVector::is_uint_conv() const
-{
-  return mVal.is_uint32();
-}
-
-// @brief 実数型に変換可能な時に true を返す．
-bool
-VlValueBitVector::is_real_conv() const
-{
-  return true;
-}
-
-// @brief time 型に変換可能な時に true を返す．
-bool
-VlValueBitVector::is_time_conv() const
-{
-  return mVal.is_time();
-}
-
-// @brief ビットベクタ型に変換可能な時に true を返す．
-bool
-VlValueBitVector::is_bitvector_conv() const
-{
-  return true;
-}
-
-// @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-int
-VlValueBitVector::int_value() const
-{
-  return mVal.to_int();
-}
-
-// @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
-ymuint
-VlValueBitVector::uint_value() const
-{
-  return mVal.to_uint32();
-}
-
-// @brief スカラー型の値を返す．
-VlScalarVal
-VlValueBitVector::scalar_value() const
-{
-  return mVal.to_scalar();
-}
-
-// @brief 論理型の値を返す．
-VlScalarVal
-VlValueBitVector::logic_value() const
-{
-  return mVal.to_logic();
-}
-
-// @brief 実数型の値を返す．
-// @note 値が実数型に変換できない時の値は不定
-double
-VlValueBitVector::real_value() const
-{
-  return mVal.to_real();
-}
-
-// @brief time 型の値を返す．
-VlTime
-VlValueBitVector::time_value() const
-{
-  return mVal.to_time();
-}
-
-// @brief ビットベクタ型の値を返す．
-// @param[in] req_type 要求されるデータの型
-BitVector
-VlValueBitVector::bitvector_value(const VlValueType& req_type) const
-{
-  return BitVector(mVal).coerce(req_type);
 }
 
 END_NAMESPACE_YM_VERILOG

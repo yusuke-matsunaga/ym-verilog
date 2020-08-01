@@ -15,13 +15,13 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 /// @brief integer 型のサイズ
-const ymuint32 kVpiSizeInteger = 32U;
+const SizeType kVpiSizeInteger = 32U;
 
 /// @brief real 型のサイズ
-const ymuint32 kVpiSizeReal = 64U;
+const SizeType kVpiSizeReal = 64U;
 
 /// @brief time 型のサイズ
-const ymuint32 kVpiSizeTime = 64U;
+const SizeType kVpiSizeTime = 64U;
 
 //////////////////////////////////////////////////////////////////////
 /// @class VlValueType VlValueType.h "ym/VlValueType.h"
@@ -41,7 +41,7 @@ public:
   /// @param[in] size サイズ(ビット幅)
   VlValueType(bool has_sign,
 	      bool has_size,
-	      ymuint size);
+	      SizeType size);
 
   /// @brief 整数型を返す．
   static
@@ -94,7 +94,7 @@ public:
   is_sized() const;
 
   /// @brief サイズを返す．
-  ymuint
+  SizeType
   size() const;
 
   /// @brief 等価比較演算子
@@ -113,7 +113,7 @@ private:
 
   /// @brief 値を直接指定するコンストラクタ
   /// @param[in] data 値
-  VlValueType(ymuint32 data);
+  VlValueType(SizeType data);
 
 
 private:
@@ -143,33 +143,33 @@ private:
 
   // 符号マスク
   static
-  const ymuint32 kSignMask = 1U << kSignBit;
+  const SizeType kSignMask = 1U << kSignBit;
 
   // サイズマスク
   static
-  const ymuint32 kSizeMask = 1U << kSizeBit;
+  const SizeType kSizeMask = 1U << kSizeBit;
 
   // ビットベクタマスク
   static
-  const ymuint32 kBvMask = 1U << kBvBit;
+  const SizeType kBvMask = 1U << kBvBit;
 
   // 実数マスク
   static
-  const ymuint32 kRealMask = 1U << kRealBit;
+  const SizeType kRealMask = 1U << kRealBit;
 
   // 整数を表すパタン
   static
-  const ymuint32 kIntData = kSignMask | kSizeMask | kBvMask |
+  const SizeType kIntData = kSignMask | kSizeMask | kBvMask |
 			   (kVpiSizeInteger << kSizeShift);
 
   // time 型を表すパタン
   static
-  const ymuint32 kTimeData = kSizeMask | kBvMask |
+  const SizeType kTimeData = kSizeMask | kBvMask |
 			    (kVpiSizeTime << kSizeShift);
 
   // 実数を表すパタン
   static
-  const ymuint32 kRealData = kSignMask | kSizeMask | kRealMask |
+  const SizeType kRealData = kSignMask | kSizeMask | kRealMask |
                             (kVpiSizeReal << kSizeShift);
 
 
@@ -179,7 +179,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 型を表す実体
-  ymuint32 mData;
+  SizeType mData;
 
 };
 
@@ -200,7 +200,7 @@ operator<<(ostream& s,
 // @note 型の指定なしの意味になる．
 inline
 VlValueType::VlValueType() :
-  mData(0U)
+  mData{0U}
 {
 }
 
@@ -211,19 +211,19 @@ VlValueType::VlValueType() :
 inline
 VlValueType::VlValueType(bool has_sign,
 			 bool has_size,
-			 ymuint size) :
-  mData(kSignMask * has_sign |
+			 SizeType size) :
+  mData{kSignMask * has_sign |
 	kSizeMask * has_size |
 	kBvMask |
-	(size << kSizeShift))
+	(size << kSizeShift)}
 {
 }
 
 // @brief 値を直接指定するコンストラクタ
 // @param[in] data 値
 inline
-VlValueType::VlValueType(ymuint32 data) :
-  mData(data)
+VlValueType::VlValueType(SizeType data) :
+  mData{data}
 {
 }
 
@@ -316,7 +316,7 @@ VlValueType::is_sized() const
 
 // @brief サイズを返す．
 inline
-ymuint
+SizeType
 VlValueType::size() const
 {
   return (mData >> kSizeShift);

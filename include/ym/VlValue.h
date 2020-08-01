@@ -21,7 +21,9 @@ class VlValueRep;
 //////////////////////////////////////////////////////////////////////
 /// @class VlValue VlValue.h "ym/VlValue.h"
 /// @brief 値を表すクラス
-/// ElbValue が実際の処理を行う．
+///
+/// 型に応じた VlValueRep の派生クラスが実際の値を保持する．
+/// このクラスはそのオブジェクとへの shared_ptr を持つ．
 //////////////////////////////////////////////////////////////////////
 class VlValue
 {
@@ -30,14 +32,14 @@ public:
   // 保持している値の種類
   //////////////////////////////////////////////////////////////////////
 
-  enum tType {
-    kIntType,
-    kUintType,
-    kScalarType,
-    kRealType,
-    kTimeType,
-    kBitVectorType,
-    kErrorType
+  enum Type {
+    INT,
+    UINT,
+    SCALAR,
+    REAL,
+    TIME,
+    BITVECTOR,
+    ERROR
   };
 
 public:
@@ -53,13 +55,16 @@ public:
   /// @brief コピーコンストラクタ
   VlValue(const VlValue& src);
 
+  /// @brief ムーブコンストラクタ
+  VlValue(VlValue&& src);
+
   /// @brief 整数値からのコンストラクタ
   explicit
   VlValue(int val);
 
   /// @brief ymuint からのコンストラクタ
   explicit
-  VlValue(ymuint val);
+  VlValue(unsigned int val);
 
   /// @brief スカラー値からのコンストラクタ
   explicit
@@ -81,9 +86,17 @@ public:
   VlValue(const VlValue& src,
 	  const VlValueType& value_type);
 
-  /// @brief 代入演算子
+  /// @brief 型変換を伴うコンストラクタ
+  VlValue(VlValue&& src,
+	  const VlValueType& value_type);
+
+  /// @brief コピー代入演算子
   const VlValue&
   operator=(const VlValue& src);
+
+  /// @brief ムーブ代入演算子
+  const VlValue&
+  operator=(VlValue&& src);
 
   /// @brief デストラクタ
   ~VlValue();
@@ -100,7 +113,7 @@ public:
 
   /// @brief ymuint の値をセットする．
   void
-  set(ymuint val);
+  set(unsigned int val);
 
   /// @brief スカラー値をセットする．
   void
@@ -125,32 +138,32 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  tType
+  Type
   type() const;
 
   /// @brief 整数型の時に true を返す．
   bool
-  is_int_type() const;
+  is_int() const;
 
   /// @brief 符号なし整数型の時に true 返す．
   bool
-  is_uint_type() const;
+  is_uint() const;
 
   /// @brief 実数型の時に true を返す．
   bool
-  is_real_type() const;
+  is_real() const;
 
   /// @brief スカラー型の時に true を返す．
   bool
-  is_scalar_type() const;
+  is_scalar() const;
 
   /// @brief time 型の時に true を返す．
   bool
-  is_time_type() const;
+  is_time() const;
 
   /// @brief ビットベクタ型の時に true を返す．
   bool
-  is_bitvector_type() const;
+  is_bitvector() const;
 
   /// @brief エラー状態の時に true を返す．
   bool
@@ -158,23 +171,23 @@ public:
 
   /// @brief 整数型に変換可能な時に true を返す．
   bool
-  is_int_conv() const;
+  is_int_compat() const;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
   bool
-  is_uint_conv() const;
+  is_uint_compat() const;
 
   /// @brief 実数型に変換可能な時に true を返す．
   bool
-  is_real_conv() const;
+  is_real_compat() const;
 
   /// @brief time 型に変換可能な時に true を返す．
   bool
-  is_time_conv() const;
+  is_time_compat() const;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const;
 
   /// @brief 符号付きの型の時に true を返す．
   bool
@@ -204,7 +217,6 @@ public:
   scalar_value() const;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
   logic_value() const;
 
@@ -230,7 +242,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値を持つ実体
-  VlValueRep* mRep;
+  shared_ptr<VlValueRep> mRep;
 
 };
 
@@ -791,50 +803,48 @@ multi_concat(const vector<VlValue>& src_list);
 //////////////////////////////////////////////////////////////////////
 class VlValueRep
 {
-  friend class VlValue;
+public:
 
-protected:
-
-  VlValueRep();
+  VlValueRep() = default;
 
   virtual
-  ~VlValueRep() { }
+  ~VlValueRep() = default;
 
 
-private:
+public:
   //////////////////////////////////////////////////////////////////////
   // VlValueRep の継承クラスが実装しなければならない仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
   virtual
-  VlValue::tType
+  VlValue::Type
   type() const = 0;
 
   /// @brief 整数型に変換可能な時に true を返す．
   virtual
   bool
-  is_int_conv() const = 0;
+  is_int_compat() const = 0;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
   virtual
   bool
-  is_uint_conv() const = 0;
+  is_uint_compat() const = 0;
 
   /// @brief 実数型に変換可能な時に true を返す．
   virtual
   bool
-  is_real_conv() const = 0;
+  is_real_compat() const = 0;
 
   /// @brief time 型に変換可能な時に true を返す．
   virtual
   bool
-  is_time_conv() const = 0;
+  is_time_compat() const = 0;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
   virtual
   bool
-  is_bitvector_conv() const = 0;
+  is_bitvector_compat() const = 0;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
@@ -875,28 +885,10 @@ private:
   BitVector
   bitvector_value(const VlValueType& req_type) const = 0;
 
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 参照回数関係の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 参照回数を増やす．
-  void
-  inc();
-
-  /// @brief 参照回数を減らす．
-  void
-  dec();
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 参照回数
-  ymuint mRefCount;
+  /// @brief 自身の複製を返す．
+  virtual
+  VlValueRep*
+  duplicate() const = 0;
 
 };
 
@@ -907,7 +899,7 @@ private:
 
 // @brief 型を返す．
 inline
-VlValue::tType
+VlValue::Type
 VlValue::type() const
 {
   return mRep->type();
@@ -916,49 +908,49 @@ VlValue::type() const
 // @brief 整数型の時に true を返す．
 inline
 bool
-VlValue::is_int_type() const
+VlValue::is_int() const
 {
-  return type() == kIntType;
+  return type() == INT;
 }
 
 // @brief 符号なし整数型の時に true 返す．
 inline
 bool
-VlValue::is_uint_type() const
+VlValue::is_uint() const
 {
-  return type() == kUintType;
+  return type() == UINT;
 }
 
 // @brief 実数型の時に true を返す．
 inline
 bool
-VlValue::is_real_type() const
+VlValue::is_real() const
 {
-  return type() == kRealType;
+  return type() == REAL;
 }
 
 // @brief スカラー型の時に true を返す．
 inline
 bool
-VlValue::is_scalar_type() const
+VlValue::is_scalar() const
 {
-  return type() == kScalarType;
+  return type() == SCALAR;
 }
 
 // @brief time 型の時に true を返す．
 inline
 bool
-VlValue::is_time_type() const
+VlValue::is_time() const
 {
-  return type() == kTimeType;
+  return type() == TIME;
 }
 
 // @brief ビットベクタ型の時に true を返す．
 inline
 bool
-VlValue::is_bitvector_type() const
+VlValue::is_bitvector() const
 {
-  return type() == kBitVectorType;
+  return type() == BITVECTOR;
 }
 
 // @brief エラー状態の時に true を返す．
@@ -966,47 +958,47 @@ inline
 bool
 VlValue::is_error() const
 {
-  return type() == kErrorType;
+  return type() == ERROR;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
 inline
 bool
-VlValue::is_int_conv() const
+VlValue::is_int_compat() const
 {
-  return mRep->is_int_conv();
+  return mRep->is_int_compat();
 }
 
 // @brief ymuint 型に変換可能な時に true を返す．
 inline
 bool
-VlValue::is_uint_conv() const
+VlValue::is_uint_compat() const
 {
-  return mRep->is_uint_conv();
+  return mRep->is_uint_compat();
 }
 
 // @brief 実数型に変換可能な時に true を返す．
 inline
 bool
-VlValue::is_real_conv() const
+VlValue::is_real_compat() const
 {
-  return mRep->is_real_conv();
+  return mRep->is_real_compat();
 }
 
 // @brief time 型に変換可能な時に true を返す．
 inline
 bool
-VlValue::is_time_conv() const
+VlValue::is_time_compat() const
 {
-  return mRep->is_time_conv();
+  return mRep->is_time_compat();
 }
 
 // @brief ビットベクタ型に変換可能な時に true を返す．
 inline
 bool
-VlValue::is_bitvector_conv() const
+VlValue::is_bitvector_compat() const
 {
-  return mRep->is_bitvector_conv();
+  return mRep->is_bitvector_compat();
 }
 
 // @brief 符号付きの型の時に true を返す．
@@ -1015,17 +1007,17 @@ bool
 VlValue::is_signed() const
 {
   switch ( type() ) {
-  case kIntType:
-  case kRealType:
+  case INT:
+  case REAL:
     return true;
 
-  case kUintType:
-  case kScalarType:
-  case kTimeType:
-  case kErrorType:
+  case UINT:
+  case SCALAR:
+  case TIME:
+  case ERROR:
     return false;
 
-  case kBitVectorType:
+  case BITVECTOR:
     return bitvector_value().is_signed();
   }
   ASSERT_NOT_REACHED;
@@ -1038,23 +1030,23 @@ ymuint
 VlValue::bit_size() const
 {
   switch ( type() ) {
-  case kIntType:
-  case kUintType:
+  case INT:
+  case UINT:
     return kVpiSizeInteger;
 
-  case kRealType:
+  case REAL:
     return kVpiSizeReal;
 
-  case kScalarType:
+  case SCALAR:
     return 1;
 
-  case kTimeType:
+  case TIME:
     return kVpiSizeTime;
 
-  case kBitVectorType:
+  case BITVECTOR:
     return bitvector_value().size();
 
-  case kErrorType:
+  case ERROR:
     return 0;
   }
   ASSERT_NOT_REACHED;
@@ -1067,25 +1059,25 @@ VlValueType
 VlValue::value_type() const
 {
   switch ( type() ) {
-  case kIntType:
+  case INT:
     return VlValueType::int_type();
 
-  case kUintType:
+  case UINT:
     return VlValueType(false, true, kVpiSizeInteger);
 
-  case kRealType:
+  case REAL:
     return VlValueType::real_type();
 
-  case kScalarType:
+  case SCALAR:
     return VlValueType(false, true, 1);
 
-  case kTimeType:
+  case TIME:
     return VlValueType::time_type();
 
-  case kBitVectorType:
+  case BITVECTOR:
     return bitvector_value().value_type();
 
-  case kErrorType:
+  case ERROR:
     return VlValueType();
   }
   ASSERT_NOT_REACHED;
@@ -1104,7 +1096,7 @@ VlValue::int_value() const
 // @brief ymuint 型の値を返す．
 // @note 値が整数型に変換できない時の値は不定
 inline
-ymuint
+unsigned int
 VlValue::uint_value() const
 {
   return mRep->uint_value();
@@ -1153,32 +1145,6 @@ BitVector
 VlValue::bitvector_value(const VlValueType& req_type) const
 {
   return mRep->bitvector_value(req_type);
-}
-
-
-inline
-VlValueRep::VlValueRep()
-{
-  mRefCount = 0;
-}
-
-// @brief 参照回数を増やす．
-inline
-void
-VlValueRep::inc()
-{
-  ++ mRefCount;
-}
-
-// @brief 参照回数を減らす．
-inline
-void
-VlValueRep::dec()
-{
-  -- mRefCount;
-  if ( mRefCount == 0 ) {
-    delete this;
-  }
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -25,11 +25,10 @@ class VlValueError :
 public:
 
   /// @brief コンストラクタ
-  VlValueError();
+  VlValueError() = default;
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueError();
+  ~VlValueError() = default;
 
 
 private:
@@ -38,73 +37,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+  VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 };
 
@@ -122,8 +112,7 @@ public:
   VlValueInt(int val);
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueInt();
+  ~VlValueInt() = default;
 
 
 private:
@@ -132,73 +121,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+  VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 
 private:
@@ -225,8 +205,7 @@ public:
   VlValueUint(ymuint val);
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueUint();
+  ~VlValueUint() = default;
 
 
 private:
@@ -235,73 +214,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+   VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 
 private:
@@ -328,8 +298,7 @@ public:
   VlValueScalar(const VlScalarVal& val);
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueScalar();
+  ~VlValueScalar() = default;
 
 
 private:
@@ -338,73 +307,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+  VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 
 private:
@@ -431,8 +391,7 @@ public:
   VlValueReal(double val);
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueReal();
+  ~VlValueReal() = default;
 
 
 private:
@@ -441,73 +400,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+  VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 
 private:
@@ -534,8 +484,7 @@ public:
   VlValueTime(VlTime val);
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueTime();
+  ~VlValueTime() = default;
 
 
 private:
@@ -544,73 +493,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+  VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 
 private:
@@ -637,8 +577,7 @@ public:
   VlValueBitVector(const BitVector& val);
 
   /// @brief デストラクタ
-  virtual
-  ~VlValueBitVector();
+  ~VlValueBitVector() = default;
 
 
 private:
@@ -647,73 +586,64 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  virtual
-  VlValue::tType
-  type() const;
+  VlValue::Type
+  type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_int_conv() const;
+  is_int_compat() const override;
 
   /// @brief ymuint 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_uint_conv() const;
+  is_uint_compat() const override;
 
   /// @brief 実数型に変換可能な時に true を返す．
-  virtual
   bool
-  is_real_conv() const;
+  is_real_compat() const override;
 
   /// @brief time 型に変換可能な時に true を返す．
-  virtual
   bool
-  is_time_conv() const;
+  is_time_compat() const override;
 
   /// @brief ビットベクタ型に変換可能な時に true を返す．
-  virtual
   bool
-  is_bitvector_conv() const;
+  is_bitvector_compat() const override;
 
   /// @brief 整数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   int
-  int_value() const;
+  int_value() const override;
 
   /// @brief ymuint 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   ymuint
-  uint_value() const;
+  uint_value() const override;
 
   /// @brief スカラー型の値を返す．
-  virtual
   VlScalarVal
-  scalar_value() const;
+  scalar_value() const override;
 
   /// @brief 論理型の値を返す．
-  virtual
   VlScalarVal
-  logic_value() const;
+  logic_value() const override;
 
   /// @brief 実数型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  virtual
   double
-  real_value() const;
+  real_value() const override;
 
   /// @brief time 型の値を返す．
-  virtual
   VlTime
-  time_value() const;
+  time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
   /// @param[in] req_type 要求されるデータの型
-  virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) const;
+  bitvector_value(const VlValueType& req_type) const override;
+
+  /// @brief 自身の複製を返す．
+  VlValueRep*
+  duplicate() const override;
 
 
 private:
