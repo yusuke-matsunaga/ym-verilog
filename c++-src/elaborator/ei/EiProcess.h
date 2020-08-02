@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbProcess.h"
+#include "elaborator/ElbProcess.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

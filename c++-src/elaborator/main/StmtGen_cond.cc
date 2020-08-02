@@ -10,8 +10,8 @@
 #include "StmtGen.h"
 #include "ElbEnv.h"
 
-#include "elb/ElbStmt.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbStmt.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"

@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbDecl.h"
+#include "elaborator/ElbDecl.h"
 
 #include "ym/VlScalarVal.h"
 #include "ym/pt/PtP.h"

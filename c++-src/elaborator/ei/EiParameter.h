@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbParameter.h"
+#include "elaborator/ElbParameter.h"
 #include "EiRange.h"
 
 #include "ym/VlValue.h"

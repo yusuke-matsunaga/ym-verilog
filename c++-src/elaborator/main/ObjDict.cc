@@ -7,18 +7,18 @@
 /// All rights reserved.
 
 
-#include "elb/ObjDict.h"
+#include "elaborator/ObjDict.h"
 #include "ObjHandleSub.h"
 
 #include "ym/vl/VlNamedObj.h"
 
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbModule.h"
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbPrimitive.h"
-#include "elb/ElbGfRoot.h"
-#include "elb/ElbGenvar.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbTaskFunc.h"
+#include "elaborator/ElbPrimitive.h"
+#include "elaborator/ElbGfRoot.h"
+#include "elaborator/ElbGenvar.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

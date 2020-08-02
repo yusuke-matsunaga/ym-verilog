@@ -10,7 +10,7 @@
 
 
 #include "ym/vl/VlContAssign.h"
-#include "elb/ElbContAssign.h"
+#include "elaborator/ElbContAssign.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

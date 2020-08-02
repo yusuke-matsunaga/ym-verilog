@@ -11,8 +11,8 @@
 #include "EiTaskFunc.h"
 #include "EiIODecl.h"
 
-#include "elb/ElbStmt.h"
-#include "elb/ElbDecl.h"
+#include "elaborator/ElbStmt.h"
+#include "elaborator/ElbDecl.h"
 
 #include "ym/VlTime.h"
 #include "ym/BitVector.h"

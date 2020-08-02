@@ -15,7 +15,7 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
 

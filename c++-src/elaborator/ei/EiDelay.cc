@@ -9,7 +9,7 @@
 
 #include "EiFactory.h"
 #include "EiDelay.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 #include "ym/vl/VlExpr.h"
 #include "ym/pt/PtBase.h"
 

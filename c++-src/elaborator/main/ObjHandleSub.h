@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ObjHandle.h"
+#include "elaborator/ObjHandle.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

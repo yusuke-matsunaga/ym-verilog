@@ -16,8 +16,8 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/vl/VlExpr.h"
 
-#include "elb/ElbUdp.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbUdp.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
 

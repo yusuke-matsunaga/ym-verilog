@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// IEEE Std 1364-2001 26.6.14 UDP
 //////////////////////////////////////////////////////////////////////
 class EiUserSystf :
-  public ElbUserSystf
+  public VlUserSystf
 {
 public:
 
@@ -73,7 +73,7 @@ public:
 /// IEEE Std 1364-2001 26.6.14 UDP
 //////////////////////////////////////////////////////////////////////
 class EiUserSystf1 :
-  public ElbUserSystf
+  public VlUserSystf
 {
 public:
 

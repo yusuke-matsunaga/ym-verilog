@@ -10,7 +10,7 @@
 #include "EiFactory.h"
 #include "EiCondStmt.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/BitVector.h"
 #include "ym/pt/PtStmt.h"

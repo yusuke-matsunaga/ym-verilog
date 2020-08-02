@@ -10,7 +10,7 @@
 #include "EiFactory.h"
 #include "EiContAssign.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/vl/VlDelay.h"
 

@@ -17,11 +17,11 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "elb/ElbModule.h"
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbExpr.h"
-#include "elb/ElbStub.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbExpr.h"
+#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 

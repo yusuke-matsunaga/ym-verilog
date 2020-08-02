@@ -16,7 +16,7 @@
 
 
 #include "EiStmt.h"
-#include "elb/ElbFwd.h"
+#include "elaborator/ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "elb/TagDict.h"
+#include "elaborator/TagDict.h"
 #include "TagDictCell.h"
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlContAssign.h"

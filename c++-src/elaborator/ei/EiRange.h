@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbRange.h"
+#include "elaborator/ElbRange.h"
 #include "ym/pt/PtDecl.h"
 
 

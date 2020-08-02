@@ -17,10 +17,10 @@
 
 #include "ym/vl/VlModule.h"
 
-#include "elb/ElbIODecl.h"
-#include "elb/ElbDecl.h"
-#include "elb/ElbExpr.h"
-#include "elb/ElbTaskFunc.h"
+#include "elaborator/ElbIODecl.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbExpr.h"
+#include "elaborator/ElbTaskFunc.h"
 
 BEGIN_NONAMESPACE
 
@@ -185,7 +185,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
   const char* name = pt_expr->name();
 
   // system function を探し出す．
-  const ElbUserSystf* user_systf = find_user_systf(name);
+  const VlUserSystf* user_systf = find_user_systf(name);
   if ( user_systf == nullptr ) {
     error_no_such_sysfunction(pt_expr);
     return nullptr;

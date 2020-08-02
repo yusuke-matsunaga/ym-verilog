@@ -11,7 +11,7 @@
 
 #include "ym/pt/PtMisc.h"
 
-#include "elb/ElbAttribute.h"
+#include "elaborator/ElbAttribute.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

@@ -12,9 +12,9 @@
 
 #include "ym/pt/PtItem.h"
 
-#include "elb/ElbTaskFunc.h"
+#include "elaborator/ElbTaskFunc.h"
 
-#include "elb/ElbStub.h"
+#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 

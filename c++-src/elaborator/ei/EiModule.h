@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbModule.h"
+#include "elaborator/ElbModule.h"
 #include "EiRange.h"
 
 #include "ym/StrBuff.h"

@@ -787,7 +787,7 @@ public:
   new_SysTaskCall(const VlNamedObj* parent,
 		  ElbProcess* process,
 		  const PtStmt* pt_stmt,
-		  const ElbUserSystf* user_systf,
+		  const VlUserSystf* user_systf,
 		  ElbExpr** arg_array) = 0;
 
   /// @brief disable 文を生成する．
@@ -1076,7 +1076,7 @@ public:
   virtual
   ElbExpr*
   new_SysFuncCall(const PtExpr* pt_expr,
-		  const ElbUserSystf* user_systf,
+		  const VlUserSystf* user_systf,
 		  SizeType arg_size,
 		  ElbExpr** arg_list) = 0;
 

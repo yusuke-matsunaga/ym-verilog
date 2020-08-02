@@ -16,14 +16,14 @@
 
 #include "ym/vl/VlModule.h"
 
-#include "elb/ElbContAssign.h"
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbGenvar.h"
-#include "elb/ElbModule.h"
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbRange.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbContAssign.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbGenvar.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbTaskFunc.h"
+#include "elaborator/ElbRange.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
 

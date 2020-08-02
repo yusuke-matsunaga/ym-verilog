@@ -14,10 +14,10 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "elb/ElbStmt.h"
-#include "elb/ElbTaskFunc.h"
+#include "elaborator/ElbStmt.h"
+#include "elaborator/ElbTaskFunc.h"
 
-#include "elb/ElbStub.h"
+#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 
@@ -463,7 +463,7 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   const char* name = pt_stmt->name();
 
   // UserSystf を取り出す．
-  const ElbUserSystf* user_systf = find_user_systf(name);
+  const VlUserSystf* user_systf = find_user_systf(name);
   if ( user_systf == nullptr ) {
     ostringstream buf;
     buf << name << " : No such system task.";

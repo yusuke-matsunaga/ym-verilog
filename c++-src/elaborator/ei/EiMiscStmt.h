@@ -260,7 +260,7 @@ private:
   EiSysTaskCall(const VlNamedObj* parent,
 		ElbProcess* process,
 		const PtStmt* pt_stmt,
-		const ElbUserSystf* user_systf,
+		const VlUserSystf* user_systf,
 		int arg_num,
 		ElbExpr** arg_array);
 
@@ -294,7 +294,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // user systf へのポインタ
-  const ElbUserSystf* mUserSystf;
+  const VlUserSystf* mUserSystf;
 
 };
 

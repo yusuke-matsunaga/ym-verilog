@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/BitVector.h"
 #include "ym/VlTime.h"

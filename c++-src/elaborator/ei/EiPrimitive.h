@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbPrimitive.h"
+#include "elaborator/ElbPrimitive.h"
 #include "EiRange.h"
 
 

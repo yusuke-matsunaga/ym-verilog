@@ -19,9 +19,9 @@
 #include "ym/ClibCell.h"
 #include "ym/ClibCellPin.h"
 
-#include "elb/ElbUdp.h"
-#include "elb/ElbPrimitive.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbUdp.h"
+#include "elaborator/ElbPrimitive.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
 

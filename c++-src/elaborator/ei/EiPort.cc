@@ -9,8 +9,8 @@
 
 #include "EiPort.h"
 
-#include "elb/ElbModule.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtPort.h"
 

@@ -10,8 +10,8 @@
 #include "EiFactory.h"
 #include "EiParamAssign.h"
 
-#include "elb/ElbParameter.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtExpr.h"

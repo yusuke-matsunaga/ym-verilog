@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbDecl.h"
+#include "elaborator/ElbDecl.h"
 
 #include "ym/BitVector.h"
 

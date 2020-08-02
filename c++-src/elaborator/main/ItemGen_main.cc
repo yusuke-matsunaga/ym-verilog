@@ -19,14 +19,14 @@
 
 #include "ym/vl/VlModule.h"
 
-#include "elb/ElbParameter.h"
-#include "elb/ElbContAssign.h"
-#include "elb/ElbProcess.h"
-#include "elb/ElbGfRoot.h"
-#include "elb/ElbGenvar.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbContAssign.h"
+#include "elaborator/ElbProcess.h"
+#include "elaborator/ElbGfRoot.h"
+#include "elaborator/ElbGenvar.h"
+#include "elaborator/ElbExpr.h"
 
-#include "elb/ElbStub.h"
+#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 

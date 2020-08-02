@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbIODecl.h"
+#include "elaborator/ElbIODecl.h"
 #include "EiRange.h"
 
 

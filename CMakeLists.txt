@@ -113,7 +113,6 @@ set (elaborator_SOURCES
   c++-src/elaborator/elb_mgr/ElbParameter.cc
   c++-src/elaborator/elb_mgr/ElbPrimitive.cc
   c++-src/elaborator/elb_mgr/ElbStmt.cc
-  c++-src/elaborator/elb_mgr/ElbUserSystf.cc
   c++-src/elaborator/elb_mgr/TagDict.cc
   c++-src/elaborator/elb_mgr/VlNamedObj.cc
 

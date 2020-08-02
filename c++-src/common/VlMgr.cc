@@ -13,13 +13,12 @@
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
 
-#include "elb/Elaborator.h"
-
-#include "elb/ElbMgr.h"
-#include "elb/ElbUdp.h"
-#include "elb/ElbUserSystf.h"
-#include "elb/ElbAttribute.h"
-#include "elb/ElbFactory.h"
+#include "elaborator/Elaborator.h"
+#include "elaborator/ElbMgr.h"
+//#include "elaborator/ElbUdp.h"
+//#include "elaborator/ElbUserSystf.h"
+#include "elaborator/ElbAttribute.h"
+#include "elaborator/ElbFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

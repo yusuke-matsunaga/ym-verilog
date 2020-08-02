@@ -16,7 +16,7 @@
 #include "ExprGen.h"
 #include "AttrGen.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 #include "ym/pt/PtExpr.h"
 #include "parser/PtDumper.h"
 

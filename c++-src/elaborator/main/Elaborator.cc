@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "elb/Elaborator.h"
+#include "elaborator/Elaborator.h"
 
 #include "UdpGen.h"
 #include "ModuleGen.h"
@@ -25,18 +25,17 @@
 
 #include "parser/PtMgr.h"
 
-#include "elb/ElbModule.h"
-#include "elb/ElbUdp.h"
-#include "elb/ElbModule.h"
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbGfRoot.h"
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbPrimitive.h"
-#include "elb/ElbContAssign.h"
-#include "elb/ElbProcess.h"
-#include "elb/ElbUserSystf.h"
-#include "elb/ElbGenvar.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbUdp.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbTaskFunc.h"
+#include "elaborator/ElbGfRoot.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbPrimitive.h"
+#include "elaborator/ElbContAssign.h"
+#include "elaborator/ElbProcess.h"
+#include "elaborator/ElbGenvar.h"
 
 #include "ym/MsgMgr.h"
 
@@ -725,10 +724,7 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
     }
     else if ( !name_branch->has_index() ) {
       // モジュール定義名として探す．
-      auto h = mObjDict.find(cur_scope, top_name);
-      if ( h->type() == VpiObjType::Module ) {
-	top_scope = h->obj();
-      }
+      top_scope = mModuleDefDict.find(cur_scope, top_name);
     }
     if ( top_scope == nullptr) {
       // cur_scope が上限もしくは cur_scope の親がいなければ

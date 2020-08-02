@@ -171,7 +171,7 @@ private:
   /// @param[in] arg_size 引数の数
   /// @param[in] arg_list 引数のリスト
   EiSysFuncCall(const PtExpr* pt_expr,
-		const ElbUserSystf* user_systf,
+		const VlUserSystf* user_systf,
 		SizeType arg_size,
 		ElbExpr** arg_list);
 
@@ -219,7 +219,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // システム関数
-  const ElbUserSystf* mUserSystf;
+  const VlUserSystf* mUserSystf;
 
 };
 

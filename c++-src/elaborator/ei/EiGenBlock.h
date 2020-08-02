@@ -10,7 +10,7 @@
 
 
 #include "ym/vl/VlNamedObj.h"
-#include "elb/ElbGfRoot.h"
+#include "elaborator/ElbGfRoot.h"
 
 #include "ym/pt/PtP.h"
 #include "ym/StrBuff.h"

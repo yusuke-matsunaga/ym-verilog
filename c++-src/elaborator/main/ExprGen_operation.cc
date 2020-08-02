@@ -14,7 +14,7 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

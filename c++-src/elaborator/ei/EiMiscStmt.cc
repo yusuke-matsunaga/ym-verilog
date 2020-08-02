@@ -10,11 +10,11 @@
 #include "EiFactory.h"
 #include "EiMiscStmt.h"
 
-#include "elb/ElbDecl.h"
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbUserSystf.h"
-#include "elb/ElbControl.h"
-#include "elb/ElbExpr.h"
+#include "ym/vl/VlUserSystf.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbTaskFunc.h"
+#include "elaborator/ElbControl.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
 
@@ -86,7 +86,7 @@ ElbStmt*
 EiFactory::new_SysTaskCall(const VlNamedObj* parent,
 			   ElbProcess* process,
 			   const PtStmt* pt_stmt,
-			   const ElbUserSystf* user_systf,
+			   const VlUserSystf* user_systf,
 			   ElbExpr** arg_array)
 {
   int n = pt_stmt->arg_num();
@@ -306,7 +306,7 @@ EiTaskCall::task() const
 EiSysTaskCall::EiSysTaskCall(const VlNamedObj* parent,
 			     ElbProcess* process,
 			     const PtStmt* pt_stmt,
-			     const ElbUserSystf* user_systf,
+			     const VlUserSystf* user_systf,
 			     int arg_num,
 			     ElbExpr** arg_array) :
   EiTcBase(parent, process, pt_stmt, arg_num, arg_array),

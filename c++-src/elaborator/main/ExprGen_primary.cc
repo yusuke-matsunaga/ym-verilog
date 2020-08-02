@@ -18,11 +18,11 @@
 #include "ym/vl/VlDeclArray.h"
 #include "ym/vl/VlRange.h"
 
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbPrimitive.h"
-#include "elb/ElbExpr.h"
-#include "elb/ElbGenvar.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbPrimitive.h"
+#include "elaborator/ElbExpr.h"
+#include "elaborator/ElbGenvar.h"
 
 #include "ym/MsgMgr.h"
 

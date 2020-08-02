@@ -12,8 +12,8 @@
 // IEEE Std 1364-2001 26.6.14 UDP
 
 
-#include "elb/ElbUdp.h"
-#include "elb/ElbIODecl.h"
+#include "elaborator/ElbUdp.h"
+#include "elaborator/ElbIODecl.h"
 
 #include "ym/VlScalarVal.h"
 

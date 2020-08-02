@@ -7,21 +7,20 @@
 /// All rights reserved.
 
 
-#include "elb/ElbMgr.h"
+#include "elaborator/ElbMgr.h"
 
 #include "ym/pt/PtMisc.h"
-
-#include "elb/ElbUdp.h"
-#include "elb/ElbModule.h"
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbGfRoot.h"
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbPrimitive.h"
-#include "elb/ElbContAssign.h"
-#include "elb/ElbProcess.h"
-#include "elb/ElbUserSystf.h"
-#include "elb/ElbGenvar.h"
+#include "ym/vl/VlUserSystf.h"
+#include "elaborator/ElbUdp.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbTaskFunc.h"
+#include "elaborator/ElbGfRoot.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbPrimitive.h"
+#include "elaborator/ElbContAssign.h"
+#include "elaborator/ElbProcess.h"
+#include "elaborator/ElbGenvar.h"
 
 #include "parser/PtiArray.h"
 
@@ -102,7 +101,7 @@ ElbMgr::topmodule_list() const
 // @param[in] name 名前
 // @return name という名のユーザー定義関数を返す．
 // @return なければ nullptr を返す．
-const ElbUserSystf*
+const VlUserSystf*
 ElbMgr::find_user_systf(const char* name) const
 {
   if ( mSystfHash.count(name) > 0 ) {
@@ -115,9 +114,9 @@ ElbMgr::find_user_systf(const char* name) const
 
 // @brief システムタスク/システム関数を登録する．
 void
-ElbMgr::reg_user_systf(const ElbUserSystf* systf)
+ElbMgr::reg_user_systf(const VlUserSystf* systf)
 {
-  mSystfHash[systf->_name()] = systf;
+  mSystfHash[systf->name()] = systf;
 }
 
 // @brief internal scope を登録する．

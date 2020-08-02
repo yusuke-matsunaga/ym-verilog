@@ -10,9 +10,9 @@
 #include "EiFactory.h"
 #include "EiIODecl.h"
 
-#include "elb/ElbModule.h"
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbDecl.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbTaskFunc.h"
+#include "elaborator/ElbDecl.h"
 
 #include "ym/pt/PtDecl.h"
 

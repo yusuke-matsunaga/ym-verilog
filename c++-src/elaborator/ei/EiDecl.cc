@@ -10,7 +10,7 @@
 #include "EiFactory.h"
 #include "EiDecl.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtDecl.h"
 #include "ym/pt/PtItem.h"

@@ -10,9 +10,9 @@
 #include "EiFactory.h"
 #include "EiPrimary.h"
 
-#include "elb/ElbDecl.h"
-#include "elb/ElbParameter.h"
-#include "elb/ElbPrimitive.h"
+#include "elaborator/ElbDecl.h"
+#include "elaborator/ElbParameter.h"
+#include "elaborator/ElbPrimitive.h"
 
 #include "ym/VlValue.h"
 #include "ym/pt/PtDecl.h"

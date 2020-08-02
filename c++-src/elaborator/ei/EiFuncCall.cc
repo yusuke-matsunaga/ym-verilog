@@ -9,9 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiFuncCall.h"
-
-#include "elb/ElbTaskFunc.h"
-#include "elb/ElbUserSystf.h"
+#include "ym/vl/VlUserSystf.h"
+#include "elaborator/ElbTaskFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -44,7 +43,7 @@ EiFactory::new_FuncCall(const PtExpr* pt_expr,
 // @param[in] arg_list 引数のリスト
 ElbExpr*
 EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
-			   const ElbUserSystf* user_systf,
+			   const VlUserSystf* user_systf,
 			   SizeType arg_size,
 			   ElbExpr** arg_list)
 {
@@ -210,7 +209,7 @@ EiFuncCall::function() const
 // @param[in] arg_size 引数の数
 // @param[in] arg_list 引数のリスト
 EiSysFuncCall::EiSysFuncCall(const PtExpr* pt_expr,
-			     const ElbUserSystf* user_systf,
+			     const VlUserSystf* user_systf,
 			     SizeType arg_size,
 			     ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),

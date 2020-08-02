@@ -13,9 +13,9 @@
 #include "ym/VlValue.h"
 #include "ym/pt/PtP.h"
 #include "ym/ClibCellLibrary.h"
-#include "elb/Elaborator.h"
-#include "elb/ElbMgr.h"
-#include "elb/ElbFactory.h"
+#include "elaborator/Elaborator.h"
+#include "elaborator/ElbMgr.h"
+#include "elaborator/ElbFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -92,7 +92,7 @@ protected:
   /// @param[in] name 名前
   /// @return name という名のユーザー定義関数を返す．
   /// @return なければ nullptr を返す．
-  const ElbUserSystf*
+  const VlUserSystf*
   find_user_systf(const char* name) const;
 
   /// @brief スコープと名前から名前付き要素を取り出す．
@@ -686,7 +686,7 @@ ElbProxy::find_udp(const char* name) const
 // @return name という名のユーザー定義関数を返す．
 // @return なければ nullptr を返す．
 inline
-const ElbUserSystf*
+const VlUserSystf*
 ElbProxy::find_user_systf(const char* name) const
 {
   return mMgr.find_user_systf(name);

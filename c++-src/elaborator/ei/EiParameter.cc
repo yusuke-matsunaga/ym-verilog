@@ -10,7 +10,7 @@
 #include "EiFactory.h"
 #include "EiParameter.h"
 
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/BitVector.h"
 

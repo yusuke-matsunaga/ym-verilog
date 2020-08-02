@@ -21,8 +21,8 @@
 
 #include "ym/vl/VlPort.h"
 
-#include "elb/ElbModule.h"
-#include "elb/ElbExpr.h"
+#include "elaborator/ElbModule.h"
+#include "elaborator/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
 

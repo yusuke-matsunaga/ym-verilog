@@ -67,7 +67,7 @@ public:
   /// @param[in] name 名前
   /// @return name という名のユーザー定義関数を返す．
   /// @return なければ nullptr を返す．
-  const ElbUserSystf*
+  const VlUserSystf*
   find_user_systf(const char* name) const;
 
   /// @brief スコープに属する internal scope のリストを取り出す．
@@ -165,7 +165,7 @@ public:
   /// @brief システムタスク/システム関数を登録する．
   /// @param[in] systf 登録するシステムタスク/システム関数
   void
-  reg_user_systf(const ElbUserSystf* systf);
+  reg_user_systf(const VlUserSystf* systf);
 
   /// @brief UDP を登録する．
   /// @param[in] def_name 定義名
@@ -291,7 +291,7 @@ private:
   vector<const VlModule*> mTopmoduleList;
 
   // UserSystf の辞書
-  unordered_map<string, const ElbUserSystf*> mSystfHash;
+  unordered_map<string, const VlUserSystf*> mSystfHash;
 
   // タグをキーにした各スコープごとのオブジェクトのリストの辞書
   TagDict mTagDict;

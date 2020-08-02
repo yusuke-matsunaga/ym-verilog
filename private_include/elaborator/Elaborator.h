@@ -15,6 +15,7 @@
 #include "ym/ClibCellLibrary.h"
 
 #include "ObjDict.h"
+#include "ModDefDict.h"
 #include "AttrDict.h"
 #include "ElbStub.h"
 
@@ -330,6 +331,9 @@ private:
 
   // 名前をキーにしたオブジェクトの辞書
   ObjDict mObjDict;
+
+  // モジュール定義名の辞書
+  ModDefDict mModuleDefDict;
 
   // constant function の辞書
   ObjDict mCfDict;

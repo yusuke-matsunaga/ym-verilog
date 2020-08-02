@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbGenvar.h"
+#include "elaborator/ElbGenvar.h"
 #include "ym/pt/PtP.h"
 
 

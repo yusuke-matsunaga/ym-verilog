@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "elb/AttrDict.h"
+#include "elaborator/AttrDict.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

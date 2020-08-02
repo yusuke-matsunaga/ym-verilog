@@ -10,7 +10,7 @@
 #include "EiFactory.h"
 #include "EiProcess.h"
 
-#include "elb/ElbStmt.h"
+#include "elaborator/ElbStmt.h"
 
 #include "ym/pt/PtItem.h"
 

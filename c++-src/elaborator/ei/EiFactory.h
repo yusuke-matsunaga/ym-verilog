@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbFactory.h"
+#include "elaborator/ElbFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -718,7 +718,7 @@ public:
   new_SysTaskCall(const VlNamedObj* parent,
 		  ElbProcess* process,
 		  const PtStmt* pt_stmt,
-		  const ElbUserSystf* user_systf,
+		  const VlUserSystf* user_systf,
 		  ElbExpr** arg_array) override;
 
   /// @brief disable 文を生成する．
@@ -981,7 +981,7 @@ public:
   /// @param[in] arg_list 引数のリスト
   ElbExpr*
   new_SysFuncCall(const PtExpr* pt_obj,
-		  const ElbUserSystf* user_systf,
+		  const VlUserSystf* user_systf,
 		  SizeType arg_size,
 		  ElbExpr** arg_list) override;
 

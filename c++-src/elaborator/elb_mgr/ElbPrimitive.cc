@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "elb/ElbPrimitive.h"
+#include "elaborator/ElbPrimitive.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
