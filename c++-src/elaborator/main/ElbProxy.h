@@ -256,13 +256,9 @@ protected:
   reg_gfroot(ElbGfRoot* obj);
 
   /// @brief constant function を登録する．
-  /// @param[in] parent 親のスコープ
-  /// @param[in] name 名前
   /// @param[in] func 関数
   void
-  reg_constant_function(const VlNamedObj* parent,
-			const char* name,
-			ElbTaskFunc* func);
+  reg_constant_function(ElbTaskFunc* func);
 
   /// @brief 属性リストを登録する．
   /// @param[in] パース木の属性定義
@@ -943,16 +939,12 @@ ElbProxy::find_constant_function(const VlNamedObj* parent,
 }
 
 // @brief constant function を登録する．
-// @param[in] parent 親のスコープ
-// @param[in] name 名前
 // @param[in] func 関数
 inline
 void
-ElbProxy::reg_constant_function(const VlNamedObj* parent,
-				const char* name,
-				ElbTaskFunc* func)
+ElbProxy::reg_constant_function(ElbTaskFunc* func)
 {
-  mElaborator.reg_constant_function(parent, name, func);
+  mElaborator.reg_constant_function(func);
 }
 
 // @brief パース木の属性定義から属性リストを取り出す．

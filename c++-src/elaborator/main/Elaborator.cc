@@ -3,7 +3,7 @@
 /// @brief Elaborator の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -119,11 +119,11 @@ Elaborator::~Elaborator()
 int
 Elaborator::operator()(const PtMgr& pt_mgr)
 {
-  auto& udp_list = pt_mgr.pt_udp_list();
-  auto& module_list = pt_mgr.pt_module_list();
+  auto& pt_udp_list = pt_mgr.pt_udp_list();
+  auto& pt_module_list = pt_mgr.pt_module_list();
 
   // UDP の生成
-  for ( auto pt_udp: udp_list ) {
+  for ( auto pt_udp: pt_udp_list ) {
     mUdpGen->instantiate_udp(pt_udp);
   }
 
@@ -131,14 +131,14 @@ Elaborator::operator()(const PtMgr& pt_mgr)
   // と同時に UDP 名とモジュール名の重複チェックを行う．
   // と同時に関数定義の辞書を作る．
   int nerr = 0;
-  for ( auto module: module_list ) {
-    const char* name = module->name();
+  for ( auto pt_module: pt_module_list ) {
+    const char* name = pt_module->name();
     if ( mMgr.find_udp(name) != nullptr ) {
       ostringstream buf;
       buf << "\"" << name
 	  << "\" is duplicately defined as module and as UDP.";
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      module->file_region(),
+		      pt_module->file_region(),
 		      MsgType::Error,
 		      "ELAB",
 		      buf.str());
@@ -148,7 +148,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
       ostringstream buf;
       buf << "module \"" << name<< "\" is redefined.";
       MsgMgr::put_msg(__FILE__, __LINE__,
-		      module->file_region(),
+		      pt_module->file_region(),
 		      MsgType::Error,
 		      "ELAB",
 		      buf.str());
@@ -156,11 +156,13 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     }
     else {
       // モジュール名をキーにして登録する．
-      mModuleDict[name] = module;
+      mModuleDict.emplace(name, pt_module);
     }
-    for ( auto item: module->item_list() ) {
+
+    // 関数の辞書を作る．
+    for ( auto item: pt_module->item_list() ) {
       if ( item->type() == PtItemType::Func ) {
-	auto key = gen_funckey(module, item->name());
+	auto key = gen_funckey(pt_module, item->name());
 	mFuncDict.emplace(key, item);
       }
     }
@@ -173,10 +175,10 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     mMgr.reg_toplevel(toplevel);
 
     // トップモジュールの生成
-    for ( auto module: module_list ) {
-      if ( !pt_mgr.check_def_name(module->name()) ) {
+    for ( auto pt_module: pt_module_list ) {
+      if ( !pt_mgr.check_def_name(pt_module->name()) ) {
 	// 他のモジュールから参照されていないモジュールをトップモジュールとみなす．
-	mModuleGen->phase1_topmodule(toplevel, module);
+	mModuleGen->phase1_topmodule(toplevel, pt_module);
       }
     }
 
@@ -264,6 +266,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
   }
 
+  mObjDict.clear();
   mCfDict.clear();
   mModuleDict.clear();
   mDefParamStubList.clear();
@@ -280,8 +283,7 @@ void
 Elaborator::add_defparamstub(const VlModule* module,
 			     const PtItem* pt_header)
 {
-  for ( SizeType i = 0; i < pt_header->defparam_num(); ++ i ) {
-    auto pt_defparam = pt_header->defparam(i);
+  for ( auto pt_defparam: pt_header->defparam_list() ) {
     mDefParamStubList.push_back(DefParamStub{module, pt_header, pt_defparam});
   }
 }
@@ -351,7 +353,13 @@ const ElbTaskFunc*
 Elaborator::find_constant_function(const VlNamedObj* parent,
 				   const char* name) const
 {
-  return mCfDict.find(parent, name);
+  auto h = mCfDict.find(parent, name);
+  if ( h != nullptr ) {
+    return h->taskfunc();
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief internal scope を登録する．
@@ -486,7 +494,6 @@ Elaborator::reg_module(ElbModule* obj)
 	 << "] )" << endl << endl;
   }
   mObjDict.add(obj);
-  mModInstDict.add(obj);
   mMgr.reg_module(obj);
 }
 
@@ -589,15 +596,11 @@ Elaborator::reg_gfroot(ElbGfRoot* obj)
 }
 
 // @brief constant function を登録する．
-// @param[in] parent 親のスコープ
-// @param[in] name 名前
 // @param[in] func 関数
 void
-Elaborator::reg_constant_function(const VlNamedObj* parent,
-				  const char* name,
-				  ElbTaskFunc* func)
+Elaborator::reg_constant_function(ElbTaskFunc* func)
 {
-  mCfDict.add(parent, name, func);
+  mCfDict.add(func);
 }
 
 // @brief セルの探索
@@ -707,8 +710,7 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
 
   SizeType n = pt_obj->namebranch_num();
   const VlNamedObj* cur_scope = base_scope;
-  for ( SizeType i = 0; i < n; ) {
-    const PtNameBranch* name_branch = pt_obj->namebranch(i);
+  for ( auto name_branch: pt_obj->namebranch_list() ) {
     const char* top_name = name_branch->name();
     const VlNamedObj* top_scope = nullptr;
     // まず普通に探す．
@@ -723,7 +725,10 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
     }
     else if ( !name_branch->has_index() ) {
       // モジュール定義名として探す．
-      top_scope = mModInstDict.find(cur_scope, top_name);
+      auto h = mObjDict.find(cur_scope, top_name);
+      if ( h->type() == VpiObjType::Module ) {
+	top_scope = h->obj();
+      }
     }
     if ( top_scope == nullptr) {
       // cur_scope が上限もしくは cur_scope の親がいなければ
@@ -750,7 +755,6 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
       }
 
       cur_scope = top_scope;
-      ++ i;
     }
   }
 

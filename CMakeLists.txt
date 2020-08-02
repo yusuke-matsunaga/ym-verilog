@@ -119,7 +119,6 @@ set (elaborator_SOURCES
 
   c++-src/elaborator/main/AttrDict.cc
   c++-src/elaborator/main/AttrGen.cc
-  c++-src/elaborator/main/CfDict.cc
   c++-src/elaborator/main/DeclGen.cc
   c++-src/elaborator/main/Elaborator.cc
   c++-src/elaborator/main/ElbEnv.cc
@@ -134,7 +133,6 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/ItemGen_primitive.cc
   c++-src/elaborator/main/ItemGen_taskfunc.cc
   c++-src/elaborator/main/ModuleGen.cc
-  c++-src/elaborator/main/ModuleHash.cc
   c++-src/elaborator/main/ObjDict.cc
   c++-src/elaborator/main/StmtGen_assign.cc
   c++-src/elaborator/main/StmtGen_block.cc

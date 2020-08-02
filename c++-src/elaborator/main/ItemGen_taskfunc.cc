@@ -247,7 +247,7 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
   ASSERT_COND( head );
 
   // 登録しておく．
-  reg_constant_function(parent, pt_function->name(), func);
+  reg_constant_function(func);
 
   // parameter の生成
   phase1_decl(func, pt_function->declhead_list(), false);

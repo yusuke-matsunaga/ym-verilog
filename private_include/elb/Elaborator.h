@@ -15,8 +15,6 @@
 #include "ym/ClibCellLibrary.h"
 
 #include "ObjDict.h"
-#include "ModuleHash.h"
-#include "CfDict.h"
 #include "AttrDict.h"
 #include "ElbStub.h"
 
@@ -229,13 +227,9 @@ private:
   reg_gfroot(ElbGfRoot* obj);
 
   /// @brief constant function を登録する．
-  /// @param[in] parent 親のスコープ
-  /// @param[in] name 名前
   /// @param[in] func 関数
   void
-  reg_constant_function(const VlNamedObj* parent,
-			const char* name,
-			ElbTaskFunc* func);
+  reg_constant_function(ElbTaskFunc* func);
 
 
 public:
@@ -337,11 +331,8 @@ private:
   // 名前をキーにしたオブジェクトの辞書
   ObjDict mObjDict;
 
-  // モジュール名をキーにしたモジュールインスタンスの辞書
-  ModuleHash mModInstDict;
-
   // constant function の辞書
-  CfDict mCfDict;
+  ObjDict mCfDict;
 
   // モジュールテンプレートの辞書
   unordered_map<string, const PtModule*> mModuleDict;
