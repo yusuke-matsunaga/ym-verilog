@@ -22,16 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class ElbGfRoot :
   public VlNamedObj
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbGfRoot() { }
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbGfRoot() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbGfRoot の関数
@@ -40,13 +30,13 @@ public:
   /// @brief 子供のスコープを追加する．
   virtual
   void
-  add(int index,
+  add(SizeType index,
       const VlNamedObj* block) = 0;
 
   /// @brief 子供のスコープを取り出す．
   virtual
   const VlNamedObj*
-  elem_by_index(int index) = 0;
+  elem_by_index(SizeType index) = 0;
 
 };
 

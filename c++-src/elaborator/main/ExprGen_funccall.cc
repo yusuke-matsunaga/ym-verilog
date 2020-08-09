@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(式の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -16,11 +16,12 @@
 #include "ym/pt/PtMisc.h"
 
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlIODecl.h"
+#include "ym/vl/VlDecl.h"
+#include "ym/vl/VlTaskFunc.h"
 
-#include "elaborator/ElbIODecl.h"
-#include "elaborator/ElbDecl.h"
 #include "elaborator/ElbExpr.h"
-#include "elaborator/ElbTaskFunc.h"
+
 
 BEGIN_NONAMESPACE
 
@@ -76,7 +77,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
 			      const ElbEnv& env,
 			      const PtExpr* pt_expr)
 {
-  const ElbTaskFunc* child_func = nullptr;
+  const VlTaskFunc* child_func = nullptr;
   if ( env.is_constant() ) {
     // 定数関数を探し出す．
     if ( pt_expr->namebranch_num() > 0 ) {
@@ -85,13 +86,13 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
     }
 
     // 関数名
-    const char* name = pt_expr->name();
+    auto name = pt_expr->name();
 
     // 関数本体を探し出す．
     // constant function はモジュール直下にしかあり得ない
     // <- generated scope 内の関数は constant function ではない．
-    const VlModule* module = parent->parent_module();
-    const PtItem* pt_func = find_funcdef(module, name);
+    auto module = parent->parent_module();
+    auto pt_func = find_funcdef(module, name);
     if ( !pt_func ) {
       error_no_such_function(pt_expr);
       return nullptr;
@@ -116,7 +117,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
   }
   else {
     // 関数本体を探し出す．
-    ObjHandle* handle = find_obj_up(parent, pt_expr, nullptr);
+    auto handle = find_obj_up(parent, pt_expr, nullptr);
     if ( handle == nullptr ) {
       error_no_such_function(pt_expr);
       return nullptr;
@@ -126,7 +127,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
       return nullptr;
     }
     child_func = handle->taskfunc();
-    ASSERT_COND(child_func );
+    ASSERT_COND( child_func );
   }
 
   // 引数の生成
@@ -138,14 +139,14 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
 
   auto arg_list = factory().new_ExprList(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    const PtExpr* pt_expr1 = pt_expr->operand(i);
+    auto pt_expr1 = pt_expr->operand(i);
     auto expr1 = instantiate_expr(parent, env, pt_expr1);
     if ( !expr1 ) {
       // エラーが起った．
       return nullptr;
     }
-    ElbIODecl* io_decl = child_func->_io(i);
-    ElbDecl* decl = io_decl->_decl();
+    auto io_decl = child_func->io(i);
+    auto decl = io_decl->decl();
     if ( decl->value_type() != expr1->value_type() ) {
       error_illegal_argument_type(pt_expr);
       if ( debug ) {
@@ -161,7 +162,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
   }
 
   // function call の生成
-  ElbExpr* expr = factory().new_FuncCall(pt_expr, child_func, n, arg_list);
+  auto expr = factory().new_FuncCall(pt_expr, child_func, n, arg_list);
 
 #if 0
   // attribute instance の生成
@@ -182,10 +183,10 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
 				 const ElbEnv& env,
 				 const PtExpr* pt_expr)
 {
-  const char* name = pt_expr->name();
+  auto name = pt_expr->name();
 
   // system function を探し出す．
-  const VlUserSystf* user_systf = find_user_systf(name);
+  auto user_systf = find_user_systf(name);
   if ( user_systf == nullptr ) {
     error_no_such_sysfunction(pt_expr);
     return nullptr;
@@ -197,7 +198,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
   SizeType n = pt_expr->operand_num();
   auto arg_list = factory().new_ExprList(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    const PtExpr* pt_expr1 = pt_expr->operand(i);
+    auto pt_expr1 = pt_expr->operand(i);
     ElbExpr* arg = nullptr;
     if ( pt_expr ) {
       arg = instantiate_arg(parent, env, pt_expr1);
@@ -214,7 +215,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
   }
 
   // system function call の生成
-  ElbExpr* expr = factory().new_SysFuncCall(pt_expr, user_systf, n, arg_list);
+  auto expr = factory().new_SysFuncCall(pt_expr, user_systf, n, arg_list);
 
   return expr;
 }
@@ -241,14 +242,14 @@ ExprGen::evaluate_funccall(const VlNamedObj* parent,
   }
 
   // 関数名
-  const char* name = pt_expr->name();
+  auto name = pt_expr->name();
 
   // 関数本体を探し出す．
   // constant function はモジュール直下にしかあり得ない
   // <- generated scope 内の関数は constant function ではない．
-  const VlModule* module = parent->parent_module();
-  const PtModule* pt_module = find_moduledef(module->def_name());
-  const PtItem* pt_func = pt_module->find_function(name);
+  auto module = parent->parent_module();
+  auto pt_module = find_moduledef(module->def_name());
+  auto pt_func = pt_module->find_function(name);
   if ( !pt_func ) {
     if ( put_error ) {
       error_no_such_function(pt_expr);
@@ -263,7 +264,7 @@ ExprGen::evaluate_funccall(const VlNamedObj* parent,
     return VlValue();
   }
 
-  const ElbTaskFunc* child_func = find_constant_function(module, name);
+  auto child_func = find_constant_function(module, name);
   if ( child_func == nullptr ) {
     pt_func->set_in_use();
     // なかったので作る．
@@ -288,15 +289,15 @@ ExprGen::evaluate_funccall(const VlNamedObj* parent,
 
   vector<VlValue> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    const PtExpr* pt_expr1 = pt_expr->operand(i);
-    VlValue val1 = evaluate_expr(parent, pt_expr1, put_error);
+    auto pt_expr1 = pt_expr->operand(i);
+    auto val1 = evaluate_expr(parent, pt_expr1, put_error);
     if ( val1.is_error() ) {
       // エラーが起った．
       return VlValue();
     }
-    ElbIODecl* io_decl = child_func->_io(i);
-    ElbDecl* decl = io_decl->_decl();
-    VlValueType decl_type = decl->value_type();
+    auto io_decl = child_func->io(i);
+    auto decl = io_decl->decl();
+    auto decl_type = decl->value_type();
     if ( decl_type.is_real_type() ) {
       if ( !val1.is_real_conv() ) {
 	// 型が異なる．
@@ -319,7 +320,7 @@ ExprGen::evaluate_funccall(const VlNamedObj* parent,
   }
 
   // function call の生成
-  ElbExpr* expr = factory().new_FuncCall(pt_expr, child_func, n, arg_list);
+  auto expr = factory().new_FuncCall(pt_expr, child_func, n, arg_list);
 #else
 #warning "TODO:2011-02-09-05"
   return VlValue();

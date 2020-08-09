@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(statement の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -14,9 +14,8 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "elaborator/ElbStmt.h"
 #include "elaborator/ElbTaskFunc.h"
-
+#include "elaborator/ElbExpr.h"
 #include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
@@ -57,7 +56,7 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
 		     const PtStmt* pt_stmt,
 		     bool cf)
 {
-  ASSERT_COND(pt_stmt != nullptr );
+  ASSERT_COND( pt_stmt != nullptr );
 
   switch ( pt_stmt->type() ) {
   case PtStmtType::Disable:
@@ -109,7 +108,7 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   case PtStmtType::NamedParBlock:
   case PtStmtType::NamedSeqBlock:
     {
-      const VlNamedObj* block_scope = factory().new_StmtScope(parent, pt_stmt);
+      auto block_scope = factory().new_StmtScope(parent, pt_stmt);
       reg_internalscope(block_scope);
 
       for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
@@ -140,96 +139,86 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_stmt(const VlNamedObj* parent,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const ElbEnv& env,
 			  const PtStmt* pt_stmt)
 {
-  ASSERT_COND(pt_stmt != nullptr );
+  if ( pt_stmt == nullptr ) {
+    return nullptr;
+  }
 
-  ElbStmt* stmt = nullptr;
+  const VlStmt* stmt = nullptr;
   switch ( pt_stmt->type() ) {
   case PtStmtType::Disable:
-    stmt = instantiate_disable(parent, process,
-			       pt_stmt);
+    stmt = instantiate_disable(parent, process, pt_stmt);
     break;
 
   case PtStmtType::Enable:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_enable(parent, process, env,
-			      pt_stmt);
+    stmt = instantiate_enable(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::SysEnable:
     if ( env.inside_constant_function() ) {
       // 無視する．
       // といっても nullptr を返すとまずいので NULL_STMT を返す．
-      stmt = instantiate_nullstmt(parent, process,
-				  pt_stmt);
+      stmt = instantiate_nullstmt(parent, process, pt_stmt);
     }
     else {
-      stmt = instantiate_sysenable(parent, process, env,
-				   pt_stmt);
+      stmt = instantiate_sysenable(parent, process, env, pt_stmt);
     }
     break;
 
   case PtStmtType::Assign:
-    stmt = instantiate_assign(parent, process, env,
-			      pt_stmt, true);
+    stmt = instantiate_assign(parent, process, env, pt_stmt, true);
     break;
 
   case PtStmtType::NbAssign:
     ASSERT_COND(!env.inside_function() );
-    stmt = instantiate_assign(parent, process, env,
-			      pt_stmt, false);
+    stmt = instantiate_assign(parent, process, env, pt_stmt, false);
     break;
 
   case PtStmtType::Event:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_eventstmt(parent, process,
-				 pt_stmt);
+    stmt = instantiate_eventstmt(parent, process, pt_stmt);
     break;
 
   case PtStmtType::Null:
-    stmt = instantiate_nullstmt(parent, process,
-				pt_stmt);
+    stmt = instantiate_nullstmt(parent, process, pt_stmt);
     break;
 
   case PtStmtType::PcAssign:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_pca(parent, process, env,
-			   pt_stmt);
+    stmt = instantiate_pca(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Deassign:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_deassign(parent, process, env,
-				pt_stmt);
+    stmt = instantiate_deassign(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Force:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_force(parent, process, env,
-			     pt_stmt);
+    stmt = instantiate_force(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Release:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_release(parent, process, env,
-			       pt_stmt);
+    stmt = instantiate_release(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::DelayControl:
@@ -237,74 +226,62 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_ctrlstmt(parent, process, env,
-				pt_stmt);
+    stmt = instantiate_ctrlstmt(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Wait:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_wait(parent, process, env,
-			    pt_stmt);
+    stmt = instantiate_wait(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Forever:
-    stmt = instantiate_forever(parent, process, env,
-			       pt_stmt);
+    stmt = instantiate_forever(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Repeat:
-    stmt = instantiate_repeat(parent, process, env,
-			      pt_stmt);
+    stmt = instantiate_repeat(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::White:
-    stmt = instantiate_while(parent, process, env,
-			     pt_stmt);
+    stmt = instantiate_while(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::For:
-    stmt = instantiate_for(parent, process, env,
-			   pt_stmt);
+    stmt = instantiate_for(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::If:
-    stmt = instantiate_if(parent, process, env,
-			  pt_stmt);
+    stmt = instantiate_if(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::Case:
   case PtStmtType::CaseX:
   case PtStmtType::CaseZ:
-    stmt = instantiate_case(parent, process, env,
-			    pt_stmt);
+    stmt = instantiate_case(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::ParBlock:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_parblock(parent, process, env,
-				pt_stmt);
+    stmt = instantiate_parblock(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::SeqBlock:
-    stmt = instantiate_seqblock(parent, process, env,
-				pt_stmt);
+    stmt = instantiate_seqblock(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::NamedParBlock:
     if ( env.inside_function() ) {
       goto error;
     }
-    stmt = instantiate_namedparblock(parent, process, env,
-				     pt_stmt);
+    stmt = instantiate_namedparblock(parent, process, env, pt_stmt);
     break;
 
   case PtStmtType::NamedSeqBlock:
-    stmt = instantiate_namedseqblock(parent, process, env,
-				     pt_stmt);
+    stmt = instantiate_namedseqblock(parent, process, env, pt_stmt);
     break;
 
   default:
@@ -345,18 +322,16 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_disable(const VlNamedObj* parent,
-			     ElbProcess* process,
+			     const VlProcess* process,
 			     const PtStmt* pt_stmt)
 {
-  const FileRegion& fr = pt_stmt->file_region();
-
-  ObjHandle* handle = nullptr;
+  const auto& fr = pt_stmt->file_region();
 
   // disable はモジュール境界を越えない？ 要チェック ##TODO##TODO##
   // 仕様書には何も書いていないのでたぶん越えられる．
-  handle = find_obj_up(parent, pt_stmt, nullptr);
+  auto handle = find_obj_up(parent, pt_stmt, nullptr);
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -368,7 +343,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
     return nullptr;
   }
 
-  VpiObjType type = handle->type();
+  auto type = handle->type();
   if ( type != VpiObjType::NamedBegin &&
        type != VpiObjType::NamedFork &&
        type != VpiObjType::Task ) {
@@ -382,9 +357,8 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 		    buf.str());
     return nullptr;
   }
-  const VlNamedObj* scope = handle->obj();
-  ElbStmt* stmt = factory().new_DisableStmt(parent, process, pt_stmt,
-					    scope);
+  auto scope = handle->obj();
+  auto stmt = factory().new_DisableStmt(parent, process, pt_stmt, scope);
 
   return stmt;
 }
@@ -394,18 +368,18 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_enable(const VlNamedObj* parent,
-			    ElbProcess* process,
+			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt)
 {
-  const FileRegion& fr = pt_stmt->file_region();
+  const auto& fr = pt_stmt->file_region();
 
   // タスクを探し出して設定する．
   // タスク名の探索はモジュール境界を越える．
-  ObjHandle* cell = find_obj_up(parent, pt_stmt, nullptr);
-  if ( !cell ) {
+  auto handle = find_obj_up(parent, pt_stmt, nullptr);
+  if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -415,7 +389,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 		    buf.str());
     return nullptr;
   }
-  if ( cell->type() != VpiObjType::Task ) {
+  if ( handle->type() != VpiObjType::Task ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not a task.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -424,14 +398,14 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 		    "ELAB",
 		    buf.str());
   }
-  ElbTaskFunc* task = cell->taskfunc();
+  auto task = handle->taskfunc();
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_num());
+  auto arg_list = factory().new_ExprList(pt_stmt->arg_num());
   SizeType wpos = 0;
   for ( auto pt_expr: pt_stmt->arg_list() ) {
-    ElbExpr* expr = instantiate_expr(parent, env, pt_expr);
+    auto expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       // エラーが起った．
       return nullptr;
@@ -441,8 +415,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
   }
 
   // task call ステートメントの生成
-  ElbStmt* stmt = factory().new_TaskCall(parent, process, pt_stmt,
-					 task, arg_list);
+  auto stmt = factory().new_TaskCall(parent, process, pt_stmt, task, arg_list);
 
   return stmt;
 }
@@ -452,18 +425,18 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_sysenable(const VlNamedObj* parent,
-			       ElbProcess* process,
+			       const VlProcess* process,
 			       const ElbEnv& env,
 			       const PtStmt* pt_stmt)
 {
-  const FileRegion& fr = pt_stmt->file_region();
+  const auto& fr = pt_stmt->file_region();
 
-  const char* name = pt_stmt->name();
+  auto name = pt_stmt->name();
 
   // UserSystf を取り出す．
-  const VlUserSystf* user_systf = find_user_systf(name);
+  auto user_systf = find_user_systf(name);
   if ( user_systf == nullptr ) {
     ostringstream buf;
     buf << name << " : No such system task.";
@@ -476,7 +449,7 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   }
 
   // 引数を生成する．
-  ElbExpr** arg_list = factory().new_ExprList(pt_stmt->arg_num());
+  auto arg_list = factory().new_ExprList(pt_stmt->arg_num());
   SizeType wpos = 0;
   for ( auto pt_expr: pt_stmt->arg_list() ) {
     ElbExpr* arg = nullptr;
@@ -493,8 +466,7 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   }
 
   // system task call ステートメントの生成
-  ElbStmt* stmt = factory().new_SysTaskCall(parent, process, pt_stmt,
-					    user_systf, arg_list);
+  auto stmt = factory().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list);
 
   return stmt;
 }
@@ -504,22 +476,20 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_ctrlstmt(const VlNamedObj* parent,
-			      ElbProcess* process,
+			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  ElbStmt* body = instantiate_stmt(parent, process, env,
-				   pt_stmt->body());
-  ElbControl* control = instantiate_control(parent, env, pt_stmt->control());
+  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
+  auto control = instantiate_control(parent, env, pt_stmt->control());
   if ( !body || !control ) {
     return nullptr;
   }
 
   // delay / event control ステートメントの生成
-  ElbStmt* stmt = factory().new_CtrlStmt(parent, process, pt_stmt,
-					 control, body);
+  auto stmt = factory().new_CtrlStmt(parent, process, pt_stmt, control, body);
 
   return stmt;
 }
@@ -528,13 +498,17 @@ StmtGen::instantiate_ctrlstmt(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] env 生成時の環境
 // @param[in] pt_control パース木のコントロール定義
-ElbControl*
+const VlControl*
 StmtGen::instantiate_control(const VlNamedObj* parent,
 			     const ElbEnv& env,
 			     const PtControl* pt_control)
 {
+  if ( pt_control == nullptr ) {
+    return nullptr;
+  }
+
   if ( pt_control->type() == PtCtrlType::Delay ) {
-    ElbExpr* delay = instantiate_expr(parent, env, pt_control->delay());
+    auto delay = instantiate_expr(parent, env, pt_control->delay());
     if ( delay ) {
       return factory().new_DelayControl(pt_control, delay);
     }
@@ -543,21 +517,22 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
 
   // イベントリストの生成を行う．
   SizeType event_num = pt_control->event_num();
-  ElbExpr** event_list = factory().new_ExprList(event_num);
-  for ( SizeType i = 0; i < event_num; ++ i ) {
-    const PtExpr* pt_expr = pt_control->event(i);
-    ElbExpr* expr = instantiate_event_expr(parent, env, pt_expr);
+  auto event_list = factory().new_ExprList(event_num);
+  SizeType wpos = 0;
+  for ( auto pt_expr: pt_control->event_list() ) {
+    auto expr = instantiate_event_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;
     }
-    event_list[i] = expr;
+    event_list[wpos] = expr;
+    ++ wpos;
   }
 
   if ( pt_control->type() == PtCtrlType::Event ) {
     return factory().new_EventControl(pt_control, event_num, event_list);
   }
 
-  ElbExpr* rep = instantiate_expr(parent, env, pt_control->rep_expr());
+  auto rep = instantiate_expr(parent, env, pt_control->rep_expr());
   if ( !rep ) {
     return nullptr;
   }
@@ -568,19 +543,18 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_eventstmt(const VlNamedObj* parent,
-			       ElbProcess* process,
+			       const VlProcess* process,
 			       const PtStmt* pt_stmt)
 {
-  const PtExpr* pt_expr = pt_stmt->primary();
-  ElbExpr* named_event = instantiate_namedevent(parent, pt_expr);
+  auto pt_expr = pt_stmt->primary();
+  auto named_event = instantiate_namedevent(parent, pt_expr);
   if ( !named_event ) {
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_EventStmt(parent, process, pt_stmt,
-					  named_event);
+  auto stmt = factory().new_EventStmt(parent, process, pt_stmt, named_event);
 
   return stmt;
 }
@@ -589,12 +563,12 @@ StmtGen::instantiate_eventstmt(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_nullstmt(const VlNamedObj* parent,
-			      ElbProcess* process,
+			      const VlProcess* process,
 			      const PtStmt* pt_stmt)
 {
-  ElbStmt* stmt = factory().new_NullStmt(parent, process, pt_stmt);
+  auto stmt = factory().new_NullStmt(parent, process, pt_stmt);
 
   return stmt;
 }

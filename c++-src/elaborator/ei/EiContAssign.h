@@ -10,7 +10,7 @@
 
 
 #include "ym/vl/VlContAssign.h"
-#include "elaborator/ElbContAssign.h"
+#include "elaborator/ElbCaHead.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -38,7 +38,7 @@ protected:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbCaHead の仮想関数
+  // EiCaHead の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールを返す．
@@ -98,7 +98,7 @@ private:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbCaHead の仮想関数
+  // EiCaHead の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延を表す式を返す．
@@ -131,8 +131,8 @@ protected:
   /// @param[in] lhs 左辺式
   /// @param[in] rhs 右辺式
   EiContAssign(const PtBase* pt_obj,
-	       ElbExpr* lhs,
-	       ElbExpr* rhs);
+	       const VlExpr* lhs,
+	       const VlExpr* rhs);
 
   /// @brief デストラクタ
   ~EiContAssign();
@@ -179,10 +179,10 @@ private:
   const PtBase* mPtObj;
 
   // 左辺式
-  ElbExpr* mLhs;
+  const VlExpr* mLhs;
 
   // 右辺式
-  ElbExpr* mRhs;
+  const VlExpr* mRhs;
 
 };
 
@@ -205,8 +205,8 @@ private:
   /// @param[in] rhs 右辺式
   EiContAssign1(ElbCaHead* head,
 		const PtBase* pt_obj,
-		ElbExpr* lhs,
-		ElbExpr* rhs);
+		const VlExpr* lhs,
+		const VlExpr* rhs);
 
   /// @brief デストラクタ
   ~EiContAssign1();
@@ -244,7 +244,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ヘッダ
-  ElbCaHead* mHead;
+  const ElbCaHead* mHead;
 
 };
 
@@ -267,8 +267,8 @@ private:
   /// @param[in] rhs 右辺式
   EiContAssign2(const VlModule* module,
 		const PtBase* pt_obj,
-		ElbExpr* lhs,
-		ElbExpr* rhs);
+		const VlExpr* lhs,
+		const VlExpr* rhs);
 
   /// @brief デストラクタ
   ~EiContAssign2();

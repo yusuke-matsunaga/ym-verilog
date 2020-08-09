@@ -90,7 +90,7 @@ public:
   /// @retval false index が範囲外
   bool
   calc_offset(int index,
-	      int& offset) const override;
+	      SizeType& offset) const override;
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] index インデックス
@@ -99,19 +99,19 @@ public:
   /// @retval false index が範囲外
   bool
   calc_roffset(int index,
-	       int& offset) const override;
+	       SizeType& offset) const override;
 
   /// @brief offset の逆関数
   /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   int
-  index(int offset) const override;
+  index(SizeType offset) const override;
 
   /// @brief roffset の逆関数
   /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   int
-  rindex(int roffset) const override;
+  rindex(SizeType roffset) const override;
 
 
 public:
@@ -162,7 +162,7 @@ public:
   calc_offset(int left,
 	      int right,
 	      int index,
-	      int& offset);
+	      SizeType& offset);
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] left 範囲の MSB
@@ -176,7 +176,7 @@ public:
   calc_roffset(int left,
 	       int right,
 	       int index,
-	       int& offset);
+	       SizeType& offset);
 
   /// @brief offset の逆関数
   /// @param[in] left 範囲の MSB
@@ -187,7 +187,7 @@ public:
   int
   index(int left,
 	int right,
-	int offset);
+	SizeType offset);
 
   /// @brief roffset の逆関数
   /// @param[in] left 範囲の MSB
@@ -198,7 +198,7 @@ public:
   int
   rindex(int left,
 	 int right,
-	 int roffset);
+	 SizeType roffset);
 
 
 private:
@@ -304,7 +304,7 @@ public:
   /// @retval false index が範囲外
   bool
   calc_offset(int index,
-	      int& offset) const;
+	      SizeType& offset) const;
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] index インデックス
@@ -313,19 +313,19 @@ public:
   /// @retval false index が範囲外
   bool
   calc_roffset(int index,
-	       int& offset) const;
+	       SizeType& offset) const;
 
   /// @brief offset の逆関数
   /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   int
-  index(int offset) const;
+  index(SizeType offset) const;
 
   /// @brief roffset の逆関数
   /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   int
-  rindex(int roffset) const;
+  rindex(SizeType roffset) const;
 
 
 private:
@@ -388,7 +388,7 @@ public:
   /// @param[in] offset オフセット
   /// @param[out] index_list インデックスのリスト
   void
-  index(int offset,
+  index(SizeType offset,
 	vector<int>& index_list) const;
 
   /// @brief インデックスのリストからオフセットを得る．
@@ -398,7 +398,7 @@ public:
   /// @retval false index_list のいずれかの値が範囲外だった．
   bool
   calc_offset(const vector<int>& index_list,
-	      int& offset) const;
+	      SizeType& offset) const;
 
 
 private:
@@ -466,7 +466,7 @@ bool
 EiRange::calc_offset(int left,
 		     int right,
 		     int index,
-		     int& offset)
+		     SizeType& offset)
 {
   if ( left >= right ) {
     if ( right <= index && index <= left ) {
@@ -495,7 +495,7 @@ bool
 EiRange::calc_roffset(int left,
 		      int right,
 		      int index,
-		      int& offset)
+		      SizeType& offset)
 {
   if ( left >= right ) {
     if ( right <= index && index <= left ) {
@@ -517,7 +517,7 @@ inline
 int
 EiRange::index(int left,
 	       int right,
-	       int offset)
+	       SizeType offset)
 {
   if ( left >= right ) {
     return offset + right;
@@ -532,7 +532,7 @@ inline
 int
 EiRange::rindex(int left,
 		int right,
-		int roffset)
+		SizeType roffset)
 {
   if ( left >= right ) {
     return left - roffset;

@@ -308,7 +308,7 @@ public:
   init_iodecl(int pos,
 	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
-	      ElbDecl* decl) override;
+	      const VlDecl* decl) override;
 
   /// @brief ポートの初期設定を行う．
   /// @param[in] index ポート番号

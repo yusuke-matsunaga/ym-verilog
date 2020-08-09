@@ -5,13 +5,11 @@
 /// @brief EiDecl のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "elaborator/ElbDecl.h"
-
-#include "ym/BitVector.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -124,7 +122,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -169,11 +167,21 @@ public:
   const VlDelay*
   delay() const override;
 
+  /// @brief 定数値を持つ型のときに true を返す．
+  /// @note このクラスは false を返す．
+  bool
+  is_consttype() const override;
+
   /// @brief 初期値の取得
   /// @retval 初期値
   /// @retval nullptr 設定がない場合
   const VlExpr*
   init_value() const override;
+
+  /// @brief localparam のときに true 返す．
+  /// @note このクラスは false を返す．
+  bool
+  is_local_param() const override;
 
 
 public:
@@ -204,409 +212,11 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class EiDeclN EiDecl.h "EiDecl.h"
-/// @brief 値を持たない EiDecl
-//////////////////////////////////////////////////////////////////////
-class EiDeclN :
-  public EiDecl
-{
-  friend class EiFactory;
-
-private:
-
-  /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiDeclN(ElbDeclHead* head,
-	  const PtNamedBase* pt_item);
-
-  /// @brief デストラクタ
-  ~EiDeclN();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // EiDecl の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief スカラー値を返す．
-  VlScalarVal
-  get_scalar() const override;
-
-  /// @brief スカラー値を設定する．
-  /// @param[in] val 値
-  void
-  set_scalar(const VlScalarVal& val) override;
-
-  /// @brief 論理値を返す．
-  VlScalarVal
-  get_logic() const override;
-
-  /// @brief real 型の値を返す．
-  double
-  get_real() const override;
-
-  /// @brief real 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_real(double val) override;
-
-  /// @brief bitvector 型の値を返す．
-  /// @param[out] val 値
-  /// @param[in] req_type 要求される型
-  void
-  get_bitvector(BitVector& val,
-		const VlValueType& req_type = VlValueType()) const override;
-
-  /// @brief bitvector 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_bitvector(const BitVector& val) override;
-
-  /// @brief ビット選択値を返す．
-  /// @param[in] index ビット位置
-  VlScalarVal
-  get_bitselect(int index) const override;
-
-  /// @brief ビット値を設定する．
-  /// @param[in] index ビット位置
-  /// @param[in] val 値
-  void
-  set_bitselect(int index,
-		const VlScalarVal& val) override;
-
-  /// @brief 範囲選択値を返す．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[out] val 値
-  void
-  get_partselect(int left,
-		 int right,
-		 BitVector& val) const override;
-
-  /// @brief 範囲値を設定する．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] val 値
-  void
-  set_partselect(int left,
-		 int right,
-		 const BitVector& val) override;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class EiDeclS EiDecl.h "EiDecl.h"
-/// @brief スカラー値を持つ EiDecl
-//////////////////////////////////////////////////////////////////////
-class EiDeclS :
-  public EiDecl
-{
-  friend class EiFactory;
-
-protected:
-
-  /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiDeclS(ElbDeclHead* head,
-	  const PtNamedBase* pt_item);
-
-  /// @brief デストラクタ
-  ~EiDeclS();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbDecl の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief スカラー値を返す．
-  VlScalarVal
-  get_scalar() const override;
-
-  /// @brief スカラー値を設定する．
-  /// @param[in] val 値
-  void
-  set_scalar(const VlScalarVal& val) override;
-
-  /// @brief 論理値を返す．
-  VlScalarVal
-  get_logic() const override;
-
-  /// @brief real 型の値を返す．
-  double
-  get_real() const override;
-
-  /// @brief real 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_real(double val) override;
-
-  /// @brief bitvector 型の値を返す．
-  /// @param[out] val 値
-  /// @param[in] req_type 要求される型
-  void
-  get_bitvector(BitVector& val,
-		const VlValueType& req_type = VlValueType()) const override;
-
-  /// @brief bitvector 型の値を設定する．
-  void
-  set_bitvector(const BitVector& val) override;
-
-  /// @brief ビット選択値を返す．
-  /// @param[in] index ビット位置
-  VlScalarVal
-  get_bitselect(int index) const override;
-
-  /// @brief ビット値を設定する．
-  /// @param[in] index ビット位置
-  /// @param[in] val 値
-  void
-  set_bitselect(int index,
-		const VlScalarVal& val) override;
-
-  /// @brief 範囲選択値を返す．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[out] val 値
-  void
-  get_partselect(int left,
-		 int right,
-		 BitVector& val) const override;
-
-  /// @brief 範囲値を設定する．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] val 値
-  void
-  set_partselect(int left,
-		 int right,
-		 const BitVector& val) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 値
-  VlScalarVal mVal;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class EiDeclR EiDecl.h "EiDecl.h"
-/// @brief 実数値を持つ EiDecl
-//////////////////////////////////////////////////////////////////////
-class EiDeclR :
-  public EiDecl
-{
-  friend class EiFactory;
-
-protected:
-
-  /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiDeclR(ElbDeclHead* head,
-	  const PtNamedBase* pt_item);
-
-  /// @brief デストラクタ
-  ~EiDeclR();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbDecl の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief スカラー値を返す．
-  VlScalarVal
-  get_scalar() const override;
-
-  /// @brief スカラー値を設定する．
-  /// @param[in] val 値
-  void
-  set_scalar(const VlScalarVal& val) override;
-
-  /// @brief 論理値を返す．
-  VlScalarVal
-  get_logic() const override;
-
-  /// @brief real 型の値を返す．
-  double
-  get_real() const override;
-
-  /// @brief real 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_real(double val) override;
-
-  /// @brief bitvector 型の値を返す．
-  /// @param[out] val 値
-  /// @param[in] req_type 要求される型
-  void
-  get_bitvector(BitVector& val,
-		const VlValueType& req_type = VlValueType()) const override;
-
-  /// @brief bitvector 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_bitvector(const BitVector& val) override;
-
-  /// @brief ビット選択値を返す．
-  /// @param[in] index ビット位置
-  VlScalarVal
-  get_bitselect(int index) const override;
-
-  /// @brief ビット値を設定する．
-  /// @param[in] index ビット位置
-  /// @param[in] val 値
-  void
-  set_bitselect(int index,
-		const VlScalarVal& val) override;
-
-  /// @brief 範囲選択値を返す．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[out] val 値
-  void
-  get_partselect(int left,
-		 int right,
-		 BitVector& val) const override;
-
-  /// @brief 範囲値を設定する．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] val 値
-  void
-  set_partselect(int left,
-		 int right,
-		 const BitVector& val) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 値
-  double mVal;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class EiDeclV EiDecl.h "EiDecl.h"
-/// @brief ビットベクタ値を持つ EiDecl
-//////////////////////////////////////////////////////////////////////
-class EiDeclV :
-  public EiDecl
-{
-  friend class EiFactory;
-
-protected:
-
-  /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiDeclV(ElbDeclHead* head,
-	  const PtNamedBase* pt_item);
-
-  /// @brief デストラクタ
-  ~EiDeclV();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbDecl の関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief スカラー値を返す．
-  VlScalarVal
-  get_scalar() const override;
-
-  /// @brief スカラー値を設定する．
-  /// @param[in] val 値
-  void
-  set_scalar(const VlScalarVal& val) override;
-
-  /// @brief 論理値を返す．
-  VlScalarVal
-  get_logic() const override;
-
-  /// @brief real 型の値を返す．
-  double
-  get_real() const override;
-
-  /// @brief real 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_real(double val) override;
-
-  /// @brief bitvector 型の値を返す．
-  /// @param[out] val 値
-  /// @param[in] req_type 要求される型
-  void
-  get_bitvector(BitVector& val,
-		const VlValueType& req_type = VlValueType()) const override;
-
-  /// @brief bitvector 型の値を設定する．
-  /// @param[in] val 値
-  void
-  set_bitvector(const BitVector& val) override;
-
-  /// @brief ビット選択値を返す．
-  /// @param[in] index ビット位置
-  VlScalarVal
-  get_bitselect(int index) const override;
-
-  /// @brief ビット値を設定する．
-  /// @param[in] index ビット位置
-  /// @param[in] val 値
-  void
-  set_bitselect(int index,
-		const VlScalarVal& val) override;
-
-  /// @brief 範囲選択値を返す．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[out] val 値
-  void
-  get_partselect(int left,
-		 int right,
-		 BitVector& val) const override;
-
-  /// @brief 範囲値を設定する．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] val 値
-  void
-  set_partselect(int left,
-		 int right,
-		 const BitVector& val) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 値
-  BitVector mVal;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class EiDeclIS EiDecl.h "EiDecl.h"
-/// @brief 初期値を持つ EiDeclS
+/// @brief 初期値を持つ EiDecl
 //////////////////////////////////////////////////////////////////////
-class EiDeclIS :
-  public EiDeclS
+class EiDeclI :
+  public EiDecl
 {
   friend class EiFactory;
 
@@ -616,126 +226,12 @@ private:
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木の宣言要素
   /// @param[in] init 初期値
-  EiDeclIS(ElbDeclHead* head,
-	   const PtNamedBase* pt_item,
-	   ElbExpr* init);
+  EiDeclI(ElbDeclHead* head,
+	  const PtNamedBase* pt_item,
+	  const VlExpr* init);
 
   /// @brief デストラクタ
-  ~EiDeclIS();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // VlDecl の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 初期値の取得
-  /// @retval 初期値
-  /// @retval nullptr 設定がない場合
-  const VlExpr*
-  init_value() const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbDecl の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 初期値の設定
-  /// @param[in] expr 初期値
-  void
-  set_init(const VlExpr* expr) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 初期値
-  const VlExpr* mInit;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class EiDeclIR EiDecl.h "EiDecl.h"
-/// @brief 初期値を持つ EiDeclR
-//////////////////////////////////////////////////////////////////////
-class EiDeclIR :
-  public EiDeclR
-{
-  friend class EiFactory;
-
-private:
-
-  /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  /// @param[in] init 初期値
-  EiDeclIR(ElbDeclHead* head,
-	   const PtNamedBase* pt_item,
-	   ElbExpr* init);
-
-  /// @brief デストラクタ
-  ~EiDeclIR();
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // VlDecl の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 初期値の取得
-  /// @retval 初期値
-  /// @retval nullptr 設定がない場合
-  const VlExpr*
-  init_value() const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbDecl の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 初期値の設定
-  /// @param[in] expr 初期値
-  void
-  set_init(const VlExpr* expr) override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 初期値
-  const VlExpr* mInit;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class EiDeclIV EiDecl.h "EiDecl.h"
-/// @brief 初期値を持つ EiDeclV
-//////////////////////////////////////////////////////////////////////
-class EiDeclIV :
-  public EiDeclV
-{
-  friend class EiFactory;
-
-private:
-
-  /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  /// @param[in] init 初期値
-  EiDeclIV(ElbDeclHead* head,
-	   const PtNamedBase* pt_item,
-	   ElbExpr* init);
-
-  /// @brief デストラクタ
-  ~EiDeclIV();
+  ~EiDeclI();
 
 
 public:

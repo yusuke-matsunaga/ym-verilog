@@ -23,13 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlParamAssign :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlParamAssign() {}
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlParamAssign の仮想関数

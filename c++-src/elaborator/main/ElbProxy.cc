@@ -30,9 +30,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbProxy::ElbProxy(Elaborator& elab,
 		   ElbMgr& elb_mgr,
 		   ElbFactory& elb_factory) :
-  mElaborator(elab),
-  mMgr(elb_mgr),
-  mFactory(elb_factory)
+  mElaborator{elab},
+  mMgr{elb_mgr},
+  mFactory{elb_factory}
 {
 }
 
@@ -77,9 +77,9 @@ ElbProxy::allow_empty_io_range()
 void
 ElbProxy::phase1_module_item(ElbModule* module,
 			     const PtModule* pt_module,
-			     const ElbParamCon* param_con)
+			     const vector<ElbParamCon>& param_con_list)
 {
-  return mModuleGen->phase1_module_item(module, pt_module, param_con);
+  mModuleGen->phase1_module_item(module, pt_module, param_con_list);
 }
 
 // @brief parameter と genvar を実体化する．
@@ -131,7 +131,7 @@ ElbProxy::phase1_item(const VlNamedObj* parent,
 // @brief constant function の生成を行う．
 // @param[in] parent 親のスコープ
 // @param[in] pt_function 関数定義
-ElbTaskFunc*
+const VlTaskFunc*
 ElbProxy::instantiate_constant_function(const VlNamedObj* parent,
 					const PtItem* pt_function)
 {
@@ -155,9 +155,9 @@ ElbProxy::phase1_stmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 ElbProxy::instantiate_stmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const ElbEnv& env,
 			   const PtStmt* pt_stmt)
 {

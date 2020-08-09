@@ -5,12 +5,11 @@
 /// @brief ElbEnv のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/verilog.h"
-#include "ym/vl/VlTaskFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -49,7 +48,7 @@ public:
   operator=(const ElbEnv& src);
 
   /// @brief デストラクタ
-  ~ElbEnv();
+  ~ElbEnv() = default;
 
 
 protected:
@@ -152,11 +151,52 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる定数
+  //////////////////////////////////////////////////////////////////////
+
+  // 定数式の環境
+  static const int CONSTANT = 0;
+
+  // 関数内の環境
+  static const int FUNCTION = 1;
+
+  // 定数関数内の環境
+  static const int CONSTFUNC = 2;
+
+  // タスク内の環境
+  static const int TASK = 3;
+
+  // 引数の環境
+  static const int ARG = 4;
+
+  // イベント式の環境
+  static const int EVENT = 5;
+
+  // 左辺式の環境
+  static const int LHS = 6;
+
+  // ネットの環境
+  static const int NET = 7;
+
+  // 変数の環境
+  static const int VAR = 8;
+
+  // PCA の環境
+  static const int PCA = 9;
+
+  // FORCE の環境
+  static const int FORCE = 10;
+
+  // フラグ数
+  static const int NUM_FLAG = FORCE + 1;
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
   // 種々のフラグ
-  ymuint32 mFlags;
+  bitset<NUM_FLAG> mFlags;
 
   // constant function
   const VlNamedObj* mCf;

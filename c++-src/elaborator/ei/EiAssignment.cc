@@ -9,7 +9,7 @@
 
 #include "EiFactory.h"
 #include "EiAssignment.h"
-#include "elaborator/ElbControl.h"
+#include "ym/vl/VlControl.h"
 #include "elaborator/ElbExpr.h"
 
 #include "ym/BitVector.h"
@@ -29,16 +29,16 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] rhs 右辺の式
 // @param[in] block ブロッキング代入の時 true
 // @param[in] control コントロール
-ElbStmt*
+const VlStmt*
 EiFactory::new_Assignment(const VlNamedObj* parent,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const PtStmt* pt_stmt,
-			  ElbExpr* lhs,
-			  ElbExpr* rhs,
+			  const VlExpr* lhs,
+			  const VlExpr* rhs,
 			  bool block,
-			  ElbControl* control)
+			  const VlControl* control)
 {
-  ElbStmt* stmt = nullptr;
+  const VlStmt* stmt = nullptr;
   if ( block ) {
     stmt = new EiAssignment(parent, process, pt_stmt,
 			    lhs, rhs, control);
@@ -56,15 +56,15 @@ EiFactory::new_Assignment(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
 // @param[in] rhs 右辺の式
-ElbStmt*
+const VlStmt*
 EiFactory::new_AssignStmt(const VlNamedObj* parent,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const PtStmt* pt_stmt,
-			  ElbExpr* lhs,
-			  ElbExpr* rhs)
+			  const VlExpr* lhs,
+			  const VlExpr* rhs)
 {
-  ElbStmt* stmt = new EiAssignStmt(parent, process, pt_stmt,
-				   lhs, rhs);
+  auto stmt = new EiAssignStmt(parent, process, pt_stmt,
+			       lhs, rhs);
 
   return stmt;
 }
@@ -74,14 +74,14 @@ EiFactory::new_AssignStmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
-ElbStmt*
+const VlStmt*
 EiFactory::new_DeassignStmt(const VlNamedObj* parent,
-			    ElbProcess* process,
+			    const VlProcess* process,
 			    const PtStmt* pt_stmt,
-			    ElbExpr* lhs)
+			    const VlExpr* lhs)
 {
-  ElbStmt* stmt = new EiDeassignStmt(parent, process, pt_stmt,
-				     lhs);
+  auto stmt = new EiDeassignStmt(parent, process, pt_stmt,
+				 lhs);
 
   return stmt;
 }
@@ -92,15 +92,15 @@ EiFactory::new_DeassignStmt(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
 // @param[in] rhs 右辺の式
-ElbStmt*
+const VlStmt*
 EiFactory::new_ForceStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
-			 ElbExpr* lhs,
-			 ElbExpr* rhs)
+			 const VlExpr* lhs,
+			 const VlExpr* rhs)
 {
-  ElbStmt* stmt = new EiForceStmt(parent, process, pt_stmt,
-				  lhs, rhs);
+  auto stmt = new EiForceStmt(parent, process, pt_stmt,
+			      lhs, rhs);
 
   return stmt;
 }
@@ -110,14 +110,14 @@ EiFactory::new_ForceStmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
-ElbStmt*
+const VlStmt*
 EiFactory::new_ReleaseStmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbExpr* lhs)
+			   const VlExpr* lhs)
 {
-  ElbStmt* stmt = new EiReleaseStmt(parent, process, pt_stmt,
-				    lhs);
+  auto stmt = new EiReleaseStmt(parent, process, pt_stmt,
+				lhs);
 
   return stmt;
 }
@@ -134,13 +134,13 @@ EiFactory::new_ReleaseStmt(const VlNamedObj* parent,
 // @param[in] lhs 左辺の式
 // @param[in] rhs 右辺の式
 EiAssignBase::EiAssignBase(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbExpr* lhs,
-			   ElbExpr* rhs) :
+			   const VlExpr* lhs,
+			   const VlExpr* rhs) :
   EiStmtBase(parent, process, pt_stmt),
-  mLhs(lhs),
-  mRhs(rhs)
+  mLhs{lhs},
+  mRhs{rhs}
 {
 }
 
@@ -164,14 +164,14 @@ EiAssignBase::rhs() const
 }
 
 // @brief 左辺を返す．
-ElbExpr*
+const VlExpr*
 EiAssignBase::_lhs() const
 {
   return mLhs;
 }
 
 // @brief 右辺を返す．
-ElbExpr*
+const VlExpr*
 EiAssignBase::_rhs() const
 {
   return mRhs;
@@ -190,13 +190,13 @@ EiAssignBase::_rhs() const
 // @param[in] rhs 右辺の式
 // @param[in] control コントロール
 EiNbAssignment::EiNbAssignment(const VlNamedObj* parent,
-			       ElbProcess* process,
+			       const VlProcess* process,
 			       const PtStmt* pt_stmt,
-			       ElbExpr* lhs,
-			       ElbExpr* rhs,
-			       ElbControl* control) :
+			       const VlExpr* lhs,
+			       const VlExpr* rhs,
+			       const VlControl* control) :
   EiAssignBase(parent, process, pt_stmt, lhs, rhs),
-  mControl(control)
+  mControl{control}
 {
 }
 
@@ -232,11 +232,11 @@ EiNbAssignment::control() const
 // @param[in] rhs 右辺の式
 // @param[in] control コントロール
 EiAssignment::EiAssignment(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbExpr* lhs,
-			   ElbExpr* rhs,
-			   ElbControl* control) :
+			   const VlExpr* lhs,
+			   const VlExpr* rhs,
+			   const VlControl* control) :
   EiNbAssignment(parent, process, pt_stmt, lhs, rhs, control)
 {
 }
@@ -266,10 +266,10 @@ EiAssignment::is_blocking() const
 // @param[in] lhs 左辺の式
 // @param[in] rhs 右辺の式
 EiAssignStmt::EiAssignStmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbExpr* lhs,
-			   ElbExpr* rhs) :
+			   const VlExpr* lhs,
+			   const VlExpr* rhs) :
   EiAssignBase(parent, process, pt_stmt, lhs, rhs)
 {
 }
@@ -298,10 +298,10 @@ EiAssignStmt::type() const
 // @param[in] lhs 左辺の式
 // @param[in] rhs 右辺の式
 EiForceStmt::EiForceStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
-			 ElbExpr* lhs,
-			 ElbExpr* rhs) :
+			 const VlExpr* lhs,
+			 const VlExpr* rhs) :
   EiAssignBase(parent, process, pt_stmt, lhs, rhs)
 {
 }
@@ -329,11 +329,11 @@ EiForceStmt::type() const
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
 EiDeassignBase::EiDeassignBase(const VlNamedObj* parent,
-			       ElbProcess* process,
+			       const VlProcess* process,
 			       const PtStmt* pt_stmt,
-			       ElbExpr* lhs) :
+			       const VlExpr* lhs) :
   EiStmtBase(parent, process, pt_stmt),
-  mLhs(lhs)
+  mLhs{lhs}
 {
 }
 
@@ -360,9 +360,9 @@ EiDeassignBase::lhs() const
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
 EiDeassignStmt::EiDeassignStmt(const VlNamedObj* parent,
-			       ElbProcess* process,
+			       const VlProcess* process,
 			       const PtStmt* pt_stmt,
-			       ElbExpr* lhs) :
+			       const VlExpr* lhs) :
   EiDeassignBase(parent, process, pt_stmt, lhs)
 {
 }
@@ -390,9 +390,9 @@ EiDeassignStmt::type() const
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] lhs 左辺の式
 EiReleaseStmt::EiReleaseStmt(const VlNamedObj* parent,
-			     ElbProcess* process,
+			     const VlProcess* process,
 			     const PtStmt* pt_stmt,
-			     ElbExpr* lhs) :
+			     const VlExpr* lhs) :
   EiDeassignBase(parent, process, pt_stmt, lhs)
 {
 }

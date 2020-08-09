@@ -23,13 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlTaskFunc :
   public VlNamedObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlTaskFunc() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // Task/Function に共通な仮想関数
@@ -108,6 +101,11 @@ public:
   virtual
   SizeType
   bit_size() const = 0;
+
+  /// @brief constant function の時に true を返す．
+  virtual
+  bool
+  is_constant_function() const = 0;
 
 };
 

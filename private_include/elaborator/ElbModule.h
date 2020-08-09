@@ -76,7 +76,7 @@ public:
   init_iodecl(int pos,
 	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
-	      ElbDecl* decl) = 0;
+	      const VlDecl* decl) = 0;
 
   /// @brief ポートの初期設定を行う．
   /// @param[in] index ポート番号

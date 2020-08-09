@@ -83,9 +83,9 @@ VlMgr::pt_udp_list() const
 int
 VlMgr::elaborate(const ClibCellLibrary& cell_library)
 {
-  Elaborator elab(*mElbMgr, *mElbFactory, cell_library);
+  Elaborator elab(*mPtMgr, *mElbMgr, *mElbFactory, cell_library);
 
-  return elab(*mPtMgr);
+  return elab();
 }
 
 // @brief UDP 定義のリストを返す．

@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(式の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -28,7 +28,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr)
 {
-  VpiOpType op_type = pt_expr->op_type();
+  auto op_type = pt_expr->op_type();
   SizeType opr_size = pt_expr->operand_num();
 
   ElbExpr* opr0 = nullptr;
@@ -39,7 +39,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
   switch ( op_type ) {
   case VpiOpType::Posedge:
   case VpiOpType::Negedge:
-    ASSERT_COND(opr_size == 1 );
+    ASSERT_COND( opr_size == 1 );
     error_illegal_edge_descriptor(pt_expr);
     return nullptr;
 
@@ -53,7 +53,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
   case VpiOpType::Plus:
   case VpiOpType::Minus:
   case VpiOpType::Not:
-    ASSERT_COND(opr_size == 1 );
+    ASSERT_COND( opr_size == 1 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     if ( !opr0 ) {
       return nullptr;
@@ -88,7 +88,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
   case VpiOpType::Gt:
   case VpiOpType::Le:
   case VpiOpType::Lt:
-    ASSERT_COND(opr_size == 2 );
+    ASSERT_COND( opr_size == 2 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     opr1 = instantiate_expr(parent, env, pt_expr->operand1());
     if ( !opr0 || !opr1 ) {
@@ -109,7 +109,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 
   case VpiOpType::Condition:
   case VpiOpType::MinTypMax:
-    ASSERT_COND(opr_size == 3 );
+    ASSERT_COND( opr_size == 3 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     opr1 = instantiate_expr(parent, env, pt_expr->operand1());
     opr2 = instantiate_expr(parent, env, pt_expr->operand2());
@@ -121,14 +121,15 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 
   case VpiOpType::Concat:
     {
-      ElbExpr** opr_list = factory().new_ExprList(opr_size);
+      auto opr_list = factory().new_ExprList(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
-	const PtExpr* pt_expr1 = pt_expr->operand(i);
-	ElbExpr* expr1 = instantiate_expr(parent, env, pt_expr1);
+	auto pt_expr1 = pt_expr->operand(i);
+	auto expr1 = instantiate_expr(parent, env, pt_expr1);
 	if ( !expr1 ) {
 	  return nullptr;
 	}
-	if ( expr1->value_type().is_real_type() ) {
+	auto type1 = expr1->value_type();
+	if ( type1.is_real_type() ) {
 	  error_illegal_real_type(pt_expr1);
 	  return nullptr;
 	}
@@ -136,27 +137,27 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
       }
 
       expr = factory().new_ConcatOp(pt_expr, opr_size, opr_list);
-      expr->set_selfsize();
     }
     break;
 
   case VpiOpType::MultiConcat:
     {
-      const PtExpr* pt_expr0 = pt_expr->operand(0);
+      auto pt_expr0 = pt_expr->operand(0);
       int rep_num;
       bool stat = evaluate_int(parent, pt_expr0, rep_num, true);
       if ( !stat ) {
 	return nullptr;
       }
-      ElbExpr* rep_expr = instantiate_expr(parent, env, pt_expr0);
-      ElbExpr** opr_list = factory().new_ExprList(opr_size - 1);
+      auto rep_expr = instantiate_expr(parent, env, pt_expr0);
+      auto opr_list = factory().new_ExprList(opr_size - 1);
       for ( SizeType i = 1; i < opr_size; ++ i ) {
-	const PtExpr* pt_expr1 = pt_expr->operand(i);
-	ElbExpr* expr1 = instantiate_expr(parent, env, pt_expr1);
+	auto pt_expr1 = pt_expr->operand(i);
+	auto expr1 = instantiate_expr(parent, env, pt_expr1);
 	if ( !expr1 ) {
 	  return nullptr;
 	}
-	if ( expr1->value_type().is_real_type() ) {
+	auto type1 = expr1->value_type();
+	if ( type1.is_real_type() ) {
 	  error_illegal_real_type(pt_expr1);
 	  return nullptr;
 	}
@@ -164,7 +165,6 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
       }
       expr = factory().new_MultiConcatOp(pt_expr, rep_num, rep_expr,
 					 opr_size - 1, opr_list);
-      expr->set_selfsize();
     }
     break;
 
@@ -192,7 +192,7 @@ ExprGen::evaluate_opr(const VlNamedObj* parent,
 		      const PtExpr* pt_expr,
 		      bool put_error)
 {
-  VpiOpType op_type = pt_expr->op_type();
+  auto op_type = pt_expr->op_type();
   SizeType op_size = pt_expr->operand_num();
   vector<VlValue> val(3);
 

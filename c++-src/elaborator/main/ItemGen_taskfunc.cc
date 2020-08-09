@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(タスク/関数の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -11,9 +11,8 @@
 #include "ElbEnv.h"
 
 #include "ym/pt/PtItem.h"
-
+#include "elaborator/ElbDecl.h"
 #include "elaborator/ElbTaskFunc.h"
-
 #include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
@@ -60,9 +59,8 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
   else {
     ASSERT_COND( pt_item->type() == PtItemType::Func );
 
-    const PtExpr* pt_left = pt_item->left_range();
-    const PtExpr* pt_right = pt_item->right_range();
-
+    auto pt_left = pt_item->left_range();
+    auto pt_right = pt_item->right_range();
     if ( pt_left && pt_right ) {
       int left_val = 0;
       int right_val = 0;
@@ -73,10 +71,11 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
       }
       taskfunc = factory().new_Function(parent,	pt_item,
 					pt_left, pt_right,
-					left_val, right_val);
+					left_val, right_val,
+					false);
     }
     else {
-      taskfunc = factory().new_Function(parent,	pt_item);
+      taskfunc = factory().new_Function(parent,	pt_item, false);
     }
     ASSERT_COND( taskfunc != nullptr );
 
@@ -102,7 +101,7 @@ ItemGen::phase1_tf(const VlNamedObj* parent,
 		  buf.str());
 
   // 本体のステートメント内部のスコープの生成
-  const PtStmt* pt_body = pt_item->body();
+  auto pt_body = pt_item->body();
   phase1_stmt(taskfunc, pt_body);
 
   // 残りの仕事は phase2, phase3 で行う．
@@ -153,7 +152,7 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
     }
     ASSERT_COND( head );
 
-    ElbDecl* decl = factory().new_Decl(head, pt_item);
+    auto decl = factory().new_Decl(head, pt_item);
     int tag = vpiVariables;
     if ( pt_item->data_type() == VpiVarType::None ) {
       tag = vpiReg;
@@ -188,8 +187,8 @@ ItemGen::phase3_tf(ElbTaskFunc* taskfunc,
 
   // 本体のステートメントの生成
   ElbTfEnv env(taskfunc);
-  const PtStmt* pt_body = pt_item->body();
-  ElbStmt* body = instantiate_stmt(taskfunc, nullptr, env, pt_body);
+  auto pt_body = pt_item->body();
+  auto body = instantiate_stmt(taskfunc, nullptr, env, pt_body);
   if ( body ) {
     taskfunc->set_stmt(body);
   }
@@ -203,7 +202,7 @@ ItemGen::phase3_tf(ElbTaskFunc* taskfunc,
 // @brief constant function の生成を行う．
 // @param[in] parent 親のスコープ
 // @param[in] pt_function 関数定義
-ElbTaskFunc*
+const VlTaskFunc*
 ItemGen::instantiate_constant_function(const VlNamedObj* parent,
 				       const PtItem* pt_function)
 {
@@ -220,8 +219,8 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
 	 << endl;
   }
 
-  const PtExpr* pt_left = pt_function->left_range();
-  const PtExpr* pt_right = pt_function->right_range();
+  auto pt_left = pt_function->left_range();
+  auto pt_right = pt_function->right_range();
 
   ElbTaskFunc* func = nullptr;
   ElbDeclHead* head = nullptr;
@@ -234,13 +233,14 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
     }
     func = factory().new_Function(parent, pt_function,
 				  pt_left, pt_right,
-				  left_val, right_val);
+				  left_val, right_val,
+				  true);
     head = factory().new_DeclHead(func, pt_function,
 				  pt_left, pt_right,
 				  left_val, right_val);
   }
   else {
-    func = factory().new_Function(parent, pt_function);
+    func = factory().new_Function(parent, pt_function, true);
     head = factory().new_DeclHead(func, pt_function);
   }
   ASSERT_COND( func );
@@ -256,7 +256,7 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
   instantiate_decl(func, pt_function->declhead_list());
 
   // 関数名と同名の変数の生成
-  ElbDecl* decl = factory().new_Decl(head, pt_function);
+  auto decl = factory().new_Decl(head, pt_function);
   int tag = vpiVariables;
   if ( pt_function->data_type() == VpiVarType::None ) {
     tag = vpiReg;
@@ -269,12 +269,12 @@ ItemGen::instantiate_constant_function(const VlNamedObj* parent,
   instantiate_iodecl(nullptr, func, pt_function->iohead_list());
 
   // 本体のステートメント内部のスコープの生成
-  const PtStmt* pt_body = pt_function->body();
+  auto pt_body = pt_function->body();
   phase1_stmt(func, pt_body, true);
 
   // 本体のステートメントの生成
   ElbConstantFunctionEnv env(func);
-  ElbStmt* body = instantiate_stmt(func, nullptr, env, pt_body);
+  auto body = instantiate_stmt(func, nullptr, env, pt_body);
   if ( body ) {
     func->set_stmt(body);
   }

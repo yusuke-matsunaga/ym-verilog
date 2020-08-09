@@ -51,10 +51,12 @@ class Elaborator
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] pt_mgr パース木を管理するクラス
   /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
   /// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
   /// @param[in] cell_library セルライブラリ
-  Elaborator(ElbMgr& elb_mgr,
+  Elaborator(const PtMgr& pt_mgr,
+	     ElbMgr& elb_mgr,
 	     ElbFactory& elb_factory,
 	     const ClibCellLibrary& cell_library);
 
@@ -65,10 +67,11 @@ public:
 public:
 
   /// @brief エラボレーションを行う．
-  /// @param[in] pt_mgr パース木を管理するクラス
   /// @return エラー数を返す．
+  ///
+  /// この関数は一度しか呼べない．
   int
-  operator()(const PtMgr& pt_mgr);
+  operator()();
 
 
 private:
@@ -123,7 +126,7 @@ private:
   /// @param[in] name 名前
   /// @return parent というスコープ内の name という関数を返す．
   /// @return なければ nullptr を返す．
-  const ElbTaskFunc*
+  const VlTaskFunc*
   find_constant_function(const VlNamedObj* parent,
 			 const char* name) const;
 
@@ -149,12 +152,12 @@ private:
   /// @brief タスクを登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_task(ElbTaskFunc* obj);
+  reg_task(const VlTaskFunc* obj);
 
   /// @brief 関数を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_function(ElbTaskFunc* obj);
+  reg_function(const VlTaskFunc* obj);
 
   /// @brief 宣言要素を登録する．
   /// @param[in] tag タグ
@@ -168,7 +171,7 @@ private:
   /// @param[in] obj 登録するオブジェクト
   void
   reg_declarray(int tag,
-		ElbDeclArray* obj);
+		const VlDeclArray* obj);
 
   /// @brief パラメータを登録する．
   /// @param[in] tag タグ
@@ -230,7 +233,7 @@ private:
   /// @brief constant function を登録する．
   /// @param[in] func 関数
   void
-  reg_constant_function(ElbTaskFunc* func);
+  reg_constant_function(const VlTaskFunc* func);
 
 
 public:
@@ -246,6 +249,15 @@ public:
   ObjHandle*
   find_obj(const VlNamedObj* parent,
 	   const char* name) const;
+
+  /// @brief スコープと名前からスコープを取り出す．
+  /// @param[in] parent 検索対象のスコープ
+  /// @param[in] name 名前
+  /// @return parent というスコープ内の name というスコープを返す．
+  /// @return なければ nullptr を返す．
+  const VlNamedObj*
+  find_namedobj(const VlNamedObj* parent,
+		const char* name) const;
 
   /// @brief スコープと階層名から要素を取り出す．
   /// @param[in] base_scope 起点となるスコープ
@@ -295,6 +307,12 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // エラボレーションを行ったことを示すフラグ
+  bool mDone;
+
+  // パース木を表すオブジェクト
+  const PtMgr& mPtMgr;
 
   // 生成したオブジェクトを管理するクラス
   ElbMgr& mMgr;
@@ -360,7 +378,7 @@ private:
   ElbStubList mPhase3StubList;
 
 
-private:
+protected:
   //////////////////////////////////////////////////////////////////////
   // コンパイルオプション
   //////////////////////////////////////////////////////////////////////

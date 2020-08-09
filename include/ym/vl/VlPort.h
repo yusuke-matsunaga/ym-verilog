@@ -23,13 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlPort :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlPort() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlPort に固有の仮想関数

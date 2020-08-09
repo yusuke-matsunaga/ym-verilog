@@ -9,9 +9,6 @@
 
 #include "EiFactory.h"
 #include "EiIODecl.h"
-
-#include "elaborator/ElbModule.h"
-#include "elaborator/ElbTaskFunc.h"
 #include "elaborator/ElbDecl.h"
 
 #include "ym/pt/PtDecl.h"
@@ -28,10 +25,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] module 親のモジュール
 // @param[in] pt_header パース木のIO宣言ヘッダ
 ElbIOHead*
-EiFactory::new_ModIOHead(ElbModule* module,
+EiFactory::new_ModIOHead(const VlModule* module,
 			 const PtIOHead* pt_header)
 {
-  EiIOHead* head = new EiModIOHead(module, pt_header);
+  auto head = new EiModIOHead(module, pt_header);
   return head;
 }
 
@@ -39,10 +36,10 @@ EiFactory::new_ModIOHead(ElbModule* module,
 // @param[in] task 親のタスク
 // @param[in] pt_header パース木のIO宣言ヘッダ
 ElbIOHead*
-EiFactory::new_TaskIOHead(ElbTaskFunc* task,
+EiFactory::new_TaskIOHead(const VlTaskFunc* task,
 			  const PtIOHead* pt_header)
 {
-  EiIOHead* head = new EiTaskIOHead(task, pt_header);
+  auto head = new EiTaskIOHead(task, pt_header);
   return head;
 }
 
@@ -50,10 +47,10 @@ EiFactory::new_TaskIOHead(ElbTaskFunc* task,
 // @param[in] func 親の関数
 // @param[in] pt_header パース木のIO宣言ヘッダ
 ElbIOHead*
-EiFactory::new_FunctionIOHead(ElbTaskFunc* func,
+EiFactory::new_FunctionIOHead(const VlTaskFunc* func,
 			      const PtIOHead* pt_header)
 {
-  EiIOHead* head = new EiFunctionIOHead(func, pt_header);
+  auto head = new EiFunctionIOHead(func, pt_header);
   return head;
 }
 
@@ -65,7 +62,7 @@ EiFactory::new_FunctionIOHead(ElbTaskFunc* func,
 // @brief コンストラクタ
 // @param[in] pt_header パース木のIO宣言ヘッダ
 EiIOHead::EiIOHead(const PtIOHead* pt_header) :
-  mPtHead(pt_header)
+  mPtHead{pt_header}
 {
 }
 
@@ -82,21 +79,21 @@ EiIOHead::direction() const
 }
 
 // @brief 親のモジュールの取得
-ElbModule*
+const VlModule*
 EiIOHead::module() const
 {
   return nullptr;
 }
 
 // @brief 親のタスクの取得
-ElbTaskFunc*
+const VlTaskFunc*
 EiIOHead::task() const
 {
   return nullptr;
 }
 
 // @brief 親の関数の取得
-ElbTaskFunc*
+const VlTaskFunc*
 EiIOHead::function() const
 {
   return nullptr;
@@ -110,10 +107,10 @@ EiIOHead::function() const
 // @brief コンストラクタ
 // @param[in] module 親のモジュール
 // @param[in] pt_header パース木のIO宣言ヘッダ
-EiModIOHead::EiModIOHead(ElbModule* module,
+EiModIOHead::EiModIOHead(const VlModule* module,
 			 const PtIOHead* pt_header) :
   EiIOHead(pt_header),
-  mModule(module)
+  mModule{module}
 {
 }
 
@@ -123,7 +120,7 @@ EiModIOHead::~EiModIOHead()
 }
 
 // @brief 親のモジュールの取得
-ElbModule*
+const VlModule*
 EiModIOHead::module() const
 {
   return mModule;
@@ -137,10 +134,10 @@ EiModIOHead::module() const
 // @brief コンストラクタ
 // @param[in] task 親のタスク/関数
 // @param[in] pt_header パース木のIO宣言ヘッダ
-EiTaskIOHead::EiTaskIOHead(ElbTaskFunc* task,
+EiTaskIOHead::EiTaskIOHead(const VlTaskFunc* task,
 			   const PtIOHead* pt_header) :
   EiIOHead(pt_header),
-  mTask(task)
+  mTask{task}
 {
 }
 
@@ -150,7 +147,7 @@ EiTaskIOHead::~EiTaskIOHead()
 }
 
 // @brief 親のタスクの取得
-ElbTaskFunc*
+const VlTaskFunc*
 EiTaskIOHead::task() const
 {
   return mTask;
@@ -164,10 +161,10 @@ EiTaskIOHead::task() const
 // @brief コンストラクタ
 // @param[in] func 親の関数
 // @param[in] pt_header パース木のIO宣言ヘッダ
-EiFunctionIOHead::EiFunctionIOHead(ElbTaskFunc* func,
+EiFunctionIOHead::EiFunctionIOHead(const VlTaskFunc* func,
 				   const PtIOHead* pt_header) :
   EiIOHead(pt_header),
-  mFunction(func)
+  mFunction{func}
 {
 }
 
@@ -177,7 +174,7 @@ EiFunctionIOHead::~EiFunctionIOHead()
 }
 
 // @brief 親の関数の取得
-ElbTaskFunc*
+const VlTaskFunc*
 EiFunctionIOHead::function() const
 {
   return mFunction;
@@ -205,7 +202,7 @@ EiIODecl::~EiIODecl()
 void
 EiIODecl::init(ElbIOHead* head,
 	       const PtIOItem* pt_item,
-	       ElbDecl* decl)
+	       const VlDecl* decl)
 {
   mHead = head;
   mPtItem = pt_item;
@@ -329,13 +326,6 @@ const VlTaskFunc*
 EiIODecl::function() const
 {
   return mHead->function();
-}
-
-// @brief 対応する ElbDecl を返す．
-ElbDecl*
-EiIODecl::_decl() const
-{
-  return mDecl;
 }
 
 END_NAMESPACE_YM_VERILOG

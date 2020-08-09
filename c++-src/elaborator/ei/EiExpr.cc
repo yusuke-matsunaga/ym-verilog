@@ -142,7 +142,7 @@ EiExpr::declarray_index(SizeType pos) const
 
 // @brief 配列型宣言要素への参照のオフセットを返す．
 // @note 固定インデックスの場合のみ意味を持つ．
-int
+SizeType
 EiExpr::declarray_offset() const
 {
   return 0;
@@ -278,7 +278,7 @@ EiExpr::operand_num() const
 const VlExpr*
 EiExpr::operand(SizeType pos) const
 {
-  return _operand(pos);
+  return nullptr;
 }
 
 // @brief 繰り返し数を返す．

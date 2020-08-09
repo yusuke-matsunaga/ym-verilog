@@ -11,9 +11,9 @@
 #include "EiMiscStmt.h"
 
 #include "ym/vl/VlUserSystf.h"
+#include "ym/vl/VlTaskFunc.h"
+#include "ym/vl/VlControl.h"
 #include "elaborator/ElbDecl.h"
-#include "elaborator/ElbTaskFunc.h"
-#include "elaborator/ElbControl.h"
 #include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
@@ -30,14 +30,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] named_event 対象のイベント
-ElbStmt*
+const VlStmt*
 EiFactory::new_EventStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
 			 ElbExpr* named_event)
 {
-  ElbStmt* stmt = new EiEventStmt(parent, process, pt_stmt,
-				  named_event);
+  auto stmt = new EiEventStmt(parent, process, pt_stmt,
+			      named_event);
 
   return stmt;
 }
@@ -46,12 +46,12 @@ EiFactory::new_EventStmt(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
-ElbStmt*
+const VlStmt*
 EiFactory::new_NullStmt(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const PtStmt* pt_stmt)
 {
-  ElbStmt* stmt = new EiNullStmt(parent, process, pt_stmt);
+  auto stmt = new EiNullStmt(parent, process, pt_stmt);
 
   return stmt;
 }
@@ -62,16 +62,16 @@ EiFactory::new_NullStmt(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] task 対象のタスク
 // @param[in] arg_array 引数の配列
-ElbStmt*
+const VlStmt*
 EiFactory::new_TaskCall(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const PtStmt* pt_stmt,
-			ElbTaskFunc* task,
+			const VlTaskFunc* task,
 			ElbExpr** arg_array)
 {
-  int n = pt_stmt->arg_num();
-  EiTaskCall* stmt = new EiTaskCall(parent, process, pt_stmt,
-				    task, n, arg_array);
+  SizeType n = pt_stmt->arg_num();
+  auto stmt = new EiTaskCall(parent, process, pt_stmt,
+			     task, n, arg_array);
 
   return stmt;
 }
@@ -82,16 +82,16 @@ EiFactory::new_TaskCall(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] user_systf システムタスク
 // @param[in] arg_array 引数の配列
-ElbStmt*
+const VlStmt*
 EiFactory::new_SysTaskCall(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
 			   const VlUserSystf* user_systf,
 			   ElbExpr** arg_array)
 {
-  int n = pt_stmt->arg_num();
-  EiSysTaskCall* stmt = new EiSysTaskCall(parent, process, pt_stmt,
-					  user_systf, n, arg_array);
+  SizeType n = pt_stmt->arg_num();
+  auto stmt = new EiSysTaskCall(parent, process, pt_stmt,
+				user_systf, n, arg_array);
 
   return stmt;
 }
@@ -101,14 +101,14 @@ EiFactory::new_SysTaskCall(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] target 対象のスコープ
-ElbStmt*
+const VlStmt*
 EiFactory::new_DisableStmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
 			   const VlNamedObj* target)
 {
-  ElbStmt* stmt = new EiDisableStmt(parent, process, pt_stmt,
-				    target);
+  auto stmt = new EiDisableStmt(parent, process, pt_stmt,
+				target);
 
   return stmt;
 }
@@ -119,15 +119,15 @@ EiFactory::new_DisableStmt(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] control コントロール
 // @param[in] stmt 本体のステートメント
-ElbStmt*
+const VlStmt*
 EiFactory::new_CtrlStmt(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const PtStmt* pt_stmt,
-			ElbControl* control,
-			ElbStmt* stmt)
+			const VlControl* control,
+			const VlStmt* stmt)
 {
-  ElbStmt* stmt1 = new EiCtrlStmt(parent, process, pt_stmt,
-				  control, stmt);
+  auto stmt1 = new EiCtrlStmt(parent, process, pt_stmt,
+			      control, stmt);
 
   return stmt1;
 }
@@ -143,11 +143,11 @@ EiFactory::new_CtrlStmt(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] named_event 対象のイベント
 EiEventStmt::EiEventStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
 			 ElbExpr* named_event) :
   EiStmtBase(parent, process, pt_stmt),
-  mEvent(named_event)
+  mEvent{named_event}
 {
 }
 
@@ -180,7 +180,7 @@ EiEventStmt::named_event() const
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 EiNullStmt::EiNullStmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt) :
   EiStmtBase(parent, process, pt_stmt)
 {
@@ -210,13 +210,13 @@ EiNullStmt::type() const
 // @param[in] arg_num 引数の数
 // @param[in] arg_array 引数を納める配列
 EiTcBase::EiTcBase(const VlNamedObj* parent,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   const PtStmt* pt_stmt,
-		   int arg_num,
+		   SizeType arg_num,
 		   ElbExpr** arg_array) :
   EiStmtBase(parent, process, pt_stmt),
-  mArgumentNum(arg_num),
-  mArgumentList(arg_array)
+  mArgumentNum{arg_num},
+  mArgumentList{arg_array}
 {
 }
 
@@ -236,17 +236,8 @@ EiTcBase::arg_num() const
 const VlExpr*
 EiTcBase::arg(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < arg_num() );
   return mArgumentList[pos];
-}
-
-// @brief 引数の設定
-// @param[in] pos 位置番号
-// @param[in] arg 設定する引数
-void
-EiTcBase::set_argument(SizeType pos,
-		       ElbExpr* arg)
-{
-  mArgumentList[pos] = arg;
 }
 
 
@@ -262,13 +253,13 @@ EiTcBase::set_argument(SizeType pos,
 // @param[in] arg_num 引数の数
 // @param[in] arg_array 引数を納める配列
 EiTaskCall::EiTaskCall(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt,
-		       ElbTaskFunc* task,
-		       int arg_num,
+		       const VlTaskFunc* task,
+		       SizeType arg_num,
 		       ElbExpr** arg_array) :
   EiTcBase(parent, process, pt_stmt, arg_num, arg_array),
-  mTask(task)
+  mTask{task}
 {
 }
 
@@ -304,10 +295,10 @@ EiTaskCall::task() const
 // @param[in] arg_num 引数の数
 // @param[in] arg_array 引数を納める配列
 EiSysTaskCall::EiSysTaskCall(const VlNamedObj* parent,
-			     ElbProcess* process,
+			     const VlProcess* process,
 			     const PtStmt* pt_stmt,
 			     const VlUserSystf* user_systf,
-			     int arg_num,
+			     SizeType arg_num,
 			     ElbExpr** arg_array) :
   EiTcBase(parent, process, pt_stmt, arg_num, arg_array),
   mUserSystf(user_systf)
@@ -344,11 +335,11 @@ EiSysTaskCall::user_systf() const
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] target 対象のスコープ
 EiDisableStmt::EiDisableStmt(const VlNamedObj* parent,
-			     ElbProcess* process,
+			     const VlProcess* process,
 			     const PtStmt* pt_stmt,
 			     const VlNamedObj* target) :
   EiStmtBase(parent, process, pt_stmt),
-  mExpr(target)
+  mExpr{target}
 {
 }
 
@@ -387,13 +378,13 @@ EiDisableStmt::scope() const
 // @param[in] control コントロール
 // @param[in] stmt 本体のステートメント
 EiCtrlStmt::EiCtrlStmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt,
-		       ElbControl* control,
-		       ElbStmt* stmt) :
+		       const VlControl* control,
+		       const VlStmt* stmt) :
   EiStmtBase(parent, process, pt_stmt),
-  mControl(control),
-  mBodyStmt(stmt)
+  mControl{control},
+  mBodyStmt{stmt}
 {
 }
 

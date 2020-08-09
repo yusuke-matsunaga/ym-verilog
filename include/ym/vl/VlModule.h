@@ -22,13 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlModuleArray :
   public VlNamedObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlModuleArray() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlModuleArray の仮想関数
@@ -81,13 +74,6 @@ public:
 class VlModule :
   public VlNamedObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlModule() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlNamedObj の仮想関数
@@ -97,7 +83,7 @@ public:
   /// @note このクラスでは this を返す．
   virtual
   const VlModule*
-  parent_module() const ;
+  parent_module() const;
 
 
 public:

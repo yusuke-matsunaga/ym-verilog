@@ -27,11 +27,6 @@ EiPort::EiPort()
 {
 }
 
-// @brief デストラクタ
-EiPort::~EiPort()
-{
-}
-
 // @brief 初期設定を行う．
 // @param[in] module 親のモジュール
 // @param[in] pt_port パース木のポート定義
@@ -39,7 +34,7 @@ EiPort::~EiPort()
 // @param[in] low_conn 下位の接続
 // @param[in] dir 向き
 void
-EiPort::init(ElbModule* module,
+EiPort::init(const VlModule* module,
 	     const PtPort* pt_port,
 	     int index,
 	     ElbExpr* low_conn,

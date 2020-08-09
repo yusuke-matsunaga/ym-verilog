@@ -26,10 +26,10 @@ class ElbExpr :
 protected:
 
   /// @brief コンストラクタ
-  ElbExpr();
+  ElbExpr() = default;
 
   /// @brief デストラクタ
-  ~ElbExpr();
+  ~ElbExpr() = default;
 
 
 public:
@@ -48,7 +48,7 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbExpr の仮想関数
+  // ElxExpr の外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
@@ -62,19 +62,18 @@ public:
   void
   set_selfsize();
 
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // ElbExpr の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
   /// @brief set_reqsize() の下請け関数
   /// @param[in] type 要求される式の型
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   virtual
   void
   _set_reqsize(const VlValueType& type) = 0;
-
-  /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  /// @note 演算子の時，意味を持つ．
-  virtual
-  ElbExpr*
-  _operand(SizeType pos) const = 0;
 
 
 public:

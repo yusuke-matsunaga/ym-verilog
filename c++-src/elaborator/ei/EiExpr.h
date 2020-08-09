@@ -109,7 +109,7 @@ public:
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
-  int
+  SizeType
   declarray_offset() const override;
 
   /// @brief スコープへの参照の場合，対象のオブジェクトを返す．

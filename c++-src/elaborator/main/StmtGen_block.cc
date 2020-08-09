@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(block statement の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -53,24 +53,14 @@ StmtGen::phase2_namedblock(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_parblock(const VlNamedObj* parent,
-			      ElbProcess* process,
+			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  int stmt_num = pt_stmt->stmt_num();
-  ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
-  for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
-    ElbStmt* stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
-    if ( !stmt1 ) {
-      return nullptr;
-    }
-    stmt_list[i] = stmt1;
-  }
-
-  ElbStmt* stmt = factory().new_Fork(parent, process, pt_stmt, stmt_list);
+  auto stmt_list = instantiate_stmt_list(parent, process, env, pt_stmt);
+  auto stmt = factory().new_Fork(parent, process, pt_stmt, stmt_list);
 
   return stmt;
 }
@@ -80,24 +70,14 @@ StmtGen::instantiate_parblock(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_seqblock(const VlNamedObj* parent,
-			      ElbProcess* process,
+			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  int stmt_num = pt_stmt->stmt_num();
-  ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
-  for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
-    ElbStmt* stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
-    if ( !stmt1 ) {
-      return nullptr;
-    }
-    stmt_list[i] = stmt1;
-  }
-
-  ElbStmt* stmt = factory().new_Begin(parent, process, pt_stmt, stmt_list);
+  auto stmt_list = instantiate_stmt_list(parent, process, env, pt_stmt);
+  auto stmt = factory().new_Begin(parent, process, pt_stmt, stmt_list);
 
   return stmt;
 }
@@ -107,30 +87,17 @@ StmtGen::instantiate_seqblock(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_namedparblock(const VlNamedObj* parent,
-				   ElbProcess* process,
+				   const VlProcess* process,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  ObjHandle* handle = find_obj(parent, pt_stmt->name());
-  ASSERT_COND(handle );
-  const VlNamedObj* block = handle->obj();
+  auto block = find_namedobj(parent, pt_stmt->name());
+  ASSERT_COND( block );
 
-  SizeType stmt_num = pt_stmt->stmt_num();
-  ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
-  for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
-    ElbStmt* stmt1 = instantiate_stmt(block, process, env,
-				      pt_stmt1);
-    if ( !stmt1 ) {
-      return nullptr;
-    }
-    stmt_list[i] = stmt1;
-  }
-
-  ElbStmt* stmt = factory().new_NamedFork(block, process,
-					  pt_stmt, stmt_list);
+  auto stmt_list = instantiate_stmt_list(block, process, env, pt_stmt);
+  auto stmt = factory().new_NamedFork(block, process, pt_stmt, stmt_list);
 
   return stmt;
 }
@@ -140,31 +107,47 @@ StmtGen::instantiate_namedparblock(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_namedseqblock(const VlNamedObj* parent,
-				   ElbProcess* process,
+				   const VlProcess* process,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  ObjHandle* handle = find_obj(parent, pt_stmt->name());
-  ASSERT_COND(handle );
-  const VlNamedObj* block = handle->obj();
+  auto block = find_namedobj(parent, pt_stmt->name());
+  ASSERT_COND( block );
 
+  auto stmt_list = instantiate_stmt_list(block, process, env, pt_stmt);
+  auto stmt = factory().new_NamedBegin(block, process, pt_stmt, stmt_list);
+
+  return stmt;
+}
+
+// @brief Stmt のリストのインスタンス化を行う．
+// @param[in] parent 親のスコープ
+// @param[in] process 親のプロセス (or nullptr)
+// @param[in] env 生成時の環境
+// @param[in] pt_stmt 対象のステートメント
+//
+// pt_stmt はブロック系のステートメント
+const VlStmt**
+StmtGen::instantiate_stmt_list(const VlNamedObj* parent,
+			       const VlProcess* process,
+			       const ElbEnv& env,
+			       const PtStmt* pt_stmt)
+{
   SizeType stmt_num = pt_stmt->stmt_num();
-  ElbStmt** stmt_list = factory().new_StmtList(stmt_num);
-  for ( int i = 0; i < stmt_num; ++ i ) {
-    const PtStmt* pt_stmt1 = pt_stmt->stmt(i);
-    ElbStmt* stmt1 = instantiate_stmt(block, process, env, pt_stmt1);
+  auto stmt_list = factory().new_StmtList(stmt_num);
+  SizeType wpos = 0;
+  for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
+    auto stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
     if ( !stmt1 ) {
       return nullptr;
     }
-    stmt_list[i] = stmt1;
+    stmt_list[wpos] = stmt1;
+    ++ wpos;
   }
 
-  ElbStmt* stmt = factory().new_NamedBegin(block, process,
-					   pt_stmt, stmt_list);
-
-  return stmt;
+  return stmt_list;
 }
 
 END_NAMESPACE_YM_VERILOG

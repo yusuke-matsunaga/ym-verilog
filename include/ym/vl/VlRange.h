@@ -23,13 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlRange :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlRange() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlRange の派生クラスに共通な仮想関数
@@ -80,7 +73,7 @@ public:
   virtual
   bool
   calc_offset(int index,
-	      int& offset) const = 0;
+	      SizeType& offset) const = 0;
 
   /// @brief MSB からのオフセット値の取得
   /// @param[in] index インデックス
@@ -90,21 +83,21 @@ public:
   virtual
   bool
   calc_roffset(int index,
-	       int& offset) const = 0;
+	       SizeType& offset) const = 0;
 
   /// @brief offset の逆関数
   /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   virtual
   int
-  index(int offset) const = 0;
+  index(SizeType offset) const = 0;
 
   /// @brief roffset の逆関数
   /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   virtual
   int
-  rindex(int roffset) const = 0;
+  rindex(SizeType roffset) const = 0;
 
 };
 

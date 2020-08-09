@@ -22,13 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlIODecl :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlIODecl() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlIODecl の仮想関数

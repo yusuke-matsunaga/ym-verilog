@@ -40,10 +40,10 @@ protected:
   /// @param[in] cond 条件式
   /// @param[in] stmt 本体のステートメント
   EiLoopStmt(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt,
-	     ElbExpr* cond,
-	     ElbStmt* stmt);
+	     const VlExpr* cond,
+	     const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiLoopStmt();
@@ -68,7 +68,7 @@ protected:
   // 継承クラスで用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  ElbStmt*
+  const VlStmt*
   _body_stmt() const;
 
 
@@ -78,10 +78,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 条件式
-  ElbExpr* mCondition;
+  const VlExpr* mCondition;
 
   // 本体
-  ElbStmt* mBodyStmt;
+  const VlStmt* mBodyStmt;
 
 };
 
@@ -105,10 +105,10 @@ private:
   /// @param[in] cond 条件式
   /// @param[in] stmt 本体のステートメント
   EiWhileStmt(const VlNamedObj* parent,
-	      ElbProcess* process,
+	      const VlProcess* process,
 	      const PtStmt* pt_stmt,
-	      ElbExpr* cond,
-	      ElbStmt* stmt);
+	      const VlExpr* cond,
+	      const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiWhileStmt();
@@ -145,10 +145,10 @@ private:
   /// @param[in] cond 条件式
   /// @param[in] stmt 本体のステートメント
   EiRepeatStmt(const VlNamedObj* parent,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       const PtStmt* pt_stmt,
-	       ElbExpr* cond,
-	       ElbStmt* stmt);
+	       const VlExpr* cond,
+	       const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiRepeatStmt();
@@ -185,10 +185,10 @@ private:
   /// @param[in] cond 条件式
   /// @param[in] stmt 本体のステートメント
   EiWaitStmt(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt,
-	     ElbExpr* cond,
-	     ElbStmt* stmt);
+	     const VlExpr* cond,
+	     const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiWaitStmt();
@@ -227,12 +227,12 @@ private:
   /// @param[in] inc_stmt 増加式
   /// @param[in] stmt 本体のステートメント
   EiForStmt(const VlNamedObj* parent,
-	    ElbProcess* process,
+	    const VlProcess* process,
 	    const PtStmt* pt_stmt,
-	    ElbExpr* cond,
-	    ElbStmt* init_stmt,
-	    ElbStmt* inc_stmt,
-	    ElbStmt* stmt);
+	    const VlExpr* cond,
+	    const VlStmt* init_stmt,
+	    const VlStmt* inc_stmt,
+	    const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiForStmt();
@@ -268,10 +268,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 初期化文
-  ElbStmt* mInitStmt;
+  const VlStmt* mInitStmt;
 
   // 増加文
-  ElbStmt* mIncStmt;
+  const VlStmt* mIncStmt;
 
 };
 
@@ -294,9 +294,9 @@ private:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] stmt 本体のステートメント
   EiForeverStmt(const VlNamedObj* parent,
-		ElbProcess* process,
+		const VlProcess* process,
 		const PtStmt* pt_stmt,
-		ElbStmt* stmt);
+		const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiForeverStmt();
@@ -328,7 +328,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 本体
-  ElbStmt* mBodyStmt;
+  const VlStmt* mBodyStmt;
 
 };
 
@@ -352,10 +352,10 @@ protected:
   /// @param[in] cond 条件式
   /// @param[in] stmt 本体のステートメント
   EiIfStmt(const VlNamedObj* parent,
-	   ElbProcess* process,
+	   const VlProcess* process,
 	   const PtStmt* pt_stmt,
-	   ElbExpr* cond,
-	   ElbStmt* stmt);
+	   const VlExpr* cond,
+	   const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiIfStmt();
@@ -390,7 +390,7 @@ protected:
   // 継承クラスで用いられる関数
   //////////////////////////////////////////////////////////////////////
 
-  ElbStmt*
+  const VlStmt*
   _body_stmt() const;
 
 
@@ -400,10 +400,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 条件式
-  ElbExpr* mCondition;
+  const VlExpr* mCondition;
 
   // 本体
-  ElbStmt* mBodyStmt;
+  const VlStmt* mBodyStmt;
 
 };
 
@@ -428,11 +428,11 @@ private:
   /// @param[in] stmt 本体のステートメント
   /// @param[in] else_stmt else節のステートメント
   EiIfElseStmt(const VlNamedObj* parent,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       const PtStmt* pt_stmt,
-	       ElbExpr* cond,
-	       ElbStmt* stmt,
-	       ElbStmt* else_stmt);
+	       const VlExpr* cond,
+	       const VlStmt* stmt,
+	       const VlStmt* else_stmt);
 
   /// @brief デストラクタ
   ~EiIfElseStmt();
@@ -464,7 +464,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // else ステートメント
-  ElbStmt* mElseStmt;
+  const VlStmt* mElseStmt;
 
 };
 
@@ -475,15 +475,21 @@ private:
 /// IEEE Std 1364-2001 26.6.36 Case
 //////////////////////////////////////////////////////////////////////
 class EiCaseItem :
-  public ElbCaseItem
+  public VlCaseItem
 {
   friend class EiFactory;
-  friend class EiCaseStmt;
 
 private:
 
   /// @brief コンストラクタ
-  EiCaseItem();
+  /// @param[in] pt_item パース木の caseitem 要素
+  /// @param[in] label_num ラベルの要素数
+  /// @param[in] label_list ラベルを表す式のリスト
+  /// @param[in] body 本体のステートメント
+  EiCaseItem(const PtCaseItem* pt_item,
+	     SizeType label_num,
+	     ElbExpr** label_list,
+	     const VlStmt* body);
 
   /// @brief デストラクタ
   ~EiCaseItem();
@@ -537,7 +543,7 @@ private:
   ElbExpr** mExprList;
 
   // 本文
-  ElbStmt* mBodyStmt;
+  const VlStmt* mBodyStmt;
 
 };
 
@@ -562,11 +568,11 @@ private:
   /// @param[in] caseitem_num caseitem の要素数
   /// @param[in] caseitem_array caseitem の配列
   EiCaseStmt(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt,
-	     ElbExpr* expr,
-	     int caseitem_num,
-	     EiCaseItem* caseitem_array);
+	     const VlExpr* expr,
+	     SizeType caseitem_num,
+	     const VlCaseItem** caseitem_array);
 
   /// @brief デストラクタ
   ~EiCaseStmt();
@@ -605,36 +611,19 @@ public:
   caseitem(SizeType pos) const override;
 
 
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbStmt の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief caseitem を設定する．
-  /// @param[in] pos 位置番号
-  /// @param[in] pt_caseitem パース木の caseitem 定義
-  /// @param[in] expr_array 条件式を納める配列
-  /// @param[in] stmt 本体のステートメント
-  void
-  set_caseitem(SizeType pos,
-	       const PtCaseItem* pt_caseitem,
-	       ElbExpr** expr_array,
-	       ElbStmt* stmt) override;
-
-
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
   // 条件式
-  ElbExpr* mCondition;
+  const VlExpr* mCondition;
 
   // case item の要素数
   SizeType mCaseItemNum;
 
   // case item のリスト
-  EiCaseItem* mCaseItemList;
+  const VlCaseItem** mCaseItemList;
 
 };
 

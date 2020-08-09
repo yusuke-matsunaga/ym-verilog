@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル (module のインスタンス化関係)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -55,8 +55,8 @@ void
 ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
 			    const PtModule* pt_module)
 {
-  const FileRegion& file_region = pt_module->file_region();
-  const char* name = pt_module->name();
+  const auto& file_region = pt_module->file_region();
+  auto name = pt_module->name();
 
   ostringstream buf;
   buf << "instantiating top module \"" << name << "\".";
@@ -67,10 +67,10 @@ ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
 		  buf.str());
 
   // モジュール本体の生成
-  ElbModule* module = factory().new_Module(toplevel,
-					   pt_module,
-					   nullptr,
-					   nullptr);
+  auto module = factory().new_Module(toplevel,
+				     pt_module,
+				     nullptr,
+				     nullptr);
   reg_module(module);
 
 #if 0
@@ -89,7 +89,7 @@ ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
 		  buf2.str());
 
   // 中身のうちスコープに関係する要素の生成
-  phase1_module_item(module, pt_module, nullptr);
+  phase1_module_item(module, pt_module, vector<ElbParamCon>());
 }
 
 // @brief module の中身のうちスコープに関係する要素のインスタンス化をする．
@@ -99,7 +99,7 @@ ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
 void
 ModuleGen::phase1_module_item(ElbModule* module,
 			      const PtModule* pt_module,
-			      const ElbParamCon* param_con)
+			      const vector<ElbParamCon>& param_con_list)
 {
   // ループチェック用のフラグを立てる．
   pt_module->set_in_use();
@@ -114,82 +114,63 @@ ModuleGen::phase1_module_item(ElbModule* module,
   phase1_decl(module, pt_module->declhead_list(), has_paramportdecl);
 
   // パラメータの割り当てを作る．
-  if ( param_con ) {
-    int n = param_con->elem_num();
-    if ( param_con->named_con() ) {
-      // 名前による割り当て
-      for ( int i = 0; i < n; ++ i ) {
-	const PtConnection* pt_con = param_con->pt_con(i);
-	ObjHandle* handle = find_obj(module, pt_con->name());
-	if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
-	  ostringstream buf;
-	  buf << param_con->name(i) << " : No such parameter.";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  pt_con->file_region(),
-			  MsgType::Error,
-			  "ELAB",
-			  buf.str());
-	  continue;
-	}
-	ElbParameter* param = handle->parameter();
-	ASSERT_COND( param );
+  bool named_con = (param_con_list.size() > 0 &&
+		    param_con_list[0].mPtCon->name() != nullptr);
 
-	const PtExpr* expr = param_con->expr(i);
-	VlValue value = param_con->value(i);
-	param->set_expr(expr, value);
-	auto pa = factory().new_NamedParamAssign(module, pt_con,
-						 param, expr,
-						 value);
-	reg_paramassign(pa);
+  // パラメータポートリストの名前を現れた順番に paramport_list に入れる．
+  vector<const char*> paramport_list;
+  if ( named_con ) {
+    // 名前による割り当て
+    for ( const auto& param_con: param_con_list ) {
+      auto pt_con = param_con.mPtCon;
+      paramport_list.push_back(pt_con->name());
+    }
+  }
+  else {
+    // 順序による割り当て
+    if ( has_paramportdecl ) {
+      for ( auto pt_param: pt_module->paramport_list() ) {
+	for ( auto pt_item: pt_param->item_list() ) {
+	  paramport_list.push_back(pt_item->name());
+	}
       }
     }
     else {
-      // 順序による割り当て
-
-      // パラメータポートリストの名前を現れた順番に paramport_list に入れる．
-      vector<const char*> paramport_list;
-      if ( has_paramportdecl ) {
-	for ( auto pt_param: pt_module->paramport_list() ) {
-	  for ( auto pt_item: pt_param->item_list() ) {
+      for ( auto pt_decl: pt_module->declhead_list() ) {
+	if ( pt_decl->type() == PtDeclType::Param ) {
+	  for ( auto pt_item: pt_decl->item_list() ) {
 	    paramport_list.push_back(pt_item->name());
 	  }
 	}
       }
-      else {
-	for ( auto pt_decl: pt_module->declhead_list() ) {
-	  if ( pt_decl->type() == PtDeclType::Param ) {
-	    for ( auto pt_item: pt_decl->item_list() ) {
-	      paramport_list.push_back(pt_item->name());
-	    }
-	  }
-	}
-      }
-      if ( paramport_list.size() < n ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			param_con->file_region(),
-			MsgType::Error,
-			"ELAB",
-			"Too many parameters.");
-      }
-      else {
-	for ( int i = 0; i < n; ++ i ) {
-	  const PtConnection* pt_con = param_con->pt_con(i);
-	  const char* tmp_name = paramport_list[i];
-	  ObjHandle* handle = find_obj(module, tmp_name);
-	  ASSERT_COND( handle );
-
-	  ElbParameter* param = handle->parameter();
-	  ASSERT_COND( param );
-
-	  const PtExpr* expr = param_con->expr(i);
-	  VlValue value = param_con->value(i);
-	  param->set_expr(expr, value);
-	  auto pa = factory().new_ParamAssign(module, pt_con,
-					      param, expr, value);
-	  reg_paramassign(pa);
-	}
-      }
     }
+    if ( paramport_list.size() < param_con_list.size() ) {
+      // 実際のパラメータの数より割り当てリストの要素数が多い．
+      error_too_many_param(param_con_list);
+    }
+  }
+
+  // param_con を paramport_list の名前と結びつける．
+  // named_con の場合には冗長なことをやっている．
+  SizeType index = 0;
+  for ( const auto& param_con: param_con_list ) {
+    auto pt_con = param_con.mPtCon;
+    auto name = paramport_list[index]; ++ index;
+    auto handle = find_obj(module, name);
+    if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
+      error_no_param(pt_con, name);
+      continue;
+    }
+
+    auto param = handle->parameter();
+    ASSERT_COND( param );
+
+    auto expr = param_con.mExpr;
+    auto value = param_con.mValue;
+    param->set_expr(expr, value);
+    auto pa = factory().new_NamedParamAssign(module, pt_con,
+					     param, expr, value);
+    reg_paramassign(pa);
   }
 
   // それ以外の要素を実体化する．
@@ -224,15 +205,14 @@ void
 ModuleGen::instantiate_port(ElbModule* module,
 			    const PtModule* pt_module)
 {
-  int index = 0;
+  SizeType index = 0;
   for ( auto pt_port: pt_module->port_list() ) {
     // 内側の接続と向きを作る．
     SizeType n = pt_port->portref_size();
 
     ElbExpr* low_conn = nullptr;
-    VpiDir dir = VpiDir::NoDirection;
-
-    const PtExpr* pt_portref = pt_port->portref();
+    auto dir = VpiDir::NoDirection;
+    auto pt_portref = pt_port->portref();
     if ( n == 1 ) {
       // 単一の要素の場合
       dir = pt_port->portref_dir(0);
@@ -240,19 +220,18 @@ ModuleGen::instantiate_port(ElbModule* module,
     }
     else if ( n > 1 ) {
       // 複数要素の結合の場合
-      ElbExpr** expr_list = factory().new_ExprList(n);
-      ElbExpr** lhs_elem_array = factory().new_ExprList(n);
-
-      for ( int i = 0; i < n; ++ i ) {
-	const PtExpr* pt_portexpr = pt_port->portref_elem(i);
-	ElbExpr* portexpr = instantiate_portref(module, pt_portexpr);
+      auto expr_list = factory().new_ExprList(n);
+      auto lhs_elem_array = factory().new_ExprList(n);
+      for ( SizeType i = 0; i < n; ++ i ) {
+	auto pt_portexpr = pt_port->portref_elem(i);
+	auto portexpr = instantiate_portref(module, pt_portexpr);
 	if ( !portexpr ) {
 	  return;
 	}
 	expr_list[i] = portexpr;
 	lhs_elem_array[n - i - 1] = portexpr;
 
-	VpiDir dir1 = pt_port->portref_dir(i);
+	auto dir1 = pt_port->portref_dir(i);
 	if ( dir == VpiDir::NoDirection ) {
 	  dir = dir1;
 	}
@@ -273,68 +252,45 @@ ElbExpr*
 ModuleGen::instantiate_portref(ElbModule* module,
 			       const PtExpr* pt_portref)
 {
-  const char* name = pt_portref->name();
-  ObjHandle* handle = find_obj(module, name);
+  auto name = pt_portref->name();
+  auto handle = find_obj(module, name);
   if ( !handle ) {
-    ostringstream buf;
-    buf << name
-	<< ": Not found.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    pt_portref->file_region(),
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
+    error_not_found(pt_portref->file_region(), name);
     return nullptr;
   }
 
   if ( handle->declarray() ) {
-    ostringstream buf;
-    buf << handle->declarray()->full_name()
-	<< ": Array shall not be connected to a module port.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    pt_portref->file_region(),
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
-    return nullptr;
-  }
-  ElbDecl* decl = handle->decl();
-  if ( decl == nullptr ) {
-    ostringstream buf;
-    buf << name
-	<< ": Illegal type for port connection.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    pt_portref->file_region(),
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
+    error_port_array(pt_portref->file_region(), handle->declarray());
     return nullptr;
   }
 
-  ElbExpr* primary = factory().new_Primary(pt_portref, decl);
+  auto decl = handle->decl();
+  if ( decl == nullptr ) {
+    error_illegal_port(pt_portref->file_region(), name);
+    return nullptr;
+  }
+
+  auto primary = factory().new_Primary(pt_portref, decl);
 
   // 添字の部分を実体化する．
   const PtExpr* pt_index = nullptr;
   if ( pt_portref->index_num() == 0 ) {
     pt_index = pt_portref->index(0);
   }
-  const PtExpr* pt_left = pt_portref->left_range();
-  const PtExpr* pt_right = pt_portref->right_range();
+  auto pt_left = pt_portref->left_range();
+  auto pt_right = pt_portref->right_range();
   if ( pt_index ) {
     int index_val;
     bool stat = evaluate_int(module, pt_index, index_val, true);
     if ( !stat ) {
       return nullptr;
     }
-    int offset;
+
+    SizeType offset;
     bool stat2 = decl->calc_bit_offset(index_val, offset);
     if ( !stat2 ) {
       // 添字が範囲外
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_index->file_region(),
-		      MsgType::Warning,
-		      "ELAB",
-		      "Index is out of range.");
+      warning_index_out_of_range(pt_index->file_region());
     }
     return factory().new_BitSelect(pt_portref, primary, pt_index, index_val);
   }
@@ -344,30 +300,139 @@ ModuleGen::instantiate_portref(ElbModule* module,
     if ( !evaluate_range(module, pt_left, pt_right, left_val, right_val) ) {
       return nullptr;
     }
-    int offset;
+
+    SizeType offset;
     bool stat1 = decl->calc_bit_offset(left_val, offset);
     if ( !stat1 ) {
       // 左の添字が範囲外
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_left->file_region(),
-		      MsgType::Warning,
-		      "ELAB",
-		      "Left index is out of range.");
+      warning_left_index_out_of_range(pt_left->file_region());
     }
     bool stat2 = decl->calc_bit_offset(right_val, offset);
     if ( !stat2 ) {
       // 右の添字が範囲外
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_right->file_region(),
-		      MsgType::Warning,
-		      "ELAB",
-		      "Right index is out of range.");
+      warning_right_index_out_of_range(pt_right->file_region());
     }
     return factory().new_PartSelect(pt_portref, primary,
 				    pt_left, pt_right,
 				    left_val, right_val);
   }
   return primary;
+}
+
+// @brief パラメータポートの割り当て数が多すぎる．
+// @param[in] param_con_list パラメータポートの割り当てリスト
+void
+ModuleGen::error_too_many_param(const vector<ElbParamCon>& param_con_list)
+{
+  auto last = param_con_list.back();
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  last.mPtCon->file_region(),
+		  MsgType::Error,
+		  "ELAB",
+		  "Too many parameters.");
+}
+
+// @brief パラメータポートに現れるパラメータが存在しない．
+// @param[in] pt_con パラメータポート割り当てのパース木
+// @param[in] name パラメータ名
+void
+ModuleGen::error_no_param(const PtConnection* pt_con,
+			  const char* name)
+{
+  ostringstream buf;
+  buf << name << " : No such parameter.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  pt_con->file_region(),
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief 対象の要素が見つからない．
+// @param[in] file_region ファイル位置
+// @param[in] name 名前
+void
+ModuleGen::error_not_found(const FileRegion& file_region,
+			   const char* name)
+{
+  ostringstream buf;
+  buf << name
+      << ": Not found.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  file_region,
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief ポートに配列が使われている．
+// @param[in] file_region ファイル位置
+// @param[in] array 配列
+void
+ModuleGen::error_port_array(const FileRegion& file_region,
+			    const VlDeclArray* array)
+{
+  ostringstream buf;
+  buf << array->full_name()
+      << ": Array shall not be connected to a module port.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  file_region,
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief ポートに使われている要素が宣言要素でなかった．
+// @param[in] file_region ファイル位置
+// @param[in] name 名前
+void
+ModuleGen::error_illegal_port(const FileRegion& file_region,
+			      const char* name)
+{
+  ostringstream buf;
+  buf << name
+      << ": Illegal type for port connection.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  file_region,
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief 添字が範囲外
+// @param[in] file_region ファイル位置
+void
+ModuleGen::warning_index_out_of_range(const FileRegion& file_region)
+{
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  file_region,
+		  MsgType::Warning,
+		  "ELAB",
+		  "Index is out of range.");
+}
+
+// @brief 左の範囲が範囲外
+// @param[in] file_region ファイル位置
+void
+ModuleGen::warning_left_index_out_of_range(const FileRegion& file_region)
+{
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  file_region,
+		  MsgType::Warning,
+		  "ELAB",
+		  "Left index is out of range.");
+}
+
+// @brief 右の範囲が範囲外
+// @param[in] file_region ファイル位置
+void
+ModuleGen::warning_right_index_out_of_range(const FileRegion& file_region)
+{
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  file_region,
+		  MsgType::Warning,
+		  "ELAB",
+		  "Right index is out of range.");
 }
 
 END_NAMESPACE_YM_VERILOG

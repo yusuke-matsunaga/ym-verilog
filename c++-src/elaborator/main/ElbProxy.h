@@ -104,6 +104,15 @@ protected:
   find_obj(const VlNamedObj* parent,
 	   const char* name) const;
 
+  /// @brief スコープと名前からスコープを取り出す．
+  /// @param[in] parent 検索対象のスコープ
+  /// @param[in] name 名前
+  /// @return parent というスコープ内の name というスコープを返す．
+  /// @return なければ nullptr を返す．
+  const VlNamedObj*
+  find_namedobj(const VlNamedObj* parent,
+		const char* name) const;
+
   /// @brief 名前によるオブジェクトの探索
   /// @param[in] base_scope 起点となるスコープ
   /// @param[in] pt_obj 階層名付きのオブジェクト
@@ -134,7 +143,7 @@ protected:
   /// @param[in] name 名前
   /// @return parent というスコープ内の name という関数を返す．
   /// @return なければ nullptr を返す．
-  const ElbTaskFunc*
+  const VlTaskFunc*
   find_constant_function(const VlNamedObj* parent,
 			 const char* name) const;
 
@@ -177,12 +186,12 @@ protected:
   /// @brief タスクを登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_task(ElbTaskFunc* obj);
+  reg_task(const VlTaskFunc* obj);
 
   /// @brief 関数を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_function(ElbTaskFunc* obj);
+  reg_function(const VlTaskFunc* obj);
 
   /// @brief 宣言要素を登録する．
   /// @param[in] tag タグ
@@ -196,7 +205,7 @@ protected:
   /// @param[in] obj 登録するオブジェクト
   void
   reg_declarray(int tag,
-		ElbDeclArray* obj);
+		const VlDeclArray* obj);
 
   /// @brief パラメータを登録する．
   /// @param[in] tag タグ
@@ -258,7 +267,7 @@ protected:
   /// @brief constant function を登録する．
   /// @param[in] func 関数
   void
-  reg_constant_function(ElbTaskFunc* func);
+  reg_constant_function(const VlTaskFunc* func);
 
   /// @brief 属性リストを登録する．
   /// @param[in] パース木の属性定義
@@ -360,7 +369,7 @@ protected:
   void
   phase1_module_item(ElbModule* module,
 		     const PtModule* pt_module,
-		     const ElbParamCon* param_con);
+		     const vector<ElbParamCon>& param_con_list);
 
 
 public:
@@ -410,7 +419,7 @@ protected:
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_function 関数定義
-  ElbTaskFunc*
+  const VlTaskFunc*
   instantiate_constant_function(const VlNamedObj* parent,
 				const PtItem* pt_function);
 
@@ -434,9 +443,9 @@ protected:
   /// @param[in] process 親のプロセス
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_stmt(const VlNamedObj* parent,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   const ElbEnv& env,
 		   const PtStmt* pt_stmt);
 
@@ -705,6 +714,19 @@ ElbProxy::find_obj(const VlNamedObj* parent,
   return mElaborator.find_obj(parent, name);
 }
 
+// @brief スコープと名前からスコープを取り出す．
+// @param[in] parent 検索対象のスコープ
+// @param[in] name 名前
+// @return parent というスコープ内の name というスコープを返す．
+// @return なければ nullptr を返す．
+inline
+const VlNamedObj*
+ElbProxy::find_namedobj(const VlNamedObj* parent,
+			const char* name) const
+{
+  return mElaborator.find_namedobj(parent, name);
+}
+
 // @brief 名前によるオブジェクトの探索
 // @param[in] base_scope 起点となるスコープ
 // @param[in] nb_array 階層名の上部 (nullptr の場合も有りうる)
@@ -766,7 +788,7 @@ ElbProxy::reg_internalscope(const VlNamedObj* obj)
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_task(ElbTaskFunc* obj)
+ElbProxy::reg_task(const VlTaskFunc* obj)
 {
   mElaborator.reg_task(obj);
 }
@@ -775,7 +797,7 @@ ElbProxy::reg_task(ElbTaskFunc* obj)
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_function(ElbTaskFunc* obj)
+ElbProxy::reg_function(const VlTaskFunc* obj)
 {
   mElaborator.reg_function(obj);
 }
@@ -797,7 +819,7 @@ ElbProxy::reg_decl(int tag,
 inline
 void
 ElbProxy::reg_declarray(int tag,
-			ElbDeclArray* obj)
+			const VlDeclArray* obj)
 {
   mElaborator.reg_declarray(tag, obj);
 }
@@ -931,7 +953,7 @@ ElbProxy::find_funcdef(const VlNamedObj* parent,
 // @return parent というスコープ内の name という関数を返す．
 // @return なければ nullptr を返す．
 inline
-const ElbTaskFunc*
+const VlTaskFunc*
 ElbProxy::find_constant_function(const VlNamedObj* parent,
 				 const char* name) const
 {
@@ -942,7 +964,7 @@ ElbProxy::find_constant_function(const VlNamedObj* parent,
 // @param[in] func 関数
 inline
 void
-ElbProxy::reg_constant_function(ElbTaskFunc* func)
+ElbProxy::reg_constant_function(const VlTaskFunc* func)
 {
   mElaborator.reg_constant_function(func);
 }

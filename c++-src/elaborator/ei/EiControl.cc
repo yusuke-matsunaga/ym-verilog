@@ -24,7 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief 遅延コントロールを生成する．
 // @param[in] pt_control パース木の定義要素
 // @param[in] delay 遅延式
-ElbControl*
+const VlControl*
 EiFactory::new_DelayControl(const PtControl* pt_control,
 			    ElbExpr* delay)
 {
@@ -37,7 +37,7 @@ EiFactory::new_DelayControl(const PtControl* pt_control,
 // @param[in] pt_control パース木の定義要素
 // @param[in] event_num イベントリストの要素数
 // @param[in] event_list イベントリストを表す配列
-ElbControl*
+const VlControl*
 EiFactory::new_EventControl(const PtControl* pt_control,
 			    SizeType event_num,
 			    ElbExpr** event_list)
@@ -53,7 +53,7 @@ EiFactory::new_EventControl(const PtControl* pt_control,
 // @param[in] rep 繰り返し式
 // @param[in] event_num イベントリストの要素数
 // @param[in] event_list イベントリストを表す配列
-ElbControl*
+const VlControl*
 EiFactory::new_RepeatControl(const PtControl* pt_control,
 			     ElbExpr* rep,
 			     SizeType event_num,
@@ -133,7 +133,7 @@ EiControl::event(SizeType pos) const
 EiDelayControl::EiDelayControl(const PtControl* pt_control,
 			       ElbExpr* delay) :
   EiControl(pt_control),
-  mDelay(delay)
+  mDelay{delay}
 {
 }
 
@@ -166,11 +166,11 @@ EiDelayControl::delay() const
 // @param[in] event_num イベントリストの要素数
 // @param[in] event_list イベントリストを表す配列
 EiEventControl::EiEventControl(const PtControl* pt_control,
-			       int event_num,
+			       SizeType event_num,
 			       ElbExpr** event_list) :
   EiControl(pt_control),
-  mEventNum(event_num),
-  mEventList(event_list)
+  mEventNum{event_num},
+  mEventList{event_list}
 {
 }
 
@@ -203,7 +203,7 @@ EiEventControl::event(SizeType pos) const
 
 
 //////////////////////////////////////////////////////////////////////
-/// クラス EiRepeatControl ElbControl.h "ElbControl.h"
+/// クラス EiRepeatControl EiControl.h "EiControl.h"
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
@@ -216,7 +216,7 @@ EiRepeatControl::EiRepeatControl(const PtControl* pt_control,
 				 int event_num,
 				 ElbExpr** event_list) :
   EiEventControl(pt_control, event_num, event_list),
-  mExpr(rep)
+  mExpr{rep}
 {
 }
 

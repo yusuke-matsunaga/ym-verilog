@@ -45,7 +45,7 @@ public:
 
   /// @brief 要素を追加する．
   void
-  add(ElbTaskFunc* obj);
+  add(const VlTaskFunc* obj);
 
   /// @brief 要素を追加する．
   void
@@ -53,7 +53,7 @@ public:
 
   /// @brief 要素を追加する．
   void
-  add(ElbDeclArray* obj);
+  add(const VlDeclArray* obj);
 
   /// @brief 要素を追加する．
   void
@@ -61,15 +61,15 @@ public:
 
   /// @brief 要素を追加する．
   void
-  add(ElbModuleArray* obj);
+  add(const VlModuleArray* obj);
 
   /// @brief 要素を追加する．
   void
-  add(ElbPrimArray* obj);
+  add(const VlPrimArray* obj);
 
   /// @brief 要素を追加する．
   void
-  add(ElbPrimitive* obj);
+  add(const VlPrimitive* obj);
 
   /// @brief 要素を追加する．
   void

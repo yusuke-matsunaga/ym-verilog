@@ -10,8 +10,6 @@
 #include "EiFactory.h"
 #include "EiProcess.h"
 
-#include "elaborator/ElbStmt.h"
-
 #include "ym/pt/PtItem.h"
 
 
@@ -28,7 +26,7 @@ ElbProcess*
 EiFactory::new_Process(const VlNamedObj* parent,
 		       const PtItem* pt_item)
 {
-  EiProcess* process = new EiProcess(parent, pt_item);
+  auto process = new EiProcess(parent, pt_item);
 
   return process;
 }
@@ -43,8 +41,8 @@ EiFactory::new_Process(const VlNamedObj* parent,
 // @param[in] pt_item パース木の要素定義
 EiProcess::EiProcess(const VlNamedObj* parent,
 		     const PtItem* pt_item) :
-  mParent(parent),
-  mPtItem(pt_item)
+  mParent{parent},
+  mPtItem{pt_item}
 {
 }
 
@@ -90,10 +88,9 @@ EiProcess::stmt() const
 // @brief 本体のステートメントをセットする．
 // @param[in] stmt 本体のステートメント
 void
-EiProcess::set_stmt(ElbStmt* stmt)
+EiProcess::set_stmt(const VlStmt* stmt)
 {
   mStmt = stmt;
 }
-
 
 END_NAMESPACE_YM_VERILOG

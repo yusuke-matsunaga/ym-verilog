@@ -5,7 +5,7 @@
 /// @brief DeclGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -140,6 +140,39 @@ private:
   instantiate_dimension_list(const VlNamedObj* parent,
 			     const PtDeclItem* pt_item,
 			     vector<ElbRangeSrc>& range_src);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // エラーメッセージを出力する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief IO 宣言に aux_type と宣言が重複している．
+  /// @param[in] pt_item IO宣言のパース木の要素
+  /// @param[in] handle 宣言要素のハンドル
+  void
+  error_duplicate_type(const PtIOItem* pt_item,
+		       const ObjHandle* handle);
+
+  /// @brief 配列要素が IO 宣言として現れていた．
+  /// @param[in] pt_item IO宣言のパース木の要素
+  /// @param[in] declarray 排列要素
+  void
+  error_array_io(const PtIOItem* pt_item,
+		 const VlDeclArray* declarray);
+
+  /// @brief IO 宣言に不適切な宣言要素が使われていた．
+  /// @param[in] pt_item IO宣言のパース木の要素
+  /// @param[in] handle 宣言要素のハンドル
+  /// @param[in] module モジュールのIOの場合のモジュール
+  void
+  error_illegal_io(const PtIOItem* pt_item,
+		   const ObjHandle* handle,
+		   const VlModule* module);
+
+  /// @brief IO 宣言と宣言要素の範囲指定が異なる．
+  void
+  error_conflict_io_range(const PtIOItem* pt_item);
 
 };
 

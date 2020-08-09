@@ -92,8 +92,8 @@ EiTernaryOp::operand_num() const
 
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
-ElbExpr*
-EiTernaryOp::_operand(SizeType pos) const
+const VlExpr*
+EiTernaryOp::operand(SizeType pos) const
 {
   return mOpr[pos];
 }

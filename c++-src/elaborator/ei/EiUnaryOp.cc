@@ -75,7 +75,7 @@ EiFactory::new_UnaryOp(const PtExpr* pt_expr,
 EiUnaryOp::EiUnaryOp(const PtExpr* pt_expr,
 		     ElbExpr* opr1) :
   EiOperation(pt_expr),
-  mOpr1(opr1)
+  mOpr1{opr1}
 {
 }
 
@@ -101,8 +101,8 @@ EiUnaryOp::operand_num() const
 
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
-ElbExpr*
-EiUnaryOp::_operand(SizeType pos) const
+const VlExpr*
+EiUnaryOp::operand(SizeType pos) const
 {
   return mOpr1;
 }

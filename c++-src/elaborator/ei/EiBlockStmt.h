@@ -36,10 +36,10 @@ protected:
   /// @param[in] stmt_num ステートメントのリストの要素数
   /// @param[in] array ステートメントのリスト用配列
   EiBlockStmt(const VlNamedObj* parent,
-	      ElbProcess* process,
+	      const VlProcess* process,
 	      const PtStmt* pt_stmt,
 	      SizeType stmt_num,
-	      ElbStmt** array);
+	      const VlStmt** array);
 
   /// @brief デストラクタ
   ~EiBlockStmt();
@@ -54,16 +54,10 @@ public:
   SizeType
   child_stmt_num() const override;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // EiStmt の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 子供のステートメントを返す．
-  /// @param[in] pos 位置番号
-  ElbStmt*
-  _child_stmt(SizeType pos) const override;
+  /// @brief 子供のステートメントの取得
+  /// @param[in] pos 位置番号 (0 <= pos < stmt_num())
+  const VlStmt*
+  child_stmt(SizeType pos) const override;
 
 
 private:
@@ -75,7 +69,7 @@ private:
   SizeType mStmtNum;
 
   // ステートメントのリスト
-  ElbStmt** mStmtList;
+  const VlStmt** mStmtList;
 
 };
 
@@ -99,10 +93,10 @@ private:
   /// @param[in] stmt_num ステートメントのリストの要素数
   /// @param[in] array ステートメントのリスト用配列
   EiBegin(const VlNamedObj* parent,
-	  ElbProcess* process,
+	  const VlProcess* process,
 	  const PtStmt* pt_stmt,
 	  SizeType stmt_num,
-	  ElbStmt** array);
+	  const VlStmt** array);
 
   /// @brief デストラクタ
   ~EiBegin();
@@ -139,10 +133,10 @@ private:
   /// @param[in] stmt_num ステートメントのリストの要素数
   /// @param[in] array ステートメントのリスト用配列
   EiFork(const VlNamedObj* parent,
-	 ElbProcess* process,
+	 const VlProcess* process,
 	 const PtStmt* pt_stmt,
 	 SizeType stmt_num,
-	 ElbStmt** array);
+	 const VlStmt** array);
 
   /// @brief デストラクタ
   ~EiFork();
@@ -166,7 +160,7 @@ public:
 /// IEEE Std 1364-2001 26.6.27 Process, block, statement, event statement
 //////////////////////////////////////////////////////////////////////
 class EiNamedBlockStmt :
-  public ElbStmt
+  public EiStmt
 {
   friend class EiFactory;
 
@@ -178,9 +172,9 @@ protected:
   /// @param[in] stmt_num ステートメントのリストの要素数
   /// @param[in] array ステートメントのリスト用配列
   EiNamedBlockStmt(const VlNamedObj* block,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   SizeType stmt_num,
-		   ElbStmt** array);
+		   const VlStmt** array);
 
   /// @brief デストラクタ
   ~EiNamedBlockStmt();
@@ -209,20 +203,27 @@ public:
   const VlNamedObj*
   scope() const override;
 
-  /// @brief 子供ののステートメントのリストの要素数を返す．
+  /// @brief 子供のステートメントの数の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiBegin
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  /// @note このクラスでは 0 を返す．
   SizeType
   child_stmt_num() const override;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // EiStmt の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 子供のステートメントを返す．
-  /// @param[in] pos 位置番号
-  ElbStmt*
-  _child_stmt(SizeType pos) const override;
+  /// @brief 子供のステートメントの取得
+  /// @param[in] pos 位置番号 (0 <= pos < stmt_num())
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  /// このクラスではなにもしない．
+  ///  - kVpiBegin
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  const VlStmt*
+  child_stmt(SizeType pos) const override;
 
 
 private:
@@ -233,14 +234,11 @@ private:
   // 自身に対応するスコープ
   const VlNamedObj* mBlockScope;
 
-  // 親のプロセス
-  ElbProcess* mProcess;
-
   // ステートメント数
   SizeType mStmtNum;
 
   // ステートメントのリスト
-  ElbStmt** mStmtList;
+  const VlStmt** mStmtList;
 
 };
 
@@ -263,9 +261,9 @@ private:
   /// @param[in] stmt_num ステートメントのリストの要素数
   /// @param[in] array ステートメントのリスト用配列
   EiNamedBegin(const VlNamedObj* block,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       SizeType stmt_num,
-	       ElbStmt** array);
+	       const VlStmt** array);
 
   /// @brief デストラクタ
   ~EiNamedBegin();
@@ -301,9 +299,9 @@ private:
   /// @param[in] stmt_num ステートメントのリストの要素数
   /// @param[in] array ステートメントのリスト用配列
   EiNamedFork(const VlNamedObj* block,
-	      ElbProcess* process,
+	      const VlProcess* process,
 	      SizeType stmt_num,
-	      ElbStmt** array);
+	      const VlStmt** array);
 
   /// @brief デストラクタ
   ~EiNamedFork();

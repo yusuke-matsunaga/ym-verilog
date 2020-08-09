@@ -22,16 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class ElbGenvar :
   public VlNamedObj
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbGenvar() { }
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbGenvar() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbGenvar に固有の関数

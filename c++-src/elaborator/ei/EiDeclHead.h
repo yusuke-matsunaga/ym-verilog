@@ -137,7 +137,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -323,7 +323,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
 
 protected:
@@ -485,7 +485,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -597,7 +597,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
 
 private:
@@ -695,7 +695,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -804,7 +804,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
 
 private:

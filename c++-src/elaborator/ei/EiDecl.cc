@@ -3,7 +3,7 @@
 /// @brief EiDecl の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -30,55 +30,15 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbDecl*
 EiFactory::new_Decl(ElbDeclHead* head,
 		    const PtNamedBase* pt_item,
-		    ElbExpr* init)
+		    const VlExpr* init)
 {
-  EiDecl* decl = nullptr;
-
-  switch ( head->type() ) {
-  case VpiObjType::Reg:
-  case VpiObjType::Net:
-    if ( head->bit_size() == 1 ) {
-      if ( init ) {
-	decl = new EiDeclIS(head, pt_item, init);
-      }
-      else {
-	decl = new EiDeclS(head, pt_item);
-      }
-      break;
-    }
-    // わざと次に続く
-
-  case VpiObjType::IntegerVar:
-  case VpiObjType::TimeVar:
-    if ( init ) {
-      decl = new EiDeclIV(head, pt_item, init);
-    }
-    else {
-      decl = new EiDeclV(head, pt_item);
-    }
-    break;
-
-  case VpiObjType::RealVar:
-    if ( init ) {
-      decl = new EiDeclIR(head, pt_item, init);
-    }
-    else {
-      decl = new EiDeclR(head, pt_item);
-    }
-    break;
-
-  case VpiObjType::NamedEvent:
-    ASSERT_COND(init == nullptr );
-    decl = new EiDeclN(head, pt_item);
-    break;
-
-  case VpiObjType::Parameter:
-  case VpiObjType::SpecParam:
-  default:
-    ASSERT_NOT_REACHED;
-    break;
+  ElbDecl* decl = nullptr;
+  if ( init ) {
+    decl = new EiDeclI(head, pt_item, init);
   }
-
+  else {
+    decl = new EiDecl(head, pt_item);
+  }
   return decl;
 }
 
@@ -92,9 +52,9 @@ EiFactory::new_Decl(ElbDeclHead* head,
 // @param[in] pt_item パース木の宣言要素
 EiDecl::EiDecl(ElbDeclHead* head,
 	       const PtNamedBase* pt_item) :
-  mHead(head),
-  mPtItem(pt_item),
-  mAuxSign(false)
+  mHead{head},
+  mPtItem{pt_item},
+  mAuxSign{false}
 {
 }
 
@@ -242,7 +202,7 @@ EiDecl::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDecl::calc_bit_offset(int index,
-			int& offset) const
+			SizeType& offset) const
 {
   return mHead->calc_bit_offset(index, offset);
 }
@@ -311,6 +271,14 @@ EiDecl::delay() const
   return mHead->delay();
 }
 
+// @brief 定数値を持つ型のときに true を返す．
+// @note このクラスは false を返す．
+bool
+EiDecl::is_consttype() const
+{
+  return false;
+}
+
 // @brief 初期値の取得
 // @retval 初期値
 // @retval nullptr 設定がない場合
@@ -318,6 +286,14 @@ const VlExpr*
 EiDecl::init_value() const
 {
   return nullptr;
+}
+
+// @brief localparam のときに true 返す．
+// @note このクラスは false を返す．
+bool
+EiDecl::is_local_param() const
+{
+  return false;
 }
 
 // @brief 符号付きに補正する．
@@ -329,528 +305,23 @@ EiDecl::set_signed()
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス EiDeclN
+// クラス EiDeclI
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
 // @param[in] head ヘッダ
 // @param[in] pt_item パース木の宣言要素
-EiDeclN::EiDeclN(ElbDeclHead* head,
-		 const PtNamedBase* pt_item) :
-  EiDecl(head, pt_item)
-{
-}
-
-// @brief デストラクタ
-EiDeclN::~EiDeclN()
-{
-}
-
-// @brief スカラー値を返す．
-VlScalarVal
-EiDeclN::get_scalar() const
-{
-  ASSERT_NOT_REACHED;
-  return VlScalarVal::x();
-}
-
-// @brief スカラー値を設定する．
-void
-EiDeclN::set_scalar(const VlScalarVal& val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief 論理値を返す．
-VlScalarVal
-EiDeclN::get_logic() const
-{
-  ASSERT_NOT_REACHED;
-  return VlScalarVal::x();
-}
-
-// @brief real 型の値を返す．
-double
-EiDeclN::get_real() const
-{
-  ASSERT_NOT_REACHED;
-  return 0.0;
-}
-
-// @brief real 型の値を設定する．
-void
-EiDeclN::set_real(double val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief bitvector 型の値を返す．
-void
-EiDeclN::get_bitvector(BitVector& bitvector,
-		       const VlValueType& req_type) const
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief bitvector 型の値を設定する．
-void
-EiDeclN::set_bitvector(const BitVector& val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief ビット選択値を返す．
-// @param[in] index ビット位置
-VlScalarVal
-EiDeclN::get_bitselect(int index) const
-{
-  ASSERT_NOT_REACHED;
-  return VlScalarVal::x();
-}
-
-// @brief ビット値を設定する．
-// @param[in] index ビット位置
-// @param[in] val 値
-void
-EiDeclN::set_bitselect(int index,
-		       const VlScalarVal& val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief 範囲選択値を返す．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[out] val 値
-void
-EiDeclN::get_partselect(int left,
-			int right,
-			BitVector& val) const
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief 範囲値を設定する．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] val 値
-void
-EiDeclN::set_partselect(int left,
-			int right,
-			const BitVector& val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス EiDeclS
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-EiDeclS::EiDeclS(ElbDeclHead* head,
-		   const PtNamedBase* pt_item) :
+// @param[in] init 初期値
+EiDeclI::EiDeclI(ElbDeclHead* head,
+		 const PtNamedBase* pt_item,
+		 const VlExpr* init) :
   EiDecl(head, pt_item),
-  mVal(VlScalarVal::x())
+  mInit{init}
 {
 }
 
 // @brief デストラクタ
-EiDeclS::~EiDeclS()
-{
-}
-
-// @brief スカラー値を返す．
-VlScalarVal
-EiDeclS::get_scalar() const
-{
-  return mVal;
-}
-
-// @brief スカラー値を設定する．
-void
-EiDeclS::set_scalar(const VlScalarVal& val)
-{
-  mVal = val;
-}
-
-// @brief 論理値を返す．
-VlScalarVal
-EiDeclS::get_logic() const
-{
-  return mVal.to_logic();
-}
-
-// @brief real 型の値を返す．
-double
-EiDeclS::get_real() const
-{
-  return mVal.to_real();
-}
-
-// @brief real 型の値を設定する．
-void
-EiDeclS::set_real(double val)
-{
-  mVal = VlScalarVal(val);
-}
-
-// @brief bitvector 型の値を返す．
-void
-EiDeclS::get_bitvector(BitVector& val,
-		       const VlValueType& req_type) const
-{
-  val = mVal;
-  val.coerce(req_type);
-}
-
-// @brief bitvector 型の値を設定する．
-void
-EiDeclS::set_bitvector(const BitVector& val)
-{
-  mVal = val.to_scalar();
-}
-
-// @brief ビット選択値を返す．
-// @param[in] index ビット位置
-VlScalarVal
-EiDeclS::get_bitselect(int index) const
-{
-  int offset;
-  if ( calc_bit_offset(index, offset) ) {
-    // offset == 0 のはず．
-    return mVal;
-  }
-  else {
-    // 範囲外は X
-    return VlScalarVal::x();
-  }
-}
-
-// @brief ビット値を設定する．
-// @param[in] index ビット位置
-// @param[in] val 値
-void
-EiDeclS::set_bitselect(int index,
-		       const VlScalarVal& val)
-{
-  int offset;
-  if ( calc_bit_offset(index, offset) ) {
-    // offset == 0 のはず．
-    mVal = val;
-  }
-}
-
-// @brief 範囲選択値を返す．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[out] val 値
-void
-EiDeclS::get_partselect(int left,
-			int right,
-			BitVector& val) const
-{
-  int bpos1;
-  int bpos2;
-  if ( calc_bit_offset(left, bpos1) &&
-       calc_bit_offset(right, bpos2) ) {
-    val = mVal;
-  }
-}
-
-// @brief 範囲値を設定する．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] val 値
-void
-EiDeclS::set_partselect(int left,
-			int right,
-			const BitVector& val)
-{
-  int bpos1;
-  int bpos2;
-  if ( calc_bit_offset(left, bpos1) &&
-       calc_bit_offset(right, bpos2) ) {
-    mVal = val.to_scalar();
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス EiDeclR
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-EiDeclR::EiDeclR(ElbDeclHead* head,
-		 const PtNamedBase* pt_item) :
-  EiDecl(head, pt_item),
-  mVal(0.0)
-{
-}
-
-// @brief デストラクタ
-EiDeclR::~EiDeclR()
-{
-}
-
-// @brief スカラー値を返す．
-VlScalarVal
-EiDeclR::get_scalar() const
-{
-  return VlScalarVal(mVal);
-}
-
-// @brief スカラー値を設定する．
-void
-EiDeclR::set_scalar(const VlScalarVal& val)
-{
-  mVal = val.to_real();
-}
-
-// @brief 論理値を返す．
-VlScalarVal
-EiDeclR::get_logic() const
-{
-  return VlScalarVal(get_real());
-}
-
-// @brief real 型の値を返す．
-double
-EiDeclR::get_real() const
-{
-  return mVal;
-}
-
-// @brief real 型の値を設定する．
-void
-EiDeclR::set_real(double val)
-{
-  mVal = val;
-}
-
-// @brief bitvector 型の値を返す．
-void
-EiDeclR::get_bitvector(BitVector& bitvector,
-		       const VlValueType& req_type) const
-{
-  bitvector = mVal;
-  bitvector.coerce(req_type);
-}
-
-// @brief bitvector 型の値を設定する．
-void
-EiDeclR::set_bitvector(const BitVector& val)
-{
-  mVal = val.to_real();
-}
-
-// @brief ビット選択値を返す．
-// @param[in] index ビット位置
-VlScalarVal
-EiDeclR::get_bitselect(int index) const
-{
-  ASSERT_NOT_REACHED;
-  return VlScalarVal::x();
-}
-
-// @brief ビット値を設定する．
-// @param[in] index ビット位置
-// @param[in] val 値
-void
-EiDeclR::set_bitselect(int index,
-		       const VlScalarVal& val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief 範囲選択値を返す．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[out] val 値
-void
-EiDeclR::get_partselect(int left,
-			int right,
-			BitVector& val) const
-{
-  ASSERT_NOT_REACHED;
-}
-
-// @brief 範囲値を設定する．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] val 値
-void
-EiDeclR::set_partselect(int left,
-			int right,
-			const BitVector& val)
-{
-  ASSERT_NOT_REACHED;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス EiDeclV
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-EiDeclV::EiDeclV(ElbDeclHead* head,
-		   const PtNamedBase* pt_item) :
-  EiDecl(head, pt_item)
-{
-}
-
-// @brief デストラクタ
-EiDeclV::~EiDeclV()
-{
-}
-
-// @brief スカラー値を返す．
-VlScalarVal
-EiDeclV::get_scalar() const
-{
-  return mVal.to_scalar();
-}
-
-// @brief スカラー値を設定する．
-void
-EiDeclV::set_scalar(const VlScalarVal& val)
-{
-  mVal = val;
-}
-
-// @brief 論理値を返す．
-VlScalarVal
-EiDeclV::get_logic() const
-{
-  return mVal.to_logic();
-}
-
-// @brief real 型の値を返す．
-double
-EiDeclV::get_real() const
-{
-  return mVal.to_real();
-}
-
-// @brief real 型の値を設定する．
-void
-EiDeclV::set_real(double val)
-{
-  mVal = val;
-}
-
-// @brief bitvector 型の値を返す．
-void
-EiDeclV::get_bitvector(BitVector& bitvector,
-		       const VlValueType& req_type) const
-{
-  bitvector = mVal;
-  bitvector.coerce(req_type);
-}
-
-// @brief bitvector 型の値を設定する．
-void
-EiDeclV::set_bitvector(const BitVector& val)
-{
-  mVal = val;
-}
-
-// @brief ビット選択値を返す．
-// @param[in] index ビット位置
-VlScalarVal
-EiDeclV::get_bitselect(int index) const
-{
-  int bpos;
-  if ( calc_bit_offset(index, bpos) ) {
-    return mVal.bit_select(bpos);
-  }
-  else {
-    return VlScalarVal::x();
-  }
-}
-
-// @brief ビット値を設定する．
-// @param[in] index ビット位置
-// @param[in] val 値
-void
-EiDeclV::set_bitselect(int index,
-		       const VlScalarVal& val)
-{
-  int bpos;
-  if ( calc_bit_offset(index, bpos) ) {
-    mVal.bit_select(bpos, val);
-  }
-}
-
-// @brief 範囲選択値を返す．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[out] val 値
-void
-EiDeclV::get_partselect(int left,
-			int right,
-			BitVector& val) const
-{
-  int bpos1;
-  int bpos2;
-  if ( calc_bit_offset(left, bpos1) &&
-       calc_bit_offset(right, bpos2) ) {
-    val = mVal.part_select(bpos1, bpos2);
-  }
-  else {
-    int w;
-    if ( left > right ) {
-      w = left - right + 1;
-    }
-    else {
-      w = right - left + 1;
-    }
-    val = BitVector(VlScalarVal::x(), w);
-  }
-}
-
-// @brief 範囲値を設定する．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] val 値
-void
-EiDeclV::set_partselect(int left,
-			int right,
-			const BitVector& val)
-{
-  int bpos1;
-  int bpos2;
-  if ( calc_bit_offset(left, bpos1) &&
-       calc_bit_offset(right, bpos2) ) {
-    mVal.part_select(bpos1, bpos2, val);
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス EiDeclIS
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] init 初期値
-EiDeclIS::EiDeclIS(ElbDeclHead* head,
-		   const PtNamedBase* pt_item,
-		   ElbExpr* init) :
-  EiDeclS(head, pt_item),
-  mInit(init)
-{
-}
-
-// @brief デストラクタ
-EiDeclIS::~EiDeclIS()
+EiDeclI::~EiDeclI()
 {
 }
 
@@ -858,7 +329,7 @@ EiDeclIS::~EiDeclIS()
 // @retval 初期値
 // @retval nullptr 設定がない場合
 const VlExpr*
-EiDeclIS::init_value() const
+EiDeclI::init_value() const
 {
   return mInit;
 }
@@ -866,85 +337,7 @@ EiDeclIS::init_value() const
 // @brief 初期値の設定
 // @param[in] expr 初期値
 void
-EiDeclIS::set_init(const VlExpr* expr)
-{
-  mInit = expr;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス EiDeclIR
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] init 初期値
-EiDeclIR::EiDeclIR(ElbDeclHead* head,
-		   const PtNamedBase* pt_item,
-		   ElbExpr* init) :
-  EiDeclR(head, pt_item),
-  mInit(init)
-{
-}
-
-// @brief デストラクタ
-EiDeclIR::~EiDeclIR()
-{
-}
-
-// @brief 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
-const VlExpr*
-EiDeclIR::init_value() const
-{
-  return mInit;
-}
-
-// @brief 初期値の設定
-// @param[in] expr 初期値
-void
-EiDeclIR::set_init(const VlExpr* expr)
-{
-  mInit = expr;
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// クラス EiDeclIV
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] init 初期値
-EiDeclIV::EiDeclIV(ElbDeclHead* head,
-		   const PtNamedBase* pt_item,
-		   ElbExpr* init) :
-  EiDeclV(head, pt_item),
-  mInit(init)
-{
-}
-
-// @brief デストラクタ
-EiDeclIV::~EiDeclIV()
-{
-}
-
-// @brief 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
-const VlExpr*
-EiDeclIV::init_value() const
-{
-  return mInit;
-}
-
-// @brief 初期値の設定
-// @param[in] expr 初期値
-void
-EiDeclIV::set_init(const VlExpr* expr)
+EiDeclI::set_init(const VlExpr* expr)
 {
   mInit = expr;
 }

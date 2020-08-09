@@ -23,13 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlProcess :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlProcess() {}
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlProcess の仮想関数

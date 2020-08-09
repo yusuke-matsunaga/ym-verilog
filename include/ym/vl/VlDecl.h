@@ -21,13 +21,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlDecl :
   public VlDeclBase
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlDecl() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlDecl の派生クラスに共通な仮想関数

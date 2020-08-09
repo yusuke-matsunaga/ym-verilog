@@ -24,7 +24,7 @@ protected:
 
   /// @brief デストラクタ
   virtual
-  ~ElbIOHead() { }
+  ~ElbIOHead() = default;
 
 
 public:
@@ -39,45 +39,18 @@ public:
 
   /// @brief 親のモジュールの取得
   virtual
-  ElbModule*
+  const VlModule*
   module() const = 0;
 
   /// @brief 親のタスクの取得
   virtual
-  ElbTaskFunc*
+  const VlTaskFunc*
   task() const = 0;
 
   /// @brief 親の関数の取得
   virtual
-  ElbTaskFunc*
+  const VlTaskFunc*
   function() const = 0;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
-/// @class ElbIODecl ElbIODecl.h <ym/vl/VlIODecl.h>
-/// @brief 入出力宣言要素を表すクラス
-//////////////////////////////////////////////////////////////////////
-class ElbIODecl :
-  public VlIODecl
-{
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbIODecl() { }
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbIODecl の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 対応する ElbDecl を返す．
-  virtual
-  ElbDecl*
-  _decl() const = 0;
 
 };
 

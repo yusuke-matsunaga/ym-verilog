@@ -23,13 +23,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlContAssign :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlContAssign() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlContAssign の派生クラスに共通な仮想関数

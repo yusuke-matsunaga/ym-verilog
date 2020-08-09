@@ -5,7 +5,7 @@
 /// @brief ObjHandleSub のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -92,7 +92,7 @@ class ElbTaskFuncHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbTaskFuncHandle(ElbTaskFunc* obj);
+  ElbTaskFuncHandle(const VlTaskFunc* obj);
 
   /// @brief デストラクタ
   ~ElbTaskFuncHandle() = default;
@@ -105,7 +105,7 @@ public:
   obj() const override;
 
   /// @brief ElbTaskFunc を返す．
-  ElbTaskFunc*
+  const VlTaskFunc*
   taskfunc() const override;
 
 
@@ -115,7 +115,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象のオブジェクト
-  ElbTaskFunc* mObj;
+  const VlTaskFunc* mObj;
 
 };
 
@@ -166,7 +166,7 @@ class ElbDeclArrayHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbDeclArrayHandle(ElbDeclArray* obj);
+  ElbDeclArrayHandle(const VlDeclArray* obj);
 
   /// @brief デストラクタ
   ~ElbDeclArrayHandle() = default;
@@ -179,7 +179,7 @@ public:
   obj() const override;
 
   /// @brief ElbDeclArray を返す．
-  ElbDeclArray*
+  const VlDeclArray*
   declarray() const override;
 
 
@@ -189,7 +189,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象のオブジェクト
-  ElbDeclArray* mObj;
+  const VlDeclArray* mObj;
 
 };
 
@@ -240,7 +240,7 @@ class ElbModuleArrayHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbModuleArrayHandle(ElbModuleArray* obj);
+  ElbModuleArrayHandle(const VlModuleArray* obj);
 
   /// @brief デストラクタ
   ~ElbModuleArrayHandle() = default;
@@ -257,7 +257,7 @@ public:
   array_elem(int index) const override;
 
   /// @brief ElbModuleArray を返す．
-  ElbModuleArray*
+  const VlModuleArray*
   module_array() const override;
 
 
@@ -267,7 +267,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象のオブジェクト
-  ElbModuleArray* mObj;
+  const VlModuleArray* mObj;
 
 };
 
@@ -281,7 +281,7 @@ class ElbPrimArrayHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbPrimArrayHandle(ElbPrimArray* obj);
+  ElbPrimArrayHandle(const VlPrimArray* obj);
 
   /// @brief デストラクタ
   ~ElbPrimArrayHandle() = default;
@@ -294,7 +294,7 @@ public:
   obj() const override;
 
   /// @brief ElbPrimArray を返す．
-  ElbPrimArray*
+  const VlPrimArray*
   prim_array() const override;
 
 
@@ -304,7 +304,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象のオブジェクト
-  ElbPrimArray* mObj;
+  const VlPrimArray* mObj;
 
 };
 
@@ -318,7 +318,7 @@ class ElbPrimitiveHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbPrimitiveHandle(ElbPrimitive* obj);
+  ElbPrimitiveHandle(const VlPrimitive* obj);
 
   /// @brief デストラクタ
   ~ElbPrimitiveHandle() = default;
@@ -331,7 +331,7 @@ public:
   obj() const override;
 
   /// @brief ElbPrimitive を返す．
-  ElbPrimitive*
+  const VlPrimitive*
   primitive() const override;
 
 
@@ -341,7 +341,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象のオブジェクト
-  ElbPrimitive* mObj;
+  const VlPrimitive* mObj;
 
 };
 

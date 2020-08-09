@@ -101,22 +101,6 @@ ElbDeclHead::set_delay(const VlDelay* delay)
 // クラス ElbDecl
 //////////////////////////////////////////////////////////////////////
 
-// @brief 定数値を持つ型のときに true を返す．
-// @note このクラスは false を返す．
-bool
-ElbDecl::is_consttype() const
-{
-  return false;
-}
-
-// @brief localparam のときに true 返す．
-// @note このクラスでは false を返す．
-bool
-ElbDecl::is_local_param() const
-{
-  return false;
-}
-
 // @brief 初期値の設定
 // @param[in] expr 初期値
 // @note このクラスではなにもしない．

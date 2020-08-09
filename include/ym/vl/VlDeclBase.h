@@ -22,13 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlDeclBase :
   public VlNamedObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlDeclBase() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlDeclBase の派生クラスに共通な仮想関数
@@ -99,7 +92,7 @@ public:
   virtual
   bool
   calc_bit_offset(int index,
-		  int& offset) const = 0;
+		  SizeType& offset) const = 0;
 
   /// @brief データ型の取得
   /// @retval kVpiVarInteger 整数型

@@ -58,17 +58,13 @@ AttrGen::instantiate_attribute(const PtAttrInst* pt_attr,
     }
     attr_list = factory().new_AttrList(n);
     ymuint i = 0;
-    for (const PtAttrInst* pt_ai = pt_attr;
-	 pt_ai; pt_ai = pt_ai->next()) {
-      for (const PtAttrSpec* pt_as = pt_ai->attr_spec_top();
-	   pt_as; pt_as = pt_as->next()) {
-	ElbExpr* expr = nullptr;
-	if ( pt_as->expr() ) {
-	  expr = instantiate_constant_expr(nullptr, pt_as->expr());
-	  if ( !expr ) {
-	    // エラー．たぶん expr() が constant_expression ではなかった．
-	    // でも無視する．
-	  }
+    for ( auto pt_ai = pt_attr; pt_ai; pt_ai = pt_ai->next() ) {
+      for ( auto pt_as = pt_ai->attr_spec_top();
+	    pt_as; pt_as = pt_as->next()) {
+	auto expr = instantiate_constant_expr(nullptr, pt_as->expr());
+	if ( !expr ) {
+	  // エラー．たぶん expr() が constant_expression ではなかった．
+	  // でも無視する．
 	}
 	attr_list->set(i, pt_as, expr, def);
 	++ i;

@@ -32,7 +32,7 @@ public:
 	      int right_val);
 
   /// @brief デストラクタ
-  ~ElbRangeSrc();
+  ~ElbRangeSrc() = default;
 
 
 public:
@@ -89,16 +89,6 @@ private:
 class ElbRange :
   public VlRange
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbRange() { }
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbRange() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbRange の仮想関数
@@ -124,17 +114,11 @@ ElbRangeSrc::ElbRangeSrc(const PtRange* pt_range,
 			 const PtExpr* right,
 			 int left_val,
 			 int right_val) :
-  mPtRange(pt_range),
-  mLeftRange(left),
-  mRightRange(right),
-  mLeftVal(left_val),
-  mRightVal(right_val)
-{
-}
-
-// @brief デストラクタ
-inline
-ElbRangeSrc::~ElbRangeSrc()
+  mPtRange{pt_range},
+  mLeftRange{left},
+  mRightRange{right},
+  mLeftVal{left_val},
+  mRightVal{right_val}
 {
 }
 

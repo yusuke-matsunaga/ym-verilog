@@ -73,16 +73,9 @@ public:
   SizeType
   operand_num() const override;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // EiOperation の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
   /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  ElbExpr*
-  _operand(SizeType pos) const override;
+  const VlExpr*
+  operand(SizeType pos) const override;
 
 
 protected:
@@ -91,20 +84,12 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 第1オペランドを返す．
-  const ElbExpr*
+  ElbExpr*
   operand1() const { return mOpr[0]; }
 
   /// @brief 第2オペランドを返す．
-  const ElbExpr*
+  ElbExpr*
   operand2() const { return mOpr[1]; }
-
-  /// @brief 第1オペランドを返す．
-  ElbExpr*
-  operand1() { return mOpr[0]; }
-
-  /// @brief 第2オペランドを返す．
-  ElbExpr*
-  operand2() { return mOpr[1]; }
 
 
 private:

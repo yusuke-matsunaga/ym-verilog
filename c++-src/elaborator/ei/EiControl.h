@@ -2,7 +2,7 @@
 #define EICONTROL_H
 
 /// @file EiControl.h
-/// @brief ElbControl の実装クラスのヘッダファイル
+/// @brief VlControl の実装クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
@@ -13,7 +13,7 @@
 // IEEE Std 1364-2001 26.6.31 Repeat control
 
 
-#include "elaborator/ElbControl.h"
+#include "ym/vl/VlControl.h"
 #include "ym/pt/PtP.h"
 
 
@@ -21,10 +21,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
 /// @class EiControl EiControl.h "EiControl.h"
-/// @brief ElbControl の実装クラス
+/// @brief VlControl の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiControl :
-  public ElbControl
+  public VlControl
 {
 protected:
 
@@ -120,7 +120,7 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbControl に固有の仮想関数
+  // VlControl に固有の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// 遅延式を返す．
@@ -158,7 +158,7 @@ protected:
   /// @param[in] event_num イベントリストの要素数
   /// @param[in] event_list イベントリストを表す配列
   EiEventControl(const PtControl* pt_control,
-		 int event_num,
+		 SizeType event_num,
 		 ElbExpr** event_list);
 
   /// @brief デストラクタ
@@ -205,7 +205,7 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class EiRepeatControl ElbControl.h "ElbControl.h"
+/// @class EiRepeatControl EiControl.h "EiControl.h"
 /// @brief repeat control を表すクラス
 /// IEEE Std 1364-2001 26.6.31 Repeat control
 //////////////////////////////////////////////////////////////////////

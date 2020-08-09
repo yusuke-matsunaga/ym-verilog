@@ -52,8 +52,8 @@ EiFactory::new_CaHead(const VlModule* module,
 const VlContAssign*
 EiFactory::new_ContAssign(ElbCaHead* head,
 			  const PtBase* pt_obj,
-			  ElbExpr* lhs,
-			  ElbExpr* rhs)
+			  const VlExpr* lhs,
+			  const VlExpr* rhs)
 {
   EiContAssign* cont_assign = new EiContAssign1(head, pt_obj, lhs, rhs);
 
@@ -68,8 +68,8 @@ EiFactory::new_ContAssign(ElbCaHead* head,
 const VlContAssign*
 EiFactory::new_ContAssign(const VlModule* module,
 			  const PtBase* pt_obj,
-			  ElbExpr* lhs,
-			  ElbExpr* rhs)
+			  const VlExpr* lhs,
+			  const VlExpr* rhs)
 {
   EiContAssign* cont_assign = new EiContAssign2(module, pt_obj, lhs, rhs);
 
@@ -170,11 +170,11 @@ EiCaHeadD::delay() const
 // @param[in] lhs 左辺式
 // @param[in] rhs 右辺式
 EiContAssign::EiContAssign(const PtBase* pt_obj,
-			   ElbExpr* lhs,
-			   ElbExpr* rhs) :
+			   const VlExpr* lhs,
+			   const VlExpr* rhs) :
   mPtObj(pt_obj),
-  mLhs(lhs),
-  mRhs(rhs)
+  mLhs{lhs},
+  mRhs{rhs}
 {
 }
 
@@ -230,8 +230,8 @@ EiContAssign::rhs() const
 // @param[in] rhs 右辺式
 EiContAssign1::EiContAssign1(ElbCaHead* head,
 			     const PtBase* pt_obj,
-			     ElbExpr* lhs,
-			     ElbExpr* rhs) :
+			     const VlExpr* lhs,
+			     const VlExpr* rhs) :
   EiContAssign(pt_obj, lhs, rhs),
   mHead(head)
 {
@@ -289,8 +289,8 @@ EiContAssign1::has_net_decl_assign() const
 // @param[in] rhs 右辺式
 EiContAssign2::EiContAssign2(const VlModule* module,
 			     const PtBase* pt_obj,
-			     ElbExpr* lhs,
-			     ElbExpr* rhs) :
+			     const VlExpr* lhs,
+			     const VlExpr* rhs) :
   EiContAssign(pt_obj, lhs, rhs),
   mModule(module)
 {

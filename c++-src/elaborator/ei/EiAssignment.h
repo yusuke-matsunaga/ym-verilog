@@ -37,10 +37,10 @@ protected:
   /// @param[in] lhs 左辺の式
   /// @param[in] rhs 右辺の式
   EiAssignBase(const VlNamedObj* parent,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       const PtStmt* pt_stmt,
-	       ElbExpr* lhs,
-	       ElbExpr* rhs);
+	       const VlExpr* lhs,
+	       const VlExpr* rhs);
 
   /// @brief デストラクタ
   ~EiAssignBase();
@@ -63,11 +63,11 @@ public:
 protected:
 
   /// @brief 左辺を返す．
-  ElbExpr*
+  const VlExpr*
   _lhs() const;
 
   /// @brief 右辺を返す．
-  ElbExpr*
+  const VlExpr*
   _rhs() const;
 
 
@@ -77,10 +77,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 左辺
-  ElbExpr* mLhs;
+  const VlExpr* mLhs;
 
   // 右辺
-  ElbExpr* mRhs;
+  const VlExpr* mRhs;
 
 };
 
@@ -105,11 +105,11 @@ protected:
   /// @param[in] rhs 右辺の式
   /// @param[in] control コントロール
   EiNbAssignment(const VlNamedObj* parent,
-		 ElbProcess* process,
+		 const VlProcess* process,
 		 const PtStmt* pt_stmt,
-		 ElbExpr* lhs,
-		 ElbExpr* rhs,
-		 ElbControl* control);
+		 const VlExpr* lhs,
+		 const VlExpr* rhs,
+		 const VlControl* control);
 
   /// @brief デストラクタ
   ~EiNbAssignment();
@@ -141,7 +141,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // コントロール
-  ElbControl* mControl;
+  const VlControl* mControl;
 
 };
 
@@ -166,11 +166,11 @@ private:
   /// @param[in] rhs 右辺の式
   /// @param[in] control コントロール
   EiAssignment(const VlNamedObj* parent,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       const PtStmt* pt_stmt,
-	       ElbExpr* lhs,
-	       ElbExpr* rhs,
-	       ElbControl* control);
+	       const VlExpr* lhs,
+	       const VlExpr* rhs,
+	       const VlControl* control);
 
   /// @brief デストラクタ
   ~EiAssignment();
@@ -209,10 +209,10 @@ private:
   /// @param[in] lhs 左辺の式
   /// @param[in] rhs 右辺の式
   EiAssignStmt(const VlNamedObj* parent,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       const PtStmt* pt_stmt,
-	       ElbExpr* lhs,
-	       ElbExpr* rhs);
+	       const VlExpr* lhs,
+	       const VlExpr* rhs);
 
   /// @brief デストラクタ
   ~EiAssignStmt();
@@ -249,10 +249,10 @@ private:
   /// @param[in] lhs 左辺の式
   /// @param[in] rhs 右辺の式
   EiForceStmt(const VlNamedObj* parent,
-	      ElbProcess* process,
+	      const VlProcess* process,
 	      const PtStmt* pt_stmt,
-	      ElbExpr* lhs,
-	      ElbExpr* rhs);
+	      const VlExpr* lhs,
+	      const VlExpr* rhs);
 
   /// @brief デストラクタ
   ~EiForceStmt();
@@ -285,9 +285,9 @@ protected:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] lhs 左辺の式
   EiDeassignBase(const VlNamedObj* parent,
-		 ElbProcess* process,
+		 const VlProcess* process,
 		 const PtStmt* pt_stmt,
-		 ElbExpr* lhs);
+		 const VlExpr* lhs);
 
   /// @brief デストラクタ
   ~EiDeassignBase();
@@ -309,7 +309,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 左辺
-  ElbExpr* mLhs;
+  const VlExpr* mLhs;
 
 };
 
@@ -332,9 +332,9 @@ private:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] lhs 左辺の式
   EiDeassignStmt(const VlNamedObj* parent,
-		 ElbProcess* process,
+		 const VlProcess* process,
 		 const PtStmt* pt_stmt,
-		 ElbExpr* lhs);
+		 const VlExpr* lhs);
 
   /// @brief デストラクタ
   ~EiDeassignStmt();
@@ -370,9 +370,9 @@ private:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] lhs 左辺の式
   EiReleaseStmt(const VlNamedObj* parent,
-		ElbProcess* process,
+		const VlProcess* process,
 		const PtStmt* pt_stmt,
-		ElbExpr* lhs);
+		const VlExpr* lhs);
 
   /// @brief デストラクタ
   ~EiReleaseStmt();

@@ -20,20 +20,17 @@
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
+#include "ym/vl/VlTaskFunc.h"
 
 #include "ym/ClibCellLibrary.h"
 
 #include "parser/PtMgr.h"
 
 #include "elaborator/ElbModule.h"
-#include "elaborator/ElbUdp.h"
-#include "elaborator/ElbModule.h"
-#include "elaborator/ElbTaskFunc.h"
 #include "elaborator/ElbGfRoot.h"
 #include "elaborator/ElbDecl.h"
 #include "elaborator/ElbParameter.h"
 #include "elaborator/ElbPrimitive.h"
-#include "elaborator/ElbContAssign.h"
 #include "elaborator/ElbProcess.h"
 #include "elaborator/ElbGenvar.h"
 
@@ -69,12 +66,16 @@ gen_funckey(const PtModule* module,
 END_NONAMESPACE
 
 // @brief コンストラクタ
+// @param[in] pt_mgr パース木を管理するクラス
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
 // @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 // @param[in] cell_library セルライブラリ
-Elaborator::Elaborator(ElbMgr& elb_mgr,
+Elaborator::Elaborator(const PtMgr& pt_mgr,
+		       ElbMgr& elb_mgr,
 		       ElbFactory& elb_factory,
 		       const ClibCellLibrary& cell_library) :
+  mDone{false},
+  mPtMgr{pt_mgr},
   mMgr{elb_mgr},
   mFactory{elb_factory},
   mCellLibrary{cell_library},
@@ -110,16 +111,14 @@ Elaborator::~Elaborator()
 }
 
 // @brief エラボレーションを行う．
-// @param[in] pt_mgr パース木を管理するクラス
-// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
-// @param[in] msg_mgr メッセージマネージャ
 // @return エラー数を返す．
 int
-Elaborator::operator()(const PtMgr& pt_mgr)
+Elaborator::operator()()
 {
-  auto& pt_udp_list = pt_mgr.pt_udp_list();
-  auto& pt_module_list = pt_mgr.pt_module_list();
+  ASSERT_COND( !mDone );
+
+  auto& pt_udp_list = mPtMgr.pt_udp_list();
+  auto& pt_module_list = mPtMgr.pt_module_list();
 
   // UDP の生成
   for ( auto pt_udp: pt_udp_list ) {
@@ -131,7 +130,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
   // と同時に関数定義の辞書を作る．
   int nerr = 0;
   for ( auto pt_module: pt_module_list ) {
-    const char* name = pt_module->name();
+    auto name = pt_module->name();
     if ( mMgr.find_udp(name) != nullptr ) {
       ostringstream buf;
       buf << "\"" << name
@@ -167,112 +166,106 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     }
   }
 
-  if ( nerr == 0 ) {
-
-    // トップレベル階層の生成
-    const VlNamedObj* toplevel = mFactory.new_Toplevel();
-    mMgr.reg_toplevel(toplevel);
-
-    // トップモジュールの生成
-    for ( auto pt_module: pt_module_list ) {
-      if ( !pt_mgr.check_def_name(pt_module->name()) ) {
-	// 他のモジュールから参照されていないモジュールをトップモジュールとみなす．
-	mModuleGen->phase1_topmodule(toplevel, pt_module);
-      }
-    }
-
-    // 残りの要素の生成
-
-    // Phase 1
-    // トップモジュールから名前空間を表す骨組みを作る．
-    // 最下位レベルのモジュールに行き着くか配列型のモジュールインスタンス
-    // で止る．
-
-    // 配列型 module instance および generate 文から骨組みの生成を行う．
-    for ( ; ; ) {
-      // defparam 文で適用できるものがあれば適用する．
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      FileRegion(),
-		      MsgType::Debug,
-		      "ELAB",
-		      "\"instantiate_defparam\" starts.");
-
-      // 未処理の defparam 文を処理する．
-      // 処理された要素は mDefParamList から削除される．
-      // 中にはまだ名前空間が構築されていないものもあるので mDefParamList
-      // が空にならない場合もある．
-      for ( auto p = mDefParamStubList.begin(); p != mDefParamStubList.end(); ) {
-	// リストの中で要素の削除を行うので反復子の扱いがちょっと複雑
-	auto q = p;
-	++ p;
-
-	const VlModule* module = q->mModule;
-	const PtItem* pt_header = q->mPtHeader;
-	const PtDefParam* pt_defparam = q->mPtDefparam;
-	if ( mItemGen->defparam_override(module, pt_header, pt_defparam, nullptr) ) {
-	  // オーバーライドがうまく行ったらこの要素は捨てる．
-	  mDefParamStubList.erase(q);
-	}
-      }
-
-      // その結果にもとづいてモジュール配列インスタンスや
-      // generate block の生成を行う．
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      FileRegion(),
-		      MsgType::Debug,
-		      "ELAB",
-		      "Phase 1 starts.");
-
-      if ( mPhase1StubList1.empty() ) {
-	// 処理する要素が残っていない．
-	break;
-      }
-      mPhase1StubList2.move(mPhase1StubList1);
-      mPhase1StubList2.eval();
-    }
-
-    // 適用できなかった defparam 文のチェック
-    for ( auto stub: mDefParamStubList ) {
-      auto pt_defparam = stub.mPtDefparam;
-      ostringstream buf;
-      buf << pt_defparam->fullname() << " : not found.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_defparam->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      buf.str());
-    }
-
-    // Phase 2
-    // 配列要素やビット要素の生成を行う．
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    FileRegion(),
-		    MsgType::Debug,
-		    "ELAB",
-		    "Phase 2 starts.");
-
-    mPhase2StubList.eval();
-
-    // Phase 3
-    // 名前の解決(リンク)を行う．
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    FileRegion(),
-		    MsgType::Debug,
-		    "ELAB",
-		    "Phase 3 starts.");
-
-    mPhase3StubList.eval();
-
+  if ( nerr > 0 ) {
+    return nerr;
   }
 
-  mObjDict.clear();
-  mCfDict.clear();
-  mModuleDict.clear();
-  mDefParamStubList.clear();
-  mPhase1StubList1.clear();
-  mPhase1StubList2.clear();
-  mPhase2StubList.clear();
-  mPhase3StubList.clear();
+  // トップレベル階層の生成
+  /// toplevel は実体を持たない仮想的なスコープ
+  auto toplevel = mFactory.new_Toplevel();
+  mMgr.reg_toplevel(toplevel);
+
+  // トップモジュールの生成
+  for ( auto pt_module: pt_module_list ) {
+    if ( !mPtMgr.check_def_name(pt_module->name()) ) {
+      // 他のモジュールから参照されていないモジュールをトップモジュールとみなす．
+      mModuleGen->phase1_topmodule(toplevel, pt_module);
+    }
+  }
+
+  // 残りの要素の生成
+
+  // Phase 1
+  // トップモジュールから名前空間を表す骨組みを作る．
+  // 最下位レベルのモジュールに行き着くか配列型のモジュールインスタンス
+  // で止る．
+  //
+  // * その時点で適用可能な defparam 文を適用する．
+  // * 配列型 module instance および generate 文から骨組みの生成を行う．
+  // これを繰り返す．
+  for ( ; ; ) {
+    // defparam 文で適用できるものがあれば適用する．
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    FileRegion(),
+		    MsgType::Debug,
+		    "ELAB",
+		    "\"instantiate_defparam\" starts.");
+
+    // 未処理の defparam 文を処理する．
+    // 処理された要素は mDefParamList から削除される．
+    // 中にはまだ名前空間が構築されていないものもあるので mDefParamList
+    // が空にならない場合もある．
+    for ( auto p = mDefParamStubList.begin(); p != mDefParamStubList.end(); ) {
+      // リストの中で要素の削除を行うので反復子の扱いがちょっと複雑
+      auto q = p;
+      ++ p;
+
+      auto* module = q->mModule;
+      auto pt_header = q->mPtHeader;
+      auto pt_defparam = q->mPtDefparam;
+      if ( mItemGen->defparam_override(module, pt_header, pt_defparam, nullptr) ) {
+	// オーバーライドがうまく行ったらこの要素は捨てる．
+	mDefParamStubList.erase(q);
+      }
+    }
+
+    // その結果にもとづいてモジュール配列インスタンスや
+    // generate block の生成を行う．
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    FileRegion(),
+		    MsgType::Debug,
+		    "ELAB",
+		    "Phase 1 starts.");
+
+    if ( mPhase1StubList1.empty() ) {
+      // 処理する要素が残っていない．
+      break;
+    }
+    mPhase1StubList2.move(mPhase1StubList1);
+    mPhase1StubList2.eval();
+  }
+
+  // 適用できなかった defparam 文のチェック
+  for ( auto stub: mDefParamStubList ) {
+    auto pt_defparam = stub.mPtDefparam;
+    ostringstream buf;
+    buf << pt_defparam->fullname() << " : not found.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    pt_defparam->file_region(),
+		    MsgType::Error,
+		    "ELAB",
+		    buf.str());
+  }
+
+  // Phase 2
+  // 配列要素やビット要素の生成を行う．
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  FileRegion(),
+		  MsgType::Debug,
+		  "ELAB",
+		  "Phase 2 starts.");
+
+  mPhase2StubList.eval();
+
+  // Phase 3
+  // 名前の解決(リンク)を行う．
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  FileRegion(),
+		  MsgType::Debug,
+		  "ELAB",
+		  "Phase 3 starts.");
+
+  mPhase3StubList.eval();
 
   return nerr;
 }
@@ -348,7 +341,7 @@ Elaborator::find_funcdef(const VlNamedObj* parent,
 // @brief constant function を取り出す．
 // @param[in] parent 親のスコープ
 // @param[in] name 名前
-const ElbTaskFunc*
+const VlTaskFunc*
 Elaborator::find_constant_function(const VlNamedObj* parent,
 				   const char* name) const
 {
@@ -381,7 +374,7 @@ Elaborator::reg_internalscope(const VlNamedObj* obj)
 // @brief タスクを登録する．
 // @param[in] obj 登録するオブジェクト
 void
-Elaborator::reg_task(ElbTaskFunc* obj)
+Elaborator::reg_task(const VlTaskFunc* obj)
 {
   if ( debug & debug_objdict ) {
     dout << "reg_task( " << obj->name() << " @ "
@@ -397,7 +390,7 @@ Elaborator::reg_task(ElbTaskFunc* obj)
 // @brief 関数を登録する．
 // @param[in] obj 登録するオブジェクト
 void
-Elaborator::reg_function(ElbTaskFunc* obj)
+Elaborator::reg_function(const VlTaskFunc* obj)
 {
   if ( debug & debug_objdict ) {
     dout << "reg_function( " << obj->name() << " @ "
@@ -433,7 +426,7 @@ Elaborator::reg_decl(int tag,
 // @param[in] obj 登録するオブジェクト
 void
 Elaborator::reg_declarray(int tag,
-			  ElbDeclArray* obj)
+			  const VlDeclArray* obj)
 {
   if ( debug & debug_objdict ) {
     dout << "reg_declarray( " << obj->name() << " @ "
@@ -597,7 +590,7 @@ Elaborator::reg_gfroot(ElbGfRoot* obj)
 // @brief constant function を登録する．
 // @param[in] func 関数
 void
-Elaborator::reg_constant_function(ElbTaskFunc* func)
+Elaborator::reg_constant_function(const VlTaskFunc* func)
 {
   mCfDict.add(func);
 }
@@ -629,8 +622,7 @@ Elaborator::find_obj(const VlNamedObj* scope,
 	 << "] )" << endl << endl;
   }
 
-  ObjHandle* handle = mObjDict.find(scope, name);
-
+  auto handle = mObjDict.find(scope, name);
   if ( handle == nullptr ) {
     if ( debug & debug_find_scope ) {
       dout << "--> Not Found"
@@ -646,6 +638,24 @@ Elaborator::find_obj(const VlNamedObj* scope,
   }
 
   return handle;
+}
+
+// @brief スコープと名前からスコープを取り出す．
+// @param[in] parent 検索対象のスコープ
+// @param[in] name 名前
+// @return parent というスコープ内の name というスコープを返す．
+// @return なければ nullptr を返す．
+const VlNamedObj*
+Elaborator::find_namedobj(const VlNamedObj* parent,
+			  const char* name) const
+{
+  auto handle = find_obj(parent, name);
+  if ( handle != nullptr ) {
+    return handle->obj();
+  }
+  else {
+    return nullptr;
+  }
 }
 
 // @brief 名前によるオブジェクトの探索
@@ -672,7 +682,7 @@ Elaborator::find_obj_up(const VlNamedObj* base_scope,
 
   // base_scope を起点として name というオブジェクトを探す．
   for ( ; base_scope; base_scope = base_scope->parent()) {
-    ObjHandle* handle = find_obj(base_scope, pt_obj->name());
+    auto handle = find_obj(base_scope, pt_obj->name());
     if ( handle ) {
       // 見つけた
       if ( debug & debug_find_scope ) {
@@ -708,12 +718,12 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
   }
 
   SizeType n = pt_obj->namebranch_num();
-  const VlNamedObj* cur_scope = base_scope;
+  auto cur_scope = base_scope;
   for ( auto name_branch: pt_obj->namebranch_list() ) {
-    const char* top_name = name_branch->name();
+    auto top_name = name_branch->name();
     const VlNamedObj* top_scope = nullptr;
     // まず普通に探す．
-    ObjHandle* handle = find_obj(cur_scope, top_name);
+    auto handle = find_obj(cur_scope, top_name);
     if ( handle ) {
       if ( name_branch->has_index() ) {
 	top_scope = handle->array_elem(name_branch->index());
@@ -738,18 +748,17 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
 	return nullptr;
       }
 
+      // upward search を行う．
       if ( debug & debug_find_scope ) {
 	dout << " upward search" << endl;
       }
-
       cur_scope = cur_scope->parent();
     }
     else {
-
+      // downward search を行う．
       if ( debug & debug_find_scope ) {
 	dout << " downward search" << endl;
       }
-
       cur_scope = top_scope;
     }
   }
@@ -757,7 +766,6 @@ Elaborator::find_scope_up(const VlNamedObj* base_scope,
   if ( debug & debug_find_scope ) {
     dout << "--> Found: " << cur_scope->full_name() << endl << endl;
   }
-
   return cur_scope;
 }
 

@@ -254,7 +254,7 @@ EiParamHead::bit_size(const VlValue& val) const
 // @note ヘッダに型指定がない時は値から情報を得る．
 bool
 EiParamHead::calc_bit_offset(int index,
-			     int& offset,
+			     SizeType& offset,
 			     const VlValue& val) const
 {
   switch ( mPtHead->data_type() ) {
@@ -441,7 +441,7 @@ EiParamHeadV::bit_size(const VlValue& val) const
 // @note ヘッダに型指定がない時は値から情報を得る．
 bool
 EiParamHeadV::calc_bit_offset(int index,
-			      int& offset,
+			      SizeType& offset,
 			      const VlValue& val) const
 {
   return mRange.calc_offset(index, offset);
@@ -612,7 +612,7 @@ EiParameter::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiParameter::calc_bit_offset(int index,
-			     int& offset) const
+			     SizeType& offset) const
 {
   return mHead->calc_bit_offset(index, offset, mValue);
 }
@@ -624,6 +624,84 @@ VpiVarType
 EiParameter::data_type() const
 {
   return mHead->data_type();
+}
+
+// @brief net 型の取得
+// @retval net 型 net 型の要素の場合
+// @retval kVpiNone net 型の要素でない場合
+// @note このクラスでは kVpiNone を返す．
+VpiNetType
+EiParameter::net_type() const
+{
+  return VpiNetType::None;
+}
+
+// @brief vectored|scalared 属性の取得
+// @retval kVpiVsNone vectored|scalared 指定なし
+// @retval kVpiVectored vectored 指定あり
+// @retval kVpiScalared scalared 指定あり
+// @note このクラスでは kVpiVsNone を返す．
+VpiVsType
+EiParameter::vs_type() const
+{
+  return VpiVsType::None;
+}
+
+// @brief drive0 strength の取得
+// @retval 0 の強度
+// @retval kVpiNoStrength strength の指定なし
+// @note このクラスでは kVpiNoStrength を返す．
+VpiStrength
+EiParameter::drive0() const
+{
+  return VpiStrength::NoStrength;
+}
+
+// @brief drive1 strength の取得
+// @retval 1 の強度
+// @retval kVpiNoStrength strength の指定なし
+// @note kVpiNoStrength を返す．
+VpiStrength
+EiParameter::drive1() const
+{
+  return VpiStrength::NoStrength;
+}
+
+// @brief charge strength の取得
+// @retval 電荷の強度
+// @retval kVpiNoStrength strength の指定なし
+// @note このクラスでは kVpiNoStrength を返す．
+VpiStrength
+EiParameter::charge() const
+{
+  return VpiStrength::NoStrength;
+}
+
+// @brief delay の取得
+// @retval delay
+// @retval nullptr delay の指定なし
+// @note このクラスでは nullptr を返す．
+const VlDelay*
+EiParameter::delay() const
+{
+  return nullptr;
+}
+
+// @brief 定数値を持つ型のときに true を返す．
+// @note このクラスは true を返す．
+bool
+EiParameter::is_consttype() const
+{
+  return true;
+}
+
+// @brief 初期値の取得
+// @retval 初期値
+// @retval nullptr 設定がない場合
+const VlExpr*
+EiParameter::init_value() const
+{
+  return nullptr;
 }
 
 // @brief localparam のときに true 返す．

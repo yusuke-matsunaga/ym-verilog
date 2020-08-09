@@ -3,7 +3,7 @@
 /// @brief ExprGen の実装ファイル(メイン)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -59,6 +59,7 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
     pt_expr = pt_expr->operand0();
   }
 
+  // ここでは式の種類に応じたサブルーティンをディスパッチするだけ．
   switch ( pt_expr->type() ) {
   case PtExprType::Opr:
     return instantiate_opr(parent, env, pt_expr);
@@ -71,10 +72,12 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
 
   case PtExprType::SysFuncCall:
     if ( env.inside_constant_function() ) {
+      // constant_function 内では system function は使えない．
       error_illegal_sysfunccall_in_cf(pt_expr);
       return nullptr;
     }
     if ( env.is_constant() ) {
+      // 定数式内では system function は使えない．
       error_illegal_sysfunccall_in_ce(pt_expr);
       return nullptr;
     }
@@ -99,6 +102,10 @@ ElbExpr*
 ExprGen::instantiate_constant_expr(const VlNamedObj* parent,
 				   const PtExpr* pt_expr)
 {
+  if ( pt_expr == nullptr ) {
+    return nullptr;
+  }
+
   ElbConstantEnv env;
   return instantiate_expr(parent, env, pt_expr);
 }
@@ -126,12 +133,12 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
     case VpiOpType::Negedge:
       { // これのみがイベント式の特徴
 	ASSERT_COND(pt_expr->operand_num() == 1 );
-	ElbExpr* opr0 = instantiate_expr(parent, env, pt_expr->operand0());
+	auto opr0 = instantiate_expr(parent, env, pt_expr->operand0());
 	if ( !opr0 ) {
 	  return nullptr;
 	}
-	ElbExpr* expr = factory().new_UnaryOp(pt_expr,
-					      pt_expr->op_type(), opr0);
+	auto expr = factory().new_UnaryOp(pt_expr,
+					  pt_expr->op_type(), opr0);
 
 #if 0
 	// attribute instance の生成
@@ -222,26 +229,25 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
     if ( pt_expr->op_type() == VpiOpType::Concat ) {
       vector<ElbExpr*> elem_array;
       SizeType opr_size = pt_expr->operand_num();
-      ElbExpr** opr_list = factory().new_ExprList(opr_size);
+      auto opr_list = factory().new_ExprList(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
+	// 現れた順は上位ビットからなので位置が逆になる．
 	SizeType pos = opr_size - i - 1;
-	const PtExpr* pt_expr1 = pt_expr->operand(pos);
-	vector<ElbExpr*> tmp_array;
-	ElbExpr* expr1 = instantiate_lhs_sub(parent, env, pt_expr1, tmp_array);
+	auto pt_expr1 = pt_expr->operand(pos);
+	auto expr1 = instantiate_lhs_sub(parent, env, pt_expr1, elem_array);
 	if ( !expr1 ) {
 	  return nullptr;
 	}
 	opr_list[pos] = expr1;
-	elem_array.insert(elem_array.end(), tmp_array.begin(), tmp_array.end());
       }
+      // elem_array をコピーする．
       SizeType n = elem_array.size();
-      ElbExpr** lhs_elem_array = factory().new_ExprList(n);
+      auto lhs_elem_array = factory().new_ExprList(n);
       for ( SizeType i = 0; i < n; ++ i ) {
 	lhs_elem_array[i] = elem_array[i];
       }
-      ElbExpr* expr = factory().new_Lhs(pt_expr, opr_size, opr_list,
-					n, lhs_elem_array);
-      expr->set_selfsize();
+      auto expr = factory().new_Lhs(pt_expr, opr_size, opr_list,
+				    n, lhs_elem_array);
 
 #if 0
       // attribute instance の生成
@@ -293,25 +299,22 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
 			     const PtExpr* pt_expr,
 			     vector<ElbExpr*>& elem_array)
 {
-  elem_array.clear();
   switch ( pt_expr->type() ) {
   case PtExprType::Opr:
     // 左辺では concatination しか適当でない．
     if ( pt_expr->op_type() == VpiOpType::Concat ) {
       SizeType opr_size = pt_expr->operand_num();
-      ElbExpr** opr_list = factory().new_ExprList(opr_size);
+      auto opr_list = factory().new_ExprList(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	SizeType pos = opr_size - i - 1;
-	const PtExpr* pt_expr1 = pt_expr->operand(pos);
-	vector<ElbExpr*> tmp_array;
-	ElbExpr* expr1 = instantiate_lhs_sub(parent, env, pt_expr1, tmp_array);
+	auto pt_expr1 = pt_expr->operand(pos);
+	auto expr1 = instantiate_lhs_sub(parent, env, pt_expr1, elem_array);
 	if ( !expr1 ) {
 	  return nullptr;
 	}
 	opr_list[pos] = expr1;
-	elem_array.insert(elem_array.end(), tmp_array.begin(), tmp_array.end());
       }
-      ElbExpr* expr = factory().new_ConcatOp(pt_expr, opr_size, opr_list);
+      auto expr = factory().new_ConcatOp(pt_expr, opr_size, opr_list);
       expr->set_selfsize();
 
 #if 0
@@ -323,14 +326,16 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
 
       return expr;
     }
-    // それ以外の演算子はエラー
-    error_illegal_operator_in_lhs(pt_expr);
-    return nullptr;
+    else {
+      // それ以外の演算子はエラー
+      error_illegal_operator_in_lhs(pt_expr);
+      return nullptr;
+    }
 
 
   case PtExprType::Primary:
     {
-      ElbExpr* expr = instantiate_primary(parent, env, pt_expr);
+      auto expr = instantiate_primary(parent, env, pt_expr);
       elem_array.push_back(expr);
       return expr;
     }
@@ -368,7 +373,7 @@ ExprGen::evaluate_int(const VlNamedObj* parent,
 		      int& value,
 		      bool put_error)
 {
-  VlValue val = evaluate_expr(parent, pt_expr, put_error);
+  auto val = evaluate_expr(parent, pt_expr, put_error);
   if ( !val.is_int_compat() ) {
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -396,7 +401,7 @@ ExprGen::evaluate_scalar(const VlNamedObj* parent,
 			 VlScalarVal& value,
 			 bool put_error)
 {
-  VlValue val = evaluate_expr(parent, pt_expr, put_error);
+  auto val = evaluate_expr(parent, pt_expr, put_error);
   value = val.scalar_value();
   return true;
 }
@@ -413,7 +418,7 @@ ExprGen::evaluate_bool(const VlNamedObj* parent,
 		       bool& value,
 		       bool put_error)
 {
-  VlValue val = evaluate_expr(parent, pt_expr, put_error);
+  auto val = evaluate_expr(parent, pt_expr, put_error);
   value = val.logic_value().to_bool();
   return true;
 }
@@ -430,7 +435,7 @@ ExprGen::evaluate_bitvector(const VlNamedObj* parent,
 			    BitVector& value,
 			    bool put_error)
 {
-  VlValue val = evaluate_expr(parent, pt_expr, put_error);
+  auto val = evaluate_expr(parent, pt_expr, put_error);
   if ( !val.is_bitvector_compat() ) {
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -550,10 +555,14 @@ const VlDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtDelay* pt_delay)
 {
+  if ( pt_delay == nullptr ) {
+    return nullptr;
+  }
+
   SizeType n = 0;
   const PtExpr* expr_array[3];
   for ( ; n < 3; ++ n) {
-    const PtExpr* expr = pt_delay->value(n);
+    auto expr = pt_delay->value(n);
     if ( expr == nullptr ) break;
     expr_array[n] = expr;
   }
@@ -571,11 +580,15 @@ const VlDelay*
 ExprGen::instantiate_delay(const VlNamedObj* parent,
 			   const PtItem* pt_header)
 {
+  if ( pt_header == nullptr ) {
+    return nullptr;
+  }
+
   SizeType n = pt_header->paramassign_num();
   ASSERT_COND( n == 1 );
 
   const PtExpr* expr_array[1];
-  const PtConnection* pt_con = pt_header->paramassign(0);
+  auto pt_con = pt_header->paramassign(0);
   expr_array[0] = pt_con->expr();
   return instantiate_delay_sub(parent, pt_header, 1, expr_array);
 }

@@ -122,8 +122,8 @@ EiBinaryOp::operand_num() const
 
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
-ElbExpr*
-EiBinaryOp::_operand(SizeType pos) const
+const VlExpr*
+EiBinaryOp::operand(SizeType pos) const
 {
   ASSERT_COND( 0 <= pos && pos < 2 );
 

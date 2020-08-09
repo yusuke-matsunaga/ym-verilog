@@ -25,15 +25,25 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] stmt_list 子のステートメントリスト
-ElbStmt*
+const VlStmt*
 EiFactory::new_Begin(const VlNamedObj* parent,
-		     ElbProcess* process,
+		     const VlProcess* process,
 		     const PtStmt* pt_stmt,
-		     ElbStmt** stmt_list)
+		     const VlStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_num();
-  EiBegin* stmt = new EiBegin(parent, process, pt_stmt,
-			      stmt_num, stmt_list);
+  {
+    for ( SizeType i = 0; i < stmt_num; ++ i ) {
+      ASSERT_COND( stmt_list[i] );
+    }
+  }
+  auto stmt = new EiBegin(parent, process, pt_stmt,
+			  stmt_num, stmt_list);
+  {
+    for ( SizeType i = 0; i < stmt_num; ++ i ) {
+      ASSERT_COND( stmt->child_stmt(i) );
+    }
+  }
 
   return stmt;
 }
@@ -43,15 +53,15 @@ EiFactory::new_Begin(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] stmt_list 子のステートメントリスト
-ElbStmt*
+const VlStmt*
 EiFactory::new_Fork(const VlNamedObj* parent,
-		    ElbProcess* process,
+		    const VlProcess* process,
 		    const PtStmt* pt_stmt,
-		    ElbStmt** stmt_list)
+		    const VlStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_num();
-  EiFork* stmt = new EiFork(parent, process, pt_stmt,
-			    stmt_num, stmt_list);
+  auto stmt = new EiFork(parent, process, pt_stmt,
+			 stmt_num, stmt_list);
 
   return stmt;
 }
@@ -61,15 +71,15 @@ EiFactory::new_Fork(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] stmt_list 子のステートメントリスト
-ElbStmt*
+const VlStmt*
 EiFactory::new_NamedBegin(const VlNamedObj* block,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const PtStmt* pt_stmt,
-			  ElbStmt** stmt_list)
+			  const VlStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_num();
-  EiNamedBegin* stmt = new EiNamedBegin(block, process,
-					stmt_num, stmt_list);
+  auto stmt = new EiNamedBegin(block, process,
+			       stmt_num, stmt_list);
 
   return stmt;
 }
@@ -79,15 +89,15 @@ EiFactory::new_NamedBegin(const VlNamedObj* block,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] stmt_list 子のステートメントリスト
-ElbStmt*
+const VlStmt*
 EiFactory::new_NamedFork(const VlNamedObj* block,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
-			 ElbStmt** stmt_list)
+			 const VlStmt** stmt_list)
 {
   SizeType stmt_num = pt_stmt->stmt_num();
-  EiNamedFork* stmt = new EiNamedFork(block, process,
-				      stmt_num, stmt_list);
+  auto stmt = new EiNamedFork(block, process,
+			      stmt_num, stmt_list);
 
   return stmt;
 }
@@ -104,13 +114,13 @@ EiFactory::new_NamedFork(const VlNamedObj* block,
 // @param[in] stmt_num ステートメントのリストの要素数
 // @param[in] array ステートメントのリスト用配列
 EiBlockStmt::EiBlockStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
 			 SizeType stmt_num,
-			 ElbStmt** array) :
+			 const VlStmt** array) :
   EiStmtBase(parent, process, pt_stmt),
-  mStmtNum(stmt_num),
-  mStmtList(array)
+  mStmtNum{stmt_num},
+  mStmtList{array}
 {
 }
 
@@ -126,11 +136,12 @@ EiBlockStmt::child_stmt_num() const
   return mStmtNum;
 }
 
-// @brief 中身のステートメントを返す．
-// @param[in] pos 位置番号
-ElbStmt*
-EiBlockStmt::_child_stmt(SizeType pos) const
+// @brief 子供のステートメントの取得
+// @param[in] pos 位置番号 (0 <= pos < stmt_num())
+const VlStmt*
+EiBlockStmt::child_stmt(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < child_stmt_num() );
   return mStmtList[pos];
 }
 
@@ -146,10 +157,10 @@ EiBlockStmt::_child_stmt(SizeType pos) const
 // @param[in] stmt_num ステートメントのリストの要素数
 // @param[in] array ステートメントのリスト用配列
 EiBegin::EiBegin(const VlNamedObj* parent,
-		 ElbProcess* process,
+		 const VlProcess* process,
 		 const PtStmt* pt_stmt,
 		 SizeType stmt_num,
-		 ElbStmt** array) :
+		 const VlStmt** array) :
   EiBlockStmt(parent, process, pt_stmt, stmt_num, array)
 {
 }
@@ -178,10 +189,10 @@ EiBegin::type() const
 // @param[in] stmt_num ステートメントのリストの要素数
 // @param[in] array ステートメントのリスト用配列
 EiFork::EiFork(const VlNamedObj* parent,
-	       ElbProcess* process,
+	       const VlProcess* process,
 	       const PtStmt* pt_stmt,
 	       SizeType stmt_num,
-	       ElbStmt** array) :
+	       const VlStmt** array) :
   EiBlockStmt(parent, process, pt_stmt, stmt_num, array)
 {
 }
@@ -209,13 +220,13 @@ EiFork::type() const
 // @param[in] stmt_num ステートメントのリストの要素数
 // @param[in] array ステートメントのリスト用配列
 EiNamedBlockStmt::EiNamedBlockStmt(const VlNamedObj* block,
-				   ElbProcess* process,
+				   const VlProcess* process,
 				   SizeType stmt_num,
-				   ElbStmt** array) :
-  mBlockScope(block),
-  mProcess(process),
-  mStmtNum(stmt_num),
-  mStmtList(array)
+				   const VlStmt** array) :
+  EiStmt(process),
+  mBlockScope{block},
+  mStmtNum{stmt_num},
+  mStmtList{array}
 {
 }
 
@@ -252,11 +263,12 @@ EiNamedBlockStmt::child_stmt_num() const
   return mStmtNum;
 }
 
-// @brief 中身のステートメントを返す．
-// @param[in] pos 位置番号
-ElbStmt*
-EiNamedBlockStmt::_child_stmt(SizeType pos) const
+// @brief 子供のステートメントの取得
+// @param[in] pos 位置番号 (0 <= pos < stmt_num())
+const VlStmt*
+EiNamedBlockStmt::child_stmt(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < child_stmt_num() );
   return mStmtList[pos];
 }
 
@@ -271,9 +283,9 @@ EiNamedBlockStmt::_child_stmt(SizeType pos) const
 // @param[in] stmt_num ステートメントのリストの要素数
 // @param[in] array ステートメントのリスト用配列
 EiNamedBegin::EiNamedBegin(const VlNamedObj* block,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   SizeType stmt_num,
-			   ElbStmt** array) :
+			   const VlStmt** array) :
   EiNamedBlockStmt(block, process, stmt_num, array)
 {
 }
@@ -301,9 +313,9 @@ EiNamedBegin::type() const
 // @param[in] stmt_num ステートメントのリストの要素数
 // @param[in] array ステートメントのリスト用配列
 EiNamedFork::EiNamedFork(const VlNamedObj* block,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 SizeType stmt_num,
-			 ElbStmt** array) :
+			 const VlStmt** array) :
   EiNamedBlockStmt(block, process, stmt_num, array)
 {
 }

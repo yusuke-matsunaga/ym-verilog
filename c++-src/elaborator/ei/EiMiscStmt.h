@@ -36,7 +36,7 @@ private:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] named_event 対象のイベント
   EiEventStmt(const VlNamedObj* parent,
-	      ElbProcess* process,
+	      const VlProcess* process,
 	      const PtStmt* pt_stmt,
 	      ElbExpr* named_event);
 
@@ -91,7 +91,7 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] pt_stmt パース木のステートメント定義
   EiNullStmt(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt);
 
   /// @brief デストラクタ
@@ -128,9 +128,9 @@ protected:
   /// @param[in] arg_num 引数の数
   /// @param[in] arg_array 引数を納める配列
   EiTcBase(const VlNamedObj* parent,
-	   ElbProcess* process,
+	   const VlProcess* process,
 	   const PtStmt* pt_stmt,
-	   int arg_num,
+	   SizeType arg_num,
 	   ElbExpr** arg_array);
 
   /// @brief デストラクタ
@@ -198,10 +198,10 @@ private:
   /// @param[in] arg_num 引数の数
   /// @param[in] arg_array 引数を納める配列
   EiTaskCall(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt,
-	     ElbTaskFunc* task,
-	     int arg_num,
+	     const VlTaskFunc* task,
+	     SizeType arg_num,
 	     ElbExpr** arg_array);
 
   /// @brief デストラクタ
@@ -234,7 +234,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // タスク
-  ElbTaskFunc* mTask;
+  const VlTaskFunc* mTask;
 
 };
 
@@ -258,10 +258,10 @@ private:
   /// @param[in] arg_num 引数の数
   /// @param[in] arg_array 引数を納める配列
   EiSysTaskCall(const VlNamedObj* parent,
-		ElbProcess* process,
+		const VlProcess* process,
 		const PtStmt* pt_stmt,
 		const VlUserSystf* user_systf,
-		int arg_num,
+		SizeType arg_num,
 		ElbExpr** arg_array);
 
   /// @brief デストラクタ
@@ -317,7 +317,7 @@ private:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] target 対象のスコープ
   EiDisableStmt(const VlNamedObj* parent,
-		ElbProcess* process,
+		const VlProcess* process,
 		const PtStmt* pt_stmt,
 		const VlNamedObj* target);
 
@@ -380,10 +380,10 @@ private:
   /// @param[in] control コントロール
   /// @param[in] stmt 本体のステートメント
   EiCtrlStmt(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt,
-	     ElbControl* control,
-	     ElbStmt* stmt);
+	     const VlControl* control,
+	     const VlStmt* stmt);
 
   /// @brief デストラクタ
   ~EiCtrlStmt();
@@ -419,10 +419,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // コントロール
-  ElbControl* mControl;
+  const VlControl* mControl;
 
   // 本文
-  ElbStmt* mBodyStmt;
+  const VlStmt* mBodyStmt;
 
 };
 

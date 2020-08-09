@@ -113,13 +113,14 @@ public:
   void
   _set_reqsize(const VlValueType& type) override;
 
+#if 0
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
   /// @note 演算子の時，意味を持つ．
   /// @note このクラスでは nullptr を返す．
   ElbExpr*
   _operand(SizeType pos) const override;
-
+#endif
 
 private:
   //////////////////////////////////////////////////////////////////////

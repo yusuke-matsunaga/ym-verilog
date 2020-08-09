@@ -184,38 +184,6 @@ public:
 
 };
 
-
-//////////////////////////////////////////////////////////////////////
-/// @class ElbPrimTerm ElbPrimitive.h <ym/vl/VlPrimitive.h>
-/// @brief プリミティブインスタンスのポート端子を表すクラス
-/// IEEE Std 1364-2001 26.6.13 Primitive, prim term
-//////////////////////////////////////////////////////////////////////
-class ElbPrimTerm :
-  public VlPrimTerm
-{
-protected:
-
-  /// @brief コンストラクタ
-  ElbPrimTerm() = default;
-
-  /// @brief デストラクタ
-  ~ElbPrimTerm() = default;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbPrimTerm の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 内容を設定する．
-  virtual
-  void
-  set(ElbPrimitive* primitive,
-      int index,
-      VpiDir dir) = 0;
-
-};
-
 END_NAMESPACE_YM_VERILOG
 
 #endif // ELBPRIMITIVE_H

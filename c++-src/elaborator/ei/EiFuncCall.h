@@ -39,7 +39,7 @@ protected:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbStmt の仮想関数
+  // ElbExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 引数の数を返す．
@@ -48,7 +48,7 @@ public:
 
   /// @brief 引数の取得
   /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
-  ElbExpr*
+  const VlExpr*
   argument(SizeType pos) const override;
 
 
@@ -62,13 +62,6 @@ public:
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
   _set_reqsize(const VlValueType& type) override;
-
-  /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  /// @note 演算子の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
-  ElbExpr*
-  _operand(SizeType pos) const override;
 
 
 private:
@@ -102,7 +95,7 @@ private:
   /// @param[in] arg_size 引数の数
   /// @param[in] arg_list 引数のリスト
   EiFuncCall(const PtExpr* pt_expr,
-	     const ElbTaskFunc* func,
+	     const VlTaskFunc* func,
 	     SizeType arg_size,
 	     ElbExpr** arg_list);
 
@@ -149,7 +142,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 関数
-  const ElbTaskFunc* mFunc;
+  const VlTaskFunc* mFunc;
 
 };
 

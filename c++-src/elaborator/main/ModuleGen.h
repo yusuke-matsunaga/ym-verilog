@@ -56,7 +56,7 @@ public:
   void
   phase1_module_item(ElbModule* module,
 		     const PtModule* pt_module,
-		     const ElbParamCon* param_con);
+		     const vector<ElbParamCon>& param_con_list);
 
 
 private:
@@ -91,6 +91,60 @@ private:
   ElbExpr*
   instantiate_portref(ElbModule* module,
 		      const PtExpr* pt_portref);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // エラーメッセージを出力する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief パラメータポートの割り当て数が多すぎる．
+  /// @param[in] param_con_list パラメータポートの割り当てリスト
+  void
+  error_too_many_param(const vector<ElbParamCon>& param_con_list);
+
+  /// @brief パラメータポートに現れるパラメータが存在しない．
+  /// @param[in] pt_con パラメータポート割り当てのパース木
+  /// @param[in] name パラメータ名
+  void
+  error_no_param(const PtConnection* pt_con,
+		 const char* name);
+
+  /// @brief 対象の要素が見つからない．
+  /// @param[in] file_region ファイル位置
+  /// @param[in] name 名前
+  void
+  error_not_found(const FileRegion& file_region,
+		  const char* name);
+
+  /// @brief ポートに配列が使われている．
+  /// @param[in] file_region ファイル位置
+  /// @param[in] array 配列
+  void
+  error_port_array(const FileRegion& file_region,
+		   const VlDeclArray* array);
+
+  /// @brief ポートに使われている要素が宣言要素でなかった．
+  /// @param[in] file_region ファイル位置
+  /// @param[in] name 名前
+  void
+  error_illegal_port(const FileRegion& file_region,
+		     const char* name);
+
+  /// @brief 添字が範囲外
+  /// @param[in] file_region ファイル位置
+  void
+  warning_index_out_of_range(const FileRegion& file_region);
+
+  /// @brief 左の範囲が範囲外
+  /// @param[in] file_region ファイル位置
+  void
+  warning_left_index_out_of_range(const FileRegion& file_region);
+
+  /// @brief 右の範囲が範囲外
+  /// @param[in] file_region ファイル位置
+  void
+  warning_right_index_out_of_range(const FileRegion& file_region);
 
 };
 

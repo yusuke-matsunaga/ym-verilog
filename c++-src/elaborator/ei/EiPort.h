@@ -9,19 +9,19 @@
 /// All rights reserved.
 
 
-#include "elaborator/ElbPort.h"
-
+#include "ym/vl/VlPort.h"
 #include "ym/pt/PtP.h"
+#include "elaborator/ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
 /// @class EiPort EiPort.h "EiPort.h"
-/// @brief ElbPort の実装クラス
+/// @brief VlPort の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiPort :
-  public ElbPort
+  public VlPort
 {
   friend class EiFactory;
 
@@ -31,7 +31,7 @@ private:
   EiPort();
 
   /// @brief デストラクタ
-  ~EiPort();
+  ~EiPort() = default;
 
 
 public:
@@ -102,7 +102,7 @@ public:
   /// @param[in] low_conn 下位の接続
   /// @param[in] dir 向き
   void
-  init(ElbModule* parent,
+  init(const VlModule* parent,
        const PtPort* pt_port,
        int index,
        ElbExpr* low_conn,
@@ -120,7 +120,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 親のモジュール
-  ElbModule* mModule;
+  const VlModule* mModule;
 
   // パース木のポート定義
   const PtPort* mPtPort;

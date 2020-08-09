@@ -45,10 +45,10 @@ EiFactory::dump_prof(ostream& s)
 
 // @brief ステートメントの配列を生成する．
 // @param[in] stmt_num 要素数
-ElbStmt**
+const VlStmt**
 EiFactory::new_StmtList(SizeType stmt_num)
 {
-  ElbStmt** array = new ElbStmt*[stmt_num];
+  const VlStmt** array = new const VlStmt*[stmt_num];
 
   return array;
 }
@@ -58,7 +58,7 @@ EiFactory::new_StmtList(SizeType stmt_num)
 ElbExpr**
 EiFactory::new_ExprList(SizeType elem_num)
 {
-  auto expr_array = new ElbExpr*[elem_num];
+  auto expr_array{new ElbExpr*[elem_num]};
 
   return expr_array;
 }

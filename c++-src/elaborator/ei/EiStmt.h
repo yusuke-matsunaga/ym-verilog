@@ -15,17 +15,239 @@
 // IEEE Std 1364-2001 26.6.37 Assign statement, deassign, force, release
 
 
-#include "elaborator/ElbStmt.h"
+#include "ym/vl/VlStmt.h"
+#include "ym/pt/PtP.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
+/// @class EiStmt EiStmt.h "EiStmt.h"
+/// @brief VlStmt の実装クラス
+///
+/// 仮想関数のデフォルト実装を行っている．
+//////////////////////////////////////////////////////////////////////
+class EiStmt :
+  public VlStmt
+{
+protected:
+
+  /// @brief コンストラクタ
+  /// @param[in] process 親のプロセス (or nullptr)
+  EiStmt(const VlProcess* process);
+
+  /// デストラクタ
+  ~EiStmt() = default;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // VlStmt の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のスコープの取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiBegin
+  ///  - kVpiDisable
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  /// @note このクラスでは nullptr を返す．
+  const VlNamedObj*
+  scope() const override;
+
+  /// @brief task の実体を返す．
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiTaskCall
+  /// @note このクラスでは nullptr を返す．
+  const VlTaskFunc*
+  task() const override;
+
+  /// @brief user systf クラスへのポインタを返す．
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiSysTaskCall
+  /// @note このクラスでは nullptr を返す．
+  const VlUserSystf*
+  user_systf() const override;
+
+  /// @brief 引数の数の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiSysTaskCall
+  ///  - kVpiTaskCall
+  /// @note このクラスでは 0 を返す．
+  SizeType
+  arg_num() const override;
+
+  /// @brief 引数の取得
+  /// @param[in] pos 位置 (0 <= pos < arg_num())
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiSysTaskCall
+  ///  - kVpiTaskCall
+  /// @note このクラスでは nullptr を返す．
+  const VlExpr*
+  arg(SizeType pos) const override;
+
+  /// @brief control の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiAssignment
+  ///  - kVpiDelayControl
+  ///  - kVpiEventControl
+  /// @note このクラスでは nullptr を返す．
+  const VlControl*
+  control() const override;
+
+  /// @brief 本体のステートメントの取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiDelayControl
+  ///  - kVpiEventControl
+  ///  - kVpiFor
+  ///  - kVpiForever
+  ///  - kVpiIf
+  ///  - kVpiIfElse
+  ///  - kVpiRepeat
+  ///  - kVpiWait
+  ///  - kVpiWhile
+  /// @note このクラスでは nullptr を返す．
+  const VlStmt*
+  body_stmt() const override;
+
+  /// @brief 式の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiCase
+  ///  - kVpiFor
+  ///  - kVpiIf
+  ///  - kVpiIfElse
+  ///  - kVpiRepeat
+  ///  - kVpiWait
+  ///  - kVpiWhile
+  /// @note このクラスでは nullptr を返す．
+  const VlExpr*
+  expr() const override;
+
+  /// @brief 代入のブロッキング/ノンブロッキングの区別の取得
+  /// @retval true ブロッキング代入文を表す．
+  /// @retval false ノンブロッキング代入文もしくは他のステートメント
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiAssignment
+  /// @note このクラスでは false を返す．
+  bool
+  is_blocking() const override;
+
+  /// @brief 左辺式の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiAssignStmt
+  ///  - kVpiAssignment
+  ///  - kVpiDeassign
+  ///  - kVpiForce
+  ///  - kVpiRelease
+  /// @note このクラスでは nullptr を返す．
+  const VlExpr*
+  lhs() const override;
+
+  /// @brief 右辺式の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiAssignStmt
+  ///  - kVpiAssignment
+  ///  - kVpiForce
+  /// @note このクラスでは nullptr を返す．
+  const VlExpr*
+  rhs() const override;
+
+  /// @brief イベントプライマリの取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiEvent
+  /// @note 返されるオブジェクトの型は kVpiNamedEvent のはず．
+  /// @note このクラスでは nullptr を返す．
+  const VlExpr*
+  named_event() const override;
+
+  /// @brief 条件が成り立たなかったとき実行されるステートメントの取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiIfElse
+  /// @note このクラスでは nullptr を返す．
+  const VlStmt*
+  else_stmt() const override;
+
+  /// @brief case type の取得
+  /// @return case type
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiCase
+  /// @note このクラスでは kVpiCaseExact を返す．
+  VpiCaseType
+  case_type() const override;
+
+  /// @brief case item の要素数の取得
+  /// @return case item の要素数
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiCase
+  /// @note このクラスでは 0 を返す．
+  SizeType
+  caseitem_num() const override;
+
+  /// @brief case item の取得
+  /// @param[in] pos 位置番号 (0 <= pos < caseitem_num())
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiCase
+  /// @note このクラスでは nullptr を返す．
+  const VlCaseItem*
+  caseitem(SizeType pos) const override;
+
+  /// @brief 初期化代入文の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiFor
+  /// @note このクラスでは nullptr を返す．
+  const VlStmt*
+  init_stmt() const override;
+
+  /// @brief 繰り返し代入文の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiFor
+  /// @note このクラスでは nullptr を返す．
+  const VlStmt*
+  inc_stmt() const override;
+
+  /// @brief 子供のステートメントの数の取得
+  /// @note この関数が意味を持つオブジェクトの型
+  ///  - kVpiBegin
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  /// @note このクラスでは 0 を返す．
+  SizeType
+  child_stmt_num() const override;
+
+  /// @brief 子供のステートメントの取得
+  /// @param[in] pos 位置番号 (0 <= pos < stmt_num())
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  /// このクラスではなにもしない．
+  ///  - kVpiBegin
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  const VlStmt*
+  child_stmt(SizeType pos) const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 親のプロセス
+  const VlProcess* mProcess;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class EiStmtBase EiStmt.h "EiStmt.h"
-/// @brief ElbStmt の実装クラス
+/// @brief VlStmt の実装クラス
+///
+/// EiStmt に親のスコープとパース木の要素をもたせたもの
 //////////////////////////////////////////////////////////////////////
 class EiStmtBase :
-  public ElbStmt
+  public EiStmt
 {
 protected:
 
@@ -34,37 +256,26 @@ protected:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] pt_stmt パース木のステートメント定義
   EiStmtBase(const VlNamedObj* parent,
-	     ElbProcess* process,
+	     const VlProcess* process,
 	     const PtStmt* pt_stmt);
 
   /// デストラクタ
-  ~EiStmtBase();
+  ~EiStmtBase() = default;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbObj の仮想関数
+  // VlStmt(VlObj) の仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ファイル位置を返す．
   FileRegion
   file_region() const override;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbStmt の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
   /// @brief 親のスコープを返す．
   const VlNamedObj*
   parent() const override;
 
-#if 0
-  /// @brief 親の process を返す．
-  ElbProcess*
-  process() const override;
-#endif
 
 protected:
   //////////////////////////////////////////////////////////////////////
@@ -83,9 +294,6 @@ private:
 
   // 親のスコープ
   const VlNamedObj* mParent;
-
-  // 親のプロセス
-  ElbProcess* mProcess;
 
   // パース木のステートメント定義
   const PtStmt* mPtStmt;

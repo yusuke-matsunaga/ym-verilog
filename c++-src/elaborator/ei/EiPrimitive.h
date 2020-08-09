@@ -775,10 +775,9 @@ private:
 /// @brief ElbPrimTerm の実装クラス
 //////////////////////////////////////////////////////////////////////
 class EiPrimTerm :
-  public ElbPrimTerm
+  public VlPrimTerm
 {
   friend class EiFactory;
-  friend class EiPrimitive;
 
 private:
 
@@ -827,14 +826,18 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbPrimTerm の仮想関数
+  // 設定用の関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 内容を設定する．
   void
-  set(ElbPrimitive* primitive,
+  set(const VlPrimitive* primitive,
       int index,
-      VpiDir dir) override;
+      VpiDir dir);
+
+  /// @brief 接続している式を設定する．
+  void
+  set_expr(const VlExpr* expr);
 
 
 private:
@@ -843,7 +846,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 親のプリミティブ
-  ElbPrimitive* mPrimitive;
+  const VlPrimitive* mPrimitive;
 
   // インデックス + 方向(3bit)
   int mIndexDir;

@@ -3,55 +3,27 @@
 /// @brief ElbEnv の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ElbEnv.h"
+#include "ym/vl/VlTaskFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-BEGIN_NONAMESPACE
-
-const int SFT_CONSTANT = 0;
-const int SFT_FUNCTION = 1;
-const int SFT_CF = 2;
-const int SFT_TASK = 3;
-const int SFT_ARG = 4;
-const int SFT_EVENT = 5;
-const int SFT_LHS = 6;
-const int SFT_NET = 7;
-const int SFT_VAR = 8;
-const int SFT_PCA = 9;
-const int SFT_FORCE = 10;
-
-const ymuint32 MASK_CONSTANT = 1U << SFT_CONSTANT;
-const ymuint32 MASK_FUNCTION = 1U << SFT_FUNCTION;
-const ymuint32 MASK_CF       = 1U << SFT_CF;
-const ymuint32 MASK_TASK     = 1U << SFT_TASK;
-const ymuint32 MASK_ARG      = 1U << SFT_ARG;
-const ymuint32 MASK_EVENT    = 1U << SFT_EVENT;
-const ymuint32 MASK_LHS      = 1U << SFT_LHS;
-const ymuint32 MASK_NET      = 1U << SFT_NET;
-const ymuint32 MASK_VAR      = 1U << SFT_VAR;
-const ymuint32 MASK_PCA      = 1U << SFT_PCA;
-const ymuint32 MASK_FORCE    = 1U << SFT_FORCE;
-
-END_NONAMESPACE
-
-
 // @brief コンストラクタ
 ElbEnv::ElbEnv() :
-  mFlags(0U),
-  mCf(nullptr)
+  mFlags{0U},
+  mCf{nullptr}
 {
 }
 
 // @brief コピーコンストラクタ
 ElbEnv::ElbEnv(const ElbEnv& src) :
-  mFlags(src.mFlags),
-  mCf(src.mCf)
+  mFlags{src.mFlags},
+  mCf{src.mCf}
 {
 }
 
@@ -64,23 +36,18 @@ ElbEnv::operator=(const ElbEnv& src)
   return *this;
 }
 
-// @brief デストラクタ
-ElbEnv::~ElbEnv()
-{
-}
-
 // @brief 定数式を要求する．
 void
 ElbEnv::set_constant()
 {
-  mFlags |= MASK_CONSTANT;
+  mFlags[CONSTANT] = true;
 }
 
 // @brief function を設定する．
 void
 ElbEnv::set_function()
 {
-  mFlags |= MASK_FUNCTION;
+  mFlags[FUNCTION] = true;
 }
 
 // @brief 親の constant function を設定する．
@@ -88,8 +55,8 @@ ElbEnv::set_function()
 void
 ElbEnv::set_constant_function(const VlNamedObj* function)
 {
-  mFlags |= MASK_CF;
-  mFlags |= MASK_FUNCTION;
+  mFlags[CONSTFUNC] = true;
+  mFlags[FUNCTION] = true;
   mCf = function;
 }
 
@@ -97,49 +64,53 @@ ElbEnv::set_constant_function(const VlNamedObj* function)
 void
 ElbEnv::set_system_tf_arg()
 {
-  mFlags |= MASK_ARG;
+  mFlags[ARG] = true;
 }
 
 // @brief イベント式の印をつける．
 void
 ElbEnv::set_event_expr()
 {
-  mFlags |= MASK_EVENT;
+  mFlags[EVENT] = true;
 }
 
 // @brief net 型の左辺式の印をつける．
 void
 ElbEnv::set_net_lhs()
 {
-  mFlags |= MASK_NET | MASK_LHS;
+  mFlags[NET] = true;
+  mFlags[LHS] = true;
 }
 
 // @brief reg/var 型の左辺式の印をつける．
 void
 ElbEnv::set_var_lhs()
 {
-  mFlags |= MASK_VAR | MASK_LHS;
+  mFlags[VAR] = true;
+  mFlags[LHS] = true;
 }
 
 // @brief pca 代入文の左辺式の印をつける．
 void
 ElbEnv::set_pca_lhs()
 {
-  mFlags |= MASK_PCA | MASK_LHS;
+  mFlags[PCA] = true;
+  mFlags[LHS] = true;
 }
 
 // @brief force 代入文の左辺式の印をつける．
 void
 ElbEnv::set_force_lhs()
 {
-  mFlags |= MASK_FORCE | MASK_LHS;
+  mFlags[FORCE] = true;
+  mFlags[LHS] = true;
 }
 
 // @brief 定数式が要求されている時に true を返す．
 bool
 ElbEnv::is_constant() const
 {
-  return static_cast<bool>((mFlags >> SFT_CONSTANT) & 1U);
+  return mFlags[CONSTANT];
 }
 
 // @brief constant function 内の生成の時に親の function を返す．
@@ -153,63 +124,63 @@ ElbEnv::constant_function() const
 bool
 ElbEnv::inside_function() const
 {
-  return static_cast<bool>((mFlags >> SFT_FUNCTION) & 1U);
+  return mFlags[FUNCTION];
 }
 
 // @brief constant function 内の生成の時に true を返す．
 bool
 ElbEnv::inside_constant_function() const
 {
-  return static_cast<bool>((mFlags >> SFT_CF) & 1U);
+  return mFlags[CONSTFUNC];
 }
 
 // @brief system task/system function の引数の時に true を返す．
 bool
 ElbEnv::is_system_tf_arg() const
 {
-  return static_cast<bool>((mFlags >> SFT_ARG) & 1U);
+  return mFlags[ARG];
 }
 
 // @brief イベント式の時に true を返す．
 bool
 ElbEnv::is_event_expr() const
 {
-  return static_cast<bool>((mFlags >> SFT_EVENT) & 1U);
+  return mFlags[EVENT];
 }
 
 // @brief 左辺式の時に true を返す．
 bool
 ElbEnv::is_lhs() const
 {
-  return static_cast<bool>((mFlags >> SFT_LHS) & 1U);
+  return mFlags[LHS];
 }
 
 // @brief net 型の左辺式の時に true を返す．
 bool
 ElbEnv::is_net_lhs() const
 {
-  return static_cast<bool>((mFlags >> SFT_NET) & 1U);
+  return mFlags[NET];
 }
 
 // @brief reg/var 型の左辺式の時に true を返す．
 bool
 ElbEnv::is_var_lhs() const
 {
-  return static_cast<bool>((mFlags >> SFT_VAR) & 1U);
+  return mFlags[VAR];
 }
 
 // @brief pca 代入文の左辺式の時に true を返す．
 bool
 ElbEnv::is_pca_lhs() const
 {
-  return static_cast<bool>((mFlags >> SFT_PCA) & 1U);
+  return mFlags[PCA];
 }
 
 // @brief force 代入文の左辺式の時に true を返す．
 bool
 ElbEnv::is_force_lhs() const
 {
-  return static_cast<bool>((mFlags >> SFT_FORCE) & 1U);
+  return mFlags[FORCE];
 }
 
 

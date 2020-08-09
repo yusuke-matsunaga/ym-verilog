@@ -67,16 +67,10 @@ public:
   SizeType
   operand_num() const override;
 
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbExpr の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
   /// @brief オペランドを返す．
   /// @param[in] pos 位置番号
-  ElbExpr*
-  _operand(SizeType pos) const override;
+  const VlExpr*
+  operand(SizeType pos) const override;
 
 
 protected:

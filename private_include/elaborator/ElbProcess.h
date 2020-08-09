@@ -41,7 +41,7 @@ public:
   /// @param[in] stmt 本体のステートメント
   virtual
   void
-  set_stmt(ElbStmt* stmt) = 0;
+  set_stmt(const VlStmt* stmt) = 0;
 
 };
 

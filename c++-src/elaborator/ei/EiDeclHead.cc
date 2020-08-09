@@ -336,7 +336,7 @@ EiDeclHeadPt::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt::calc_bit_offset(int index,
-			      int& offset) const
+			      SizeType& offset) const
 {
   switch ( mPtHead->type() ) {
   case PtDeclType::Reg:
@@ -599,7 +599,7 @@ EiDeclHeadPtV::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPtV::calc_bit_offset(int index,
-			       int& offset) const
+			       SizeType& offset) const
 {
   return mRange.calc_offset(index, offset);
 }
@@ -786,7 +786,7 @@ EiDeclHeadPt2::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt2::calc_bit_offset(int index,
-			       int& offset) const
+			       SizeType& offset) const
 {
   switch ( mAuxType ) {
   case VpiAuxType::Net:
@@ -947,7 +947,7 @@ EiDeclHeadPt2V::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt2V::calc_bit_offset(int index,
-				int& offset) const
+				SizeType& offset) const
 {
   return mRange.calc_offset(index, offset);
 }
@@ -1074,7 +1074,7 @@ EiDeclHeadPt3::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt3::calc_bit_offset(int index,
-			       int& offset) const
+			       SizeType& offset) const
 {
   switch ( data_type() ) {
   case VpiVarType::None:
@@ -1226,7 +1226,7 @@ EiDeclHeadPt3V::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiDeclHeadPt3V::calc_bit_offset(int index,
-				int& offset) const
+				SizeType& offset) const
 {
   return mRange.calc_offset(index, offset);
 }

@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(要素の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -20,7 +20,6 @@
 #include "ym/vl/VlModule.h"
 
 #include "elaborator/ElbParameter.h"
-#include "elaborator/ElbContAssign.h"
 #include "elaborator/ElbProcess.h"
 #include "elaborator/ElbGfRoot.h"
 #include "elaborator/ElbGenvar.h"
@@ -140,13 +139,14 @@ ItemGen::defparam_override(const VlModule* module,
 			   const PtDefParam* pt_defparam,
 			   const VlNamedObj* ulimit)
 {
-  const FileRegion& fr = pt_defparam->file_region();
+  const auto& fr = pt_defparam->file_region();
 
-  ObjHandle* handle = find_obj_up(module, pt_defparam, ulimit);
+  auto handle = find_obj_up(module, pt_defparam, ulimit);
   if ( !handle ) {
     return false;
   }
-  ElbParameter* param = handle->parameter();
+
+  auto param = handle->parameter();
   if ( !param ) {
     ostringstream buf;
     buf << "\"" << pt_defparam->fullname() << "\" is not a parameter.";
@@ -174,7 +174,7 @@ ItemGen::defparam_override(const VlModule* module,
     return true;
   }
 
-  const PtExpr* rhs_expr = pt_defparam->expr();
+  auto rhs_expr = pt_defparam->expr();
 
   ostringstream buf;
   buf << "instantiating defparam: " << param->full_name()
@@ -206,28 +206,24 @@ void
 ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 				 const PtItem* pt_header)
 {
-  const PtDelay* pt_delay = pt_header->delay();
-  const VlDelay* delay = nullptr;
-  if ( pt_delay ) {
-    delay = instantiate_delay(parent, pt_delay);
-  }
-
-  const VlModule* module = parent->parent_module();
-  ElbCaHead* ca_head = factory().new_CaHead(module, pt_header, delay);
+  auto module = parent->parent_module();
+  auto pt_delay = pt_header->delay();
+  auto delay = instantiate_delay(parent, pt_delay);
+  auto ca_head = factory().new_CaHead(module, pt_header, delay);
 
   ElbEnv env;
   ElbNetLhsEnv env1(env);
   for ( auto pt_elem: pt_header->contassign_list() ) {
     // 左辺式の生成
-    const PtExpr* pt_lhs = pt_elem->lhs();
-    ElbExpr* lhs = instantiate_lhs(parent, env1, pt_lhs);
+    auto pt_lhs = pt_elem->lhs();
+    auto lhs = instantiate_lhs(parent, env1, pt_lhs);
     if ( !lhs ) {
       return;
     }
 
     // 右辺式の生成
-    const PtExpr* pt_rhs = pt_elem->rhs();
-    ElbExpr* rhs = instantiate_rhs(parent, env, pt_rhs, lhs);
+    auto pt_rhs = pt_elem->rhs();
+    auto rhs = instantiate_rhs(parent, env, pt_rhs, lhs);
     if ( !rhs ) {
       return;
     }
@@ -253,12 +249,14 @@ void
 ItemGen::instantiate_process(const VlNamedObj* parent,
 			     const PtItem* pt_item)
 {
-  ElbProcess* process = factory().new_Process(parent, pt_item);
+  auto process = factory().new_Process(parent, pt_item);
   reg_process(process);
 
   ElbEnv env;
-  ElbStmt* body = instantiate_stmt(parent, process, env,
-				   pt_item->body());
+  auto body = instantiate_stmt(parent, process, env,
+			       pt_item->body());
+  ASSERT_COND( body );
+
   process->set_stmt(body);
 }
 
@@ -281,9 +279,9 @@ void
 ItemGen::phase1_genblock(const VlNamedObj* parent,
 			 const PtItem* pt_genblock)
 {
-  const char* name = pt_genblock->name();
+  auto* name = pt_genblock->name();
   if ( name != nullptr ) {
-    const VlNamedObj* genblock = factory().new_GenBlock(parent, pt_genblock);
+    auto genblock = factory().new_GenBlock(parent, pt_genblock);
     reg_internalscope(genblock);
 
     parent = genblock;
@@ -365,12 +363,11 @@ void
 ItemGen::phase1_genfor(const VlNamedObj* parent,
 		       const PtItem* pt_genfor)
 {
-  const FileRegion& fr = pt_genfor->file_region();
+  const auto& fr = pt_genfor->file_region();
+  auto name0 = pt_genfor->name();
+  ASSERT_COND( name0 != nullptr );
 
-  const char* name0 = pt_genfor->name();
-  ASSERT_COND(name0 != nullptr );
-
-  ObjHandle* handle = find_obj(parent, pt_genfor->loop_var());
+  auto handle = find_obj(parent, pt_genfor->loop_var());
   if ( !handle ) {
     ostringstream buf;
     buf << pt_genfor->loop_var() << " : Not found.";
@@ -381,7 +378,8 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
 		    buf.str());
     return;
   }
-  ElbGenvar* genvar = handle->genvar();
+
+  auto genvar = handle->genvar();
   if ( !genvar ) {
     ostringstream buf;
     buf << pt_genfor->loop_var() << " : Not a genvar.";
@@ -405,7 +403,7 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
   }
 
   // 子供のスコープの検索用オブジェクト
-  ElbGfRoot* gfroot = factory().new_GfRoot(parent, pt_genfor);
+  auto gfroot = factory().new_GfRoot(parent, pt_genfor);
   reg_gfroot(gfroot);
 
   {
@@ -438,12 +436,12 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
     // スコープ名生成のために genvar の値を取得
     {
       int gvi = genvar->value();
-      const VlNamedObj* genblock = factory().new_GfBlock(parent, pt_genfor, gvi);
+      auto genblock = factory().new_GfBlock(parent, pt_genfor, gvi);
       gfroot->add(gvi, genblock);
       reg_internalscope(genblock);
 
-      const PtDeclItem* pt_item = genvar->pt_item();
-      ElbGenvar* genvar1 = factory().new_Genvar(genblock, pt_item, gvi);
+      auto pt_item = genvar->pt_item();
+      auto genvar1 = factory().new_Genvar(genblock, pt_item, gvi);
       reg_genvar(genvar1);
 
       phase1_generate(genblock, pt_genfor);

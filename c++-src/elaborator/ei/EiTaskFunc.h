@@ -1,11 +1,11 @@
 ﻿#ifndef EITASKFUNC_H
 #define EITASKFUNC_H
 
-/// @file ElbTaskFuncImpl.h
-/// @brief ElbTaskFuncImpl のヘッダファイル
+/// @file EiTaskFunc.h
+/// @brief EiTaskFunc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -103,20 +103,11 @@ public:
   init_iodecl(SizeType pos,
   	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
-	      ElbDecl* decl) override;
+	      const VlDecl* decl) override;
 
   /// @brief 本体のステートメントをセットする．
   void
-  set_stmt(ElbStmt* stmt) override;
-
-  /// @brief 入出力を得る．
-  /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
-  ElbIODecl*
-  _io(SizeType pos) const override;
-
-  /// @brief 本体の ElbStmt を得る．
-  ElbStmt*
-  _stmt() const override;
+  set_stmt(const VlStmt* stmt) override;
 
 
 protected:
@@ -147,7 +138,7 @@ private:
   EiIODecl* mIODeclList;
 
   // 本体のステートメント
-  ElbStmt* mStmt;
+  const VlStmt* mStmt;
 
 };
 
@@ -263,10 +254,12 @@ protected:
   /// @param[in] pt_item パース木の定義
   /// @param[in] io_num IOの数
   /// @param[in] io_array IO の配列
+  /// @param[in] const_func constant function の時 true にする．
   EiFunction(const VlNamedObj* parent,
 	     const PtItem* pt_item,
 	     SizeType io_num,
-	     EiIODecl* io_array);
+	     EiIODecl* io_array,
+	     bool const_func);
 
   /// @brief デストラクタ
   ~EiFunction();
@@ -288,7 +281,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief function type を返す．
-
   VpiFuncType
   func_type() const override;
 
@@ -349,6 +341,9 @@ private:
   // 出力変数
   ElbDecl* mOvar;
 
+  // 定数関数フラグ
+  bool mConstFunc;
+
 };
 
 
@@ -372,6 +367,7 @@ protected:
   /// @param[in] right 範囲の LSB の式
   /// @param[in] left_val 範囲の MSB の値
   /// @param[in] right_val 範囲の LSB の値
+  /// @param[in] const_func 定数関数フラグ
   EiFunctionV(const VlNamedObj* parent,
 	      const PtItem* pt_item,
 	      SizeType io_num,
@@ -379,7 +375,8 @@ protected:
 	      const PtExpr* left,
 	      const PtExpr* right,
 	      int left_val,
-	      int right_val);
+	      int right_val,
+	      bool const_func);
 
   /// @brief デストラクタ
   ~EiFunctionV();

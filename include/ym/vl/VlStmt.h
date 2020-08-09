@@ -34,13 +34,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlStmt :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlStmt() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlStmt の派生クラスに共通な仮想関数
@@ -245,12 +238,6 @@ public:
 class VlCaseItem :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  ~VlCaseItem() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlCaseItem の仮想関数

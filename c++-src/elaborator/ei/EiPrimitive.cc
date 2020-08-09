@@ -639,7 +639,7 @@ EiPrimArray::elem_by_offset(SizeType offset) const
 const VlPrimitive*
 EiPrimArray::elem_by_index(int index) const
 {
-  int offset;
+  SizeType offset;
   if ( mRange.calc_offset(index, offset) ) {
     return &mArray[offset];
   }
@@ -661,7 +661,7 @@ EiPrimArray::_primitive_by_offset(int offset) const
 ElbPrimitive*
 EiPrimArray::_primitive_by_index(int index) const
 {
-  int offset;
+  SizeType offset;
   if ( mRange.calc_offset(index, offset) ) {
     return &mArray[offset];
   }
@@ -853,7 +853,7 @@ void
 EiPrimitive::connect(int pos,
 		     const VlExpr* expr)
 {
-  mPortArray[pos].mExpr = expr;
+  mPortArray[pos].set_expr(expr);
 }
 
 
@@ -1052,12 +1052,19 @@ EiPrimTerm::expr() const
 
 // @brief 内容を設定する．
 void
-EiPrimTerm::set(ElbPrimitive* primitive,
+EiPrimTerm::set(const VlPrimitive* primitive,
 		int index,
 		VpiDir dir)
 {
   mPrimitive = primitive;
   mIndexDir = (index << 3) | static_cast<ymuint32>(dir);
+}
+
+// @brief 接続している式を設定する．
+void
+EiPrimTerm::set_expr(const VlExpr* expr)
+{
+  mExpr = expr;
 }
 
 END_NAMESPACE_YM_VERILOG

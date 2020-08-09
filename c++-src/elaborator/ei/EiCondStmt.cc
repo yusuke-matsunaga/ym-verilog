@@ -3,7 +3,7 @@
 /// @brief EiCondStmt の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -29,15 +29,15 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
-ElbStmt*
+const VlStmt*
 EiFactory::new_WhileStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
-			 ElbExpr* cond,
-			 ElbStmt* stmt)
+			 const VlExpr* cond,
+			 const VlStmt* stmt)
 {
-  ElbStmt* stmt1 = new EiWhileStmt(parent, process, pt_stmt,
-				   cond, stmt);
+  auto stmt1 = new EiWhileStmt(parent, process, pt_stmt,
+			       cond, stmt);
 
   return stmt1;
 }
@@ -48,15 +48,15 @@ EiFactory::new_WhileStmt(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
-ElbStmt*
+const VlStmt*
 EiFactory::new_RepeatStmt(const VlNamedObj* parent,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const PtStmt* pt_stmt,
-			  ElbExpr* cond,
-			  ElbStmt* stmt)
+			  const VlExpr* cond,
+			  const VlStmt* stmt)
 {
-  ElbStmt* stmt1 = new EiRepeatStmt(parent, process, pt_stmt,
-				    cond, stmt);
+  auto stmt1 = new EiRepeatStmt(parent, process, pt_stmt,
+				cond, stmt);
 
   return stmt1;
 }
@@ -67,15 +67,15 @@ EiFactory::new_RepeatStmt(const VlNamedObj* parent,
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
-ElbStmt*
+const VlStmt*
 EiFactory::new_WaitStmt(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const PtStmt* pt_stmt,
-			ElbExpr* cond,
-			ElbStmt* stmt)
+			const VlExpr* cond,
+			const VlStmt* stmt)
 {
-  ElbStmt* stmt1 = new EiWaitStmt(parent, process, pt_stmt,
-				  cond, stmt);
+  auto stmt1 = new EiWaitStmt(parent, process, pt_stmt,
+			      cond, stmt);
 
   return stmt1;
 }
@@ -88,17 +88,17 @@ EiFactory::new_WaitStmt(const VlNamedObj* parent,
 // @param[in] init_stmt 初期化式
 // @param[in] inc_stmt 増加式
 // @param[in] stmt 本体のステートメント
-ElbStmt*
+const VlStmt*
 EiFactory::new_ForStmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt,
-		       ElbExpr* cond,
-		       ElbStmt* init_stmt,
-		       ElbStmt* inc_stmt,
-		       ElbStmt* stmt)
+		       const VlExpr* cond,
+		       const VlStmt* init_stmt,
+		       const VlStmt* inc_stmt,
+		       const VlStmt* stmt)
 {
-  ElbStmt* stmt1 = new EiForStmt(parent, process, pt_stmt,
-				 cond, init_stmt, inc_stmt, stmt);
+  auto stmt1 = new EiForStmt(parent, process, pt_stmt,
+			     cond, init_stmt, inc_stmt, stmt);
 
   return stmt1;
 }
@@ -108,14 +108,13 @@ EiFactory::new_ForStmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] stmt 本体のステートメント
-ElbStmt*
+const VlStmt*
 EiFactory::new_ForeverStmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbStmt* stmt)
+			   const VlStmt* stmt)
 {
-  ElbStmt* stmt1 = new EiForeverStmt(parent, process, pt_stmt,
-				     stmt);
+  auto stmt1 = new EiForeverStmt(parent, process, pt_stmt, stmt);
 
   return stmt1;
 }
@@ -128,22 +127,22 @@ EiFactory::new_ForeverStmt(const VlNamedObj* parent,
 // @param[in] stmt 本体のステートメント
 // @param[in] else_stmt else節のステートメント
 // @note else_stmt は nullptr もありうる．
-ElbStmt*
+const VlStmt*
 EiFactory::new_IfStmt(const VlNamedObj* parent,
-		      ElbProcess* process,
+		      const VlProcess* process,
 		      const PtStmt* pt_stmt,
-		      ElbExpr* cond,
-		      ElbStmt* stmt,
-		      ElbStmt* else_stmt)
+		      const VlExpr* cond,
+		      const VlStmt* stmt,
+		      const VlStmt* else_stmt)
 {
-  ElbStmt* stmt1;
+  const VlStmt* stmt1;
   if ( else_stmt ) {
     stmt1 = new EiIfElseStmt(parent, process, pt_stmt,
-				 cond, stmt, else_stmt);
+			     cond, stmt, else_stmt);
   }
   else {
     stmt1 = new EiIfStmt(parent, process, pt_stmt,
-			     cond, stmt);
+			 cond, stmt);
   }
   return stmt1;
 }
@@ -153,20 +152,41 @@ EiFactory::new_IfStmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] expr 条件式
-ElbStmt*
+const VlStmt*
 EiFactory::new_CaseStmt(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const PtStmt* pt_stmt,
-			ElbExpr* expr)
+			const VlExpr* expr,
+			const vector<const VlCaseItem*>& caseitem_list)
 {
-  int caseitem_num = pt_stmt->caseitem_num();
-
-  EiCaseItem* array = new EiCaseItem[caseitem_num];
-  EiCaseStmt* stmt1 = new EiCaseStmt(parent, process, pt_stmt,
-				     expr,
-				     caseitem_num, array);
+  SizeType item_num = caseitem_list.size();
+  const VlCaseItem** array = new const VlCaseItem*[item_num];
+  SizeType wpos = 0;
+  for ( auto item: caseitem_list ) {
+    array[wpos] = item;
+    ++ wpos;
+  }
+  auto stmt1 = new EiCaseStmt(parent, process, pt_stmt,
+			      expr,
+			      item_num, array);
 
   return stmt1;
+}
+
+// @brief caseitem を生成する．
+// @param[in] pt_item パース木の caseitem 要素
+// @param[in] label_num ラベルの要素数
+// @param[in] label_list ラベルを表す式のリスト
+// @param[in] body 本体のステートメント
+const VlCaseItem*
+EiFactory::new_CaseItem(const PtCaseItem* pt_item,
+			SizeType label_num,
+			ElbExpr** label_list,
+			const VlStmt* body)
+{
+  auto caseitem = new EiCaseItem(pt_item, label_num, label_list, body);
+
+  return caseitem;
 }
 
 
@@ -181,10 +201,10 @@ EiFactory::new_CaseStmt(const VlNamedObj* parent,
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
 EiLoopStmt::EiLoopStmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt,
-		       ElbExpr* cond,
-		       ElbStmt* stmt) :
+		       const VlExpr* cond,
+		       const VlStmt* stmt) :
   EiStmtBase(parent, process, pt_stmt),
   mCondition(cond),
   mBodyStmt(stmt)
@@ -210,7 +230,7 @@ EiLoopStmt::body_stmt() const
   return mBodyStmt;
 }
 
-ElbStmt*
+const VlStmt*
 EiLoopStmt::_body_stmt() const
 {
   return mBodyStmt;
@@ -228,10 +248,10 @@ EiLoopStmt::_body_stmt() const
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
 EiWhileStmt::EiWhileStmt(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const PtStmt* pt_stmt,
-			 ElbExpr* cond,
-			 ElbStmt* stmt) :
+			 const VlExpr* cond,
+			 const VlStmt* stmt) :
   EiLoopStmt(parent, process, pt_stmt, cond, stmt)
 {
 }
@@ -260,10 +280,10 @@ EiWhileStmt::type() const
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
 EiRepeatStmt::EiRepeatStmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbExpr* cond,
-			   ElbStmt* stmt) :
+			   const VlExpr* cond,
+			   const VlStmt* stmt) :
   EiLoopStmt(parent, process, pt_stmt, cond, stmt)
 {
 }
@@ -292,10 +312,10 @@ EiRepeatStmt::type() const
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
 EiWaitStmt::EiWaitStmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt,
-		       ElbExpr* cond,
-		       ElbStmt* stmt) :
+		       const VlExpr* cond,
+		       const VlStmt* stmt) :
   EiLoopStmt(parent, process, pt_stmt, cond, stmt)
 {
 }
@@ -326,12 +346,12 @@ EiWaitStmt::type() const
 // @param[in] inc_stmt 増加式
 // @param[in] stmt 本体のステートメント
 EiForStmt::EiForStmt(const VlNamedObj* parent,
-		     ElbProcess* process,
+		     const VlProcess* process,
 		     const PtStmt* pt_stmt,
-		     ElbExpr* cond,
-		     ElbStmt* init_stmt,
-		     ElbStmt* inc_stmt,
-		     ElbStmt* stmt) :
+		     const VlExpr* cond,
+		     const VlStmt* init_stmt,
+		     const VlStmt* inc_stmt,
+		     const VlStmt* stmt) :
   EiLoopStmt(parent, process, pt_stmt, cond, stmt),
   mInitStmt(init_stmt),
   mIncStmt(inc_stmt)
@@ -375,9 +395,9 @@ EiForStmt::inc_stmt() const
 // @param[in] pt_stmt パース木のステートメント定義
 // @param[in] stmt 本体のステートメント
 EiForeverStmt::EiForeverStmt(const VlNamedObj* parent,
-			     ElbProcess* process,
+			     const VlProcess* process,
 			     const PtStmt* pt_stmt,
-			     ElbStmt* stmt) :
+			     const VlStmt* stmt) :
   EiStmtBase(parent, process, pt_stmt),
   mBodyStmt(stmt)
 {
@@ -414,10 +434,10 @@ EiForeverStmt::body_stmt() const
 // @param[in] cond 条件式
 // @param[in] stmt 本体のステートメント
 EiIfStmt::EiIfStmt(const VlNamedObj* parent,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   const PtStmt* pt_stmt,
-		   ElbExpr* cond,
-		   ElbStmt* stmt) :
+		   const VlExpr* cond,
+		   const VlStmt* stmt) :
   EiStmtBase(parent, process, pt_stmt),
   mCondition(cond),
   mBodyStmt(stmt)
@@ -451,7 +471,7 @@ EiIfStmt::body_stmt() const
 }
 
 
-ElbStmt*
+const VlStmt*
 EiIfStmt::_body_stmt() const
 {
   return mBodyStmt;
@@ -470,11 +490,11 @@ EiIfStmt::_body_stmt() const
 // @param[in] stmt 本体のステートメント
 // @param[in] else_stmt else節のステートメント
 EiIfElseStmt::EiIfElseStmt(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const PtStmt* pt_stmt,
-			   ElbExpr* cond,
-			   ElbStmt* stmt,
-			   ElbStmt* else_stmt) :
+			   const VlExpr* cond,
+			   const VlStmt* stmt,
+			   const VlStmt* else_stmt) :
   EiIfStmt(parent, process, pt_stmt, cond, stmt),
   mElseStmt(else_stmt)
 {
@@ -505,10 +525,18 @@ EiIfElseStmt::else_stmt() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-EiCaseItem::EiCaseItem() :
-  mExprNum(0),
-  mExprList(nullptr),
-  mBodyStmt(nullptr)
+// @param[in] pt_item パース木の caseitem 要素
+// @param[in] label_num ラベルの要素数
+// @param[in] label_list ラベルを表す式のリスト
+// @param[in] body 本体のステートメント
+EiCaseItem::EiCaseItem(const PtCaseItem* pt_item,
+		       SizeType label_num,
+		       ElbExpr** label_list,
+		       const VlStmt* body) :
+  mPtCaseItem{pt_item},
+  mExprNum{label_num},
+  mExprList{label_list},
+  mBodyStmt{body}
 {
 }
 
@@ -566,15 +594,15 @@ EiCaseItem::body_stmt() const
 // @param[in] caseitem_list caseitem のリストの要素数
 // @param[in] caseitem_array caseitem の配列
 EiCaseStmt::EiCaseStmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt,
-		       ElbExpr* expr,
-		       int caseitem_num,
-		       EiCaseItem* caseitem_array) :
+		       const VlExpr* expr,
+		       SizeType caseitem_num,
+		       const VlCaseItem** caseitem_array) :
   EiStmtBase(parent, process, pt_stmt),
-  mCondition(expr),
-  mCaseItemNum(caseitem_num),
-  mCaseItemList(caseitem_array)
+  mCondition{expr},
+  mCaseItemNum{caseitem_num},
+  mCaseItemList{caseitem_array}
 {
 }
 
@@ -623,24 +651,8 @@ EiCaseStmt::caseitem_num() const
 const VlCaseItem*
 EiCaseStmt::caseitem(SizeType pos) const
 {
-  return &mCaseItemList[pos];
-}
-
-// @brief caseitem を設定する．
-// @param[in] pt_caseitem パース木の caseitem 定義
-// @param[in] expr_array ラベルのリスト用配列
-// @param[in] stmt 本体のステートメント
-void
-EiCaseStmt::set_caseitem(SizeType pos,
-			 const PtCaseItem* pt_caseitem,
-			 ElbExpr** expr_array,
-			 ElbStmt* stmt)
-{
-  EiCaseItem& ci = mCaseItemList[pos];
-  ci.mPtCaseItem = pt_caseitem;
-  ci.mExprNum = pt_caseitem->label_num();
-  ci.mExprList = expr_array;
-  ci.mBodyStmt = stmt;
+  ASSERT_COND( 0 <= pos && pos < caseitem_num() );
+  return mCaseItemList[pos];
 }
 
 END_NAMESPACE_YM_VERILOG

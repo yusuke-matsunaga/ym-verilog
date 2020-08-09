@@ -473,7 +473,7 @@ void
 EiModule::init_iodecl(int pos,
 		      ElbIOHead* head,
 		      const PtIOItem* pt_item,
-		      ElbDecl* decl)
+		      const VlDecl* decl)
 {
   ASSERT_COND( 0 <= pos && pos < io_num() );
   mIODeclList[pos].init(head, pt_item, decl);
@@ -762,7 +762,7 @@ EiModuleArray::elem_by_offset(SizeType offset) const
 const VlModule*
 EiModuleArray::elem_by_index(int index) const
 {
-  int offset;
+  SizeType offset;
   if ( mRange.calc_offset(index, offset) ) {
     return elem_by_offset(offset);
   }

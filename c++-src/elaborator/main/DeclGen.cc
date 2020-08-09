@@ -3,7 +3,7 @@
 /// @brief ElbMgr の実装ファイル(宣言要素の elaboration)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -14,9 +14,6 @@
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
 
-#include "ym/vl/VlModule.h"
-
-#include "elaborator/ElbContAssign.h"
 #include "elaborator/ElbDecl.h"
 #include "elaborator/ElbParameter.h"
 #include "elaborator/ElbGenvar.h"
@@ -106,12 +103,12 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     ASSERT_NOT_REACHED;
   }
 
-  int index = 0;
+  SizeType index = 0;
   for ( auto pt_head: pt_head_array ) {
-    VpiAuxType def_aux_type = pt_head->aux_type();
+    auto def_aux_type = pt_head->aux_type();
     bool sign = pt_head->is_signed();
-    const PtExpr* pt_left = pt_head->left_range();
-    const PtExpr* pt_right = pt_head->right_range();
+    auto pt_left = pt_head->left_range();
+    auto pt_right = pt_head->right_range();
     bool has_range = (pt_left != nullptr) && (pt_right != nullptr);
 
     // 範囲指定を持っている場合には範囲を計算する．
@@ -139,8 +136,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     }
     ASSERT_COND( head != nullptr );
 
-    for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
-      auto pt_item = pt_head->item(i);
+    for ( auto pt_item: pt_head->item_list() ) {
       // IO定義と変数/ネット定義が一致しているか調べる．
       auto handle = find_obj(namedobj, pt_item->name());
       ElbDecl* decl = nullptr;
@@ -148,21 +144,13 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	// 同名の要素が見つかった．
 	if ( def_aux_type != VpiAuxType::None ) {
 	  // なのに IO 宣言の aux_type もある．
-	  ostringstream buf;
-	  buf << pt_item->name() << " : has an aux-type declaration"
-	      << ", while it also has another declaration in "
-	      << handle->file_region() << ".";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  pt_item->file_region(),
-			  MsgType::Error,
-			  "ELAB",
-			  buf.str());
+	  error_duplicate_type(pt_item, handle);
 	  continue;
 	}
 	decl = handle->decl();
 	if ( decl ) {
 	  // 対象が宣言要素だった場合．
-	  VpiObjType type = decl->type();
+	  auto type = decl->type();
 	  if ( (module == nullptr || type != VpiObjType::Net) &&
 	       type != VpiObjType::Reg &&
 	       type != VpiObjType::IntegerVar &&
@@ -178,31 +166,13 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	if ( !decl ) {
 	  if ( handle->declarray() ) {
 	    // 対象が配列だった場合．
-	    ostringstream buf;
-	    buf << pt_item->name()
-		<< ": Array object shall not be connected to IO port.";
-	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    decl->file_region(),
-			    MsgType::Error,
-			    "ELAB",
-			    buf.str());
+	    error_array_io(pt_item, handle->declarray());
+	    continue;
 	  }
-	  else {
-	    // 不適切な型だった場合．
-	    // 上の decl = nullptr にした時もここに来る．
-	    ostringstream buf;
-	    buf << handle->full_name()
-		<< ": Should be a ";
-	    if ( module ) {
-	      buf << "net, ";
-	    }
-	    buf << "reg or integer/time variable.";
-	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    pt_item->file_region(),
-			    MsgType::Error,
-			    "ELAB",
-			    buf.str());
-	  }
+
+	  // 不適切な型だった場合．
+	  // 上の decl = nullptr にした時もここに来る．
+	  error_illegal_io(pt_item, handle, module);
 	  continue;
 	}
 
@@ -222,27 +192,13 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	      right_val = right_val2;
 	    }
 	    else {
-	      ostringstream buf;
-	      buf << "Conflictive range declaration of \""
-		  << pt_item->name() << "\".";
-	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      pt_item->file_region(),
-			      MsgType::Error,
-			      "ELAB",
-			      buf.str());
+	      error_conflict_io_range(pt_item);
 	      continue;
 	    }
 	  }
 	  else if ( left_val != left_val2 || right_val != right_val2 ) {
 	    // 範囲が異なっていた．
-	    ostringstream buf;
-	    buf << "Conflictive range declaration of \""
-		<< pt_item->name() << "\".";
-	    MsgMgr::put_msg(__FILE__, __LINE__,
-			    pt_item->file_region(),
-			    MsgType::Error,
-			    "ELAB",
-			    buf.str());
+	    error_conflict_io_range(pt_item);
 	    dout << "IO range: [" << left_val << ":" << right_val << "]"
 		 << endl
 		 << "Decl range: [" << left_val2 << ":" << right_val2 << "]"
@@ -253,14 +209,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	else if ( has_range ) {
 	  // decl は範囲を持っていないが IO は持っている．
 	  // エラーとする．
-	  ostringstream buf;
-	  buf << "Conflictive range declaration of \""
-	      << pt_item->name() << "\".";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  pt_item->file_region(),
-			  MsgType::Error,
-			  "ELAB",
-			  buf.str());
+	  error_conflict_io_range(pt_item);
 	  continue;
 	}
 	// どちらか一方でも符号付きなら両方符号付きにする．
@@ -271,11 +220,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
       }
       else {
 	// 同名の要素が見つからなかったので作る必要がある．
-	VpiAuxType aux_type = def_aux_type;
+	auto aux_type = def_aux_type;
 	if ( aux_type == VpiAuxType::None ) {
 	  if ( module ) {
 	    // モジュール IO の場合は `default_net_type を参照する．
-	    VpiNetType net_type = module->def_net_type();
+	    auto net_type = module->def_net_type();
 	    if ( net_type == VpiNetType::None ) {
 	      ostringstream buf;
 	      buf << pt_item->name() << " : Implicit declaration is inhibited "
@@ -320,28 +269,26 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	ASSERT_COND( head != nullptr );
 
 	// 初期値を生成する．
-	const PtExpr* pt_init = pt_item->init_value();
+	auto pt_init = pt_item->init_value();
 	ElbExpr* init = nullptr;
 	if ( module ) {
-	  if ( pt_init ) {
-	    // 初期値を持つ場合
-	    if ( aux_type == VpiAuxType::Net ) {
-	      // net 型の場合(ここに来るのは暗黙宣言のみ)は初期値を持てない．
-	      ostringstream buf;
-	      buf << pt_item->name()
-		  << " : Implicit net declaration cannot have initial value.";
-	      MsgMgr::put_msg(__FILE__, __LINE__,
-			      pt_item->file_region(),
-			      MsgType::Error,
-			      "ELAB",
-			      buf.str());
-	      continue;
-	    }
-	    // これは verilog_grammer.yy の list_of_variable_port_identifiers
-	    // に対応するので必ず constant_expression である．
-	    init = instantiate_constant_expr(module, pt_init);
-	    // エラーの場合には init = nullptr となるが処理は続ける．
+	  if ( aux_type == VpiAuxType::Net && pt_init ) {
+	    // net 型の場合(ここに来るのは暗黙宣言のみ)は初期値を持てない．
+	    ostringstream buf;
+	    buf << pt_item->name()
+		<< " : Implicit net declaration cannot have initial value.";
+	    MsgMgr::put_msg(__FILE__, __LINE__,
+			    pt_item->file_region(),
+			    MsgType::Error,
+			    "ELAB",
+			    buf.str());
+	    continue;
 	  }
+	  // 初期値を持つ場合
+	  // これは verilog_grammer.yy の list_of_variable_port_identifiers
+	  // に対応するので必ず constant_expression である．
+	  init = instantiate_constant_expr(module, pt_init);
+	  // エラーの場合には init = nullptr となるが処理は続ける．
 	}
 	else {
 	  // task/function の IO 宣言には初期値はない．
@@ -437,10 +384,9 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
 				const PtDeclHead* pt_head,
 				bool is_local)
 {
-  const VlModule* module = parent->parent_module();
-
-  const PtExpr* pt_left = pt_head->left_range();
-  const PtExpr* pt_right = pt_head->right_range();
+  auto module = parent->parent_module();
+  auto pt_left = pt_head->left_range();
+  auto* pt_right = pt_head->right_range();
   ElbParamHead* param_head = nullptr;
   if ( pt_left && pt_right ) {
     int left_val = 0;
@@ -459,12 +405,11 @@ DeclGen::instantiate_param_head(const VlNamedObj* parent,
 
 
   for ( auto pt_item: pt_head->item_list() ) {
-    const FileRegion& file_region = pt_item->file_region();
-
-    ElbParameter* param = factory().new_Parameter(param_head,
-						  pt_item,
-						  is_local);
-    ASSERT_COND(param );
+    const auto& file_region = pt_item->file_region();
+    auto param = factory().new_Parameter(param_head,
+					 pt_item,
+					 is_local);
+    ASSERT_COND( param );
     reg_parameter(vpiParameter, param);
 
 #if 0
@@ -506,7 +451,6 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
   auto pt_left = pt_head->left_range();
   auto pt_right = pt_head->right_range();
   auto pt_delay = pt_head->delay();
-
   bool has_delay = (pt_delay != nullptr);
 
   ElbDeclHead* net_head = nullptr;
@@ -532,8 +476,7 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
 			     net_head, pt_delay));
   }
 
-  for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
-    auto pt_item = pt_head->item(i);
+  for ( auto pt_item: pt_head->item_list() ) {
     // init_value() が 0 でなければ初期割り当てを持つということ．
     auto pt_init = pt_item->init_value();
 
@@ -570,12 +513,13 @@ DeclGen::instantiate_net_head(const VlNamedObj* parent,
     }
     else {
       // 単一の要素
-      ElbDecl* net = factory().new_Decl(net_head,
-					pt_item);
+      auto net = factory().new_Decl(net_head, pt_item);
       reg_decl(vpiNet, net);
 
       if ( pt_init ) {
 	// 初期割り当てつき
+	// net の初期割り当ては continuous assignment と同等なので
+	// あとで作る．
 	add_phase3stub(make_stub(this, &DeclGen::link_net_assign,
 				 net, pt_item));
       }
@@ -619,9 +563,8 @@ void
 DeclGen::link_net_assign(ElbDecl* net,
 			 const PtDeclItem* pt_item)
 {
-  // 実際には対応する continuous assign 文を作る．
+  // 実体は左辺が net の代入文を作る．
   auto lhs = factory().new_Primary(pt_item, net);
-
   auto parent = net->parent();
   auto pt_init = pt_item->init_value();
   auto rhs = instantiate_rhs(parent, ElbEnv(), pt_init, lhs);
@@ -629,6 +572,9 @@ DeclGen::link_net_assign(ElbDecl* net,
     return;
   }
 
+  net->set_init(rhs);
+
+  // 対応する continuous assign 文を作る．
   auto module = parent->parent_module();
   auto ca = factory().new_ContAssign(module, pt_item, lhs, rhs);
   reg_contassign(ca);
@@ -641,8 +587,8 @@ void
 DeclGen::instantiate_reg_head(const VlNamedObj* parent,
 			      const PtDeclHead* pt_head)
 {
-  const PtExpr* pt_left = pt_head->left_range();
-  const PtExpr* pt_right = pt_head->right_range();
+  auto pt_left = pt_head->left_range();
+  auto pt_right = pt_head->right_range();
 
   ElbDeclHead* reg_head = nullptr;
   if ( pt_left && pt_right ) {
@@ -661,9 +607,8 @@ DeclGen::instantiate_reg_head(const VlNamedObj* parent,
   }
   ASSERT_COND( reg_head != nullptr );
 
-  for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
-    auto pt_item = pt_head->item(i);
-    const PtExpr* pt_init = pt_item->init_value();
+  for ( auto pt_item: pt_head->item_list() ) {
+    auto pt_init = pt_item->init_value();
     SizeType dim_size = pt_item->range_num();
     if ( dim_size > 0 ) {
       // 配列の場合
@@ -677,9 +622,9 @@ DeclGen::instantiate_reg_head(const VlNamedObj* parent,
 	continue;
       }
 
-      ElbDeclArray* reg_array = factory().new_DeclArray(reg_head,
-							pt_item,
-							range_src);
+      auto reg_array = factory().new_DeclArray(reg_head,
+					       pt_item,
+					       range_src);
       reg_declarray(vpiRegArray, reg_array);
 
 #if 0
@@ -699,16 +644,13 @@ DeclGen::instantiate_reg_head(const VlNamedObj* parent,
     }
     else {
       // 単独の要素
-      ElbExpr* init = nullptr;
-      if ( pt_init ) {
-	// 初期値を持つ場合
-	// 初期値は constant_expression なので今作る．
-	init = instantiate_constant_expr(parent, pt_init);
-	// エラーの時には init = nullptr となるがそれでも処理は続ける．
-	// もちろんエラーは記録されている．
-      }
+      // 初期値を持つ場合
+      // 初期値は constant_expression なので今作る．
+      auto init = instantiate_constant_expr(parent, pt_init);
+      // エラーの時には init = nullptr となるがそれでも処理は続ける．
+      // もちろんエラーは記録されている．
 
-      ElbDecl* reg = factory().new_Decl(reg_head, pt_item, init);
+      auto reg = factory().new_Decl(reg_head, pt_item, init);
       reg_decl(vpiReg, reg);
 
 #if 0
@@ -736,13 +678,11 @@ void
 DeclGen::instantiate_var_head(const VlNamedObj* parent,
 			      const PtDeclHead* pt_head)
 {
-  ASSERT_COND(pt_head->data_type() != VpiVarType::None );
+  ASSERT_COND( pt_head->data_type() != VpiVarType::None );
 
-  ElbDeclHead* var_head = factory().new_DeclHead(parent, pt_head);
-
-  for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
-    auto pt_item = pt_head->item(i);
-    const PtExpr* pt_init = pt_item->init_value();
+  auto var_head = factory().new_DeclHead(parent, pt_head);
+  for ( auto pt_item: pt_head->item_list() ) {
+    auto pt_init = pt_item->init_value();
     SizeType dim_size = pt_item->range_num();
     if ( dim_size > 0 ) {
       // 配列の場合
@@ -756,9 +696,9 @@ DeclGen::instantiate_var_head(const VlNamedObj* parent,
 	continue;
       }
 
-      ElbDeclArray* var_array = factory().new_DeclArray(var_head,
-							pt_item,
-							range_src);
+      auto var_array = factory().new_DeclArray(var_head,
+					       pt_item,
+					       range_src);
       reg_declarray(vpiVariables, var_array);
 
 #if 0
@@ -778,16 +718,13 @@ DeclGen::instantiate_var_head(const VlNamedObj* parent,
     }
     else {
       // 単独の変数
-      ElbExpr* init = nullptr;
-      if ( pt_init ) {
-	// 初期値を持つ場合
-	// 初期値は constant_expression なので今作る．
-	init = instantiate_constant_expr(parent, pt_init);
-	// エラーの時には init = nullptr となるがそれでも処理は続ける．
-	// もちろんエラーは記録されている．
-      }
+      // 初期値を持つ場合
+      // 初期値は constant_expression なので今作る．
+      auto init = instantiate_constant_expr(parent, pt_init);
+      // エラーの時には init = nullptr となるがそれでも処理は続ける．
+      // もちろんエラーは記録されている．
 
-      ElbDecl* var = factory().new_Decl(var_head, pt_item, init);
+      auto var = factory().new_Decl(var_head, pt_item, init);
       reg_decl(vpiVariables, var);
 
 #if 0
@@ -815,10 +752,8 @@ void
 DeclGen::instantiate_event_head(const VlNamedObj* parent,
 				const PtDeclHead* pt_head)
 {
-  ElbDeclHead* event_head = factory().new_DeclHead(parent, pt_head);
-
-  for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
-    auto pt_item = pt_head->item(i);
+  auto event_head = factory().new_DeclHead(parent, pt_head);
+  for ( auto pt_item: pt_head->item_list() ) {
     SizeType dim_size = pt_item->range_num();
     if ( dim_size > 0 ) {
       // 配列
@@ -829,9 +764,7 @@ DeclGen::instantiate_event_head(const VlNamedObj* parent,
 	continue;
       }
 
-      ElbDeclArray* ne_array = factory().new_DeclArray(event_head,
-						       pt_item,
-						       range_src);
+      auto ne_array = factory().new_DeclArray(event_head, pt_item, range_src);
       reg_declarray(vpiNamedEventArray, ne_array);
 
 #if 0
@@ -851,8 +784,7 @@ DeclGen::instantiate_event_head(const VlNamedObj* parent,
     }
     else {
       // 単一の要素
-      ElbDecl* named_event = factory().new_Decl(event_head,
-						pt_item);
+      auto named_event = factory().new_Decl(event_head, pt_item);
       reg_decl(vpiNamedEvent, named_event);
 
 #if 0
@@ -880,9 +812,8 @@ void
 DeclGen::instantiate_genvar_head(const VlNamedObj* parent,
 				 const PtDeclHead* pt_head)
 {
-  for ( SizeType i = 0; i < pt_head->item_num(); ++ i ) {
-    auto pt_item = pt_head->item(i);
-    ElbGenvar* genvar = factory().new_Genvar(parent, pt_item, 0);
+  for ( auto pt_item: pt_head->item_list() ) {
+    auto genvar = factory().new_Genvar(parent, pt_item, 0);
     reg_genvar(genvar);
 
     ostringstream buf;
@@ -898,7 +829,7 @@ DeclGen::instantiate_genvar_head(const VlNamedObj* parent,
 // @brief 配列の次元リストを生成する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_item 要素定義
-// @param[in] range_src 範囲の情報を設定する配列
+// @param[out] range_src 範囲の情報を設定する配列
 bool
 DeclGen::instantiate_dimension_list(const VlNamedObj*  parent,
 				    const PtDeclItem* pt_item,
@@ -908,10 +839,9 @@ DeclGen::instantiate_dimension_list(const VlNamedObj*  parent,
   range_src.reserve(n);
 
   bool ok = true;
-  for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_range = pt_item->range(i);
-    const PtExpr* pt_left = pt_range->left();
-    const PtExpr* pt_right = pt_range->right();
+  for ( auto pt_range: pt_item->range_list() ) {
+    auto pt_left = pt_range->left();
+    auto pt_right = pt_range->right();
     int left_val = 0;
     int right_val = 0;
     if ( !evaluate_range(parent, pt_left, pt_right,
@@ -925,6 +855,76 @@ DeclGen::instantiate_dimension_list(const VlNamedObj*  parent,
   }
 
   return ok;
+}
+
+// @brief IO 宣言に aux_type と宣言が重複している．
+// @param[in] pt_item パース木の要素
+void
+DeclGen::error_duplicate_type(const PtIOItem* pt_item,
+			      const ObjHandle* handle)
+{
+  ostringstream buf;
+  buf << pt_item->name() << " : has an aux-type declaration"
+      << ", while it also has another declaration in "
+      << handle->file_region() << ".";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  pt_item->file_region(),
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief 配列要素が IO 宣言として現れていた．
+// @param[in] pt_item IO宣言のパース木の要素
+// @param[in] declarray 排列要素
+void
+DeclGen::error_array_io(const PtIOItem* pt_item,
+			const VlDeclArray* declarray)
+{
+  ostringstream buf;
+  buf << pt_item->name()
+      << ": Array object shall not be connected to IO port.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  declarray->file_region(),
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief IO 宣言に不適切な宣言要素が使われていた．
+// @param[in] pt_item IO宣言のパース木の要素
+// @param[in] handle 宣言要素のハンドル
+void
+DeclGen::error_illegal_io(const PtIOItem* pt_item,
+			  const ObjHandle* handle,
+			  const VlModule* module)
+{
+  ostringstream buf;
+  buf << handle->full_name()
+      << ": Should be a ";
+  if ( module ) {
+    buf << "net, ";
+  }
+  buf << "reg or integer/time variable.";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  pt_item->file_region(),
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
+}
+
+// @brief IO 宣言と宣言要素の範囲指定が異なる．
+void
+DeclGen::error_conflict_io_range(const PtIOItem* pt_item)
+{
+  ostringstream buf;
+  buf << "Conflictive range declaration of \""
+      << pt_item->name() << "\".";
+  MsgMgr::put_msg(__FILE__, __LINE__,
+		  pt_item->file_region(),
+		  MsgType::Error,
+		  "ELAB",
+		  buf.str());
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -3,14 +3,13 @@
 /// @brief ElbMgr の実装ファイル(conditional statement の実体化)
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "StmtGen.h"
 #include "ElbEnv.h"
 
-#include "elaborator/ElbStmt.h"
 #include "elaborator/ElbExpr.h"
 
 #include "ym/pt/PtStmt.h"
@@ -30,37 +29,27 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_if(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const ElbEnv& env,
 			const PtStmt* pt_stmt)
 {
-  ElbExpr* cond = instantiate_expr(parent, env, pt_stmt->expr());
-  if ( !cond ) {
+  auto cond = instantiate_expr(parent, env, pt_stmt->expr());
+
+  auto pt_then = pt_stmt->body();
+  auto then_stmt = instantiate_stmt(parent, process, env, pt_then);
+
+  auto pt_else = pt_stmt->else_body();
+  auto else_stmt = instantiate_stmt(parent, process, env, pt_else);
+
+  if ( !cond || !then_stmt || ( pt_else && !else_stmt ) ) {
     // たぶんエラー
     return nullptr;
   }
 
-  const PtStmt* pt_then = pt_stmt->body();
-  ElbStmt* then_stmt = instantiate_stmt(parent, process, env, pt_then);
-  if ( !then_stmt ) {
-    // たぶんエラー
-    return nullptr;
-  }
-
-  ElbStmt* else_stmt = nullptr;
-  const PtStmt* pt_else = pt_stmt->else_body();
-  if ( pt_else ) {
-    else_stmt = instantiate_stmt(parent, process, env, pt_else);
-    if ( !else_stmt ) {
-      // たぶんエラー
-      return nullptr;
-    }
-  }
-
-  ElbStmt* stmt = factory().new_IfStmt(parent, process, pt_stmt,
-				       cond, then_stmt, else_stmt);
+  auto stmt = factory().new_IfStmt(parent, process, pt_stmt,
+				   cond, then_stmt, else_stmt);
 
   return stmt;
 }
@@ -70,22 +59,21 @@ StmtGen::instantiate_if(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_case(const VlNamedObj* parent,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const ElbEnv& env,
 			  const PtStmt* pt_stmt)
 {
-  ElbExpr* cond = instantiate_expr(parent, env, pt_stmt->expr());
-
+  // 条件式の生成
+  auto cond = instantiate_expr(parent, env, pt_stmt->expr());
   if ( !cond ) {
     // たぶんエラー
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_CaseStmt(parent, process, pt_stmt, cond);
-
   // この case 文に関係する全ての式のリスト
+  // あとでサイズ調整をするために用いる．
   vector<ElbExpr*> expr_list;
   SizeType ne = 0;
   for ( auto pt_item: pt_stmt->caseitem_list() ) {
@@ -95,55 +83,65 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 
   // default caseitem を末尾にするために順序づけを行う．
   // Parser::check_default_label() で default が高々1個しかないことは確認済み．
-  SizeType nc = pt_stmt->caseitem_num();
-  vector<const PtCaseItem*> caseitem_list(nc);
-  SizeType wpos = 0;
-  for ( auto pt_item: pt_stmt->caseitem_list() ) {
-    if ( pt_item->label_num() > 0 ) {
-      caseitem_list[wpos] = pt_item;
-      ++ wpos;
+  vector<const PtCaseItem*> pt_caseitem_list;
+  {
+    SizeType nc = pt_stmt->caseitem_num();
+    pt_caseitem_list.reserve(nc);
+    const PtCaseItem* default_caseitem = nullptr;
+    for ( auto pt_item: pt_stmt->caseitem_list() ) {
+      if ( pt_item->label_num() > 0 ) {
+	pt_caseitem_list.push_back(pt_item);
+      }
+      else {
+	default_caseitem = pt_item;
+      }
     }
-    else {
-      caseitem_list[nc - 1] = pt_item;
+    if ( default_caseitem ) {
+      // default caseitem を末尾に置く．
+      pt_caseitem_list.push_back(default_caseitem);
     }
   }
 
   // case-item の生成
-  wpos = 0;
-  for ( auto pt_item: caseitem_list ) {
-    ElbStmt* body = nullptr;
-    if ( pt_item->body() ) {
-      body = instantiate_stmt(parent, process, env, pt_item->body());
-      if ( !body ) {
-	return nullptr;
-      }
+  vector<const VlCaseItem*> caseitem_list;
+  caseitem_list.reserve(pt_caseitem_list.size());
+  for ( auto pt_item: pt_caseitem_list ) {
+    auto pt_body = pt_item->body();
+    auto body = instantiate_stmt(parent, process, env, pt_body);
+    if ( pt_body && !body ) {
+      // たぶんエラー
+      return nullptr;
     }
+    // pt_body が空の場合はあり．
 
     // ラベルの生成と設定
     SizeType n = pt_item->label_num();
-    ElbExpr** label_list = factory().new_ExprList(n);
+    auto label_list = factory().new_ExprList(n);
     SizeType pos = 0;
     for ( auto pt_expr: pt_item->label_list() ) {
-      ElbExpr* tmp = instantiate_expr(parent, env, pt_expr);
-      if ( !tmp ) {
+      auto expr = instantiate_expr(parent, env, pt_expr);
+      if ( !expr ) {
 	// たぶんエラー
 	return nullptr;
       }
-      label_list[pos] = tmp;
+      label_list[pos] = expr;
       ++ pos;
-      expr_list.push_back(tmp);
+      expr_list.push_back(expr);
     }
 
-    stmt->set_caseitem(wpos, pt_item, label_list, body);
-    ++ wpos;
+    // caseitem の生成
+    auto caseitem = factory().new_CaseItem(pt_item, n, label_list, body);
+    caseitem_list.push_back(caseitem);
   }
 
   // expr_list のサイズを合わせる．
   // ルールは
   // - どれか一つでも符号付きならすべて符号付き
   // - サイズは各要素の最大サイズ
-  VlValueType value_type0 = cond->value_type();
+  // 初期値は cond のものを用いる．
+  auto value_type0 = cond->value_type();
   if ( value_type0.is_real_type() ) {
+    // real 型は駄目
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    cond->file_region(),
 		    MsgType::Error,
@@ -153,9 +151,11 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
   }
   bool sign = value_type0.is_signed();
   SizeType size = value_type0.size();
+
   for ( auto expr: expr_list ) {
-    VlValueType value_type1 = expr->value_type();
+    auto value_type1 = expr->value_type();
     if ( value_type1.is_real_type() ) {
+      // real 型は駄目
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      expr->file_region(),
 		      MsgType::Error,
@@ -163,11 +163,15 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 		      "Case-item expression should not be real-type.");
       return nullptr;
     }
+
     if ( value_type1.is_signed() ) {
+      // 符号付き
       sign = true;
     }
+
     SizeType size1 = value_type1.size();
     if ( size < size1 ) {
+      // 最大サイズの更新
       size = size1;
     }
   }
@@ -178,6 +182,10 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
     expr->set_reqsize(value_type);
   }
 
+  // case statement の生成
+  auto stmt = factory().new_CaseStmt(parent, process, pt_stmt,
+				     cond, caseitem_list);
+
   return stmt;
 }
 
@@ -186,22 +194,19 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_wait(const VlNamedObj* parent,
-			  ElbProcess* process,
+			  const VlProcess* process,
 			  const ElbEnv& env,
 			  const PtStmt* pt_stmt)
 {
-  ElbExpr* cond = instantiate_expr(parent, env, pt_stmt->expr());
-  ElbStmt* body = instantiate_stmt(parent, process, env,
-				   pt_stmt->body());
-
+  auto cond = instantiate_expr(parent, env, pt_stmt->expr());
+  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
   if ( !cond || !body ) {
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_WaitStmt(parent, process, pt_stmt,
-					 cond, body);
+  auto stmt = factory().new_WaitStmt(parent, process, pt_stmt, cond, body);
 
   return stmt;
 }
@@ -211,20 +216,18 @@ StmtGen::instantiate_wait(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_forever(const VlNamedObj* parent,
-			     ElbProcess* process,
+			     const VlProcess* process,
 			     const ElbEnv& env,
 			     const PtStmt* pt_stmt)
 {
-  ElbStmt* body = instantiate_stmt(parent, process, env, pt_stmt->body());
-
+  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
   if ( !body ) {
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_ForeverStmt(parent, process, pt_stmt,
-					    body);
+  auto stmt = factory().new_ForeverStmt(parent, process, pt_stmt, body);
 
   return stmt;
 }
@@ -234,22 +237,19 @@ StmtGen::instantiate_forever(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_repeat(const VlNamedObj* parent,
-			    ElbProcess* process,
+			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt)
 {
-  ElbExpr* expr = instantiate_expr(parent, env, pt_stmt->expr());
-
-  ElbStmt* body = instantiate_stmt(parent, process, env, pt_stmt->body());
-
+  auto expr = instantiate_expr(parent, env, pt_stmt->expr());
+  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
   if ( !expr || !body ) {
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_RepeatStmt(parent, process, pt_stmt,
-					   expr, body);
+  auto stmt = factory().new_RepeatStmt(parent, process, pt_stmt, expr, body);
 
   return stmt;
 }
@@ -259,22 +259,19 @@ StmtGen::instantiate_repeat(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_while(const VlNamedObj* parent,
-			   ElbProcess* process,
+			   const VlProcess* process,
 			   const ElbEnv& env,
 			   const PtStmt* pt_stmt)
 {
-  ElbExpr* cond = instantiate_expr(parent, env, pt_stmt->expr());
-
-  ElbStmt* body = instantiate_stmt(parent, process, env, pt_stmt->body());
-
+  auto cond = instantiate_expr(parent, env, pt_stmt->expr());
+  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
   if ( !cond || !body ) {
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_WhileStmt(parent, process, pt_stmt,
-					  cond, body);
+  auto stmt = factory().new_WhileStmt(parent, process, pt_stmt, cond, body);
 
   return stmt;
 }
@@ -284,26 +281,21 @@ StmtGen::instantiate_while(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
-ElbStmt*
+const VlStmt*
 StmtGen::instantiate_for(const VlNamedObj* parent,
-			 ElbProcess* process,
+			 const VlProcess* process,
 			 const ElbEnv& env,
 			 const PtStmt* pt_stmt)
 {
-  ElbExpr* cond = instantiate_expr(parent, env, pt_stmt->expr());
-  ElbStmt* init = instantiate_stmt(parent, process, env,
-				   pt_stmt->init_stmt());
-  ElbStmt* next = instantiate_stmt(parent, process, env,
-				   pt_stmt->next_stmt());
-  ElbStmt* body = instantiate_stmt(parent, process, env,
-				   pt_stmt->body());
-
+  auto cond = instantiate_expr(parent, env, pt_stmt->expr());
+  auto init = instantiate_stmt(parent, process, env, pt_stmt->init_stmt());
+  auto next = instantiate_stmt(parent, process, env, pt_stmt->next_stmt());
+  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
   if ( !cond || !init || !next || !body ) {
     return nullptr;
   }
 
-  ElbStmt* stmt = factory().new_ForStmt(parent, process, pt_stmt,
-					cond, init, next, body);
+  auto stmt = factory().new_ForStmt(parent, process, pt_stmt, cond, init, next, body);
 
   return stmt;
 }

@@ -9,8 +9,8 @@
 
 #include "EiFactory.h"
 #include "EiFuncCall.h"
+#include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlUserSystf.h"
-#include "elaborator/ElbTaskFunc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -26,7 +26,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] arg_list 引数のリスト
 ElbExpr*
 EiFactory::new_FuncCall(const PtExpr* pt_expr,
-			const ElbTaskFunc* func,
+			const VlTaskFunc* func,
 			SizeType arg_size,
 			ElbExpr** arg_list)
 {
@@ -66,8 +66,8 @@ EiFcBase::EiFcBase(const PtExpr* pt_expr,
 		   SizeType arg_size,
 		   ElbExpr** arg_list) :
   EiExprBase(pt_expr),
-  mArgNum(arg_size),
-  mArgList(arg_list)
+  mArgNum{arg_size},
+  mArgList{arg_list}
 {
 }
 
@@ -85,7 +85,7 @@ EiFcBase::argument_num() const
 
 // @brief 引数の取得
 // @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
-ElbExpr*
+const VlExpr*
 EiFcBase::argument(SizeType pos) const
 {
   return mArgList[pos];
@@ -100,16 +100,6 @@ EiFcBase::_set_reqsize(const VlValueType& type)
   // なにもしない．
 }
 
-// @brief オペランドを返す．
-// @param[in] pos 位置番号
-// @note 演算子の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
-ElbExpr*
-EiFcBase::_operand(SizeType pos) const
-{
-  return nullptr;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiFuncCall
@@ -121,11 +111,11 @@ EiFcBase::_operand(SizeType pos) const
 // @param[in] arg_size 引数の数
 // @param[in] arg_list 引数のリスト
 EiFuncCall::EiFuncCall(const PtExpr* pt_expr,
-		       const ElbTaskFunc* func,
+		       const VlTaskFunc* func,
 		       SizeType arg_size,
 		       ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),
-  mFunc(func)
+  mFunc{func}
 {
 }
 
@@ -173,7 +163,7 @@ EiFuncCall::is_const() const
 {
   if ( mFunc->is_constant_function() ) {
     SizeType n = argument_num();
-    for ( int i = 0; i < n; ++ i ) {
+    for ( SizeType i = 0; i < n; ++ i ) {
       if ( !argument(i)->is_const() ) {
 	return false;
       }
@@ -213,7 +203,7 @@ EiSysFuncCall::EiSysFuncCall(const PtExpr* pt_expr,
 			     SizeType arg_size,
 			     ElbExpr** arg_list) :
   EiFcBase(pt_expr, arg_size, arg_list),
-  mUserSystf(user_systf)
+  mUserSystf{user_systf}
 {
 }
 

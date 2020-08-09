@@ -19,16 +19,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 // クラス ElbExpr
 //////////////////////////////////////////////////////////////////////
 
-// @brief コンストラクタ
-ElbExpr::ElbExpr()
-{
-}
-
-// @brief デストラクタ
-ElbExpr::~ElbExpr()
-{
-}
-
 // @brief 要求された値のタイプを返す．
 VlValueType
 ElbExpr::req_type() const

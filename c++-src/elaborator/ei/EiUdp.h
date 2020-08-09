@@ -13,8 +13,7 @@
 
 
 #include "elaborator/ElbUdp.h"
-#include "elaborator/ElbIODecl.h"
-
+#include "ym/vl/VlIODecl.h"
 #include "ym/VlScalarVal.h"
 
 

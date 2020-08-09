@@ -22,13 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlNamedObj :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlNamedObj() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlNamedObj の派生クラスに共通な仮想関数

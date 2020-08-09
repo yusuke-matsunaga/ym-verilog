@@ -3,7 +3,7 @@
 /// @brief ObjDict の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -11,11 +11,11 @@
 #include "ObjHandleSub.h"
 
 #include "ym/vl/VlNamedObj.h"
+#include "ym/vl/VlDecl.h"
+#include "ym/vl/VlTaskFunc.h"
 
-#include "elaborator/ElbDecl.h"
 #include "elaborator/ElbParameter.h"
 #include "elaborator/ElbModule.h"
-#include "elaborator/ElbTaskFunc.h"
 #include "elaborator/ElbPrimitive.h"
 #include "elaborator/ElbGfRoot.h"
 #include "elaborator/ElbGenvar.h"
@@ -80,7 +80,7 @@ ObjHandle::decl() const
 
 // @brief ElbDeclArray を返す．
 // @note このクラスでは nullptr を返す．
-ElbDeclArray*
+const VlDeclArray*
 ObjHandle::declarray() const
 {
   return nullptr;
@@ -96,7 +96,7 @@ ObjHandle::parameter() const
 
 // @brief ElbTaskFunc を返す．
 // @note このクラスでは nullptr を返す．
-ElbTaskFunc*
+const VlTaskFunc*
 ObjHandle::taskfunc() const
 {
   return nullptr;
@@ -104,7 +104,7 @@ ObjHandle::taskfunc() const
 
 // @brief ElbModuleArray を返す．
 // @note このクラスでは nullptr を返す．
-ElbModuleArray*
+const VlModuleArray*
 ObjHandle::module_array() const
 {
   return nullptr;
@@ -112,7 +112,7 @@ ObjHandle::module_array() const
 
 // @brief ElbPrimArray を返す．
 // @note このクラスでは nullptr を返す．
-ElbPrimArray*
+const VlPrimArray*
 ObjHandle::prim_array() const
 {
   return nullptr;
@@ -120,7 +120,7 @@ ObjHandle::prim_array() const
 
 // @brief ElbPrimitive を返す．
 // @note このクラスでは nullptr を返す．
-ElbPrimitive*
+const VlPrimitive*
 ObjHandle::primitive() const
 {
   return nullptr;
@@ -217,7 +217,7 @@ KeyObjHandle::full_name() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbTaskFuncHandle::ElbTaskFuncHandle(ElbTaskFunc* obj) :
+ElbTaskFuncHandle::ElbTaskFuncHandle(const VlTaskFunc* obj) :
   mObj{obj}
 {
 }
@@ -230,7 +230,7 @@ ElbTaskFuncHandle::obj() const
 }
 
 // @brief ElbTaskFunc を返す．
-ElbTaskFunc*
+const VlTaskFunc*
 ElbTaskFuncHandle::taskfunc() const
 {
   return mObj;
@@ -267,7 +267,7 @@ ElbDeclHandle::decl() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbDeclArrayHandle::ElbDeclArrayHandle(ElbDeclArray* obj) :
+ElbDeclArrayHandle::ElbDeclArrayHandle(const VlDeclArray* obj) :
   mObj{obj}
 {
 }
@@ -280,7 +280,7 @@ ElbDeclArrayHandle::obj() const
 }
 
 // @brief ElbDeclArray を返す．
-ElbDeclArray*
+const VlDeclArray*
 ElbDeclArrayHandle::declarray() const
 {
   return mObj;
@@ -317,7 +317,7 @@ ElbParamHandle::parameter() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbModuleArrayHandle::ElbModuleArrayHandle(ElbModuleArray* obj) :
+ElbModuleArrayHandle::ElbModuleArrayHandle(const VlModuleArray* obj) :
   mObj{obj}
 {
 }
@@ -337,7 +337,7 @@ ElbModuleArrayHandle::array_elem(int index) const
 }
 
 // @brief ElbModuleArray を返す．
-ElbModuleArray*
+const VlModuleArray*
 ElbModuleArrayHandle::module_array() const
 {
   return mObj;
@@ -349,7 +349,7 @@ ElbModuleArrayHandle::module_array() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbPrimArrayHandle::ElbPrimArrayHandle(ElbPrimArray* obj) :
+ElbPrimArrayHandle::ElbPrimArrayHandle(const VlPrimArray* obj) :
   mObj{obj}
 {
 }
@@ -362,7 +362,7 @@ ElbPrimArrayHandle::obj() const
 }
 
 // @brief ElbPrimArray を返す．
-ElbPrimArray*
+const VlPrimArray*
 ElbPrimArrayHandle::prim_array() const
 {
   return mObj;
@@ -374,7 +374,7 @@ ElbPrimArrayHandle::prim_array() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbPrimitiveHandle::ElbPrimitiveHandle(ElbPrimitive* obj) :
+ElbPrimitiveHandle::ElbPrimitiveHandle(const VlPrimitive* obj) :
   mObj{obj}
 {
 }
@@ -387,7 +387,7 @@ ElbPrimitiveHandle::obj() const
 }
 
 // @brief ElbPrimitive を返す．
-ElbPrimitive*
+const VlPrimitive*
 ElbPrimitiveHandle::primitive() const
 {
   return mObj;
@@ -491,7 +491,7 @@ ObjDict::add(const VlNamedObj* obj)
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbTaskFunc* obj)
+ObjDict::add(const VlTaskFunc* obj)
 {
   auto handle = new ElbTaskFuncHandle(obj);
   add_handle(handle);
@@ -507,7 +507,7 @@ ObjDict::add(ElbDecl* obj)
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbDeclArray* obj)
+ObjDict::add(const VlDeclArray* obj)
 {
   auto handle = new ElbDeclArrayHandle(obj);
   add_handle(handle);
@@ -523,7 +523,7 @@ ObjDict::add(ElbParameter* obj)
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbModuleArray* obj)
+ObjDict::add(const VlModuleArray* obj)
 {
   auto handle = new ElbModuleArrayHandle(obj);
   add_handle(handle);
@@ -531,7 +531,7 @@ ObjDict::add(ElbModuleArray* obj)
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbPrimArray* obj)
+ObjDict::add(const VlPrimArray* obj)
 {
   auto handle = new ElbPrimArrayHandle(obj);
   add_handle(handle);
@@ -539,7 +539,7 @@ ObjDict::add(ElbPrimArray* obj)
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbPrimitive* obj)
+ObjDict::add(const VlPrimitive* obj)
 {
   auto handle = new ElbPrimitiveHandle(obj);
   add_handle(handle);

@@ -24,13 +24,6 @@ class VlExpr;
 class VlDelay :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlDelay() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlDelay の派生クラスに共通な仮想関数

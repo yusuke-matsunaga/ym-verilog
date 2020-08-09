@@ -5,9 +5,8 @@
 /// @brief StmtGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
@@ -56,9 +55,11 @@ public:
   /// @param[in] process 親のプロセス
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  ///
+  /// pt_stmt が nullptr の時は nullptr を返す．
+  const VlStmt*
   instantiate_stmt(const VlNamedObj* parent,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   const ElbEnv& env,
 		   const PtStmt* pt_stmt);
 
@@ -72,9 +73,9 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_disable(const VlNamedObj* parent,
-		      ElbProcess* process,
+		      const VlProcess* process,
 		      const PtStmt* pt_stmt);
 
   /// @brief enable の実体化を行う．
@@ -82,9 +83,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_enable(const VlNamedObj* parent,
-		     ElbProcess* process,
+		     const VlProcess* process,
 		     const ElbEnv& env,
 		     const PtStmt* pt_stmt);
 
@@ -93,9 +94,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_sysenable(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const ElbEnv& env,
 			const PtStmt* pt_stmt);
 
@@ -104,9 +105,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_ctrlstmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const ElbEnv& env,
 		       const PtStmt* pt_stmt);
 
@@ -116,9 +117,9 @@ private:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
   /// @param[in] block ブロッキング代入の時 true
-  ElbStmt*
+  const VlStmt*
   instantiate_assign(const VlNamedObj* parent,
-		     ElbProcess* process,
+		     const VlProcess* process,
 		     const ElbEnv& env,
 		     const PtStmt* pt_stmt,
 		     bool block);
@@ -127,7 +128,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] env 生成時の環境
   /// @param[in] pt_control パース木のコントロール定義
-  ElbControl*
+  const VlControl*
   instantiate_control(const VlNamedObj* parent,
 		      const ElbEnv& env,
 		      const PtControl* pt_control);
@@ -136,18 +137,18 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_eventstmt(const VlNamedObj* parent,
-			ElbProcess* process,
+			const VlProcess* process,
 			const PtStmt* pt_stmt);
 
   /// @brief null statement の実体化を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_nullstmt(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const PtStmt* pt_stmt);
 
   /// @brief if 文の生成を行う．
@@ -155,9 +156,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_if(const VlNamedObj* parent,
-		 ElbProcess* process,
+		 const VlProcess* process,
 		 const ElbEnv& env,
 		 const PtStmt* pt_stmt);
 
@@ -166,9 +167,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_case(const VlNamedObj* parent,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   const ElbEnv& env,
 		   const PtStmt* pt_stmt);
 
@@ -177,9 +178,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_wait(const VlNamedObj* parent,
-		   ElbProcess* process,
+		   const VlProcess* process,
 		   const ElbEnv& env,
 		   const PtStmt* pt_stmt);
 
@@ -188,9 +189,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_forever(const VlNamedObj* parent,
-		      ElbProcess* process,
+		      const VlProcess* process,
 		      const ElbEnv& env,
 		      const PtStmt* pt_stmt);
 
@@ -199,9 +200,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_repeat(const VlNamedObj* parent,
-		     ElbProcess* process,
+		     const VlProcess* process,
 		     const ElbEnv& env,
 		     const PtStmt* pt_stmt);
 
@@ -210,9 +211,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_while(const VlNamedObj* parent,
-		    ElbProcess* process,
+		    const VlProcess* process,
 		    const ElbEnv& env,
 		    const PtStmt* pt_stmt);
 
@@ -221,9 +222,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_for(const VlNamedObj* parent,
-		  ElbProcess* process,
+		  const VlProcess* process,
 		  const ElbEnv& env,
 		  const PtStmt* pt_stmt);
 
@@ -232,9 +233,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_pca(const VlNamedObj* parent,
-		  ElbProcess* process,
+		  const VlProcess* process,
 		  const ElbEnv& env,
 		  const PtStmt* pt_stmt);
 
@@ -243,9 +244,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_deassign(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const ElbEnv& env,
 		       const PtStmt* pt_stmt);
 
@@ -254,9 +255,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_force(const VlNamedObj* parent,
-		    ElbProcess* process,
+		    const VlProcess* process,
 		    const ElbEnv& env,
 		    const PtStmt* pt_stmt);
 
@@ -265,9 +266,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_release(const VlNamedObj* parent,
-		      ElbProcess* process,
+		      const VlProcess* process,
 		      const ElbEnv& env,
 		      const PtStmt* pt_stmt);
 
@@ -276,9 +277,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_parblock(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const ElbEnv& env,
 		       const PtStmt* pt_stmt);
 
@@ -287,9 +288,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_seqblock(const VlNamedObj* parent,
-		       ElbProcess* process,
+		       const VlProcess* process,
 		       const ElbEnv& env,
 		       const PtStmt* pt_stmt);
 
@@ -303,9 +304,9 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_namedparblock(const VlNamedObj* parent,
-			    ElbProcess* process,
+			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt);
 
@@ -314,11 +315,24 @@ private:
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
-  ElbStmt*
+  const VlStmt*
   instantiate_namedseqblock(const VlNamedObj* parent,
-			    ElbProcess* process,
+			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt);
+
+  /// @brief Stmt のリストのインスタンス化を行う．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] process 親のプロセス (or nullptr)
+  /// @param[in] env 生成時の環境
+  /// @param[in] pt_stmt 対象のステートメント
+  ///
+  /// pt_stmt はブロック系のステートメント
+  const VlStmt**
+  instantiate_stmt_list(const VlNamedObj* parent,
+			const VlProcess* process,
+			const ElbEnv& env,
+			const PtStmt* pt_stmt);
 
 };
 

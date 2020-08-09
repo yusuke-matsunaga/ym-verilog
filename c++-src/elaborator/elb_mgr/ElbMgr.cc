@@ -3,26 +3,13 @@
 /// @brief ElbMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "elaborator/ElbMgr.h"
-
-#include "ym/pt/PtMisc.h"
 #include "ym/vl/VlUserSystf.h"
-#include "elaborator/ElbUdp.h"
 #include "elaborator/ElbModule.h"
-#include "elaborator/ElbTaskFunc.h"
-#include "elaborator/ElbGfRoot.h"
-#include "elaborator/ElbDecl.h"
-#include "elaborator/ElbParameter.h"
-#include "elaborator/ElbPrimitive.h"
-#include "elaborator/ElbContAssign.h"
-#include "elaborator/ElbProcess.h"
-#include "elaborator/ElbGenvar.h"
-
-#include "parser/PtiArray.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

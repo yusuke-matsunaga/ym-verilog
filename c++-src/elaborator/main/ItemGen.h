@@ -5,7 +5,7 @@
 /// @brief ItemGen のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -61,7 +61,7 @@ public:
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_function 関数定義
-  ElbTaskFunc*
+  const VlTaskFunc*
   instantiate_constant_function(const VlNamedObj* parent,
 				const PtItem* pt_function);
 
@@ -254,6 +254,13 @@ private:
   phase1_genitem(const VlNamedObj* parent,
 		 const vector<const PtDeclHead*>& pt_decl_array,
 		 const vector<const PtItem*>& pt_item_array);
+
+  /// @brief パラメータ割り当て情報を作る．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] pt_head 構文木のヘッダ要素
+  vector<ElbParamCon>
+  gen_param_con_list(const VlNamedObj* parent,
+		     const PtItem* pt_head);
 
 };
 

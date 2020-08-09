@@ -127,7 +127,7 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 パラメータや変数の場合
@@ -179,11 +179,21 @@ public:
   const VlDelay*
   delay() const override;
 
+  /// @brief 定数値を持つ型のときに true を返す．
+  /// @note このクラスは false を返す．
+  bool
+  is_consttype() const override;
+
   /// @brief 初期値の取得
   /// @retval 初期値
   /// @retval nullptr 設定がない場合
   const VlExpr*
   init_value() const override;
+
+  /// @brief localparam のときに true 返す．
+  /// @note このクラスは false を返す．
+  bool
+  is_local_param() const override;
 
 
 public:
@@ -195,6 +205,7 @@ public:
   void
   set_signed() override;
 
+#if 0
   /// @brief スカラー値を返す．
   VlScalarVal
   get_scalar() const override;
@@ -258,7 +269,7 @@ public:
   set_partselect(int left,
 		 int right,
 		 const BitVector& val) override;
-
+#endif
 
 private:
   //////////////////////////////////////////////////////////////////////

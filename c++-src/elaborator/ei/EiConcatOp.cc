@@ -29,7 +29,7 @@ EiFactory::new_ConcatOp(const PtExpr* pt_expr,
 			SizeType opr_size,
 			ElbExpr** opr_list)
 {
-  EiConcatOp* op = new EiConcatOp(pt_expr, opr_size, opr_list);
+  auto op{new EiConcatOp(pt_expr, opr_size, opr_list)};
 
   return op;
 }
@@ -47,8 +47,8 @@ EiFactory::new_MultiConcatOp(const PtExpr* pt_expr,
 			     SizeType opr_size,
 			     ElbExpr** opr_list)
 {
-  EiMultiConcatOp* op = new EiMultiConcatOp(pt_expr, rep_num, rep_expr,
-					    opr_size, opr_list);
+  auto op{new EiMultiConcatOp(pt_expr, rep_num, rep_expr,
+			      opr_size, opr_list)};
 
   return op;
 }
@@ -66,21 +66,22 @@ EiConcatOp::EiConcatOp(const PtExpr* pt_expr,
 		       SizeType opr_size,
 		       ElbExpr** opr_array) :
   EiOperation(pt_expr),
-  mOprNum(opr_size),
-  mOprList(opr_array)
+  mOprNum{opr_size},
+  mOprList{opr_array}
 {
   SizeType n = operand_num();
   mSize = 0;
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto expr = _operand(i);
+    auto expr = mOprList[i];
     VlValueType type1 = expr->value_type();
     ASSERT_COND( !type1.is_real_type() );
     SizeType size1 = type1.size();
     mSize += size1;
-
     // オペランドのサイズは self determined
     expr->set_selfsize();
   }
+  // 自分自身のサイズも self determined
+  set_selfsize();
 }
 
 // @brief デストラクタ
@@ -126,8 +127,8 @@ EiConcatOp::operand_num() const
 
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
-ElbExpr*
-EiConcatOp::_operand(SizeType pos) const
+const VlExpr*
+EiConcatOp::operand(SizeType pos) const
 {
   return mOprList[pos];
 }
@@ -156,8 +157,8 @@ EiMultiConcatOp::EiMultiConcatOp(const PtExpr* pt_expr,
 				 SizeType opr_size,
 				 ElbExpr** opr_array) :
   EiConcatOp(pt_expr, opr_size, opr_array),
-  mRepNum(rep_num),
-  mRepExpr(rep_expr)
+  mRepNum{rep_num},
+  mRepExpr{rep_expr}
 {
 }
 
@@ -179,6 +180,16 @@ EiMultiConcatOp::operand_num() const
 {
   return EiConcatOp::operand_num() + 1;
 }
+// @brief オペランドを返す．
+// @param[in] pos 位置番号
+const VlExpr*
+EiMultiConcatOp::operand(SizeType pos) const
+{
+  if ( pos == 0 ) {
+    return mRepExpr;
+  }
+  return EiConcatOp::operand(pos - 1);
+}
 
 // @brief 繰り返し数を返す．
 // @note multiple concatenation の時のみ意味を持つ．
@@ -186,17 +197,6 @@ SizeType
 EiMultiConcatOp::rep_num() const
 {
   return mRepNum;
-}
-
-// @brief オペランドを返す．
-// @param[in] pos 位置番号
-ElbExpr*
-EiMultiConcatOp::_operand(SizeType pos) const
-{
-  if ( pos == 0 ) {
-    return mRepExpr;
-  }
-  return EiConcatOp::_operand(pos - 1);
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -106,7 +106,7 @@ public:
   /// @note ヘッダに型指定がない時は値から情報を得る．
   bool
   calc_bit_offset(int index,
-		  int& offset,
+		  SizeType& offset,
 		  const VlValue& val) const override;
 
   /// @breif 値の型を返す．
@@ -233,7 +233,7 @@ public:
   /// @note ヘッダに型指定がない時は値から情報を得る．
   bool
   calc_bit_offset(int index,
-		  int& offset,
+		  SizeType& offset,
 		  const VlValue& val) const override;
 
   /// @breif 値の型を返す．
@@ -362,13 +362,67 @@ public:
   /// @retval false インデックスが範囲外の時
   bool
   calc_bit_offset(int index,
-		  int& offset) const override;
+		  SizeType& offset) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
   /// @retval kVpiVarNone 上記以外
   VpiVarType
   data_type() const override;
+
+  /// @brief net 型の取得
+  /// @retval net 型 net 型の要素の場合
+  /// @retval kVpiNone net 型の要素でない場合
+  /// @note このクラスでは kVpiNone を返す．
+  VpiNetType
+  net_type() const override;
+
+  /// @brief vectored|scalared 属性の取得
+  /// @retval kVpiVsNone vectored|scalared 指定なし
+  /// @retval kVpiVectored vectored 指定あり
+  /// @retval kVpiScalared scalared 指定あり
+  /// @note このクラスでは kVpiVsNone を返す．
+  VpiVsType
+  vs_type() const override;
+
+  /// @brief drive0 strength の取得
+  /// @retval 0 の強度
+  /// @retval kVpiNoStrength strength の指定なし
+  /// @note このクラスでは kVpiNoStrength を返す．
+  VpiStrength
+  drive0() const override;
+
+  /// @brief drive1 strength の取得
+  /// @retval 1 の強度
+  /// @retval kVpiNoStrength strength の指定なし
+  /// @note kVpiNoStrength を返す．
+  VpiStrength
+  drive1() const override;
+
+  /// @brief charge strength の取得
+  /// @retval 電荷の強度
+  /// @retval kVpiNoStrength strength の指定なし
+  /// @note このクラスでは kVpiNoStrength を返す．
+  VpiStrength
+  charge() const override;
+
+  /// @brief delay の取得
+  /// @retval delay
+  /// @retval nullptr delay の指定なし
+  /// @note このクラスでは nullptr を返す．
+  const VlDelay*
+  delay() const override;
+
+  /// @brief 定数値を持つ型のときに true を返す．
+  /// @note このクラスは true を返す．
+  bool
+  is_consttype() const override;
+
+  /// @brief 初期値の取得
+  /// @retval 初期値
+  /// @retval nullptr 設定がない場合
+  const VlExpr*
+  init_value() const override;
 
   /// @brief localparam のときに true 返す．
   /// @note このクラスでは false を返す．

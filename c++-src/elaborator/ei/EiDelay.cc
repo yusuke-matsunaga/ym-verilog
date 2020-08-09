@@ -29,7 +29,7 @@ EiFactory::new_Delay(const PtBase* pt_obj,
 		     SizeType elem_num,
 		     ElbExpr** expr_list)
 {
-  EiDelay* delay = new EiDelay(pt_obj, elem_num, expr_list);
+  EiDelay* delay{new EiDelay(pt_obj, elem_num, expr_list)};
 
   return delay;
 }
@@ -47,8 +47,8 @@ EiDelay::EiDelay(const PtBase* pt_obj,
 		 SizeType elem_num,
 		 ElbExpr** expr_list) :
   mPtObj(pt_obj),
-  mElemNum(elem_num),
-  mElemArray(expr_list)
+  mElemNum{elem_num},
+  mElemArray{expr_list}
 {
 }
 

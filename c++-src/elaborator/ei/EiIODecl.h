@@ -9,7 +9,8 @@
 /// All rights reserved.
 
 
-#include "elaborator/ElbIODecl.h"
+#include "ym/vl/VlIODecl.h"
+#include "elaborator/ElbIOHead.h"
 #include "EiRange.h"
 
 
@@ -43,17 +44,17 @@ public:
 
   /// @brief 親のモジュールの取得
   /// @note このクラスでは nullptr を返す．
-  ElbModule*
+  const VlModule*
   module() const override;
 
   /// @brief 親のタスクの取得
   /// @note このクラスでは nullptr を返す．
-  ElbTaskFunc*
+  const VlTaskFunc*
   task() const override;
 
   /// @brief 親の関数の取得
   /// @note このクラスでは nullptr を返す．
-  ElbTaskFunc*
+  const VlTaskFunc*
   function() const override;
 
 
@@ -82,7 +83,7 @@ private:
   /// @brief コンストラクタ
   /// @param[in] module 親のモジュール
   /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiModIOHead(ElbModule* module,
+  EiModIOHead(const VlModule* module,
 	      const PtIOHead* pt_header);
 
   /// @brief デストラクタ
@@ -95,7 +96,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のモジュールの取得
-  ElbModule*
+  const VlModule*
   module() const override;
 
 
@@ -105,7 +106,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 親のモジュール
-  ElbModule* mModule;
+  const VlModule* mModule;
 
 };
 
@@ -124,8 +125,8 @@ private:
   /// @brief コンストラクタ
   /// @param[in] task 親のタスク
   /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiTaskIOHead(ElbTaskFunc* task,
-	     const PtIOHead* pt_header);
+  EiTaskIOHead(const VlTaskFunc* task,
+	       const PtIOHead* pt_header);
 
   /// @brief デストラクタ
   ~EiTaskIOHead();
@@ -137,7 +138,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親のタスクの取得
-  ElbTaskFunc*
+  const VlTaskFunc*
   task() const override;
 
 
@@ -147,7 +148,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 親のタスク
-  ElbTaskFunc* mTask;
+  const VlTaskFunc* mTask;
 
 };
 
@@ -166,7 +167,7 @@ private:
   /// @brief コンストラクタ
   /// @param[in] func 親の関数
   /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiFunctionIOHead(ElbTaskFunc* func,
+  EiFunctionIOHead(const VlTaskFunc* func,
 		   const PtIOHead* pt_header);
 
   /// @brief デストラクタ
@@ -179,7 +180,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 親の関数の取得
-  ElbTaskFunc*
+  const VlTaskFunc*
   function() const override;
 
 
@@ -189,7 +190,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 親の関数
-  ElbTaskFunc* mFunction;
+  const VlTaskFunc* mFunction;
 
 };
 
@@ -199,7 +200,7 @@ private:
 /// @brief IO 要素を表すクラス
 //////////////////////////////////////////////////////////////////////
 class EiIODecl :
-  public ElbIODecl
+  public VlIODecl
 {
   friend class EiFactory;
 
@@ -297,16 +298,6 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbIODecl の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 対応する ElbDecl を返す．
-  ElbDecl*
-  _decl() const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
   // EiIODecl の関数
   //////////////////////////////////////////////////////////////////////
 
@@ -318,7 +309,7 @@ public:
   void
   init(ElbIOHead* head,
        const PtIOItem* pt_item,
-       ElbDecl* decl);
+       const VlDecl* decl);
 
 
 private:
@@ -333,7 +324,7 @@ private:
   const PtIOItem* mPtItem;
 
   // 対応する宣言要素
-  ElbDecl* mDecl;
+  const VlDecl* mDecl;
 
 };
 

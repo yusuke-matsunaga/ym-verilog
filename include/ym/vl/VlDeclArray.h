@@ -21,13 +21,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlDeclArray :
   public VlDeclBase
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlDeclArray() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlDeclArray の派生クラスに共通な仮想関数
@@ -67,7 +60,7 @@ public:
   virtual
   bool
   calc_array_offset(int index,
-		    int& offset) const = 0;
+		    SizeType& offset) const = 0;
 
   /// @brief 他次元配列の場合にインデックスのリストからオフセットを計算する．
   /// @param[in] index_list インデックスのリスト
@@ -77,7 +70,7 @@ public:
   virtual
   bool
   calc_array_offset(const vector<int>& index_list,
-		    int& offset) const = 0;
+		    SizeType& offset) const = 0;
 
 };
 

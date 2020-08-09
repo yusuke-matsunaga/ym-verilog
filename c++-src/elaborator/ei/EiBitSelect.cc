@@ -16,7 +16,6 @@
 #include "ym/pt/PtExpr.h"
 
 
-
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
@@ -34,8 +33,7 @@ EiFactory::new_BitSelect(const PtExpr* pt_expr,
 			 const PtExpr* index_expr,
 			 int index_val)
 {
-  return new EiConstBitSelect(pt_expr, base_expr,
-				  index_expr, index_val);
+  return new EiConstBitSelect(pt_expr, base_expr, index_expr, index_val);
 }
 
 // @brief 固定ビット選択式を生成する．
@@ -192,16 +190,6 @@ EiBitSelect::lhs_elem(SizeType pos) const
 void
 EiBitSelect::_set_reqsize(const VlValueType& type)
 {
-}
-
-// @brief オペランドを返す．
-// @param[in] pos 位置番号
-// @note 演算子の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
-ElbExpr*
-EiBitSelect::_operand(SizeType pos) const
-{
-  return nullptr;
 }
 
 

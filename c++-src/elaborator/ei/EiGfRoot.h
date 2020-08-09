@@ -1,25 +1,29 @@
-﻿#ifndef EIPROCESS_H
-#define EIPROCESS_H
+﻿#ifndef EIGFROOT_H
+#define EIGFROOT_H
 
-/// @file EiProcess.h
-/// @brief EiProcess のヘッダファイル
+/// @file EiGenBlock.h
+/// @brief EiGenBlock のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "elaborator/ElbProcess.h"
+#include "ym/vl/VlNamedObj.h"
+#include "elaborator/ElbGfRoot.h"
+
+#include "ym/pt/PtP.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class EiProcess EiProcess.h "EiProcess.h"
-/// @brief initial/always 文を表すクラス
+/// @class EiGfRoot EiGfRoot.h "EiGfRoot.h"
+/// @brief GfBlock の親となるクラス
+/// @note スコープとしての親ではなく，名前による検索のためのオブジェクト
 //////////////////////////////////////////////////////////////////////
-class EiProcess :
-  public ElbProcess
+class EiGfRoot :
+  public ElbGfRoot
 {
   friend class EiFactory;
 
@@ -27,51 +31,55 @@ private:
 
   /// @brief コンストラクタ
   /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の要素定義
-  EiProcess(const VlNamedObj* parent,
-	    const PtItem* pt_item);
+  /// @param[in] pt_item 対応するパース木の要素
+  EiGfRoot(const VlNamedObj* parent,
+	   const PtItem* pt_item);
 
   /// @brief デストラクタ
-  ~EiProcess();
+  ~EiGfRoot();
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // VlObj の仮想関数
+  // VlObj の派生クラスに共通な仮想関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型の取得
   VpiObjType
   type() const override;
 
-  /// @brief ファイル位置を返す．
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // VlProcess の関数
+  // VlNamedObj の派生クラスに共通な仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 親のスコープを返す．
+  /// @brief このオブジェクトの属しているスコープを返す．
   const VlNamedObj*
   parent() const override;
 
-  /// @brief 本体のステートメントの取得
-  const VlStmt*
-  stmt() const override;
+  /// @brief 名前の取得
+  const char*
+  name() const override;
 
 
 public:
   //////////////////////////////////////////////////////////////////////
-  // ElbProcess の仮想関数
+  // ElbGfRoot の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 本体のステートメントをセットする．
-  /// @param[in] stmt 本体のステートメント
+  /// @brief 子供のスコープを追加する．
   void
-  set_stmt(const VlStmt* stmt) override;
+  add(SizeType index,
+      const VlNamedObj* block) override;
+
+  /// @brief 子供のスコープを取り出す．
+  const VlNamedObj*
+  elem_by_index(SizeType index) override;
 
 
 private:
@@ -82,14 +90,14 @@ private:
   // 親のスコープ
   const VlNamedObj* mParent;
 
-  // パース木の要素定義
+  // 対応するパース木の要素
   const PtItem* mPtItem;
 
-  // 本体のステートメント
-  const VlStmt* mStmt;
+  // 子供のスコープのハッシュ表
+  unordered_map<SizeType, const VlNamedObj*> mTable;
 
 };
 
 END_NAMESPACE_YM_VERILOG
 
-#endif // EIPROCESS_H
+#endif // EIGFROOT_H

@@ -126,7 +126,7 @@ EiRange::is_in(int index) const
 // @retval false index が範囲外
 bool
 EiRange::calc_offset(int index,
-		     int& offset) const
+		     SizeType& offset) const
 {
   return calc_offset(mLeftVal, mRightVal, index, offset);
 }
@@ -138,7 +138,7 @@ EiRange::calc_offset(int index,
 // @retval false index が範囲外
 bool
 EiRange::calc_roffset(int index,
-		      int& offset) const
+		      SizeType& offset) const
 {
   return calc_roffset(mLeftVal, mRightVal, index, offset);
 }
@@ -147,7 +147,7 @@ EiRange::calc_roffset(int index,
 // @param[in] offset LSB からのオフセット値
 // @return offset に対応したインデックスを返す．
 int
-EiRange::index(int offset) const
+EiRange::index(SizeType offset) const
 {
   return index(mLeftVal, mRightVal, offset);
 }
@@ -156,7 +156,7 @@ EiRange::index(int offset) const
 // @param[in] roffset MSB からのオフセット値
 // @return roffset に対応したインデックスを返す．
 int
-EiRange::rindex(int roffset) const
+EiRange::rindex(SizeType roffset) const
 {
   return rindex(mLeftVal, mRightVal, roffset);
 }
@@ -243,7 +243,7 @@ EiRangeImpl::is_in(int index) const
 // @retval false index が範囲外
 bool
 EiRangeImpl::calc_offset(int index,
-			 int& offset) const
+			 SizeType& offset) const
 {
   return EiRange::calc_offset(mLeftVal, mRightVal, index, offset);
 }
@@ -255,21 +255,21 @@ EiRangeImpl::calc_offset(int index,
 // @retval false index が範囲外
 bool
 EiRangeImpl::calc_roffset(int index,
-			  int& offset) const
+			  SizeType& offset) const
 {
   return EiRange::calc_roffset(mLeftVal, mRightVal, index, offset);
 }
 
 // offset の逆関数
 int
-EiRangeImpl::index(int offset) const
+EiRangeImpl::index(SizeType offset) const
 {
   return EiRange::index(mLeftVal, mRightVal, offset);
 }
 
 // roffset の逆関数
 int
-EiRangeImpl::rindex(int roffset) const
+EiRangeImpl::rindex(SizeType roffset) const
 {
   return EiRange::rindex(mLeftVal, mRightVal, roffset);
 }
@@ -288,7 +288,7 @@ EiRangeArray::EiRangeArray(SizeType dim_size,
 {
   // 要素数を計算する．
   mElemSize = 1;
-  for ( int i = 0; i < dim_size; ++ i ) {
+  for ( SizeType i = 0; i < dim_size; ++ i ) {
     mElemSize *= array[i].size();
   }
 }
@@ -302,15 +302,15 @@ EiRangeArray::~EiRangeArray()
 // @param[in] offset オフセット
 // @param[out] index_list
 void
-EiRangeArray::index(int offset,
+EiRangeArray::index(SizeType offset,
 		    vector<int>& index_list) const
 {
-  int n = size();
+  SizeType n = size();
   index_list.resize(n);
-  for ( int i = n; i -- > 0; ) {
-    const EiRange* r = range(i);
-    int k = r->size();
-    int offset1 = offset % k;
+  for ( SizeType i = n; i -- > 0; ) {
+    auto r = range(i);
+    SizeType k = r->size();
+    SizeType offset1 = offset % k;
     offset /= k;
     index_list[i] = r->rindex(offset1);
   }
@@ -323,20 +323,20 @@ EiRangeArray::index(int offset,
 // @retval false index_list のいずれかの値が範囲外だった．
 bool
 EiRangeArray::calc_offset(const vector<int>& index_list,
-			  int& offset) const
+			  SizeType& offset) const
 {
-  int n = size();
+  SizeType n = size();
   if ( index_list.size() != n ) {
     // そもそもインデックス配列のサイズが違う．
     return false;
   }
 
   offset = 0;
-  for ( int i = 0; i < n; ++ i ) {
-    const EiRange* r = range(i);
-    int k = r->size();
+  for ( SizeType i = 0; i < n; ++ i ) {
+    auto r = range(i);
+    SizeType k = r->size();
     offset *= k;
-    int offset1;
+    SizeType offset1;
     if ( r->calc_roffset(index_list[i], offset1) ) {
       offset += offset1;
     }

@@ -54,13 +54,6 @@ public:
   void
   _set_reqsize(const VlValueType& type) override;
 
-  /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  /// @note 演算子の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
-  ElbExpr*
-  _operand(SizeType pos) const override;
-
 };
 
 
@@ -79,7 +72,7 @@ private:
   /// @param[in] pt_expr パース木の定義要素
   /// @param[in] obj 本体のオブジェクト
   EiPrimary(const PtExpr* pt_expr,
-	    ElbDecl* obj);
+	    const VlDecl* obj);
 
   /// @brief デストラクタ
   ~EiPrimary();
@@ -140,7 +133,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象の宣言要素
-  ElbDecl* mObj;
+  const VlDecl* mObj;
 
 };
 
@@ -160,7 +153,7 @@ private:
   /// @param[in] pt_item パース木の定義要素
   /// @param[in] obj 本体のオブジェクト
   EiDeclPrimary(const PtDeclItem* pt_item,
-		ElbDecl* obj);
+		const VlDecl* obj);
 
   /// @brief デストラクタ
   ~EiDeclPrimary();
@@ -234,13 +227,6 @@ public:
   void
   _set_reqsize(const VlValueType& type) override;
 
-  /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  /// @note 演算子の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
-  ElbExpr*
-  _operand(SizeType pos) const override;
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -261,7 +247,7 @@ private:
   const PtDeclItem* mPtObj;
 
   // 対象の宣言要素
-  ElbDecl* mObj;
+  const VlDecl* mObj;
 
 };
 
@@ -356,7 +342,7 @@ private:
   /// @param[in] dim 配列の次元
   /// @param[in] index_list インデックスのリスト
   EiArrayElemPrimary(const PtExpr* pt_expr,
-		     ElbDeclArray* obj,
+		     const VlDeclArray* obj,
 		     int dim,
 		     ElbExpr** index_list);
 
@@ -430,7 +416,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象の宣言要素
-  ElbDeclArray* mObj;
+  const VlDeclArray* mObj;
 
   // 配列の次元
   int mDim;
@@ -457,8 +443,8 @@ private:
   /// @param[in] obj 本体のオブジェクト
   /// @param[in] offset オフセット
   EiConstArrayElemPrimary(const PtExpr* pt_expr,
-			  ElbDeclArray* obj,
-			  int offset);
+			  const VlDeclArray* obj,
+			  SizeType offset);
 
   /// @brief デストラクタ
   ~EiConstArrayElemPrimary();
@@ -517,7 +503,7 @@ public:
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
-  int
+  SizeType
   declarray_offset() const override;
 
   /// @brief 左辺式の要素数の取得
@@ -541,10 +527,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 対象の宣言要素
-  ElbDeclArray* mObj;
+  const VlDeclArray* mObj;
 
   // オフセット
-  int mOffset;
+  SizeType mOffset;
 
 };
 

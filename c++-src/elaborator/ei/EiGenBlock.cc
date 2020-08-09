@@ -25,19 +25,9 @@ const VlNamedObj*
 EiFactory::new_GenBlock(const VlNamedObj* parent,
 			const PtItem* pt_item)
 {
-  EiGenBlock* scope = new EiGenBlock(parent, pt_item);
+  auto scope = new EiGenBlock(parent, pt_item);
 
   return scope;
-}
-
-// @brief GfBlock 検索用の親の名前付きオブジェクトを作る．
-ElbGfRoot*
-EiFactory::new_GfRoot(const VlNamedObj* parent,
-		      const PtItem* pt_item)
-{
-  EiGfRoot* gfroot = new EiGfRoot(parent, pt_item);
-
-  return gfroot;
 }
 
 // @brief generate for block を生成する．
@@ -49,7 +39,7 @@ EiFactory::new_GfBlock(const VlNamedObj* parent,
 		       const PtItem* pt_item,
 		       int gvi)
 {
-  EiGfBlock* scope = new EiGfBlock(parent, pt_item, gvi);
+  auto scope = new EiGfBlock(parent, pt_item, gvi);
 
   return scope;
 }
@@ -64,8 +54,8 @@ EiFactory::new_GfBlock(const VlNamedObj* parent,
 // @param[in] pt_item 対応するパース木の要素
 EiGenBlock::EiGenBlock(const VlNamedObj* parent,
 		       const PtItem* pt_item) :
-  mParent(parent),
-  mPtItem(pt_item)
+  mParent{parent},
+  mPtItem{pt_item}
 {
 }
 
@@ -104,75 +94,6 @@ EiGenBlock::name() const
 
 
 //////////////////////////////////////////////////////////////////////
-// クラス EiGfRoot
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item 対応するパース木の要素
-EiGfRoot::EiGfRoot(const VlNamedObj* parent,
-		   const PtItem* pt_item) :
-  mParent(parent),
-  mPtItem(pt_item)
-{
-}
-
-// @brief デストラクタ
-EiGfRoot::~EiGfRoot()
-{
-}
-
-// @brief 型の取得
-VpiObjType
-EiGfRoot::type() const
-{
-  return VpiObjType::Scope;
-}
-
-// @brief ファイル位置の取得
-FileRegion
-EiGfRoot::file_region() const
-{
-  return mPtItem->file_region();
-}
-
-// @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
-EiGfRoot::parent() const
-{
-  return mParent;
-}
-
-// @brief 名前の取得
-const char*
-EiGfRoot::name() const
-{
-  return mPtItem->name();
-}
-
-// @brief 子供のスコープを追加する．
-void
-EiGfRoot::add(int index,
-	      const VlNamedObj* block)
-{
-  mTable[index] = block;
-}
-
-
-// @brief 子供のスコープを取り出す．
-const VlNamedObj*
-EiGfRoot::elem_by_index(int index)
-{
-  if ( mTable.count(index) ) {
-    return mTable.at(index);
-  }
-  else {
-    return nullptr;
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // クラス EiGfBlock
 //////////////////////////////////////////////////////////////////////
 
@@ -187,6 +108,7 @@ EiGfBlock::EiGfBlock(const VlNamedObj* parent,
 {
   ostringstream buf;
   buf << pt_item->name() << "[" << index << "]";
+#warning "TODO 2020-08-08: ここのメモリアロケーションどうする．"
 
   mName = buf.str();
 }

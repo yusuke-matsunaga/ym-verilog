@@ -11,7 +11,6 @@
 #include "EiTaskFunc.h"
 #include "EiIODecl.h"
 
-#include "elaborator/ElbStmt.h"
 #include "elaborator/ElbDecl.h"
 
 #include "ym/VlTime.h"
@@ -40,7 +39,8 @@ EiFactory::new_Function(const VlNamedObj* parent,
 			const PtExpr* left,
 			const PtExpr* right,
 			int left_val,
-			int right_val)
+			int right_val,
+			bool const_func)
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
@@ -48,7 +48,8 @@ EiFactory::new_Function(const VlNamedObj* parent,
   SizeType io_num = pt_item->ioitem_num();
   auto io_array{new EiIODecl[io_num]};
   auto func{new EiFunctionV(parent, pt_item, io_num, io_array,
-			    left, right, left_val, right_val)};
+			    left, right, left_val, right_val,
+			    const_func)};
 
   return func;
 }
@@ -58,12 +59,13 @@ EiFactory::new_Function(const VlNamedObj* parent,
 // @param[in] pt_item パース木の定義
 ElbTaskFunc*
 EiFactory::new_Function(const VlNamedObj* parent,
-			const PtItem* pt_item)
+			const PtItem* pt_item,
+			bool const_func)
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
   auto io_array{new EiIODecl[io_num]};
-  auto func{new EiFunction(parent, pt_item, io_num, io_array)};
+  auto func{new EiFunction(parent, pt_item, io_num, io_array, const_func)};
 
   return func;
 }
@@ -168,31 +170,16 @@ void
 EiTaskFunc::init_iodecl(SizeType pos,
 			ElbIOHead* head,
 			const PtIOItem* pt_item,
-			ElbDecl* decl)
+			const VlDecl* decl)
 {
   mIODeclList[pos].init(head, pt_item, decl);
 }
 
 // @brief 本体のステートメントをセットする．
 void
-EiTaskFunc::set_stmt(ElbStmt* stmt)
+EiTaskFunc::set_stmt(const VlStmt* stmt)
 {
   mStmt = stmt;
-}
-
-// @brief 入出力を得る．
-// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
-ElbIODecl*
-EiTaskFunc::_io(SizeType pos) const
-{
-  return &mIODeclList[pos];
-}
-
-// @brief 本体の ElbStmt を得る．
-ElbStmt*
-EiTaskFunc::_stmt() const
-{
-  return mStmt;
 }
 
 
@@ -314,8 +301,10 @@ EiTask::is_constant_function() const
 EiFunction::EiFunction(const VlNamedObj* parent,
 		       const PtItem* pt_item,
 		       SizeType io_num,
-		       EiIODecl* io_array) :
-  EiTaskFunc(parent, pt_item, io_num, io_array)
+		       EiIODecl* io_array,
+		       bool const_func) :
+  EiTaskFunc(parent, pt_item, io_num, io_array),
+  mConstFunc{const_func}
 {
 }
 
@@ -442,7 +431,7 @@ EiFunction::set_ovar(ElbDecl* ovar)
 bool
 EiFunction::is_constant_function() const
 {
-  return false;
+  return mConstFunc;
 }
 
 
@@ -459,6 +448,7 @@ EiFunction::is_constant_function() const
 // @param[in] right 範囲の LSB の式
 // @param[in] left_val 範囲の MSB の値
 // @param[in] right_val 範囲の LSB の値
+// @param[in] const_func 定数関数フラグ
 EiFunctionV::EiFunctionV(const VlNamedObj* parent,
 			 const PtItem* pt_item,
 			 SizeType io_num,
@@ -466,8 +456,9 @@ EiFunctionV::EiFunctionV(const VlNamedObj* parent,
 			 const PtExpr* left,
 			 const PtExpr* right,
 			 int left_val,
-			 int right_val) :
-  EiFunction(parent, pt_item, io_num, io_array)
+			 int right_val,
+			 bool const_func) :
+  EiFunction(parent, pt_item, io_num, io_array, const_func)
 {
   mRange.set(left, right, left_val, right_val);
 }

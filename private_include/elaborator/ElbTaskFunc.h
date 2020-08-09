@@ -46,23 +46,12 @@ public:
   init_iodecl(SizeType pos,
   	      ElbIOHead* head,
 	      const PtIOItem* pt_item,
-	      ElbDecl* decl) = 0;
+	      const VlDecl* decl) = 0;
 
   /// @brief 本体のステートメントをセットする．
   virtual
   void
-  set_stmt(ElbStmt* stmt) = 0;
-
-  /// @brief 入出力を得る．
-  /// @param[in] pos 位置番号 (0 <= pos < io_num())
-  virtual
-  ElbIODecl*
-  _io(SizeType pos) const = 0;
-
-  /// @brief 本体の ElbStmt を得る．
-  virtual
-  ElbStmt*
-  _stmt() const = 0;
+  set_stmt(const VlStmt* stmt) = 0;
 
 
 public:
@@ -77,11 +66,6 @@ public:
   virtual
   void
   set_ovar(ElbDecl* ovar) = 0;
-
-  /// @brief constant function の時に true を返す．
-  virtual
-  bool
-  is_constant_function() const = 0;
 
 };
 

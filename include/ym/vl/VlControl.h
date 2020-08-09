@@ -42,13 +42,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlControl :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlControl() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlControl の仮想関数

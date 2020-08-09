@@ -23,12 +23,10 @@ class ElbPort;
 
 // in ElbIODecl.h
 class ElbIOHead;
-class ElbIODecl;
 
 // in ElbDecl.h
 class ElbDeclHead;
 class ElbDecl;
-class ElbDeclArray;
 
 // in ElbParameter.h
 class ElbParamHead;
@@ -48,13 +46,6 @@ class ElbPrimTerm;
 
 // in ElbProcess.h
 class ElbProcess;
-
-// in ElbStmt.h
-class ElbStmt;
-class ElbCaseItem;
-
-// in ElbControl.h
-class ElbControl;
 
 // in ElbExpr.h
 class ElbExpr;

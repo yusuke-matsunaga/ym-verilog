@@ -52,8 +52,8 @@ EiLhs::EiLhs(const PtExpr* pt_expr,
 	     SizeType lhs_elem_num,
 	     ElbExpr** lhs_elem_array) :
   EiConcatOp(pt_expr, opr_size, opr_array),
-  mNum(lhs_elem_num),
-  mArray(lhs_elem_array)
+  mNum{lhs_elem_num},
+  mArray{lhs_elem_array}
 {
 }
 

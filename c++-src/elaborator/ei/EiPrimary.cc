@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] obj 本体のオブジェクト
 ElbExpr*
 EiFactory::new_Primary(const PtExpr* pt_expr,
-		       ElbDecl* obj)
+		       const VlDecl* obj)
 {
   return new EiPrimary(pt_expr, obj);
 }
@@ -39,7 +39,7 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 // @param[in] obj 本体のオブジェクト
 ElbExpr*
 EiFactory::new_Primary(const PtDeclItem* pt_item,
-		       ElbDecl* obj)
+		       const VlDecl* obj)
 {
   return new EiDeclPrimary(pt_item, obj);
 }
@@ -60,12 +60,12 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 // @param[in] index_list インデックスのリスト
 ElbExpr*
 EiFactory::new_Primary(const PtExpr* pt_expr,
-		       ElbDeclArray* obj,
+		       const VlDeclArray* obj,
 		       const vector<ElbExpr*>& index_list)
 {
   SizeType n = index_list.size();
-  ElbExpr** index_array = new ElbExpr*[n];
-  for ( int i = 0; i < n; ++ i ) {
+  auto index_array = new ElbExpr*[n];
+  for ( SizeType i = 0; i < n; ++ i ) {
     index_array[i] = index_list[i];
   }
   return new EiArrayElemPrimary(pt_expr, obj, n, index_array);
@@ -77,7 +77,7 @@ EiFactory::new_Primary(const PtExpr* pt_expr,
 // @param[in] offset オフセット
 ElbExpr*
 EiFactory::new_Primary(const PtExpr* pt_expr,
-		       ElbDeclArray* obj,
+		       const VlDeclArray* obj,
 		       int offset)
 {
   return new EiConstArrayElemPrimary(pt_expr, obj, offset);
@@ -136,16 +136,6 @@ EiPrimaryBase::_set_reqsize(const VlValueType& type)
   // なにもしない．
 }
 
-// @brief オペランドを返す．
-// @param[in] pos 位置番号
-// @note 演算子の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
-ElbExpr*
-EiPrimaryBase::_operand(SizeType pos) const
-{
-  return nullptr;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiPrimary
@@ -155,9 +145,9 @@ EiPrimaryBase::_operand(SizeType pos) const
 // @param[in] pt_expr パース木の定義要素
 // @param[in] obj 本体のオブジェクト
 EiPrimary::EiPrimary(const PtExpr* pt_expr,
-		     ElbDecl* obj) :
+		     const VlDecl* obj) :
   EiPrimaryBase(pt_expr),
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -234,9 +224,9 @@ EiPrimary::lhs_elem(SizeType pos) const
 // @param[in] pt_item パース木の定義要素
 // @param[in] obj 本体のオブジェクト
 EiDeclPrimary::EiDeclPrimary(const PtDeclItem* pt_item,
-			     ElbDecl* obj) :
+			     const VlDecl* obj) :
   mPtObj(pt_item),
-  mObj(obj)
+  mObj{obj}
 {
 }
 
@@ -327,16 +317,6 @@ EiDeclPrimary::_set_reqsize(const VlValueType& type)
   // なにもしない．
 }
 
-// @brief オペランドを返す．
-// @param[in] pos 位置番号
-// @note 演算子の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
-ElbExpr*
-EiDeclPrimary::_operand(SizeType pos) const
-{
-  return nullptr;
-}
-
 // @brief パース木の定義要素を返す．
 const PtBase*
 EiDeclPrimary::pt_obj() const
@@ -422,7 +402,7 @@ EiParamPrimary::decl_obj() const
 // @param[in] dim 配列の次元
 // @param[in] index_list インデックスのリスト
 EiArrayElemPrimary::EiArrayElemPrimary(const PtExpr* pt_expr,
-				       ElbDeclArray* obj,
+				       const VlDeclArray* obj,
 				       int dim,
 				       ElbExpr** index_list) :
   EiPrimaryBase(pt_expr),
@@ -524,8 +504,8 @@ EiArrayElemPrimary::lhs_elem(SizeType pos) const
 // @param[in] obj 本体のオブジェクト
 // @param[in] offset オフセット
 EiConstArrayElemPrimary::EiConstArrayElemPrimary(const PtExpr* pt_expr,
-						 ElbDeclArray* obj,
-						 int offset) :
+						 const VlDeclArray* obj,
+						 SizeType offset) :
   EiPrimaryBase(pt_expr),
   mObj(obj),
   mOffset(offset)
@@ -604,7 +584,7 @@ EiConstArrayElemPrimary::declarray_index(SizeType pos) const
 
 // @brief 配列型宣言要素への参照のオフセットを返す．
 // @note 固定インデックスの場合のみ意味を持つ．
-int
+SizeType
 EiConstArrayElemPrimary::declarray_offset() const
 {
   return mOffset;

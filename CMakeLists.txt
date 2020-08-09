@@ -86,6 +86,7 @@ set (elaborator_SOURCES
   c++-src/elaborator/ei/EiFuncCall.cc
   c++-src/elaborator/ei/EiGenBlock.cc
   c++-src/elaborator/ei/EiGenvar.cc
+  c++-src/elaborator/ei/EiGfRoot.cc
   c++-src/elaborator/ei/EiIODecl.cc
   c++-src/elaborator/ei/EiImpNet.cc
   c++-src/elaborator/ei/EiLhs.cc
@@ -110,9 +111,7 @@ set (elaborator_SOURCES
   c++-src/elaborator/elb_mgr/ElbDecl.cc
   c++-src/elaborator/elb_mgr/ElbExpr.cc
   c++-src/elaborator/elb_mgr/ElbMgr.cc
-  c++-src/elaborator/elb_mgr/ElbParameter.cc
   c++-src/elaborator/elb_mgr/ElbPrimitive.cc
-  c++-src/elaborator/elb_mgr/ElbStmt.cc
   c++-src/elaborator/elb_mgr/TagDict.cc
   c++-src/elaborator/elb_mgr/VlNamedObj.cc
 

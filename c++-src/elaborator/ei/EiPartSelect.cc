@@ -216,6 +216,7 @@ EiPartSelect::_set_reqsize(const VlValueType& type)
   // なにもしない．
 }
 
+#if 0
 // @brief オペランドを返す．
 // @param[in] pos 位置番号
 // @note 演算子の時，意味を持つ．
@@ -225,7 +226,7 @@ EiPartSelect::_operand(SizeType pos) const
 {
   return nullptr;
 }
-
+#endif
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiConstPartSelect

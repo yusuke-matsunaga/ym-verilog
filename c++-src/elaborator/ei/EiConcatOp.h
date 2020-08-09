@@ -55,6 +55,10 @@ public:
   SizeType
   operand_num() const override;
 
+  /// @brief オペランドを返す．
+  const VlExpr*
+  operand(SizeType pos) const override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -66,16 +70,6 @@ public:
   /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
   _set_reqsize(const VlValueType& type) override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbExpr の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief オペランドを返す．
-  ElbExpr*
-  _operand(SizeType pos) const override;
 
 
 protected:
@@ -146,21 +140,14 @@ public:
   SizeType
   operand_num() const override;
 
+  /// @brief オペランドを返す．
+  const VlExpr*
+  operand(SizeType pos) const override;
+
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．
   SizeType
   rep_num() const override;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // ElbExpr の仮想関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  ElbExpr*
-  _operand(SizeType pos) const override;
 
 
 private:

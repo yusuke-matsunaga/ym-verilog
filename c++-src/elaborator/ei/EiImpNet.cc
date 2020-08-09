@@ -26,7 +26,7 @@ EiFactory::new_ImpNet(const VlNamedObj* parent,
 		      const PtExpr* pt_expr,
 		      VpiNetType net_type)
 {
-  EiImpNet* decl = new EiImpNet(parent, pt_expr, net_type);
+  auto decl = new EiImpNet(parent, pt_expr, net_type);
 
   return decl;
 }
@@ -41,9 +41,9 @@ EiFactory::new_ImpNet(const VlNamedObj* parent,
 EiImpNet::EiImpNet(const VlNamedObj* parent,
 		   const PtExpr* pt_expr,
 		   VpiNetType net_type) :
-  mParent(parent),
-  mPtExpr(pt_expr),
-  mNetType(net_type)
+  mParent{parent},
+  mPtExpr{pt_expr},
+  mNetType{net_type}
 {
 }
 
@@ -165,7 +165,7 @@ EiImpNet::bit_size() const
 // @retval false インデックスが範囲外の時
 bool
 EiImpNet::calc_bit_offset(int index,
-			  int& offset) const
+			  SizeType& offset) const
 {
   if ( index == 0 ) {
     offset = 0;
@@ -240,6 +240,14 @@ EiImpNet::delay() const
   return nullptr;
 }
 
+// @brief 定数値を持つ型のときに true を返す．
+// @note このクラスは false を返す．
+bool
+EiImpNet::is_consttype() const
+{
+  return false;
+}
+
 // @brief 初期値の取得
 // @retval 初期値
 // @retval nullptr 設定がない場合
@@ -249,115 +257,19 @@ EiImpNet::init_value() const
   return nullptr;
 }
 
+// @brief localparam のときに true 返す．
+// @note このクラスは false を返す．
+bool
+EiImpNet::is_local_param() const
+{
+  return false;
+}
+
 // @brief 符号付きに補正する．
 void
 EiImpNet::set_signed()
 {
   // なにもしない．
-}
-
-// @brief スカラー値を返す．
-VlScalarVal
-EiImpNet::get_scalar() const
-{
-  return mVal;
-}
-
-// @brief スカラー値を設定する．
-void
-EiImpNet::set_scalar(const VlScalarVal& val)
-{
-  mVal = val;
-}
-
-// @brief 論理値を返す．
-VlScalarVal
-EiImpNet::get_logic() const
-{
-  return mVal.to_logic();
-}
-
-// @brief real 型の値を返す．
-double
-EiImpNet::get_real() const
-{
-  return mVal.to_real();
-}
-
-// @brief real 型の値を設定する．
-void
-EiImpNet::set_real(double val)
-{
-  mVal = VlScalarVal(val);
-}
-
-// @brief bitvector 型の値を返す．
-void
-EiImpNet::get_bitvector(BitVector& bitvector,
-			const VlValueType& req_type) const
-{
-  bitvector = mVal;
-  bitvector.coerce(req_type);
-}
-
-// @brief bitvector 型の値を設定する．
-void
-EiImpNet::set_bitvector(const BitVector& val)
-{
-  mVal = val.to_scalar();
-}
-
-// @brief ビット選択値を返す．
-// @param[in] index ビット位置
-VlScalarVal
-EiImpNet::get_bitselect(int index) const
-{
-  if ( index == 0 ) {
-    return mVal;
-  }
-  else {
-    return VlScalarVal::x();
-  }
-}
-
-// @brief ビット値を設定する．
-// @param[in] index ビット位置
-// @param[in] val 値
-void
-EiImpNet::set_bitselect(int index,
-			const VlScalarVal& val)
-{
-  if ( index == 0 ) {
-    mVal = val;
-  }
-}
-
-// @brief 範囲選択値を返す．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[out] val 値
-void
-EiImpNet::get_partselect(int left,
-			 int right,
-			 BitVector& val) const
-{
-  if ( left == 0 && right == 0 ) {
-    val = mVal;
-  }
-}
-
-// @brief 範囲値を設定する．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] val 値
-void
-EiImpNet::set_partselect(int left,
-			 int right,
-			 const BitVector& val)
-{
-  if ( left == 0 && right == 0 ) {
-    mVal = val.to_scalar();
-  }
 }
 
 END_NAMESPACE_YM_VERILOG

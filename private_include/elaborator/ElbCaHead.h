@@ -1,22 +1,24 @@
-﻿#ifndef ELBCONTASSIGN_H
-#define ELBCONTASSIGN_H
+﻿#ifndef ELBCAHEAD_H
+#define ELBCAHEAD_H
 
-/// @file ElbContAssign.h
-/// @brief ElbContAssign のヘッダファイル
+/// @file ElbCaHead.h
+/// @brief ElbCaHead のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "ym/vl/VlContAssign.h"
+#include "ym/verilog.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class ElbCaHead ElbContAssign.h "ElbContAssign.h"
+/// @class ElbCaHead ElbCaHead.h "ElbCaHead.h"
 /// @brief 継続的代入文のヘッダ
+///
+/// とは言ってもただの place holder クラス
 //////////////////////////////////////////////////////////////////////
 class ElbCaHead
 {
@@ -59,4 +61,4 @@ public:
 
 END_NAMESPACE_YM_VERILOG
 
-#endif // ELBCONTASSIGN_H
+#endif // ELBCAHEAD_H

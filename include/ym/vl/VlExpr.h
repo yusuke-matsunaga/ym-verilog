@@ -22,13 +22,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class VlExpr :
   public VlObj
 {
-protected:
-
-  /// @brief デストラクタ
-  virtual
-  ~VlExpr() { }
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // VlExpr の派生クラスに共通な仮想関数
@@ -134,7 +127,7 @@ public:
   /// @brief 配列型宣言要素への参照のオフセットを返す．
   /// @note 固定インデックスの場合のみ意味を持つ．
   virtual
-  int
+  SizeType
   declarray_offset() const = 0;
 
   /// @brief スコープへの参照の場合，対象のオブジェクトを返す．

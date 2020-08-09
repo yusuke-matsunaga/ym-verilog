@@ -73,16 +73,16 @@ public:
   const VlNamedObj*
   array_elem(int index) const;
 
-  /// @brief ElbDecl を返す．
+  /// @brief VlDecl を返す．
   /// @note このクラスでは nullptr を返す．
   virtual
   ElbDecl*
   decl() const;
 
-  /// @brief ElbDeclArray を返す．
+  /// @brief VlDeclArray を返す．
   /// @note このクラスでは nullptr を返す．
   virtual
-  ElbDeclArray*
+  const VlDeclArray*
   declarray() const;
 
   /// @brief ElbParameter を返す．
@@ -94,25 +94,25 @@ public:
   /// @brief ElbTaskFunc を返す．
   /// @note このクラスでは nullptr を返す．
   virtual
-  ElbTaskFunc*
+  const VlTaskFunc*
   taskfunc() const;
 
   /// @brief ElbModuleArray を返す．
   /// @note このクラスでは nullptr を返す．
   virtual
-  ElbModuleArray*
+  const VlModuleArray*
   module_array() const;
 
   /// @brief ElbPrimArray を返す．
   /// @note このクラスでは nullptr を返す．
   virtual
-  ElbPrimArray*
+  const VlPrimArray*
   prim_array() const;
 
   /// @brief ElbPrimitive を返す．
   /// @note このクラスでは nullptr を返す．
   virtual
-  ElbPrimitive*
+  const VlPrimitive*
   primitive() const;
 
   /// @brief ElbGfRoot を返す．
