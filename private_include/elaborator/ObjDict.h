@@ -5,7 +5,7 @@
 /// @brief ObjDict のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -24,10 +24,10 @@ class ObjDict
 public:
 
   /// @brief コンストラクタ
-  ObjDict() = default;
+  ObjDict();
 
   /// @brief デストラクタ
-  ~ObjDict() = default;
+  ~ObjDict();
 
 
 public:
@@ -39,9 +39,9 @@ public:
   void
   clear();
 
-  /// @brief 要素を追加する．
+  /// @brief スコープを追加する．
   void
-  add(const VlNamedObj* obj);
+  add(const VlScope* obj);
 
   /// @brief 要素を追加する．
   void
@@ -58,6 +58,10 @@ public:
   /// @brief 要素を追加する．
   void
   add(ElbParameter* obj);
+
+  /// @brief 要素を追加する．
+  void
+  add(const VlModule* obj);
 
   /// @brief 要素を追加する．
   void
@@ -82,8 +86,8 @@ public:
   /// @brief 名前から該当する要素を検索する．
   /// @note なければ nullptr を返す．
   ObjHandle*
-  find(const VlNamedObj* parent,
-       const char* name) const;
+  find(const VlScope* parent,
+       const string& name) const;
 
 
 private:
@@ -103,9 +107,6 @@ private:
 
   // ObjHandle を納めるハッシュ表
   unordered_set<ObjHandle*, ObjHandleHash, ObjHandleEq> mHash;
-
-  // ObjHandle のリスト
-  vector<unique_ptr<ObjHandle>> mHandleList;
 
 };
 

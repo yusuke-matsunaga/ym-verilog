@@ -8,12 +8,13 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "ym/pt/PtDecl.h"
+#include "ym/FileRegion.h"
 #include "PtiFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
+
+class Alloc;
 
 //////////////////////////////////////////////////////////////////////
 /// @class PtiFactory PtiFactory.h "PtiFactory.h"
@@ -32,11 +33,11 @@ public:
   static
   PtiFactory*
   make_obj(const string& type,
-	   PtAlloc& alloc);
+	   Alloc& alloc);
 
   /// @brief コンストラクタ
   /// @param[in] alloc メモリアロケータ
-  PtiFactory(PtAlloc& alloc);
+  PtiFactory(Alloc& alloc);
 
   /// @brief デストラクタ
   virtual
@@ -2228,6 +2229,14 @@ public:
   new_NameBranch(const char* name,
 		 int index) = 0;
 
+  /// @brief 階層名の生成
+  /// @param[in] head_name 階層の上位部分
+  /// @param[in] index インデックス
+  /// @param[in] name 階層の最下位部分
+  PuHierName*
+  new_HierName(const PtNameBranch* nb,
+	       const char* name);
+
 
   //////////////////////////////////////////////////////////////////////
   // attribute instance 関係
@@ -2272,7 +2281,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   // メモリアロケータ
-  PtAlloc& mAlloc;
+  Alloc& mAlloc;
 
 };
 

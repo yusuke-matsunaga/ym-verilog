@@ -22,6 +22,7 @@
 #include "ym/vl/VlPort.h"
 
 #include "elaborator/ElbModule.h"
+#include "elaborator/ElbModuleArray.h"
 #include "elaborator/ElbExpr.h"
 
 #include "ym/MsgMgr.h"
@@ -54,7 +55,7 @@ END_NONAMESPACE
 // @param[in] parent 親のスコープ
 // @param[in] pt_head ヘッダ
 void
-ItemGen::phase1_muheader(const VlNamedObj* parent,
+ItemGen::phase1_muheader(const VlScope* parent,
 			 const PtItem* pt_head)
 {
   const auto& fr = pt_head->file_region();
@@ -122,6 +123,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
 	// パラメータ割り当て式の生成
 	auto param_con_list = gen_param_con_list(parent, pt_head);
 	phase1_module_item(module1, pt_module, param_con_list);
+
 	add_phase3stub(make_stub(this, &ItemGen::link_module,
 				 module1, pt_module, pt_inst));
       }
@@ -197,7 +199,7 @@ ItemGen::phase1_muheader(const VlNamedObj* parent,
 // @param[in] pt_head ヘッダ
 // @param[in] pt_inst インスタンス定義
 void
-ItemGen::phase1_module_array(const VlNamedObj* parent,
+ItemGen::phase1_module_array(const VlScope* parent,
 			     const PtModule* pt_module,
 			     const PtItem* pt_head,
 			     const PtInst* pt_inst)
@@ -240,7 +242,7 @@ ItemGen::phase1_module_array(const VlNamedObj* parent,
   auto param_con_list = gen_param_con_list(parent, pt_head);
   SizeType n = module_array->elem_num();
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto module1 = module_array->_module(i);
+    auto module1 = module_array->elem_by_offset(i);
 
 #if 0
     // attribute instance の生成
@@ -259,7 +261,8 @@ ItemGen::phase1_module_array(const VlNamedObj* parent,
 		    buf.str());
 
     // モジュール要素を作る．
-    phase1_module_item(module1, pt_module, param_con_list);
+    auto module = module_array->elem(i);
+    phase1_module_item(module, pt_module, param_con_list);
   }
 }
 
@@ -272,11 +275,11 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 			   const PtModule* pt_module,
 			   const PtInst* pt_inst)
 {
-  auto parent = module_array->parent();
+  auto parent = module_array->parent_scope();
   const auto& fr = pt_inst->file_region();
 
   SizeType module_size = module_array->elem_num();
-  auto module0 = module_array->_module(0);
+  auto module0 = module_array->elem_by_offset(0);
   SizeType port_num = module0->port_num();
 
   auto port_list = pt_inst->port_list();
@@ -395,15 +398,14 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       if ( port_size == expr_size ) {
 	// サイズが等しい場合はそのまま接続する．
 	for ( SizeType i = 0; i < module_size; ++ i ) {
-	  auto module1 = module_array->_module(i);
-	  module1->set_port_high_conn(index, tmp, conn_by_name);
+	  auto module = module_array->elem(i);
+	  module->set_port_high_conn(index, tmp, conn_by_name);
 	}
       }
       else if ( port_size * module_size == expr_size ) {
 	ASSERT_COND( module_size > 1 );
 	// tmp を 分割する．
 	for ( SizeType i = 0; i < module_size; ++ i ) {
-	  auto module1 = module_array->_module(i);
 	  ElbExpr* tmp1 = nullptr;
 	  if ( port_size == 1 ) {
 	    tmp1 = factory().new_BitSelect(pt_expr, tmp, i);
@@ -413,7 +415,8 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 	    int msb = lsb + port_size - 1;
 	    tmp1 = factory().new_PartSelect(pt_expr, tmp, msb, lsb);
 	  }
-	  module1->set_port_high_conn(index, tmp1, conn_by_name);
+	  auto module = module_array->elem(i);
+	  module->set_port_high_conn(index, tmp1, conn_by_name);
 	}
       }
       else {
@@ -447,8 +450,8 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 	// 同一の式を接続する．
 	// 普通に考えていいアイデアとは思えない．
 	for ( SizeType i = 0; i < module_size; ++ i ) {
-	  auto module1 = module_array->_module(i);
-	  module1->set_port_high_conn(index, tmp, conn_by_name);
+	  auto module = module_array->elem(i);
+	  module->set_port_high_conn(index, tmp, conn_by_name);
 	}
       }
       else if ( expr_size == port_size * module_size ) {
@@ -494,7 +497,7 @@ ItemGen::link_module(ElbModule* module,
 		     const PtInst* pt_inst)
 {
   const auto& fr = pt_inst->file_region();
-  auto parent = module->parent();
+  auto parent = module->parent_scope();
   SizeType port_num = module->port_num();
   auto port_list = pt_inst->port_list();
   SizeType n = port_list.size();
@@ -656,7 +659,7 @@ ItemGen::link_module(ElbModule* module,
 // @param[in] parent 親のスコープ
 // @param[in] pt_head 構文木のヘッダ要素
 vector<ElbParamCon>
-ItemGen::gen_param_con_list(const VlNamedObj* parent,
+ItemGen::gen_param_con_list(const VlScope* parent,
 			    const PtItem* pt_head)
 {
   vector<ElbParamCon> param_con_list;

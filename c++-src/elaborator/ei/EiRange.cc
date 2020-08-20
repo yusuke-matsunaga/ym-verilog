@@ -3,32 +3,17 @@
 /// @brief EiRange の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiRange.h"
+#include "ei/EiFactory.h"
+#include "ei/EiRange.h"
 
 #include "ym/pt/PtExpr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
-
-//////////////////////////////////////////////////////////////////////
-// EiFactory の生成関数
-//////////////////////////////////////////////////////////////////////
-
-// @brief 範囲の配列を生成する．
-// @param[in] dim_size 要素数
-ElbRange*
-EiFactory::new_RangeArray(SizeType dim_size)
-{
-  EiRange* range_array = new EiRange[dim_size];
-
-  return range_array;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiRange
@@ -168,8 +153,8 @@ EiRange::rindex(SizeType roffset) const
 
 // コンストラクタ
 EiRangeImpl::EiRangeImpl() :
-  mLeftRange(nullptr),
-  mRightRange(nullptr)
+  mLeftRange{nullptr},
+  mRightRange{nullptr}
 {
 }
 
@@ -280,16 +265,14 @@ EiRangeImpl::rindex(SizeType roffset) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @brief dim_size 次元数
-EiRangeArray::EiRangeArray(SizeType dim_size,
-			   EiRange* array) :
-  mDimSize(dim_size),
-  mArray(array)
+// @brief array 範囲の配列
+EiRangeArray::EiRangeArray(const vector<EiRange>& array) :
+  mArray{array}
 {
   // 要素数を計算する．
   mElemSize = 1;
-  for ( SizeType i = 0; i < dim_size; ++ i ) {
-    mElemSize *= array[i].size();
+  for ( const auto& range: mArray ) {
+    mElemSize *= range.size();
   }
 }
 

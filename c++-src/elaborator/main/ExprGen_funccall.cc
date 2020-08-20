@@ -73,7 +73,7 @@ END_NONAMESPACE
 // @param[in] env 生成時の環境
 // @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_funccall(const VlNamedObj* parent,
+ExprGen::instantiate_funccall(const VlScope* parent,
 			      const ElbEnv& env,
 			      const PtExpr* pt_expr)
 {
@@ -137,7 +137,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
     return nullptr;
   }
 
-  auto arg_list = factory().new_ExprList(n);
+  vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     auto pt_expr1 = pt_expr->operand(i);
     auto expr1 = instantiate_expr(parent, env, pt_expr1);
@@ -162,7 +162,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
   }
 
   // function call の生成
-  auto expr = factory().new_FuncCall(pt_expr, child_func, n, arg_list);
+  auto expr = factory().new_FuncCall(pt_expr, child_func, arg_list);
 
 #if 0
   // attribute instance の生成
@@ -179,7 +179,7 @@ ExprGen::instantiate_funccall(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
+ExprGen::instantiate_sysfunccall(const VlScope* parent,
 				 const ElbEnv& env,
 				 const PtExpr* pt_expr)
 {
@@ -196,7 +196,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
 
   // 引数の生成
   SizeType n = pt_expr->operand_num();
-  auto arg_list = factory().new_ExprList(n);
+  vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     auto pt_expr1 = pt_expr->operand(i);
     ElbExpr* arg = nullptr;
@@ -215,7 +215,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
   }
 
   // system function call の生成
-  auto expr = factory().new_SysFuncCall(pt_expr, user_systf, n, arg_list);
+  auto expr = factory().new_SysFuncCall(pt_expr, user_systf, arg_list);
 
   return expr;
 }
@@ -225,7 +225,7 @@ ExprGen::instantiate_sysfunccall(const VlNamedObj* parent,
 // @param[in] pt_expr 式を表すパース木
 // @param[in] put_error エラーを出力する時，true にする．
 VlValue
-ExprGen::evaluate_funccall(const VlNamedObj* parent,
+ExprGen::evaluate_funccall(const VlScope* parent,
 			   const PtExpr* pt_expr,
 			   bool put_error)
 {

@@ -31,11 +31,11 @@ public:
   virtual
   void
   add(SizeType index,
-      const VlNamedObj* block) = 0;
+      const VlScope* block) = 0;
 
   /// @brief 子供のスコープを取り出す．
   virtual
-  const VlNamedObj*
+  const VlScope*
   elem_by_index(SizeType index) = 0;
 
 };

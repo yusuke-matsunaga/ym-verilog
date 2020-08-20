@@ -53,7 +53,7 @@ END_NONAMESPACE
 // @param[in] parent 親のスコープ
 // @param[in] pt_head ヘッダ
 void
-ItemGen::instantiate_gateheader(const VlNamedObj* parent,
+ItemGen::instantiate_gateheader(const VlScope* parent,
 				const PtItem* pt_head)
 {
   auto pt_delay = pt_head->delay();
@@ -155,7 +155,7 @@ ItemGen::instantiate_gateheader(const VlNamedObj* parent,
 // @param[in] pt_head ヘッダ
 // @param[in] udpdefn UDP
 void
-ItemGen::instantiate_udpheader(const VlNamedObj* parent,
+ItemGen::instantiate_udpheader(const VlScope* parent,
 			       const PtItem* pt_head,
 			       const VlUdpDefn* udpdefn)
 {
@@ -241,7 +241,7 @@ ItemGen::instantiate_udpheader(const VlNamedObj* parent,
 // @param[in] pt_head ヘッダ
 // @param[in] cell_id セル番号
 void
-ItemGen::instantiate_cell(const VlNamedObj* parent,
+ItemGen::instantiate_cell(const VlScope* parent,
 			  const PtItem* pt_head,
 			  int cell_id)
 {
@@ -331,7 +331,7 @@ void
 ItemGen::link_gate_delay(ElbPrimHead* prim_head,
 			 const PtDelay* pt_delay)
 {
-  auto parent = prim_head->parent();
+  auto parent = prim_head->parent_scope();
   auto delay = instantiate_delay(parent, pt_delay);
   prim_head->set_delay(delay);
 }
@@ -344,7 +344,7 @@ void
 ItemGen::link_udp_delay(ElbPrimHead* prim_head,
 			const PtItem* pt_head)
 {
-  auto parent = prim_head->parent();
+  auto parent = prim_head->parent_scope();
   SizeType param_size = pt_head->paramassign_num();
   auto pt_delay = pt_head->delay();
   const VlDelay* delay = instantiate_delay(parent, pt_delay);
@@ -364,7 +364,7 @@ void
 ItemGen::link_prim_array(ElbPrimArray* prim_array,
 			 const PtInst* pt_inst)
 {
-  auto parent = prim_array->parent();
+  auto parent = prim_array->parent_scope();
   SizeType arraysize = prim_array->elem_num();
 
   // ポートの情報を得るために先頭の要素を取り出す．
@@ -453,7 +453,7 @@ void
 ItemGen::link_primitive(ElbPrimitive* primitive,
 			const PtInst* pt_inst)
 {
-  auto parent = primitive->parent();
+  auto parent = primitive->parent_scope();
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
@@ -520,7 +520,7 @@ void
 ItemGen::link_cell_array(ElbPrimArray* prim_array,
 			 const PtInst* pt_inst)
 {
-  auto parent = prim_array->parent();
+  auto parent = prim_array->parent_scope();
   SizeType arraysize = prim_array->elem_num();
 
   // ポートの情報を得るために先頭の要素を取り出す．
@@ -633,7 +633,7 @@ void
 ItemGen::link_cell(ElbPrimitive* primitive,
 		   const PtInst* pt_inst)
 {
-  auto parent = primitive->parent();
+  auto parent = primitive->parent_scope();
 
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name = (pt_inst->port(0)->name() != nullptr);

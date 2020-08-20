@@ -37,11 +37,13 @@ const int check_memory_leak = 0;
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
 // @param[in] alloc メモリアロケータ
+// @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
 // @param[in] ptifactory パース木の要素を生成するファクトリクラス
-Parser::Parser(PtMgr& ptmgr,
+Parser::Parser(Alloc& alloc,
+	       PtMgr& ptmgr,
 	       PtiFactory& ptifactory) :
+  mAlloc{alloc},
   mPtMgr{ptmgr},
   mFactory{ptifactory},
   mLex{new Lex}
@@ -223,7 +225,7 @@ Parser::check_function_statement(const PtStmt* stmt)
 bool
 Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
 {
-  int n = 0;
+  SizeType n = 0;
   for ( auto ci: *ci_list ) {
     if ( ci->label_num() == 0 ) {
       ++ n;
@@ -274,8 +276,7 @@ PuHierName*
 Parser::new_HierName(const PtNameBranch* nb,
 		     const char* name)
 {
-  void* p{alloc().get_memory(sizeof(PuHierName))};
-  auto hname{new (p) PuHierName(nb, name)};
+  auto hname{mFactory.new_HierName(nb, name)};
   return hname;
 }
 
@@ -321,7 +322,7 @@ Parser::flush_paramport()
   if ( !mDeclItemList.empty() ) {
     ASSERT_COND( !mParamPortHeadList.empty() );
     auto last{mParamPortHeadList.back()};
-    last->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
+    last->set_elem(PtiDeclItemArray(mAlloc, mDeclItemList));
     mDeclItemList.clear();
   }
 }
@@ -344,7 +345,7 @@ Parser::flush_io()
   if ( !mIOItemList.empty() ) {
     ASSERT_COND( !mCurIOHeadList->empty() );
     auto last{mCurIOHeadList->back()};
-    last->set_elem(PtiIOItemArray(alloc(), mIOItemList));
+    last->set_elem(PtiIOItemArray(mAlloc, mIOItemList));
     mIOItemList.clear();
   }
 }
@@ -374,7 +375,7 @@ Parser::add_decl_head(PtiDeclHead* head,
     reg_attrinst(head, attr_list);
     cur_declhead_list().push_back(head);
     if ( !mDeclItemList.empty() ) {
-      head->set_elem(PtiDeclItemArray(alloc(), mDeclItemList));
+      head->set_elem(PtiDeclItemArray(mAlloc, mDeclItemList));
     }
   }
   mDeclItemList.clear();

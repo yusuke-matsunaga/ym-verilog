@@ -12,6 +12,7 @@
 #include "ym/VlMgr.h"
 #include "ym/vl/VlUdp.h"
 #include "ym/vl/VlPrimitive.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlContAssign.h"
 #include "ym/vl/VlModule.h"
@@ -84,7 +85,7 @@ VlDumperImpl::put_primitive(const char* label,
 #endif
 
   put("vpiModule", prim->parent_module()->full_name() );
-  put("vpiScope", prim->parent()->full_name() );
+  put("vpiScope", prim->parent_scope()->full_name() );
 
   put("vpiStrength0", prim->drive0() );
   put("vpiStrength1", prim->drive1() );
@@ -189,8 +190,8 @@ VlDumperImpl::put_task(const char* label,
   put("FileRegion", task->file_region() );
   put("vpiFullName", task->full_name() );
 
-  ymuint n = task->io_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  SizeType n = task->io_num();
+  for ( SizeType i = 0; i < n; ++ i ) {
     put_iodecl("vpiIODecl", mgr, task->io(i) );
   }
 

@@ -5,11 +5,12 @@
 /// @brief VlModule のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/vl/VlNamedObj.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlFwd.h"
 
 
@@ -72,7 +73,7 @@ public:
 /// @brief elaboration 中の module を表すクラス
 //////////////////////////////////////////////////////////////////////
 class VlModule :
-  public VlNamedObj
+  public VlScope
 {
 public:
   //////////////////////////////////////////////////////////////////////
@@ -80,10 +81,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 自分の属する module を得る．
-  /// @note このクラスでは this を返す．
-  virtual
+  ///
+  /// このクラスでは this を返す．
   const VlModule*
-  parent_module() const;
+  parent_module() const override;
 
 
 public:
@@ -100,7 +101,7 @@ public:
   /// @brief definition name を返す．
   /// @return 定義名を返す．
   virtual
-  const char*
+  string
   def_name() const = 0;
 
   /// @brief cell instance のチェック

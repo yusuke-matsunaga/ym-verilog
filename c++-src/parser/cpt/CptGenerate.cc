@@ -8,8 +8,8 @@
 
 
 #include "CptGenerate.h"
+#include "alloc/Alloc.h"
 #include "parser/CptFactory.h"
-#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

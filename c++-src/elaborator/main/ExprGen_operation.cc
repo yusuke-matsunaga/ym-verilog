@@ -24,7 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] pt_expr 式を表すパース木
 // @param[in] env 生成時の環境
 ElbExpr*
-ExprGen::instantiate_opr(const VlNamedObj* parent,
+ExprGen::instantiate_opr(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr)
 {
@@ -121,7 +121,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 
   case VpiOpType::Concat:
     {
-      auto opr_list = factory().new_ExprList(opr_size);
+      vector<ElbExpr*> opr_list(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	auto pt_expr1 = pt_expr->operand(i);
 	auto expr1 = instantiate_expr(parent, env, pt_expr1);
@@ -136,7 +136,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 	opr_list[i] = expr1;
       }
 
-      expr = factory().new_ConcatOp(pt_expr, opr_size, opr_list);
+      expr = factory().new_ConcatOp(pt_expr, opr_list);
     }
     break;
 
@@ -149,7 +149,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 	return nullptr;
       }
       auto rep_expr = instantiate_expr(parent, env, pt_expr0);
-      auto opr_list = factory().new_ExprList(opr_size - 1);
+      vector<ElbExpr*> opr_list(opr_size - 1);
       for ( SizeType i = 1; i < opr_size; ++ i ) {
 	auto pt_expr1 = pt_expr->operand(i);
 	auto expr1 = instantiate_expr(parent, env, pt_expr1);
@@ -163,8 +163,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 	}
 	opr_list[i - 1] = expr1;
       }
-      expr = factory().new_MultiConcatOp(pt_expr, rep_num, rep_expr,
-					 opr_size - 1, opr_list);
+      expr = factory().new_MultiConcatOp(pt_expr, rep_num, rep_expr, opr_list);
     }
     break;
 
@@ -188,7 +187,7 @@ ExprGen::instantiate_opr(const VlNamedObj* parent,
 // @param[in] pt_expr 式を表すパース木
 // @param[in] put_error エラーを出力する時，true にする．
 VlValue
-ExprGen::evaluate_opr(const VlNamedObj* parent,
+ExprGen::evaluate_opr(const VlScope* parent,
 		      const PtExpr* pt_expr,
 		      bool put_error)
 {

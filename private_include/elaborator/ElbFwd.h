@@ -14,8 +14,13 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+// in ElbScope.h
+class ElbScope;
+
 // in ElbModule.h
 class ElbModule;
+
+// in ElbModuleArray.h
 class ElbModuleArray;
 
 // in ElbPort.h

@@ -7,10 +7,12 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiProcess.h"
+#include "ei/EiFactory.h"
+#include "ei/EiProcess.h"
 
 #include "ym/pt/PtItem.h"
+
+#include "ym/vl/VlStmt.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -23,7 +25,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] parent 親のスコープ
 // @param[in] pt_item パース木の要素定義
 ElbProcess*
-EiFactory::new_Process(const VlNamedObj* parent,
+EiFactory::new_Process(const VlScope* parent,
 		       const PtItem* pt_item)
 {
   auto process = new EiProcess(parent, pt_item);
@@ -39,7 +41,7 @@ EiFactory::new_Process(const VlNamedObj* parent,
 // @brief コンストラクタ
 // @param[in] parent 親のスコープ
 // @param[in] pt_item パース木の要素定義
-EiProcess::EiProcess(const VlNamedObj* parent,
+EiProcess::EiProcess(const VlScope* parent,
 		     const PtItem* pt_item) :
   mParent{parent},
   mPtItem{pt_item}
@@ -72,8 +74,8 @@ EiProcess::file_region() const
 }
 
 // @brief 親のスコープを返す．
-const VlNamedObj*
-EiProcess::parent() const
+const VlScope*
+EiProcess::parent_scope() const
 {
   return mParent;
 }

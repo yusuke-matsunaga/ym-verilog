@@ -9,6 +9,7 @@
 
 #include "StmtGen.h"
 #include "ElbEnv.h"
+#include "ElbStub.h"
 
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
@@ -16,7 +17,6 @@
 
 #include "elaborator/ElbTaskFunc.h"
 #include "elaborator/ElbExpr.h"
-#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 
@@ -52,7 +52,7 @@ StmtGen::~StmtGen()
 // 2. 自身がスコープとなるもの (named-begin, named-fork) はスコープ
 //    を生成し，phase2 用のキューに登録す．
 void
-StmtGen::phase1_stmt(const VlNamedObj* parent,
+StmtGen::phase1_stmt(const VlScope* parent,
 		     const PtStmt* pt_stmt,
 		     bool cf)
 {
@@ -108,7 +108,7 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
   case PtStmtType::NamedParBlock:
   case PtStmtType::NamedSeqBlock:
     {
-      auto block_scope = factory().new_StmtScope(parent, pt_stmt);
+      auto block_scope = factory().new_StmtBlockScope(parent, pt_stmt);
       reg_internalscope(block_scope);
 
       for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
@@ -119,10 +119,10 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
       }
       else {
 	auto stub{make_stub<StmtGen,
-		  const VlNamedObj*,
+		  const VlScope*,
 		  const vector<const PtDeclHead*>&>(this,
 						    &StmtGen::phase2_namedblock,
-						    static_cast<const VlNamedObj*>(block_scope),
+						    block_scope,
 						    pt_stmt->declhead_list())};
 	add_phase2stub(stub);
       }
@@ -140,7 +140,7 @@ StmtGen::phase1_stmt(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_stmt(const VlNamedObj* parent,
+StmtGen::instantiate_stmt(const VlScope* parent,
 			  const VlProcess* process,
 			  const ElbEnv& env,
 			  const PtStmt* pt_stmt)
@@ -323,7 +323,7 @@ StmtGen::instantiate_stmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_disable(const VlNamedObj* parent,
+StmtGen::instantiate_disable(const VlScope* parent,
 			     const VlProcess* process,
 			     const PtStmt* pt_stmt)
 {
@@ -357,7 +357,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 		    buf.str());
     return nullptr;
   }
-  auto scope = handle->obj();
+  auto scope = handle->scope();
   auto stmt = factory().new_DisableStmt(parent, process, pt_stmt, scope);
 
   return stmt;
@@ -369,7 +369,7 @@ StmtGen::instantiate_disable(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_enable(const VlNamedObj* parent,
+StmtGen::instantiate_enable(const VlScope* parent,
 			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt)
@@ -402,16 +402,15 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
-  auto arg_list = factory().new_ExprList(pt_stmt->arg_num());
-  SizeType wpos = 0;
+  vector<ElbExpr*> arg_list;
+  arg_list.reserve(pt_stmt->arg_num());
   for ( auto pt_expr: pt_stmt->arg_list() ) {
     auto expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       // エラーが起った．
       return nullptr;
     }
-    arg_list[wpos] = expr;
-    ++ wpos;
+    arg_list.push_back(expr);
   }
 
   // task call ステートメントの生成
@@ -426,7 +425,7 @@ StmtGen::instantiate_enable(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_sysenable(const VlNamedObj* parent,
+StmtGen::instantiate_sysenable(const VlScope* parent,
 			       const VlProcess* process,
 			       const ElbEnv& env,
 			       const PtStmt* pt_stmt)
@@ -449,8 +448,8 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
   }
 
   // 引数を生成する．
-  auto arg_list = factory().new_ExprList(pt_stmt->arg_num());
-  SizeType wpos = 0;
+  vector<ElbExpr*> arg_list;
+  arg_list.reserve(pt_stmt->arg_num());
   for ( auto pt_expr: pt_stmt->arg_list() ) {
     ElbExpr* arg = nullptr;
     // 空の引数があるのでエラーと区別する．
@@ -461,8 +460,7 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
 	return nullptr;
       }
     }
-    arg_list[wpos] = arg;
-    ++ wpos;
+    arg_list.push_back(arg);
   }
 
   // system task call ステートメントの生成
@@ -477,7 +475,7 @@ StmtGen::instantiate_sysenable(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_ctrlstmt(const VlNamedObj* parent,
+StmtGen::instantiate_ctrlstmt(const VlScope* parent,
 			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
@@ -499,7 +497,7 @@ StmtGen::instantiate_ctrlstmt(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_control パース木のコントロール定義
 const VlControl*
-StmtGen::instantiate_control(const VlNamedObj* parent,
+StmtGen::instantiate_control(const VlScope* parent,
 			     const ElbEnv& env,
 			     const PtControl* pt_control)
 {
@@ -517,26 +515,25 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
 
   // イベントリストの生成を行う．
   SizeType event_num = pt_control->event_num();
-  auto event_list = factory().new_ExprList(event_num);
-  SizeType wpos = 0;
+  vector<ElbExpr*> event_list;
+  event_list.reserve(event_num);
   for ( auto pt_expr: pt_control->event_list() ) {
     auto expr = instantiate_event_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;
     }
-    event_list[wpos] = expr;
-    ++ wpos;
+    event_list.push_back(expr);
   }
 
   if ( pt_control->type() == PtCtrlType::Event ) {
-    return factory().new_EventControl(pt_control, event_num, event_list);
+    return factory().new_EventControl(pt_control, event_list);
   }
 
   auto rep = instantiate_expr(parent, env, pt_control->rep_expr());
   if ( !rep ) {
     return nullptr;
   }
-  return factory().new_RepeatControl(pt_control, rep, event_num, event_list);
+  return factory().new_RepeatControl(pt_control, rep, event_list);
 }
 
 // @brief event statement の実体化を行う．
@@ -544,7 +541,7 @@ StmtGen::instantiate_control(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_eventstmt(const VlNamedObj* parent,
+StmtGen::instantiate_eventstmt(const VlScope* parent,
 			       const VlProcess* process,
 			       const PtStmt* pt_stmt)
 {
@@ -564,7 +561,7 @@ StmtGen::instantiate_eventstmt(const VlNamedObj* parent,
 // @param[in] process 親のプロセス (or nullptr)
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_nullstmt(const VlNamedObj* parent,
+StmtGen::instantiate_nullstmt(const VlScope* parent,
 			      const VlProcess* process,
 			      const PtStmt* pt_stmt)
 {

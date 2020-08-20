@@ -9,6 +9,7 @@
 
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlScope.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -22,7 +23,7 @@ const VlModule*
 VlNamedObj::parent_module() const
 {
   // デフォルトは parent() に同じ質問をする．
-  return parent()->parent_module();
+  return parent_scope()->parent_module();
 }
 
 // @brief fullname の取得
@@ -30,14 +31,14 @@ string
 VlNamedObj::full_name() const
 {
   string tmp;
-  if ( name() ) {
+  if ( name() != string() ) {
     tmp = name();
   }
   else {
     tmp = "<anonymous>";
   }
-  if ( parent() ) {
-    return parent()->full_name() + "." + tmp;
+  if ( parent_scope() ) {
+    return parent_scope()->full_name() + "." + tmp;
   }
   return tmp;
 }

@@ -31,21 +31,21 @@ AttrHash::clear()
 void
 AttrHash::add(const VlObj* obj,
 	      bool def,
-	      ElbAttrList* attr_list)
+	      const vector<const VlAttribute*>& attr_list)
 {
   if ( mHash.count(obj) == 0 ) {
-    mHash.emplace(obj, Cell{{nullptr, nullptr}});
+    mHash.emplace(obj, Cell{{{}, {}}});
   }
   SizeType pos = (def) ? 1 : 0;
   auto& cell = mHash.at(obj);
-  ASSERT_COND(cell.mAttrList[pos] == nullptr );
+  ASSERT_COND(cell.mAttrList[pos].empty() );
   cell.mAttrList[pos] = attr_list;
 }
 
 // @brief 属性を取り出す．
 // @param[in] obj 対象のオブジェクト
 // @param[in] def 定義側の属性の時 true とするフラグ
-ElbAttrList*
+vector<const VlAttribute*>
 AttrHash::find(const VlObj* obj,
 	       bool def) const
 {
@@ -53,7 +53,9 @@ AttrHash::find(const VlObj* obj,
     SizeType pos = (def) ? 1 : 0;
     return mHash.at(obj).mAttrList[pos];
   }
-  return nullptr;
+  else {
+    return {};
+  }
 }
 
 END_NAMESPACE_YM_VERILOG

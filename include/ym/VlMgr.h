@@ -18,6 +18,7 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+class Alloc;
 class PtMgr;
 class PtiFactory;
 class ElbMgr;
@@ -108,8 +109,8 @@ public:
   /// @brief スコープに属する internal scope のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
-  vector<const VlNamedObj*>
-  find_internalscope_list(const VlNamedObj* parent) const;
+  vector<const VlScope*>
+  find_internalscope_list(const VlScope* parent) const;
 
   /// @brief スコープとタグから宣言要素を取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -119,7 +120,7 @@ public:
   ///
   /// parent のスコープ内の tag というタグを持つ要素のリストを返す．
   vector<const VlDecl*>
-  find_decl_list(const VlNamedObj* parent,
+  find_decl_list(const VlScope* parent,
 		 int tag) const;
 
   /// @brief スコープとタグから宣言要素の配列を取り出す．
@@ -129,73 +130,73 @@ public:
   ///
   /// parent というスコープ内の tag というタグを持つ要素のリストを返す．
   vector<const VlDeclArray*>
-  find_declarray_list(const VlNamedObj* parent,
+  find_declarray_list(const VlScope* parent,
 		      int tag) const;
 
   /// @brief スコープに属する defparam のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlDefParam*>
-  find_defparam_list(const VlNamedObj* parent) const;
+  find_defparam_list(const VlScope* parent) const;
 
   /// @brief スコープに属する param assign のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlParamAssign*>
-  find_paramassign_list(const VlNamedObj* parent) const;
+  find_paramassign_list(const VlScope* parent) const;
 
   /// @brief スコープに属する module のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlModule*>
-  find_module_list(const VlNamedObj* parent) const;
+  find_module_list(const VlScope* parent) const;
 
   /// @brief スコープに属する module arrayのリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlModuleArray*>
-  find_modulearray_list(const VlNamedObj* parent) const;
+  find_modulearray_list(const VlScope* parent) const;
 
   /// @brief スコープに属する primitive のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlPrimitive*>
-  find_primitive_list(const VlNamedObj* parent) const;
+  find_primitive_list(const VlScope* parent) const;
 
   /// @brief スコープに属する primitive array のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlPrimArray*>
-  find_primarray_list(const VlNamedObj* parent) const;
+  find_primarray_list(const VlScope* parent) const;
 
   /// @brief スコープに属するタスクのリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlTaskFunc*>
-  find_task_list(const VlNamedObj* parent) const;
+  find_task_list(const VlScope* parent) const;
 
   /// @brief スコープに属する関数のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlTaskFunc*>
-  find_function_list(const VlNamedObj* parent) const;
+  find_function_list(const VlScope* parent) const;
 
   /// @brief スコープに属する continuous assignment のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlContAssign*>
-  find_contassign_list(const VlNamedObj* parent) const;
+  find_contassign_list(const VlScope* parent) const;
 
   /// @brief スコープに属する process のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
   /// @return 結果のリストを返す．
   vector<const VlProcess*>
-  find_process_list(const VlNamedObj* parent) const;
+  find_process_list(const VlScope* parent) const;
 
   /// @brief 属性リストを得る．
   /// @param[in] obj 対象のオブジェクト
   /// @param[in] def 定義側の属性の時 true とするフラグ
-  VlAttrList*
+  vector<const VlAttribute*>
   find_attr(const VlObj* obj,
 	    bool def = false) const;
 
@@ -204,6 +205,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // メモリアロケータ
+  unique_ptr<Alloc> mAlloc;
 
   // Pt オブジェクトを管理するクラス
   unique_ptr<PtMgr> mPtMgr;

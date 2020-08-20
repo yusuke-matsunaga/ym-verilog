@@ -7,11 +7,7 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiExpr.h"
-
-#include "ym/pt/PtUdp.h"
-#include "ym/pt/PtDecl.h"
+#include "ei/EiFactory.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -22,6 +18,7 @@ ElbFactory::new_obj()
 {
   return new EiFactory();
 }
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiFactory
@@ -41,26 +38,6 @@ EiFactory::~EiFactory()
 void
 EiFactory::dump_prof(ostream& s)
 {
-}
-
-// @brief ステートメントの配列を生成する．
-// @param[in] stmt_num 要素数
-const VlStmt**
-EiFactory::new_StmtList(SizeType stmt_num)
-{
-  const VlStmt** array = new const VlStmt*[stmt_num];
-
-  return array;
-}
-
-// @brief 式の配列を生成する．
-// @param[in] elem_num 要素数
-ElbExpr**
-EiFactory::new_ExprList(SizeType elem_num)
-{
-  auto expr_array{new ElbExpr*[elem_num]};
-
-  return expr_array;
 }
 
 END_NAMESPACE_YM_VERILOG

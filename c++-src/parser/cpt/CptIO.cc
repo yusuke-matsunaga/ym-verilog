@@ -8,8 +8,8 @@
 
 
 #include "CptIO.h"
+#include "alloc/Alloc.h"
 #include "parser/CptFactory.h"
-#include "ym/pt/PtAlloc.h"
 #include "ym/pt/PtExpr.h"
 
 

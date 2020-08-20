@@ -55,11 +55,9 @@ elaborate_mode(const vector<string>& filename_list,
 
   int c = loop + 1;
   for ( int i = 0; i < c; ++ i ) {
-
 #if !defined(YM_DEBUG)
     try {
 #endif
-
       StopWatch timer;
       timer.start();
       VlMgr vlmgr;

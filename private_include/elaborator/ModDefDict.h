@@ -11,6 +11,7 @@
 
 #include "ym/verilog.h"
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlScope.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -52,14 +53,14 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] name 名前
   const VlModule*
-  find(const VlNamedObj* parent,
+  find(const VlScope* parent,
        const char* name) const;
 
   /// @brief 親のスコープと名前を持つ構造体
   struct Key
   {
-    const VlNamedObj* mParent;
-    const char* mName;
+    const VlScope* mParent;
+    string mName;
   };
 
   struct KeyHash
@@ -111,7 +112,7 @@ inline
 void
 ModDefDict::add(const VlModule* obj)
 {
-  Key key{obj->parent(), obj->def_name()};
+  Key key{obj->parent_scope(), obj->def_name()};
   if ( mHash.count(key) > 0 ) {
     // 同じモジュールがすでに登録されていた．
     // そのエントリを無効化する．
@@ -128,7 +129,7 @@ ModDefDict::add(const VlModule* obj)
 // @param[in] name 名前
 inline
 const VlModule*
-ModDefDict::find(const VlNamedObj* parent,
+ModDefDict::find(const VlScope* parent,
 		 const char* name) const
 {
   Key key{parent, name};
@@ -145,9 +146,8 @@ SizeType
 ModDefDict::KeyHash::operator()(const Key& key) const
 {
   SizeType h = 0;
-  SizeType c;
-  for ( auto p = key.mName; (c = static_cast<SizeType>(*p)); ++ p ) {
-    h = h * 37 + c;
+  for ( auto c: key.mName ) {
+    h = h * 37 + static_cast<SizeType>(c);
   }
   return ((reinterpret_cast<ympuint>(key.mParent) * h) >> 8);
 }
@@ -157,7 +157,7 @@ bool
 ModDefDict::KeyEq::operator()(const Key& key1,
 			      const Key& key2) const
 {
-  return key1.mParent == key2.mParent && strcmp(key1.mName, key2.mName) == 0;
+  return key1.mParent == key2.mParent && key1.mName == key2.mName;
 }
 
 END_NAMESPACE_YM_VERILOG

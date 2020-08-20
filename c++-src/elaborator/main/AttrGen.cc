@@ -10,8 +10,7 @@
 #include "AttrGen.h"
 
 #include "ym/pt/PtMisc.h"
-
-#include "elaborator/ElbAttribute.h"
+#include "ym/vl/VlAttribute.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -46,9 +45,9 @@ AttrGen::instantiate_attribute(const PtAttrInst* pt_attr,
 			       const VlObj* obj)
 {
 #if 0
-  ElbAttrList* attr_list = find_attr_list(pt_attr);
-  if ( !attr_list ) {
-    ymuint n = 0;
+  auto attr_list = find_attr_list(pt_attr);
+  if ( attr_list.empty() ) {
+    SizeType n = 0;
     for (const PtAttrInst* pt_ai = pt_attr;
 	 pt_ai; pt_ai = pt_ai->next()) {
       for (const PtAttrSpec* pt_as = pt_ai->attr_spec_top();

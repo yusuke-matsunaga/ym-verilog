@@ -9,6 +9,7 @@
 
 #include "ModuleGen.h"
 #include "ElbParamCon.h"
+#include "ElbStub.h"
 
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtPort.h"
@@ -21,7 +22,6 @@
 #include "elaborator/ElbDecl.h"
 #include "elaborator/ElbParameter.h"
 #include "elaborator/ElbExpr.h"
-#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 
@@ -52,7 +52,7 @@ ModuleGen::~ModuleGen()
 // @param[in] toplevel トップレベルのスコープ
 // @param[in] pt_module モジュール定義
 void
-ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
+ModuleGen::phase1_topmodule(const VlScope* toplevel,
 			    const PtModule* pt_module)
 {
   const auto& file_region = pt_module->file_region();
@@ -65,7 +65,6 @@ ModuleGen::phase1_topmodule(const VlNamedObj* toplevel,
 		  MsgType::Info,
 		  "ELAB",
 		  buf.str());
-
   // モジュール本体の生成
   auto module = factory().new_Module(toplevel,
 				     pt_module,
@@ -116,7 +115,6 @@ ModuleGen::phase1_module_item(ElbModule* module,
   // パラメータの割り当てを作る．
   bool named_con = (param_con_list.size() > 0 &&
 		    param_con_list[0].mPtCon->name() != nullptr);
-
   // パラメータポートリストの名前を現れた順番に paramport_list に入れる．
   vector<const char*> paramport_list;
   if ( named_con ) {
@@ -167,7 +165,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
 
     auto expr = param_con.mExpr;
     auto value = param_con.mValue;
-    param->set_expr(expr, value);
+    param->set_init_expr(expr, value);
     auto pa = factory().new_NamedParamAssign(module, pt_con,
 					     param, expr, value);
     reg_paramassign(pa);
@@ -194,10 +192,11 @@ ModuleGen::phase2_module_item(ElbModule* module,
   instantiate_decl(module, pt_module->declhead_list());
 
   // IODecl を実体化する．
-  instantiate_iodecl(module, nullptr, pt_module->iohead_list());
+  instantiate_iodecl(module, pt_module->iohead_list());
 
   // ポートを実体化する
   instantiate_port(module, pt_module);
+
 }
 
 // port の生成を行う．
@@ -220,8 +219,8 @@ ModuleGen::instantiate_port(ElbModule* module,
     }
     else if ( n > 1 ) {
       // 複数要素の結合の場合
-      auto expr_list = factory().new_ExprList(n);
-      auto lhs_elem_array = factory().new_ExprList(n);
+      vector<ElbExpr*> expr_list(n);
+      vector<ElbExpr*> lhs_elem_array(n);
       for ( SizeType i = 0; i < n; ++ i ) {
 	auto pt_portexpr = pt_port->portref_elem(i);
 	auto portexpr = instantiate_portref(module, pt_portexpr);
@@ -240,7 +239,7 @@ ModuleGen::instantiate_port(ElbModule* module,
 	}
       }
 
-      low_conn = factory().new_Lhs(pt_portref, n, expr_list, n, lhs_elem_array);
+      low_conn = factory().new_Lhs(pt_portref, expr_list, lhs_elem_array);
     }
     module->init_port(index, pt_port, low_conn, dir);
     ++ index;

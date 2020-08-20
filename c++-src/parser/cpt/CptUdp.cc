@@ -8,9 +8,9 @@
 
 
 #include "CptUdp.h"
+#include "alloc/Alloc.h"
 #include "parser/CptFactory.h"
 #include "parser/PtiDecl.h"
-#include "ym/pt/PtAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

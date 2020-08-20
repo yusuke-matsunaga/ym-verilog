@@ -1,0 +1,109 @@
+#ifndef EIGENBLOCKSCOPE_H
+#define EIGENBLOCKSCOPE_H
+
+/// @file EiGenBlockScope.h
+/// @brief EiGenBlockScope のヘッダファイル
+/// @author Yusuke Matsunaga (松永 裕介)
+///
+/// Copyright (C) 2020 Yusuke Matsunaga
+/// All rights reserved.
+
+#include "ei/EiScope.h"
+
+
+BEGIN_NAMESPACE_YM_VERILOG
+
+//////////////////////////////////////////////////////////////////////
+/// @class EiGenBlockScope EiGenBlockScope.h "EiGenBlockScope.h"
+/// @brief generate block に対応するスコープ
+//////////////////////////////////////////////////////////////////////
+class EiGenBlockScope :
+  public EiScope
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @param[in] parent 親のスコープ環境
+  /// @param[in] pt_item 対応するパース木の要素
+  EiGenBlockScope(const VlScope* parent,
+		  const PtItem* pt_item);
+
+  /// @brief デストラクタ
+  ~EiGenBlockScope();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // VlObj の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief ファイル位置の取得
+  FileRegion
+  file_region() const override;
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // VlScope の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 名前の取得
+  string
+  name() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 対応するパース木の要素
+  const PtItem* mPtItem;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class EiGfBlockScope EiGenBlockScope.h "EiGenBlockScope.h"
+/// @brief generate for 文に対応するスコープ
+//////////////////////////////////////////////////////////////////////
+class EiGfBlockScope :
+  public EiGenBlockScope
+{
+public:
+
+  /// @brief コンストラクタ
+  /// @param[in] parent 親のスコープ環境
+  /// @param[in] pt_item 対応するパース木の要素
+  /// @param[in] index インデックス
+  EiGfBlockScope(const VlScope* parent,
+		 const PtItem* pt_item,
+		 int index);
+
+  /// @brief デストラクタ
+  ~EiGfBlockScope();
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 名前の取得
+  string
+  name() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // インデックス
+  int mIndex;
+
+};
+
+END_NAMESPACE_YM_VERILOG
+
+#endif // EIGENBLOCKSCOPE_H

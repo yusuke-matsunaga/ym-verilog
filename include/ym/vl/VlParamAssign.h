@@ -31,7 +31,7 @@ public:
   /// @brief 親のモジュールを返す．
   virtual
   const VlModule*
-  parent() const = 0;
+  parent_module() const = 0;
 
   /// @brief 左辺値を返す．
   virtual
@@ -79,7 +79,7 @@ public:
   /// @brief 親のモジュールを返す．
   virtual
   const VlModule*
-  parent() const = 0;
+  parent_module() const = 0;
 
   /// @brief 左辺値を返す．
   virtual

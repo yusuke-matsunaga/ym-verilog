@@ -37,92 +37,111 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief VlNamedObj を返す．
-  virtual
-  const VlNamedObj*
-  obj() const = 0;
-
   /// @brief 親のスコープを返す．
   virtual
-  const VlNamedObj*
-  parent() const;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief オブジェクトの名前を返す．
   virtual
-  const char*
-  name() const;
+  string
+  name() const = 0;
 
   /// @brief オブジェクトの型を返す．
   virtual
   VpiObjType
-  type() const;
+  type() const = 0;
 
   /// @brief ファイル位置の取得
   virtual
   FileRegion
-  file_region() const;
+  file_region() const = 0;
 
   /// @brief オブジェクトの階層付き名前を返す．
   virtual
   string
-  full_name() const;
+  full_name() const = 0;
+
+  /// @brief VlScope を返す．
+  ///
+  /// このクラスでは nullptr を返す．
+  virtual
+  const VlScope*
+  scope() const;
+
+  /// @brief VlModule を返す．
+  ///
+  /// このクラスでは nullptr を返す．
+  virtual
+  const VlModule*
+  module() const;
+
+  /// @brief VlModuleArray を返す．
+  ///
+  /// このクラスでは nullptr を返す．
+  virtual
+  const VlModuleArray*
+  module_array() const;
+
+  /// @brief VlTaskFunc を返す．
+  ///
+  /// このクラスでは nullptr を返す．
+  virtual
+  const VlTaskFunc*
+  taskfunc() const;
 
   /// @brief 配列要素を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
-  const VlNamedObj*
+  const VlScope*
   array_elem(int index) const;
 
   /// @brief VlDecl を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   ElbDecl*
   decl() const;
 
   /// @brief VlDeclArray を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   const VlDeclArray*
   declarray() const;
 
   /// @brief ElbParameter を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   ElbParameter*
   parameter() const;
 
-  /// @brief ElbTaskFunc を返す．
-  /// @note このクラスでは nullptr を返す．
-  virtual
-  const VlTaskFunc*
-  taskfunc() const;
-
-  /// @brief ElbModuleArray を返す．
-  /// @note このクラスでは nullptr を返す．
-  virtual
-  const VlModuleArray*
-  module_array() const;
-
   /// @brief ElbPrimArray を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   const VlPrimArray*
   prim_array() const;
 
   /// @brief ElbPrimitive を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   const VlPrimitive*
   primitive() const;
 
   /// @brief ElbGfRoot を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   ElbGfRoot*
   gfroot() const;
 
   /// @brief ElbGenvar を返す．
-  /// @note このクラスでは nullptr を返す．
+  ///
+  /// このクラスでは nullptr を返す．
   virtual
   ElbGenvar*
   genvar() const;
@@ -150,7 +169,7 @@ struct ObjHandleEq
   operator()(const ObjHandle* h1,
 	     const ObjHandle* h2) const
   {
-    return h1->parent() == h2->parent() && strcmp(h1->name(), h2->name()) == 0;
+    return h1->parent_scope() == h2->parent_scope() && h1->name() == h2->name();
   }
 };
 

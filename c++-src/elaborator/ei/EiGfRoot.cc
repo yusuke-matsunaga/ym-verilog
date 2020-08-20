@@ -7,8 +7,9 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiGfRoot.h"
+#include "ei/EiFactory.h"
+#include "ei/EiGfRoot.h"
+
 #include "ym/pt/PtItem.h"
 
 
@@ -20,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief GfBlock 検索用の親の名前付きオブジェクトを作る．
 ElbGfRoot*
-EiFactory::new_GfRoot(const VlNamedObj* parent,
+EiFactory::new_GfRoot(const VlScope* parent,
 		      const PtItem* pt_item)
 {
   auto gfroot = new EiGfRoot(parent, pt_item);
@@ -36,7 +37,7 @@ EiFactory::new_GfRoot(const VlNamedObj* parent,
 // @brief コンストラクタ
 // @param[in] parent 親のスコープ環境
 // @param[in] pt_item 対応するパース木の要素
-EiGfRoot::EiGfRoot(const VlNamedObj* parent,
+EiGfRoot::EiGfRoot(const VlScope* parent,
 		   const PtItem* pt_item) :
   mParent{parent},
   mPtItem{pt_item}
@@ -63,14 +64,14 @@ EiGfRoot::file_region() const
 }
 
 // @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
-EiGfRoot::parent() const
+const VlScope*
+EiGfRoot::parent_scope() const
 {
   return mParent;
 }
 
 // @brief 名前の取得
-const char*
+string
 EiGfRoot::name() const
 {
   return mPtItem->name();
@@ -79,14 +80,14 @@ EiGfRoot::name() const
 // @brief 子供のスコープを追加する．
 void
 EiGfRoot::add(SizeType index,
-	      const VlNamedObj* block)
+	      const VlScope* block)
 {
-  mTable[index] = block;
+  mTable.emplace(index, block);
 }
 
 
 // @brief 子供のスコープを取り出す．
-const VlNamedObj*
+const VlScope*
 EiGfRoot::elem_by_index(SizeType index)
 {
   if ( mTable.count(index) ) {

@@ -35,7 +35,7 @@ public:
 
   /// @brief プリミティブの定義名を返す．
   virtual
-  const char*
+  string
   def_name() const = 0;
 
   /// @brief UDP 定義を返す．
@@ -122,7 +122,7 @@ public:
 
   /// @brief プリミティブの定義名を返す．
   virtual
-  const char*
+  string
   def_name() const = 0;
 
   /// @brief UDP 定義を返す．

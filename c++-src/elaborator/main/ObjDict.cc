@@ -27,51 +27,42 @@ BEGIN_NAMESPACE_YM_VERILOG
 // クラス ObjHandle
 //////////////////////////////////////////////////////////////////////
 
-// @brief 親のスコープを返す．
-const VlNamedObj*
-ObjHandle::parent() const
+// @brief VlScope を返す．
+const VlScope*
+ObjHandle::scope() const
 {
-  return obj()->parent();
+  return nullptr;
 }
 
-// @brief オブジェクトの名前を返す．
-const char*
-ObjHandle::name() const
+// @brief VlModule を返す．
+const VlModule*
+ObjHandle::module() const
 {
-  return obj()->name();
+  return nullptr;
 }
 
-// @brief オブジェクトの型を返す．
-VpiObjType
-ObjHandle::type() const
+// @brief VlModuleArray を返す．
+const VlModuleArray*
+ObjHandle::module_array() const
 {
-  return obj()->type();
+  return nullptr;
 }
 
-// @brief ファイル位置の取得
-FileRegion
-ObjHandle::file_region() const
+// @brief ElbTaskFunc を返す．
+const VlTaskFunc*
+ObjHandle::taskfunc() const
 {
-  return obj()->file_region();
+  return nullptr;
 }
 
-// @brief オブジェクトの階層付き名前を返す．
-string
-ObjHandle::full_name() const
-{
-  return obj()->full_name();
-}
-
-// @brief 配列要素の VlNamedObj を返す．
-// @note このクラスでは nullptr を返す．
-const VlNamedObj*
+// @brief 配列要素の VlScope を返す．
+const VlScope*
 ObjHandle::array_elem(int index) const
 {
   return nullptr;
 }
 
 // @brief ElbDecl を返す．
-// @note このクラスでは nullptr を返す．
 ElbDecl*
 ObjHandle::decl() const
 {
@@ -79,7 +70,6 @@ ObjHandle::decl() const
 }
 
 // @brief ElbDeclArray を返す．
-// @note このクラスでは nullptr を返す．
 const VlDeclArray*
 ObjHandle::declarray() const
 {
@@ -87,31 +77,13 @@ ObjHandle::declarray() const
 }
 
 // @brief ElbParameter を返す．
-// @note このクラスでは nullptr を返す．
 ElbParameter*
 ObjHandle::parameter() const
 {
   return nullptr;
 }
 
-// @brief ElbTaskFunc を返す．
-// @note このクラスでは nullptr を返す．
-const VlTaskFunc*
-ObjHandle::taskfunc() const
-{
-  return nullptr;
-}
-
-// @brief ElbModuleArray を返す．
-// @note このクラスでは nullptr を返す．
-const VlModuleArray*
-ObjHandle::module_array() const
-{
-  return nullptr;
-}
-
 // @brief ElbPrimArray を返す．
-// @note このクラスでは nullptr を返す．
 const VlPrimArray*
 ObjHandle::prim_array() const
 {
@@ -119,7 +91,6 @@ ObjHandle::prim_array() const
 }
 
 // @brief ElbPrimitive を返す．
-// @note このクラスでは nullptr を返す．
 const VlPrimitive*
 ObjHandle::primitive() const
 {
@@ -127,7 +98,6 @@ ObjHandle::primitive() const
 }
 
 // @brief ElbGfRoot を返す．
-// @note このクラスでは nullptr を返す．
 ElbGfRoot*
 ObjHandle::gfroot() const
 {
@@ -135,7 +105,6 @@ ObjHandle::gfroot() const
 }
 
 // @brief ElbGenvar を返す．
-// @note このクラスでは nullptr を返す．
 ElbGenvar*
 ObjHandle::genvar() const
 {
@@ -147,11 +116,63 @@ SizeType
 ObjHandle::hash() const
 {
   SizeType h = 0;
-  SizeType c;
-  for ( auto p = name(); (c = static_cast<SizeType>(*p)); ++ p ) {
-    h = h * 37 + c;
+  for ( auto c: name() ) {
+    h = h * 37 + static_cast<SizeType>(c);
   }
-  return ((reinterpret_cast<ympuint>(parent()) * h) >> 8);
+  return ((reinterpret_cast<ympuint>(parent_scope()) * h) >> 8);
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ElbScopeHandle
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+ElbScopeHandle::ElbScopeHandle(const VlScope* obj) :
+  mObj{obj}
+{
+}
+
+// @brief 親のスコープを返す．
+const VlScope*
+ElbScopeHandle::parent_scope() const
+{
+  return mObj->parent_scope();
+}
+
+// @brief オブジェクトの名前を返す．
+string
+ElbScopeHandle::name() const
+{
+  return mObj->name();
+}
+
+// @brief オブジェクトの型を返す．
+VpiObjType
+ElbScopeHandle::type() const
+{
+  return VpiObjType::Scope;
+}
+
+// @brief ファイル位置の取得
+FileRegion
+ElbScopeHandle::file_region() const
+{
+  return FileRegion();
+}
+
+// @brief オブジェクトの階層付き名前を返す．
+string
+ElbScopeHandle::full_name() const
+{
+  return mObj->full_name();
+}
+
+// @brief VlScope を返す．
+const VlScope*
+ElbScopeHandle::scope() const
+{
+  return mObj;
 }
 
 
@@ -162,29 +183,22 @@ ObjHandle::hash() const
 // @brief コンストラクタ
 // @param[in] parent 親のスコープ
 // @param[in] name 名前
-KeyObjHandle::KeyObjHandle(const VlNamedObj* parent,
-			   const char* name) :
+KeyObjHandle::KeyObjHandle(const VlScope* parent,
+			   const string& name) :
   mParent{parent},
   mName{name}
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-KeyObjHandle::obj() const
-{
-  return nullptr;
-}
-
 // @brief 親のスコープを返す．
-const VlNamedObj*
-KeyObjHandle::parent() const
+const VlScope*
+KeyObjHandle::parent_scope() const
 {
   return mParent;
 }
 
 // @brief オブジェクトの名前を返す．
-const char*
+string
 KeyObjHandle::name() const
 {
   return mName;
@@ -213,6 +227,46 @@ KeyObjHandle::full_name() const
 
 
 //////////////////////////////////////////////////////////////////////
+// クラス NamedObjHandle
+//////////////////////////////////////////////////////////////////////
+
+// @brief 親のスコープを返す．
+const VlScope*
+NamedObjHandle::parent_scope() const
+{
+  return _namedobj()->parent_scope();
+}
+
+// @brief オブジェクトの名前を返す．
+string
+NamedObjHandle::name() const
+{
+  return _namedobj()->name();
+}
+
+// @brief オブジェクトの型を返す．
+VpiObjType
+NamedObjHandle::type() const
+{
+  return _namedobj()->type();
+}
+
+// @brief ファイル位置の取得
+FileRegion
+NamedObjHandle::file_region() const
+{
+  return _namedobj()->file_region();
+}
+
+// @brief オブジェクトの階層付き名前を返す．
+string
+NamedObjHandle::full_name() const
+{
+  return _namedobj()->full_name();
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // クラス ElbTaskFuncHandle
 //////////////////////////////////////////////////////////////////////
 
@@ -222,16 +276,16 @@ ElbTaskFuncHandle::ElbTaskFuncHandle(const VlTaskFunc* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbTaskFuncHandle::obj() const
+// @brief ElbTaskFunc を返す．
+const VlTaskFunc*
+ElbTaskFuncHandle::taskfunc() const
 {
   return mObj;
 }
 
-// @brief ElbTaskFunc を返す．
-const VlTaskFunc*
-ElbTaskFuncHandle::taskfunc() const
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbTaskFuncHandle::_namedobj() const
 {
   return mObj;
 }
@@ -247,16 +301,16 @@ ElbDeclHandle::ElbDeclHandle(ElbDecl* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbDeclHandle::obj() const
+// @brief ElbDecl を返す．
+ElbDecl*
+ElbDeclHandle::decl() const
 {
   return mObj;
 }
 
-// @brief ElbDecl を返す．
-ElbDecl*
-ElbDeclHandle::decl() const
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbDeclHandle::_namedobj() const
 {
   return mObj;
 }
@@ -272,16 +326,16 @@ ElbDeclArrayHandle::ElbDeclArrayHandle(const VlDeclArray* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbDeclArrayHandle::obj() const
+// @brief ElbDeclArray を返す．
+const VlDeclArray*
+ElbDeclArrayHandle::declarray() const
 {
   return mObj;
 }
 
-// @brief ElbDeclArray を返す．
-const VlDeclArray*
-ElbDeclArrayHandle::declarray() const
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbDeclArrayHandle::_namedobj() const
 {
   return mObj;
 }
@@ -297,16 +351,41 @@ ElbParamHandle::ElbParamHandle(ElbParameter* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbParamHandle::obj() const
+// @brief ElbParameter を返す．
+ElbParameter*
+ElbParamHandle::parameter() const
 {
   return mObj;
 }
 
-// @brief ElbParameter を返す．
-ElbParameter*
-ElbParamHandle::parameter() const
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbParamHandle::_namedobj() const
+{
+  return mObj;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// クラス ElbModuleHandle
+//////////////////////////////////////////////////////////////////////
+
+// @brief コンストラクタ
+ElbModuleHandle::ElbModuleHandle(const VlModule* obj) :
+  mObj{obj}
+{
+}
+
+// @brief VlModule を返す．
+const VlModule*
+ElbModuleHandle::module() const
+{
+  return mObj;
+}
+
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbModuleHandle::_namedobj() const
 {
   return mObj;
 }
@@ -322,15 +401,8 @@ ElbModuleArrayHandle::ElbModuleArrayHandle(const VlModuleArray* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbModuleArrayHandle::obj() const
-{
-  return mObj;
-}
-
-// @brief 配列要素の VlNamedObj を返す．
-const VlNamedObj*
+// @brief 配列要素の VlScope を返す．
+const VlScope*
 ElbModuleArrayHandle::array_elem(int index) const
 {
   return mObj->elem_by_index(index);
@@ -339,6 +411,13 @@ ElbModuleArrayHandle::array_elem(int index) const
 // @brief ElbModuleArray を返す．
 const VlModuleArray*
 ElbModuleArrayHandle::module_array() const
+{
+  return mObj;
+}
+
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbModuleArrayHandle::_namedobj() const
 {
   return mObj;
 }
@@ -354,16 +433,16 @@ ElbPrimArrayHandle::ElbPrimArrayHandle(const VlPrimArray* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbPrimArrayHandle::obj() const
+// @brief ElbPrimArray を返す．
+const VlPrimArray*
+ElbPrimArrayHandle::prim_array() const
 {
   return mObj;
 }
 
-// @brief ElbPrimArray を返す．
-const VlPrimArray*
-ElbPrimArrayHandle::prim_array() const
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbPrimArrayHandle::_namedobj() const
 {
   return mObj;
 }
@@ -379,13 +458,6 @@ ElbPrimitiveHandle::ElbPrimitiveHandle(const VlPrimitive* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbPrimitiveHandle::obj() const
-{
-  return mObj;
-}
-
 // @brief ElbPrimitive を返す．
 const VlPrimitive*
 ElbPrimitiveHandle::primitive() const
@@ -393,20 +465,9 @@ ElbPrimitiveHandle::primitive() const
   return mObj;
 }
 
-
-//////////////////////////////////////////////////////////////////////
-// クラス ElbNamedObjHandle
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-ElbNamedObjHandle::ElbNamedObjHandle(const VlNamedObj* obj) :
-  mObj{obj}
-{
-}
-
-// @brief VlNamedObj を返す．
+// @brief 対象のオブジェクトを返す．
 const VlNamedObj*
-ElbNamedObjHandle::obj() const
+ElbPrimitiveHandle::_namedobj() const
 {
   return mObj;
 }
@@ -422,15 +483,8 @@ ElbGfRootHandle::ElbGfRootHandle(ElbGfRoot* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbGfRootHandle::obj() const
-{
-  return mObj;
-}
-
 // @brief 配列要素の VlNamedObj を返す．
-const VlNamedObj*
+const VlScope*
 ElbGfRootHandle::array_elem(int index) const
 {
   return mObj->elem_by_index(index);
@@ -439,6 +493,13 @@ ElbGfRootHandle::array_elem(int index) const
 // @brief ElbGfRoot を返す．
 ElbGfRoot*
 ElbGfRootHandle::gfroot() const
+{
+  return mObj;
+}
+
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbGfRootHandle::_namedobj() const
 {
   return mObj;
 }
@@ -454,16 +515,16 @@ ElbGenvarHandle::ElbGenvarHandle(ElbGenvar* obj) :
 {
 }
 
-// @brief VlNamedObj を返す．
-const VlNamedObj*
-ElbGenvarHandle::obj() const
+// @brief ElbGenvar を返す．
+ElbGenvar*
+ElbGenvarHandle::genvar() const
 {
   return mObj;
 }
 
-// @brief ElbGenvar を返す．
-ElbGenvar*
-ElbGenvarHandle::genvar() const
+// @brief 対象のオブジェクトを返す．
+const VlNamedObj*
+ElbGenvarHandle::_namedobj() const
 {
   return mObj;
 }
@@ -473,19 +534,32 @@ ElbGenvarHandle::genvar() const
 // VlNamedObj を格納するハッシュ表
 //////////////////////////////////////////////////////////////////////
 
+// @brief コンストラクタ
+ObjDict::ObjDict()
+{
+}
+
+// @brief デストラクタ
+ObjDict::~ObjDict()
+{
+  clear();
+}
+
 // @brief 内容を空にする．
 void
 ObjDict::clear()
 {
+  for ( auto handle: mHash ) {
+    delete handle;
+  }
   mHash.clear();
-  mHandleList.clear();
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlNamedObj* obj)
+ObjDict::add(const VlScope* obj)
 {
-  auto handle = new ElbNamedObjHandle(obj);
+  auto handle = new ElbScopeHandle(obj);
   add_handle(handle);
 }
 
@@ -518,6 +592,14 @@ void
 ObjDict::add(ElbParameter* obj)
 {
   auto handle = new ElbParamHandle(obj);
+  add_handle(handle);
+}
+
+// @brief 要素を追加する．
+void
+ObjDict::add(const VlModule* obj)
+{
+  auto handle = new ElbModuleHandle(obj);
   add_handle(handle);
 }
 
@@ -566,13 +648,12 @@ void
 ObjDict::add_handle(ObjHandle* handle)
 {
   mHash.emplace(handle);
-  mHandleList.push_back(unique_ptr<ObjHandle>{handle});
 }
 
 // @brief 名前から該当する要素を検索する．
 ObjHandle*
-ObjDict::find(const VlNamedObj* parent,
-	      const char* name) const
+ObjDict::find(const VlScope* parent,
+	      const string& name) const
 {
   KeyObjHandle key{parent, name};
   auto p = mHash.find(&key);

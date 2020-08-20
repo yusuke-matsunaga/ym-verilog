@@ -30,7 +30,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_if(const VlNamedObj* parent,
+StmtGen::instantiate_if(const VlScope* parent,
 			const VlProcess* process,
 			const ElbEnv& env,
 			const PtStmt* pt_stmt)
@@ -60,7 +60,7 @@ StmtGen::instantiate_if(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_case(const VlNamedObj* parent,
+StmtGen::instantiate_case(const VlScope* parent,
 			  const VlProcess* process,
 			  const ElbEnv& env,
 			  const PtStmt* pt_stmt)
@@ -116,21 +116,20 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 
     // ラベルの生成と設定
     SizeType n = pt_item->label_num();
-    auto label_list = factory().new_ExprList(n);
-    SizeType pos = 0;
+    vector<ElbExpr*> label_list;
+    label_list.reserve(n);
     for ( auto pt_expr: pt_item->label_list() ) {
       auto expr = instantiate_expr(parent, env, pt_expr);
       if ( !expr ) {
 	// たぶんエラー
 	return nullptr;
       }
-      label_list[pos] = expr;
-      ++ pos;
+      label_list.push_back(expr);
       expr_list.push_back(expr);
     }
 
     // caseitem の生成
-    auto caseitem = factory().new_CaseItem(pt_item, n, label_list, body);
+    auto caseitem = factory().new_CaseItem(pt_item, label_list, body);
     caseitem_list.push_back(caseitem);
   }
 
@@ -195,7 +194,7 @@ StmtGen::instantiate_case(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_wait(const VlNamedObj* parent,
+StmtGen::instantiate_wait(const VlScope* parent,
 			  const VlProcess* process,
 			  const ElbEnv& env,
 			  const PtStmt* pt_stmt)
@@ -217,7 +216,7 @@ StmtGen::instantiate_wait(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_forever(const VlNamedObj* parent,
+StmtGen::instantiate_forever(const VlScope* parent,
 			     const VlProcess* process,
 			     const ElbEnv& env,
 			     const PtStmt* pt_stmt)
@@ -238,7 +237,7 @@ StmtGen::instantiate_forever(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_repeat(const VlNamedObj* parent,
+StmtGen::instantiate_repeat(const VlScope* parent,
 			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt)
@@ -260,7 +259,7 @@ StmtGen::instantiate_repeat(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_while(const VlNamedObj* parent,
+StmtGen::instantiate_while(const VlScope* parent,
 			   const VlProcess* process,
 			   const ElbEnv& env,
 			   const PtStmt* pt_stmt)
@@ -282,7 +281,7 @@ StmtGen::instantiate_while(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_for(const VlNamedObj* parent,
+StmtGen::instantiate_for(const VlScope* parent,
 			 const VlProcess* process,
 			 const ElbEnv& env,
 			 const PtStmt* pt_stmt)

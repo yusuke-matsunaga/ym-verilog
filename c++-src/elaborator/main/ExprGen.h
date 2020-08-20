@@ -52,7 +52,7 @@ public:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_expr(const VlNamedObj* parent,
+  instantiate_expr(const VlScope* parent,
 		   const ElbEnv& env,
 		   const PtExpr* pt_expr);
 
@@ -62,7 +62,7 @@ public:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_constant_expr(const VlNamedObj* parent,
+  instantiate_constant_expr(const VlScope* parent,
 			    const PtExpr* pt_expr);
 
   /// @brief PtExpr からイベント式の ElbiExpr を生成する
@@ -71,7 +71,7 @@ public:
   /// @param[in] pt_expr 式を表すパース木
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_event_expr(const VlNamedObj* parent,
+  instantiate_event_expr(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr);
 
@@ -82,7 +82,7 @@ public:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_arg(const VlNamedObj* parent,
+  instantiate_arg(const VlScope* parent,
 		  const ElbEnv& env,
 		  const PtExpr* pt_expr);
 
@@ -93,7 +93,7 @@ public:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_lhs(const VlNamedObj* parent,
+  instantiate_lhs(const VlScope* parent,
 		  const ElbEnv& env,
 		  const PtExpr* pt_expr);
 
@@ -101,7 +101,7 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
   ElbExpr*
-  instantiate_namedevent(const VlNamedObj* parent,
+  instantiate_namedevent(const VlScope* parent,
 			 const PtExpr* pt_expr);
 
   /// @brief 式の値を評価する．
@@ -109,7 +109,7 @@ public:
   /// @param[in] pt_expr 式を表すパース木
   /// @param[in] put_error エラーを出力する時，true にする．
   VlValue
-  evaluate_expr(const VlNamedObj* parent,
+  evaluate_expr(const VlScope* parent,
 		const PtExpr* pt_expr,
 		bool put_error);
 
@@ -120,7 +120,7 @@ public:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_int(const VlNamedObj* parent,
+  evaluate_int(const VlScope* parent,
 	       const PtExpr* pt_expr,
 	       int& value,
 	       bool put_error);
@@ -132,7 +132,7 @@ public:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_scalar(const VlNamedObj* parent,
+  evaluate_scalar(const VlScope* parent,
 		  const PtExpr* pt_expr,
 		  VlScalarVal& value,
 		  bool put_error);
@@ -144,7 +144,7 @@ public:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_bool(const VlNamedObj* parent,
+  evaluate_bool(const VlScope* parent,
 		const PtExpr* pt_expr,
 		bool& value,
 		bool put_error);
@@ -156,7 +156,7 @@ public:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_bitvector(const VlNamedObj* parent,
+  evaluate_bitvector(const VlScope* parent,
 		     const PtExpr* pt_expr,
 		     BitVector& value,
 		     bool put_error);
@@ -165,7 +165,7 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_delay 遅延を表すパース木
   const VlDelay*
-  instantiate_delay(const VlNamedObj* parent,
+  instantiate_delay(const VlScope* parent,
 		    const PtDelay* pt_delay);
 
   /// @brief PtOrderedCon から ElbExpr を生成する．
@@ -174,7 +174,7 @@ public:
   /// これは PtInst の前にある # つきの式がパラメータ割り当てなのか
   /// 遅延なのかわからないので PtOrderedCon で表していることによる．
   const VlDelay*
-  instantiate_delay(const VlNamedObj* parent,
+  instantiate_delay(const VlScope* parent,
 		    const PtItem* pt_head);
 
   /// @brief instantiate_delay の下請け関数
@@ -185,7 +185,7 @@ public:
   /// @note pt_obj は PtDelay か PtItem のどちらか
   /// @note n は最大で 3
   const VlDelay*
-  instantiate_delay_sub(const VlNamedObj* parent,
+  instantiate_delay_sub(const VlScope* parent,
 			const PtBase* pt_obj,
 			SizeType n,
 			const PtExpr* expr_array[]);
@@ -204,7 +204,7 @@ private:
   /// @return 生成した式を返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_lhs_sub(const VlNamedObj* parent,
+  instantiate_lhs_sub(const VlScope* parent,
 		      const ElbEnv& env,
 		      const PtExpr* pt_expr,
 		      vector<ElbExpr*>& elem_array);
@@ -216,7 +216,7 @@ private:
   /// @return 生成された式を返す．
   /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
   ElbExpr*
-  instantiate_primary(const VlNamedObj* parent,
+  instantiate_primary(const VlScope* parent,
 		      const ElbEnv& env,
 		      const PtExpr* pt_expr);
 
@@ -227,7 +227,7 @@ private:
   /// @return 生成された式を返す．
   /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
   ElbExpr*
-  instantiate_opr(const VlNamedObj* parent,
+  instantiate_opr(const VlScope* parent,
 		  const ElbEnv& env,
 		  const PtExpr* pt_expr);
 
@@ -238,7 +238,7 @@ private:
   /// @return 生成された式を返す．
   /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
   ElbExpr*
-  instantiate_funccall(const VlNamedObj* parent,
+  instantiate_funccall(const VlScope* parent,
 		       const ElbEnv& env,
 		       const PtExpr* pt_expr);
 
@@ -249,7 +249,7 @@ private:
   /// @return 生成された式を返す．
   /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
   ElbExpr*
-  instantiate_sysfunccall(const VlNamedObj* parent,
+  instantiate_sysfunccall(const VlScope* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr);
 
@@ -257,7 +257,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
   ObjHandle*
-  find_const_handle(const VlNamedObj* parent,
+  find_const_handle(const VlScope* parent,
 		    const PtExpr* pt_expr);
 
   /// @brief genvar に対応した定数を生成する．
@@ -266,7 +266,7 @@ private:
   /// @param[in] val 値
   /// @note pt_expr に添字が付いていたらエラーとなる．
   ElbExpr*
-  instantiate_genvar(const VlNamedObj* parent,
+  instantiate_genvar(const VlScope* parent,
 		     const PtExpr* pt_expr,
 		     int val);
 
@@ -280,7 +280,7 @@ private:
   /// @param[out] has_bit_select ビット指定を持っていたら true を返す．
   ElbExpr*
   instantiate_primary_sub(ObjHandle* handle,
-			  const VlNamedObj* parent,
+			  const VlScope* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr,
 			  bool& is_array,
@@ -305,7 +305,7 @@ private:
   /// @param[in] pt_expr 式を表すパース木
   /// @param[in] put_error エラーを出力する時，true にする．
   VlValue
-  evaluate_opr(const VlNamedObj* parent,
+  evaluate_opr(const VlScope* parent,
 	       const PtExpr* pt_expr,
 	       bool put_error);
 
@@ -313,7 +313,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
   VlValue
-  evaluate_const(const VlNamedObj* parent,
+  evaluate_const(const VlScope* parent,
 		 const PtExpr* pt_expr);
 
   /// @brief 関数呼び出しに対して式の値を評価する．
@@ -321,7 +321,7 @@ private:
   /// @param[in] pt_expr 式を表すパース木
   /// @param[in] put_error エラーを出力する時，true にする．
   VlValue
-  evaluate_funccall(const VlNamedObj* parent,
+  evaluate_funccall(const VlScope* parent,
 		    const PtExpr* pt_expr,
 		    bool put_error);
 
@@ -330,7 +330,7 @@ private:
   /// @param[in] pt_expr 式を表すパース木
   /// @param[in] put_error エラーを出力する時，true にする．
   VlValue
-  evaluate_primary(const VlNamedObj* parent,
+  evaluate_primary(const VlScope* parent,
 		   const PtExpr* pt_expr,
 		   bool put_error);
 

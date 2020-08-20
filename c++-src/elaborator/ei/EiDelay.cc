@@ -7,9 +7,11 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiDelay.h"
+#include "ei/EiFactory.h"
+#include "ei/EiDelay.h"
+
 #include "elaborator/ElbExpr.h"
+
 #include "ym/vl/VlExpr.h"
 #include "ym/pt/PtBase.h"
 
@@ -26,10 +28,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] expr_list 式の配列
 const VlDelay*
 EiFactory::new_Delay(const PtBase* pt_obj,
-		     SizeType elem_num,
-		     ElbExpr** expr_list)
+		     const vector<ElbExpr*>& expr_list)
 {
-  EiDelay* delay{new EiDelay(pt_obj, elem_num, expr_list)};
+  auto delay{new EiDelay(pt_obj, expr_list)};
 
   return delay;
 }
@@ -44,11 +45,9 @@ EiFactory::new_Delay(const PtBase* pt_obj,
 // @param[in] elem_num 要素数
 // @param[in] expr_list 式の配列
 EiDelay::EiDelay(const PtBase* pt_obj,
-		 SizeType elem_num,
-		 ElbExpr** expr_list) :
-  mPtObj(pt_obj),
-  mElemNum{elem_num},
-  mElemArray{expr_list}
+		 const vector<ElbExpr*>& expr_list) :
+  mPtObj{pt_obj},
+  mElemList{expr_list}
 {
 }
 
@@ -76,7 +75,7 @@ EiDelay::file_region() const
 SizeType
 EiDelay::elem_num() const
 {
-  return mElemNum;
+  return mElemList.size();
 }
 
 // @brief 値を返す．
@@ -86,7 +85,7 @@ EiDelay::expr(SizeType pos) const
 {
   ASSERT_COND( 0 <= pos && pos < elem_num() );
 
-  return mElemArray[pos];
+  return mElemList[pos];
 }
 
 // @brief Verilog-HDL の文字列を得る．
@@ -95,9 +94,9 @@ EiDelay::decompile() const
 {
   string ans = "(";
   string comma = "";
-  for ( SizeType i = 0; i < elem_num(); ++ i ) {
+  for ( const auto& expr: mElemList ) {
     ans += comma;
-    ans += expr(i)->decompile();
+    ans += expr->decompile();
     comma = ", ";
   }
   ans += ")";

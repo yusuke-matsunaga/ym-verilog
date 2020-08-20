@@ -35,9 +35,11 @@ class Parser
 public:
 
   /// @brief コンストラクタ
+  /// @param[in] alloc メモリアロケータ
   /// @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
   /// @param[in] ptifactory パース木の要素を生成するファクトリクラス
-  Parser(PtMgr& ptmgr,
+  Parser(Alloc& alloc,
+	 PtMgr& ptmgr,
 	 PtiFactory& ptifactory);
 
   /// @brief デストラクタ
@@ -2298,10 +2300,6 @@ private:
 	   const vector<const PtIOHead*>& iohead_array,
 	   unordered_map<string, VpiDir>& iodecl_dirs);
 
-  /// @brief メモリアロケータを返す．
-  PtAlloc&
-  alloc();
-
   /// @brief vector を基底クラスの vector に変換する．
   template <typename T1,
 	    typename T2>
@@ -2322,6 +2320,9 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // メモリアロケータ
+  Alloc& mAlloc;
 
   // パース木を保持するクラス
   PtMgr& mPtMgr;
@@ -2478,14 +2479,6 @@ vector<const PtUdpValue*>
 Parser::get_udp_value_array()
 {
   return mUdpValueList;
-}
-
-// @brief メモリアロケータを返す．
-inline
-PtAlloc&
-Parser::alloc()
-{
-  return mPtMgr.alloc();
 }
 
 // @brief 現在の宣言ヘッダのリストを返す．

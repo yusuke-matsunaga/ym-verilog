@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiControl.h"
+#include "ei/EiFactory.h"
+#include "ei/EiControl.h"
 
 #include "elaborator/ElbExpr.h"
 
@@ -28,7 +28,7 @@ const VlControl*
 EiFactory::new_DelayControl(const PtControl* pt_control,
 			    ElbExpr* delay)
 {
-  EiDelayControl* control = new EiDelayControl(pt_control, delay);
+  auto control = new EiDelayControl(pt_control, delay);
 
   return control;
 }
@@ -39,11 +39,9 @@ EiFactory::new_DelayControl(const PtControl* pt_control,
 // @param[in] event_list イベントリストを表す配列
 const VlControl*
 EiFactory::new_EventControl(const PtControl* pt_control,
-			    SizeType event_num,
-			    ElbExpr** event_list)
+			    const vector<ElbExpr*>& event_list)
 {
-  EiEventControl* control = new EiEventControl(pt_control,
-					       event_num, event_list);
+  auto control = new EiEventControl(pt_control, event_list);
 
   return control;
 }
@@ -56,11 +54,9 @@ EiFactory::new_EventControl(const PtControl* pt_control,
 const VlControl*
 EiFactory::new_RepeatControl(const PtControl* pt_control,
 			     ElbExpr* rep,
-			     SizeType event_num,
-			     ElbExpr** event_list)
+			     const vector<ElbExpr*>& event_list)
 {
-  EiRepeatControl* control = new EiRepeatControl(pt_control, rep,
-						 event_num, event_list);
+  auto control = new EiRepeatControl(pt_control, rep, event_list);
 
   return control;
 }
@@ -73,7 +69,7 @@ EiFactory::new_RepeatControl(const PtControl* pt_control,
 // @brief コンストラクタ
 // @param[in] pt_control パース木の定義要素
 EiControl::EiControl(const PtControl* pt_control) :
-  mPtControl(pt_control)
+  mPtControl{pt_control}
 {
 }
 
@@ -166,10 +162,8 @@ EiDelayControl::delay() const
 // @param[in] event_num イベントリストの要素数
 // @param[in] event_list イベントリストを表す配列
 EiEventControl::EiEventControl(const PtControl* pt_control,
-			       SizeType event_num,
-			       ElbExpr** event_list) :
+			       const vector<ElbExpr*>& event_list) :
   EiControl(pt_control),
-  mEventNum{event_num},
   mEventList{event_list}
 {
 }
@@ -190,7 +184,7 @@ EiEventControl::type() const
 SizeType
 EiEventControl::event_num() const
 {
-  return mEventNum;
+  return mEventList.size();
 }
 
 // @brief イベント条件式を返す．
@@ -198,6 +192,7 @@ EiEventControl::event_num() const
 const VlExpr*
 EiEventControl::event(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < event_num() );
   return mEventList[pos];
 }
 
@@ -213,9 +208,8 @@ EiEventControl::event(SizeType pos) const
 // @param[in] event_list イベントリストを表す配列
 EiRepeatControl::EiRepeatControl(const PtControl* pt_control,
 				 ElbExpr* rep,
-				 int event_num,
-				 ElbExpr** event_list) :
-  EiEventControl(pt_control, event_num, event_list),
+				 const vector<ElbExpr*>& event_list) :
+  EiEventControl(pt_control, event_list),
   mExpr{rep}
 {
 }

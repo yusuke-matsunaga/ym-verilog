@@ -10,7 +10,7 @@
 
 
 #include "ym/pt/PtP.h"
-#include "ym/pt/PtAlloc.h"
+#include "alloc/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -38,14 +38,14 @@ public:
   /// @param[in] alloc メモリアロケータ
   /// @param[in] src ソース
   explicit
-  PtiArray(PtAlloc& alloc,
+  PtiArray(Alloc& alloc,
 	   const vector<T*>& src);
 
   /// @brief 1つの要素からなるコンストラクタ
   /// @param[in] alloc メモリアロケータ
   /// @param[in] elem1 要素1
   explicit
-  PtiArray(PtAlloc& alloc,
+  PtiArray(Alloc& alloc,
 	   T* elem1);
 
   /// @brief 2つの要素からなるコンストラクタ
@@ -53,7 +53,7 @@ public:
   /// @param[in] elem1 要素1
   /// @param[in] elem2 要素2
   explicit
-  PtiArray(PtAlloc& alloc,
+  PtiArray(Alloc& alloc,
 	   T* elem1,
 	   T* elem2);
 
@@ -63,7 +63,7 @@ public:
   /// @param[in] elem2 要素2
   /// @param[in] elem3 要素3
   explicit
-  PtiArray(PtAlloc& alloc,
+  PtiArray(Alloc& alloc,
 	   T* elem1,
 	   T* elem2,
 	   T* elem3);
@@ -75,7 +75,7 @@ public:
   /// @param[in] elem3 要素3
   /// @param[in] elem4 要素4
   explicit
-  PtiArray(PtAlloc& alloc,
+  PtiArray(Alloc& alloc,
 	   T* elem1,
 	   T* elem2,
 	   T* elem3,
@@ -84,7 +84,7 @@ public:
   /// コピーコンストラクタ
   /// @param[in] alloc メモリアロケータ
   /// @param[in] src ソース
-  PtiArray(PtAlloc& alloc,
+  PtiArray(Alloc& alloc,
 	   const PtiArray& src);
 
   /// @brief コピー代入演算子は禁止
@@ -165,7 +165,7 @@ PtiArray<T>::PtiArray() :
 // @param[in] src ソース
 template <typename T>
 inline
-PtiArray<T>::PtiArray(PtAlloc& alloc,
+PtiArray<T>::PtiArray(Alloc& alloc,
 		      const vector<T*>& src) :
   mNum{src.size()},
   mArray{alloc.get_array<T*>(mNum)}
@@ -180,7 +180,7 @@ PtiArray<T>::PtiArray(PtAlloc& alloc,
 // @param[in] elem1 要素1
 template <typename T>
 inline
-PtiArray<T>::PtiArray(PtAlloc& alloc,
+PtiArray<T>::PtiArray(Alloc& alloc,
 		      T* elem1) :
   mNum{1},
   mArray{alloc.get_array<T*>(1)}
@@ -194,7 +194,7 @@ PtiArray<T>::PtiArray(PtAlloc& alloc,
 // @param[in] elem2 要素2
 template <typename T>
 inline
-PtiArray<T>::PtiArray(PtAlloc& alloc,
+PtiArray<T>::PtiArray(Alloc& alloc,
 		      T* elem1,
 		      T* elem2) :
   mNum{2},
@@ -211,7 +211,7 @@ PtiArray<T>::PtiArray(PtAlloc& alloc,
 // @param[in] elem3 要素3
 template <typename T>
 inline
-PtiArray<T>::PtiArray(PtAlloc& alloc,
+PtiArray<T>::PtiArray(Alloc& alloc,
 		      T* elem1,
 		      T* elem2,
 		      T* elem3) :
@@ -231,7 +231,7 @@ PtiArray<T>::PtiArray(PtAlloc& alloc,
 // @param[in] elem4 要素4
 template <typename T>
 inline
-PtiArray<T>::PtiArray(PtAlloc& alloc,
+PtiArray<T>::PtiArray(Alloc& alloc,
 		      T* elem1,
 		      T* elem2,
 		      T* elem3,
@@ -250,7 +250,7 @@ PtiArray<T>::PtiArray(PtAlloc& alloc,
 // @param[in] src ソース
 template <typename T>
 inline
-PtiArray<T>::PtiArray(PtAlloc& alloc,
+PtiArray<T>::PtiArray(Alloc& alloc,
 		      const PtiArray& src) :
   mNum{src.mNum},
   mArray{alloc.get_array<T*>(mNum)}

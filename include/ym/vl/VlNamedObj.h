@@ -5,7 +5,7 @@
 /// @brief VlNamedObj のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -29,18 +29,19 @@ public:
 
   /// @brief このオブジェクトの属している scope を返す．
   virtual
-  const VlNamedObj*
-  parent() const = 0;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief このオブジェクトの属している module を返す．
-  /// @note ただし module の場合には自分自身を返す．
+  ///
+  /// ただし module の場合には自分自身を返す．
   virtual
   const VlModule*
   parent_module() const;
 
   /// @brief 名前の取得
   virtual
-  const char*
+  string
   name() const = 0;
 
   /// @brief fullname の取得

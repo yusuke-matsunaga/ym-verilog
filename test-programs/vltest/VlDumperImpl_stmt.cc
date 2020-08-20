@@ -15,6 +15,7 @@
 #include "ym/vl/VlStmt.h"
 #include "ym/vl/VlControl.h"
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlUserSystf.h"
 #include "ym/vl/VlExpr.h"
@@ -38,7 +39,7 @@ VlDumperImpl::put_process(const char* label,
   VlDumpHeader x(this, label, nm);
 
   put("FileRegion", process->file_region() );
-  put("vpiModule", process->parent()->parent_module()->full_name() );
+  put("vpiModule", process->parent_scope()->parent_module()->full_name() );
   put_stmt("vpiStmt", mgr, process->stmt() );
 }
 
@@ -93,7 +94,7 @@ VlDumperImpl::put_stmt(const char* label,
   VlDumpHeader x(this, label, nm);
 
   put("FileRegion", stmt->file_region());
-  put("vpiScope", stmt->parent()->full_name() );
+  put("vpiScope", stmt->parent_scope()->full_name() );
 
   switch ( stmt->type() ) {
   case VpiObjType::NamedBegin:

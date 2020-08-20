@@ -29,7 +29,7 @@ public:
 
   /// @brief 名前を返す．
   virtual
-  const char*
+  string
   name() const = 0;
 
   /// @brief 方向を返す．

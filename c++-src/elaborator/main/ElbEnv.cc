@@ -53,7 +53,7 @@ ElbEnv::set_function()
 // @brief 親の constant function を設定する．
 // @param[in] function 設定する function
 void
-ElbEnv::set_constant_function(const VlNamedObj* function)
+ElbEnv::set_constant_function(const VlScope* function)
 {
   mFlags[CONSTFUNC] = true;
   mFlags[FUNCTION] = true;
@@ -114,7 +114,7 @@ ElbEnv::is_constant() const
 }
 
 // @brief constant function 内の生成の時に親の function を返す．
-const VlNamedObj*
+const VlScope*
 ElbEnv::constant_function() const
 {
   return mCf;
@@ -201,7 +201,7 @@ ElbConstantEnv::ElbConstantEnv()
 
 // @brief コンストラクタ
 // @param[in] func 親の関数
-ElbConstantFunctionEnv::ElbConstantFunctionEnv(const VlNamedObj* func)
+ElbConstantFunctionEnv::ElbConstantFunctionEnv(const VlScope* func)
 {
   set_constant_function(func);
 }
@@ -212,8 +212,8 @@ ElbConstantFunctionEnv::ElbConstantFunctionEnv(const VlNamedObj* func)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] taskfunc タスクか関数のオブジェクト
-ElbTfEnv::ElbTfEnv(const VlNamedObj* taskfunc)
+// @param[in] taskfunc タスク/関数
+ElbTfEnv::ElbTfEnv(const VlTaskFunc* taskfunc)
 {
   if ( taskfunc->type() == VpiObjType::Function ) {
     set_function();

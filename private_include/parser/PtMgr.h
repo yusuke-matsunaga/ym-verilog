@@ -5,12 +5,11 @@
 /// @brief PtMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ym/pt/PtP.h"
-#include "alloc/SimpleAlloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -37,10 +36,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // 情報を取得する関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief アロケータを返す．
-  PtAlloc&
-  alloc();
 
   /// @brief 登録されているモジュールのリストを返す．
   /// @return 登録されているモジュールのリスト
@@ -97,9 +92,6 @@ private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
-
-  // メモリアロケータ
-  SimpleAlloc mAlloc;
 
   // UDP 定義のリスト
   vector<const PtUdp*> mUdpList;

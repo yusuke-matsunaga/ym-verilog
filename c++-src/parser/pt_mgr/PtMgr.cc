@@ -31,13 +31,6 @@ PtMgr::~PtMgr()
   clear();
 }
 
-// @brief アロケータを返す．
-PtAlloc&
-PtMgr::alloc()
-{
-  return mAlloc;
-}
-
 // @brief 登録されているモジュールのリストを返す．
 // @return 登録されているモジュールのリスト
 const vector<const PtModule*>&
@@ -71,8 +64,6 @@ PtMgr::clear()
   mModuleList.clear();
   mDefNames.clear();
   mStringPool.clear();
-
-  mAlloc.destroy();
 
   FileInfo::clear();
 }

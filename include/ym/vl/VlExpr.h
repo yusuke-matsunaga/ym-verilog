@@ -134,7 +134,7 @@ public:
   /// @note それ以外では nullptr を返す．
   /// @note スコープへの参照が式で用いられるのはシステム関数/タスクの引数だけ
   virtual
-  const VlNamedObj*
+  const VlScope*
   scope_obj() const = 0;
 
   /// @brief primitive への参照の場合，対象のオブジェクトを返す．
@@ -244,15 +244,17 @@ public:
   rep_num() const = 0;
 
   /// @brief 定数型を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
+  ///
+  /// is_const() = true の時，意味を持つ．
+  /// それ以外では動作は不定
   virtual
   VpiConstType
   constant_type() const = 0;
 
   /// @brief 定数値を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
+  ///
+  /// is_const() = true の時，意味を持つ．
+  /// それ以外では動作は不定
   virtual
   VlValue
   constant_value() const = 0;

@@ -5,7 +5,7 @@
 /// @brief AttrHash のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -43,12 +43,12 @@ public:
   void
   add(const VlObj* obj,
       bool def,
-      ElbAttrList* attr_list);
+      const vector<const VlAttribute*>& attr_list);
 
   /// @brief 属性を取り出す．
   /// @param[in] obj 対象のオブジェクト
   /// @param[in] def 定義側の属性の時 true とするフラグ
-  ElbAttrList*
+  vector<const VlAttribute*>
   find(const VlObj* obj,
        bool def) const;
 
@@ -61,7 +61,7 @@ private:
   struct Cell
   {
     // 対応する属性リスト
-    ElbAttrList* mAttrList[2];
+    vector<const VlAttribute*> mAttrList[2];
 
   };
 

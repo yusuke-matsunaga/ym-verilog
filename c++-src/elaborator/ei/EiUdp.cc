@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiUdp.h"
+#include "ei/EiFactory.h"
+#include "ei/EiUdp.h"
 
 #include "elaborator/ElbExpr.h"
 
@@ -31,29 +31,9 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 		       bool is_protected)
 {
   SizeType port_num = pt_udp->port_num();
-  EiUdpIO* iodecl = new EiUdpIO[port_num];
   SizeType table_size = pt_udp->table_num();
-  EiTableEntry* table = new EiTableEntry[table_size];
-
-  SizeType row_size = port_num;
-  if ( pt_udp->prim_type() == VpiPrimType::Seq ) {
-    ++ row_size;
-  }
-  SizeType vsize = row_size * table_size;
-  VlUdpVal* val_array = new VlUdpVal[vsize];
-
-  EiUdpDefn* udp = new EiUdpDefn(pt_udp, is_protected,
-				 port_num, iodecl,
-				 table_size, table,
-				 val_array);
-  for ( int i = 0; i < port_num; ++ i ) {
-    iodecl[i].mUdp = udp;
-  }
-  for ( int i = 0; i < table_size; ++ i ) {
-    table[i].mUdp = udp;
-    table[i].mValArray = val_array;
-    val_array += row_size;
-  }
+  auto udp = new EiUdpDefn(pt_udp, is_protected,
+			   port_num, table_size);
 
   return udp;
 }
@@ -73,19 +53,13 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 EiUdpDefn::EiUdpDefn(const PtUdp* pt_udp,
 		     bool is_protected,
 		     SizeType io_num,
-		     EiUdpIO* io_array,
-		     SizeType table_num,
-		     EiTableEntry* table,
-		     VlUdpVal* val_array) :
-  mPtUdp(pt_udp),
-  mPortNum(io_num),
-  mProtected(is_protected),
-  mIODeclList(io_array),
-  mInitExpr(nullptr),
-  mInitVal(VlScalarVal::x()),
-  mTableEntrySize(table_num),
-  mTableEntryList(table),
-  mValArray(val_array)
+		     SizeType table_num) :
+  mPtUdp{pt_udp},
+  mProtected{is_protected},
+  mIODeclList(io_num),
+  mInitExpr{nullptr},
+  mInitVal{VlScalarVal::x()},
+  mTableEntryList(table_num)
 {
 }
 
@@ -109,7 +83,7 @@ EiUdpDefn::file_region() const
 }
 
 // @brief 定義された名前を返す．
-const char*
+string
 EiUdpDefn::def_name() const
 {
   return mPtUdp->name();
@@ -126,7 +100,7 @@ EiUdpDefn::prim_type() const
 SizeType
 EiUdpDefn::port_num() const
 {
-  return mPortNum;
+  return mIODeclList.size();
 }
 
 // @brief 入力の宣言要素を返す．
@@ -134,6 +108,7 @@ EiUdpDefn::port_num() const
 const VlIODecl*
 EiUdpDefn::input(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < port_num() - 1 );
   return &mIODeclList[pos];
 }
 
@@ -141,7 +116,7 @@ EiUdpDefn::input(SizeType pos) const
 const VlIODecl*
 EiUdpDefn::output() const
 {
-  return &mIODeclList[mPortNum - 1];
+  return &mIODeclList[port_num() - 1];
 }
 
 // @brief protected かどうかを返す．
@@ -175,7 +150,7 @@ EiUdpDefn::init_val_string() const
 SizeType
 EiUdpDefn::table_size() const
 {
-  return mTableEntrySize;
+  return mTableEntryList.size();
 }
 
 // @brief table entry を返す．
@@ -183,6 +158,7 @@ EiUdpDefn::table_size() const
 const VlTableEntry*
 EiUdpDefn::table_entry(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < table_size() );
   return &mTableEntryList[pos];
 }
 
@@ -196,6 +172,7 @@ EiUdpDefn::set_io(SizeType pos,
 		  const PtIOHead* pt_header,
 		  const PtIOItem* pt_item)
 {
+  ASSERT_COND( 0 <= pos && pos < table_size() );
   mIODeclList[pos].set(pt_header, pt_item);
 }
 
@@ -252,7 +229,7 @@ EiUdpIO::file_region() const
 }
 
 // @brief 名前を返す．
-const char*
+string
 EiUdpIO::name() const
 {
   return mPtItem->name();
@@ -361,6 +338,13 @@ EiUdpIO::function() const
   return nullptr;
 }
 
+// @brief 親のUDPを設定する．
+void
+EiUdpIO::set_udp(ElbUdpDefn* udp)
+{
+  mUdp = udp;
+}
+
 // @brief 内容を設定する．
 // @param[in] pt_header パース木のIO宣言ヘッダ
 // @param[in] pt_item パース木のIO宣言定義
@@ -416,6 +400,7 @@ EiTableEntry::size() const
 VlUdpVal
 EiTableEntry::val(SizeType pos) const
 {
+  ASSERT_COND( 0 <= pos && pos < size() );
   return mValArray[pos];
 }
 
@@ -443,16 +428,20 @@ EiTableEntry::str() const
   return s;
 }
 
+// @brief 初期化する．
+void
+EiTableEntry::init(ElbUdpDefn* udp)
+{
+  mUdp = udp;
+}
+
 // @brief 設定する．
 void
 EiTableEntry::set(const PtUdpEntry* pt_entry,
 		  const vector<VlUdpVal>& vals)
 {
   mPtUdpEntry = pt_entry;
-  int n = size();
-  for ( int i = 0; i < n; ++ i ) {
-    mValArray[i] = vals[i];
-  }
+  mValArray = vals;
 }
 
 END_NAMESPACE_YM_VERILOG

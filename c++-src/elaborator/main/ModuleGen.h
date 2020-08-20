@@ -46,7 +46,7 @@ public:
   /// @param[in] toplevel トップレベルのスコープ
   /// @param[in] pt_module モジュール定義
   void
-  phase1_topmodule(const VlNamedObj* toplevel,
+  phase1_topmodule(const VlScope* toplevel,
 		   const PtModule* pt_module);
 
   /// @brief module の中身のうちスコープに関係するインスタンス化を行う．

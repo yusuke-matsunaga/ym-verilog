@@ -17,7 +17,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 template <typename T1,
 	  typename T2>
 class PtrList;
-class PtAlloc;
 
 //////////////////////////////////////////////////////////////////////
 /// @class PtrListCell PtrList.h "PtrList.h"

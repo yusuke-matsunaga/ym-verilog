@@ -17,66 +17,26 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class ElbModuleArray ElbModule.h "ElbModule.h"
-/// @brief elaboration 中の module 配列を表すクラス
-//////////////////////////////////////////////////////////////////////
-class ElbModuleArray :
-  public VlModuleArray
-{
-protected:
-
-  /// @brief コンストラクタ
-  ElbModuleArray() = default;
-
-  /// @brief デストラクタ
-  ~ElbModuleArray() = default;
-
-
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 設定用の関数 (ElbMgr が使う)
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief 要素を返す．
-  virtual
-  ElbModule*
-  _module(int offset) = 0;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class ElbModule ElbModule.h "ElbModule.h"
 /// @brief elaboration 中の module を表すクラス
 //////////////////////////////////////////////////////////////////////
 class ElbModule :
   public VlModule
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbModule() = default;
-
-  /// @brief デストラクタ
-  ~ElbModule() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbModule の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 入出力の初期設定を行う．
-  /// @param[in] pos 位置番号
+  /// @brief 入出力を追加する．
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木のIO宣言要素
   /// @param[in] decl 対応する宣言要素
   virtual
   void
-  init_iodecl(int pos,
-	      ElbIOHead* head,
-	      const PtIOItem* pt_item,
-	      const VlDecl* decl) = 0;
+  add_iodecl(ElbIOHead* head,
+	     const PtIOItem* pt_item,
+	     const VlDecl* decl) = 0;
 
   /// @brief ポートの初期設定を行う．
   /// @param[in] index ポート番号
@@ -85,7 +45,7 @@ public:
   /// @param[in] dir 向き
   virtual
   void
-  init_port(int index,
+  init_port(SizeType index,
 	    const PtPort* pt_port,
 	    ElbExpr* low_conn,
 	    VpiDir dir) = 0;
@@ -96,7 +56,7 @@ public:
   /// @param[in] conn_by_name 名前による割り当て時に true とするフラグ
   virtual
   void
-  set_port_high_conn(int index,
+  set_port_high_conn(SizeType index,
 		     ElbExpr* high_conn,
 		     bool conn_by_name) = 0;
 

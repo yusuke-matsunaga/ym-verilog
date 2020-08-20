@@ -23,7 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 class ElbExpr :
   public VlExpr
 {
-protected:
+public:
 
   /// @brief コンストラクタ
   ElbExpr() = default;

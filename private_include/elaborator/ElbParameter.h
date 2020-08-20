@@ -5,7 +5,7 @@
 /// @brief ElbParameter のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -44,8 +44,8 @@ public:
 
   /// @brief このオブジェクトの属しているスコープを返す．
   virtual
-  const VlNamedObj*
-  parent() const = 0;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief 符号の取得
   /// @param[in] val 値
@@ -147,16 +147,21 @@ public:
 
   /// @brief 値の取得
   virtual
+  const PtExpr*
+  init_expr() const = 0;
+
+  /// @brief 値の取得
+  virtual
   VlValue
-  get_value() const = 0;
+  value() const = 0;
 
   /// @brief parameter の値の設定
   /// @param[in] expr 値を表す式
-  /// @param[in] val 値
+  /// @param[in] value 値
   virtual
   void
-  set_expr(const PtExpr* expr,
-	   const VlValue& val) = 0;
+  set_init_expr(const PtExpr* expr,
+		const VlValue& value) = 0;
 
 };
 

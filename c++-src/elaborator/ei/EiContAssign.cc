@@ -7,13 +7,12 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiContAssign.h"
+#include "ei/EiFactory.h"
+#include "ei/EiContAssign.h"
 
 #include "elaborator/ElbExpr.h"
 
 #include "ym/vl/VlDelay.h"
-
 #include "ym/pt/PtItem.h"
 #include "ym/pt/PtMisc.h"
 
@@ -55,7 +54,7 @@ EiFactory::new_ContAssign(ElbCaHead* head,
 			  const VlExpr* lhs,
 			  const VlExpr* rhs)
 {
-  EiContAssign* cont_assign = new EiContAssign1(head, pt_obj, lhs, rhs);
+  auto cont_assign = new EiContAssign1(head, pt_obj, lhs, rhs);
 
   return cont_assign;
 }
@@ -71,7 +70,7 @@ EiFactory::new_ContAssign(const VlModule* module,
 			  const VlExpr* lhs,
 			  const VlExpr* rhs)
 {
-  EiContAssign* cont_assign = new EiContAssign2(module, pt_obj, lhs, rhs);
+  auto cont_assign = new EiContAssign2(module, pt_obj, lhs, rhs);
 
   return cont_assign;
 }
@@ -86,8 +85,8 @@ EiFactory::new_ContAssign(const VlModule* module,
 // @param[in] pt_obj パース木のヘッダ定義
 EiCaHead::EiCaHead(const VlModule* module,
 		   const PtItem* pt_head) :
-  mModule(module),
-  mPtHead(pt_head)
+  mModule{module},
+  mPtHead{pt_head}
 {
 }
 
@@ -144,7 +143,7 @@ EiCaHeadD::EiCaHeadD(const VlModule* module,
 		     const PtItem* pt_head,
 		     const VlDelay* delay) :
   EiCaHead(module, pt_head),
-  mDelay(delay)
+  mDelay{delay}
 {
 }
 
@@ -233,7 +232,7 @@ EiContAssign1::EiContAssign1(ElbCaHead* head,
 			     const VlExpr* lhs,
 			     const VlExpr* rhs) :
   EiContAssign(pt_obj, lhs, rhs),
-  mHead(head)
+  mHead{head}
 {
 }
 
@@ -292,7 +291,7 @@ EiContAssign2::EiContAssign2(const VlModule* module,
 			     const VlExpr* lhs,
 			     const VlExpr* rhs) :
   EiContAssign(pt_obj, lhs, rhs),
-  mModule(module)
+  mModule{module}
 {
 }
 

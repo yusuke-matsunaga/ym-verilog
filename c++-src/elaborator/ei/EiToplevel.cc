@@ -3,12 +3,12 @@
 /// @brief EiToplevel の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiToplevel.h"
+#include "ei/EiFactory.h"
+#include "ei/EiToplevel.h"
 
 #include "ym/FileRegion.h"
 
@@ -20,11 +20,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief トップレベルのスコープを生成する
-// @param[in] alloc アロケータ
-const VlNamedObj*
+const VlScope*
 EiFactory::new_Toplevel()
 {
-  EiToplevel* toplevel = new EiToplevel();
+  auto toplevel{new EiToplevel()};
 
   return toplevel;
 }
@@ -35,7 +34,8 @@ EiFactory::new_Toplevel()
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-EiToplevel::EiToplevel()
+EiToplevel::EiToplevel() :
+  EiScope(nullptr)
 {
 }
 
@@ -44,25 +44,11 @@ EiToplevel::~EiToplevel()
 {
 }
 
-// @brief 型の取得
-VpiObjType
-EiToplevel::type() const
-{
-  return VpiObjType::Scope;
-}
-
 // @brief ファイル位置の取得
 FileRegion
 EiToplevel::file_region() const
 {
   return FileRegion();
-}
-
-// @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
-EiToplevel::parent() const
-{
-  return nullptr;
 }
 
 /// @brief このオブジェクトの属している module を返す．
@@ -73,8 +59,15 @@ EiToplevel::parent_module() const
 }
 
 // @brief 名前の取得
-const char*
+string
 EiToplevel::name() const
+{
+  return "";
+}
+
+// @brief fullname の取得
+string
+EiToplevel::full_name() const
 {
   return "";
 }

@@ -139,25 +139,12 @@ public:
   /// @brief internal scope を追加する．
   virtual
   void
-  add_internalscope(const VlNamedObj* obj);
+  add_internalscope(const VlScope* obj);
 
   /// @brief internal scope のリストを得る．
   virtual
-  vector<const VlNamedObj*>
+  vector<const VlScope*>
   internalscope_list();
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-#if 0
-  // 親のスコープ
-  const VlNamedObj* mParent;
-
-  // タグの値
-  int mTag;
-#endif
 
 };
 

@@ -28,7 +28,7 @@ END_NONAMESPACE
 
 // @brief ブロックスコープ内の宣言要素の生成を行う．
 void
-StmtGen::phase2_namedblock(const VlNamedObj* parent,
+StmtGen::phase2_namedblock(const VlScope* parent,
 			   const vector<const PtDeclHead*>& pt_head_array)
 {
   if ( debug ) {
@@ -54,7 +54,7 @@ StmtGen::phase2_namedblock(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_parblock(const VlNamedObj* parent,
+StmtGen::instantiate_parblock(const VlScope* parent,
 			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
@@ -71,7 +71,7 @@ StmtGen::instantiate_parblock(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_seqblock(const VlNamedObj* parent,
+StmtGen::instantiate_seqblock(const VlScope* parent,
 			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
@@ -88,7 +88,7 @@ StmtGen::instantiate_seqblock(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_namedparblock(const VlNamedObj* parent,
+StmtGen::instantiate_namedparblock(const VlScope* parent,
 				   const VlProcess* process,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
@@ -108,7 +108,7 @@ StmtGen::instantiate_namedparblock(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_namedseqblock(const VlNamedObj* parent,
+StmtGen::instantiate_namedseqblock(const VlScope* parent,
 				   const VlProcess* process,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
@@ -129,22 +129,21 @@ StmtGen::instantiate_namedseqblock(const VlNamedObj* parent,
 // @param[in] pt_stmt 対象のステートメント
 //
 // pt_stmt はブロック系のステートメント
-const VlStmt**
-StmtGen::instantiate_stmt_list(const VlNamedObj* parent,
+vector<const VlStmt*>
+StmtGen::instantiate_stmt_list(const VlScope* parent,
 			       const VlProcess* process,
 			       const ElbEnv& env,
 			       const PtStmt* pt_stmt)
 {
   SizeType stmt_num = pt_stmt->stmt_num();
-  auto stmt_list = factory().new_StmtList(stmt_num);
-  SizeType wpos = 0;
+  vector<const VlStmt*> stmt_list;
+  stmt_list.reserve(stmt_num);
   for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
     auto stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
     if ( !stmt1 ) {
-      return nullptr;
+      return vector<const VlStmt*>{};
     }
-    stmt_list[wpos] = stmt1;
-    ++ wpos;
+    stmt_list.push_back(stmt1);
   }
 
   return stmt_list;

@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] pt_stmt 対象のステートメント
 // @param[in] block ブロッキング代入の時 true
 const VlStmt*
-StmtGen::instantiate_assign(const VlNamedObj* parent,
+StmtGen::instantiate_assign(const VlScope* parent,
 			    const VlProcess* process,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt,
@@ -74,7 +74,7 @@ StmtGen::instantiate_assign(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_pca(const VlNamedObj* parent,
+StmtGen::instantiate_pca(const VlScope* parent,
 			 const VlProcess* process,
 			 const ElbEnv& env,
 			 const PtStmt* pt_stmt)
@@ -103,7 +103,7 @@ StmtGen::instantiate_pca(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_deassign(const VlNamedObj* parent,
+StmtGen::instantiate_deassign(const VlScope* parent,
 			      const VlProcess* process,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
@@ -126,7 +126,7 @@ StmtGen::instantiate_deassign(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_force(const VlNamedObj* parent,
+StmtGen::instantiate_force(const VlScope* parent,
 			   const VlProcess* process,
 			   const ElbEnv& env,
 			   const PtStmt* pt_stmt)
@@ -155,7 +155,7 @@ StmtGen::instantiate_force(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_release(const VlNamedObj* parent,
+StmtGen::instantiate_release(const VlScope* parent,
 			     const VlProcess* process,
 			     const ElbEnv& env,
 			     const PtStmt* pt_stmt)

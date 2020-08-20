@@ -12,6 +12,7 @@
 #include "ym/VlMgr.h"
 #include "ym/vl/VlRange.h"
 #include "ym/vl/VlDelay.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlExpr.h"
 #include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlUserSystf.h"

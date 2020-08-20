@@ -55,7 +55,7 @@ public:
 
   /// @brief 名前を返す．
   virtual
-  const char*
+  string
   name() const = 0;
 
   /// @brief 親のモジュールを取出す
@@ -65,7 +65,7 @@ public:
 
   /// @brief ポートリストの何番目のポートかを表すインデックスを返す．
   virtual
-  int
+  SizeType
   port_index() const = 0;
 
   /// @brief 上位の接続先を返す．

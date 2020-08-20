@@ -43,11 +43,11 @@ public:
   /// @param[in] attr_list 登録する属性のリスト
   void
   add(const PtAttrInst* pt_attr,
-      ElbAttrList* attr_list);
+      const vector<const VlAttribute*>& attr_list);
 
   /// @brief 属性リストを取り出す．
   /// @param[in] pt_attr パース木の属性定義
-  ElbAttrList*
+  vector<const VlAttribute*>
   find(const PtAttrInst* pt_attr) const;
 
   /// @brief 内容をクリアする．
@@ -67,7 +67,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ハッシュ表
-  unordered_map<const PtAttrInst*, ElbAttrList*> mHash;
+  unordered_map<const PtAttrInst*, vector<const VlAttribute*>> mHash;
 
 };
 
@@ -82,7 +82,7 @@ private:
 inline
 void
 AttrDict::add(const PtAttrInst* pt_attr,
-	      ElbAttrList* attr_list)
+	      const vector<const VlAttribute*>& attr_list)
 {
   mHash.emplace(pt_attr, attr_list);
 }
@@ -90,13 +90,15 @@ AttrDict::add(const PtAttrInst* pt_attr,
 // @brief 属性リストを取り出す．
 // @param[in] pt_attr パース木の属性定義
 inline
-ElbAttrList*
+vector<const VlAttribute*>
 AttrDict::find(const PtAttrInst* pt_attr) const
 {
   if ( mHash.count(pt_attr) > 0 ) {
     return mHash.at(pt_attr);
   }
-  return nullptr;
+  else {
+    return {};
+  }
 }
 
 // @brief 内容をクリアする．

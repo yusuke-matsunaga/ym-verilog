@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 class ElbDeclHead
 {
-protected:
+public:
 
   /// @brief コンストラクタ
   ElbDeclHead() = default;
@@ -44,8 +44,8 @@ public:
 
   /// @brief このオブジェクトの属しているスコープを返す．
   virtual
-  const VlNamedObj*
-  parent() const = 0;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief 符号の取得
   /// @retval true 符号つき
@@ -192,7 +192,7 @@ public:
 class ElbDecl :
   public VlDecl
 {
-protected:
+public:
 
   /// @brief コンストラクタ
   ElbDecl() = default;

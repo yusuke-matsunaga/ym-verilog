@@ -8,7 +8,15 @@
 
 
 #include "elaborator/ElbMgr.h"
+#include "ym/vl/VlContAssign.h"
+#include "ym/vl/VlDecl.h"
+#include "ym/vl/VlDeclArray.h"
+#include "ym/vl/VlParamAssign.h"
+#include "ym/vl/VlPrimitive.h"
+#include "ym/vl/VlProcess.h"
+#include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlUserSystf.h"
+#include "ym/vl/VlUdp.h"
 #include "elaborator/ElbModule.h"
 
 
@@ -22,12 +30,18 @@ ElbMgr::ElbMgr()
 // @brief デストラクタ
 ElbMgr::~ElbMgr()
 {
+  clear();
 }
 
 // @brief 内容をクリアする．
 void
 ElbMgr::clear()
 {
+  for ( auto obj: mObjList ) {
+    delete obj;
+  }
+  mObjList.clear();
+
   mUdpList.clear();
   mUdpHash.clear();
   mTopmoduleList.clear();
@@ -68,11 +82,12 @@ ElbMgr::reg_udp(const char* def_name,
 {
   mUdpList.push_back(udp);
   mUdpHash[def_name] = udp;
+  mObjList.push_back(udp);
 }
 
 // @brief グローバルスコープを登録する．
 void
-ElbMgr::reg_toplevel(const VlNamedObj* toplevel)
+ElbMgr::reg_toplevel(const VlScope* toplevel)
 {
   mTopLevel = toplevel;
 }
@@ -104,12 +119,13 @@ void
 ElbMgr::reg_user_systf(const VlUserSystf* systf)
 {
   mSystfHash[systf->name()] = systf;
+  mObjList.push_back(systf);
 }
 
 // @brief internal scope を登録する．
 // @param[in] obj 登録するオブジェクト
 void
-ElbMgr::reg_internalscope(const VlNamedObj* obj)
+ElbMgr::reg_internalscope(const VlScope* obj)
 {
   mTagDict.add_internalscope(obj);
 }
@@ -124,6 +140,7 @@ ElbMgr::reg_decl(int tag,
   if ( tag ) {
     mTagDict.add_decl(tag, obj);
   }
+  mObjList.push_back(obj);
 }
 
 // @brief 配列型の宣言要素を登録する．
@@ -140,6 +157,7 @@ ElbMgr::reg_declarray(int tag,
     }
     mTagDict.add_declarray(tag, obj);
   }
+  mObjList.push_back(obj);
 }
 
 // @brief defparam を登録する．
@@ -148,6 +166,7 @@ void
 ElbMgr::reg_defparam(const VlDefParam* obj)
 {
   mTagDict.add_defparam(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief paramassign を登録する．
@@ -156,6 +175,7 @@ void
 ElbMgr::reg_paramassign(const VlParamAssign* obj)
 {
   mTagDict.add_paramassign(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief モジュール配列を登録する．
@@ -164,6 +184,7 @@ void
 ElbMgr::reg_modulearray(const VlModuleArray* obj)
 {
   mTagDict.add_modulearray(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief モジュールを登録する．
@@ -171,9 +192,10 @@ void
 ElbMgr::reg_module(const VlModule* obj)
 {
   mTagDict.add_module(obj);
-  if ( obj->parent() == mTopLevel ) {
+  if ( obj->parent_scope() == mTopLevel ) {
     mTopmoduleList.push_back(obj);
   }
+  mObjList.push_back(obj);
 }
 
 // @brief プリミティブ配列を登録する．
@@ -182,6 +204,7 @@ void
 ElbMgr::reg_primarray(const VlPrimArray* obj)
 {
   mTagDict.add_primarray(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief プリミティブを登録する．
@@ -190,6 +213,7 @@ void
 ElbMgr::reg_primitive(const VlPrimitive* obj)
 {
   mTagDict.add_primitive(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief タスクを登録する．
@@ -198,6 +222,7 @@ void
 ElbMgr::reg_task(const VlTaskFunc* obj)
 {
   mTagDict.add_task(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief 関数を登録する．
@@ -206,6 +231,7 @@ void
 ElbMgr::reg_function(const VlTaskFunc* obj)
 {
   mTagDict.add_function(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief continuous assignment を登録する．
@@ -214,6 +240,7 @@ void
 ElbMgr::reg_contassign(const VlContAssign* obj)
 {
   mTagDict.add_contassign(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief process を登録する．
@@ -222,6 +249,7 @@ void
 ElbMgr::reg_process(const VlProcess* obj)
 {
   mTagDict.add_process(obj);
+  mObjList.push_back(obj);
 }
 
 // @brief 属性リストを登録する．
@@ -231,7 +259,7 @@ ElbMgr::reg_process(const VlProcess* obj)
 void
 ElbMgr::reg_attr(const VlObj* obj,
 		 bool def,
-		 ElbAttrList* attr_list)
+		 const vector<const VlAttribute*>& attr_list)
 {
   mAttrHash.add(obj, def, attr_list);
 }

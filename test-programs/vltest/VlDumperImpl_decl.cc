@@ -16,6 +16,7 @@
 #include "ym/vl/VlDeclArray.h"
 #include "ym/vl/VlParamAssign.h"
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlUdp.h"
 #include "ym/vl/VlTaskFunc.h"
 
@@ -140,7 +141,7 @@ VlDumperImpl::put_decl(const char* label,
   put("vpiSize", decl->bit_size() );
 
   put("vpiModule", decl->parent_module()->full_name() );
-  put("vpiScope", decl->parent()->full_name() );
+  put("vpiScope", decl->parent_scope()->full_name() );
 
   if ( decl->type() == VpiObjType::Net ) {
     put("vpiStrength0", decl->drive0() );
@@ -289,7 +290,7 @@ VlDumperImpl::put_declarray(const char* label,
   put("vpiSize", decl->bit_size() );
 
   put("vpiModule", decl->parent_module()->full_name() );
-  put("vpiScope", decl->parent()->full_name() );
+  put("vpiScope", decl->parent_scope()->full_name() );
 
   put("vpiMultiArray", decl->is_multi_array());
 
@@ -416,7 +417,7 @@ VlDumperImpl::put_defparam_list(const char* label,
     VlDumpHeader x(this, label, "DefParam");
 
     put("FileRegion", defparam->file_region() );
-    put("vpiModule", defparam->parent()->full_name() );
+    put("vpiModule", defparam->parent_module()->full_name() );
     put("vpiLhs", defparam->lhs()->full_name() );
     //put("vpiRhs", defparam->rhs_string());
     put("vpiRhs", defparam->rhs_value());
@@ -438,7 +439,7 @@ VlDumperImpl::put_paramassign_list(const char* label,
     VlDumpHeader x(this, label, "ParamAssign");
 
     put("FileRegion", paramassign->file_region() );
-    put("vpiModule", paramassign->parent()->full_name() );
+    put("vpiModule", paramassign->parent_module()->full_name() );
     put("vpiConnByName", paramassign->is_conn_by_name() );
     put("vpiLhs", paramassign->lhs()->full_name() );
     //put("vpiRhs", paramassign->rhs_string());

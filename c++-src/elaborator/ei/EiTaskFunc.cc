@@ -3,17 +3,20 @@
 /// @brief EiTaskFunc の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiTaskFunc.h"
-#include "EiIODecl.h"
+#include "ei/EiFactory.h"
+#include "ei/EiTaskFunc.h"
+#include "ei/EiIODecl.h"
+#include "ei/EiDeclHead.h"
 
 #include "elaborator/ElbDecl.h"
 
 #include "ym/VlTime.h"
+#include "ym/vl/VlStmt.h"
+
 #include "ym/BitVector.h"
 #include "ym/pt/PtDecl.h"
 #include "ym/pt/PtItem.h"
@@ -34,7 +37,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] left_val 範囲の MSB の値
 // @param[in] right_val 範囲の LSB の値
 ElbTaskFunc*
-EiFactory::new_Function(const VlNamedObj* parent,
+EiFactory::new_Function(const VlScope* parent,
 			const PtItem* pt_item,
 			const PtExpr* left,
 			const PtExpr* right,
@@ -46,8 +49,7 @@ EiFactory::new_Function(const VlNamedObj* parent,
 
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  auto io_array{new EiIODecl[io_num]};
-  auto func{new EiFunctionV(parent, pt_item, io_num, io_array,
+  auto func{new EiFunctionV(parent, pt_item, io_num,
 			    left, right, left_val, right_val,
 			    const_func)};
 
@@ -58,14 +60,13 @@ EiFactory::new_Function(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_item パース木の定義
 ElbTaskFunc*
-EiFactory::new_Function(const VlNamedObj* parent,
+EiFactory::new_Function(const VlScope* parent,
 			const PtItem* pt_item,
 			bool const_func)
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  auto io_array{new EiIODecl[io_num]};
-  auto func{new EiFunction(parent, pt_item, io_num, io_array, const_func)};
+  auto func{new EiFunction(parent, pt_item, io_num, const_func)};
 
   return func;
 }
@@ -74,13 +75,13 @@ EiFactory::new_Function(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_item パース木の定義
 ElbTaskFunc*
-EiFactory::new_Task(const VlNamedObj* parent,
+EiFactory::new_Task(const VlScope* parent,
 		    const PtItem* pt_item)
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  EiIODecl* io_array = new EiIODecl[io_num];
-  EiTask* task = new EiTask(parent, pt_item, io_num, io_array);
+  auto task{new EiTask(parent, pt_item, io_num)};
+
   return task;
 }
 
@@ -94,16 +95,13 @@ EiFactory::new_Task(const VlNamedObj* parent,
 // @param[in] pt_item パース木の定義
 // @param[in] io_num IOの数
 // @param[in] io_array IO の配列
-EiTaskFunc::EiTaskFunc(const VlNamedObj* parent,
+EiTaskFunc::EiTaskFunc(const VlScope* parent,
 		       const PtItem* pt_item,
-		       SizeType io_num,
-		       EiIODecl* io_array):
-  mParent(parent),
-  mPtItem(pt_item),
-  mIODeclNum(io_num),
-  mIODeclList(io_array),
-  mStmt(nullptr)
+		       SizeType io_num) :
+  mParent{parent},
+  mPtItem{pt_item}
 {
+  mIODeclList.reserve(io_num);
 }
 
 // @brief デストラクタ
@@ -119,14 +117,14 @@ EiTaskFunc::file_region() const
 }
 
 // @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
-EiTaskFunc::parent() const
+const VlScope*
+EiTaskFunc::parent_scope() const
 {
   return mParent;
 }
 
 // @brief 名前の取得
-const char*
+string
 EiTaskFunc::name() const
 {
   return mPtItem->name();
@@ -143,7 +141,7 @@ EiTaskFunc::automatic() const
 SizeType
 EiTaskFunc::io_num() const
 {
-  return mIODeclNum;
+  return mIODeclList.size();
 }
 
 // @brief 入出力を得る．
@@ -162,17 +160,15 @@ EiTaskFunc::stmt() const
 }
 
 // @brief 入出力の初期設定を行う．
-// @param[in] pos 位置番号
 // @param[in] head ヘッダ
 // @param[in] pt_item パース木のIO宣言要素
 // @param[in] decl 対応する宣言要素
 void
-EiTaskFunc::init_iodecl(SizeType pos,
-			ElbIOHead* head,
-			const PtIOItem* pt_item,
-			const VlDecl* decl)
+EiTaskFunc::add_iodecl(ElbIOHead* head,
+		       const PtIOItem* pt_item,
+		       const VlDecl* decl)
 {
-  mIODeclList[pos].init(head, pt_item, decl);
+  mIODeclList.push_back({head, pt_item, decl});
 }
 
 // @brief 本体のステートメントをセットする．
@@ -191,12 +187,10 @@ EiTaskFunc::set_stmt(const VlStmt* stmt)
 // @param[in] parent 親のスコープ環境
 // @param[in] pt_item パース木の定義
 // @param[in] io_num IOの数
-// @param[in] io_array IO の配列
-EiTask::EiTask(const VlNamedObj* parent,
+EiTask::EiTask(const VlScope* parent,
 	       const PtItem* pt_item,
-	       SizeType io_num,
-	       EiIODecl* io_array) :
-  EiTaskFunc(parent, pt_item, io_num, io_array)
+	       SizeType io_num) :
+  EiTaskFunc(parent, pt_item, io_num)
 {
 }
 
@@ -297,13 +291,11 @@ EiTask::is_constant_function() const
 // @param[in] parent 親のスコープ環境
 // @param[in] pt_item パース木の定義
 // @param[in] io_num IOの数
-// @param[in] io_array IO の配列
-EiFunction::EiFunction(const VlNamedObj* parent,
+EiFunction::EiFunction(const VlScope* parent,
 		       const PtItem* pt_item,
 		       SizeType io_num,
-		       EiIODecl* io_array,
 		       bool const_func) :
-  EiTaskFunc(parent, pt_item, io_num, io_array),
+  EiTaskFunc(parent, pt_item, io_num),
   mConstFunc{const_func}
 {
 }
@@ -449,16 +441,15 @@ EiFunction::is_constant_function() const
 // @param[in] left_val 範囲の MSB の値
 // @param[in] right_val 範囲の LSB の値
 // @param[in] const_func 定数関数フラグ
-EiFunctionV::EiFunctionV(const VlNamedObj* parent,
+EiFunctionV::EiFunctionV(const VlScope* parent,
 			 const PtItem* pt_item,
 			 SizeType io_num,
-			 EiIODecl* io_array,
 			 const PtExpr* left,
 			 const PtExpr* right,
 			 int left_val,
 			 int right_val,
 			 bool const_func) :
-  EiFunction(parent, pt_item, io_num, io_array, const_func)
+  EiFunction(parent, pt_item, io_num, const_func)
 {
   mRange.set(left, right, left_val, right_val);
 }

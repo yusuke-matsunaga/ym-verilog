@@ -25,7 +25,7 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] alloc メモリアロケータ
-  CptFactory(PtAlloc& alloc);
+  CptFactory(Alloc& alloc);
 
   /// @brief デストラクタ
   ~CptFactory();

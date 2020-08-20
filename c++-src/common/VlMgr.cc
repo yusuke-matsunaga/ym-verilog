@@ -9,15 +9,13 @@
 
 #include "ym/VlMgr.h"
 
+#include "alloc/SimpleAlloc.h"
 #include "parser/Parser.h"
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
 
 #include "elaborator/Elaborator.h"
 #include "elaborator/ElbMgr.h"
-//#include "elaborator/ElbUdp.h"
-//#include "elaborator/ElbUserSystf.h"
-#include "elaborator/ElbAttribute.h"
 #include "elaborator/ElbFactory.h"
 
 
@@ -25,8 +23,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
 VlMgr::VlMgr() :
+  mAlloc{new SimpleAlloc},
   mPtMgr{new PtMgr},
-  mPtiFactory{PtiFactory::make_obj("cpt", mPtMgr->alloc())},
+  mPtiFactory{PtiFactory::make_obj("cpt", *mAlloc)},
   mElbMgr{new ElbMgr()},
   mElbFactory{ElbFactory::new_obj()}
 {
@@ -41,6 +40,7 @@ VlMgr::~VlMgr()
 void
 VlMgr::clear()
 {
+  mAlloc->destroy();
   mPtMgr->clear();
   mElbMgr->clear();
 }
@@ -56,7 +56,7 @@ VlMgr::read_file(const string& filename,
 		 const SearchPathList& searchpath,
 		 const vector<VlLineWatcher*> watcher_list)
 {
-  Parser parser(*mPtMgr, *mPtiFactory);
+  Parser parser(*mAlloc, *mPtMgr, *mPtiFactory);
 
   return parser.read_file(filename, searchpath, watcher_list);
 }
@@ -83,9 +83,9 @@ VlMgr::pt_udp_list() const
 int
 VlMgr::elaborate(const ClibCellLibrary& cell_library)
 {
-  Elaborator elab(*mPtMgr, *mElbMgr, *mElbFactory, cell_library);
+  Elaborator elab(*mElbMgr, *mElbFactory, cell_library);
 
-  return elab();
+  return elab(*mPtMgr);
 }
 
 // @brief UDP 定義のリストを返す．
@@ -125,8 +125,8 @@ VlMgr::find_user_systf(const char* name) const
 // @brief スコープに属する internal scope のリストを取り出す．
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
-vector<const VlNamedObj*>
-VlMgr::find_internalscope_list(const VlNamedObj* parent) const
+vector<const VlScope*>
+VlMgr::find_internalscope_list(const VlScope* parent) const
 {
   return mElbMgr->find_internalscope_list(parent);
 }
@@ -138,7 +138,7 @@ VlMgr::find_internalscope_list(const VlNamedObj* parent) const
 //
 // parent のスコープ内の tag というタグを持つ要素のリストを返す．
 vector<const VlDecl*>
-VlMgr::find_decl_list(const VlNamedObj* parent,
+VlMgr::find_decl_list(const VlScope* parent,
 		      int tag) const
 {
   return mElbMgr->find_decl_list(parent, tag);
@@ -151,7 +151,7 @@ VlMgr::find_decl_list(const VlNamedObj* parent,
 //
 // parent というスコープ内の tag というタグを持つ要素のリストを返す．
 vector<const VlDeclArray*>
-VlMgr::find_declarray_list(const VlNamedObj* parent,
+VlMgr::find_declarray_list(const VlScope* parent,
 			   int tag) const
 {
   return mElbMgr->find_declarray_list(parent, tag);
@@ -161,7 +161,7 @@ VlMgr::find_declarray_list(const VlNamedObj* parent,
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlDefParam*>
-VlMgr::find_defparam_list(const VlNamedObj* parent) const
+VlMgr::find_defparam_list(const VlScope* parent) const
 {
   return mElbMgr->find_defparam_list(parent);
 }
@@ -170,7 +170,7 @@ VlMgr::find_defparam_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlParamAssign*>
-VlMgr::find_paramassign_list(const VlNamedObj* parent) const
+VlMgr::find_paramassign_list(const VlScope* parent) const
 {
   return mElbMgr->find_paramassign_list(parent);
 }
@@ -179,7 +179,7 @@ VlMgr::find_paramassign_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlModule*>
-VlMgr::find_module_list(const VlNamedObj* parent) const
+VlMgr::find_module_list(const VlScope* parent) const
 {
   return mElbMgr->find_module_list(parent);
 }
@@ -188,7 +188,7 @@ VlMgr::find_module_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlModuleArray*>
-VlMgr::find_modulearray_list(const VlNamedObj* parent) const
+VlMgr::find_modulearray_list(const VlScope* parent) const
 {
   return mElbMgr->find_modulearray_list(parent);
 }
@@ -197,7 +197,7 @@ VlMgr::find_modulearray_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlPrimitive*>
-VlMgr::find_primitive_list(const VlNamedObj* parent) const
+VlMgr::find_primitive_list(const VlScope* parent) const
 {
   return mElbMgr->find_primitive_list(parent);
 }
@@ -206,7 +206,7 @@ VlMgr::find_primitive_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlPrimArray*>
-VlMgr::find_primarray_list(const VlNamedObj* parent) const
+VlMgr::find_primarray_list(const VlScope* parent) const
 {
   return mElbMgr->find_primarray_list(parent);
 }
@@ -215,7 +215,7 @@ VlMgr::find_primarray_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlTaskFunc*>
-VlMgr::find_task_list(const VlNamedObj* parent) const
+VlMgr::find_task_list(const VlScope* parent) const
 {
   return mElbMgr->find_task_list(parent);
 }
@@ -224,7 +224,7 @@ VlMgr::find_task_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlTaskFunc*>
-VlMgr::find_function_list(const VlNamedObj* parent) const
+VlMgr::find_function_list(const VlScope* parent) const
 {
   return mElbMgr->find_function_list(parent);
 }
@@ -233,7 +233,7 @@ VlMgr::find_function_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlContAssign*>
-VlMgr::find_contassign_list(const VlNamedObj* parent) const
+VlMgr::find_contassign_list(const VlScope* parent) const
 {
   return mElbMgr->find_contassign_list(parent);
 }
@@ -242,7 +242,7 @@ VlMgr::find_contassign_list(const VlNamedObj* parent) const
 // @param[in] parent 検索対象のスコープ
 // @return 結果のリストを返す．
 vector<const VlProcess*>
-VlMgr::find_process_list(const VlNamedObj* parent) const
+VlMgr::find_process_list(const VlScope* parent) const
 {
   return mElbMgr->find_process_list(parent);
 }
@@ -250,7 +250,7 @@ VlMgr::find_process_list(const VlNamedObj* parent) const
 // @brief 属性リストを得る．
 // @param[in] obj 対象のオブジェクト
 // @param[in] def 定義側の属性の時 true とするフラグ
-VlAttrList*
+vector<const VlAttribute*>
 VlMgr::find_attr(const VlObj* obj,
 		 bool def) const
 {

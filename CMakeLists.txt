@@ -66,46 +66,50 @@ set (common_SOURCES
   )
 
 set (elaborator_SOURCES
-  c++-src/elaborator/ei/EiAssignment.cc
   c++-src/elaborator/ei/EiAttribute.cc
-  c++-src/elaborator/ei/EiBinaryOp.cc
-  c++-src/elaborator/ei/EiBitSelect.cc
-  c++-src/elaborator/ei/EiBlockScope.cc
-  c++-src/elaborator/ei/EiBlockStmt.cc
-  c++-src/elaborator/ei/EiConcatOp.cc
-  c++-src/elaborator/ei/EiCondStmt.cc
-  c++-src/elaborator/ei/EiConstant.cc
   c++-src/elaborator/ei/EiContAssign.cc
   c++-src/elaborator/ei/EiControl.cc
-  c++-src/elaborator/ei/EiDecl.cc
-  c++-src/elaborator/ei/EiDeclArray.cc
-  c++-src/elaborator/ei/EiDeclHead.cc
   c++-src/elaborator/ei/EiDelay.cc
-  c++-src/elaborator/ei/EiExpr.cc
   c++-src/elaborator/ei/EiFactory.cc
-  c++-src/elaborator/ei/EiFuncCall.cc
-  c++-src/elaborator/ei/EiGenBlock.cc
-  c++-src/elaborator/ei/EiGenvar.cc
+  c++-src/elaborator/ei/EiGenBlockScope.cc
   c++-src/elaborator/ei/EiGfRoot.cc
-  c++-src/elaborator/ei/EiIODecl.cc
-  c++-src/elaborator/ei/EiImpNet.cc
-  c++-src/elaborator/ei/EiLhs.cc
-  c++-src/elaborator/ei/EiMiscStmt.cc
   c++-src/elaborator/ei/EiModule.cc
   c++-src/elaborator/ei/EiParamAssign.cc
-  c++-src/elaborator/ei/EiParameter.cc
-  c++-src/elaborator/ei/EiPartSelect.cc
   c++-src/elaborator/ei/EiPort.cc
-  c++-src/elaborator/ei/EiPrimary.cc
   c++-src/elaborator/ei/EiPrimitive.cc
   c++-src/elaborator/ei/EiProcess.cc
   c++-src/elaborator/ei/EiRange.cc
-  c++-src/elaborator/ei/EiStmt.cc
+  c++-src/elaborator/ei/EiScope.cc
+  c++-src/elaborator/ei/EiStmtBlockScope.cc
   c++-src/elaborator/ei/EiTaskFunc.cc
-  c++-src/elaborator/ei/EiTernaryOp.cc
   c++-src/elaborator/ei/EiToplevel.cc
   c++-src/elaborator/ei/EiUdp.cc
-  c++-src/elaborator/ei/EiUnaryOp.cc
+
+  c++-src/elaborator/ei_decl/EiDecl.cc
+  c++-src/elaborator/ei_decl/EiDeclArray.cc
+  c++-src/elaborator/ei_decl/EiDeclHead.cc
+  c++-src/elaborator/ei_decl/EiGenvar.cc
+  c++-src/elaborator/ei_decl/EiImpNet.cc
+  c++-src/elaborator/ei_decl/EiIODecl.cc
+  c++-src/elaborator/ei_decl/EiParameter.cc
+
+  c++-src/elaborator/ei_expr/EiBinaryOp.cc
+  c++-src/elaborator/ei_expr/EiBitSelect.cc
+  c++-src/elaborator/ei_expr/EiConcatOp.cc
+  c++-src/elaborator/ei_expr/EiConstant.cc
+  c++-src/elaborator/ei_expr/EiExpr.cc
+  c++-src/elaborator/ei_expr/EiFuncCall.cc
+  c++-src/elaborator/ei_expr/EiLhs.cc
+  c++-src/elaborator/ei_expr/EiPartSelect.cc
+  c++-src/elaborator/ei_expr/EiPrimary.cc
+  c++-src/elaborator/ei_expr/EiTernaryOp.cc
+  c++-src/elaborator/ei_expr/EiUnaryOp.cc
+
+  c++-src/elaborator/ei_stmt/EiAssignment.cc
+  c++-src/elaborator/ei_stmt/EiBlockStmt.cc
+  c++-src/elaborator/ei_stmt/EiCondStmt.cc
+  c++-src/elaborator/ei_stmt/EiMiscStmt.cc
+  c++-src/elaborator/ei_stmt/EiStmt.cc
 
   c++-src/elaborator/elb_mgr/AttrHash.cc
   c++-src/elaborator/elb_mgr/ElbDecl.cc
@@ -121,6 +125,7 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/Elaborator.cc
   c++-src/elaborator/main/ElbEnv.cc
   c++-src/elaborator/main/ElbProxy.cc
+  c++-src/elaborator/main/ElbStubList.cc
   c++-src/elaborator/main/ExprGen_error.cc
   c++-src/elaborator/main/ExprGen_funccall.cc
   c++-src/elaborator/main/ExprGen_main.cc
@@ -202,7 +207,7 @@ set (parser_SOURCES
   )
 
 set (alloc_SOURCES
-  c++-src/alloc/PtAlloc.cc
+  c++-src/alloc/Alloc.cc
   c++-src/alloc/SimpleAlloc.cc
   )
 

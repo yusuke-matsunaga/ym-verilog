@@ -87,7 +87,7 @@ ElbProxy::phase1_module_item(ElbModule* module,
 // @param[in] pt_head_array 宣言ヘッダの配列
 // @param[in] force_to_local true なら parameter を localparam にする．
 void
-ElbProxy::phase1_decl(const VlNamedObj* parent,
+ElbProxy::phase1_decl(const VlScope* parent,
 		      const vector<const PtDeclHead*>& pt_head_array,
 		      bool force_to_local)
 {
@@ -96,23 +96,29 @@ ElbProxy::phase1_decl(const VlNamedObj* parent,
 
 // @brief IO宣言要素を実体化する．
 // @param[in] module 親のモジュール
-// @param[in] task 親のタスク
-// @param[in] function 親の function
 // @param[in] pt_head_array IO宣言ヘッダの配列
-// @note module, task, function は1つのみが値を持つ．残りは nullptr．
 void
 ElbProxy::instantiate_iodecl(ElbModule* module,
-			     ElbTaskFunc* taskfunc,
 			     const vector<const PtIOHead*>& pt_head_array)
 {
-  mDeclGen->instantiate_iodecl(module, taskfunc, pt_head_array);
+  mDeclGen->instantiate_iodecl(module, nullptr, pt_head_array);
+}
+
+// @brief IO宣言要素を実体化する．
+// @param[in] pt_head_array IO宣言ヘッダの配列
+// @param[in] taskfunc 親のタスク/関数
+void
+ElbProxy::instantiate_iodecl(ElbTaskFunc* taskfunc,
+			     const vector<const PtIOHead*>& pt_head_array)
+{
+  mDeclGen->instantiate_iodecl(nullptr, taskfunc, pt_head_array);
 }
 
 // @brief 宣言要素のリストをインスタンス化する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_head_array 宣言ヘッダの配列
 void
-ElbProxy::instantiate_decl(const VlNamedObj* parent,
+ElbProxy::instantiate_decl(const VlScope* parent,
 			   const vector<const PtDeclHead*>& pt_head_array)
 {
   mDeclGen->instantiate_decl(parent, pt_head_array);
@@ -122,7 +128,7 @@ ElbProxy::instantiate_decl(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_item_array 要素定義の配列
 void
-ElbProxy::phase1_item(const VlNamedObj* parent,
+ElbProxy::phase1_item(const VlScope* parent,
 		      const vector<const PtItem*>& pt_item_array)
 {
   mItemGen->phase1_item(parent, pt_item_array);
@@ -132,7 +138,7 @@ ElbProxy::phase1_item(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_function 関数定義
 const VlTaskFunc*
-ElbProxy::instantiate_constant_function(const VlNamedObj* parent,
+ElbProxy::instantiate_constant_function(const VlScope* parent,
 					const PtItem* pt_function)
 {
   return mItemGen->instantiate_constant_function(parent, pt_function);
@@ -143,7 +149,7 @@ ElbProxy::instantiate_constant_function(const VlNamedObj* parent,
 // @param[in] pt_stmt 対象のステートメント
 // @param[in] cf constant function 中のステートメントの時 true
 void
-ElbProxy::phase1_stmt(const VlNamedObj* parent,
+ElbProxy::phase1_stmt(const VlScope* parent,
 		      const PtStmt* pt_stmt,
 		      bool cf)
 {
@@ -156,7 +162,7 @@ ElbProxy::phase1_stmt(const VlNamedObj* parent,
 // @param[in] env 生成時の環境
 // @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-ElbProxy::instantiate_stmt(const VlNamedObj* parent,
+ElbProxy::instantiate_stmt(const VlScope* parent,
 			   const VlProcess* process,
 			   const ElbEnv& env,
 			   const PtStmt* pt_stmt)
@@ -171,7 +177,7 @@ ElbProxy::instantiate_stmt(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ElbProxy::instantiate_expr(const VlNamedObj* parent,
+ElbProxy::instantiate_expr(const VlScope* parent,
 			   const ElbEnv& env,
 			   const PtExpr* pt_expr)
 {
@@ -184,7 +190,7 @@ ElbProxy::instantiate_expr(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ElbProxy::instantiate_constant_expr(const VlNamedObj* parent,
+ElbProxy::instantiate_constant_expr(const VlScope* parent,
 				    const PtExpr* pt_expr)
 {
   return mExprGen->instantiate_constant_expr(parent, pt_expr);
@@ -197,7 +203,7 @@ ElbProxy::instantiate_constant_expr(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ElbProxy::instantiate_event_expr(const VlNamedObj* parent,
+ElbProxy::instantiate_event_expr(const VlScope* parent,
 				 const ElbEnv& env,
 				 const PtExpr* pt_expr)
 {
@@ -211,7 +217,7 @@ ElbProxy::instantiate_event_expr(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ElbProxy::instantiate_arg(const VlNamedObj* parent,
+ElbProxy::instantiate_arg(const VlScope* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr)
 {
@@ -225,7 +231,7 @@ ElbProxy::instantiate_arg(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ElbProxy::instantiate_lhs(const VlNamedObj* parent,
+ElbProxy::instantiate_lhs(const VlScope* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr)
 {
@@ -240,7 +246,7 @@ ElbProxy::instantiate_lhs(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ElbProxy::instantiate_rhs(const VlNamedObj* parent,
+ElbProxy::instantiate_rhs(const VlScope* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr,
 			  ElbExpr* lhs)
@@ -257,7 +263,7 @@ ElbProxy::instantiate_rhs(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ElbProxy::instantiate_namedevent(const VlNamedObj* parent,
+ElbProxy::instantiate_namedevent(const VlScope* parent,
 				 const PtExpr* pt_expr)
 {
   return mExprGen->instantiate_namedevent(parent, pt_expr);
@@ -267,7 +273,7 @@ ElbProxy::instantiate_namedevent(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_delay 遅延を表すパース木
 const VlDelay*
-ElbProxy::instantiate_delay(const VlNamedObj* parent,
+ElbProxy::instantiate_delay(const VlScope* parent,
 			    const PtDelay* pt_delay)
 {
   return mExprGen->instantiate_delay(parent, pt_delay);
@@ -279,7 +285,7 @@ ElbProxy::instantiate_delay(const VlNamedObj* parent,
 // これは PtInst の前にある # つきの式がパラメータ割り当てなのか
 // 遅延なのかわからないので PtOrderedCon で表していることによる．
 const VlDelay*
-ElbProxy::instantiate_delay(const VlNamedObj* parent,
+ElbProxy::instantiate_delay(const VlScope* parent,
 			    const PtItem* pt_head)
 {
   return mExprGen->instantiate_delay(parent, pt_head);
@@ -290,7 +296,7 @@ ElbProxy::instantiate_delay(const VlNamedObj* parent,
 // @param[in] pt_expr 式を表すパース木
 // @param[in] put_error エラーを出力する時，true にする．
 VlValue
-ElbProxy::evaluate_expr(const VlNamedObj* parent,
+ElbProxy::evaluate_expr(const VlScope* parent,
 			const PtExpr* pt_expr,
 			bool put_error)
 {
@@ -304,7 +310,7 @@ ElbProxy::evaluate_expr(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ElbProxy::evaluate_int(const VlNamedObj* parent,
+ElbProxy::evaluate_int(const VlScope* parent,
 		       const PtExpr* pt_expr,
 		       int& value,
 		       bool put_error)
@@ -319,7 +325,7 @@ ElbProxy::evaluate_int(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ElbProxy::evaluate_scalar(const VlNamedObj* parent,
+ElbProxy::evaluate_scalar(const VlScope* parent,
 			  const PtExpr* pt_expr,
 			  VlScalarVal& value,
 			  bool put_error)
@@ -334,7 +340,7 @@ ElbProxy::evaluate_scalar(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ElbProxy::evaluate_bool(const VlNamedObj* parent,
+ElbProxy::evaluate_bool(const VlScope* parent,
 			const PtExpr* pt_expr,
 			bool& value,
 			bool put_error)
@@ -349,7 +355,7 @@ ElbProxy::evaluate_bool(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ElbProxy::evaluate_bitvector(const VlNamedObj* parent,
+ElbProxy::evaluate_bitvector(const VlScope* parent,
 			     const PtExpr* pt_expr,
 			     BitVector& value,
 			     bool put_error)
@@ -364,7 +370,7 @@ ElbProxy::evaluate_bitvector(const VlNamedObj* parent,
 // @param[in] left_val 範囲の MSB の値
 // @param[in] right_val 範囲の LSB の値
 bool
-ElbProxy::evaluate_range(const VlNamedObj* parent,
+ElbProxy::evaluate_range(const VlScope* parent,
 			 const PtExpr* pt_left,
 			 const PtExpr* pt_right,
 			 int& left_val,

@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "EiPort.h"
+#include "ei/EiPort.h"
 
 #include "elaborator/ElbModule.h"
 #include "elaborator/ElbExpr.h"
@@ -36,7 +36,7 @@ EiPort::EiPort()
 void
 EiPort::init(const VlModule* module,
 	     const PtPort* pt_port,
-	     int index,
+	     SizeType index,
 	     ElbExpr* low_conn,
 	     VpiDir dir)
 {
@@ -101,7 +101,7 @@ EiPort::is_explicit_name() const
 }
 
 // @brief 名前を返す．
-const char*
+string
 EiPort::name() const
 {
   return mPtPort->ext_name();
@@ -115,7 +115,7 @@ EiPort::module() const
 }
 
 // @brief ポートリストの何番目のポートかを表すインデックスを返す．
-int
+SizeType
 EiPort::port_index() const
 {
   return mIndex;

@@ -7,8 +7,8 @@
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiParamAssign.h"
+#include "ei/EiFactory.h"
+#include "ei/EiParamAssign.h"
 
 #include "elaborator/ElbParameter.h"
 #include "elaborator/ElbExpr.h"
@@ -29,7 +29,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] param 対象の parameter
 // @param[in] rhs_expr 割り当て式の右辺
 // @param[in] rhs_value 右辺の値
-// @param[in] named_con 名前による割り当ての時 true
 const VlParamAssign*
 EiFactory::new_ParamAssign(const VlModule* module,
 			   const PtBase* pt_obj,
@@ -45,7 +44,6 @@ EiFactory::new_ParamAssign(const VlModule* module,
 // @param[in] param 対象の parameter
 // @param[in] rhs_expr 割り当て式の右辺
 // @param[in] rhs_value 右辺の値
-// @param[in] named_con 名前による割り当ての時 true
 const VlParamAssign*
 EiFactory::new_NamedParamAssign(const VlModule* module,
 				const PtBase* pt_obj,
@@ -91,11 +89,11 @@ EiParamAssign::EiParamAssign(const VlModule* parent,
 			     ElbParameter* param,
 			     const PtExpr* rhs_expr,
 			     const VlValue& rhs_value) :
-  mModule(parent),
-  mPtObj(pt_obj),
-  mLhs(param),
-  mRhsExpr(rhs_expr),
-  mRhsValue(rhs_value)
+  mModule{parent},
+  mPtObj{pt_obj},
+  mLhs{param},
+  mRhsExpr{rhs_expr},
+  mRhsValue{rhs_value}
 {
 }
 
@@ -120,7 +118,7 @@ EiParamAssign::file_region() const
 
 // @brief 親のモジュールを返す．
 const VlModule*
-EiParamAssign::parent() const
+EiParamAssign::parent_module() const
 {
   return mModule;
 }
@@ -203,12 +201,12 @@ EiDefParam::EiDefParam(const VlModule* parent,
 		       ElbParameter* param,
 		       const PtExpr* rhs_expr,
 		       const VlValue& rhs_value) :
-  mModule(parent),
-  mPtHead(pt_header),
-  mPtDefParam(pt_defparam),
-  mLhs(param),
-  mRhsExpr(rhs_expr),
-  mRhsValue(rhs_value)
+  mModule{parent},
+  mPtHead{pt_header},
+  mPtDefParam{pt_defparam},
+  mLhs{param},
+  mRhsExpr{rhs_expr},
+  mRhsValue{rhs_value}
 {
 }
 
@@ -233,7 +231,7 @@ EiDefParam::file_region() const
 
 // @brief 親のモジュールを返す．
 const VlModule*
-EiDefParam::parent() const
+EiDefParam::parent_module() const
 {
   return mModule;
 }

@@ -21,11 +21,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 class VlObj
 {
-protected:
+public:
 
   /// @brief デストラクタ
   virtual
-  ~VlObj() { }
+  ~VlObj() = default;
 
 
 public:

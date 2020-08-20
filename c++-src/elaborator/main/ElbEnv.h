@@ -10,11 +10,10 @@
 
 
 #include "ym/verilog.h"
+#include "ym/vl/VlFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
-
-class VlNamedObj;
 
 //////////////////////////////////////////////////////////////////////
 /// @class ElbEnv ElbEnv.h "ElbEnv.h"
@@ -62,9 +61,8 @@ protected:
 
   /// @brief 親の function を設定する．
   /// @param[in] function 設定する function
-  /// @param[in] cf constant function の時 true にするフラグ
   void
-  set_constant_function(const VlNamedObj* function);
+  set_constant_function(const VlScope* function);
 
   /// @brief 親の function を設定する．
   void
@@ -113,7 +111,7 @@ public:
   inside_constant_function() const;
 
   /// @brief constant function 内の生成の時に親の function を返す．
-  const VlNamedObj*
+  const VlScope*
   constant_function() const;
 
   /// @brief function 内の生成時に true を返す．
@@ -199,7 +197,7 @@ private:
   bitset<NUM_FLAG> mFlags;
 
   // constant function
-  const VlNamedObj* mCf;
+  const VlScope* mCf;
 
 };
 
@@ -230,14 +228,14 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] func 親の関数
-  ElbConstantFunctionEnv(const VlNamedObj* func);
+  ElbConstantFunctionEnv(const VlScope* func);
 
 };
 
 
 //////////////////////////////////////////////////////////////////////
 /// @class ElbTfEnv ElbEnv.h "ElbEnv.h"
-/// @brief 関数内を表す環境
+/// @brief 関数/タスク内を表す環境
 //////////////////////////////////////////////////////////////////////
 class ElbTfEnv :
   public ElbEnv
@@ -245,8 +243,8 @@ class ElbTfEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] taskfunc タスクか関数のオブジェクト
-  ElbTfEnv(const VlNamedObj* taskfunc);
+  /// @param[in] taskfunc タスク/関数
+  ElbTfEnv(const VlTaskFunc* taskfunc);
 
 };
 

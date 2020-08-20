@@ -10,6 +10,7 @@
 
 
 #include "ym/verilog.h"
+#include "ym/pt/PtP.h"
 #include "PtrList.h"
 
 
@@ -18,9 +19,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 // クラス名の前方宣言
 //////////////////////////////////////////////////////////////////////
-
-// in PtAlloc.h
-class PtAlloc;
 
 // in PtiFactory.h
 class PtiFactory;

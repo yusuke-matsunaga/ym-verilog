@@ -9,7 +9,9 @@
 
 #include "ItemGen.h"
 #include "DeclGen.h"
+#include "DefParamStub.h"
 #include "ElbEnv.h"
+#include "ElbStub.h"
 
 #include "ym/BitVector.h"
 
@@ -25,7 +27,6 @@
 #include "elaborator/ElbGenvar.h"
 #include "elaborator/ElbExpr.h"
 
-#include "elaborator/ElbStub.h"
 
 #include "ym/MsgMgr.h"
 
@@ -56,7 +57,7 @@ ItemGen::~ItemGen()
 // @param[in] parent 親のスコープ
 // @param[in] pt_item_array 要素定義の配列
 void
-ItemGen::phase1_item(const VlNamedObj* parent,
+ItemGen::phase1_item(const VlScope* parent,
 		     const vector<const PtItem*>& pt_item_array)
 {
   for ( auto pt_item: pt_item_array ) {
@@ -134,11 +135,13 @@ ItemGen::phase1_item(const VlNamedObj* parent,
 // defparam 文によるパラメータ割り当てを行う．
 // 該当するパラメータが見つかったら true を返す．
 bool
-ItemGen::defparam_override(const VlModule* module,
-			   const PtItem* pt_header,
-			   const PtDefParam* pt_defparam,
-			   const VlNamedObj* ulimit)
+ItemGen::defparam_override(const DefParamStub& stub,
+			   const VlScope* ulimit)
 {
+  auto module = stub.mModule;
+  auto pt_header = stub.mPtHeader;
+  auto pt_defparam = stub.mPtDefparam;
+
   const auto& fr = pt_defparam->file_region();
 
   auto handle = find_obj_up(module, pt_defparam, ulimit);
@@ -175,6 +178,7 @@ ItemGen::defparam_override(const VlModule* module,
   }
 
   auto rhs_expr = pt_defparam->expr();
+  auto value = evaluate_expr(module, rhs_expr, true);
 
   ostringstream buf;
   buf << "instantiating defparam: " << param->full_name()
@@ -185,15 +189,12 @@ ItemGen::defparam_override(const VlModule* module,
 		  "ELAB",
 		  buf.str());
 
-  auto value = evaluate_expr(module, rhs_expr, true);
-  param->set_expr(rhs_expr, value);
-
+  param->set_init_expr(rhs_expr, value);
 
   auto dp = factory().new_DefParam(module,
 				   pt_header,
 				   pt_defparam,
-				   param, rhs_expr,
-				   value);
+				   param, rhs_expr, value);
   reg_defparam(dp);
 
   return true;
@@ -203,7 +204,7 @@ ItemGen::defparam_override(const VlModule* module,
 // @param[in] parent 親のスコープ
 // @param[in] pt_header ヘッダ
 void
-ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
+ItemGen::instantiate_cont_assign(const VlScope* parent,
 				 const PtItem* pt_header)
 {
   auto module = parent->parent_module();
@@ -246,7 +247,7 @@ ItemGen::instantiate_cont_assign(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_item パース木の定義
 void
-ItemGen::instantiate_process(const VlNamedObj* parent,
+ItemGen::instantiate_process(const VlScope* parent,
 			     const PtItem* pt_item)
 {
   auto process = factory().new_Process(parent, pt_item);
@@ -264,7 +265,7 @@ ItemGen::instantiate_process(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_generate generate block 定義
 void
-ItemGen::phase1_generate(const VlNamedObj* parent,
+ItemGen::phase1_generate(const VlScope* parent,
 			 const PtItem* pt_generate)
 {
   phase1_genitem(parent,
@@ -276,7 +277,7 @@ ItemGen::phase1_generate(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_genblock generate block 定義
 void
-ItemGen::phase1_genblock(const VlNamedObj* parent,
+ItemGen::phase1_genblock(const VlScope* parent,
 			 const PtItem* pt_genblock)
 {
   auto* name = pt_genblock->name();
@@ -293,7 +294,7 @@ ItemGen::phase1_genblock(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @parma[in] pt_genif generate if 定義
 void
-ItemGen::phase1_genif(const VlNamedObj* parent,
+ItemGen::phase1_genif(const VlScope* parent,
 		      const PtItem* pt_genif)
 {
   bool cond;
@@ -316,7 +317,7 @@ ItemGen::phase1_genif(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @parma[in] pt_gencase generate case 定義
 void
-ItemGen::phase1_gencase(const VlNamedObj* parent,
+ItemGen::phase1_gencase(const VlScope* parent,
 			const PtItem* pt_gencase)
 {
   BitVector val;
@@ -360,7 +361,7 @@ ItemGen::phase1_gencase(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @parma[in] pt_genfor generate for 定義
 void
-ItemGen::phase1_genfor(const VlNamedObj* parent,
+ItemGen::phase1_genfor(const VlScope* parent,
 		       const PtItem* pt_genfor)
 {
   const auto& fr = pt_genfor->file_region();
@@ -473,13 +474,13 @@ ItemGen::phase1_genfor(const VlNamedObj* parent,
 // @param[in] pt_decl_array パース木の宣言の配列
 // @param[in] pt_item_array パース木の要素の配列
 void
-ItemGen::phase1_genitem(const VlNamedObj* parent,
+ItemGen::phase1_genitem(const VlScope* parent,
 			const vector<const PtDeclHead*>& pt_decl_array,
 			const vector<const PtItem*>& pt_item_array)
 {
   phase1_item(parent, pt_item_array);
   auto stub{make_stub<ElbProxy,
-	    const VlNamedObj*,
+	    const VlScope*,
 	    const vector<const PtDeclHead*>&>(static_cast<ElbProxy*>(this),
 					      &ElbProxy::instantiate_decl,
 					      parent, pt_decl_array)};

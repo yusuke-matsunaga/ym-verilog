@@ -9,8 +9,8 @@
 /// All rights reserved.
 
 
-#include "ym/vl/VlNamedObj.h"
-#include "ym/vl/VlObj.h"
+#include "ym/vl/VlScope.h"
+#include "ym/vl/VlFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// IEEE Std 1364-2001 26.6.18 Task, function declaration
 //////////////////////////////////////////////////////////////////////
 class VlTaskFunc :
-  public VlNamedObj
+  public VlScope
 {
 public:
   //////////////////////////////////////////////////////////////////////

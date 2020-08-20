@@ -11,6 +11,7 @@
 #include "parser/CptFactory.h"
 #include "parser/PuHierName.h"
 #include "parser/PtiArray.h"
+#include "ym/pt/PtDecl.h"
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 

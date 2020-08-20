@@ -31,7 +31,7 @@ public:
 
   /// @brief 定義された名前を返す．
   virtual
-  const char*
+  string
   def_name() const = 0;
 
   /// @brief primitive type を返す．

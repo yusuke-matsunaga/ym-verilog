@@ -20,6 +20,9 @@ class VlObj;
 // in VlNamedObj.h
 class VlNamedObj;
 
+// in VlScope.h
+class VlScope;
+
 // in VlDeclBase.h
 class VlDeclBase;
 
@@ -28,6 +31,9 @@ class VlDecl;
 
 // in VlDeclArray.h
 class VlDeclArray;
+
+// in VlGenBlock.h
+class VlGenBlock;
 
 // in VlModule.h
 class VlModule;
@@ -82,7 +88,6 @@ class VlUserSystf;
 
 // in VlAttribute.h
 class VlAttribute;
-class VlAttrList;
 
 END_NAMESPACE_YM_VERILOG
 
@@ -115,7 +120,6 @@ using nsVerilog::VlUdpDefn;
 using nsVerilog::VlTableEntry;
 using nsVerilog::VlUserSystf;
 using nsVerilog::VlAttribute;
-using nsVerilog::VlAttrList;
 
 END_NAMESPACE_YM
 

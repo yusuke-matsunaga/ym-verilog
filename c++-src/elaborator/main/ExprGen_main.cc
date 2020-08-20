@@ -49,7 +49,7 @@ ExprGen::~ExprGen()
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_expr(const VlNamedObj* parent,
+ExprGen::instantiate_expr(const VlScope* parent,
 			  const ElbEnv& env,
 			  const PtExpr* pt_expr)
 {
@@ -99,7 +99,7 @@ ExprGen::instantiate_expr(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_constant_expr(const VlNamedObj* parent,
+ExprGen::instantiate_constant_expr(const VlScope* parent,
 				   const PtExpr* pt_expr)
 {
   if ( pt_expr == nullptr ) {
@@ -116,7 +116,7 @@ ExprGen::instantiate_constant_expr(const VlNamedObj* parent,
 // @param[in] pt_expr 式を表すパース木
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_event_expr(const VlNamedObj* parent,
+ExprGen::instantiate_event_expr(const VlScope* parent,
 				const ElbEnv& env,
 				const PtExpr* pt_expr)
 {
@@ -194,7 +194,7 @@ ExprGen::instantiate_event_expr(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_arg(const VlNamedObj* parent,
+ExprGen::instantiate_arg(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr)
 {
@@ -219,7 +219,7 @@ ExprGen::instantiate_arg(const VlNamedObj* parent,
 // @return 生成された ElbExpr のポインタを返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_lhs(const VlNamedObj* parent,
+ExprGen::instantiate_lhs(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr)
 {
@@ -229,7 +229,7 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
     if ( pt_expr->op_type() == VpiOpType::Concat ) {
       vector<ElbExpr*> elem_array;
       SizeType opr_size = pt_expr->operand_num();
-      auto opr_list = factory().new_ExprList(opr_size);
+      vector<ElbExpr*> opr_list(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	// 現れた順は上位ビットからなので位置が逆になる．
 	SizeType pos = opr_size - i - 1;
@@ -240,14 +240,7 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
 	}
 	opr_list[pos] = expr1;
       }
-      // elem_array をコピーする．
-      SizeType n = elem_array.size();
-      auto lhs_elem_array = factory().new_ExprList(n);
-      for ( SizeType i = 0; i < n; ++ i ) {
-	lhs_elem_array[i] = elem_array[i];
-      }
-      auto expr = factory().new_Lhs(pt_expr, opr_size, opr_list,
-				    n, lhs_elem_array);
+      auto expr = factory().new_Lhs(pt_expr, opr_list, elem_array);
 
 #if 0
       // attribute instance の生成
@@ -294,7 +287,7 @@ ExprGen::instantiate_lhs(const VlNamedObj* parent,
 // @return 生成した式を返す．
 // @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
+ExprGen::instantiate_lhs_sub(const VlScope* parent,
 			     const ElbEnv& env,
 			     const PtExpr* pt_expr,
 			     vector<ElbExpr*>& elem_array)
@@ -304,7 +297,7 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
     // 左辺では concatination しか適当でない．
     if ( pt_expr->op_type() == VpiOpType::Concat ) {
       SizeType opr_size = pt_expr->operand_num();
-      auto opr_list = factory().new_ExprList(opr_size);
+      vector<ElbExpr*> opr_list(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	SizeType pos = opr_size - i - 1;
 	auto pt_expr1 = pt_expr->operand(pos);
@@ -314,7 +307,7 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
 	}
 	opr_list[pos] = expr1;
       }
-      auto expr = factory().new_ConcatOp(pt_expr, opr_size, opr_list);
+      auto expr = factory().new_ConcatOp(pt_expr, opr_list);
       expr->set_selfsize();
 
 #if 0
@@ -368,7 +361,7 @@ ExprGen::instantiate_lhs_sub(const VlNamedObj* parent,
 // @note 定数でなければエラーメッセージを出力し false を返す．
 // @brief PtExpr から expression を生成し int 値を返す．
 bool
-ExprGen::evaluate_int(const VlNamedObj* parent,
+ExprGen::evaluate_int(const VlScope* parent,
 		      const PtExpr* pt_expr,
 		      int& value,
 		      bool put_error)
@@ -396,7 +389,7 @@ ExprGen::evaluate_int(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ExprGen::evaluate_scalar(const VlNamedObj* parent,
+ExprGen::evaluate_scalar(const VlScope* parent,
 			 const PtExpr* pt_expr,
 			 VlScalarVal& value,
 			 bool put_error)
@@ -413,7 +406,7 @@ ExprGen::evaluate_scalar(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ExprGen::evaluate_bool(const VlNamedObj* parent,
+ExprGen::evaluate_bool(const VlScope* parent,
 		       const PtExpr* pt_expr,
 		       bool& value,
 		       bool put_error)
@@ -430,7 +423,7 @@ ExprGen::evaluate_bool(const VlNamedObj* parent,
 // @param[in] put_error エラーを出力する時，true にする．
 // @note 定数でなければエラーメッセージを出力し false を返す．
 bool
-ExprGen::evaluate_bitvector(const VlNamedObj* parent,
+ExprGen::evaluate_bitvector(const VlScope* parent,
 			    const PtExpr* pt_expr,
 			    BitVector& value,
 			    bool put_error)
@@ -456,7 +449,7 @@ ExprGen::evaluate_bitvector(const VlNamedObj* parent,
 // @param[in] pt_expr 式を表すパース木
 // @param[in] put_error エラーを出力する時，true にする．
 VlValue
-ExprGen::evaluate_expr(const VlNamedObj* parent,
+ExprGen::evaluate_expr(const VlScope* parent,
 		       const PtExpr* pt_expr,
 		       bool put_error)
 {
@@ -496,7 +489,7 @@ ExprGen::evaluate_expr(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
 VlValue
-ExprGen::evaluate_const(const VlNamedObj* parent,
+ExprGen::evaluate_const(const VlScope* parent,
 			const PtExpr* pt_expr)
 {
   SizeType size = pt_expr->const_size();
@@ -552,7 +545,7 @@ ExprGen::evaluate_const(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_delay 遅延を表すパース木
 const VlDelay*
-ExprGen::instantiate_delay(const VlNamedObj* parent,
+ExprGen::instantiate_delay(const VlScope* parent,
 			   const PtDelay* pt_delay)
 {
   if ( pt_delay == nullptr ) {
@@ -577,7 +570,7 @@ ExprGen::instantiate_delay(const VlNamedObj* parent,
 // これは PtInst の前にある # つきの式がパラメータ割り当てなのか
 // 遅延なのかわからないので PtOrderedCon で表していることによる．
 const VlDelay*
-ExprGen::instantiate_delay(const VlNamedObj* parent,
+ExprGen::instantiate_delay(const VlScope* parent,
 			   const PtItem* pt_header)
 {
   if ( pt_header == nullptr ) {
@@ -601,7 +594,7 @@ ExprGen::instantiate_delay(const VlNamedObj* parent,
 // @note pt_obj は PtDelay か PtItem のどちらか
 // @note n は最大で 3
 const VlDelay*
-ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
+ExprGen::instantiate_delay_sub(const VlScope* parent,
 			       const PtBase* pt_obj,
 			       SizeType n,
 			       const PtExpr* expr_array[])
@@ -610,7 +603,7 @@ ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
 
   // TODO : 環境の条件をチェック
   ElbEnv env;
-  auto expr_list = factory().new_ExprList(n);
+  vector<ElbExpr*> expr_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     auto pt_expr = expr_array[i];
     auto expr = instantiate_expr(parent, env, pt_expr);
@@ -620,7 +613,7 @@ ExprGen::instantiate_delay_sub(const VlNamedObj* parent,
     expr_list[i] = expr;
   }
 
-  auto delay = factory().new_Delay(pt_obj, n, expr_list);
+  auto delay = factory().new_Delay(pt_obj, expr_list);
 
   return delay;
 }

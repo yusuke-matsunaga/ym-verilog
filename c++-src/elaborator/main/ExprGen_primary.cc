@@ -34,7 +34,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] env 生成時の環境
 // @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_primary(const VlNamedObj* parent,
+ExprGen::instantiate_primary(const VlScope* parent,
 			     const ElbEnv& env,
 			     const PtExpr* pt_expr)
 {
@@ -115,7 +115,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
   if ( env.is_system_tf_arg() ) {
     // システム関数/タスクの引数の場合
     if ( isize == 0 ) {
-      auto scope = handle->obj();
+      auto scope = handle->scope();
       if ( scope ) {
 	return factory().new_ArgHandle(pt_expr, scope);
       }
@@ -400,7 +400,7 @@ ExprGen::instantiate_primary(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_namedevent(const VlNamedObj* parent,
+ExprGen::instantiate_namedevent(const VlScope* parent,
 				const PtExpr* pt_expr)
 {
   ASSERT_COND( pt_expr->type()        == PtExprType::Primary );
@@ -455,7 +455,7 @@ ExprGen::instantiate_namedevent(const VlNamedObj* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
 ObjHandle*
-ExprGen::find_const_handle(const VlNamedObj* parent,
+ExprGen::find_const_handle(const VlScope* parent,
 			   const PtExpr* pt_expr)
 {
   // モジュール内の識別子を探索する．
@@ -480,7 +480,7 @@ ExprGen::find_const_handle(const VlNamedObj* parent,
 // @param[in] val 値
 // @note pt_expr に添字が付いていたらエラーとなる．
 ElbExpr*
-ExprGen::instantiate_genvar(const VlNamedObj* parent,
+ExprGen::instantiate_genvar(const VlScope* parent,
 			    const PtExpr* pt_expr,
 			    int val)
 {
@@ -526,7 +526,7 @@ ExprGen::instantiate_genvar(const VlNamedObj* parent,
 // @param[out] has_bit_select ビット指定を持っていたら true を返す．
 ElbExpr*
 ExprGen::instantiate_primary_sub(ObjHandle* handle,
-				 const VlNamedObj* parent,
+				 const VlScope* parent,
 				 const ElbEnv& env,
 				 const PtExpr* pt_expr,
 				 bool& is_array,
@@ -743,7 +743,7 @@ ExprGen::check_decl(const ElbEnv& env,
 // @param[in] pt_expr 式を表すパース木
 // @param[in] put_error エラーを出力する時，true にする．
 VlValue
-ExprGen::evaluate_primary(const VlNamedObj* parent,
+ExprGen::evaluate_primary(const VlScope* parent,
 			  const PtExpr* pt_expr,
 			  bool put_error)
 {
@@ -833,7 +833,8 @@ ExprGen::evaluate_primary(const VlNamedObj* parent,
     return VlValue();
   }
 
-  auto val = param->get_value();
+  auto pt_init_expr = param->init_expr();
+  auto val = evaluate_expr(parent, pt_init_expr, true);
   if ( param->value_type().is_real_type() ) {
     if ( has_bit_select || has_range_select ) {
       if ( put_error ) {

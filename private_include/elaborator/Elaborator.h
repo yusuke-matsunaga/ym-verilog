@@ -5,7 +5,7 @@
 /// @brief Elaborator のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -17,7 +17,7 @@
 #include "ObjDict.h"
 #include "ModDefDict.h"
 #include "AttrDict.h"
-#include "ElbStub.h"
+#include "ElbStubList.h"
 
 #include "ElbFwd.h"
 
@@ -36,6 +36,7 @@ class ItemGen;
 class StmtGen;
 class ExprGen;
 class AttrGen;
+class DefParamStub;
 
 //////////////////////////////////////////////////////////////////////
 /// @class Elaborator Elaborator.h "Elaborator.h"
@@ -51,12 +52,10 @@ class Elaborator
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_mgr パース木を管理するクラス
   /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
   /// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
   /// @param[in] cell_library セルライブラリ
-  Elaborator(const PtMgr& pt_mgr,
-	     ElbMgr& elb_mgr,
+  Elaborator(ElbMgr& elb_mgr,
 	     ElbFactory& elb_factory,
 	     const ClibCellLibrary& cell_library);
 
@@ -67,11 +66,12 @@ public:
 public:
 
   /// @brief エラボレーションを行う．
+  /// @param[in] pt_mgr パース木を管理するクラス
   /// @return エラー数を返す．
   ///
   /// この関数は一度しか呼べない．
   int
-  operator()();
+  operator()(const PtMgr& pt_mgr);
 
 
 private:
@@ -112,13 +112,13 @@ private:
   /// @return name という名のモジュール定義
   /// @return なければ nullptr を返す．
   const PtModule*
-  find_moduledef(const char* name) const;
+  find_moduledef(const string& name) const;
 
   /// @brief 関数定義を探す．
   /// @param[in] parent 親のモジュール
   /// @param[in] name 関数名
   const PtItem*
-  find_funcdef(const VlNamedObj* parent,
+  find_funcdef(const VlScope* parent,
 	       const char* name) const;
 
   /// @brief constant function を取り出す．
@@ -127,7 +127,7 @@ private:
   /// @return parent というスコープ内の name という関数を返す．
   /// @return なければ nullptr を返す．
   const VlTaskFunc*
-  find_constant_function(const VlNamedObj* parent,
+  find_constant_function(const VlScope* parent,
 			 const char* name) const;
 
   /// @brief セルの探索
@@ -147,7 +147,7 @@ private:
   /// @brief internal scope を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_internalscope(const VlNamedObj* obj);
+  reg_internalscope(const VlScope* obj);
 
   /// @brief タスクを登録する．
   /// @param[in] obj 登録するオブジェクト
@@ -183,7 +183,7 @@ private:
   /// @brief モジュール配列を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_modulearray(ElbModuleArray* obj);
+  reg_modulearray(const VlModuleArray* obj);
 
   /// @brief ElbModule を登録する．
   /// @param[in] module 登録するモジュール
@@ -247,7 +247,7 @@ public:
   /// @return parent というスコープ内の name という要素を返す．
   /// @return なければ nullptr を返す．
   ObjHandle*
-  find_obj(const VlNamedObj* parent,
+  find_obj(const VlScope* parent,
 	   const char* name) const;
 
   /// @brief スコープと名前からスコープを取り出す．
@@ -255,8 +255,8 @@ public:
   /// @param[in] name 名前
   /// @return parent というスコープ内の name というスコープを返す．
   /// @return なければ nullptr を返す．
-  const VlNamedObj*
-  find_namedobj(const VlNamedObj* parent,
+  const VlScope*
+  find_namedobj(const VlScope* parent,
 		const char* name) const;
 
   /// @brief スコープと階層名から要素を取り出す．
@@ -266,9 +266,9 @@ public:
   /// @return 見付かったオブジェクトを返す．
   /// 見付からなかったら nullptr を返す．
   ObjHandle*
-  find_obj_up(const VlNamedObj* base_scope,
+  find_obj_up(const VlScope* base_scope,
 	      const PtHierNamedBase* pt_obj,
-	      const VlNamedObj* ulimit);
+	      const VlScope* ulimit);
 
 
 private:
@@ -278,29 +278,16 @@ private:
 
   /// @brief base_scope を起点として (nb, "") という名前のスコープを探す．
   /// なければ親のスコープに対して同様の探索を繰り返す．
-  const VlNamedObj*
-  find_scope_up(const VlNamedObj* base_scope,
+  const VlScope*
+  find_scope_up(const VlScope* base_scope,
 		const PtHierNamedBase* pt_obj,
-		const VlNamedObj* ulimit);
+		const VlScope* ulimit);
 
 
 private:
   //////////////////////////////////////////////////////////////////////
   // 内部で用いられる型定義
   //////////////////////////////////////////////////////////////////////
-
-  struct DefParamStub
-  {
-
-    /// @brief 対象のモジュール
-    const VlModule* mModule;
-
-    /// @brief パース木の DefParam ヘッダ
-    const PtItem* mPtHeader;
-
-    /// @brief パース木の DefParam 文
-    const PtDefParam* mPtDefparam;
-  };
 
 
 private:
@@ -310,9 +297,6 @@ private:
 
   // エラボレーションを行ったことを示すフラグ
   bool mDone;
-
-  // パース木を表すオブジェクト
-  const PtMgr& mPtMgr;
 
   // 生成したオブジェクトを管理するクラス
   ElbMgr& mMgr;

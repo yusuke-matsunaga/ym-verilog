@@ -16,6 +16,7 @@
 #include "elaborator/Elaborator.h"
 #include "elaborator/ElbMgr.h"
 #include "elaborator/ElbFactory.h"
+#include "ElbStub.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -23,6 +24,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 class BitVector;
 class ElbEnv;
 class ElbParamCon;
+class ElbScope;
 
 //////////////////////////////////////////////////////////////////////
 /// @class ElbProxy ElbProxy.h "ElbProxy.h"
@@ -101,7 +103,7 @@ protected:
   /// @return parent というスコープ内の name という要素を返す．
   /// @return なければ nullptr を返す．
   ObjHandle*
-  find_obj(const VlNamedObj* parent,
+  find_obj(const VlScope* parent,
 	   const char* name) const;
 
   /// @brief スコープと名前からスコープを取り出す．
@@ -109,8 +111,8 @@ protected:
   /// @param[in] name 名前
   /// @return parent というスコープ内の name というスコープを返す．
   /// @return なければ nullptr を返す．
-  const VlNamedObj*
-  find_namedobj(const VlNamedObj* parent,
+  const VlScope*
+  find_namedobj(const VlScope* parent,
 		const char* name) const;
 
   /// @brief 名前によるオブジェクトの探索
@@ -120,9 +122,9 @@ protected:
   /// @return 見付かったオブジェクトを返す．
   /// 見付からなかったら nullptr を返す．
   ObjHandle*
-  find_obj_up(const VlNamedObj* base_scope,
+  find_obj_up(const VlScope* base_scope,
 	      const PtHierNamedBase* pt_obj,
-	      const VlNamedObj* ulimit);
+	      const VlScope* ulimit);
 
   /// @brief 名前からモジュール定義を取り出す．
   /// @param[in] name 名前
@@ -135,7 +137,7 @@ protected:
   /// @param[in] parent 親のモジュール
   /// @param[in] name 関数名
   const PtItem*
-  find_funcdef(const VlNamedObj* parent,
+  find_funcdef(const VlScope* parent,
 	       const char* name) const;
 
   /// @brief constant function を取り出す．
@@ -144,12 +146,12 @@ protected:
   /// @return parent というスコープ内の name という関数を返す．
   /// @return なければ nullptr を返す．
   const VlTaskFunc*
-  find_constant_function(const VlNamedObj* parent,
+  find_constant_function(const VlScope* parent,
 			 const char* name) const;
 
   /// @brief パース木の属性定義から属性リストを取り出す．
   /// @param[in] pt_attr パース木の属性定義
-  ElbAttrList*
+  vector<const VlAttribute*>
   find_attr_list(const PtAttrInst* pt_attr) const;
 
   /// @brief セルの探索
@@ -181,7 +183,7 @@ protected:
   /// @brief internal scope を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_internalscope(const VlNamedObj* obj);
+  reg_internalscope(const VlScope* obj);
 
   /// @brief タスクを登録する．
   /// @param[in] obj 登録するオブジェクト
@@ -217,7 +219,7 @@ protected:
   /// @brief モジュール配列を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
-  reg_modulearray(ElbModuleArray* obj);
+  reg_modulearray(const VlModuleArray* obj);
 
   /// @brief ElbModule を登録する．
   /// @param[in] module 登録するモジュール
@@ -274,7 +276,7 @@ protected:
   /// @param[in] attr_list 属性リスト
   void
   reg_attr_list(const PtAttrInst* pt_attr,
-		ElbAttrList* attr_list);
+		const vector<const VlAttribute*>& attr_list);
 
   /// @brief 属性リストを登録する．
   /// @param[in] obj 対象のオブジェクト
@@ -283,7 +285,7 @@ protected:
   void
   reg_attr(const VlObj* obj,
 	   bool def,
-	   ElbAttrList* attr_list);
+	   const vector<const VlAttribute*>& attr_list);
 
 
 protected:
@@ -382,25 +384,29 @@ public:
   /// @param[in] pt_head_array 宣言ヘッダの配列
   /// @param[in] force_to_local true なら parameter を localparam にする．
   void
-  phase1_decl(const VlNamedObj* parent,
+  phase1_decl(const VlScope* parent,
 	      const vector<const PtDeclHead*>& pt_head_array,
 	      bool force_to_local);
 
   /// @brief IO宣言要素を実体化する．
   /// @param[in] module 親のモジュール
-  /// @param[in] taskfunc 親のタスク/関数
   /// @param[in] pt_head_array IO宣言ヘッダの配列
-  /// @note module, task, function は1つのみが値を持つ．残りは nullptr．
   void
   instantiate_iodecl(ElbModule* module,
-		     ElbTaskFunc* taskfunc,
+		     const vector<const PtIOHead*>& pt_head_array);
+
+  /// @brief IO宣言要素を実体化する．
+  /// @param[in] taskfunc 親のタスク/関数
+  /// @param[in] pt_head_array IO宣言ヘッダの配列
+  void
+  instantiate_iodecl(ElbTaskFunc* taskfunc,
 		     const vector<const PtIOHead*>& pt_head_array);
 
   /// @brief 宣言要素のリストをインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head_array 宣言ヘッダの配列
   void
-  instantiate_decl(const VlNamedObj* parent,
+  instantiate_decl(const VlScope* parent,
 		   const vector<const PtDeclHead*>& pt_head_array);
 
 
@@ -413,14 +419,14 @@ protected:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_item_array 要素定義の配列
   void
-  phase1_item(const VlNamedObj* parent,
+  phase1_item(const VlScope* parent,
 	      const vector<const PtItem*>& pt_item_array);
 
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_function 関数定義
   const VlTaskFunc*
-  instantiate_constant_function(const VlNamedObj* parent,
+  instantiate_constant_function(const VlScope* parent,
 				const PtItem* pt_function);
 
 
@@ -434,7 +440,7 @@ protected:
   /// @param[in] pt_stmt 対象のステートメント
   /// @param[in] cf constant function 中のステートメントの時 true
   void
-  phase1_stmt(const VlNamedObj* parent,
+  phase1_stmt(const VlScope* parent,
 	      const PtStmt* pt_stmt,
 	      bool cf = false);
 
@@ -444,7 +450,7 @@ protected:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_stmt 対象のステートメント
   const VlStmt*
-  instantiate_stmt(const VlNamedObj* parent,
+  instantiate_stmt(const VlScope* parent,
 		   const VlProcess* process,
 		   const ElbEnv& env,
 		   const PtStmt* pt_stmt);
@@ -462,7 +468,7 @@ protected:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_expr(const VlNamedObj* parent,
+  instantiate_expr(const VlScope* parent,
 		   const ElbEnv& env,
 		   const PtExpr* pt_expr);
 
@@ -472,7 +478,7 @@ protected:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_constant_expr(const VlNamedObj* parent,
+  instantiate_constant_expr(const VlScope* parent,
 			    const PtExpr* pt_expr);
 
   /// @brief PtExpr からイベント式の ElbExpr を生成する
@@ -482,7 +488,7 @@ protected:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_event_expr(const VlNamedObj* parent,
+  instantiate_event_expr(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr);
 
@@ -493,7 +499,7 @@ protected:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_arg(const VlNamedObj* parent,
+  instantiate_arg(const VlScope* parent,
 		  const ElbEnv& env,
 		  const PtExpr* pt_expr);
 
@@ -504,7 +510,7 @@ protected:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_lhs(const VlNamedObj* parent,
+  instantiate_lhs(const VlScope* parent,
 		  const ElbEnv& env,
 		  const PtExpr* pt_expr);
 
@@ -516,7 +522,7 @@ protected:
   /// @return 生成された ElbExpr のポインタを返す．
   /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
   ElbExpr*
-  instantiate_rhs(const VlNamedObj* parent,
+  instantiate_rhs(const VlScope* parent,
 		  const ElbEnv& env,
 		  const PtExpr* pt_expr,
 		  ElbExpr* lhs);
@@ -525,14 +531,14 @@ protected:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
   ElbExpr*
-  instantiate_namedevent(const VlNamedObj* parent,
+  instantiate_namedevent(const VlScope* parent,
 			 const PtExpr* pt_expr);
 
   /// @brief PtDelay から ElbExpr を生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_delay 遅延を表すパース木
   const VlDelay*
-  instantiate_delay(const VlNamedObj* parent,
+  instantiate_delay(const VlScope* parent,
 		    const PtDelay* pt_delay);
 
   /// @brief PtOrderedCon から ElbExpr を生成する．
@@ -541,7 +547,7 @@ protected:
   /// これは PtInst の前にある # つきの式がパラメータ割り当てなのか
   /// 遅延なのかわからないので PtOrderedCon で表していることによる．
   const VlDelay*
-  instantiate_delay(const VlNamedObj* parent,
+  instantiate_delay(const VlScope* parent,
 		    const PtItem* pt_head);
 
   /// @brief 式の値を評価する．
@@ -549,7 +555,7 @@ protected:
   /// @param[in] pt_expr 式を表すパース木
   /// @param[in] put_error エラーを出力する時，true にする．
   VlValue
-  evaluate_expr(const VlNamedObj* parent,
+  evaluate_expr(const VlScope* parent,
 		const PtExpr* pt_expr,
 		bool put_error);
 
@@ -560,7 +566,7 @@ protected:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_int(const VlNamedObj* parent,
+  evaluate_int(const VlScope* parent,
 	       const PtExpr* pt_expr,
 	       int& value,
 	       bool put_error);
@@ -572,7 +578,7 @@ protected:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_scalar(const VlNamedObj* parent,
+  evaluate_scalar(const VlScope* parent,
 		  const PtExpr* pt_expr,
 		  VlScalarVal& value,
 		  bool put_error);
@@ -584,7 +590,7 @@ protected:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_bool(const VlNamedObj* parent,
+  evaluate_bool(const VlScope* parent,
 		const PtExpr* pt_expr,
 		bool& value,
 		bool put_error);
@@ -596,7 +602,7 @@ protected:
   /// @param[in] put_error エラーを出力する時，true にする．
   /// @note 定数でなければエラーメッセージを出力し false を返す．
   bool
-  evaluate_bitvector(const VlNamedObj* parent,
+  evaluate_bitvector(const VlScope* parent,
 		     const PtExpr* pt_expr,
 		     BitVector& value,
 		     bool put_error);
@@ -608,7 +614,7 @@ protected:
   /// @param[out] left_val 範囲の MSB の値
   /// @param[out] right_val 範囲の LSB の値
   bool
-  evaluate_range(const VlNamedObj* parent,
+  evaluate_range(const VlScope* parent,
 		 const PtExpr* pt_left,
 		 const PtExpr* pt_right,
 		 int& left_val,
@@ -708,7 +714,7 @@ ElbProxy::find_user_systf(const char* name) const
 // @return なければ nullptr を返す．
 inline
 ObjHandle*
-ElbProxy::find_obj(const VlNamedObj* parent,
+ElbProxy::find_obj(const VlScope* parent,
 		   const char* name) const
 {
   return mElaborator.find_obj(parent, name);
@@ -720,8 +726,8 @@ ElbProxy::find_obj(const VlNamedObj* parent,
 // @return parent というスコープ内の name というスコープを返す．
 // @return なければ nullptr を返す．
 inline
-const VlNamedObj*
-ElbProxy::find_namedobj(const VlNamedObj* parent,
+const VlScope*
+ElbProxy::find_namedobj(const VlScope* parent,
 			const char* name) const
 {
   return mElaborator.find_namedobj(parent, name);
@@ -736,9 +742,9 @@ ElbProxy::find_namedobj(const VlNamedObj* parent,
 // 見付からなかったら nullptr を返す．
 inline
 ObjHandle*
-ElbProxy::find_obj_up(const VlNamedObj* base_scope,
+ElbProxy::find_obj_up(const VlScope* base_scope,
 		      const PtHierNamedBase* pt_obj,
-		      const VlNamedObj* ulimit)
+		      const VlScope* ulimit)
 {
   return mElaborator.find_obj_up(base_scope, pt_obj, ulimit);
 }
@@ -779,7 +785,7 @@ ElbProxy::reg_udp(const char* def_name,
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_internalscope(const VlNamedObj* obj)
+ElbProxy::reg_internalscope(const VlScope* obj)
 {
   mElaborator.reg_internalscope(obj);
 }
@@ -839,7 +845,7 @@ ElbProxy::reg_parameter(int tag,
 // @param[in] obj 登録するオブジェクト
 inline
 void
-ElbProxy::reg_modulearray(ElbModuleArray* obj)
+ElbProxy::reg_modulearray(const VlModuleArray* obj)
 {
   mElaborator.reg_modulearray(obj);
 }
@@ -941,7 +947,7 @@ ElbProxy::find_moduledef(const char* name) const
 // @param[in] name 関数名
 inline
 const PtItem*
-ElbProxy::find_funcdef(const VlNamedObj* parent,
+ElbProxy::find_funcdef(const VlScope* parent,
 		       const char* name) const
 {
   return mElaborator.find_funcdef(parent, name);
@@ -954,7 +960,7 @@ ElbProxy::find_funcdef(const VlNamedObj* parent,
 // @return なければ nullptr を返す．
 inline
 const VlTaskFunc*
-ElbProxy::find_constant_function(const VlNamedObj* parent,
+ElbProxy::find_constant_function(const VlScope* parent,
 				 const char* name) const
 {
   return mElaborator.find_constant_function(parent, name);
@@ -972,7 +978,7 @@ ElbProxy::reg_constant_function(const VlTaskFunc* func)
 // @brief パース木の属性定義から属性リストを取り出す．
 // @param[in] pt_attr パース木の属性定義
 inline
-ElbAttrList*
+vector<const VlAttribute*>
 ElbProxy::find_attr_list(const PtAttrInst* pt_attr) const
 {
   return mElaborator.mAttrDict.find(pt_attr);
@@ -984,7 +990,7 @@ ElbProxy::find_attr_list(const PtAttrInst* pt_attr) const
 inline
 void
 ElbProxy::reg_attr_list(const PtAttrInst* pt_attr,
-			ElbAttrList* attr_list)
+			const vector<const VlAttribute*>& attr_list)
 {
   return mElaborator.mAttrDict.add(pt_attr, attr_list);
 }
@@ -997,7 +1003,7 @@ inline
 void
 ElbProxy::reg_attr(const VlObj* obj,
 		   bool def,
-		   ElbAttrList* attr_list)
+		   const vector<const VlAttribute*>& attr_list)
 {
   mMgr.reg_attr(obj, def, attr_list);
 }

@@ -121,11 +121,11 @@ public:
   void
   put_scope(const char* label,
 	    const VlMgr& mgr,
-	    const VlNamedObj* scope);
+	    const VlScope* scope);
 
   void
   put_scope_sub(const VlMgr& mgr,
-		const VlNamedObj* scope);
+		const VlScope* scope);
 
   /// @brief io decl の内容を出力する関数
   /// @param[in] mgr VlMgr

@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 class ElbIOHead
 {
-protected:
+public:
 
   /// @brief デストラクタ
   virtual

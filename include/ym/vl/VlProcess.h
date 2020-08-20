@@ -30,8 +30,8 @@ public:
 
   /// @brief 親のスコープを返す．
   virtual
-  const VlNamedObj*
-  parent() const = 0;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief 本体のステートメントの取得
   virtual

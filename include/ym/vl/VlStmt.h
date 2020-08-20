@@ -41,18 +41,17 @@ public:
 
   /// @brief このオブジェクトの属しているスコープを返す．
   virtual
-  const VlNamedObj*
-  parent() const = 0;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief 対象のスコープの取得
   /// @note この関数が意味を持つオブジェクトの型
   ///  - kVpiBegin
-  ///  - kVpiDisable
   ///  - kVpiFork
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   virtual
-  const VlNamedObj*
+  const VlScope*
   scope() const = 0;
 
   /// @brief task の実体を返す．
@@ -226,6 +225,11 @@ public:
   virtual
   const VlStmt*
   child_stmt(SizeType pos) const = 0;
+
+  /// @brief disable 対象のスコープを得る．
+  virtual
+  const VlScope*
+  target_scope() const = 0;
 
 };
 

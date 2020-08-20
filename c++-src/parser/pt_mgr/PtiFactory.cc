@@ -10,6 +10,8 @@
 #include "parser/PtiFactory.h"
 #include "parser/CptFactory.h"
 #include "parser/SptFactory.h"
+#include "parser/PuHierName.h"
+#include "alloc/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -19,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] alloc メモリアロケータ
 PtiFactory*
 PtiFactory::make_obj(const string& type,
-		     PtAlloc& alloc)
+		     Alloc& alloc)
 {
   if ( type == "spt" ) {
     return new SptFactory(alloc);
@@ -29,7 +31,7 @@ PtiFactory::make_obj(const string& type,
 
 // @brief コンストラクタ
 // @param[in] alloc メモリアロケータ
-PtiFactory::PtiFactory(PtAlloc& alloc) :
+PtiFactory::PtiFactory(Alloc& alloc) :
   mAlloc{alloc}
 {
 }
@@ -335,6 +337,19 @@ PtiFactory::new_InstV(const FileRegion& fr,
 					      new_OrderedCon(expr2),
 					      new_OrderedCon(expr3),
  					      new_OrderedCon(expr4)});
+}
+
+// @brief 階層名の生成
+// @param[in] head_name 階層の上位部分
+// @param[in] index インデックス
+// @param[in] name 階層の最下位部分
+PuHierName*
+PtiFactory::new_HierName(const PtNameBranch* nb,
+			 const char* name)
+{
+  void* p{mAlloc.get_memory(sizeof(PuHierName))};
+  auto hname{new (p) PuHierName(nb, name)};
+  return hname;
 }
 
 END_NAMESPACE_YM_VERILOG

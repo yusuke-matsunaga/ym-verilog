@@ -10,6 +10,7 @@
 #include "SptItem.h"
 #include "parser/SptFactory.h"
 #include "parser/PuHierName.h"
+#include "ym/pt/PtDecl.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG

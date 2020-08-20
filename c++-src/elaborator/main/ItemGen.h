@@ -13,9 +13,12 @@
 #include "ym/pt/PtP.h"
 #include "ym/clib.h"
 #include "ElbProxy.h"
+#include "elaborator/ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
+
+struct DefParamStub;
 
 //////////////////////////////////////////////////////////////////////
 /// @class ItemGen ItemGen.h "ItemGen.h"
@@ -47,22 +50,22 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_item_array 要素定義の配列
   void
-  phase1_item(const VlNamedObj* parent,
+  phase1_item(const VlScope* parent,
 	      const vector<const PtItem*>& pt_item_array);
 
   /// @brief defparam 文によるパラメータ割り当てを行う．
+  /// @param[in] stub defparam 文の情報
+  /// @param[in] ulimit スコープの上限
   /// @return 該当するパラメータが見つかったら true を返す．
   bool
-  defparam_override(const VlModule* module,
-		    const PtItem* pt_head,
-		    const PtDefParam* pt_defparam,
-		    const VlNamedObj* ulimit);
+  defparam_override(const DefParamStub& stub,
+		    const VlScope* ulimit);
 
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_function 関数定義
   const VlTaskFunc*
-  instantiate_constant_function(const VlNamedObj* parent,
+  instantiate_constant_function(const VlScope* parent,
 				const PtItem* pt_function);
 
 
@@ -75,21 +78,21 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head ヘッダ
   void
-  instantiate_cont_assign(const VlNamedObj* parent,
+  instantiate_cont_assign(const VlScope* parent,
 			  const PtItem* pt_head);
 
   /// @brief process 文の生成を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_item パース木の定義
   void
-  instantiate_process(const VlNamedObj* parent,
+  instantiate_process(const VlScope* parent,
 		      const PtItem* pt_item);
 
   /// @brief task/function の生成を行う．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_tf タスク/関数定義
   void
-  phase1_tf(const VlNamedObj* parent,
+  phase1_tf(const VlScope* parent,
 	      const PtItem* pt_tf);
 
   /// @param[in] task/function 内の宣言要素の生成を行う．
@@ -110,7 +113,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head ヘッダ
   void
-  phase1_muheader(const VlNamedObj* parent,
+  phase1_muheader(const VlScope* parent,
 		  const PtItem* pt_head);
 
   /// @brief module array のインスタンス化を行う．
@@ -119,7 +122,7 @@ private:
   /// @param[in] pt_head ヘッダ
   /// @param[in] pt_inst インスタンス定義
   void
-  phase1_module_array(const VlNamedObj* parent,
+  phase1_module_array(const VlScope* parent,
 		      const PtModule* pt_module,
 		      const PtItem* pt_head,
 		      const PtInst* pt_inst);
@@ -146,7 +149,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head ヘッダ
   void
-  instantiate_gateheader(const VlNamedObj* parent,
+  instantiate_gateheader(const VlScope* parent,
 			 const PtItem* pt_head);
 
   /// @brief UDP instance の生成を行う
@@ -154,7 +157,7 @@ private:
   /// @param[in] pt_head ヘッダ
   /// @param[in] udpdefn UDP
   void
-  instantiate_udpheader(const VlNamedObj* parent,
+  instantiate_udpheader(const VlScope* parent,
 			const PtItem* pt_head,
 			const VlUdpDefn* udpdefn);
 
@@ -163,7 +166,7 @@ private:
   /// @param[in] pt_head ヘッダ
   /// @param[in] cell_id セル番号
   void
-  instantiate_cell(const VlNamedObj* parent,
+  instantiate_cell(const VlScope* parent,
 		   const PtItem* pt_head,
 		   int cell_id);
 
@@ -214,35 +217,35 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_genblock generate block 定義
   void
-  phase1_generate(const VlNamedObj* parent,
+  phase1_generate(const VlScope* parent,
 		  const PtItem* pt_genblock);
 
   /// @brief PtGenBlock に対応するインスタンスの生成を行う
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_genblock generate block 定義
   void
-  phase1_genblock(const VlNamedObj* parent,
+  phase1_genblock(const VlScope* parent,
 		  const PtItem* pt_genblock);
 
   /// @brief generate if に対応するインスタンスの生成を行う
   /// @param[in] parent 親のスコープ
   /// @parma[in] pt_genif generate if 定義
   void
-  phase1_genif(const VlNamedObj* parent,
+  phase1_genif(const VlScope* parent,
 	       const PtItem* pt_genif);
 
   /// @brief generate case に対応するインスタンスの生成を行う
   /// @param[in] parent 親のスコープ
   /// @parma[in] pt_gencase generate case 定義
   void
-  phase1_gencase(const VlNamedObj* parent,
+  phase1_gencase(const VlScope* parent,
 		 const PtItem* pt_gencase);
 
   /// @brief generate for に対応するインスタンスの生成を行う
   /// @param[in] parent 親のスコープ
   /// @parma[in] pt_genfor generate for 定義
   void
-  phase1_genfor(const VlNamedObj* parent,
+  phase1_genfor(const VlScope* parent,
 		const PtItem* pt_genfor);
 
   /// @brief generate block の要素でスコープに関連するものの生成を行う．
@@ -251,7 +254,7 @@ private:
   /// @param[in] pt_decl_array パース木の宣言の配列
   /// @param[in] pt_item_array パース木の要素の配列
   void
-  phase1_genitem(const VlNamedObj* parent,
+  phase1_genitem(const VlScope* parent,
 		 const vector<const PtDeclHead*>& pt_decl_array,
 		 const vector<const PtItem*>& pt_item_array);
 
@@ -259,7 +262,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 構文木のヘッダ要素
   vector<ElbParamCon>
-  gen_param_con_list(const VlNamedObj* parent,
+  gen_param_con_list(const VlScope* parent,
 		     const PtItem* pt_head);
 
 };

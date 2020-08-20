@@ -47,7 +47,7 @@ public:
   /// @param[in] pt_head_array 宣言ヘッダの配列
   /// @param[in] force_to_local true なら parameter を localparam にする．
   void
-  phase1_decl(const VlNamedObj* parent,
+  phase1_decl(const VlScope* parent,
 	      const vector<const PtDeclHead*>& pt_head_array,
 	      bool force_to_local);
 
@@ -55,7 +55,8 @@ public:
   /// @param[in] module 親のモジュール
   /// @param[in] taskfunc 親のタスク/関数
   /// @param[in] pt_head_array IO宣言ヘッダの配列
-  /// @note module, taskfunc は1つのみが値を持つ．残りは nullptr．
+  ///
+  /// module と taskfunc はどちらか一方が nullptr
   void
   instantiate_iodecl(ElbModule* module,
 		     ElbTaskFunc* taskfunc,
@@ -65,7 +66,7 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head_array 宣言ヘッダの配列
   void
-  instantiate_decl(const VlNamedObj* parent,
+  instantiate_decl(const VlScope* parent,
 		   const vector<const PtDeclHead*>& pt_head_array);
 
 
@@ -79,7 +80,7 @@ private:
   /// @param[in] pt_head 宣言ヘッダ
   /// @param[in] is_local local_param にする時 true
   void
-  instantiate_param_head(const VlNamedObj* parent,
+  instantiate_param_head(const VlScope* parent,
 			 const PtDeclHead* pt_head,
 			 bool is_local);
 
@@ -87,7 +88,7 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 宣言のヘッダ
   void
-  instantiate_net_head(const VlNamedObj* parent,
+  instantiate_net_head(const VlScope* parent,
 		       const PtDeclHead* pt_head);
 
   /// @brief net の遅延値を生成する．
@@ -108,28 +109,28 @@ private:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 宣言のヘッダ
   void
-  instantiate_reg_head(const VlNamedObj* parent,
+  instantiate_reg_head(const VlScope* parent,
 		       const PtDeclHead* pt_head);
 
   /// @brief variable をインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 宣言のヘッダ
   void
-  instantiate_var_head(const VlNamedObj* parent,
+  instantiate_var_head(const VlScope* parent,
 		       const PtDeclHead* pt_head);
 
   /// @brief named_event をインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 宣言のヘッダ
   void
-  instantiate_event_head(const VlNamedObj* parent,
+  instantiate_event_head(const VlScope* parent,
 			 const PtDeclHead* pt_head);
 
   /// @brief genvar をインスタンス化する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 宣言のヘッダ
   void
-  instantiate_genvar_head(const VlNamedObj* parent,
+  instantiate_genvar_head(const VlScope* parent,
 			  const PtDeclHead* pt_head);
 
   /// @brief 配列の次元リストを生成する．
@@ -137,7 +138,7 @@ private:
   /// @param[in] pt_item 要素定義
   /// @param[in] range_src 範囲の情報を設定する配列
   bool
-  instantiate_dimension_list(const VlNamedObj* parent,
+  instantiate_dimension_list(const VlScope* parent,
 			     const PtDeclItem* pt_item,
 			     vector<ElbRangeSrc>& range_src);
 

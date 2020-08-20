@@ -11,6 +11,7 @@
 
 #include "ym/VlMgr.h"
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlTaskFunc.h"
 
 
@@ -21,7 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 void
 VlDumperImpl::put_scope(const char* label,
 			const VlMgr& mgr,
-			const VlNamedObj* scope)
+			const VlScope* scope)
 {
   VlDumpHeader x(this, label, "Scope");
 
@@ -33,7 +34,7 @@ VlDumperImpl::put_scope(const char* label,
 
 void
 VlDumperImpl::put_scope_sub(const VlMgr& mgr,
-			    const VlNamedObj* scope)
+			    const VlScope* scope)
 {
   put_decl_list("vpiParameter", mgr, mgr.find_decl_list(scope, vpiParameter));
 
@@ -59,7 +60,7 @@ VlDumperImpl::put_scope_sub(const VlMgr& mgr,
 
   put_declarray_list("vpiNamedEventArray", mgr, mgr.find_declarray_list(scope, vpiNamedEventArray));
 
-  vector<const VlNamedObj*> scope_list = mgr.find_internalscope_list(scope);
+  vector<const VlScope*> scope_list = mgr.find_internalscope_list(scope);
   VlDumpHeader x(this, "vpiInternalScope", "ScopeList");
   for ( auto obj: scope_list ) {
     put_scope("vpiInternalScope", mgr, obj);

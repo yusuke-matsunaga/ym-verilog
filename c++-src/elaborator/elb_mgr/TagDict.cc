@@ -14,6 +14,7 @@
 #include "ym/vl/VlDecl.h"
 #include "ym/vl/VlDeclArray.h"
 #include "ym/vl/VlModule.h"
+#include "ym/vl/VlScope.h"
 #include "ym/vl/VlParamAssign.h"
 #include "ym/vl/VlPrimitive.h"
 #include "ym/vl/VlProcess.h"
@@ -40,8 +41,10 @@ TagDict::~TagDict()
 void
 TagDict::clear()
 {
+  for ( auto p: mHash ) {
+    delete p.second;
+  }
   mHash.clear();
-  mCellList.clear();
 }
 
 // @brief Cell を登録する．
@@ -49,20 +52,19 @@ TagDict::clear()
 // @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
 // @param[in] cell 対象の Cell
 void
-TagDict::put_cell(const VlNamedObj* parent,
+TagDict::put_cell(const VlScope* parent,
 		  int tag,
 		  TagDictCell* cell)
 {
   Key key{parent, tag};
   mHash.emplace(key, cell);
-  mCellList.push_back(unique_ptr<TagDictCell>{cell});
 }
 
 // @brief タグから該当する Cell を探す．
 // @param[in] parent 親のスコープ
 // @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
 TagDictCell*
-TagDict::find_cell(const VlNamedObj* parent,
+TagDict::find_cell(const VlScope* parent,
 		   int tag) const
 {
   Key key{parent, tag};
@@ -244,17 +246,17 @@ TagDictCell::process_list()
 
 // internal scope を追加する．
 void
-TagDictCell::add_internalscope(const VlNamedObj* obj)
+TagDictCell::add_internalscope(const VlScope* obj)
 {
   ASSERT_NOT_REACHED;
 }
 
 // internal scope のリストを得る．
-vector<const VlNamedObj*>
+vector<const VlScope*>
 TagDictCell::internalscope_list()
 {
   ASSERT_NOT_REACHED;
-  return vector<const VlNamedObj*>{};
+  return vector<const VlScope*>{};
 }
 
 
@@ -267,14 +269,14 @@ class CellScope :
 public:
 
   /// @brief コンストラクタ
-  CellScope(const VlNamedObj* obj);
+  CellScope(const VlScope* obj);
 
   /// @brief 要素の追加
   void
-  add_internalscope(const VlNamedObj* obj) override;
+  add_internalscope(const VlScope* obj) override;
 
   /// @brief 要素のリストを返す．
-  vector<const VlNamedObj*>
+  vector<const VlScope*>
   internalscope_list() override;
 
 
@@ -284,25 +286,25 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 要素のリスト
-  vector<const VlNamedObj*> mList;
+  vector<const VlScope*> mList;
 
 };
 
 // @brief コンストラクタ
-CellScope::CellScope(const VlNamedObj* obj) :
+CellScope::CellScope(const VlScope* obj) :
   mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellScope::add_internalscope(const VlNamedObj* obj)
+CellScope::add_internalscope(const VlScope* obj)
 {
   mList.push_back(obj);
 }
 
 // @brief 要素のリストを得る．
-vector<const VlNamedObj*>
+vector<const VlScope*>
 CellScope::internalscope_list()
 {
   return mList;
@@ -311,9 +313,9 @@ CellScope::internalscope_list()
 // @brief internal scope を追加する．
 // @param[in] obj 登録する要素
 void
-TagDict::add_internalscope(const VlNamedObj* obj)
+TagDict::add_internalscope(const VlScope* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiInternalScope);
@@ -331,8 +333,8 @@ TagDict::add_internalscope(const VlNamedObj* obj)
 // @param[out] obj_list 結果を格納するリスト
 // @retval true 該当する要素が1つ以上あった．
 // @retval false 該当する要素がなかった．
-vector<const VlNamedObj*>
-TagDict::find_internalscope_list(const VlNamedObj* parent) const
+vector<const VlScope*>
+TagDict::find_internalscope_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiInternalScope);
@@ -340,7 +342,7 @@ TagDict::find_internalscope_list(const VlNamedObj* parent) const
     return cell->internalscope_list();
   }
   else {
-    return vector<const VlNamedObj*>();
+    return vector<const VlScope*>();
   }
 }
 
@@ -402,7 +404,7 @@ void
 TagDict::add_decl(int tag,
 		  const VlDecl* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, tag);
@@ -420,7 +422,7 @@ TagDict::add_decl(int tag,
 // @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
 // @return 結果のリストを返す．
 vector<const VlDecl*>
-TagDict::find_decl_list(const VlNamedObj* parent,
+TagDict::find_decl_list(const VlScope* parent,
 			int tag) const
 {
   // 該当の Cell が存在するか調べる．
@@ -491,7 +493,7 @@ void
 TagDict::add_declarray(int tag,
 		       const VlDeclArray* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, tag);
@@ -509,7 +511,7 @@ TagDict::add_declarray(int tag,
 // @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
 // @retrun 結果のリストを返す．
 vector<const VlDeclArray*>
-TagDict::find_declarray_list(const VlNamedObj* parent,
+TagDict::find_declarray_list(const VlScope* parent,
 			     int tag) const
 {
   // 該当の Cell が存在するか調べる．
@@ -578,7 +580,7 @@ CellDefParam::defparam_list()
 void
 TagDict::add_defparam(const VlDefParam* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_module();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiDefParam);
@@ -595,7 +597,7 @@ TagDict::add_defparam(const VlDefParam* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlDefParam*>
-TagDict::find_defparam_list(const VlNamedObj* parent) const
+TagDict::find_defparam_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiDefParam);
@@ -663,7 +665,7 @@ CellParamAssign::paramassign_list()
 void
 TagDict::add_paramassign(const VlParamAssign* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_module();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiParamAssign);
@@ -680,7 +682,7 @@ TagDict::add_paramassign(const VlParamAssign* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlParamAssign*>
-TagDict::find_paramassign_list(const VlNamedObj* parent) const
+TagDict::find_paramassign_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiParamAssign);
@@ -748,7 +750,7 @@ CellModuleArray::modulearray_list()
 void
 TagDict::add_modulearray(const VlModuleArray* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiModuleArray);
@@ -765,7 +767,7 @@ TagDict::add_modulearray(const VlModuleArray* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlModuleArray*>
-TagDict::find_modulearray_list(const VlNamedObj* parent) const
+TagDict::find_modulearray_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiModuleArray);
@@ -833,7 +835,7 @@ CellModule::module_list()
 void
 TagDict::add_module(const VlModule* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiModule);
@@ -850,7 +852,7 @@ TagDict::add_module(const VlModule* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlModule*>
-TagDict::find_module_list(const VlNamedObj* parent) const
+TagDict::find_module_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiModule);
@@ -919,7 +921,7 @@ CellPrimArray::primarray_list()
 void
 TagDict::add_primarray(const VlPrimArray* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiPrimitiveArray);
@@ -936,7 +938,7 @@ TagDict::add_primarray(const VlPrimArray* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlPrimArray*>
-TagDict::find_primarray_list(const VlNamedObj* parent) const
+TagDict::find_primarray_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiPrimitiveArray);
@@ -1004,7 +1006,7 @@ CellPrimitive::primitive_list()
 void
 TagDict::add_primitive(const VlPrimitive* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiPrimitive);
@@ -1021,7 +1023,7 @@ TagDict::add_primitive(const VlPrimitive* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlPrimitive*>
-TagDict::find_primitive_list(const VlNamedObj* parent) const
+TagDict::find_primitive_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiPrimitive);
@@ -1089,7 +1091,7 @@ CellTaskFunc::taskfunc_list()
 void
 TagDict::add_task(const VlTaskFunc* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiTask);
@@ -1106,7 +1108,7 @@ TagDict::add_task(const VlTaskFunc* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlTaskFunc*>
-TagDict::find_task_list(const VlNamedObj* parent) const
+TagDict::find_task_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiTask);
@@ -1123,7 +1125,7 @@ TagDict::find_task_list(const VlNamedObj* parent) const
 void
 TagDict::add_function(const VlTaskFunc* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiFunction);
@@ -1140,7 +1142,7 @@ TagDict::add_function(const VlTaskFunc* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlTaskFunc*>
-TagDict::find_function_list(const VlNamedObj* parent) const
+TagDict::find_function_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiFunction);
@@ -1225,7 +1227,7 @@ TagDict::add_contassign(const VlContAssign* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlContAssign*>
-TagDict::find_contassign_list(const VlNamedObj* parent) const
+TagDict::find_contassign_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiContAssign);
@@ -1293,7 +1295,7 @@ CellProcess::process_list()
 void
 TagDict::add_process(const VlProcess* obj)
 {
-  auto parent = obj->parent();
+  auto parent = obj->parent_scope();
 
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiProcess);
@@ -1310,7 +1312,7 @@ TagDict::add_process(const VlProcess* obj)
 // @param[in] parent 親のスコープ
 // @return 結果のリストを返す．
 vector<const VlProcess*>
-TagDict::find_process_list(const VlNamedObj* parent) const
+TagDict::find_process_list(const VlScope* parent) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiProcess);

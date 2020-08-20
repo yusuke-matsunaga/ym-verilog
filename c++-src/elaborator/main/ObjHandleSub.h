@@ -26,8 +26,8 @@ public:
   /// @brief コンストラクタ
   /// @param[in] parent 親のスコープ
   /// @param[in] name 名前
-  KeyObjHandle(const VlNamedObj* parent,
-	       const char* name);
+  KeyObjHandle(const VlScope* parent,
+	       const string& name);
 
   /// @brief デストラクタ
   ~KeyObjHandle() = default;
@@ -38,16 +38,12 @@ public:
   // 外部インターフェイス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief 親のスコープを返す．
-  const VlNamedObj*
-  parent() const override;
+  const VlScope*
+  parent_scope() const override;
 
   /// @brief オブジェクトの名前を返す．
-  const char*
+  string
   name() const override;
 
   /// @brief オブジェクトの型を返す．
@@ -65,8 +61,58 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
+  // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // 親のスコープ
+  const VlScope* mParent;
+
+  // 名前
+  string mName;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class ElbScopeHandle
+//////////////////////////////////////////////////////////////////////
+class ElbScopeHandle :
+  public ObjHandle
+{
+public:
+
+  /// @brief コンストラクタ
+  ElbScopeHandle(const VlScope* obj);
+
+  /// @brief デストラクタ
+  ~ElbScopeHandle() = default;
+
+
+public:
+
+  /// @brief 親のスコープを返す．
+  const VlScope*
+  parent_scope() const override;
+
+  /// @brief オブジェクトの名前を返す．
+  string
+  name() const override;
+
+  /// @brief オブジェクトの型を返す．
+  VpiObjType
+  type() const override;
+
+  /// @brief ファイル位置の取得
+  FileRegion
+  file_region() const override;
+
+  /// @brief オブジェクトの階層付き名前を返す．
+  string
+  full_name() const override;
+
+  /// @brief VlScope を返す．
+  const VlScope*
+  scope() const override;
 
 
 private:
@@ -74,11 +120,57 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // 親のスコープ
-  const VlNamedObj* mParent;
+  // 対象のオブジェクト
+  const VlScope* mObj;
 
-  // 名前
-  const char* mName;
+};
+
+
+//////////////////////////////////////////////////////////////////////
+/// @class NamedObjHandle ObjHandle.h "ObjHandle.h"
+//////////////////////////////////////////////////////////////////////
+class NamedObjHandle :
+  public ObjHandle
+{
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 外部インターフェイス
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 親のスコープを返す．
+  const VlScope*
+  parent_scope() const override;
+
+  /// @brief オブジェクトの名前を返す．
+  string
+  name() const override;
+
+  /// @brief オブジェクトの型を返す．
+  VpiObjType
+  type() const override;
+
+  /// @brief ファイル位置の取得
+  FileRegion
+  file_region() const override;
+
+  /// @brief オブジェクトの階層付き名前を返す．
+  string
+  full_name() const override;
+
+  /// @brief ハッシュ値を返す．
+  SizeType
+  hash() const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  virtual
+  const VlNamedObj*
+  _namedobj() const = 0;
 
 };
 
@@ -87,7 +179,7 @@ private:
 /// @class ElbTaskFuncHandle
 //////////////////////////////////////////////////////////////////////
 class ElbTaskFuncHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -100,13 +192,19 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief ElbTaskFunc を返す．
   const VlTaskFunc*
   taskfunc() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -124,7 +222,7 @@ private:
 /// @class ElbDeclHandle
 //////////////////////////////////////////////////////////////////////
 class ElbDeclHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -137,13 +235,20 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
 
   /// @brief ElbDecl を返す．
   ElbDecl*
   decl() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -161,7 +266,7 @@ private:
 /// @class ElbDeclArrayHandle
 //////////////////////////////////////////////////////////////////////
 class ElbDeclArrayHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -174,13 +279,19 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief ElbDeclArray を返す．
   const VlDeclArray*
   declarray() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -198,7 +309,7 @@ private:
 /// @class ElbParamHandle
 //////////////////////////////////////////////////////////////////////
 class ElbParamHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -211,13 +322,19 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief ElbParameterを返す．
   ElbParameter*
   parameter() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -232,10 +349,53 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
+/// @class ElbModuleHandle
+//////////////////////////////////////////////////////////////////////
+class ElbModuleHandle :
+  public NamedObjHandle
+{
+public:
+
+  /// @brief コンストラクタ
+  ElbModuleHandle(const VlModule* obj);
+
+  /// @brief デストラクタ
+  ~ElbModuleHandle() = default;
+
+
+public:
+
+  /// @brief VlModule を返す．
+  const VlModule*
+  module() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // 対象のオブジェクト
+  const VlModule* mObj;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////
 /// @class ElbModuleArrayHandle
 //////////////////////////////////////////////////////////////////////
 class ElbModuleArrayHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -248,17 +408,23 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief 配列要素を返す．
-  const VlNamedObj*
+  const VlScope*
   array_elem(int index) const override;
 
   /// @brief ElbModuleArray を返す．
   const VlModuleArray*
   module_array() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -276,7 +442,7 @@ private:
 /// @class ElbPrimArrayHandle
 //////////////////////////////////////////////////////////////////////
 class ElbPrimArrayHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -289,13 +455,19 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief ElbPrimArray を返す．
   const VlPrimArray*
   prim_array() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -313,7 +485,7 @@ private:
 /// @class ElbPrimitiveHandle
 //////////////////////////////////////////////////////////////////////
 class ElbPrimitiveHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -326,13 +498,19 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief ElbPrimitive を返す．
   const VlPrimitive*
   primitive() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -347,43 +525,10 @@ private:
 
 
 //////////////////////////////////////////////////////////////////////
-/// @class ElbNamedObjHandle
-//////////////////////////////////////////////////////////////////////
-class ElbNamedObjHandle :
-  public ObjHandle
-{
-public:
-
-  /// @brief コンストラクタ
-  ElbNamedObjHandle(const VlNamedObj* obj);
-
-  /// @brief デストラクタ
-  ~ElbNamedObjHandle() = default;
-
-
-public:
-
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // データメンバ
-  //////////////////////////////////////////////////////////////////////
-
-  // 対象のオブジェクト
-  const VlNamedObj* mObj;
-
-};
-
-
-//////////////////////////////////////////////////////////////////////
 /// @class ElbGfRootHandle
 //////////////////////////////////////////////////////////////////////
 class ElbGfRootHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -396,17 +541,23 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief 配列要素を返す．
-  const VlNamedObj*
+  const VlScope*
   array_elem(int index) const override;
 
   /// @brief ElbGfRoot を返す．
   ElbGfRoot*
   gfroot() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:
@@ -424,7 +575,7 @@ private:
 /// @class ElbGenvarHandle
 //////////////////////////////////////////////////////////////////////
 class ElbGenvarHandle :
-  public ObjHandle
+  public NamedObjHandle
 {
 public:
 
@@ -437,13 +588,19 @@ public:
 
 public:
 
-  /// @brief VlNamedObj を返す．
-  const VlNamedObj*
-  obj() const override;
-
   /// @brief ElbGenvar を返す．
   ElbGenvar*
   genvar() const override;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // NamedObjHandle の仮想関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象のオブジェクトを返す．
+  const VlNamedObj*
+  _namedobj() const override;
 
 
 private:

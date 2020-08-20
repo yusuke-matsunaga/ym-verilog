@@ -39,8 +39,8 @@ public:
 
   /// @brief このオブジェクトの属しているスコープを返す．
   virtual
-  const VlNamedObj*
-  parent() const = 0;
+  const VlScope*
+  parent_scope() const = 0;
 
   /// @brief primitive type を返す．
   virtual
@@ -49,7 +49,7 @@ public:
 
   /// @brief プリミティブの定義名を返す．
   virtual
-  const char*
+  string
   def_name() const = 0;
 
   /// @brief UDP 定義を返す．
@@ -110,12 +110,12 @@ public:
   /// @brief 要素のプリミティブを取り出す．
   virtual
   ElbPrimitive*
-  _primitive_by_offset(int offset) const = 0;
+  _primitive_by_offset(SizeType offset) = 0;
 
   /// @brief 要素のプリミティブを取り出す．
   virtual
   ElbPrimitive*
-  _primitive_by_index(int index) const = 0;
+  _primitive_by_index(int index) = 0;;
 
   /// @brief ヘッダを得る．
   virtual
@@ -151,7 +151,7 @@ public:
   /// @param[in] expr 接続する式
   virtual
   void
-  connect(int pos,
+  connect(SizeType pos,
 	  const VlExpr* expr) = 0;
 
   /// @brief ヘッダを得る．

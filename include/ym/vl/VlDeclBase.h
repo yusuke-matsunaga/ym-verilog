@@ -5,7 +5,7 @@
 /// @brief VlDeclBase のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -18,6 +18,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 /// @class VlDeclBase VlDeclBase.h "ym/vl/VlDeclBase.h"
 /// @brief エラボレーション中の名前付きオブジェクトを表す基底クラス
+///
+/// 派生クラスは VlDecl と VlDeclArray
 //////////////////////////////////////////////////////////////////////
 class VlDeclBase :
   public VlNamedObj
@@ -28,7 +30,8 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値の型を返す．
-  /// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
+  ///
+  /// 値を持たないオブジェクトの場合には kVpiValueNone を返す．
   virtual
   VlValueType
   value_type() const = 0;

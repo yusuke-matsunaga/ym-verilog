@@ -3,15 +3,16 @@
 /// @brief EiModule の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "EiFactory.h"
-#include "EiModule.h"
-#include "EiPort.h"
-#include "EiIODecl.h"
-#include "EiExpr.h"
+#include "ei/EiFactory.h"
+#include "ei/EiModule.h"
+#include "ei/EiPort.h"
+#include "ei/EiIODecl.h"
+#include "ei/EiDeclHead.h"
+#include "ei/EiExpr.h"
 
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtDecl.h"
@@ -30,23 +31,15 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] pt_head パース木のヘッダ定義
 // @param[in] pt_inst パース木のインスタンス定義
 ElbModule*
-EiFactory::new_Module(const VlNamedObj* parent,
+EiFactory::new_Module(const VlScope* parent,
 		      const PtModule* pt_module,
 		      const PtItem* pt_head,
 		      const PtInst* pt_inst)
 {
-
-  SizeType port_num = pt_module->port_num();
-  auto port_array{new EiPort[port_num]};
-
-  SizeType io_num = pt_module->iodecl_num();
-  auto io_array{new EiIODecl[io_num]};
-
   auto module{new EiModule2(parent,
 			    pt_module,
 			    pt_head,
 			    pt_inst)};
-  module->init(port_array, io_array);
 
   return module;
 }
@@ -61,7 +54,7 @@ EiFactory::new_Module(const VlNamedObj* parent,
 // @param[in] left_val 範囲の MSB の値
 // @param[in] right_val 範囲の LSB の値
 ElbModuleArray*
-EiFactory::new_ModuleArray(const VlNamedObj* parent,
+EiFactory::new_ModuleArray(const VlScope* parent,
 			   const PtModule* pt_module,
 			   const PtItem* pt_head,
 			   const PtInst* pt_inst,
@@ -73,25 +66,12 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
   EiRangeImpl range;
   range.set(left, right, left_val, right_val);
 
-  SizeType n = range.size();
-  auto chunk{new EiModule1[n]};
   auto module_array{new EiModuleArray(parent,
 				      pt_module,
 				      pt_head,
 				      pt_inst,
-				      range,
-				      chunk)};
+				      range)};
 
-  SizeType port_num = pt_module->port_num();
-  SizeType io_num = pt_module->iodecl_num();
-  for ( int i = 0; i < n; ++ i ) {
-    auto port_array{new EiPort[port_num]};
-    auto io_array{new EiIODecl[io_num]};
-
-    int index = module_array->mRange.index(i);
-    chunk[i].init(port_array, io_array,
-		  module_array, index);
-  }
 
   return module_array;
 }
@@ -106,14 +86,14 @@ EiFactory::new_ModuleArray(const VlNamedObj* parent,
 // @param[in] pt_module モジュールテンプレート
 // @param[in] pt_head パース木のヘッダ定義
 // @param[in] pt_inst インスタンス定義
-EiModuleHead::EiModuleHead(const VlNamedObj* parent,
+EiModuleHead::EiModuleHead(const VlScope* parent,
 			   const PtModule* pt_module,
 			   const PtItem* pt_head,
 			   const PtInst* pt_inst) :
-  mParent(parent),
-  mPtModule(pt_module),
-  mPtHead(pt_head),
-  mPtInst(pt_inst)
+  mParent{parent},
+  mPtModule{pt_module},
+  mPtHead{pt_head},
+  mPtInst{pt_inst}
 {
 }
 
@@ -123,7 +103,7 @@ EiModuleHead::~EiModuleHead()
 }
 
 // @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
+const VlScope*
 EiModuleHead::parent() const
 {
   return mParent;
@@ -142,7 +122,7 @@ EiModuleHead::file_region() const
 }
 
 // @brief インスタンス名を返す．
-const char*
+string
 EiModuleHead::name() const
 {
   if ( mPtInst ) {
@@ -163,21 +143,21 @@ EiModuleHead::def_file_region() const
 
 // @brief definition name を返す．
 // @return 定義名を返す．
-const char*
+string
 EiModuleHead::def_name() const
 {
   return mPtModule->name();
 }
 
 // @brief ポート数を返す．
-int
+SizeType
 EiModuleHead::port_num() const
 {
   return mPtModule->port_num();
 }
 
-/// @brief 入出力宣言数を返す．
-int
+// @brief 入出力宣言数を返す．
+SizeType
 EiModuleHead::io_num() const
 {
   return mPtModule->iodecl_num();
@@ -279,9 +259,7 @@ EiModuleHead::cell() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-EiModule::EiModule() :
-  mPortList(nullptr),
-  mIODeclList(nullptr)
+EiModule::EiModule()
 {
 }
 
@@ -291,14 +269,14 @@ EiModule::~EiModule()
 }
 
 // @brief ポート配列とIO配列を初期化する．
-// @param[in] port_array ポート配列
-// @param[in] io_array IO 配列
+// @param[in] port_num ポート数
+// @param[in] io_num IO 数
 void
-EiModule::init(EiPort* port_array,
-	       EiIODecl* io_array)
+EiModule::init(SizeType port_num,
+	       SizeType io_num)
 {
-  mPortList = port_array;
-  mIODeclList = io_array;
+  mPortList = vector<EiPort>(port_num);
+  mIODeclList.reserve(io_num);
 }
 
 // @brief 型の取得
@@ -316,8 +294,8 @@ EiModule::file_region() const
 }
 
 // @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
-EiModule::parent() const
+const VlScope*
+EiModule::parent_scope() const
 {
   return head().parent();
 }
@@ -332,7 +310,7 @@ EiModule::def_file_region() const
 
 // @brief definition name を返す．
 // @return 定義名を返す．
-const char*
+string
 EiModule::def_name() const
 {
   return head().def_name();
@@ -441,9 +419,6 @@ EiModule::port_num() const
 const VlPort*
 EiModule::port(SizeType pos) const
 {
-  if ( pos >= port_num() ) {
-    abort();
-  }
   ASSERT_COND( 0 <= pos && pos < port_num() );
   return &mPortList[pos];
 }
@@ -464,19 +439,17 @@ EiModule::io(SizeType pos) const
   return &mIODeclList[pos];
 }
 
-// @brief 入出力の初期設定を行う．
+// @brief 入出力を追加する．
 // @param[in] pos 位置番号
 // @param[in] head ヘッダ
 // @param[in] pt_item パース木のIO宣言要素
 // @param[in] decl 対応する宣言要素
 void
-EiModule::init_iodecl(int pos,
-		      ElbIOHead* head,
-		      const PtIOItem* pt_item,
-		      const VlDecl* decl)
+EiModule::add_iodecl(ElbIOHead* head,
+		     const PtIOItem* pt_item,
+		     const VlDecl* decl)
 {
-  ASSERT_COND( 0 <= pos && pos < io_num() );
-  mIODeclList[pos].init(head, pt_item, decl);
+  mIODeclList.push_back({head, pt_item, decl});
 }
 
 // @brief ポートの初期設定を行う．
@@ -485,7 +458,7 @@ EiModule::init_iodecl(int pos,
 // @param[in] low_conn 下位の接続
 // @param[in] dir 向き
 void
-EiModule::init_port(int index,
+EiModule::init_port(SizeType index,
 		    const PtPort* pt_port,
 		    ElbExpr* low_conn,
 		    VpiDir dir)
@@ -499,14 +472,13 @@ EiModule::init_port(int index,
 // @param[in] high_conn 上位の接続の式
 // @param[in] conn_by_name 名前による割り当て時に true とするフラグ
 void
-EiModule::set_port_high_conn(int index,
+EiModule::set_port_high_conn(SizeType index,
 			     ElbExpr* high_conn,
 			     bool conn_by_name)
 {
   ASSERT_COND( 0 <= index && index < port_num() );
   mPortList[index].set_high_conn(high_conn, conn_by_name);
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiModule1
@@ -529,27 +501,26 @@ EiModule1::~EiModule1()
 // @param[in] module_array 親の配列
 // @param[in] index 配列中のインデックス
 void
-EiModule1::init(EiPort* port_array,
-		EiIODecl* io_array,
+EiModule1::init(SizeType port_num,
+		SizeType io_num,
 		EiModuleArray* module_array,
 		int index)
 {
-  EiModule::init(port_array, io_array);
+  EiModule::init(port_num, io_num);
 
   mModuleArray = module_array;
   mIndex = index;
 
   // 名前の生成
-  ostringstream buf;
-  buf << module_array->name() << "[" << index << "]";
-  mName = buf.str();
 }
 
 // @brief 名前の取得
-const char*
+string
 EiModule1::name() const
 {
-  return mName.c_str();
+  ostringstream buf;
+  buf << mModuleArray->name() << "[" << mIndex << "]";
+  return buf.str();
 }
 
 // @brief 配列要素の時 true を返す．
@@ -599,12 +570,15 @@ EiModule1::head()
 // @param[in] pt_module モジュールテンプレート
 // @param[in] pt_head パース木のヘッダ定義
 // @param[in] pt_inst インスタンス定義
-EiModule2::EiModule2(const VlNamedObj* parent,
+EiModule2::EiModule2(const VlScope* parent,
 		     const PtModule* pt_module,
 		     const PtItem* pt_head,
 		     const PtInst* pt_inst) :
   mHead(parent, pt_module, pt_head, pt_inst)
 {
+  SizeType port_num = pt_module->port_num();
+  SizeType io_num = pt_module->iodecl_num();
+  init(port_num, io_num);
 }
 
 // デストラクタ
@@ -613,7 +587,7 @@ EiModule2::~EiModule2()
 }
 
 // @brief 名前の取得
-const char*
+string
 EiModule2::name() const
 {
   return mHead.name();
@@ -668,16 +642,22 @@ EiModule2::head()
 // @param[in] pt_inst パース木のインスタンス定義
 // @param[in] left 範囲の MSB
 // @param[in] right 範囲の LSB
-EiModuleArray::EiModuleArray(const VlNamedObj* parent,
+EiModuleArray::EiModuleArray(const VlScope* parent,
 			     const PtModule* pt_module,
 			     const PtItem* pt_head,
 			     const PtInst* pt_inst,
-			     const EiRangeImpl& range,
-			     EiModule1* array) :
-  mHead(parent, pt_module, pt_head, pt_inst),
-  mRange(range),
-  mArray(array)
+			     const EiRangeImpl& range) :
+  mHead{parent, pt_module, pt_head, pt_inst},
+  mRange{range},
+  mArray(range.size())
 {
+  SizeType port_num = pt_module->port_num();
+  SizeType io_num = pt_module->iodecl_num();
+  SizeType n = mArray.size();
+  for ( SizeType i = 0; i < n; ++ i ) {
+    int index = range.index(i);
+    mArray[i].init(port_num, io_num, this, index);
+  }
 }
 
 // @brief デストラクタ
@@ -700,14 +680,14 @@ EiModuleArray::file_region() const
 }
 
 // @brief このオブジェクトの属しているスコープを返す．
-const VlNamedObj*
-EiModuleArray::parent() const
+const VlScope*
+EiModuleArray::parent_scope() const
 {
   return mHead.parent();
 }
 
 // @brief 名前の取得
-const char*
+string
 EiModuleArray::name() const
 {
   return mHead.name();
@@ -773,6 +753,14 @@ EiModuleArray::elem_by_index(int index) const
   }
 }
 
+// @brief 要素を取り出す．
+// @param[in] index モジュール番号
+ElbModule*
+EiModuleArray::elem(SizeType index)
+{
+  return &mArray[index];
+}
+
 // @brief ヘッダ情報を返す．
 const EiModuleHead&
 EiModuleArray::head() const
@@ -787,12 +775,11 @@ EiModuleArray::head()
   return mHead;
 }
 
-// @brief 要素を返す．
-ElbModule*
-EiModuleArray::_module(int offset)
+// @brief 範囲を返す．
+const EiRangeImpl&
+EiModuleArray::range() const
 {
-  ASSERT_COND( 0 <= offset && offset < elem_num() );
-  return &mArray[offset];
+  return mRange;
 }
 
 END_NAMESPACE_YM_VERILOG

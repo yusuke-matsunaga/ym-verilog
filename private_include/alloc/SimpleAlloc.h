@@ -1,5 +1,5 @@
-﻿#ifndef YM_SIMPLEALLOC_H
-#define YM_SIMPLEALLOC_H
+﻿#ifndef PARSER_SIMPLEALLOC_H
+#define PARSER_SIMPLEALLOC_H
 
 /// @file SimpleAlloc.h
 /// @brief SimpleAlloc のヘッダファイル
@@ -9,17 +9,17 @@
 /// All rights reserved.
 
 
-#include "ym/pt/PtAlloc.h"
+#include "alloc/Alloc.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class SimpleAlloc SimpleAlloc.h "ym/SimpleAlloc.h"
+/// @class SimpleAlloc SimpleAlloc.h "parser/SimpleAlloc.h"
 /// @brief 単純なメモリ管理
 //////////////////////////////////////////////////////////////////////
 class SimpleAlloc :
-  public PtAlloc
+  public Alloc
 {
 public:
 
@@ -144,4 +144,4 @@ private:
 
 END_NAMESPACE_YM_VERILOG
 
-#endif // YM_SIMPLEALLOC_H
+#endif // PARSER_SIMPLEALLOC_H
