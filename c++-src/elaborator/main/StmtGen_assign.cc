@@ -62,7 +62,7 @@ StmtGen::instantiate_assign(const VlScope* parent,
   }
 
   auto control = instantiate_control(parent, env, pt_control);
-  auto stmt = factory().new_Assignment(parent, process, pt_stmt,
+  auto stmt = mgr().new_Assignment(parent, process, pt_stmt,
 				       lhs, rhs, block, control);
 
   return stmt;
@@ -92,7 +92,7 @@ StmtGen::instantiate_pca(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_AssignStmt(parent, process, pt_stmt, lhs, rhs);
+  auto stmt = mgr().new_AssignStmt(parent, process, pt_stmt, lhs, rhs);
 
   return stmt;
 }
@@ -115,7 +115,7 @@ StmtGen::instantiate_deassign(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_DeassignStmt(parent, process, pt_stmt, lhs);
+  auto stmt = mgr().new_DeassignStmt(parent, process, pt_stmt, lhs);
 
   return stmt;
 }
@@ -144,7 +144,7 @@ StmtGen::instantiate_force(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_ForceStmt(parent, process, pt_stmt, lhs, rhs);
+  auto stmt = mgr().new_ForceStmt(parent, process, pt_stmt, lhs, rhs);
 
   return stmt;
 }
@@ -167,7 +167,7 @@ StmtGen::instantiate_release(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_ReleaseStmt(parent, process, pt_stmt, lhs);
+  auto stmt = mgr().new_ReleaseStmt(parent, process, pt_stmt, lhs);
 
   return stmt;
 }

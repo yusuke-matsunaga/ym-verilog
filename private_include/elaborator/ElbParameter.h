@@ -8,9 +8,8 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
-#include "ElbDecl.h"
-
+#include "elaborator/ElbHead.h"
+#include "elaborator/ElbDecl.h"
 #include "ym/pt/PtP.h"
 
 
@@ -20,18 +19,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @class ElbParamHead.h ElbParameter.h "ElbParameter.h"
 /// @brief 宣言要素のヘッダを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ElbParamHead
+class ElbParamHead :
+  public ElbHead
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbParamHead() = default;
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbParamHead() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbParamHead の仮想関数

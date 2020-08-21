@@ -12,6 +12,7 @@
 #include "ym/VlValueType.h"
 #include "ym/vl/VlDecl.h"
 #include "ym/vl/VlDeclArray.h"
+#include "elaborator/ElbHead.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -20,18 +21,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @class ElbDeclHead.h ElbDecl.h "ElbDecl.h"
 /// @brief 宣言要素のヘッダを表すクラス
 //////////////////////////////////////////////////////////////////////
-class ElbDeclHead
+class ElbDeclHead :
+  public ElbHead
 {
-public:
-
-  /// @brief コンストラクタ
-  ElbDeclHead() = default;
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbDeclHead() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbDeclHead の仮想関数

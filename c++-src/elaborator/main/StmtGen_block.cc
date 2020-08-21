@@ -60,7 +60,7 @@ StmtGen::instantiate_parblock(const VlScope* parent,
 			      const PtStmt* pt_stmt)
 {
   auto stmt_list = instantiate_stmt_list(parent, process, env, pt_stmt);
-  auto stmt = factory().new_Fork(parent, process, pt_stmt, stmt_list);
+  auto stmt = mgr().new_Fork(parent, process, pt_stmt, stmt_list);
 
   return stmt;
 }
@@ -77,7 +77,7 @@ StmtGen::instantiate_seqblock(const VlScope* parent,
 			      const PtStmt* pt_stmt)
 {
   auto stmt_list = instantiate_stmt_list(parent, process, env, pt_stmt);
-  auto stmt = factory().new_Begin(parent, process, pt_stmt, stmt_list);
+  auto stmt = mgr().new_Begin(parent, process, pt_stmt, stmt_list);
 
   return stmt;
 }
@@ -97,7 +97,7 @@ StmtGen::instantiate_namedparblock(const VlScope* parent,
   ASSERT_COND( block );
 
   auto stmt_list = instantiate_stmt_list(block, process, env, pt_stmt);
-  auto stmt = factory().new_NamedFork(block, process, pt_stmt, stmt_list);
+  auto stmt = mgr().new_NamedFork(block, process, pt_stmt, stmt_list);
 
   return stmt;
 }
@@ -117,7 +117,7 @@ StmtGen::instantiate_namedseqblock(const VlScope* parent,
   ASSERT_COND( block );
 
   auto stmt_list = instantiate_stmt_list(block, process, env, pt_stmt);
-  auto stmt = factory().new_NamedBegin(block, process, pt_stmt, stmt_list);
+  auto stmt = mgr().new_NamedBegin(block, process, pt_stmt, stmt_list);
 
   return stmt;
 }

@@ -3,13 +3,12 @@
 /// @brief EiContAssign の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "ei/EiFactory.h"
 #include "ei/EiContAssign.h"
-
 #include "elaborator/ElbExpr.h"
 
 #include "ym/vl/VlDelay.h"

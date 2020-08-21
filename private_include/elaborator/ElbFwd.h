@@ -26,6 +26,9 @@ class ElbModuleArray;
 // in ElbPort.h
 class ElbPort;
 
+// in ElbHead.h
+class ElbHead;
+
 // in ElbIODecl.h
 class ElbIOHead;
 

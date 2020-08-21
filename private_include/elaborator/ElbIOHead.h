@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/vl/VlIODecl.h"
+#include "elaborator/ElbHead.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -18,15 +18,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @class ElbIOHead  ElbIODecl.h "ElbIODecl.h"
 /// @brief IO のヘッダの基底クラス
 //////////////////////////////////////////////////////////////////////
-class ElbIOHead
+class ElbIOHead :
+  public ElbHead
 {
-public:
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbIOHead() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbIOHead の仮想関数

@@ -29,11 +29,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 ExprGen::ExprGen(Elaborator& elab,
-		 ElbMgr& elb_mgr,
-		 ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+		 ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 
@@ -65,7 +63,7 @@ ExprGen::instantiate_expr(const VlScope* parent,
     return instantiate_opr(parent, env, pt_expr);
 
   case PtExprType::Const:
-    return factory().new_Constant(pt_expr);
+    return mgr().new_Constant(pt_expr);
 
   case PtExprType::FuncCall:
     return instantiate_funccall(parent, env, pt_expr);
@@ -137,7 +135,7 @@ ExprGen::instantiate_event_expr(const VlScope* parent,
 	if ( !opr0 ) {
 	  return nullptr;
 	}
-	auto expr = factory().new_UnaryOp(pt_expr,
+	auto expr = mgr().new_UnaryOp(pt_expr,
 					  pt_expr->op_type(), opr0);
 
 #if 0
@@ -240,7 +238,7 @@ ExprGen::instantiate_lhs(const VlScope* parent,
 	}
 	opr_list[pos] = expr1;
       }
-      auto expr = factory().new_Lhs(pt_expr, opr_list, elem_array);
+      auto expr = mgr().new_Lhs(pt_expr, opr_list, elem_array);
 
 #if 0
       // attribute instance の生成
@@ -307,7 +305,7 @@ ExprGen::instantiate_lhs_sub(const VlScope* parent,
 	}
 	opr_list[pos] = expr1;
       }
-      auto expr = factory().new_ConcatOp(pt_expr, opr_list);
+      auto expr = mgr().new_ConcatOp(pt_expr, opr_list);
       expr->set_selfsize();
 
 #if 0
@@ -613,7 +611,7 @@ ExprGen::instantiate_delay_sub(const VlScope* parent,
     expr_list[i] = expr;
   }
 
-  auto delay = factory().new_Delay(pt_obj, expr_list);
+  auto delay = mgr().new_Delay(pt_obj, expr_list);
 
   return delay;
 }

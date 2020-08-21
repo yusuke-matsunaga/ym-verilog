@@ -97,7 +97,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	   !has_hname &&
 	   isize == 0 &&
 	   def_nettype != VpiNetType::None ) {
-	auto decl = factory().new_ImpNet(parent, pt_expr, def_nettype);
+	auto decl = mgr().new_ImpNet(parent, pt_expr, def_nettype);
 	reg_decl(vpiNet, decl);
 
 	handle = find_obj(parent, name);
@@ -117,22 +117,22 @@ ExprGen::instantiate_primary(const VlScope* parent,
     if ( isize == 0 ) {
       auto scope = handle->scope();
       if ( scope ) {
-	return factory().new_ArgHandle(pt_expr, scope);
+	return mgr().new_ArgHandle(pt_expr, scope);
       }
 
       auto primitive = handle->primitive();
       if ( primitive ) {
-	return factory().new_ArgHandle(pt_expr, primitive);
+	return mgr().new_ArgHandle(pt_expr, primitive);
       }
 
       auto decl = handle->decl();
       if ( decl ) {
-	return factory().new_Primary(pt_expr, decl);
+	return mgr().new_Primary(pt_expr, decl);
       }
 
       auto declarray = handle->declarray();
       if ( declarray ) {
-	return factory().new_ArgHandle(pt_expr, declarray);
+	return mgr().new_ArgHandle(pt_expr, declarray);
       }
     }
     else if ( isize == 1 ) {
@@ -145,7 +145,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 
       auto scope = handle->array_elem(index);
       if ( scope ) {
-	return factory().new_ArgHandle(pt_expr, scope);
+	return mgr().new_ArgHandle(pt_expr, scope);
       }
 
       auto prim_array = handle->prim_array();
@@ -153,7 +153,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	//auto primitive = prim_array->_primitive_by_index(index);
 	auto primitive = prim_array->elem_by_index(index);
 	if ( primitive ) {
-	  return factory().new_ArgHandle(pt_expr, primitive);
+	  return mgr().new_ArgHandle(pt_expr, primitive);
 	}
       }
     }
@@ -222,13 +222,13 @@ ExprGen::instantiate_primary(const VlScope* parent,
 			"Bit-Select index is out of range.");
 	// ただ値が X になるだけでエラーにはならないそうだ．
       }
-      return factory().new_BitSelect(pt_expr, primary, pt_expr1, index_val);
+      return mgr().new_BitSelect(pt_expr, primary, pt_expr1, index_val);
     }
     auto index = instantiate_expr(parent, index_env, pt_expr1);
     if ( !index ) {
       return nullptr;
     }
-    return factory().new_BitSelect(pt_expr, primary, index);
+    return mgr().new_BitSelect(pt_expr, primary, index);
   }
   if ( has_range_select ) {
     // 範囲指定付きの場合
@@ -279,7 +279,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	  // ただ値が X になるだけでエラーにはならないそうだ．
 	}
 
-	return factory().new_PartSelect(pt_expr, primary,
+	return mgr().new_PartSelect(pt_expr, primary,
 					pt_left, pt_right,
 					index1_val, index2_val);
       }
@@ -322,7 +322,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 			    "Index is out of range.");
 	    // ただ値が X になるだけでエラーにはならないそうだ．
 	  }
-	  return factory().new_PartSelect(pt_expr, primary,
+	  return mgr().new_PartSelect(pt_expr, primary,
 					  pt_base, pt_range,
 					  index1_val, index2_val);
 	}
@@ -331,7 +331,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	  if ( !base ) {
 	    return nullptr;
 	  }
-	  return factory().new_PlusPartSelect(pt_expr, primary,
+	  return mgr().new_PlusPartSelect(pt_expr, primary,
 					      base, pt_range, range_val);
 	}
       }
@@ -374,7 +374,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 			    "Index is out of range.");
 	    // ただ値が X になるだけでエラーにはならないそうだ．
 	  }
-	  return factory().new_PartSelect(pt_expr, primary,
+	  return mgr().new_PartSelect(pt_expr, primary,
 					  pt_base, pt_range,
 					  index1_val, index2_val);
 	}
@@ -383,7 +383,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	  if ( !base ) {
 	    return nullptr;
 	  }
-	  return factory().new_MinusPartSelect(pt_expr, primary,
+	  return mgr().new_MinusPartSelect(pt_expr, primary,
 					       base, pt_range, range_val);
 	}
       }
@@ -514,7 +514,7 @@ ExprGen::instantiate_genvar(const VlScope* parent,
   }
 
   // genvar の値に対応した定数式を生成
-  return factory().new_GenvarConstant(pt_expr, val);
+  return mgr().new_GenvarConstant(pt_expr, val);
 }
 
 // @brief 宣言要素のインスタンス化を行う．
@@ -547,7 +547,7 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
   if ( handle->type() == VpiObjType::Parameter ) {
     // パラメータの場合
     auto param = handle->parameter();
-    primary = factory().new_Primary(pt_expr, param);
+    primary = mgr().new_Primary(pt_expr, param);
     is_array = false;
     value_type = param->value_type();
   }
@@ -556,7 +556,7 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
     auto decl = handle->decl();
     auto declarray = handle->declarray();
     if ( decl != nullptr ) {
-      primary = factory().new_Primary(pt_expr, decl);
+      primary = mgr().new_Primary(pt_expr, decl);
       is_array = false;
       value_type = decl->value_type();
     }
@@ -589,7 +589,7 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 	mlt *= declarray->range(j)->size();
       }
       if ( const_index ) {
-	primary = factory().new_Primary(pt_expr, declarray, offset);
+	primary = mgr().new_Primary(pt_expr, declarray, offset);
       }
       else {
 	// 添字の式を生成する．
@@ -604,7 +604,7 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 	  index_list.push_back(expr1);
 	}
 
-	primary = factory().new_Primary(pt_expr, declarray, index_list);
+	primary = mgr().new_Primary(pt_expr, declarray, index_list);
       }
     }
   }

@@ -58,7 +58,7 @@ ItemGen::instantiate_gateheader(const VlScope* parent,
 {
   auto pt_delay = pt_head->delay();
   bool has_delay = (pt_delay != nullptr);
-  auto prim_head = factory().new_PrimHead(parent, pt_head, has_delay);
+  auto prim_head = mgr().new_PrimHead(parent, pt_head, has_delay);
   if ( has_delay ) {
     add_phase3stub(make_stub(this, &ItemGen::link_gate_delay,
 			     prim_head, pt_delay));
@@ -100,7 +100,7 @@ ItemGen::instantiate_gateheader(const VlScope* parent,
 	return;
       }
 
-      auto prim_array= factory().new_PrimitiveArray(prim_head,
+      auto prim_array= mgr().new_PrimitiveArray(prim_head,
 						    pt_inst,
 						    pt_left, pt_right,
 						    left_val, right_val);
@@ -126,7 +126,7 @@ ItemGen::instantiate_gateheader(const VlScope* parent,
     }
     else {
       // 単一の要素の場合
-      auto prim = factory().new_Primitive(prim_head, pt_inst);
+      auto prim = mgr().new_Primitive(prim_head, pt_inst);
       reg_primitive(prim);
 
 #if 0
@@ -162,7 +162,7 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
   SizeType param_size = pt_head->paramassign_num();
   auto pt_delay = pt_head->delay();
   bool has_delay = ( pt_delay || param_size == 1 );
-  auto prim_head = factory().new_UdpHead(parent,
+  auto prim_head = mgr().new_UdpHead(parent,
 					 pt_head,
 					 udpdefn,
 					 has_delay);
@@ -202,7 +202,7 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
 	return;
       }
 
-      auto prim_array= factory().new_PrimitiveArray(prim_head,
+      auto prim_array= mgr().new_PrimitiveArray(prim_head,
 						    pt_inst,
 						    pt_left, pt_right,
 						    left_val, right_val);
@@ -220,7 +220,7 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
     }
     else {
       // 単一の要素
-      auto primitive = factory().new_Primitive(prim_head, pt_inst);
+      auto primitive = mgr().new_Primitive(prim_head, pt_inst);
       reg_primitive(primitive);
 
 #if 0
@@ -245,7 +245,7 @@ ItemGen::instantiate_cell(const VlScope* parent,
 			  const PtItem* pt_head,
 			  int cell_id)
 {
-  auto prim_head = factory().new_CellHead(parent, pt_head, cell_id);
+  auto prim_head = mgr().new_CellHead(parent, pt_head, cell_id);
   const auto& cell = get_cell(cell_id);
   for ( auto pt_inst: pt_head->inst_list() ) {
     // ポート数のチェックを行う．
@@ -290,7 +290,7 @@ ItemGen::instantiate_cell(const VlScope* parent,
 	return;
       }
 
-      auto prim_array = factory().new_PrimitiveArray(prim_head,
+      auto prim_array = mgr().new_PrimitiveArray(prim_head,
 						     pt_inst,
 						     pt_left, pt_right,
 						     left_val, right_val);
@@ -308,7 +308,7 @@ ItemGen::instantiate_cell(const VlScope* parent,
     }
     else {
       // 単一の要素
-      auto primitive = factory().new_Primitive(prim_head, pt_inst);
+      auto primitive = mgr().new_Primitive(prim_head, pt_inst);
       reg_primitive(primitive);
 
 #if 0
@@ -429,7 +429,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
       // tmp を 1 ビットずつに分割して接続する．
       for ( SizeType i = 0; i < arraysize; ++ i ) {
 	auto prim = prim_array->_primitive_by_offset(i);
-	auto bit = factory().new_BitSelect(pt_expr, tmp, i);
+	auto bit = mgr().new_BitSelect(pt_expr, tmp, i);
 	prim->connect(index, bit);
       }
     }
@@ -609,7 +609,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       // tmp を 1 ビットずつに分割して接続する．
       for ( SizeType i = 0; i < arraysize; ++ i ) {
 	auto prim = prim_array->_primitive_by_offset(i);
-	auto bit = factory().new_BitSelect(pt_expr, tmp, i);
+	auto bit = mgr().new_BitSelect(pt_expr, tmp, i);
 	prim->connect(index, bit);
       }
     }

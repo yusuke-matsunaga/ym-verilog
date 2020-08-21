@@ -31,11 +31,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 UdpGen::UdpGen(Elaborator& elab,
-	       ElbMgr& elb_mgr,
-	       ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+	       ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 
@@ -68,7 +66,7 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
   auto ptype = pt_udp->prim_type();
   bool is_protected = true; // 何これ?
 
-  auto udp = factory().new_UdpDefn(pt_udp, is_protected);
+  auto udp = mgr().new_UdpDefn(pt_udp, is_protected);
 
   // 最初のポート名 = 出力のポート名
   auto outname = pt_udp->port(0)->ext_name();

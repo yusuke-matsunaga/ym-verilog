@@ -53,7 +53,7 @@ ItemGen::phase1_tf(const VlScope* parent,
   ElbTaskFunc* taskfunc = nullptr;
 
   if ( pt_item->type() == PtItemType::Task ) {
-    taskfunc = factory().new_Task(parent, pt_item);
+    taskfunc = mgr().new_Task(parent, pt_item);
     reg_task(taskfunc);
   }
   else {
@@ -69,13 +69,13 @@ ItemGen::phase1_tf(const VlScope* parent,
 			   left_val, right_val) ) {
 	return;
       }
-      taskfunc = factory().new_Function(parent,	pt_item,
+      taskfunc = mgr().new_Function(parent,	pt_item,
 					pt_left, pt_right,
 					left_val, right_val,
 					false);
     }
     else {
-      taskfunc = factory().new_Function(parent,	pt_item, false);
+      taskfunc = mgr().new_Function(parent,	pt_item, false);
     }
     ASSERT_COND( taskfunc != nullptr );
 
@@ -143,16 +143,16 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
     int right_val = taskfunc->right_range_val();
     ElbDeclHead* head = nullptr;
     if ( taskfunc->has_range() ) {
-      head = factory().new_DeclHead(taskfunc, pt_item,
+      head = mgr().new_DeclHead(taskfunc, pt_item,
 				    pt_item->left_range(), pt_item->right_range(),
 				    left_val, right_val);
     }
     else {
-      head = factory().new_DeclHead(taskfunc, pt_item);
+      head = mgr().new_DeclHead(taskfunc, pt_item);
     }
     ASSERT_COND( head );
 
-    auto decl = factory().new_Decl(head, pt_item);
+    auto decl = mgr().new_Decl(head, pt_item);
     int tag = vpiVariables;
     if ( pt_item->data_type() == VpiVarType::None ) {
       tag = vpiReg;
@@ -232,17 +232,17 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
 			 left_val, right_val) ) {
       return nullptr;
     }
-    func = factory().new_Function(parent, pt_function,
+    func = mgr().new_Function(parent, pt_function,
 				  pt_left, pt_right,
 				  left_val, right_val,
 				  true);
-    head = factory().new_DeclHead(func, pt_function,
+    head = mgr().new_DeclHead(func, pt_function,
 				  pt_left, pt_right,
 				  left_val, right_val);
   }
   else {
-    func = factory().new_Function(parent, pt_function, true);
-    head = factory().new_DeclHead(func, pt_function);
+    func = mgr().new_Function(parent, pt_function, true);
+    head = mgr().new_DeclHead(func, pt_function);
   }
   ASSERT_COND( func );
   ASSERT_COND( head );
@@ -257,7 +257,7 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
   instantiate_decl(func, pt_function->declhead_list());
 
   // 関数名と同名の変数の生成
-  auto decl = factory().new_Decl(head, pt_function);
+  auto decl = mgr().new_Decl(head, pt_function);
   int tag = vpiVariables;
   if ( pt_function->data_type() == VpiVarType::None ) {
     tag = vpiReg;

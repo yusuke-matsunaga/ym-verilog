@@ -9,7 +9,7 @@
 /// All rights reserved.
 
 
-#include "ym/verilog.h"
+#include "elaborator/ElbHead.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -20,18 +20,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 ///
 /// とは言ってもただの place holder クラス
 //////////////////////////////////////////////////////////////////////
-class ElbCaHead
+class ElbCaHead :
+  public ElbHead
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbCaHead() = default;
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbCaHead() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbCaHead の仮想関数

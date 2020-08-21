@@ -35,11 +35,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 ModuleGen::ModuleGen(Elaborator& elab,
-		     ElbMgr& elb_mgr,
-		     ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+		     ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 
@@ -66,7 +64,7 @@ ModuleGen::phase1_topmodule(const VlScope* toplevel,
 		  "ELAB",
 		  buf.str());
   // モジュール本体の生成
-  auto module = factory().new_Module(toplevel,
+  auto module = mgr().new_Module(toplevel,
 				     pt_module,
 				     nullptr,
 				     nullptr);
@@ -166,7 +164,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
     auto expr = param_con.mExpr;
     auto value = param_con.mValue;
     param->set_init_expr(expr, value);
-    auto pa = factory().new_NamedParamAssign(module, pt_con,
+    auto pa = mgr().new_NamedParamAssign(module, pt_con,
 					     param, expr, value);
     reg_paramassign(pa);
   }
@@ -239,7 +237,7 @@ ModuleGen::instantiate_port(ElbModule* module,
 	}
       }
 
-      low_conn = factory().new_Lhs(pt_portref, expr_list, lhs_elem_array);
+      low_conn = mgr().new_Lhs(pt_portref, expr_list, lhs_elem_array);
     }
     module->init_port(index, pt_port, low_conn, dir);
     ++ index;
@@ -269,7 +267,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
     return nullptr;
   }
 
-  auto primary = factory().new_Primary(pt_portref, decl);
+  auto primary = mgr().new_Primary(pt_portref, decl);
 
   // 添字の部分を実体化する．
   const PtExpr* pt_index = nullptr;
@@ -291,7 +289,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
       // 添字が範囲外
       warning_index_out_of_range(pt_index->file_region());
     }
-    return factory().new_BitSelect(pt_portref, primary, pt_index, index_val);
+    return mgr().new_BitSelect(pt_portref, primary, pt_index, index_val);
   }
   if ( pt_left && pt_right ) {
     int left_val = 0;
@@ -311,7 +309,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
       // 右の添字が範囲外
       warning_right_index_out_of_range(pt_right->file_region());
     }
-    return factory().new_PartSelect(pt_portref, primary,
+    return mgr().new_PartSelect(pt_portref, primary,
 				    pt_left, pt_right,
 				    left_val, right_val);
   }

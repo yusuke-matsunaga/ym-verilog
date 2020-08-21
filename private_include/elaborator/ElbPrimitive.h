@@ -10,8 +10,8 @@
 
 
 #include "ym/vl/VlPrimitive.h"
-
-#include "ElbFwd.h"
+#include "elaborator/ElbHead.h"
+#include "elaborator/ElbFwd.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -20,18 +20,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// @class ElbPrimHead ElbPrimitive.h "ElbPrimitive.h"
 /// @brief primitive/primitive array のヘッダ情報
 //////////////////////////////////////////////////////////////////////
-class ElbPrimHead
+class ElbPrimHead :
+  public ElbHead
 {
-protected:
-
-  /// @brief コンストラクタ
-  ElbPrimHead() = default;
-
-  /// @brief デストラクタ
-  virtual
-  ~ElbPrimHead() = default;
-
-
 public:
   //////////////////////////////////////////////////////////////////////
   // ElbPrimHead の仮想関数

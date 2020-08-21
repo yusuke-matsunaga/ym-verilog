@@ -72,19 +72,17 @@ END_NONAMESPACE
 // @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 // @param[in] cell_library セルライブラリ
 Elaborator::Elaborator(ElbMgr& elb_mgr,
-		       ElbFactory& elb_factory,
 		       const ClibCellLibrary& cell_library) :
   mDone{false},
   mMgr{elb_mgr},
-  mFactory{elb_factory},
   mCellLibrary{cell_library},
-  mUdpGen{new UdpGen(*this, elb_mgr, elb_factory)},
-  mModuleGen{new ModuleGen(*this, elb_mgr, elb_factory)},
-  mDeclGen{new DeclGen(*this, elb_mgr, elb_factory)},
-  mItemGen{new ItemGen(*this, elb_mgr, elb_factory)},
-  mStmtGen{new StmtGen(*this, elb_mgr, elb_factory)},
-  mExprGen{new ExprGen(*this, elb_mgr, elb_factory)},
-  mAttrGen{new AttrGen(*this, elb_mgr, elb_factory)}
+  mUdpGen{new UdpGen(*this, elb_mgr)},
+  mModuleGen{new ModuleGen(*this, elb_mgr)},
+  mDeclGen{new DeclGen(*this, elb_mgr)},
+  mItemGen{new ItemGen(*this, elb_mgr)},
+  mStmtGen{new StmtGen(*this, elb_mgr)},
+  mExprGen{new ExprGen(*this, elb_mgr)},
+  mAttrGen{new AttrGen(*this, elb_mgr)}
 {
   mAllowEmptyIORange = true;
 
@@ -171,7 +169,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
   // トップレベル階層の生成
   /// toplevel は実体を持たない仮想的なスコープ
-  auto toplevel{mFactory.new_Toplevel()};
+  auto toplevel{mMgr.new_Toplevel()};
   mMgr.reg_toplevel(toplevel);
 
   // トップモジュールの生成

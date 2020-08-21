@@ -162,7 +162,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
 
   // function call の生成
-  auto expr = factory().new_FuncCall(pt_expr, child_func, arg_list);
+  auto expr = mgr().new_FuncCall(pt_expr, child_func, arg_list);
 
 #if 0
   // attribute instance の生成
@@ -215,7 +215,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   }
 
   // system function call の生成
-  auto expr = factory().new_SysFuncCall(pt_expr, user_systf, arg_list);
+  auto expr = mgr().new_SysFuncCall(pt_expr, user_systf, arg_list);
 
   return expr;
 }
@@ -320,7 +320,7 @@ ExprGen::evaluate_funccall(const VlScope* parent,
   }
 
   // function call の生成
-  auto expr = factory().new_FuncCall(pt_expr, child_func, n, arg_list);
+  auto expr = mgr().new_FuncCall(pt_expr, child_func, n, arg_list);
 #else
 #warning "TODO:2011-02-09-05"
   return VlValue();

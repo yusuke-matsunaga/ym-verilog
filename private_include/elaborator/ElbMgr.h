@@ -13,8 +13,9 @@
 #include "ym/vl/VlFwd.h"
 #include "ym/clib.h"
 
-#include "TagDict.h"
-#include "AttrHash.h"
+#include "elaborator/ElbFactory.h"
+#include "elaborator/TagDict.h"
+#include "elaborator/AttrHash.h"
 
 #include "parser/PtiFwd.h"
 
@@ -279,6 +280,13 @@ public:
   const VlScope*
   new_Toplevel();
 
+  /// @brief ステートメントブロックのスコープを生成する．
+  /// @param[in] parent 親のスコープ環境
+  /// @param[in] pt_stmt 対応するパース木の要素
+  const VlScope*
+  new_StmtBlockScope(const VlScope* parent,
+		     const PtStmt* pt_stmt);
+
   /// @brief generate block を生成する．
   /// @param[in] parent 親のスコープ環境
   /// @param[in] pt_item 対応するパース木の要素
@@ -327,7 +335,7 @@ public:
   /// @param[in] right 範囲の LSB の式
   /// @param[in] left_val 範囲の MSB の値
   /// @param[in] right_val 範囲の LSB の値
-  const VlModuleArray*
+  ElbModuleArray*
   new_ModuleArray(const VlScope* parent,
 		  const PtModule* pt_module,
 		  const PtItem* pt_head,
@@ -341,22 +349,15 @@ public:
   /// @param[in] module 親のモジュール
   /// @param[in] pt_header パース木のIO宣言ヘッダ
   ElbIOHead*
-  new_ModIOHead(const VlModule* module,
-		const PtIOHead* pt_header);
+  new_IOHead(const VlModule* module,
+	     const PtIOHead* pt_header);
 
-  /// @brief タスク用の IO ヘッダを生成する．
-  /// @param[in] task 親のタスク
+  /// @brief タスク/関数用の IO ヘッダを生成する．
+  /// @param[in] taskfunc 親のタスク/関数
   /// @param[in] pt_header パース木のIO宣言ヘッダ
   ElbIOHead*
-  new_TaskIOHead(const VlTaskFunc* task,
-		 const PtIOHead* pt_header);
-
-  /// @brief 関数用の IO ヘッダを生成する．
-  /// @param[in] func 親の関数
-  /// @param[in] pt_header パース木のIO宣言ヘッダ
-  ElbIOHead*
-  new_FunctionIOHead(const VlTaskFunc* func,
-		     const PtIOHead* pt_header);
+  new_IOHead(const VlTaskFunc* taskfunc,
+	     const PtIOHead* pt_header);
 
   /// @brief 宣言要素のヘッダを生成する．
   /// @param[in] parent 親のスコープ
@@ -774,20 +775,13 @@ public:
 	   const PtStmt* pt_stmt,
 	   const vector<const VlStmt*>& stmt_list);
 
-  /// @breif statement block を生成する．
-  /// @param[in] parent 親のスコープ環境
-  /// @param[in] pt_stmt 対応するパース木の要素
-  const VlNamedObj*
-  new_StmtScope(const VlScope* parent,
-		const PtStmt* pt_stmt);
-
   /// @brief 名前付き begin ブロックを生成する．
   /// @param[in] block 自分自身に対応するスコープ
   /// @param[in] process 親のプロセス (or nullptr)
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] stmt_list 子のステートメントリスト
   const VlStmt*
-  new_NamedBegin(const VlNamedObj* block,
+  new_NamedBegin(const VlScope* block,
 		 const VlProcess* process,
 		 const PtStmt* pt_stmt,
 		 const vector<const VlStmt*>& stmt_list);
@@ -799,7 +793,7 @@ public:
   /// @param[in] pt_stmt パース木のステートメント定義
   /// @param[in] stmt_list 子のステートメントリスト
   const VlStmt*
-  new_NamedFork(const VlNamedObj* block,
+  new_NamedFork(const VlScope* block,
 		const VlProcess* process,
 		const PtStmt* pt_stmt,
 		const vector<const VlStmt*>& stmt_list);
@@ -964,7 +958,7 @@ public:
   new_DisableStmt(const VlScope* parent,
 		  const VlProcess* process,
 		  const PtStmt* pt_stmt,
-		  const VlNamedObj* target);
+		  const VlScope* target);
 
   /// @brief コントロール文を生成する．
   /// @param[in] parent 親のスコープ
@@ -1206,14 +1200,21 @@ public:
   /// @param[in] arg 引数本体
   ElbExpr*
   new_ArgHandle(const PtExpr* pt_expr,
-		const VlNamedObj* arg);
+		const VlScope* arg);
 
   /// @brief システム関数/システムタスクの引数を生成する．
   /// @param[in] pt_expr パース木中で参照している要素
   /// @param[in] arg 引数本体
   ElbExpr*
   new_ArgHandle(const PtExpr* pt_expr,
-		ElbPrimitive* arg);
+		const VlPrimitive* arg);
+
+  /// @brief システム関数/システムタスクの引数を生成する．
+  /// @param[in] pt_expr パース木中で参照している要素
+  /// @param[in] arg 引数本体
+  ElbExpr*
+  new_ArgHandle(const PtExpr* pt_expr,
+		const VlDeclArray* arg);
 
   /// @brief 連結演算子の左辺式を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -1231,11 +1232,12 @@ public:
   new_Delay(const PtBase* pt_obj,
 	    const vector<ElbExpr*>& expr_list);
 
+#if 0
   /// @brief attribute instance のリストを生成する．
   /// @param[in] n 要素数
-  ElbAttrList*
+  vector<const VlAttribute*>
   new_AttrList(SizeType n);
-
+#endif
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -1245,8 +1247,21 @@ public:
 
 private:
   //////////////////////////////////////////////////////////////////////
+  // 内部で用いられる関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief Elbオブジェクト用のファクトリを返す．
+  ElbFactory&
+  factory();
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // オブジェクト生成用のファクトリクラス
+  unique_ptr<ElbFactory> mFactory;
 
   // UDP のリスト
   vector<const VlUdpDefn*> mUdpList;
@@ -1259,6 +1274,9 @@ private:
 
   // UserSystf の辞書
   unordered_map<string, const VlUserSystf*> mSystfHash;
+
+  // ヘッダのリスト
+  vector<const ElbHead*> mHeadList;
 
   // 全てのオブジェクトのリスト
   vector<const VlObj*> mObjList;
@@ -1430,6 +1448,14 @@ ElbMgr::find_attr(const VlObj* obj,
 		  bool def) const
 {
   return mAttrHash.find(obj, def);
+}
+
+// @brief Elbオブジェクト用のファクトリを返す．
+inline
+ElbFactory&
+ElbMgr::factory()
+{
+  return *mFactory;
 }
 
 END_NAMESPACE_YM_VERILOG

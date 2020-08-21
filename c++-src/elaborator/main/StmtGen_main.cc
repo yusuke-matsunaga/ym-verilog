@@ -30,11 +30,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 StmtGen::StmtGen(Elaborator& elab,
-		 ElbMgr& elb_mgr,
-		 ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+		 ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 
@@ -108,7 +106,7 @@ StmtGen::phase1_stmt(const VlScope* parent,
   case PtStmtType::NamedParBlock:
   case PtStmtType::NamedSeqBlock:
     {
-      auto block_scope = factory().new_StmtBlockScope(parent, pt_stmt);
+      auto block_scope = mgr().new_StmtBlockScope(parent, pt_stmt);
       reg_internalscope(block_scope);
 
       for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
@@ -358,7 +356,7 @@ StmtGen::instantiate_disable(const VlScope* parent,
     return nullptr;
   }
   auto scope = handle->scope();
-  auto stmt = factory().new_DisableStmt(parent, process, pt_stmt, scope);
+  auto stmt = mgr().new_DisableStmt(parent, process, pt_stmt, scope);
 
   return stmt;
 }
@@ -414,7 +412,7 @@ StmtGen::instantiate_enable(const VlScope* parent,
   }
 
   // task call ステートメントの生成
-  auto stmt = factory().new_TaskCall(parent, process, pt_stmt, task, arg_list);
+  auto stmt = mgr().new_TaskCall(parent, process, pt_stmt, task, arg_list);
 
   return stmt;
 }
@@ -464,7 +462,7 @@ StmtGen::instantiate_sysenable(const VlScope* parent,
   }
 
   // system task call ステートメントの生成
-  auto stmt = factory().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list);
+  auto stmt = mgr().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list);
 
   return stmt;
 }
@@ -487,7 +485,7 @@ StmtGen::instantiate_ctrlstmt(const VlScope* parent,
   }
 
   // delay / event control ステートメントの生成
-  auto stmt = factory().new_CtrlStmt(parent, process, pt_stmt, control, body);
+  auto stmt = mgr().new_CtrlStmt(parent, process, pt_stmt, control, body);
 
   return stmt;
 }
@@ -508,7 +506,7 @@ StmtGen::instantiate_control(const VlScope* parent,
   if ( pt_control->type() == PtCtrlType::Delay ) {
     auto delay = instantiate_expr(parent, env, pt_control->delay());
     if ( delay ) {
-      return factory().new_DelayControl(pt_control, delay);
+      return mgr().new_DelayControl(pt_control, delay);
     }
     return nullptr;
   }
@@ -526,14 +524,14 @@ StmtGen::instantiate_control(const VlScope* parent,
   }
 
   if ( pt_control->type() == PtCtrlType::Event ) {
-    return factory().new_EventControl(pt_control, event_list);
+    return mgr().new_EventControl(pt_control, event_list);
   }
 
   auto rep = instantiate_expr(parent, env, pt_control->rep_expr());
   if ( !rep ) {
     return nullptr;
   }
-  return factory().new_RepeatControl(pt_control, rep, event_list);
+  return mgr().new_RepeatControl(pt_control, rep, event_list);
 }
 
 // @brief event statement の実体化を行う．
@@ -551,7 +549,7 @@ StmtGen::instantiate_eventstmt(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_EventStmt(parent, process, pt_stmt, named_event);
+  auto stmt = mgr().new_EventStmt(parent, process, pt_stmt, named_event);
 
   return stmt;
 }
@@ -565,7 +563,7 @@ StmtGen::instantiate_nullstmt(const VlScope* parent,
 			      const VlProcess* process,
 			      const PtStmt* pt_stmt)
 {
-  auto stmt = factory().new_NullStmt(parent, process, pt_stmt);
+  auto stmt = mgr().new_NullStmt(parent, process, pt_stmt);
 
   return stmt;
 }

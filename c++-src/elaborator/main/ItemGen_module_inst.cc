@@ -98,7 +98,7 @@ ItemGen::phase1_muheader(const VlScope* parent,
       }
       else {
 	// 単一の要素
-	auto module1 = factory().new_Module(parent,
+	auto module1 = mgr().new_Module(parent,
 					    pt_module,
 					    pt_head,
 					    pt_inst);
@@ -218,12 +218,12 @@ ItemGen::phase1_module_array(const VlScope* parent,
     return;
   }
 
-  auto module_array = factory().new_ModuleArray(parent,
-						pt_module,
-						pt_head,
-						pt_inst,
-						pt_left, pt_right,
-						left_val, right_val);
+  auto module_array = mgr().new_ModuleArray(parent,
+					    pt_module,
+					    pt_head,
+					    pt_inst,
+					    pt_left, pt_right,
+					    left_val, right_val);
   reg_modulearray(module_array);
 
   ostringstream buf;
@@ -408,12 +408,12 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
 	for ( SizeType i = 0; i < module_size; ++ i ) {
 	  ElbExpr* tmp1 = nullptr;
 	  if ( port_size == 1 ) {
-	    tmp1 = factory().new_BitSelect(pt_expr, tmp, i);
+	    tmp1 = mgr().new_BitSelect(pt_expr, tmp, i);
 	  }
 	  else {
 	    int lsb = i;
 	    int msb = lsb + port_size - 1;
-	    tmp1 = factory().new_PartSelect(pt_expr, tmp, msb, lsb);
+	    tmp1 = mgr().new_PartSelect(pt_expr, tmp, msb, lsb);
 	  }
 	  auto module = module_array->elem(i);
 	  module->set_port_high_conn(index, tmp1, conn_by_name);

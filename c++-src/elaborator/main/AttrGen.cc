@@ -22,11 +22,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 AttrGen::AttrGen(Elaborator& elab,
-		 ElbMgr& elb_mgr,
-		 ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+		 ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 

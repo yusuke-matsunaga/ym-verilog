@@ -38,10 +38,8 @@ protected:
   /// @brief コンストラクタ
   /// @param[in] elab 生成器
   /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-  /// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
   ElbProxy(Elaborator& elab,
-	   ElbMgr& elb_mgr,
-	   ElbFactory& elb_factory);
+	   ElbMgr& elb_mgr);
 
   /// @brief デストラクタ
   ~ElbProxy();
@@ -635,15 +633,14 @@ protected:
 			bool def,
 			const VlObj* obj);
 
-
 protected:
   //////////////////////////////////////////////////////////////////////
-  // メンバへのアクセス
+  // メンバに対するアクセス
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief ファクトリオブジェクトを得る．
-  ElbFactory&
-  factory();
+  /// @brief ElbMgr を返す．
+  ElbMgr&
+  mgr();
 
 
 private:
@@ -656,9 +653,6 @@ private:
 
   // 生成したオブジェクトを管理するマネージャクラス
   ElbMgr& mMgr;
-
-  // オブジェクトを生成するファクトリクラス
-  ElbFactory& mFactory;
 
   // モジュール生成用のオブジェクト
   ModuleGen* mModuleGen;
@@ -1046,14 +1040,6 @@ ElbProxy::add_phase3stub(ElbStub* stub)
   mElaborator.add_phase3stub(stub);
 }
 
-// @brief ファクトリオブジェクトを得る．
-inline
-ElbFactory&
-ElbProxy::factory()
-{
-  return mFactory;
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // テンプレート関数の定義
@@ -1117,6 +1103,14 @@ ElbProxy::make_stub(T* obj,
 		    D d)
 {
   return new ElbStubT4<T, A, B, C, D>(obj, memfunc, a, b, c, d);
+}
+
+// @brief ElbMgr を返す．
+inline
+ElbMgr&
+ElbProxy::mgr()
+{
+  return mMgr;
 }
 
 END_NAMESPACE_YM_VERILOG

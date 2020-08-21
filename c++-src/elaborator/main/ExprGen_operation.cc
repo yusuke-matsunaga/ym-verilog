@@ -62,7 +62,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
       error_illegal_real_type(pt_expr->operand0());
       return nullptr;
     }
-    return factory().new_UnaryOp(pt_expr, op_type, opr0);
+    return mgr().new_UnaryOp(pt_expr, op_type, opr0);
 
   case VpiOpType::BitAnd:
   case VpiOpType::BitOr:
@@ -104,7 +104,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
 	return nullptr;
       }
     }
-    expr = factory().new_BinaryOp(pt_expr, op_type, opr0, opr1);
+    expr = mgr().new_BinaryOp(pt_expr, op_type, opr0, opr1);
     break;
 
   case VpiOpType::Condition:
@@ -116,7 +116,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
     if ( !opr0 || !opr1 || !opr2 ) {
       return nullptr;
     }
-    expr = factory().new_TernaryOp(pt_expr, op_type, opr0, opr1, opr2);
+    expr = mgr().new_TernaryOp(pt_expr, op_type, opr0, opr1, opr2);
     break;
 
   case VpiOpType::Concat:
@@ -136,7 +136,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
 	opr_list[i] = expr1;
       }
 
-      expr = factory().new_ConcatOp(pt_expr, opr_list);
+      expr = mgr().new_ConcatOp(pt_expr, opr_list);
     }
     break;
 
@@ -163,7 +163,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
 	}
 	opr_list[i - 1] = expr1;
       }
-      expr = factory().new_MultiConcatOp(pt_expr, rep_num, rep_expr, opr_list);
+      expr = mgr().new_MultiConcatOp(pt_expr, rep_num, rep_expr, opr_list);
     }
     break;
 

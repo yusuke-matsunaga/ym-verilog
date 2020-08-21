@@ -40,11 +40,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 ItemGen::ItemGen(Elaborator& elab,
-		 ElbMgr& elb_mgr,
-		 ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+		 ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 
@@ -191,7 +189,7 @@ ItemGen::defparam_override(const DefParamStub& stub,
 
   param->set_init_expr(rhs_expr, value);
 
-  auto dp = factory().new_DefParam(module,
+  auto dp = mgr().new_DefParam(module,
 				   pt_header,
 				   pt_defparam,
 				   param, rhs_expr, value);
@@ -210,7 +208,7 @@ ItemGen::instantiate_cont_assign(const VlScope* parent,
   auto module = parent->parent_module();
   auto pt_delay = pt_header->delay();
   auto delay = instantiate_delay(parent, pt_delay);
-  auto ca_head = factory().new_CaHead(module, pt_header, delay);
+  auto ca_head = mgr().new_CaHead(module, pt_header, delay);
 
   ElbEnv env;
   ElbNetLhsEnv env1(env);
@@ -229,7 +227,7 @@ ItemGen::instantiate_cont_assign(const VlScope* parent,
       return;
     }
 
-    auto ca = factory().new_ContAssign(ca_head, pt_elem, lhs, rhs);
+    auto ca = mgr().new_ContAssign(ca_head, pt_elem, lhs, rhs);
     reg_contassign(ca);
 
     ostringstream buf;
@@ -250,7 +248,7 @@ void
 ItemGen::instantiate_process(const VlScope* parent,
 			     const PtItem* pt_item)
 {
-  auto process = factory().new_Process(parent, pt_item);
+  auto process = mgr().new_Process(parent, pt_item);
   reg_process(process);
 
   ElbEnv env;
@@ -282,7 +280,7 @@ ItemGen::phase1_genblock(const VlScope* parent,
 {
   auto* name = pt_genblock->name();
   if ( name != nullptr ) {
-    auto genblock = factory().new_GenBlock(parent, pt_genblock);
+    auto genblock = mgr().new_GenBlock(parent, pt_genblock);
     reg_internalscope(genblock);
 
     parent = genblock;
@@ -404,7 +402,7 @@ ItemGen::phase1_genfor(const VlScope* parent,
   }
 
   // 子供のスコープの検索用オブジェクト
-  auto gfroot = factory().new_GfRoot(parent, pt_genfor);
+  auto gfroot = mgr().new_GfRoot(parent, pt_genfor);
   reg_gfroot(gfroot);
 
   {
@@ -437,12 +435,12 @@ ItemGen::phase1_genfor(const VlScope* parent,
     // スコープ名生成のために genvar の値を取得
     {
       int gvi = genvar->value();
-      auto genblock = factory().new_GfBlock(parent, pt_genfor, gvi);
+      auto genblock = mgr().new_GfBlock(parent, pt_genfor, gvi);
       gfroot->add(gvi, genblock);
       reg_internalscope(genblock);
 
       auto pt_item = genvar->pt_item();
-      auto genvar1 = factory().new_Genvar(genblock, pt_item, gvi);
+      auto genvar1 = mgr().new_Genvar(genblock, pt_item, gvi);
       reg_genvar(genvar1);
 
       phase1_generate(genblock, pt_genfor);

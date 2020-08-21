@@ -27,7 +27,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 class PtMgr;
 
 class ElbMgr;
-class ElbFactory;
 
 class UdpGen;
 class ModuleGen;
@@ -53,10 +52,8 @@ public:
 
   /// @brief コンストラクタ
   /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-  /// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
   /// @param[in] cell_library セルライブラリ
   Elaborator(ElbMgr& elb_mgr,
-	     ElbFactory& elb_factory,
 	     const ClibCellLibrary& cell_library);
 
   /// @brief デストラクタ
@@ -300,9 +297,6 @@ private:
 
   // 生成したオブジェクトを管理するクラス
   ElbMgr& mMgr;
-
-  // オブジェクト生成用のファクトリクラス
-  ElbFactory& mFactory;
 
   // セルライブラリ
   ClibCellLibrary mCellLibrary;

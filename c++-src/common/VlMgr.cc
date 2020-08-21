@@ -26,8 +26,7 @@ VlMgr::VlMgr() :
   mAlloc{new SimpleAlloc},
   mPtMgr{new PtMgr},
   mPtiFactory{PtiFactory::make_obj("cpt", *mAlloc)},
-  mElbMgr{new ElbMgr()},
-  mElbFactory{ElbFactory::new_obj()}
+  mElbMgr{new ElbMgr()}
 {
 }
 
@@ -83,7 +82,7 @@ VlMgr::pt_udp_list() const
 int
 VlMgr::elaborate(const ClibCellLibrary& cell_library)
 {
-  Elaborator elab(*mElbMgr, *mElbFactory, cell_library);
+  Elaborator elab(*mElbMgr, cell_library);
 
   return elab(*mPtMgr);
 }

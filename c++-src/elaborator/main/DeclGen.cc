@@ -35,11 +35,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elab 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 DeclGen::DeclGen(Elaborator& elab,
-		 ElbMgr& elb_mgr,
-		 ElbFactory& elb_factory) :
-  ElbProxy(elab, elb_mgr, elb_factory)
+		 ElbMgr& elb_mgr) :
+  ElbProxy(elab, elb_mgr)
 {
 }
 
@@ -118,10 +116,10 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     // ちなみに IOHead は範囲の情報を持たない．
     ElbIOHead* head = nullptr;
     if ( module ) {
-      head = factory().new_IOHead(module, pt_head);
+      head = mgr().new_IOHead(module, pt_head);
     }
     else if ( taskfunc ) {
-      head = factory().new_IOHead(taskfunc, pt_head);
+      head = mgr().new_IOHead(taskfunc, pt_head);
     }
     ASSERT_COND( head != nullptr );
 
@@ -258,13 +256,13 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	}
 #else
 	if ( has_range ) {
-	  head = factory().new_DeclHead(scope,
+	  head = mgr().new_DeclHead(scope,
 					pt_head, aux_type,
 					pt_left, pt_right,
 					left_val, right_val);
 	}
 	else {
-	  head = factory().new_DeclHead(scope,
+	  head = mgr().new_DeclHead(scope,
 					pt_head, aux_type);
 	}
 #endif
@@ -297,7 +295,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	  ASSERT_COND( pt_init == nullptr );
 	}
 
-	decl = factory().new_Decl(head, pt_item, init);
+	decl = mgr().new_Decl(head, pt_item, init);
 	int tag = 0;
 	switch ( aux_type ) {
 	case VpiAuxType::Net: tag = vpiNet; break;
@@ -395,19 +393,19 @@ DeclGen::instantiate_param_head(const VlScope* scope,
 			 left_val, right_val) ) {
       return;
     }
-    param_head = factory().new_ParamHead(scope,
+    param_head = mgr().new_ParamHead(scope,
 					 pt_head,
 					 pt_left, pt_right,
 					 left_val, right_val);
   }
   else {
-    param_head = factory().new_ParamHead(scope,
+    param_head = mgr().new_ParamHead(scope,
 					 pt_head);
   }
 
   for ( auto pt_item: pt_head->item_list() ) {
     const auto& file_region = pt_item->file_region();
-    auto param = factory().new_Parameter(param_head,
+    auto param = mgr().new_Parameter(param_head,
 					 pt_item,
 					 is_local);
     ASSERT_COND( param );
@@ -435,7 +433,7 @@ DeclGen::instantiate_param_head(const VlScope* scope,
 
     // ダブっている感じがするけど同じことを表す parameter assign 文
     // をつくってモジュールに追加する．
-    auto pa = factory().new_NamedParamAssign(module, pt_item,
+    auto pa = mgr().new_NamedParamAssign(module, pt_item,
 					     param, pt_init_expr, value);
     reg_paramassign(pa);
   }
@@ -461,13 +459,13 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 			 left_val, right_val) ) {
       return;
     }
-    net_head = factory().new_DeclHead(scope, pt_head,
+    net_head = mgr().new_DeclHead(scope, pt_head,
 				      pt_left, pt_right,
 				      left_val, right_val,
 				      has_delay);
   }
   else {
-    net_head = factory().new_DeclHead(scope, pt_head);
+    net_head = mgr().new_DeclHead(scope, pt_head);
   }
   ASSERT_COND( net_head );
 
@@ -493,7 +491,7 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 	continue;
       }
 
-      auto net_array = factory().new_DeclArray(net_head, pt_item, range_src);
+      auto net_array = mgr().new_DeclArray(net_head, pt_item, range_src);
       reg_declarray(vpiNetArray, net_array);
 
 #if 0
@@ -513,7 +511,7 @@ DeclGen::instantiate_net_head(const VlScope* scope,
     }
     else {
       // 単一の要素
-      auto net = factory().new_Decl(net_head, pt_item);
+      auto net = mgr().new_Decl(net_head, pt_item);
       reg_decl(vpiNet, net);
 
       if ( pt_init ) {
@@ -564,7 +562,7 @@ DeclGen::link_net_assign(ElbDecl* net,
 			 const PtDeclItem* pt_item)
 {
   // 実体は左辺が net の代入文を作る．
-  auto lhs = factory().new_Primary(pt_item, net);
+  auto lhs = mgr().new_Primary(pt_item, net);
   auto scope = net->parent_scope();
   auto pt_init = pt_item->init_value();
   auto rhs = instantiate_rhs(scope, ElbEnv(), pt_init, lhs);
@@ -576,7 +574,7 @@ DeclGen::link_net_assign(ElbDecl* net,
 
   // 対応する continuous assign 文を作る．
   auto module = scope->parent_module();
-  auto ca = factory().new_ContAssign(module, pt_item, lhs, rhs);
+  auto ca = mgr().new_ContAssign(module, pt_item, lhs, rhs);
   reg_contassign(ca);
 }
 
@@ -598,12 +596,12 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 			 left_val, right_val) ) {
       return;
     }
-    reg_head = factory().new_DeclHead(scope, pt_head,
+    reg_head = mgr().new_DeclHead(scope, pt_head,
 				      pt_left, pt_right,
 				      left_val, right_val);
   }
   else {
-    reg_head = factory().new_DeclHead(scope, pt_head);
+    reg_head = mgr().new_DeclHead(scope, pt_head);
   }
   ASSERT_COND( reg_head != nullptr );
 
@@ -622,7 +620,7 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 	continue;
       }
 
-      auto reg_array = factory().new_DeclArray(reg_head,
+      auto reg_array = mgr().new_DeclArray(reg_head,
 					       pt_item,
 					       range_src);
       reg_declarray(vpiRegArray, reg_array);
@@ -650,7 +648,7 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
       // エラーの時には init = nullptr となるがそれでも処理は続ける．
       // もちろんエラーは記録されている．
 
-      auto reg = factory().new_Decl(reg_head, pt_item, init);
+      auto reg = mgr().new_Decl(reg_head, pt_item, init);
       reg_decl(vpiReg, reg);
 
 #if 0
@@ -680,7 +678,7 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 {
   ASSERT_COND( pt_head->data_type() != VpiVarType::None );
 
-  auto var_head = factory().new_DeclHead(scope, pt_head);
+  auto var_head = mgr().new_DeclHead(scope, pt_head);
   for ( auto pt_item: pt_head->item_list() ) {
     auto pt_init = pt_item->init_value();
     SizeType dim_size = pt_item->range_num();
@@ -696,7 +694,7 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 	continue;
       }
 
-      auto var_array = factory().new_DeclArray(var_head,
+      auto var_array = mgr().new_DeclArray(var_head,
 					       pt_item,
 					       range_src);
       reg_declarray(vpiVariables, var_array);
@@ -724,7 +722,7 @@ DeclGen::instantiate_var_head(const VlScope* scope,
       // エラーの時には init = nullptr となるがそれでも処理は続ける．
       // もちろんエラーは記録されている．
 
-      auto var = factory().new_Decl(var_head, pt_item, init);
+      auto var = mgr().new_Decl(var_head, pt_item, init);
       reg_decl(vpiVariables, var);
 
 #if 0
@@ -752,7 +750,7 @@ void
 DeclGen::instantiate_event_head(const VlScope* scope,
 				const PtDeclHead* pt_head)
 {
-  auto event_head = factory().new_DeclHead(scope, pt_head);
+  auto event_head = mgr().new_DeclHead(scope, pt_head);
   for ( auto pt_item: pt_head->item_list() ) {
     SizeType dim_size = pt_item->range_num();
     if ( dim_size > 0 ) {
@@ -764,7 +762,7 @@ DeclGen::instantiate_event_head(const VlScope* scope,
 	continue;
       }
 
-      auto ne_array = factory().new_DeclArray(event_head, pt_item, range_src);
+      auto ne_array = mgr().new_DeclArray(event_head, pt_item, range_src);
       reg_declarray(vpiNamedEventArray, ne_array);
 
 #if 0
@@ -784,7 +782,7 @@ DeclGen::instantiate_event_head(const VlScope* scope,
     }
     else {
       // 単一の要素
-      auto named_event = factory().new_Decl(event_head, pt_item);
+      auto named_event = mgr().new_Decl(event_head, pt_item);
       reg_decl(vpiNamedEvent, named_event);
 
 #if 0
@@ -813,7 +811,7 @@ DeclGen::instantiate_genvar_head(const VlScope* scope,
 				 const PtDeclHead* pt_head)
 {
   for ( auto pt_item: pt_head->item_list() ) {
-    auto genvar = factory().new_Genvar(scope, pt_item, 0);
+    auto genvar = mgr().new_Genvar(scope, pt_item, 0);
     reg_genvar(genvar);
 
     ostringstream buf;

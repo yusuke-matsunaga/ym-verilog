@@ -48,7 +48,7 @@ StmtGen::instantiate_if(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_IfStmt(parent, process, pt_stmt,
+  auto stmt = mgr().new_IfStmt(parent, process, pt_stmt,
 				   cond, then_stmt, else_stmt);
 
   return stmt;
@@ -129,7 +129,7 @@ StmtGen::instantiate_case(const VlScope* parent,
     }
 
     // caseitem の生成
-    auto caseitem = factory().new_CaseItem(pt_item, label_list, body);
+    auto caseitem = mgr().new_CaseItem(pt_item, label_list, body);
     caseitem_list.push_back(caseitem);
   }
 
@@ -182,7 +182,7 @@ StmtGen::instantiate_case(const VlScope* parent,
   }
 
   // case statement の生成
-  auto stmt = factory().new_CaseStmt(parent, process, pt_stmt,
+  auto stmt = mgr().new_CaseStmt(parent, process, pt_stmt,
 				     cond, caseitem_list);
 
   return stmt;
@@ -205,7 +205,7 @@ StmtGen::instantiate_wait(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_WaitStmt(parent, process, pt_stmt, cond, body);
+  auto stmt = mgr().new_WaitStmt(parent, process, pt_stmt, cond, body);
 
   return stmt;
 }
@@ -226,7 +226,7 @@ StmtGen::instantiate_forever(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_ForeverStmt(parent, process, pt_stmt, body);
+  auto stmt = mgr().new_ForeverStmt(parent, process, pt_stmt, body);
 
   return stmt;
 }
@@ -248,7 +248,7 @@ StmtGen::instantiate_repeat(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_RepeatStmt(parent, process, pt_stmt, expr, body);
+  auto stmt = mgr().new_RepeatStmt(parent, process, pt_stmt, expr, body);
 
   return stmt;
 }
@@ -270,7 +270,7 @@ StmtGen::instantiate_while(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_WhileStmt(parent, process, pt_stmt, cond, body);
+  auto stmt = mgr().new_WhileStmt(parent, process, pt_stmt, cond, body);
 
   return stmt;
 }
@@ -294,7 +294,7 @@ StmtGen::instantiate_for(const VlScope* parent,
     return nullptr;
   }
 
-  auto stmt = factory().new_ForStmt(parent, process, pt_stmt, cond, init, next, body);
+  auto stmt = mgr().new_ForStmt(parent, process, pt_stmt, cond, init, next, body);
 
   return stmt;
 }

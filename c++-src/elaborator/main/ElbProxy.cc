@@ -26,13 +26,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @brief コンストラクタ
 // @param[in] elb 生成器
 // @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
 ElbProxy::ElbProxy(Elaborator& elab,
-		   ElbMgr& elb_mgr,
-		   ElbFactory& elb_factory) :
+		   ElbMgr& elb_mgr) :
   mElaborator{elab},
-  mMgr{elb_mgr},
-  mFactory{elb_factory}
+  mMgr{elb_mgr}
 {
 }
 
