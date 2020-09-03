@@ -11,6 +11,7 @@
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
+#include "parser/PtiAttrInfo.h"
 #include "ElbProxy.h"
 
 
@@ -18,7 +19,17 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
 /// @class AttrGen AttrGen.h "AttrGen.h"
-/// @brief ElbAttr を生成するクラス
+/// @brief attribute instance を生成するクラス
+///
+/// attribute instance は構文木の要素に対して設定されており，
+/// 例えばモジュールを複数インスタンス化した時には当然複数回
+/// この関数が呼ばれることになる．
+/// 通常のエラボレーションと異なり attribute instance は毎回同じなので
+/// おなじオブジェクトを使い回す．
+///
+/// 実際には attribute instance のリストであり，
+/// さらに attribute instance 自体が attribute spec のリストなので
+/// ややこしい
 //////////////////////////////////////////////////////////////////////
 class AttrGen :
   public ElbProxy
@@ -40,14 +51,29 @@ public:
   // AttrGen の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief PtAttr から ElbAttr を生成する．
-  /// @param[in] pt_attr_array 属性を表すパース木
-  /// @param[in] def 定義側の属性の時 true とするフラグ
-  /// @param[in] obj 属性を設定する対象のオブジェクト
+  /// @brief PtAttr から VlAttribute を生成する．
+  /// @param[in] attr_info 属性リストの情報
+  ///
+  /// 結果は mHash に登録される．
   void
-  instantiate_attribute(const PtAttrInst* pt_attr,
-			bool def,
-			const VlObj* obj);
+  instantiate_attribute(const PtiAttrInfo& attr_info);
+
+  /// @brief 構文木要素に対応する属性リストを返す．
+  /// @param[in] pt_obj 元となる構文木要素
+  const vector<const VlAttribute*>&
+  attribute_list(const PtBase* pt_obj);
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // データメンバ
+  //////////////////////////////////////////////////////////////////////
+
+  // ハッシュ表
+  unordered_map<const PtBase*, vector<const VlAttribute*>> mHash;
+
+  // 空のリスト
+  vector<const VlAttribute*> mEmptyList{};
 
 };
 

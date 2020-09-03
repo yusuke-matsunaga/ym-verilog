@@ -37,15 +37,11 @@ const int check_memory_leak = 0;
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] alloc メモリアロケータ
 // @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
-// @param[in] ptifactory パース木の要素を生成するファクトリクラス
-Parser::Parser(Alloc& alloc,
-	       PtMgr& ptmgr,
-	       PtiFactory& ptifactory) :
-  mAlloc{alloc},
+Parser::Parser(PtMgr& ptmgr) :
+  mAlloc{ptmgr.alloc()},
   mPtMgr{ptmgr},
-  mFactory{ptifactory},
+  mFactory{PtiFactory::make_obj("cpt", mAlloc)},
   mLex{new Lex}
 {
 }
@@ -138,11 +134,10 @@ Parser::reg_defname(const char* name)
 // @brief attribute instance を登録する．
 void
 Parser::reg_attrinst(const PtBase* ptobj,
-		     PtrList<const PtAttrInst>* attr_list)
+		     PtrList<const PtAttrInst>* attr_list,
+		     bool def)
 {
-  if ( attr_list ) {
-    // 未実装
-  }
+  mPtMgr.reg_attrinst(ptobj, attr_list, def);
 }
 
 // 関数内で使えるステートメントかどうかのチェック
@@ -249,7 +244,7 @@ PuHierName*
 Parser::new_HierName(const char* head_name,
 		     const char* name)
 {
-  auto nb{mFactory.new_NameBranch(head_name)};
+  auto nb{mFactory->new_NameBranch(head_name)};
   auto hname{new_HierName(nb, name)};
   return hname;
 }
@@ -263,7 +258,7 @@ Parser::new_HierName(const char* head_name,
 		     int index,
 		     const char* name)
 {
-  auto nb{mFactory.new_NameBranch(head_name, index)};
+  auto nb{mFactory->new_NameBranch(head_name, index)};
   auto hname{new_HierName(nb, name)};
   return hname;
 }
@@ -276,7 +271,7 @@ PuHierName*
 Parser::new_HierName(const PtNameBranch* nb,
 		     const char* name)
 {
-  auto hname{mFactory.new_HierName(nb, name)};
+  auto hname{mFactory->new_HierName(nb, name)};
   return hname;
 }
 
@@ -287,7 +282,7 @@ void
 Parser::add_HierName(PuHierName* hname,
 		     const char* name)
 {
-  auto nb{mFactory.new_NameBranch(hname->tail_name())};
+  auto nb{mFactory->new_NameBranch(hname->tail_name())};
   hname->add(nb, name);
 }
 
@@ -300,7 +295,7 @@ Parser::add_HierName(PuHierName* hname,
 		     int index,
 		     const char* name)
 {
-  auto nb{mFactory.new_NameBranch(hname->tail_name(), index)};
+  auto nb{mFactory->new_NameBranch(hname->tail_name(), index)};
   hname->add(nb, name);
 }
 

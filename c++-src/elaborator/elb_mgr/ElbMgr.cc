@@ -8,6 +8,7 @@
 
 
 #include "elaborator/ElbMgr.h"
+#include "ym/vl/VlAttribute.h"
 #include "ym/vl/VlContAssign.h"
 #include "ym/vl/VlControl.h"
 #include "ym/vl/VlDecl.h"
@@ -84,7 +85,7 @@ ElbMgr::udp_list() const
 // @return name という名の UDP を返す．
 // @return なければ nullptr を返す．
 const VlUdpDefn*
-ElbMgr::find_udp(const char* name) const
+ElbMgr::find_udp(const string& name) const
 {
   if ( mUdpHash.count(name) > 0 ) {
     return mUdpHash.at(name);
@@ -98,7 +99,7 @@ ElbMgr::find_udp(const char* name) const
 // @param[in] def_name 定義名
 // @param[in] udp 登録する UDP
 void
-ElbMgr::reg_udp(const char* def_name,
+ElbMgr::reg_udp(const string& def_name,
 		const VlUdpDefn* udp)
 {
   mUdpList.push_back(udp);
@@ -124,7 +125,7 @@ ElbMgr::topmodule_list() const
 // @return name という名のユーザー定義関数を返す．
 // @return なければ nullptr を返す．
 const VlUserSystf*
-ElbMgr::find_user_systf(const char* name) const
+ElbMgr::find_user_systf(const string& name) const
 {
   if ( mSystfHash.count(name) > 0 ) {
     return mSystfHash.at(name);
@@ -261,14 +262,12 @@ ElbMgr::reg_process(const VlProcess* obj)
 
 // @brief 属性リストを登録する．
 // @param[in] obj 対象のオブジェクト
-// @param[in] def 定義側の属性の時 true とするフラグ
 // @param[in] attr_list 属性リスト
 void
 ElbMgr::reg_attr(const VlObj* obj,
-		 bool def,
 		 const vector<const VlAttribute*>& attr_list)
 {
-  mAttrHash.add(obj, def, attr_list);
+  mAttrHash.emplace(obj, attr_list);
 }
 
 // @brief トップレベルのスコープを生成する
@@ -1719,6 +1718,20 @@ ElbMgr::new_Delay(const PtBase* pt_obj,
   auto delay{factory().new_Delay(pt_obj, expr_list)};
   mObjList.push_back(delay);
   return delay;
+}
+
+// @brief attribute instance のリストを生成する．
+// @param[in] pt_attr パース木の定義要素
+// @param[in] expr 値
+// @param[in] def 定義側の属性の時 true
+const VlAttribute*
+ElbMgr::new_Attribute(const PtAttrSpec* pt_attr,
+		      const VlExpr* expr,
+		      bool def)
+{
+  auto attr{factory().new_Attribute(pt_attr, expr, def)};
+  mObjList.push_back(attr);
+  return attr;
 }
 
 END_NAMESPACE_YM_VERILOG

@@ -9,7 +9,6 @@
 
 #include "ym/VlMgr.h"
 
-#include "alloc/SimpleAlloc.h"
 #include "parser/Parser.h"
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
@@ -23,9 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
 VlMgr::VlMgr() :
-  mAlloc{new SimpleAlloc},
   mPtMgr{new PtMgr},
-  mPtiFactory{PtiFactory::make_obj("cpt", *mAlloc)},
   mElbMgr{new ElbMgr()}
 {
 }
@@ -39,7 +36,6 @@ VlMgr::~VlMgr()
 void
 VlMgr::clear()
 {
-  mAlloc->destroy();
   mPtMgr->clear();
   mElbMgr->clear();
 }
@@ -55,7 +51,7 @@ VlMgr::read_file(const string& filename,
 		 const SearchPathList& searchpath,
 		 const vector<VlLineWatcher*> watcher_list)
 {
-  Parser parser(*mAlloc, *mPtMgr, *mPtiFactory);
+  Parser parser(*mPtMgr);
 
   return parser.read_file(filename, searchpath, watcher_list);
 }
@@ -74,6 +70,14 @@ const vector<const PtUdp*>&
 VlMgr::pt_udp_list() const
 {
   return mPtMgr->pt_udp_list();
+}
+
+// @brief attribute instance のリストを表す構文木要素を返す．
+// @param[in] pt_obj 対象の構文木要素
+vector<const PtAttrInst*>
+VlMgr::pt_attr_list(const PtBase* pt_obj) const
+{
+  return mPtMgr->find_attr_list(pt_obj);
 }
 
 // @brief エラボレーションを行う．
@@ -248,12 +252,10 @@ VlMgr::find_process_list(const VlScope* parent) const
 
 // @brief 属性リストを得る．
 // @param[in] obj 対象のオブジェクト
-// @param[in] def 定義側の属性の時 true とするフラグ
 vector<const VlAttribute*>
-VlMgr::find_attr(const VlObj* obj,
-		 bool def) const
+VlMgr::find_attr(const VlObj* obj) const
 {
-  return mElbMgr->find_attr(obj, def);
+  return mElbMgr->find_attr(obj);
 }
 
 END_NAMESPACE_YM_VERILOG

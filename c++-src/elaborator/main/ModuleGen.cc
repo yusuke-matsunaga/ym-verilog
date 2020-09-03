@@ -53,8 +53,8 @@ void
 ModuleGen::phase1_topmodule(const VlScope* toplevel,
 			    const PtModule* pt_module)
 {
-  const auto& file_region = pt_module->file_region();
-  auto name = pt_module->name();
+  const auto& file_region{pt_module->file_region()};
+  auto name{pt_module->name()};
 
   ostringstream buf;
   buf << "instantiating top module \"" << name << "\".";
@@ -65,17 +65,14 @@ ModuleGen::phase1_topmodule(const VlScope* toplevel,
 		  buf.str());
   // モジュール本体の生成
   auto module = mgr().new_Module(toplevel,
-				     pt_module,
-				     nullptr,
-				     nullptr);
+				 pt_module,
+				 nullptr,
+				 nullptr);
   reg_module(module);
 
-#if 0
   // attribute instance の生成
-  instantiate_attribute(pt_module->attr_top(), true, module);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+  const auto& attr_list{attribute_list(pt_module)};
+  mgr().reg_attr(module, attr_list);
 
   ostringstream buf2;
   buf2 << "module \"" << module->full_name() << "\" has been created.";

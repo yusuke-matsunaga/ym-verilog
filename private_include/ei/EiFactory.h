@@ -1007,9 +1007,11 @@ public:
 
   /// @brief attribute instance のリストを生成する．
   /// @param[in] pt_attr パース木の定義要素
+  /// @param[in] expr 値
   /// @param[in] def 定義側の属性の時 true
   const VlAttribute*
-  new_Attribute(const PtAttrInst* pt_attr,
+  new_Attribute(const PtAttrSpec* pt_attr,
+		const VlExpr* expr,
 		bool def) override;
 
 

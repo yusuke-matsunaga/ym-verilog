@@ -305,7 +305,7 @@ Parser::new_Udp(const FileRegion& file_region,
     // このあと elaboration で注意が必要なのは init_value.
     // 場合によってはこれが nullptrで outhead->top()->init_value()
     // が空でない場合がある．
-    udp = mFactory.new_SeqUdp(file_region,
+    udp = mFactory->new_SeqUdp(file_region,
 			      udp_name,
 			      port_array,
 			      iohead_array,
@@ -322,7 +322,7 @@ Parser::new_Udp(const FileRegion& file_region,
 		      "Combinational primitive can not have the initial value.");
       return;
     }
-    udp = mFactory.new_CmbUdp(file_region,
+    udp = mFactory->new_CmbUdp(file_region,
 			      udp_name,
 			      port_array,
 			      iohead_array,
@@ -342,8 +342,8 @@ Parser::new_UdpEntry(const FileRegion& fr,
 		     const FileRegion& output_loc,
 		     char output_symbol)
 {
-  auto output{mFactory.new_UdpValue(output_loc, output_symbol)};
-  auto entry{mFactory.new_UdpEntry(fr, get_udp_value_array(), output)};
+  auto output{mFactory->new_UdpValue(output_loc, output_symbol)};
+  auto entry{mFactory->new_UdpEntry(fr, get_udp_value_array(), output)};
   add_udp_entry(entry);
 }
 
@@ -360,9 +360,9 @@ Parser::new_UdpEntry(const FileRegion& fr,
 		     const FileRegion& output_loc,
 		     char output_symbol)
 {
-  auto current{mFactory.new_UdpValue(current_loc, current_symbol)};
-  auto output{mFactory.new_UdpValue(output_loc, output_symbol)};
-  auto entry{mFactory.new_UdpEntry(fr, get_udp_value_array(), current, output)};
+  auto current{mFactory->new_UdpValue(current_loc, current_symbol)};
+  auto output{mFactory->new_UdpValue(output_loc, output_symbol)};
+  auto entry{mFactory->new_UdpEntry(fr, get_udp_value_array(), current, output)};
   add_udp_entry(entry);
 }
 
@@ -382,7 +382,7 @@ void
 Parser::new_UdpValue(const FileRegion& fr,
 		     char symbol)
 {
-  auto value{mFactory.new_UdpValue(fr, symbol)};
+  auto value{mFactory->new_UdpValue(fr, symbol)};
   add_udp_value(value);
 }
 
@@ -395,7 +395,7 @@ Parser::new_UdpValue(const FileRegion& fr,
 		     char symbol1,
 		     char symbol2)
 {
-  auto value{mFactory.new_UdpValue(fr, symbol1, symbol2)};
+  auto value{mFactory->new_UdpValue(fr, symbol1, symbol2)};
   add_udp_value(value);
 }
 

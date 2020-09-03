@@ -112,11 +112,11 @@ private:
   find_moduledef(const string& name) const;
 
   /// @brief 関数定義を探す．
-  /// @param[in] parent 親のモジュール
+  /// @param[in] module 親のモジュール
   /// @param[in] name 関数名
   const PtItem*
-  find_funcdef(const VlScope* parent,
-	       const char* name) const;
+  find_funcdef(const VlModule* module,
+	       const string& name) const;
 
   /// @brief constant function を取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -125,7 +125,7 @@ private:
   /// @return なければ nullptr を返す．
   const VlTaskFunc*
   find_constant_function(const VlScope* parent,
-			 const char* name) const;
+			 const string& name) const;
 
   /// @brief セルの探索
   /// @param[in] name セル名
@@ -133,7 +133,7 @@ private:
   ///
   /// なければ -1 を返す．
   int
-  find_cell_id(const char* name) const;
+  find_cell_id(const string& name) const;
 
 
 private:
@@ -245,7 +245,7 @@ public:
   /// @return なければ nullptr を返す．
   ObjHandle*
   find_obj(const VlScope* parent,
-	   const char* name) const;
+	   const string& name) const;
 
   /// @brief スコープと名前からスコープを取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -254,7 +254,7 @@ public:
   /// @return なければ nullptr を返す．
   const VlScope*
   find_namedobj(const VlScope* parent,
-		const char* name) const;
+		const string& name) const;
 
   /// @brief スコープと階層名から要素を取り出す．
   /// @param[in] base_scope 起点となるスコープ

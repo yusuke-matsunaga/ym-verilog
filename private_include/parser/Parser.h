@@ -35,12 +35,8 @@ class Parser
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] alloc メモリアロケータ
   /// @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
-  /// @param[in] ptifactory パース木の要素を生成するファクトリクラス
-  Parser(Alloc& alloc,
-	 PtMgr& ptmgr,
-	 PtiFactory& ptifactory);
+  Parser(PtMgr& ptmgr);
 
   /// @brief デストラクタ
   ~Parser();
@@ -2231,7 +2227,8 @@ public:
   /// @brief attribute instance を登録する．
   void
   reg_attrinst(const PtBase* ptobj,
-	       PtrList<const PtAttrInst>* attr_list);
+	       PtrList<const PtAttrInst>* attr_list,
+	       bool def = false);
 
 
 public:
@@ -2328,7 +2325,7 @@ private:
   PtMgr& mPtMgr;
 
   // パース木の要素の生成を行うクラス
-  PtiFactory& mFactory;
+  unique_ptr<PtiFactory> mFactory;
 
   // 字句解析を行うオブジェクト
   unique_ptr<Lex> mLex;

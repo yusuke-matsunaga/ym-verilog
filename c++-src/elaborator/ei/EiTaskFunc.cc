@@ -282,6 +282,15 @@ EiTask::is_constant_function() const
   return false;
 }
 
+// @brief 出力変数を返す．
+//
+// 出力変数とは関数名と同名の変数
+VlDecl*
+EiTask::ovar() const
+{
+  return nullptr;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiFunction
@@ -424,6 +433,15 @@ bool
 EiFunction::is_constant_function() const
 {
   return mConstFunc;
+}
+
+// @brief 出力変数を返す．
+//
+// 出力変数とは関数名と同名の変数
+VlDecl*
+EiFunction::ovar() const
+{
+  return mOvar;
 }
 
 

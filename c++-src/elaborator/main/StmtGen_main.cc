@@ -14,6 +14,7 @@
 #include "ym/pt/PtStmt.h"
 #include "ym/pt/PtExpr.h"
 #include "ym/pt/PtMisc.h"
+#include "ym/vl/VlStmt.h"
 
 #include "elaborator/ElbTaskFunc.h"
 #include "elaborator/ElbExpr.h"
@@ -106,7 +107,7 @@ StmtGen::phase1_stmt(const VlScope* parent,
   case PtStmtType::NamedParBlock:
   case PtStmtType::NamedSeqBlock:
     {
-      auto block_scope = mgr().new_StmtBlockScope(parent, pt_stmt);
+      auto block_scope{mgr().new_StmtBlockScope(parent, pt_stmt)};
       reg_internalscope(block_scope);
 
       for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
@@ -286,12 +287,9 @@ StmtGen::instantiate_stmt(const VlScope* parent,
     ASSERT_NOT_REACHED;
   }
   if ( stmt ) {
-#if 0
     // attribute instance の生成
-    instantiate_attribute(pt_stmt->attr_top(), false, stmt);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+    auto attr_list{attribute_list(pt_stmt)};
+    mgr().reg_attr(stmt, attr_list);
   }
 
   return stmt;
@@ -325,9 +323,9 @@ StmtGen::instantiate_disable(const VlScope* parent,
 			     const VlProcess* process,
 			     const PtStmt* pt_stmt)
 {
-  const auto& fr = pt_stmt->file_region();
+  const auto& fr{pt_stmt->file_region()};
 
-  // disable はモジュール境界を越えない？ 要チェック ##TODO##TODO##
+  // disable はモジュール境界を越えない？
   // 仕様書には何も書いていないのでたぶん越えられる．
   auto handle = find_obj_up(parent, pt_stmt, nullptr);
   if ( !handle ) {

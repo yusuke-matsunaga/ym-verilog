@@ -25,6 +25,7 @@ class BitVector;
 class ElbEnv;
 class ElbParamCon;
 class ElbScope;
+class PtiAttrInfo;
 
 //////////////////////////////////////////////////////////////////////
 /// @class ElbProxy ElbProxy.h "ElbProxy.h"
@@ -86,14 +87,14 @@ protected:
   /// @return name という名の UDP を返す．
   /// @return なければ nullptr を返す．
   const VlUdpDefn*
-  find_udp(const char* name) const;
+  find_udp(const string& name) const;
 
   /// @brief 名前から UserSystf を取出す．
   /// @param[in] name 名前
   /// @return name という名のユーザー定義関数を返す．
   /// @return なければ nullptr を返す．
   const VlUserSystf*
-  find_user_systf(const char* name) const;
+  find_user_systf(const string& name) const;
 
   /// @brief スコープと名前から名前付き要素を取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -102,7 +103,7 @@ protected:
   /// @return なければ nullptr を返す．
   ObjHandle*
   find_obj(const VlScope* parent,
-	   const char* name) const;
+	   const string& name) const;
 
   /// @brief スコープと名前からスコープを取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -111,7 +112,7 @@ protected:
   /// @return なければ nullptr を返す．
   const VlScope*
   find_namedobj(const VlScope* parent,
-		const char* name) const;
+		const string& name) const;
 
   /// @brief 名前によるオブジェクトの探索
   /// @param[in] base_scope 起点となるスコープ
@@ -129,14 +130,14 @@ protected:
   /// @return name という名のモジュール定義
   /// @return なければ nullptr を返す．
   const PtModule*
-  find_moduledef(const char* name) const;
+  find_moduledef(const string& name) const;
 
   /// @brief 関数定義を探す．
-  /// @param[in] parent 親のモジュール
+  /// @param[in] module 親のモジュール
   /// @param[in] name 関数名
   const PtItem*
-  find_funcdef(const VlScope* parent,
-	       const char* name) const;
+  find_funcdef(const VlModule* module,
+	       const string& name) const;
 
   /// @brief constant function を取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -145,12 +146,7 @@ protected:
   /// @return なければ nullptr を返す．
   const VlTaskFunc*
   find_constant_function(const VlScope* parent,
-			 const char* name) const;
-
-  /// @brief パース木の属性定義から属性リストを取り出す．
-  /// @param[in] pt_attr パース木の属性定義
-  vector<const VlAttribute*>
-  find_attr_list(const PtAttrInst* pt_attr) const;
+			 const string& name) const;
 
   /// @brief セルの探索
   /// @param[in] name セル名
@@ -158,7 +154,7 @@ protected:
   ///
   /// なければ -1 を返す．
   int
-  find_cell_id(const char* name) const;
+  find_cell_id(const string& name) const;
 
   /// @brief セルの取得
   /// @param[in] cell_id セル番号
@@ -175,7 +171,7 @@ protected:
   /// @param[in] def_name 定義名
   /// @param[in] udp 登録する UDP
   void
-  reg_udp(const char* def_name,
+  reg_udp(const string& def_name,
 	  const VlUdpDefn* udp);
 
   /// @brief internal scope を登録する．
@@ -282,7 +278,6 @@ protected:
   /// @param[in] attr_list 属性リスト
   void
   reg_attr(const VlObj* obj,
-	   bool def,
 	   const vector<const VlAttribute*>& attr_list);
 
 
@@ -624,14 +619,17 @@ protected:
   // attribute instance の生成関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief PtAttrInst から属性リストを生成し，オブジェクトに付加する．
-  /// @param[in] pt_attr 属性を表すパース木
-  /// @param[in] def 定義側の属性の時 true とするフラグ
-  /// @param[in] obj 付加する対象のオブジェクト
-  void
-  instantiate_attribute(const PtAttrInst* pt_attr,
-			bool def,
-			const VlObj* obj);
+  /// @brief 構文木要素に対応する属性リストを返す．
+  /// @param[in] pt_obj 元となる構文木要素
+  const vector<const VlAttribute*>&
+  attribute_list(const PtBase* pt_obj);
+
+  /// @brief 構文木要素に対応する属性リストを返す．
+  /// @param[in] pt_obj 元となる構文木要素
+  vector<const VlAttribute*>
+  attribute_list(const PtBase* pt_obj1,
+		 const PtBase* pt_obj2);
+
 
 protected:
   //////////////////////////////////////////////////////////////////////
@@ -685,7 +683,7 @@ private:
 // @return なければ nullptr を返す．
 inline
 const VlUdpDefn*
-ElbProxy::find_udp(const char* name) const
+ElbProxy::find_udp(const string& name) const
 {
   return mMgr.find_udp(name);
 }
@@ -696,7 +694,7 @@ ElbProxy::find_udp(const char* name) const
 // @return なければ nullptr を返す．
 inline
 const VlUserSystf*
-ElbProxy::find_user_systf(const char* name) const
+ElbProxy::find_user_systf(const string& name) const
 {
   return mMgr.find_user_systf(name);
 }
@@ -709,7 +707,7 @@ ElbProxy::find_user_systf(const char* name) const
 inline
 ObjHandle*
 ElbProxy::find_obj(const VlScope* parent,
-		   const char* name) const
+		   const string& name) const
 {
   return mElaborator.find_obj(parent, name);
 }
@@ -722,7 +720,7 @@ ElbProxy::find_obj(const VlScope* parent,
 inline
 const VlScope*
 ElbProxy::find_namedobj(const VlScope* parent,
-			const char* name) const
+			const string& name) const
 {
   return mElaborator.find_namedobj(parent, name);
 }
@@ -750,7 +748,7 @@ ElbProxy::find_obj_up(const VlScope* base_scope,
 // なければ -1 を返す．
 inline
 int
-ElbProxy::find_cell_id(const char* name) const
+ElbProxy::find_cell_id(const string& name) const
 {
   return mElaborator.find_cell_id(name);
 }
@@ -769,7 +767,7 @@ ElbProxy::get_cell(int cell_id) const
 // @param[in] udp 登録する UDP
 inline
 void
-ElbProxy::reg_udp(const char* def_name,
+ElbProxy::reg_udp(const string& def_name,
 		  const VlUdpDefn* udp)
 {
   mMgr.reg_udp(def_name, udp);
@@ -931,20 +929,20 @@ ElbProxy::reg_gfroot(ElbGfRoot* obj)
 // @return なければ nullptr を返す．
 inline
 const PtModule*
-ElbProxy::find_moduledef(const char* name) const
+ElbProxy::find_moduledef(const string& name) const
 {
   return mElaborator.find_moduledef(name);
 }
 
 // @brief 関数定義を探す．
-// @param[in] parent 親のモジュール
+// @param[in] module 親のモジュール
 // @param[in] name 関数名
 inline
 const PtItem*
-ElbProxy::find_funcdef(const VlScope* parent,
-		       const char* name) const
+ElbProxy::find_funcdef(const VlModule* module,
+		       const string& name) const
 {
-  return mElaborator.find_funcdef(parent, name);
+  return mElaborator.find_funcdef(module, name);
 }
 
 // @brief constant function を取り出す．
@@ -955,7 +953,7 @@ ElbProxy::find_funcdef(const VlScope* parent,
 inline
 const VlTaskFunc*
 ElbProxy::find_constant_function(const VlScope* parent,
-				 const char* name) const
+				 const string& name) const
 {
   return mElaborator.find_constant_function(parent, name);
 }
@@ -967,15 +965,6 @@ void
 ElbProxy::reg_constant_function(const VlTaskFunc* func)
 {
   mElaborator.reg_constant_function(func);
-}
-
-// @brief パース木の属性定義から属性リストを取り出す．
-// @param[in] pt_attr パース木の属性定義
-inline
-vector<const VlAttribute*>
-ElbProxy::find_attr_list(const PtAttrInst* pt_attr) const
-{
-  return mElaborator.mAttrDict.find(pt_attr);
 }
 
 // @brief 属性リストを登録する．
@@ -996,10 +985,9 @@ ElbProxy::reg_attr_list(const PtAttrInst* pt_attr,
 inline
 void
 ElbProxy::reg_attr(const VlObj* obj,
-		   bool def,
 		   const vector<const VlAttribute*>& attr_list)
 {
-  mMgr.reg_attr(obj, def, attr_list);
+  mMgr.reg_attr(obj, attr_list);
 }
 
 // @brief 後で処理する defparam 文を登録する．

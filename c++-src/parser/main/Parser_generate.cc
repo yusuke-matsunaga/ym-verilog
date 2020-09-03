@@ -39,7 +39,7 @@ Parser::end_generate()
 const PtItem*
 Parser::new_Generate(const FileRegion& fr)
 {
-  auto item{mFactory.new_Generate(fr, mCurDeclArray, mCurItemArray)};
+  auto item{mFactory->new_Generate(fr, mCurDeclArray, mCurItemArray)};
   return item;
 }
 
@@ -48,7 +48,7 @@ Parser::new_Generate(const FileRegion& fr)
 void
 Parser::new_GenBlock(const FileRegion& fr)
 {
-  auto item{mFactory.new_GenBlock(fr, mCurDeclArray, mCurItemArray)};
+  auto item{mFactory->new_GenBlock(fr, mCurDeclArray, mCurItemArray)};
   add_item(item);
 }
 
@@ -59,7 +59,7 @@ void
 Parser::new_GenBlock(const FileRegion& fr,
 		     const char* name)
 {
-  auto item{mFactory.new_GenBlock(fr, name, mCurDeclArray, mCurItemArray)};
+  auto item{mFactory->new_GenBlock(fr, name, mCurDeclArray, mCurItemArray)};
   add_item(item);
 }
 
@@ -102,7 +102,7 @@ void
 Parser::new_GenIf(const FileRegion& fr,
 		  const PtExpr* cond)
 {
-  auto item{mFactory.new_GenIf(fr, cond,
+  auto item{mFactory->new_GenIf(fr, cond,
 			       mGenThenDeclArray,
 			       mGenThenItemArray,
 			       vector<const PtDeclHead*>(),
@@ -117,7 +117,7 @@ void
 Parser::new_GenIfElse(const FileRegion& fr,
 		      const PtExpr* cond)
 {
-  auto item{mFactory.new_GenIf(fr, cond,
+  auto item{mFactory->new_GenIf(fr, cond,
 			       mGenThenDeclArray,
 			       mGenThenItemArray,
 			       mGenElseDeclArray,
@@ -134,7 +134,7 @@ Parser::new_GenCase(const FileRegion& fr,
 		    const PtExpr* expr,
 		    PtrList<const PtGenCaseItem>* item_list)
 {
-  auto item{mFactory.new_GenCase(fr, expr, item_list->to_vector())};
+  auto item{mFactory->new_GenCase(fr, expr, item_list->to_vector())};
   add_item(item);
 }
 
@@ -146,7 +146,7 @@ const PtGenCaseItem*
 Parser::new_GenCaseItem(const FileRegion& fr,
 			PtrList<const PtExpr>* label_list)
 {
-  auto item{mFactory.new_GenCaseItem(fr, label_list->to_vector(), mCurDeclArray, mCurItemArray)};
+  auto item{mFactory->new_GenCaseItem(fr, label_list->to_vector(), mCurDeclArray, mCurItemArray)};
   return item;
 }
 
@@ -170,7 +170,7 @@ Parser::new_GenFor(const FileRegion& fr,
 		   const char* block_name)
 {
   if ( strcmp(loop_var, inc_var) == 0 ) {
-    auto item{mFactory.new_GenFor(fr, loop_var,
+    auto item{mFactory->new_GenFor(fr, loop_var,
 				  init_expr, cond, inc_expr, block_name,
 				  mCurDeclArray, mCurItemArray)};
     add_item(item);

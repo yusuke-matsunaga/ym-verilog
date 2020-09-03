@@ -58,7 +58,7 @@ public:
   /// @return name という名の UDP を返す．
   /// @return なければ nullptr を返す．
   const VlUdpDefn*
-  find_udp(const char* name) const;
+  find_udp(const string& name) const;
 
   /// @brief topmodule のリストを返す．
   const vector<const VlModule*>&
@@ -69,7 +69,7 @@ public:
   /// @return name という名のユーザー定義関数を返す．
   /// @return なければ nullptr を返す．
   const VlUserSystf*
-  find_user_systf(const char* name) const;
+  find_user_systf(const string& name) const;
 
   /// @brief スコープに属する internal scope のリストを取り出す．
   /// @param[in] parent 検索対象のスコープ
@@ -172,7 +172,7 @@ public:
   /// @param[in] def_name 定義名
   /// @param[in] udp 登録する UDP
   void
-  reg_udp(const char* def_name,
+  reg_udp(const string& def_name,
 	  const VlUdpDefn* udp);
 
   /// @brief グローバルスコープを登録する．
@@ -256,18 +256,16 @@ public:
 
   /// @brief 属性リストを得る．
   /// @param[in] obj 対象のオブジェクト
-  /// @param[in] def 定義側の属性の時 true とするフラグ
+  ///
+  /// 対象が存在しない場合には空リストを返す．
   vector<const VlAttribute*>
-  find_attr(const VlObj* obj,
-	    bool def) const;
+  find_attr(const VlObj* obj) const;
 
   /// @brief 属性リストを登録する．
   /// @param[in] obj 対象のオブジェクト
-  /// @param[in] def 定義側の属性の時 true とするフラグ
   /// @param[in] attr_list 属性リスト
   void
   reg_attr(const VlObj* obj,
-	   bool def,
 	   const vector<const VlAttribute*>& attr_list);
 
 
@@ -1232,12 +1230,15 @@ public:
   new_Delay(const PtBase* pt_obj,
 	    const vector<ElbExpr*>& expr_list);
 
-#if 0
   /// @brief attribute instance のリストを生成する．
-  /// @param[in] n 要素数
-  vector<const VlAttribute*>
-  new_AttrList(SizeType n);
-#endif
+  /// @param[in] pt_attr パース木の定義要素
+  /// @param[in] expr 値
+  /// @param[in] def 定義側の属性の時 true
+  const VlAttribute*
+  new_Attribute(const PtAttrSpec* pt_attr,
+		const VlExpr* expr,
+		bool def = false);
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -1285,7 +1286,7 @@ private:
   TagDict mTagDict;
 
   // 属性リストの辞書
-  AttrHash mAttrHash;
+  unordered_map<const VlObj*, vector<const VlAttribute*>> mAttrHash;
 
   // トップレベルスコープ
   const VlScope* mTopLevel;
@@ -1441,13 +1442,16 @@ ElbMgr::find_process_list(const VlScope* parent) const
 
 // @brief 属性リストを得る．
 // @param[in] obj 対象のオブジェクト
-// @param[in] def 定義側の属性の時 true とするフラグ
 inline
 vector<const VlAttribute*>
-ElbMgr::find_attr(const VlObj* obj,
-		  bool def) const
+ElbMgr::find_attr(const VlObj* obj) const
 {
-  return mAttrHash.find(obj, def);
+  if ( mAttrHash.count(obj) > 0 ) {
+    return mAttrHash.at(obj);
+  }
+  else {
+    return {};
+  }
 }
 
 // @brief Elbオブジェクト用のファクトリを返す．

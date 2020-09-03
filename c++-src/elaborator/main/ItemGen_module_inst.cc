@@ -58,10 +58,10 @@ void
 ItemGen::phase1_muheader(const VlScope* parent,
 			 const PtItem* pt_head)
 {
-  const auto& fr = pt_head->file_region();
-  auto defname = pt_head->name();
+  const auto& fr{pt_head->file_region()};
+  auto defname{pt_head->name()};
 
-  auto pt_module = find_moduledef(defname);
+  auto pt_module{find_moduledef(defname)};
   if ( pt_module ) {
     // モジュール定義が見つかった．
 
@@ -78,7 +78,7 @@ ItemGen::phase1_muheader(const VlScope* parent,
     }
 
     for ( auto pt_inst: pt_head->inst_list() ) {
-      auto name = pt_inst->name();
+      auto name{pt_inst->name()};
       if ( name == nullptr ) {
 	// 名無しのモジュールインスタンスはない
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -99,18 +99,14 @@ ItemGen::phase1_muheader(const VlScope* parent,
       else {
 	// 単一の要素
 	auto module1 = mgr().new_Module(parent,
-					    pt_module,
-					    pt_head,
-					    pt_inst);
+					pt_module,
+					pt_head,
+					pt_inst);
 	reg_module(module1);
 
-#if 0
 	// attribute instance の生成
-	instantiate_attribute(pt_module->attr_top(), true, module1);
-	instantiate_attribute(pt_head->attr_top(), false, module1);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+	auto attr_list{attribute_list(pt_module, pt_head)};
+	mgr().reg_attr(module1, attr_list);
 
 	ostringstream buf;
 	buf << "\"" << module1->full_name() << "\" has been created.";
@@ -121,7 +117,7 @@ ItemGen::phase1_muheader(const VlScope* parent,
 			buf.str());
 
 	// パラメータ割り当て式の生成
-	auto param_con_list = gen_param_con_list(parent, pt_head);
+	auto param_con_list{gen_param_con_list(parent, pt_head)};
 	phase1_module_item(module1, pt_module, param_con_list);
 
 	add_phase3stub(make_stub(this, &ItemGen::link_module,
@@ -204,12 +200,12 @@ ItemGen::phase1_module_array(const VlScope* parent,
 			     const PtItem* pt_head,
 			     const PtInst* pt_inst)
 {
-  const auto& fr = pt_head->file_region();
-  auto defname = pt_head->name();
+  const auto& fr{pt_head->file_region()};
+  auto defname{pt_head->name()};
 
-  auto name = pt_inst->name();
-  auto pt_left = pt_inst->left_range();
-  auto pt_right = pt_inst->right_range();
+  auto name{pt_inst->name()};
+  auto pt_left{pt_inst->left_range()};
+  auto pt_right{pt_inst->right_range()};
 
   int left_val = 0;
   int right_val = 0;
@@ -239,21 +235,14 @@ ItemGen::phase1_module_array(const VlScope* parent,
 			   module_array, pt_module, pt_inst));
 
   // パラメータ割り当て式の生成
-  auto param_con_list = gen_param_con_list(parent, pt_head);
+  auto param_con_list{gen_param_con_list(parent, pt_head)};
   SizeType n = module_array->elem_num();
+  auto attr_list{attribute_list(pt_module, pt_head)};
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto module1 = module_array->elem_by_offset(i);
-
-#if 0
-    // attribute instance の生成
-    instantiate_attribute(pt_module->attr_top(), true, module1);
-    instantiate_attribute(pt_head->attr_top(), false, module1);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+    auto module = module_array->elem(i);
 
     ostringstream buf;
-    buf << "\"" << module1->full_name() << "\" has been created.";
+    buf << "\"" << module->full_name() << "\" has been created.";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    module_array->file_region(),
 		    MsgType::Info,
@@ -261,8 +250,9 @@ ItemGen::phase1_module_array(const VlScope* parent,
 		    buf.str());
 
     // モジュール要素を作る．
-    auto module = module_array->elem(i);
     phase1_module_item(module, pt_module, param_con_list);
+    // attribute instance の登録
+    mgr().reg_attr(module, attr_list);
   }
 }
 
@@ -456,7 +446,14 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       }
       else if ( expr_size == port_size * module_size ) {
 	// 式を分割する．
-#warning "TODO:2011-02-09-03"
+	// 0番目のモジュールがLSB側になる．
+	for ( SizeType i = 0; i < module_size; ++ i ) {
+	  auto module = module_array->elem(i);
+	  int index1 = i * port_size;
+	  int index2 = index2 + port_size - 1;
+	  auto expr1{mgr().new_PartSelect(pt_expr, tmp, index1, index2)};
+	  module->set_port_high_conn(index, expr1, conn_by_name);
+	}
       }
       else {
 	// サイズが合わない．
@@ -472,18 +469,15 @@ ItemGen::link_module_array(ElbModuleArray* module_array,
       }
     }
 
-#if 0
     // attribute instance の設定
     for ( SizeType i = 0; i < module_size; ++ i ) {
-      auto module1 = module_array->_module(i);
-      auto port = module1->port(index);
+      auto module = module_array->elem(i);
+      auto port = module->port(index);
 
       // attribute instance の生成
-      instantiate_attribute(pt_con->attr_top(), false, port);
+      auto attr_list{attribute_list(pt_con)};
+      mgr().reg_attr(port, attr_list);
     }
-#else
-#warning "TODO:2011-02-09-01"
-#endif
   }
 }
 
@@ -646,12 +640,9 @@ ItemGen::link_module(ElbModule* module,
       module->set_port_high_conn(index, tmp, conn_by_name);
     }
 
-#if 0
     // attribute instance の生成
-    instantiate_attribute(pt_con->attr_top(), false, port);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+    auto attr_list{attribute_list(pt_con)};
+    reg_attr(port, attr_list);
   }
 }
 

@@ -125,7 +125,7 @@ Parser::new_Module1995(const FileRegion& file_region,
     }
   }
 
-  auto module{mFactory.new_Module(file_region,
+  auto module{mFactory->new_Module(file_region,
 				  module_name,
 				  is_macro,
 				  is_cell,
@@ -142,7 +142,7 @@ Parser::new_Module1995(const FileRegion& file_region,
 				  mCurDeclArray,
 				  mCurItemArray)};
   mPtMgr.reg_module(module);
-  reg_attrinst(module, ai_list);
+  reg_attrinst(module, ai_list, true);
 }
 
 // Verilog2001 タイプのモジュールを生成する．
@@ -183,7 +183,7 @@ Parser::new_Module2001(const FileRegion& file_region,
   // iohead_array からポートの配列を作る．
   auto port_array = new_PortArray(iohead_array);
 
-  auto module{mFactory.new_Module(file_region,
+  auto module{mFactory->new_Module(file_region,
 				  module_name,
 				  is_macro, is_cell, is_protected,
 				  time_u, time_p, nettype,
@@ -197,7 +197,7 @@ Parser::new_Module2001(const FileRegion& file_region,
 				  mCurDeclArray,
 				  mCurItemArray)};
   mPtMgr.reg_module(module);
-  reg_attrinst(module, ai_list);
+  reg_attrinst(module, ai_list, true);
 }
 
 // @brief ポート宣言とIO宣言の齟齬をチェックする．

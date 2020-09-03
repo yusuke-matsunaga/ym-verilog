@@ -21,7 +21,7 @@ const PtControl*
 Parser::new_DelayControl(const FileRegion& fr,
 			 const PtExpr* value)
 {
-  auto control{mFactory.new_DelayControl(fr, value)};
+  auto control{mFactory->new_DelayControl(fr, value)};
   return control;
 }
 
@@ -31,7 +31,7 @@ Parser::new_DelayControl(const FileRegion& fr,
 const PtControl*
 Parser::new_EventControl(const FileRegion& fr)
 {
-  auto control{mFactory.new_EventControl(fr)};
+  auto control{mFactory->new_EventControl(fr)};
   return control;
 }
 
@@ -45,7 +45,7 @@ Parser::new_EventControl(const FileRegion& fr,
 			 const FileRegion& name_loc)
 {
   auto expr{new_Primary(name_loc, event_name)};
-  auto control{mFactory.new_EventControl(fr, expr)};
+  auto control{mFactory->new_EventControl(fr, expr)};
   return control;
 }
 
@@ -59,7 +59,7 @@ Parser::new_EventControl(const FileRegion& fr,
 			 const FileRegion& name_loc)
 {
   auto expr{new_Primary(name_loc, event_name)};
-  auto control{mFactory.new_EventControl(fr, expr)};
+  auto control{mFactory->new_EventControl(fr, expr)};
   return control;
 }
 
@@ -71,7 +71,7 @@ const PtControl*
 Parser::new_EventControl(const FileRegion& fr,
 			 PtrList<const PtExpr>* event_list)
 {
-  auto control{mFactory.new_EventControl(fr, event_list->to_vector())};
+  auto control{mFactory->new_EventControl(fr, event_list->to_vector())};
   return control;
 }
 
@@ -83,7 +83,7 @@ const PtControl*
 Parser::new_RepeatControl(const FileRegion& fr,
 			  const PtExpr* expr)
 {
-  auto control{mFactory.new_RepeatControl(fr, expr)};
+  auto control{mFactory->new_RepeatControl(fr, expr)};
   return control;
 }
 
@@ -99,7 +99,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const FileRegion& name_loc)
 {
   auto expr{new_Primary(name_loc, event_name)};
-  auto control{mFactory.new_RepeatControl(fr, rep, expr)};
+  auto control{mFactory->new_RepeatControl(fr, rep, expr)};
   return control;
 }
 
@@ -115,7 +115,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const FileRegion& name_loc)
 {
   auto expr{new_Primary(name_loc, event_name)};
-  auto control{mFactory.new_RepeatControl(fr, rep, expr)};
+  auto control{mFactory->new_RepeatControl(fr, rep, expr)};
   return control;
 }
 
@@ -129,7 +129,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 			  const PtExpr* rep,
 			  PtrList<const PtExpr>* event_list)
 {
-  auto control{mFactory.new_RepeatControl(fr, rep, event_list->to_vector())};
+  auto control{mFactory->new_RepeatControl(fr, rep, event_list->to_vector())};
   return control;
 }
 
@@ -139,7 +139,7 @@ Parser::new_RepeatControl(const FileRegion& fr,
 const PtConnection*
 Parser::new_OrderedCon(const PtExpr* expr)
 {
-  auto con{mFactory.new_OrderedCon(expr)};
+  auto con{mFactory->new_OrderedCon(expr)};
   return con;
 }
 
@@ -152,7 +152,7 @@ Parser::new_OrderedCon(const FileRegion& fr,
 		       const PtExpr* expr,
 		       PtrList<const PtAttrInst>* ai_list)
 {
-  auto con{mFactory.new_OrderedCon(fr, expr)};
+  auto con{mFactory->new_OrderedCon(fr, expr)};
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -168,7 +168,7 @@ Parser::new_NamedCon(const FileRegion& fr,
 		     const PtExpr* expr,
 		     PtrList<const PtAttrInst>* ai_list)
 {
-  auto con{mFactory.new_NamedCon(fr, name, expr)};
+  auto con{mFactory->new_NamedCon(fr, name, expr)};
   reg_attrinst(con, ai_list);
   return con;
 }
@@ -183,7 +183,7 @@ Parser::new_Strength(const FileRegion& fr,
 		     VpiStrength value0,
 		     VpiStrength value1)
 {
-  auto str{mFactory.new_Strength(fr, value0, value1)};
+  auto str{mFactory->new_Strength(fr, value0, value1)};
   return str;
 }
 
@@ -195,7 +195,7 @@ const PtStrength*
 Parser::new_Strength(const FileRegion& fr,
 		     VpiStrength value)
 {
-  auto str{mFactory.new_Strength(fr, value)};
+  auto str{mFactory->new_Strength(fr, value)};
   return str;
 }
 
@@ -207,7 +207,7 @@ const PtDelay*
 Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value1)
 {
-  auto delay{mFactory.new_Delay(fr, value1)};
+  auto delay{mFactory->new_Delay(fr, value1)};
   return delay;
 }
 
@@ -221,7 +221,7 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value1,
 		  const PtExpr* value2)
 {
-  auto delay{mFactory.new_Delay(fr, value1, value2)};
+  auto delay{mFactory->new_Delay(fr, value1, value2)};
   return delay;
 }
 
@@ -237,7 +237,7 @@ Parser::new_Delay(const FileRegion& fr,
 		  const PtExpr* value2,
 		  const PtExpr* value3)
 {
-  auto delay{mFactory.new_Delay(fr, value1, value2, value3)};
+  auto delay{mFactory->new_Delay(fr, value1, value2, value3)};
   return delay;
 }
 
@@ -249,7 +249,7 @@ const PtAttrInst*
 Parser::new_AttrInst(const FileRegion& fr,
 		     PtrList<const PtAttrSpec>* as_list)
 {
-  auto ai{mFactory.new_AttrInst(fr, as_list->to_vector())};
+  auto ai{mFactory->new_AttrInst(fr, as_list->to_vector())};
   return ai;
 }
 
@@ -263,7 +263,7 @@ Parser::new_AttrSpec(const FileRegion& fr,
 		     const char* name,
 		     const PtExpr* expr)
 {
-  auto as{mFactory.new_AttrSpec(fr, name, expr)};
+  auto as{mFactory->new_AttrSpec(fr, name, expr)};
   return as;
 }
 

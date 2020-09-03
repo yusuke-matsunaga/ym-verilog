@@ -20,7 +20,7 @@ const PtStmt*
 Parser::new_Disable(const FileRegion& fr,
 		    const char* name)
 {
-  auto stmt{mFactory.new_Disable(fr, name)};
+  auto stmt{mFactory->new_Disable(fr, name)};
   return stmt;
 }
 
@@ -33,7 +33,7 @@ const PtStmt*
 Parser::new_Disable(const FileRegion& fr,
 		    PuHierName* hname)
 {
-  auto stmt{mFactory.new_Disable(fr, hname)};
+  auto stmt{mFactory->new_Disable(fr, hname)};
   return stmt;
 }
 
@@ -47,7 +47,7 @@ Parser::new_Enable(const FileRegion& fr,
 		   const char* name,
 		   PtrList<const PtExpr>* arg_list)
 {
-  auto stmt{mFactory.new_Enable(fr, name, arg_list->to_vector())};
+  auto stmt{mFactory->new_Enable(fr, name, arg_list->to_vector())};
   return stmt;
 }
 
@@ -62,7 +62,7 @@ Parser::new_Enable(const FileRegion& fr,
 		   PuHierName* hname,
 		   PtrList<const PtExpr>* arg_list)
 {
-  auto stmt{mFactory.new_Enable(fr, hname, arg_list->to_vector())};
+  auto stmt{mFactory->new_Enable(fr, hname, arg_list->to_vector())};
   return stmt;
 }
 
@@ -75,7 +75,7 @@ Parser::new_SysEnable(const FileRegion& fr,
 		      const char* name,
 		      PtrList<const PtExpr>* arg_list)
 {
-  auto stmt{mFactory.new_SysEnable(fr, name, arg_list->to_vector())};
+  auto stmt{mFactory->new_SysEnable(fr, name, arg_list->to_vector())};
   return stmt;
 }
 
@@ -89,7 +89,7 @@ Parser::new_DcStmt(const FileRegion& fr,
 		   const PtControl* delay,
 		   const PtStmt* body)
 {
-  auto stmt{mFactory.new_DcStmt(fr, delay, body)};
+  auto stmt{mFactory->new_DcStmt(fr, delay, body)};
   return stmt;
 }
 
@@ -103,7 +103,7 @@ Parser::new_EcStmt(const FileRegion& fr,
 		   const PtControl* event,
 		   const PtStmt* body)
 {
-  auto stmt{mFactory.new_EcStmt(fr, event, body)};
+  auto stmt{mFactory->new_EcStmt(fr, event, body)};
   return stmt;
 }
 
@@ -117,7 +117,7 @@ Parser::new_Wait(const FileRegion& fr,
 		 const PtExpr* cond,
 		 const PtStmt* body)
 {
-  auto stmt{mFactory.new_Wait(fr, cond, body)};
+  auto stmt{mFactory->new_Wait(fr, cond, body)};
   return stmt;
 }
 
@@ -131,7 +131,7 @@ Parser::new_Assign(const FileRegion& fr,
 		   const PtExpr* lhs,
 		   const PtExpr* rhs)
 {
-  auto stmt{mFactory.new_Assign(fr, lhs, rhs)};
+  auto stmt{mFactory->new_Assign(fr, lhs, rhs)};
   return stmt;
 }
 
@@ -147,7 +147,7 @@ Parser::new_Assign(const FileRegion& fr,
 		   const PtExpr* rhs,
 		   const PtControl* control)
 {
-  auto stmt{mFactory.new_Assign(fr, lhs, rhs, control)};
+  auto stmt{mFactory->new_Assign(fr, lhs, rhs, control)};
   return stmt;
 }
 
@@ -161,7 +161,7 @@ Parser::new_NbAssign(const FileRegion& fr,
 		     const PtExpr* lhs,
 		     const PtExpr* rhs)
 {
-  auto stmt{mFactory.new_NbAssign(fr, lhs, rhs)};
+  auto stmt{mFactory->new_NbAssign(fr, lhs, rhs)};
   return stmt;
 }
 
@@ -177,7 +177,7 @@ Parser::new_NbAssign(const FileRegion& fr,
 		     const PtExpr* rhs,
 		     const PtControl* control)
 {
-  auto stmt{mFactory.new_NbAssign(fr, lhs, rhs, control)};
+  auto stmt{mFactory->new_NbAssign(fr, lhs, rhs, control)};
   return stmt;
 }
 
@@ -189,7 +189,7 @@ const PtStmt*
 Parser::new_EventStmt(const FileRegion& fr,
 		      const PtExpr* event)
 {
-  auto stmt{mFactory.new_EventStmt(fr, event)};
+  auto stmt{mFactory->new_EventStmt(fr, event)};
   return stmt;
 }
 
@@ -199,7 +199,7 @@ Parser::new_EventStmt(const FileRegion& fr,
 const PtStmt*
 Parser::new_NullStmt(const FileRegion& fr)
 {
-  auto stmt{mFactory.new_NullStmt(fr)};
+  auto stmt{mFactory->new_NullStmt(fr)};
   return stmt;
 }
 
@@ -213,7 +213,7 @@ Parser::new_If(const FileRegion& fr,
 	       const PtExpr* expr,
 	       const PtStmt* then_body)
 {
-  auto stmt{mFactory.new_If(fr, expr, then_body)};
+  auto stmt{mFactory->new_If(fr, expr, then_body)};
   return stmt;
 }
 
@@ -229,7 +229,7 @@ Parser::new_If(const FileRegion& fr,
 	       const PtStmt* then_body,
 	       const PtStmt* else_body)
 {
-  auto stmt{mFactory.new_If(fr, expr, then_body, else_body)};
+  auto stmt{mFactory->new_If(fr, expr, then_body, else_body)};
   return stmt;
 }
 
@@ -243,7 +243,7 @@ Parser::new_Case(const FileRegion& fr,
 		 const PtExpr* expr,
 		 PtrList<const PtCaseItem>* caseitem_list)
 {
-  auto stmt{mFactory.new_Case(fr, expr, caseitem_list->to_vector())};
+  auto stmt{mFactory->new_Case(fr, expr, caseitem_list->to_vector())};
   return stmt;
 }
 
@@ -257,7 +257,7 @@ Parser::new_CaseX(const FileRegion& fr,
 		  const PtExpr* expr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
-  auto stmt{mFactory.new_CaseX(fr, expr, caseitem_list->to_vector())};
+  auto stmt{mFactory->new_CaseX(fr, expr, caseitem_list->to_vector())};
   return stmt;
 }
 
@@ -271,7 +271,7 @@ Parser::new_CaseZ(const FileRegion& fr,
 		  const PtExpr* expr,
 		  PtrList<const PtCaseItem>* caseitem_list)
 {
-  auto stmt{mFactory.new_CaseZ(fr, expr, caseitem_list->to_vector())};
+  auto stmt{mFactory->new_CaseZ(fr, expr, caseitem_list->to_vector())};
   return stmt;
 }
 
@@ -285,7 +285,7 @@ Parser::new_CaseItem(const FileRegion& fr,
 		     PtrList<const PtExpr>* label_list,
 		     const PtStmt* body)
 {
-  auto stmt{mFactory.new_CaseItem(fr, label_list->to_vector(), body)};
+  auto stmt{mFactory->new_CaseItem(fr, label_list->to_vector(), body)};
   return stmt;
 }
 
@@ -297,7 +297,7 @@ const PtStmt*
 Parser::new_Forever(const FileRegion& fr,
 		    const PtStmt* body)
 {
-  auto stmt{mFactory.new_Forever(fr, body)};
+  auto stmt{mFactory->new_Forever(fr, body)};
   return stmt;
 }
 
@@ -311,7 +311,7 @@ Parser::new_Repeat(const FileRegion& fr,
 		   const PtExpr* expr,
 		   const PtStmt* body)
 {
-  auto stmt{mFactory.new_Repeat(fr, expr, body)};
+  auto stmt{mFactory->new_Repeat(fr, expr, body)};
   return stmt;
 }
 
@@ -325,7 +325,7 @@ Parser::new_While(const FileRegion& fr,
 		  const PtExpr* cond,
 		  const PtStmt* body)
 {
-  auto stmt{mFactory.new_While(fr, cond, body)};
+  auto stmt{mFactory->new_While(fr, cond, body)};
   return stmt;
 }
 
@@ -343,7 +343,7 @@ Parser::new_For(const FileRegion& fr,
 		const PtStmt* next,
 		const PtStmt* body)
 {
-  auto stmt{mFactory.new_For(fr, init, cond, next, body)};
+  auto stmt{mFactory->new_For(fr, init, cond, next, body)};
   return stmt;
 }
 
@@ -357,7 +357,7 @@ Parser::new_PcAssign(const FileRegion& fr,
 		     const PtExpr* lhs,
 		     const PtExpr* rhs)
 {
-  auto stmt{mFactory.new_PcAssign(fr, lhs, rhs)};
+  auto stmt{mFactory->new_PcAssign(fr, lhs, rhs)};
   return stmt;
 }
 
@@ -369,7 +369,7 @@ const PtStmt*
 Parser::new_Deassign(const FileRegion& fr,
 		     const PtExpr* lhs)
 {
-  auto stmt{mFactory.new_Deassign(fr, lhs)};
+  auto stmt{mFactory->new_Deassign(fr, lhs)};
   return stmt;
 }
 
@@ -383,7 +383,7 @@ Parser::new_Force(const FileRegion& fr,
 		  const PtExpr* lhs,
 		  const PtExpr* rhs)
 {
-  auto stmt{mFactory.new_Force(fr, lhs, rhs)};
+  auto stmt{mFactory->new_Force(fr, lhs, rhs)};
   return stmt;
 }
 
@@ -395,7 +395,7 @@ const PtStmt*
 Parser::new_Release(const FileRegion& fr,
 		    const PtExpr* lhs)
 {
-  auto stmt{mFactory.new_Release(fr, lhs)};
+  auto stmt{mFactory->new_Release(fr, lhs)};
   return stmt;
 }
 
@@ -407,7 +407,7 @@ const PtStmt*
 Parser::new_ParBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
-  auto stmt{mFactory.new_ParBlock(fr, stmt_list->to_vector())};
+  auto stmt{mFactory->new_ParBlock(fr, stmt_list->to_vector())};
   return stmt;
 }
 
@@ -421,7 +421,7 @@ Parser::new_NamedParBlock(const FileRegion& fr,
 			  const char* name,
 			  PtrList<const PtStmt>* stmt_list)
 {
-  auto stmt{mFactory.new_NamedParBlock(fr, name, mCurDeclArray,
+  auto stmt{mFactory->new_NamedParBlock(fr, name, mCurDeclArray,
 				       stmt_list->to_vector())};
   return stmt;
 }
@@ -434,7 +434,7 @@ const PtStmt*
 Parser::new_SeqBlock(const FileRegion& fr,
 		     PtrList<const PtStmt>* stmt_list)
 {
-  auto stmt{mFactory.new_SeqBlock(fr, stmt_list->to_vector())};
+  auto stmt{mFactory->new_SeqBlock(fr, stmt_list->to_vector())};
   return stmt;
 }
 
@@ -448,7 +448,7 @@ Parser::new_NamedSeqBlock(const FileRegion& fr,
 			  const char* name,
 			  PtrList<const PtStmt>* stmt_list)
 {
-  auto stmt{mFactory.new_NamedSeqBlock(fr, name, mCurDeclArray,
+  auto stmt{mFactory->new_NamedSeqBlock(fr, name, mCurDeclArray,
 				       stmt_list->to_vector())};
   return stmt;
 }

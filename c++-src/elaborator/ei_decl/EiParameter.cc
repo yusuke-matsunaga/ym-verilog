@@ -31,7 +31,7 @@ ElbParamHead*
 EiFactory::new_ParamHead(const VlScope* parent,
 			 const PtDeclHead* pt_head)
 {
-  auto head = new EiParamHead(parent, pt_head);
+  auto head{new EiParamHead(parent, pt_head)};
   return head;
 }
 

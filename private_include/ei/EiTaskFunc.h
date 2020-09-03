@@ -91,13 +91,6 @@ public:
   // ElbTaskFunc の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-#if 0
-  /// @brief 入出力用のヘッダを生成する．
-  // @param[in] pt_header パース木のIO宣言ヘッダ
-  ElbIOHead*
-  new_IOHead(const PtIOHead* pt_header) override;
-#endif
-
   /// @brief 入出力の初期設定を行う．
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木のIO宣言要素
@@ -106,53 +99,6 @@ public:
   add_iodecl(ElbIOHead* head,
 	     const PtIOItem* pt_item,
 	     const VlDecl* decl) override;
-
-#if 0
-  /// @brief 宣言要素用のヘッダを生成する．
-  /// @param[in] pt_header パース木の宣言ヘッダ
-  ElbDeclHead*
-  new_DeclHead(const PtDeclHead* pt_header) override;
-
-  /// @brief 宣言要素のヘッダを生成する．(IODecl 中の宣言用)
-  /// @param[in] pt_head パース木のIO宣言ヘッダ
-  /// @param[in] aux_type 補助的なデータ型
-  ElbDeclHead*
-  new_DeclHead(const PtIOHead* pt_head,
-	       VpiAuxType aux_type) override;
-
-  /// @brief 宣言要素のヘッダを生成する．(IODecl 中の宣言用)
-  /// @param[in] pt_head パース木のIO宣言ヘッダ
-  /// @param[in] aux_type 補助的なデータ型
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の MSB の値
-  /// @param[in] right_val 範囲の LSB の値
-  ElbDeclHead*
-  new_DeclHead(const PtIOHead* pt_head,
-	       VpiAuxType aux_type,
-	       const PtExpr* left,
-	       const PtExpr* right,
-	       int left_val,
-	       int right_val) override;
-
-  /// @brief 宣言要素のヘッダを生成する．(function の暗黙宣言用)
-  /// @param[in] pt_item パース木の関数定義
-  ElbDeclHead*
-  new_DeclHead(const PtItem* pt_item) override;
-
-  /// @brief 宣言要素のヘッダを生成する．(function の暗黙宣言用)
-  /// @param[in] pt_item パース木の関数定義
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の MSB の値
-  /// @param[in] right_val 範囲の LSB の値
-  ElbDeclHead*
-  new_DeclHead(const PtItem* pt_item,
-	       const PtExpr* left,
-	       const PtExpr* right,
-	       int left_val,
-	       int right_val) override;
-#endif
 
   /// @brief 本体のステートメントをセットする．
   void
@@ -281,6 +227,12 @@ public:
   bool
   is_constant_function() const override;
 
+  /// @brief 出力変数を返す．
+  ///
+  /// 出力変数とは関数名と同名の変数
+  VlDecl*
+  ovar() const override;
+
 };
 
 
@@ -359,6 +311,16 @@ public:
   SizeType
   bit_size() const override;
 
+  /// @brief constant function の時に true を返す．
+  bool
+  is_constant_function() const override;
+
+  /// @brief 出力変数を返す．
+  ///
+  /// 出力変数とは関数名と同名の変数
+  VlDecl*
+  ovar() const override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -370,10 +332,6 @@ public:
   /// @param[in] ovar 出力変数
   void
   set_ovar(ElbDecl* ovar) override;
-
-  /// @brief constant function の時に true を返す．
-  bool
-  is_constant_function() const override;
 
 
 private:

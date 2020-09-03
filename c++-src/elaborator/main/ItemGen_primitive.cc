@@ -106,12 +106,9 @@ ItemGen::instantiate_gateheader(const VlScope* parent,
 						    left_val, right_val);
       reg_primarray(prim_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, prim_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(prim_array, attr_list);
 
       ostringstream buf;
       buf << "instantiating primitive array: " << prim_array->full_name();
@@ -129,12 +126,9 @@ ItemGen::instantiate_gateheader(const VlScope* parent,
       auto prim = mgr().new_Primitive(prim_head, pt_inst);
       reg_primitive(prim);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, prim);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(prim, attr_list);
 
       ostringstream buf;
       buf << "instantiating primitive: " << prim->full_name();
@@ -208,12 +202,9 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
 						    left_val, right_val);
       reg_primarray(prim_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, prim_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(prim_array, attr_list);
 
       add_phase3stub(make_stub(this, &ItemGen::link_prim_array,
 			       prim_array, pt_inst));
@@ -223,12 +214,9 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
       auto primitive = mgr().new_Primitive(prim_head, pt_inst);
       reg_primitive(primitive);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, primitive);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(primitive, attr_list);
 
       add_phase3stub(make_stub(this, &ItemGen::link_primitive,
 			       primitive, pt_inst));
@@ -296,12 +284,9 @@ ItemGen::instantiate_cell(const VlScope* parent,
 						     left_val, right_val);
       reg_primarray(prim_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, prim_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(prim_array, attr_list);
 
       add_phase3stub(make_stub(this, &ItemGen::link_cell_array,
 			       prim_array, pt_inst));
@@ -311,12 +296,9 @@ ItemGen::instantiate_cell(const VlScope* parent,
       auto primitive = mgr().new_Primitive(prim_head, pt_inst);
       reg_primitive(primitive);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, primitive);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(primitive, attr_list);
 
       add_phase3stub(make_stub(this, &ItemGen::link_cell,
 			       primitive, pt_inst));

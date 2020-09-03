@@ -385,16 +385,24 @@ ElbProxy::evaluate_range(const VlScope* parent,
   return true;
 }
 
-// @brief PtAttrInst から属性リストを生成し，オブジェクトに付加する．
-// @param[in] pt_attr_array 属性を表すパース木
-// @param[in] def 定義側の属性の時 true とするフラグ
-// @param[in] obj 付加する対象のオブジェクト
-void
-ElbProxy::instantiate_attribute(const PtAttrInst* pt_attr,
-				bool def,
-				const VlObj* obj)
+// @brief 構文木要素に対応する属性リストを返す．
+// @param[in] pt_obj 元となる構文木要素
+const vector<const VlAttribute*>&
+ElbProxy::attribute_list(const PtBase* pt_obj)
 {
-  return mAttrGen->instantiate_attribute(pt_attr, def, obj);
+  return mAttrGen->attribute_list(pt_obj);
+}
+
+// @brief 構文木要素に対応する属性リストを返す．
+// @param[in] pt_obj 元となる構文木要素
+vector<const VlAttribute*>
+ElbProxy::attribute_list(const PtBase* pt_obj1,
+			 const PtBase* pt_obj2)
+{
+  auto ans{mAttrGen->attribute_list(pt_obj1)};
+  const auto& ans1{mAttrGen->attribute_list(pt_obj2)};
+  ans.insert(ans.end(), ans1.begin(), ans1.end());
+  return ans;
 }
 
 END_NAMESPACE_YM_VERILOG

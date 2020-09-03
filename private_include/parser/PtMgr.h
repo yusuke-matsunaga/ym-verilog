@@ -10,6 +10,9 @@
 
 
 #include "ym/pt/PtP.h"
+#include "alloc/Alloc.h"
+#include "parser/PtrList.h"
+#include "PtiAttrInfo.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -51,7 +54,28 @@ public:
   /// @param[in] name 調べる名前
   /// @return 用いられていたら true を返す．
   bool
-  check_def_name(const char* name) const;
+  check_def_name(const string& name) const;
+
+  /// @brief 関数を探す．
+  /// @param[in] module 親のモジュール
+  /// @param[in] name 関数名
+  ///
+  /// なければ nullptr を返す．
+  const PtItem*
+  find_function(const PtModule* module,
+		const string& name) const;
+
+  /// @brief attribute instance を取り出す．
+  /// @param[in] pt_obj 対象の構文木の要素
+  /// @return PtAttrInst のリスト
+  ///
+  /// 空の場合もある．
+  vector<const PtAttrInst*>
+  find_attr_list(const PtBase* pt_obj) const;
+
+  /// @brief 全ての属性リストのリストを返す．
+  vector<const PtiAttrInfo>
+  all_attr_list() const;
 
 
 public:
@@ -77,7 +101,13 @@ public:
 
   /// @brief インスタンス定義名を追加する．
   void
-  reg_defname(const char* name);
+  reg_defname(const string& name);
+
+  /// @brief attribute instance を登録する．
+  void
+  reg_attrinst(const PtBase* pt_obj,
+	       PtrList<const PtAttrInst>* ai_list,
+	       bool def = false);
 
   /// @brief 文字列領域を確保する．
   /// @param[in] str 文字列
@@ -88,10 +118,23 @@ public:
   save_string(const char* str);
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // メンバにアクセスする関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief メモリアロケーターを返す．
+  Alloc&
+  alloc();
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // データメンバ
   //////////////////////////////////////////////////////////////////////
+
+  // メモリアロケーター
+  unique_ptr<Alloc> mAlloc;
 
   // UDP 定義のリスト
   vector<const PtUdp*> mUdpList;
@@ -105,6 +148,30 @@ private:
 
   // 文字列の辞書
   unordered_set<string> mStringPool;
+
+  struct AttrHash
+  {
+    SizeType
+    operator()(const PtiAttrInfo& attr_info) const
+    {
+      SizeType tmp{reinterpret_cast<SizeType>(attr_info.obj())};
+      return (tmp * tmp) >> 16;
+    }
+  };
+
+  struct AttrEq
+  {
+    bool
+    operator()(const PtiAttrInfo& attr_info1,
+	       const PtiAttrInfo& attr_info2) const
+    {
+      return attr_info1.obj() == attr_info2.obj();
+    }
+  };
+
+  // 属性リストの辞書
+  // PtBase* をキーにする．
+  unordered_set<PtiAttrInfo, AttrHash, AttrEq> mAttrDict;
 
 };
 

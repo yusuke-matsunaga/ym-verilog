@@ -1,14 +1,14 @@
 ﻿
 /// @file AttrGen.cc
-/// @brief AttrGen の実装ファイル(メイン)
+/// @brief AttrGen の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
 #include "AttrGen.h"
-
+#include "elaborator/ElbExpr.h"
 #include "ym/pt/PtMisc.h"
 #include "ym/vl/VlAttribute.h"
 
@@ -34,43 +34,46 @@ AttrGen::~AttrGen()
 }
 
 // @brief PtAttr から ElbAttr を生成する．
-// @param[in] pt_attr 式を表すパース木
-// @param[in] def 定義側の属性の時 true とするフラグ
-// @param[in] obj 属性を設定する対象のオブジェクト
+// @param[in] attr_info 属性リストの情報
 void
-AttrGen::instantiate_attribute(const PtAttrInst* pt_attr,
-			       bool def,
-			       const VlObj* obj)
+AttrGen::instantiate_attribute(const PtiAttrInfo& attr_info)
 {
-#if 0
-  auto attr_list = find_attr_list(pt_attr);
-  if ( attr_list.empty() ) {
-    SizeType n = 0;
-    for (const PtAttrInst* pt_ai = pt_attr;
-	 pt_ai; pt_ai = pt_ai->next()) {
-      for (const PtAttrSpec* pt_as = pt_ai->attr_spec_top();
-	   pt_as; pt_as = pt_as->next()) {
-	++ n;
-      }
-    }
-    attr_list = factory().new_AttrList(n);
-    ymuint i = 0;
-    for ( auto pt_ai = pt_attr; pt_ai; pt_ai = pt_ai->next() ) {
-      for ( auto pt_as = pt_ai->attr_spec_top();
-	    pt_as; pt_as = pt_as->next()) {
+  auto pt_obj = attr_info.obj();
+  if ( mHash.count(pt_obj) == 0 ) {
+    // また未生成なので作る．
+    auto pt_attr_list = attr_info.attr_list();
+    bool def = attr_info.def();
+    vector<const VlAttribute*> attr_list;
+    for ( auto pt_ai: pt_attr_list ) {
+      auto pt_as_list = pt_ai->attrspec_list();
+      for ( auto pt_as: pt_as_list ) {
 	auto expr = instantiate_constant_expr(nullptr, pt_as->expr());
 	if ( !expr ) {
 	  // エラー．たぶん expr() が constant_expression ではなかった．
 	  // でも無視する．
 	}
-	attr_list->set(i, pt_as, expr, def);
-	++ i;
+	// attr_list に pt_as, expr, def を追加
+	auto attr{mgr().new_Attribute(pt_as, expr, def)};
+	attr_list.push_back(attr);
       }
     }
-    reg_attr_list(pt_attr, attr_list);
+    // attr_list が空でも処理済みの意味で追加する．
+    mHash.emplace(pt_obj, attr_list);
   }
-  reg_attr(obj, def, attr_list);
-#endif
+  mHash.at(pt_obj);
+}
+
+// @brief 構文木要素に対応する属性リストを返す．
+// @param[in] pt_obj 元となる構文木要素
+const vector<const VlAttribute*>&
+AttrGen::attribute_list(const PtBase* pt_obj)
+{
+  if ( mHash.count(pt_obj) > 0 ) {
+    return mHash.at(pt_obj);
+  }
+  else {
+    return mEmptyList;
+  }
 }
 
 END_NAMESPACE_YM_VERILOG

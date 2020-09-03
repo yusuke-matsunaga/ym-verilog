@@ -25,12 +25,12 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param[in] expr 値
 // @param[in] def 定義側の属性の時 true
 const VlAttribute*
-EiFactory::new_Attribute(const PtAttrInst* pt_attr,
+EiFactory::new_Attribute(const PtAttrSpec* pt_attr,
+			 const VlExpr* expr,
 			 bool def)
 {
-  //auto attr{new EiAttribute(pt_attr, def)};
-  //return attr;
-  return nullptr;
+  auto attr{new EiAttribute(pt_attr, expr, def)};
+  return attr;
 }
 
 

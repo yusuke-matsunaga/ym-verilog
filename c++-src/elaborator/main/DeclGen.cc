@@ -233,39 +233,14 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 
 	// ヘッダを生成する．
 	ElbDeclHead* head = nullptr;
-#if 0
-	if ( module ) {
-	  if ( has_range ) {
-	    head = module->new_DeclHead(pt_head, aux_type,
-					pt_left, pt_right,
-					left_val, right_val);
-	  }
-	  else {
-	    head = module->new_DeclHead(pt_head, aux_type);
-	  }
-	}
-	if ( taskfunc ) {
-	  if ( has_range ) {
-	    head = taskfunc->new_DeclHead(pt_head, aux_type,
-					  pt_left, pt_right,
-					  left_val, right_val);
-	  }
-	  else {
-	    head = taskfunc->new_DeclHead(pt_head, aux_type);
-	  }
-	}
-#else
 	if ( has_range ) {
-	  head = mgr().new_DeclHead(scope,
-					pt_head, aux_type,
-					pt_left, pt_right,
-					left_val, right_val);
+	  head = mgr().new_DeclHead(scope, pt_head, aux_type,
+				    pt_left, pt_right,
+				    left_val, right_val);
 	}
 	else {
-	  head = mgr().new_DeclHead(scope,
-					pt_head, aux_type);
+	  head = mgr().new_DeclHead(scope, pt_head, aux_type);
 	}
-#endif
 	ASSERT_COND( head != nullptr );
 
 	// 初期値を生成する．
@@ -404,19 +379,16 @@ DeclGen::instantiate_param_head(const VlScope* scope,
   }
 
   for ( auto pt_item: pt_head->item_list() ) {
-    const auto& file_region = pt_item->file_region();
+    const auto& file_region{pt_item->file_region()};
     auto param = mgr().new_Parameter(param_head,
 					 pt_item,
 					 is_local);
     ASSERT_COND( param );
     reg_parameter(vpiParameter, param);
 
-#if 0
     // attribute instance の生成
-    instantiate_attribute(pt_head->attr_top(), false, param);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+    auto attr_list{attribute_list(pt_head)};
+    mgr().reg_attr(param, attr_list);
 
     ostringstream buf;
     buf << "Parameter(" << param->full_name() << ") created.";
@@ -494,12 +466,9 @@ DeclGen::instantiate_net_head(const VlScope* scope,
       auto net_array = mgr().new_DeclArray(net_head, pt_item, range_src);
       reg_declarray(vpiNetArray, net_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, net_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(net_array, attr_list);
 
       ostringstream buf;
       buf << "NetArray(" << net_array->full_name() << ") created.";
@@ -522,12 +491,9 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 				 net, pt_item));
       }
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, net);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(net, attr_list);
 
       ostringstream buf;
       buf << "Net(" << net->full_name() << ") created.";
@@ -625,12 +591,9 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 					       range_src);
       reg_declarray(vpiRegArray, reg_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, reg_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(reg_array, attr_list);
 
       ostringstream buf;
       buf << "RegArray(" << reg_array->full_name() << ") created.";
@@ -651,12 +614,9 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
       auto reg = mgr().new_Decl(reg_head, pt_item, init);
       reg_decl(vpiReg, reg);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, reg);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(reg, attr_list);
 
       ostringstream buf;
       buf << "Reg(" << reg->full_name() << ") created.";
@@ -699,12 +659,9 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 					       range_src);
       reg_declarray(vpiVariables, var_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, var_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(var_array, attr_list);
 
       ostringstream buf;
       buf << "VarArray(" << var_array->full_name() << ") created.";
@@ -725,12 +682,9 @@ DeclGen::instantiate_var_head(const VlScope* scope,
       auto var = mgr().new_Decl(var_head, pt_item, init);
       reg_decl(vpiVariables, var);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, var);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(var, attr_list);
 
       ostringstream buf;
       buf << "Var(" << var->full_name() << ") created.";
@@ -765,12 +719,9 @@ DeclGen::instantiate_event_head(const VlScope* scope,
       auto ne_array = mgr().new_DeclArray(event_head, pt_item, range_src);
       reg_declarray(vpiNamedEventArray, ne_array);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, ne_array);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(ne_array, attr_list);
 
       ostringstream buf;
       buf << "NamedEventArray(" << ne_array->full_name() << ") created.";
@@ -785,12 +736,9 @@ DeclGen::instantiate_event_head(const VlScope* scope,
       auto named_event = mgr().new_Decl(event_head, pt_item);
       reg_decl(vpiNamedEvent, named_event);
 
-#if 0
       // attribute instance の生成
-      instantiate_attribute(pt_head->attr_top(), false, named_event);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+      auto attr_list{attribute_list(pt_head)};
+      mgr().reg_attr(named_event, attr_list);
 
       ostringstream buf;
       buf << "NamedEvent(" << named_event->full_name() << ") created.";

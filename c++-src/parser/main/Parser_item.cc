@@ -21,7 +21,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 const PtItem*
 Parser::new_DefParamH(const FileRegion& fr)
 {
-  auto item{mFactory.new_DefParamH(fr, mDefParamList)};
+  auto item{mFactory->new_DefParamH(fr, mDefParamList)};
   return item;
 }
 
@@ -41,7 +41,7 @@ Parser::new_DefParam(const FileRegion& fr,
 		     const char* name,
 		     const PtExpr* value)
 {
-  auto defparam{mFactory.new_DefParam(fr, name, value)};
+  auto defparam{mFactory->new_DefParam(fr, name, value)};
   add_defparam(defparam);
 }
 
@@ -54,7 +54,7 @@ Parser::new_DefParam(const FileRegion& fr,
 		     PuHierName* hname,
 		     const PtExpr* value)
 {
-  auto defparam{mFactory.new_DefParam(fr, hname, value)};
+  auto defparam{mFactory->new_DefParam(fr, hname, value)};
   add_defparam(defparam);
 }
 
@@ -76,7 +76,7 @@ Parser::add_defparam(const PtDefParam* defparam)
 const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr)
 {
-  auto item{mFactory.new_ContAssignH(fr, mContAssignList)};
+  auto item{mFactory->new_ContAssignH(fr, mContAssignList)};
 
   return item;
 }
@@ -88,7 +88,7 @@ const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr,
 			const PtStrength* strength)
 {
-  auto item{mFactory.new_ContAssignH(fr, strength, mContAssignList)};
+  auto item{mFactory->new_ContAssignH(fr, strength, mContAssignList)};
   return item;
 }
 
@@ -99,7 +99,7 @@ const PtItem*
 Parser::new_ContAssignH(const FileRegion& fr,
 			const PtDelay* delay)
 {
-  auto item{mFactory.new_ContAssignH(fr, delay, mContAssignList)};
+  auto item{mFactory->new_ContAssignH(fr, delay, mContAssignList)};
   return item;
 }
 
@@ -113,7 +113,7 @@ Parser::new_ContAssignH(const FileRegion& fr,
 			const PtStrength* strength,
 			const PtDelay* delay)
 {
-  auto item{mFactory.new_ContAssignH(fr, strength, delay, mContAssignList)};
+  auto item{mFactory->new_ContAssignH(fr, strength, delay, mContAssignList)};
   return item;
 }
 
@@ -133,7 +133,7 @@ Parser::new_ContAssign(const FileRegion& fr,
 		       const PtExpr* lhs,
 		       const PtExpr* rhs)
 {
-  auto ca{mFactory.new_ContAssign(fr, lhs, rhs)};
+  auto ca{mFactory->new_ContAssign(fr, lhs, rhs)};
   add_contassign(ca);
 }
 
@@ -157,7 +157,7 @@ const PtItem*
 Parser::new_Initial(const FileRegion& fr,
 		    const PtStmt* body)
 {
-  auto item{mFactory.new_Initial(fr, body)};
+  auto item{mFactory->new_Initial(fr, body)};
   return item;
 }
 
@@ -168,7 +168,7 @@ const PtItem*
 Parser::new_Always(const FileRegion& fr,
 		   const PtStmt* body)
 {
-  auto item{mFactory.new_Always(fr, body)};
+  auto item{mFactory->new_Always(fr, body)};
   return item;
 }
 
@@ -214,7 +214,7 @@ Parser::new_Task(const FileRegion& fr,
 		 bool automatic,
 		 const PtStmt* stmt)
 {
-  auto item{mFactory.new_Task(fr, name, automatic,
+  auto item{mFactory->new_Task(fr, name, automatic,
 			      get_tf_io_array(),
 			      mCurDeclArray,
 			      stmt)};
@@ -234,7 +234,7 @@ Parser::new_Function(const FileRegion& fr,
 		     bool sign,
 		     const PtStmt* stmt)
 {
-  auto item{mFactory.new_Function(fr, name, automatic,
+  auto item{mFactory->new_Function(fr, name, automatic,
 				  sign,
 				  get_tf_io_array(),
 				  mCurDeclArray,
@@ -259,7 +259,7 @@ Parser::new_SizedFunc(const FileRegion& fr,
 		      const PtExpr* right,
 		      const PtStmt* stmt)
 {
-  auto item{mFactory.new_SizedFunc(fr, name, automatic,
+  auto item{mFactory->new_SizedFunc(fr, name, automatic,
 				   sign, left, right,
 				   get_tf_io_array(),
 				   mCurDeclArray,
@@ -282,7 +282,7 @@ Parser::new_TypedFunc(const FileRegion& fr,
 		      VpiVarType func_type,
 		      const PtStmt* stmt)
 {
-  auto item{mFactory.new_TypedFunc(fr, name, automatic,
+  auto item{mFactory->new_TypedFunc(fr, name, automatic,
 				   sign, func_type,
 				   get_tf_io_array(),
 				   mCurDeclArray,
@@ -304,7 +304,7 @@ Parser::new_SpecItem(const FileRegion& fr,
 		     VpiSpecItemType id,
 		     PtrList<const PtExpr>* terminal_list)
 {
-  auto item{mFactory.new_SpecItem(fr, id, terminal_list->to_vector())};
+  auto item{mFactory->new_SpecItem(fr, id, terminal_list->to_vector())};
   add_item(item);
 }
 
@@ -319,7 +319,7 @@ Parser::new_SpecPath(const FileRegion& fr,
 		     const PtExpr* expr,
 		     const PtPathDecl* path_decl)
 {
-  auto item{mFactory.new_SpecPath(fr, id, expr, path_decl)};
+  auto item{mFactory->new_SpecPath(fr, id, expr, path_decl)};
   add_item(item);
 }
 
@@ -344,7 +344,7 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     const PtExpr* expr,
 		     const PtPathDelay* path_delay)
 {
-  auto item{mFactory.new_PathDecl(fr, edge,
+  auto item{mFactory->new_PathDecl(fr, edge,
 				  input_list->to_vector(), input_pol,
 				  op,
 				  output_list->to_vector(), output_pol,
@@ -373,7 +373,7 @@ Parser::new_PathDecl(const FileRegion& fr,
 		     const PtExpr* expr,
 		     const PtPathDelay* path_delay)
 {
-  auto item{mFactory.new_PathDecl(fr, edge,
+  auto item{mFactory->new_PathDecl(fr, edge,
 				  input_list->to_vector(), input_pol,
 				  op,
 				  output, output_pol,
@@ -389,7 +389,7 @@ const PtPathDelay*
 Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value)
 {
-  auto item{mFactory.new_PathDelay(fr, value)};
+  auto item{mFactory->new_PathDelay(fr, value)};
   return item;
 }
 
@@ -403,7 +403,7 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value1,
 		      const PtExpr* value2)
 {
-  auto item{mFactory.new_PathDelay(fr, value1, value2)};
+  auto item{mFactory->new_PathDelay(fr, value1, value2)};
   return item;
 }
 
@@ -419,7 +419,7 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value2,
 		      const PtExpr* value3)
 {
-  auto item{mFactory.new_PathDelay(fr, value1, value2, value3)};
+  auto item{mFactory->new_PathDelay(fr, value1, value2, value3)};
   return item;
 }
 
@@ -441,7 +441,7 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value5,
 		      const PtExpr* value6)
 {
-  auto item{mFactory.new_PathDelay(fr,
+  auto item{mFactory->new_PathDelay(fr,
 				   value1, value2, value3,
 				   value4, value5, value6)};
   return item;
@@ -477,7 +477,7 @@ Parser::new_PathDelay(const FileRegion& fr,
 		      const PtExpr* value11,
 		      const PtExpr* value12)
 {
-  auto item{mFactory.new_PathDelay(fr,
+  auto item{mFactory->new_PathDelay(fr,
 				   value1, value2, value3,
 				   value4, value5, value6,
 				   value7, value8, value9,

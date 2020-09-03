@@ -131,6 +131,7 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/ExprGen_main.cc
   c++-src/elaborator/main/ExprGen_operation.cc
   c++-src/elaborator/main/ExprGen_primary.cc
+  c++-src/elaborator/main/ExprGen_eval.cc
   c++-src/elaborator/main/ItemGen_main.cc
   c++-src/elaborator/main/ItemGen_module_inst.cc
   c++-src/elaborator/main/ItemGen_primitive.cc
@@ -142,6 +143,8 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/StmtGen_cond.cc
   c++-src/elaborator/main/StmtGen_main.cc
   c++-src/elaborator/main/UdpGen.cc
+
+  c++-src/elaborator/eval/Evaluator.cc
   )
 
 set (parser_SOURCES

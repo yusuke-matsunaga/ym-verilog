@@ -5,7 +5,7 @@
 /// @brief BitVector のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
@@ -41,8 +41,9 @@ public:
 
   /// @brief 空のコンストラクタ
   /// @param[in] val 値
-  /// @note 符号なし整数からのキャスト用コンストラクタでもある
-  /// @note 結果の型は
+  ///
+  /// 符号なし整数からのキャスト用コンストラクタでもある
+  /// 結果の型は
   /// - サイズは無し
   /// - 符号なし
   /// - 基数は10
@@ -51,7 +52,8 @@ public:
 
   /// @brief int からのキャスト用コンストラクタ
   /// @param[in] val 値
-  /// @note 結果の型は
+  ///
+  /// 結果の型は
   /// - サイズは無し
   /// - 符号あり
   /// - 基数は10
@@ -60,7 +62,8 @@ public:
 
   /// @brief bool からの変換コンストラクタ
   /// @param[in] value ブール値
-  /// @note 結果の型は
+  ///
+  /// 結果の型は
   /// - サイズはあり(1ビット)
   /// - 符号なし
   /// - 基数は2
@@ -69,7 +72,8 @@ public:
 
   /// @brief time 型からの変換コンストラクタ
   /// @param[in] time time 値
-  /// @note 結果の型は
+  ///
+  /// 結果の型は
   /// - サイズはあり(64ビット)
   /// - 符号なし
   /// - 基数は10
@@ -79,18 +83,20 @@ public:
   /// @brief スカラ値からのキャスト用コンストラクタ
   /// @param[in] value 値 (kVpiScalar{0, 1, X, Z}
   /// @param[in] size サイズ (ビット幅)
+  ///
   /// size を指定するとその数分 value を繰り返す．
-  /// @note 結果の型は
+  /// 結果の型は
   /// - サイズはあり(= size)
   /// - 符号なし
   /// - 基数は2
   explicit
   BitVector(const VlScalarVal& value,
-	    int size = 1);
+	    SizeType size = 1);
 
   /// @brief C文字列からの変換用コンストラクタ
   /// @param[in] str 文字列 (C文字列)
-  /// @note 結果の型は
+  ///
+  /// 結果の型は
   /// - サイズはあり
   /// - 符号なし
   /// - 基数は2
@@ -99,7 +105,8 @@ public:
 
   /// @brief string 文字列からの変換用コンストラクタ
   /// @param[in] str 文字列 (string)
-  /// @note 結果の型は
+  ///
+  /// 結果の型は
   /// - サイズはあり
   /// - 符号なし
   /// - 基数は2
@@ -118,36 +125,38 @@ public:
   /// @param[in] is_signed 符号の有無を表すフラグ
   /// @param[in] base 基数を表す数字 (2, 8, 10, 16 のみが妥当な値)
   /// @param[in] str 値の内容を表す文字列
-  /// @note とはいってもサイズと基数は str に含まれていない
-  BitVector(int size,
+  ///
+  /// とはいってもサイズと基数は str に含まれていない
+  BitVector(SizeType size,
 	    bool is_signed,
 	    int base,
 	    const string& str);
 
   /// @brief 連結演算用のコンストラクタ
   /// @param[in] src_list 連結する値のリスト
-  /// @note src_list の内容を連結したものをセットする
-  BitVector(const list<BitVector>& src_list);
-
-  /// @brief 連結演算用のコンストラクタ
-  /// @param[in] src_list 連結する値のリスト
-  /// @note src_list の内容を連結したものをセットする
+  ///
+  /// src_list の内容を連結したものをセットする
   BitVector(const vector<BitVector>& src_list);
 
   /// @brief コピーコンストラクタ
   /// @param[in] src コピー元のオブジェクト
   BitVector(const BitVector& src);
 
+  /// @brief ムーブコンストラクタ
+  /// @param[in] src ムーブ元のオブジェクト
+  BitVector(BitVector&& src);
+
   /// @brief ビット長の変換を行うコピーコンストラクタもどき
   /// @param[in] src 返還元ののビットベクタ
   /// @param[in] size 指定サイズ
-  /// @note 変換ルールは以下の通り
+  ///
+  /// 変換ルールは以下の通り
   /// - src のビット長が size よりも短ければ適切な拡張を行う．
   /// - unsigned なら上位に0を補う．signed なら符号拡張を行う．
   /// - MSB が x か z の場合には x または z を補う．
   /// - src のビット長が size よりも長ければ切り捨てる．
   BitVector(const BitVector& src,
-	    int size);
+	    SizeType size);
 
   /// @brief ビット長の変換と属性の変更を行うコピーコンストラクタもどき
   /// @param[in] src 変換元のオブジェクト
@@ -156,85 +165,106 @@ public:
   /// @param[in] is_signed 符号の有無
   /// @param[in] base 基数
   BitVector(const BitVector& src,
-	    int size,
+	    SizeType size,
 	    bool is_sized,
 	    bool is_signed,
 	    int base);
 
-  /// @brief 代入演算子
+  /// @brief コピー代入演算子
   /// @param[in] src コピー元のオブジェクト
   /// @return 自分自身
-  const BitVector&
+  BitVector&
   operator=(const BitVector& src);
+
+  /// @brief ムーブ代入演算子
+  /// @param[in] src ムーブ元のオブジェクト
+  /// @return 自分自身
+  BitVector&
+  operator=(BitVector&& src);
 
   /// @brief 符号なし整数からの代入演算子
   /// @param[in] val 値
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズは無し
   /// - 符号なし
   /// - 基数は10
-  const BitVector&
+  BitVector&
   operator=(unsigned int val);
 
   /// @brief int からの代入演算子
   /// @param[in] val 値
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズは無し
   /// - 符号あり
   /// - 基数は10
-  const BitVector&
+  BitVector&
   operator=(int val);
 
   /// @brief bool からの代入演算子
   /// @param[in] value ブール値
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズはあり(1ビット)
   /// - 符号なし
   /// - 基数は2
-  const BitVector&
+  BitVector&
   operator=(bool value);
 
   /// @brief time 型からの代入演算子
   /// @param[in] time time 値
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズはあり(64ビット)
   /// - 符号なし
   /// - 基数は10
-  const BitVector&
+  BitVector&
   operator=(VlTime time);
 
   /// @brief スカラ値からの代入演算子
   /// @param[in] value 値 (kVpiScalar{0, 1, X, Z}
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズはあり(1ビット)
   /// - 符号なし
   /// - 基数は2
-  const BitVector&
+  BitVector&
   operator=(const VlScalarVal& value);
 
   /// @brief C文字列からの代入演算子
   /// @param[in] str 文字列 (C文字列)
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズはあり
   /// - 符号なし
   /// - 基数は2
-  const BitVector&
+  BitVector&
   operator=(const char* str);
 
   /// @brief string 文字列からの代入演算子
   /// @param[in] str 文字列 (string)
-  /// @note 結果の型は
+  /// @return 自分自身
+  ///
+  /// 結果の型は
   /// - サイズはあり
   /// - 符号なし
   /// - 基数は2
-  const BitVector&
+  BitVector&
   operator=(const string& str);
 
   /// @brief 浮動小数点数からの代入演算子
   /// @param[in] val 浮動小数点数
+  /// @return 自分自身
   /// @warning 整数で表せない範囲の場合には値は不定
   /// @todo 整数を経由しない方法に書き換えること
-  const BitVector&
+  BitVector&
   operator=(double val);
 
   /// @brief ビット長の変換と属性の変更を行う代入演算子もどき
@@ -245,7 +275,7 @@ public:
   /// @param[in] base 基数
   void
   set_with_attr(const BitVector& src,
-		int size,
+		SizeType size,
 		bool is_sized,
 		bool is_signed,
 		int base);
@@ -279,28 +309,28 @@ public:
   /// @return 生成されたオブジェクト
   static
   BitVector
-  zero(int size = 1);
+  zero(SizeType size = 1);
 
   /// @brief 1 を表すオブジェクトを生成する
   /// @param size ビット数．デフォルトは 1
   /// @return 生成されたオブジェクト
   static
   BitVector
-  one(int size = 1);
+  one(SizeType size = 1);
 
   /// @brief X を表すオブジェクトを生成する
   /// @param size ビット数．デフォルトは 1
   /// @return 生成されたオブジェクト
   static
   BitVector
-  x(int size = 1);
+  x(SizeType size = 1);
 
   /// @brief Z を表すオブジェクトを生成する
   /// @param size ビット数．デフォルトは 1
   /// @return 生成されたオブジェクト
   static
   BitVector
-  z(int size = 1);
+  z(SizeType size = 1);
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -552,8 +582,8 @@ public:
   /// @param[in] lsb 選択範囲の LSB
   /// @return 選択された範囲のビットベクタ
   BitVector
-  part_select(int msb,
-	      int lsb) const;
+  part_select_op(int msb,
+		 int lsb) const;
 
   /// @brief part-select 書き込み
   /// @param[in] msb 選択範囲の MSB
@@ -562,15 +592,15 @@ public:
   /// @note [msb:lsb] の範囲に val を書き込む
   /// @note 範囲外ならなにもしない．
   void
-  part_select(int msb,
-	      int lsb,
-	      const BitVector& val);
+  part_select_op(int msb,
+		 int lsb,
+		 const BitVector& val);
 
   /// @brief bit-select 演算子
   /// @param[in] bpos 選択するビット位置
   /// @return bpos で指定された位置の値
   VlScalarVal
-  bit_select(int bpos) const;
+  bit_select_op(int bpos) const;
 
   /// @brief bit-select 書き込み
   /// @param[in] bpos 選択するビット位置
@@ -578,8 +608,8 @@ public:
   /// @note bpos の位置に val を書き込む．
   /// @note 範囲外ならないもしない．
   void
-  bit_select(int bpos,
-	     const VlScalarVal& val);
+  bit_select_op(int bpos,
+		VlScalarVal val);
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -601,7 +631,7 @@ public:
   merge(const BitVector& src);
 
   /// @brief サイズを返す．
-  int
+  SizeType
   size() const;
 
   /// @brief 実際のサイズはともかくサイズの指定があるかどうかを返す．
@@ -613,23 +643,18 @@ public:
   is_signed() const;
 
   /// @brief 表示用の基数を得る．
+  ///
+  /// 返り値は 2, 8, 10, 16 のいずれか．
   int
   base() const;
 
   /// @brief pos ビット目の値を得る．
   /// @param[in] pos 取得するビット位置
   /// @return pos ビット目の値を返す．
-  /// @return pos が範囲を越えていたら kVpiScalarX を返す．
+  ///
+  /// pos が範囲を越えていたら kVpiScalarX を返す．
   VlScalarVal
   value(int pos) const;
-
-  /// @brief pos ビット目の値をセットする．
-  /// @param[in] pos 値を設定するビット位置
-  /// @param[in] val 設定する値
-  /// @note pos が範囲を越えていたら何もしない
-  void
-  set_value(int pos,
-	    const VlScalarVal& val);
 
   /// @brief 符号付きかつ負数の時に true を返す
   bool
@@ -720,7 +745,8 @@ public:
   /// @brief 内容を Verilog-HDL (IEEE1364-2001) の形式の文字列に変換する．
   /// @param[in] opt_base 基数
   /// @return Verilog-HDL 形式の文字列表現を返す．
-  /// @note opt_base が 2, 8, 10, 16 の時には内部で持っている基数を無視して
+  ///
+  /// opt_base が 2, 8, 10, 16 の時には内部で持っている基数を無視して
   /// opt_base を基数と見なす．
   string
   verilog_string(int opt_base = 0) const;
@@ -795,7 +821,7 @@ private:
 
   // mVal0, mVal1 のリサイズをする．
   void
-  resize(int size);
+  resize(SizeType size);
 
   // 属性(サイズの有無, 符号の有無, 基数)をセットする．
   void
@@ -807,7 +833,7 @@ private:
   void
   set(uword val0,
       uword val1,
-      int size,
+      SizeType size,
       bool is_sized,
       bool is_signed,
       int base);
@@ -816,8 +842,8 @@ private:
   void
   set(const uword* val0,
       const uword* val1,
-      int src_size,
-      int size,
+      SizeType src_size,
+      SizeType size,
       bool is_sized,
       bool is_signed,
       int base);
@@ -826,15 +852,15 @@ private:
   void
   set(const vector<uword>& val0,
       const vector<uword>& val1,
-      int src_size,
-      int size,
+      SizeType src_size,
+      SizeType size,
       bool is_sized,
       bool is_signed,
       int base);
 
   // Verilog 形式の2進数から変換するための共通ルーティン
   void
-  set_from_binstring(int size,
+  set_from_binstring(SizeType size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
@@ -842,7 +868,7 @@ private:
 
   // Verilog 形式の8進数から変換するための共通ルーティン
   void
-  set_from_octstring(int size,
+  set_from_octstring(SizeType size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
@@ -850,7 +876,7 @@ private:
 
   // Verilog 形式の10進数から変換するための共通ルーティン
   void
-  set_from_decstring(int size,
+  set_from_decstring(SizeType size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
@@ -858,7 +884,7 @@ private:
 
   // Verilog 形式の16進数から変換するための共通ルーティン
   void
-  set_from_hexstring(int size,
+  set_from_hexstring(SizeType size,
 		     bool is_sized,
 		     bool is_signed,
 		     const string& str,
@@ -866,7 +892,7 @@ private:
 
   // 文字列からの変換用コンストラクタの共通ルーティン
   void
-  set_from_string(int strsize,
+  set_from_string(SizeType strsize,
 		  const char* str);
 
   /// @brief src を 10 で割る．
@@ -887,18 +913,18 @@ private:
 
   /// @brief ビット長からブロック数を得る．
   static
-  int
-  block(int size);
+  SizeType
+  block(SizeType size);
 
   /// @brief ビット長から最後のブロックのシフト数を得る．
   static
-  int
-  shift(int size);
+  SizeType
+  shift(SizeType size);
 
   /// @brief size からマスクパタンを作る
   static
   uword
-  mask(int size);
+  mask(SizeType size);
 
 
 private:
@@ -907,7 +933,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ビット長
-  int mSize;
+  SizeType mSize;
 
   // sized, signed, base をパックした変数
   ymuint32 mFlags;
@@ -926,7 +952,7 @@ private:
 
   /// @brief uword のビット長
   static
-  const int kBlockSize = sizeof(uword) * 8;
+  const SizeType kBlockSize = sizeof(uword) * 8;
 
   /// @brief すべてが0のパタン
   static
@@ -1416,23 +1442,7 @@ ite(const VlScalarVal& src1,
 /// @param[in] src_list 連結する値のリスト
 /// @return 連結した結果を返す．
 BitVector
-concat(const list<BitVector>& src_list);
-
-/// @relates BitVector
-/// @brief 連結演算
-/// @param[in] src_list 連結する値のリスト
-/// @return 連結した結果を返す．
-BitVector
 concat(const vector<BitVector>& src_list);
-
-/// @relates BitVector
-/// @brief 繰り返し連結演算
-/// @param[in] rep 繰り返し数
-/// @param[in] src_list 連結する値のリスト
-/// @return src_list の内容を rep 回繰り返して連結したもの
-BitVector
-multi_concat(const BitVector& rep,
-	     const list<BitVector>& src_list);
 
 /// @relates BitVector
 /// @brief 繰り返し連結演算
@@ -1740,7 +1750,7 @@ BitVector::value_type() const
 
 // サイズを返す．
 inline
-int
+SizeType
 BitVector::size() const
 {
   return mSize;
@@ -1855,7 +1865,7 @@ BitVector::to_time() const
 // bit-select 演算子
 inline
 VlScalarVal
-BitVector::bit_select(int bpos) const
+BitVector::bit_select_op(int bpos) const
 {
   // 範囲外のチェックは value() でやっている．
   return value(bpos);

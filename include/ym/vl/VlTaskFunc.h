@@ -107,6 +107,13 @@ public:
   bool
   is_constant_function() const = 0;
 
+  /// @brief 出力変数を返す．
+  ///
+  /// 出力変数とは関数名と同名の変数
+  virtual
+  VlDecl*
+  ovar() const = 0;
+
 };
 
 END_NAMESPACE_YM_VERILOG

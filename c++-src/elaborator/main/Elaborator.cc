@@ -60,7 +60,7 @@ BEGIN_NONAMESPACE
 inline
 string
 gen_funckey(const PtModule* module,
-	    const char* name)
+	    const string& name)
 {
   return string(module->name()) + " " + string(name);
 }
@@ -117,6 +117,11 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
   auto& pt_udp_list = pt_mgr.pt_udp_list();
   auto& pt_module_list = pt_mgr.pt_module_list();
+
+  // attribute instance の生成
+  for ( const auto& attr_info: pt_mgr.all_attr_list() ) {
+    mAttrGen->instantiate_attribute(attr_info);
+  }
 
   // UDP の生成
   for ( auto pt_udp: pt_udp_list ) {
@@ -316,13 +321,13 @@ Elaborator::find_moduledef(const string& name) const
 }
 
 // @brief 関数定義を探す．
-// @param[in] parent 親のモジュール
+// @param[in] module 親のモジュール
 // @param[in] name 関数名
 const PtItem*
-Elaborator::find_funcdef(const VlScope* parent,
-			 const char* name) const
+Elaborator::find_funcdef(const VlModule* module,
+			 const string& name) const
 {
-  auto pt_module{find_moduledef(parent->name())};
+  auto pt_module{find_moduledef(module->def_name())};
   if ( pt_module == nullptr ) {
     return nullptr;
   }
@@ -341,7 +346,7 @@ Elaborator::find_funcdef(const VlScope* parent,
 // @param[in] name 名前
 const VlTaskFunc*
 Elaborator::find_constant_function(const VlScope* parent,
-				   const char* name) const
+				   const string& name) const
 {
   auto h{mCfDict.find(parent, name)};
   if ( h != nullptr ) {
@@ -611,7 +616,7 @@ Elaborator::reg_constant_function(const VlTaskFunc* func)
 // @return name という名のセル番号を返す．
 // @note なければ -1 を返す．
 int
-Elaborator::find_cell_id(const char* name) const
+Elaborator::find_cell_id(const string& name) const
 {
   return mCellLibrary.cell_id(name);
 }
@@ -623,7 +628,7 @@ Elaborator::find_cell_id(const char* name) const
 // @return なければ nullptr を返す．
 ObjHandle*
 Elaborator::find_obj(const VlScope* scope,
-		     const char* name) const
+		     const string& name) const
 {
   if ( debug & debug_find_scope ) {
     dout << "find_obj( " << name << ", @ "
@@ -658,7 +663,7 @@ Elaborator::find_obj(const VlScope* scope,
 // @return なければ nullptr を返す．
 const VlScope*
 Elaborator::find_namedobj(const VlScope* parent,
-			  const char* name) const
+			  const string& name) const
 {
   auto handle{find_obj(parent, name)};
   if ( handle != nullptr ) {

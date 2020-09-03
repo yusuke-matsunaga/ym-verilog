@@ -6876,7 +6876,7 @@ attr_inst
 }
 ;
 
-// [SPEC*] nazlist_of_attr_spec ::= attr_sprc {',' attr_spec}
+// [SPEC*] nzlist_of_attr_spec ::= attr_sprc {',' attr_spec}
 nzlist_of_attr_spec
 : attr_spec
 {

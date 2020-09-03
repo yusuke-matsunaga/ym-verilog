@@ -19,6 +19,7 @@
 #include "ym/vl/VlIODecl.h"
 #include "ym/vl/VlDecl.h"
 #include "ym/vl/VlTaskFunc.h"
+#include "ym/vl/VlStmt.h"
 
 #include "elaborator/ElbExpr.h"
 
@@ -86,13 +87,13 @@ ExprGen::instantiate_funccall(const VlScope* parent,
     }
 
     // 関数名
-    auto name = pt_expr->name();
+    auto name{pt_expr->name()};
 
     // 関数本体を探し出す．
     // constant function はモジュール直下にしかあり得ない
     // <- generated scope 内の関数は constant function ではない．
-    auto module = parent->parent_module();
-    auto pt_func = find_funcdef(module, name);
+    auto module{parent->parent_module()};
+    auto pt_func{find_funcdef(module, name)};
     if ( !pt_func ) {
       error_no_such_function(pt_expr);
       return nullptr;
@@ -117,7 +118,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
   else {
     // 関数本体を探し出す．
-    auto handle = find_obj_up(parent, pt_expr, nullptr);
+    auto handle{find_obj_up(parent, pt_expr, nullptr)};
     if ( handle == nullptr ) {
       error_no_such_function(pt_expr);
       return nullptr;
@@ -131,7 +132,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
 
   // 引数の生成
-  SizeType n = pt_expr->operand_num();
+  SizeType n{pt_expr->operand_num()};
   if ( n != child_func->io_num() ) {
     error_n_of_arguments_mismatch(pt_expr);
     return nullptr;
@@ -139,14 +140,14 @@ ExprGen::instantiate_funccall(const VlScope* parent,
 
   vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1 = pt_expr->operand(i);
-    auto expr1 = instantiate_expr(parent, env, pt_expr1);
+    auto pt_expr1{pt_expr->operand(i)};
+    auto expr1{instantiate_expr(parent, env, pt_expr1)};
     if ( !expr1 ) {
       // エラーが起った．
       return nullptr;
     }
-    auto io_decl = child_func->io(i);
-    auto decl = io_decl->decl();
+    auto io_decl{child_func->io(i)};
+    auto decl{io_decl->decl()};
     if ( decl->value_type() != expr1->value_type() ) {
       error_illegal_argument_type(pt_expr);
       if ( debug ) {
@@ -162,14 +163,11 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
 
   // function call の生成
-  auto expr = mgr().new_FuncCall(pt_expr, child_func, arg_list);
+  auto expr{mgr().new_FuncCall(pt_expr, child_func, arg_list)};
 
-#if 0
   // attribute instance の生成
-  instantiate_attribute(pt_expr->attr_top(), false, expr);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+  auto attr_list{attribute_list(pt_expr)};
+  mgr().reg_attr(expr, attr_list);
 
   return expr;
 }
@@ -183,7 +181,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
 				 const ElbEnv& env,
 				 const PtExpr* pt_expr)
 {
-  auto name = pt_expr->name();
+  auto name{pt_expr->name()};
 
   // system function を探し出す．
   auto user_systf = find_user_systf(name);
@@ -193,12 +191,13 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   }
 
 #warning "TODO: 2011-02-09-04 引数の個数と型のチェック"
+  // これは user_systf の仮想関数として実装すべき
 
   // 引数の生成
-  SizeType n = pt_expr->operand_num();
+  SizeType n{pt_expr->operand_num()};
   vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1 = pt_expr->operand(i);
+    auto pt_expr1{pt_expr->operand(i)};
     ElbExpr* arg = nullptr;
     if ( pt_expr ) {
       arg = instantiate_arg(parent, env, pt_expr1);
@@ -215,116 +214,9 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   }
 
   // system function call の生成
-  auto expr = mgr().new_SysFuncCall(pt_expr, user_systf, arg_list);
+  auto expr{mgr().new_SysFuncCall(pt_expr, user_systf, arg_list)};
 
   return expr;
-}
-
-// @brief PtFuncCall から式の値を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @param[in] put_error エラーを出力する時，true にする．
-VlValue
-ExprGen::evaluate_funccall(const VlScope* parent,
-			   const PtExpr* pt_expr,
-			   bool put_error)
-{
-#if 0 // evaluate_funccall 未完
-  // 定数関数を探し出す．
-
-  // 階層名は使えない．
-  PtNameBranchArray nb_array = pt_expr->namebranch_array();
-  if ( nb_array.size() > 0 ) {
-    if ( put_error ) {
-      error_hname_in_ce(pt_expr);
-    }
-    return VlValue();
-  }
-
-  // 関数名
-  auto name = pt_expr->name();
-
-  // 関数本体を探し出す．
-  // constant function はモジュール直下にしかあり得ない
-  // <- generated scope 内の関数は constant function ではない．
-  auto module = parent->parent_module();
-  auto pt_module = find_moduledef(module->def_name());
-  auto pt_func = pt_module->find_function(name);
-  if ( !pt_func ) {
-    if ( put_error ) {
-      error_no_such_function(pt_expr);
-    }
-    return VlValue();
-  }
-
-  if ( pt_func->is_in_use() ) {
-    if ( put_error ) {
-      error_uses_itself(pt_expr);
-    }
-    return VlValue();
-  }
-
-  auto child_func = find_constant_function(module, name);
-  if ( child_func == nullptr ) {
-    pt_func->set_in_use();
-    // なかったので作る．
-    child_func = instantiate_constant_function(parent, pt_func);
-    pt_func->clear_in_use();
-  }
-  if ( !child_func ) {
-    if ( put_error ) {
-      error_not_a_constant_function(pt_expr);
-    }
-    return VlValue();
-  }
-
-  // 引数の生成
-  SizeType n = pt_expr->operand_num();
-  if ( n != child_func->io_num() ) {
-    if ( put_error ) {
-      error_n_of_arguments_mismatch(pt_expr);
-    }
-    return VlValue();
-  }
-
-  vector<VlValue> arg_list(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1 = pt_expr->operand(i);
-    auto val1 = evaluate_expr(parent, pt_expr1, put_error);
-    if ( val1.is_error() ) {
-      // エラーが起った．
-      return VlValue();
-    }
-    auto io_decl = child_func->io(i);
-    auto decl = io_decl->decl();
-    auto decl_type = decl->value_type();
-    if ( decl_type.is_real_type() ) {
-      if ( !val1.is_real_conv() ) {
-	// 型が異なる．
-	if ( put_error ) {
-	  error_illegal_argument_type(pt_expr1);
-	}
-	return VlValue();
-      }
-    }
-    else if ( decl_type.is_bitvector_type() ) {
-      if ( !val1.is_bitvector_conv() ) {
-	// 型が異なる．
-	if ( put_error ) {
-	  error_illegal_argument_type(pt_expr1);
-	}
-	return VlValue();
-      }
-    }
-    arg_list[i] = val1;
-  }
-
-  // function call の生成
-  auto expr = mgr().new_FuncCall(pt_expr, child_func, n, arg_list);
-#else
-#warning "TODO:2011-02-09-05"
-  return VlValue();
-#endif
 }
 
 END_NAMESPACE_YM_VERILOG

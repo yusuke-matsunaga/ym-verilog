@@ -18,11 +18,8 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-class Alloc;
 class PtMgr;
-class PtiFactory;
 class ElbMgr;
-class ElbFactory;
 
 //////////////////////////////////////////////////////////////////////
 /// @class VlMgr VlMgr.h "ym/VlMgr.h"
@@ -71,6 +68,11 @@ public:
   /// @return 登録されている UDP のリスト
   const vector<const PtUdp*>&
   pt_udp_list() const;
+
+  /// @brief attribute instance のリストを表す構文木要素を返す．
+  /// @param[in] pt_obj 対象の構文木要素
+  vector<const PtAttrInst*>
+  pt_attr_list(const PtBase* pt_obj) const;
 
 
 public:
@@ -195,10 +197,8 @@ public:
 
   /// @brief 属性リストを得る．
   /// @param[in] obj 対象のオブジェクト
-  /// @param[in] def 定義側の属性の時 true とするフラグ
   vector<const VlAttribute*>
-  find_attr(const VlObj* obj,
-	    bool def = false) const;
+  find_attr(const VlObj* obj) const;
 
 
 private:
@@ -206,20 +206,11 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // メモリアロケータ
-  unique_ptr<Alloc> mAlloc;
-
   // Pt オブジェクトを管理するクラス
   unique_ptr<PtMgr> mPtMgr;
 
-  // Ptオブジェクトの生成を行うファクトリクラス
-  unique_ptr<PtiFactory> mPtiFactory;
-
   // Elb オブジェクトを管理するクラス
   unique_ptr<ElbMgr> mElbMgr;
-
-  // Elbオブジェクトの生成を行うファクトリクラス
-  unique_ptr<ElbFactory> mElbFactory;
 
 };
 

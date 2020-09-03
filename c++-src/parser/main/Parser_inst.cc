@@ -23,7 +23,7 @@ const PtItem*
 Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type)
 {
-  auto item{mFactory.new_GateH(fr, type, mInstList)};
+  auto item{mFactory->new_GateH(fr, type, mInstList)};
   return item;
 }
 
@@ -36,7 +36,7 @@ Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type,
 		  const PtStrength* strength)
 {
-  auto item{mFactory.new_GateH(fr, type, strength, mInstList)};
+  auto item{mFactory->new_GateH(fr, type, strength, mInstList)};
   return item;
 }
 
@@ -49,7 +49,7 @@ Parser::new_GateH(const FileRegion& fr,
 		  VpiPrimType type,
 		  const PtDelay* delay)
 {
-  auto item{mFactory.new_GateH(fr, type, delay, mInstList)};
+  auto item{mFactory->new_GateH(fr, type, delay, mInstList)};
   return item;
 }
 
@@ -64,7 +64,7 @@ Parser::new_GateH(const FileRegion& fr,
 		  const PtStrength* strength,
 		  const PtDelay* delay)
 {
-  auto item{mFactory.new_GateH(fr, type, strength, delay, mInstList)};
+  auto item{mFactory->new_GateH(fr, type, strength, delay, mInstList)};
   return item;
 }
 
@@ -75,7 +75,7 @@ const PtItem*
 Parser::new_MuH(const FileRegion& fr,
 		const char* def_name)
 {
-  auto item{mFactory.new_MuH(fr, def_name, mInstList)};
+  auto item{mFactory->new_MuH(fr, def_name, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -89,7 +89,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		const PtStrength* strength)
 {
-  auto item{mFactory.new_MuH(fr, def_name, strength, mInstList)};
+  auto item{mFactory->new_MuH(fr, def_name, strength, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -103,7 +103,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		const PtDelay* delay)
 {
-  auto item{mFactory.new_MuH(fr, def_name, delay, mInstList)};
+  auto item{mFactory->new_MuH(fr, def_name, delay, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -119,7 +119,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const PtStrength* strength,
 		const PtDelay* delay)
 {
-  auto item{mFactory.new_MuH(fr, def_name, strength, delay, mInstList)};
+  auto item{mFactory->new_MuH(fr, def_name, strength, delay, mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -133,7 +133,7 @@ Parser::new_MuH(const FileRegion& fr,
 		const char* def_name,
 		PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_MuH(fr, def_name, con_list->to_vector(), mInstList)};
+  auto item{mFactory->new_MuH(fr, def_name, con_list->to_vector(), mInstList)};
   reg_defname(def_name);
   return item;
 }
@@ -152,7 +152,7 @@ void
 Parser::new_Inst(const FileRegion& fr,
 		 PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_Inst(fr, con_list->to_vector())};
+  auto item{mFactory->new_Inst(fr, con_list->to_vector())};
   add_inst(item);
 }
 
@@ -163,7 +163,7 @@ void
 Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr1)
 {
-  auto item{mFactory.new_Inst(fr, expr1)};
+  auto item{mFactory->new_Inst(fr, expr1)};
   add_inst(item);
 }
 
@@ -175,7 +175,7 @@ Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr1,
 		 const PtExpr* expr2)
 {
-  auto item{mFactory.new_Inst(fr, expr1, expr2)};
+  auto item{mFactory->new_Inst(fr, expr1, expr2)};
   add_inst(item);
 }
 
@@ -188,7 +188,7 @@ Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr2,
 		 const PtExpr* expr3)
 {
-  auto item{mFactory.new_Inst(fr, expr1, expr2, expr3)};
+  auto item{mFactory->new_Inst(fr, expr1, expr2, expr3)};
   add_inst(item);
 }
 
@@ -202,7 +202,7 @@ Parser::new_Inst(const FileRegion& fr,
 		 const PtExpr* expr3,
 		 const PtExpr* expr4)
 {
-  auto item{mFactory.new_Inst(fr, expr1, expr2, expr3, expr4)};
+  auto item{mFactory->new_Inst(fr, expr1, expr2, expr3, expr4)};
   add_inst(item);
 }
 
@@ -215,7 +215,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const char* name,
 		  PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_InstN(fr, name, con_list->to_vector())};
+  auto item{mFactory->new_InstN(fr, name, con_list->to_vector())};
   add_inst(item);
 }
 
@@ -228,7 +228,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const char* name,
 		  const PtExpr* expr1)
 {
-  auto item{mFactory.new_InstN(fr, name, expr1)};
+  auto item{mFactory->new_InstN(fr, name, expr1)};
   add_inst(item);
 }
 
@@ -242,7 +242,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const PtExpr* expr1,
 		  const PtExpr* expr2)
 {
-  auto item{mFactory.new_InstN(fr, name, expr1, expr2)};
+  auto item{mFactory->new_InstN(fr, name, expr1, expr2)};
   add_inst(item);
 }
 
@@ -257,7 +257,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const PtExpr* expr2,
 		  const PtExpr* expr3)
 {
-  auto item{mFactory.new_InstN(fr, name, expr1, expr2, expr3)};
+  auto item{mFactory->new_InstN(fr, name, expr1, expr2, expr3)};
   add_inst(item);
 }
 
@@ -273,7 +273,7 @@ Parser::new_InstN(const FileRegion& fr,
 		  const PtExpr* expr3,
 		  const PtExpr* expr4)
 {
-  auto item{mFactory.new_InstN(fr, name, expr1, expr2, expr3, expr4)};
+  auto item{mFactory->new_InstN(fr, name, expr1, expr2, expr3, expr4)};
   add_inst(item);
 }
 
@@ -290,7 +290,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* right,
 		  PtrList<const PtConnection>* con_list)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, con_list->to_vector())};
+  auto item{mFactory->new_InstV(fr, name, left, right, con_list->to_vector())};
   add_inst(item);
 }
 
@@ -307,7 +307,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* right,
 		  const PtExpr* expr1)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, expr1)};
+  auto item{mFactory->new_InstV(fr, name, left, right, expr1)};
   add_inst(item);
 }
 
@@ -325,7 +325,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* expr1,
 		  const PtExpr* expr2)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, expr1, expr2)};
+  auto item{mFactory->new_InstV(fr, name, left, right, expr1, expr2)};
   add_inst(item);
 }
 
@@ -344,7 +344,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* expr2,
 		  const PtExpr* expr3)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, expr1, expr2, expr3)};
+  auto item{mFactory->new_InstV(fr, name, left, right, expr1, expr2, expr3)};
   add_inst(item);
 }
 
@@ -364,7 +364,7 @@ Parser::new_InstV(const FileRegion& fr,
 		  const PtExpr* expr3,
 		  const PtExpr* expr4)
 {
-  auto item{mFactory.new_InstV(fr, name, left, right, expr1, expr2, expr3, expr4)};
+  auto item{mFactory->new_InstV(fr, name, left, right, expr1, expr2, expr3, expr4)};
   add_inst(item);
 }
 

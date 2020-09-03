@@ -85,12 +85,9 @@ ItemGen::phase1_tf(const VlScope* parent,
   // 宣言要素の生成(phase1 では parameter と genvar のみ)
   phase1_decl(taskfunc, pt_item->declhead_list(), false);
 
-#if 0
   // attribute instance の生成
-  instantiate_attribute(pt_item->attr_top(), false, taskfunc);
-#else
-#warning "TODO:2011-02-09-01"
-#endif
+  auto attr_list{attribute_list(pt_item)};
+  mgr().reg_attr(taskfunc, attr_list);
 
   ostringstream buf;
   buf << "instantiating task/func : " << taskfunc->full_name() << ".";
