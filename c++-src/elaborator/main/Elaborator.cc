@@ -115,8 +115,8 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 {
   ASSERT_COND( !mDone );
 
-  auto& pt_udp_list = pt_mgr.pt_udp_list();
-  auto& pt_module_list = pt_mgr.pt_module_list();
+  auto& pt_udp_list{pt_mgr.pt_udp_list()};
+  auto& pt_module_list{pt_mgr.pt_module_list()};
 
   // attribute instance の生成
   for ( const auto& attr_info: pt_mgr.all_attr_list() ) {
@@ -131,9 +131,9 @@ Elaborator::operator()(const PtMgr& pt_mgr)
   // モジュールテンプレートの辞書を作る．
   // と同時に UDP 名とモジュール名の重複チェックを行う．
   // と同時に関数定義の辞書を作る．
-  int nerr = 0;
+  int nerr{0};
   for ( auto pt_module: pt_module_list ) {
-    auto name = pt_module->name();
+    auto name{pt_module->name()};
     if ( mMgr.find_udp(name) != nullptr ) {
       ostringstream buf;
       buf << "\"" << name
@@ -162,7 +162,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     // 関数の辞書を作る．
     for ( auto item: pt_module->item_list() ) {
       if ( item->type() == PtItemType::Func ) {
-	auto key = gen_funckey(pt_module, item->name());
+	auto key{gen_funckey(pt_module, item->name())};
 	mFuncDict.emplace(key, item);
       }
     }
@@ -209,7 +209,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     // が空にならない場合もある．
     for ( auto p = mDefParamStubList.begin(); p != mDefParamStubList.end(); ) {
       // リストの中で要素の削除を行うので反復子の扱いがちょっと複雑
-      auto q = p;
+      auto q{p};
       ++ p;
 
       if ( mItemGen->defparam_override(*q, nullptr) ) {
@@ -733,11 +733,11 @@ Elaborator::find_scope_up(const VlScope* base_scope,
 	 << base_scope->full_name() << endl;
   }
 
-  SizeType n = pt_obj->namebranch_num();
-  auto cur_scope = base_scope;
+  SizeType n{pt_obj->namebranch_num()};
+  auto cur_scope{base_scope};
   for ( auto name_branch: pt_obj->namebranch_list() ) {
     auto top_name{name_branch->name()};
-    const VlScope* top_scope = nullptr;
+    const VlScope* top_scope{nullptr};
     // まず普通に探す．
     auto handle{find_obj(cur_scope, top_name)};
     if ( handle ) {

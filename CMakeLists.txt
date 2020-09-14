@@ -119,7 +119,6 @@ set (elaborator_SOURCES
   c++-src/elaborator/elb_mgr/TagDict.cc
   c++-src/elaborator/elb_mgr/VlNamedObj.cc
 
-  c++-src/elaborator/main/AttrDict.cc
   c++-src/elaborator/main/AttrGen.cc
   c++-src/elaborator/main/DeclGen.cc
   c++-src/elaborator/main/Elaborator.cc

@@ -376,7 +376,7 @@ CptPort::portref() const
 }
 
 // @brief 内部のポート結線リストのサイズの取得
-int
+SizeType
 CptPort::portref_size() const
 {
   return 0;
@@ -437,7 +437,7 @@ CptPort1::portref() const
 }
 
 // @brief 内部のポート結線リストのサイズの取得
-int
+SizeType
 CptPort1::portref_size() const
 {
   return 1;
@@ -494,7 +494,7 @@ CptPort2::~CptPort2()
 }
 
 // @brief 内部のポート結線リストのサイズの取得
-int
+SizeType
 CptPort2::portref_size() const
 {
   return mPortRefArray.size();

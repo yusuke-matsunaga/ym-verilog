@@ -56,31 +56,36 @@ ModuleGen::phase1_topmodule(const VlScope* toplevel,
   const auto& file_region{pt_module->file_region()};
   auto name{pt_module->name()};
 
-  ostringstream buf;
-  buf << "instantiating top module \"" << name << "\".";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  file_region,
-		  MsgType::Info,
-		  "ELAB",
-		  buf.str());
+  {
+    ostringstream buf;
+    buf << "instantiating top module \"" << name << "\".";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    file_region,
+		    MsgType::Info,
+		    "ELAB",
+		    buf.str());
+  }
+
   // モジュール本体の生成
-  auto module = mgr().new_Module(toplevel,
-				 pt_module,
-				 nullptr,
-				 nullptr);
+  auto module{mgr().new_Module(toplevel,
+			       pt_module,
+			       nullptr,
+			       nullptr)};
   reg_module(module);
 
   // attribute instance の生成
   const auto& attr_list{attribute_list(pt_module)};
   mgr().reg_attr(module, attr_list);
 
-  ostringstream buf2;
-  buf2 << "module \"" << module->full_name() << "\" has been created.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  file_region,
-		  MsgType::Info,
-		  "ELAB",
-		  buf2.str());
+  {
+    ostringstream buf;
+    buf << "module \"" << module->full_name() << "\" has been created.";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    file_region,
+		    MsgType::Info,
+		    "ELAB",
+		    buf.str());
+  }
 
   // 中身のうちスコープに関係する要素の生成
   phase1_module_item(module, pt_module, vector<ElbParamCon>());
@@ -99,7 +104,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
   pt_module->set_in_use();
 
   // パラメータポートを実体化する．
-  bool has_paramportdecl = (pt_module->paramport_num() > 0);
+  bool has_paramportdecl{(pt_module->paramport_num() > 0)};
   if ( has_paramportdecl ) {
     phase1_decl(module, pt_module->paramport_list(), false);
   }
@@ -108,14 +113,14 @@ ModuleGen::phase1_module_item(ElbModule* module,
   phase1_decl(module, pt_module->declhead_list(), has_paramportdecl);
 
   // パラメータの割り当てを作る．
-  bool named_con = (param_con_list.size() > 0 &&
-		    param_con_list[0].mPtCon->name() != nullptr);
+  bool named_con{(param_con_list.size() > 0 &&
+		  param_con_list[0].mPtCon->name() != nullptr)};
   // パラメータポートリストの名前を現れた順番に paramport_list に入れる．
   vector<const char*> paramport_list;
   if ( named_con ) {
     // 名前による割り当て
     for ( const auto& param_con: param_con_list ) {
-      auto pt_con = param_con.mPtCon;
+      auto pt_con{param_con.mPtCon};
       paramport_list.push_back(pt_con->name());
     }
   }
@@ -145,24 +150,25 @@ ModuleGen::phase1_module_item(ElbModule* module,
 
   // param_con を paramport_list の名前と結びつける．
   // named_con の場合には冗長なことをやっている．
-  SizeType index = 0;
+  SizeType index{0};
   for ( const auto& param_con: param_con_list ) {
-    auto pt_con = param_con.mPtCon;
-    auto name = paramport_list[index]; ++ index;
-    auto handle = find_obj(module, name);
+    auto pt_con{param_con.mPtCon};
+    auto name{paramport_list[index]}; ++ index;
+    auto handle{find_obj(module, name)};
     if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
       error_no_param(pt_con, name);
       continue;
     }
 
-    auto param = handle->parameter();
+    auto param{handle->parameter()};
     ASSERT_COND( param );
 
-    auto expr = param_con.mExpr;
-    auto value = param_con.mValue;
+    auto expr{param_con.mExpr};
+    auto value{param_con.mValue};
     param->set_init_expr(expr, value);
-    auto pa = mgr().new_NamedParamAssign(module, pt_con,
-					     param, expr, value);
+
+    auto pa{mgr().new_NamedParamAssign(module, pt_con,
+				       param, expr, value)};
     reg_paramassign(pa);
   }
 
@@ -199,14 +205,14 @@ void
 ModuleGen::instantiate_port(ElbModule* module,
 			    const PtModule* pt_module)
 {
-  SizeType index = 0;
+  SizeType index{0};
   for ( auto pt_port: pt_module->port_list() ) {
     // 内側の接続と向きを作る．
-    SizeType n = pt_port->portref_size();
+    SizeType n{pt_port->portref_size()};
 
-    ElbExpr* low_conn = nullptr;
-    auto dir = VpiDir::NoDirection;
-    auto pt_portref = pt_port->portref();
+    ElbExpr* low_conn{nullptr};
+    auto dir{VpiDir::NoDirection};
+    auto pt_portref{pt_port->portref()};
     if ( n == 1 ) {
       // 単一の要素の場合
       dir = pt_port->portref_dir(0);
@@ -217,15 +223,15 @@ ModuleGen::instantiate_port(ElbModule* module,
       vector<ElbExpr*> expr_list(n);
       vector<ElbExpr*> lhs_elem_array(n);
       for ( SizeType i = 0; i < n; ++ i ) {
-	auto pt_portexpr = pt_port->portref_elem(i);
-	auto portexpr = instantiate_portref(module, pt_portexpr);
+	auto pt_portexpr{pt_port->portref_elem(i)};
+	auto portexpr{instantiate_portref(module, pt_portexpr)};
 	if ( !portexpr ) {
 	  return;
 	}
 	expr_list[i] = portexpr;
 	lhs_elem_array[n - i - 1] = portexpr;
 
-	auto dir1 = pt_port->portref_dir(i);
+	auto dir1{pt_port->portref_dir(i)};
 	if ( dir == VpiDir::NoDirection ) {
 	  dir = dir1;
 	}
@@ -246,8 +252,8 @@ ElbExpr*
 ModuleGen::instantiate_portref(ElbModule* module,
 			       const PtExpr* pt_portref)
 {
-  auto name = pt_portref->name();
-  auto handle = find_obj(module, name);
+  auto name{pt_portref->name()};
+  auto handle{find_obj(module, name)};
   if ( !handle ) {
     error_not_found(pt_portref->file_region(), name);
     return nullptr;
@@ -258,30 +264,30 @@ ModuleGen::instantiate_portref(ElbModule* module,
     return nullptr;
   }
 
-  auto decl = handle->decl();
+  auto decl{handle->decl()};
   if ( decl == nullptr ) {
     error_illegal_port(pt_portref->file_region(), name);
     return nullptr;
   }
 
-  auto primary = mgr().new_Primary(pt_portref, decl);
+  auto primary{mgr().new_Primary(pt_portref, decl)};
 
   // 添字の部分を実体化する．
-  const PtExpr* pt_index = nullptr;
+  const PtExpr* pt_index{nullptr};
   if ( pt_portref->index_num() == 0 ) {
     pt_index = pt_portref->index(0);
   }
-  auto pt_left = pt_portref->left_range();
-  auto pt_right = pt_portref->right_range();
+  auto pt_left{pt_portref->left_range()};
+  auto pt_right{pt_portref->right_range()};
   if ( pt_index ) {
     int index_val;
-    bool stat = evaluate_int(module, pt_index, index_val, true);
+    bool stat{evaluate_int(module, pt_index, index_val, true)};
     if ( !stat ) {
       return nullptr;
     }
 
     SizeType offset;
-    bool stat2 = decl->calc_bit_offset(index_val, offset);
+    bool stat2{decl->calc_bit_offset(index_val, offset)};
     if ( !stat2 ) {
       // 添字が範囲外
       warning_index_out_of_range(pt_index->file_region());
@@ -289,19 +295,19 @@ ModuleGen::instantiate_portref(ElbModule* module,
     return mgr().new_BitSelect(pt_portref, primary, pt_index, index_val);
   }
   if ( pt_left && pt_right ) {
-    int left_val = 0;
-    int right_val = 0;
+    int left_val{0};
+    int right_val{0};
     if ( !evaluate_range(module, pt_left, pt_right, left_val, right_val) ) {
       return nullptr;
     }
 
     SizeType offset;
-    bool stat1 = decl->calc_bit_offset(left_val, offset);
+    bool stat1{decl->calc_bit_offset(left_val, offset)};
     if ( !stat1 ) {
       // 左の添字が範囲外
       warning_left_index_out_of_range(pt_left->file_region());
     }
-    bool stat2 = decl->calc_bit_offset(right_val, offset);
+    bool stat2{decl->calc_bit_offset(right_val, offset)};
     if ( !stat2 ) {
       // 右の添字が範囲外
       warning_right_index_out_of_range(pt_right->file_region());
@@ -318,7 +324,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
 void
 ModuleGen::error_too_many_param(const vector<ElbParamCon>& param_con_list)
 {
-  auto last = param_con_list.back();
+  auto last{param_con_list.back()};
   MsgMgr::put_msg(__FILE__, __LINE__,
 		  last.mPtCon->file_region(),
 		  MsgType::Error,

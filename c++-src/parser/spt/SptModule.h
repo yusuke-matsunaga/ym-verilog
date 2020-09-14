@@ -295,7 +295,7 @@ public:
   portref() const override;
 
   /// @brief 内部のポート結線リストのサイズの取得
-  int
+  SizeType
   portref_size() const override;
 
   /// @brief 内部のポート結線の取得

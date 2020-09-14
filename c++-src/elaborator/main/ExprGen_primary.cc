@@ -39,7 +39,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 			     const PtExpr* pt_expr)
 {
   // 識別子の階層
-  bool has_hname = (pt_expr->namebranch_num() > 0);
+  bool has_hname{(pt_expr->namebranch_num() > 0)};
   if ( has_hname ) {
     if ( env.is_constant() ) {
       // 階層つき識別子はだめ
@@ -54,10 +54,10 @@ ExprGen::instantiate_primary(const VlScope* parent,
   }
 
   // 識別子の名前
-  auto name = pt_expr->name();
+  auto name{pt_expr->name()};
 
   // 識別子の添字の次元
-  SizeType isize = pt_expr->index_num();
+  SizeType isize{pt_expr->index_num()};
 
   // 名前に対応したオブジェクトのハンドル
   ObjHandle* handle = nullptr;
@@ -91,13 +91,13 @@ ExprGen::instantiate_primary(const VlScope* parent,
       // 見つからなくてもデフォルトネットタイプが kVpiNone でないかぎり
       // 暗黙の1ビットネット宣言を行う．
       // ただし識別子に添字がついていたらだめ
-      auto parent_module = parent->parent_module();
-      auto def_nettype = parent_module->def_net_type();
+      auto parent_module{parent->parent_module()};
+      auto def_nettype{parent_module->def_net_type()};
       if ( pt_expr->is_simple() &&
 	   !has_hname &&
 	   isize == 0 &&
 	   def_nettype != VpiNetType::None ) {
-	auto decl = mgr().new_ImpNet(parent, pt_expr, def_nettype);
+	auto decl{mgr().new_ImpNet(parent, pt_expr, def_nettype)};
 	reg_decl(vpiNet, decl);
 
 	handle = find_obj(parent, name);
@@ -115,43 +115,43 @@ ExprGen::instantiate_primary(const VlScope* parent,
   if ( env.is_system_tf_arg() ) {
     // システム関数/タスクの引数の場合
     if ( isize == 0 ) {
-      auto scope = handle->scope();
+      auto scope{handle->scope()};
       if ( scope ) {
 	return mgr().new_ArgHandle(pt_expr, scope);
       }
 
-      auto primitive = handle->primitive();
+      auto primitive{handle->primitive()};
       if ( primitive ) {
 	return mgr().new_ArgHandle(pt_expr, primitive);
       }
 
-      auto decl = handle->decl();
+      auto decl{handle->decl()};
       if ( decl ) {
 	return mgr().new_Primary(pt_expr, decl);
       }
 
-      auto declarray = handle->declarray();
+      auto declarray{handle->declarray()};
       if ( declarray ) {
 	return mgr().new_ArgHandle(pt_expr, declarray);
       }
     }
     else if ( isize == 1 ) {
-      auto pt_expr1 = pt_expr->index(0);
+      auto pt_expr1{pt_expr->index(0)};
       int index;
-      bool stat = evaluate_int(parent, pt_expr1, index, true);
+      bool stat{evaluate_int(parent, pt_expr1, index, true)};
       if ( !stat ) {
 	return nullptr;
       }
 
-      auto scope = handle->array_elem(index);
+      auto scope{handle->array_elem(index)};
       if ( scope ) {
 	return mgr().new_ArgHandle(pt_expr, scope);
       }
 
-      auto prim_array = handle->prim_array();
+      auto prim_array{handle->prim_array()};
       if ( prim_array ) {
 	//auto primitive = prim_array->_primitive_by_index(index);
-	auto primitive = prim_array->elem_by_index(index);
+	auto primitive{prim_array->elem_by_index(index)};
 	if ( primitive ) {
 	  return mgr().new_ArgHandle(pt_expr, primitive);
 	}
@@ -163,7 +163,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 
   if ( !env.is_lhs() ) {
     // 対象のオブジェクトが genvar の場合
-    auto genvar = handle->genvar();
+    auto genvar{handle->genvar()};
     if ( genvar ) {
       return instantiate_genvar(parent, pt_expr, genvar->value());
     }
@@ -193,9 +193,9 @@ ExprGen::instantiate_primary(const VlScope* parent,
     return nullptr;
   }
 
-  auto decl_base = primary->decl_base();
+  auto decl_base{primary->decl_base()};
   ASSERT_COND( decl_base != nullptr );
-  auto decl_type = decl_base->type();
+  auto decl_type{decl_base->type()};
 
   if ( !check_decl(env, pt_expr, decl_type, is_array,
 		   has_range_select | has_bit_select) ) {
@@ -206,13 +206,13 @@ ExprGen::instantiate_primary(const VlScope* parent,
 
   if ( has_bit_select ) {
     // ビット指定付きの場合
-    auto pt_expr1 = pt_expr->index(isize - 1);
+    auto pt_expr1{pt_expr->index(isize - 1)};
     int index_val;
-    bool stat1 = evaluate_int(parent, pt_expr1, index_val, false);
+    bool stat1{evaluate_int(parent, pt_expr1, index_val, false)};
     if ( stat1 ) {
       // 固定インデックスだった．
       SizeType offset;
-      bool stat2 = decl_base->calc_bit_offset(index_val, offset);
+      bool stat2{decl_base->calc_bit_offset(index_val, offset)};
       if ( !stat2 ) {
 	// インデックスが範囲外
 	MsgMgr::put_msg(__FILE__, __LINE__,
@@ -235,21 +235,21 @@ ExprGen::instantiate_primary(const VlScope* parent,
     switch ( pt_expr->range_mode() ) {
     case VpiRangeMode::Const:
       {
-	auto pt_left = pt_expr->left_range();
+	auto pt_left{pt_expr->left_range()};
 	int index1_val;
-	bool stat1 = evaluate_int(parent, pt_left, index1_val, true);
+	bool stat1{evaluate_int(parent, pt_left, index1_val, true)};
 	if ( !stat1 ) {
 	  return nullptr;
 	}
 
-	auto pt_right = pt_expr->right_range();
+	auto pt_right{pt_expr->right_range()};
 	int index2_val;
-	bool stat2 = evaluate_int(parent, pt_right, index2_val, true);
+	bool stat2{evaluate_int(parent, pt_right, index2_val, true)};
 	if ( !stat2 ) {
 	  return nullptr;
 	}
 
-	bool big = (index1_val >= index2_val);
+	bool big{(index1_val >= index2_val)};
 	if ( big ^ decl_base->is_big_endian() ) {
 	  // 範囲の順番が逆
 	  error_range_order(pt_expr);
@@ -257,7 +257,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	}
 
 	SizeType offset;
-	bool stat3 = decl_base->calc_bit_offset(index1_val, offset);
+	bool stat3{decl_base->calc_bit_offset(index1_val, offset)};
 	if ( !stat3 ) {
 	  // 左のインデックスが範囲外
 	  MsgMgr::put_msg(__FILE__, __LINE__,
@@ -268,7 +268,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	  // ただ値が X になるだけでエラーにはならないそうだ．
 	}
 
-	bool stat4 = decl_base->calc_bit_offset(index2_val, offset);
+	bool stat4{decl_base->calc_bit_offset(index2_val, offset)};
 	if ( !stat4 ) {
 	  // 右のインデックスが範囲外
 	  MsgMgr::put_msg(__FILE__, __LINE__,
@@ -280,23 +280,23 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	}
 
 	return mgr().new_PartSelect(pt_expr, primary,
-					pt_left, pt_right,
-					index1_val, index2_val);
+				    pt_left, pt_right,
+				    index1_val, index2_val);
       }
 
     case VpiRangeMode::Plus:
       {
-	auto pt_range = pt_expr->right_range();
+	auto pt_range{pt_expr->right_range()};
 	int range_val;
-	bool stat1 = evaluate_int(parent, pt_range, range_val, true);
+	bool stat1{evaluate_int(parent, pt_range, range_val, true)};
 	if ( !stat1 ) {
 	  // range は常に固定でなければならない．
 	  return nullptr;
 	}
 
-	auto pt_base = pt_expr->left_range();
+	auto pt_base{pt_expr->left_range()};
 	int base_val;
-	bool stat2 = evaluate_int(parent, pt_base, base_val, false);
+	bool stat2{evaluate_int(parent, pt_base, base_val, false)};
 	if ( stat2 ) {
 	  // 固定インデックスだった．
 	  int index1_val;
@@ -311,8 +311,8 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	  }
 
 	  SizeType offset;
-	  bool stat3 = decl_base->calc_bit_offset(index1_val, offset);
-	  bool stat4 = decl_base->calc_bit_offset(index2_val, offset);
+	  bool stat3{decl_base->calc_bit_offset(index1_val, offset)};
+	  bool stat4{decl_base->calc_bit_offset(index2_val, offset)};
 	  if ( !stat3 || !stat4 ) {
 	    // 左か右のインデックスが範囲外
 	    MsgMgr::put_msg(__FILE__, __LINE__,
@@ -327,28 +327,28 @@ ExprGen::instantiate_primary(const VlScope* parent,
 					  index1_val, index2_val);
 	}
 	else {
-	  auto base = instantiate_expr(parent, index_env, pt_base);
+	  auto base{instantiate_expr(parent, index_env, pt_base)};
 	  if ( !base ) {
 	    return nullptr;
 	  }
 	  return mgr().new_PlusPartSelect(pt_expr, primary,
-					      base, pt_range, range_val);
+					  base, pt_range, range_val);
 	}
       }
 
     case VpiRangeMode::Minus:
       {
-	auto pt_range = pt_expr->right_range();
+	auto pt_range{pt_expr->right_range()};
 	int range_val;
-	bool stat1 = evaluate_int(parent, pt_range, range_val, true);
+	bool stat1{evaluate_int(parent, pt_range, range_val, true)};
 	if ( !stat1 ) {
 	  // range は常に固定でなければならない．
 	  return nullptr;
 	}
 
-	auto pt_base = pt_expr->left_range();
+	auto pt_base{pt_expr->left_range()};
 	int base_val;
-	bool stat2 = evaluate_int(parent, pt_base, base_val, false);
+	bool stat2{evaluate_int(parent, pt_base, base_val, false)};
 	if ( stat2 ) {
 	  // 固定インデックスだった．
 	  int index1_val;
@@ -363,8 +363,8 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	  }
 
 	  SizeType offset;
-	  bool stat3 = decl_base->calc_bit_offset(index1_val, offset);
-	  bool stat4 = decl_base->calc_bit_offset(index2_val, offset);
+	  bool stat3{decl_base->calc_bit_offset(index1_val, offset)};
+	  bool stat4{decl_base->calc_bit_offset(index2_val, offset)};
 	  if ( !stat3 || !stat4 ) {
 	    // 左か右のインデックスが範囲外
 	    MsgMgr::put_msg(__FILE__, __LINE__,
@@ -379,7 +379,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 					  index1_val, index2_val);
 	}
 	else {
-	  auto base = instantiate_expr(parent, index_env, pt_base);
+	  auto base{instantiate_expr(parent, index_env, pt_base)};
 	  if ( !base ) {
 	    return nullptr;
 	  }
@@ -408,7 +408,7 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
   ASSERT_COND( pt_expr->right_range() == nullptr );
 
   // 名前に対応したオブジェクトのハンドルを求める．
-  auto handle = find_obj_up(parent, pt_expr, nullptr);
+  auto handle{find_obj_up(parent, pt_expr, nullptr)};
   if ( handle == nullptr ) {
     // 見つからなかった．
     error_not_found(pt_expr);
@@ -434,9 +434,9 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
     return nullptr;
   }
 
-  auto decl_base = primary->decl_base();
+  auto decl_base{primary->decl_base()};
   ASSERT_COND( decl_base != nullptr );
-  auto decl_type = decl_base->type();
+  auto decl_type{decl_base->type()};
   if ( decl_type != VpiObjType::NamedEvent ) {
     // 型が違う
     error_not_a_namedevent(pt_expr);
@@ -459,7 +459,7 @@ ExprGen::find_const_handle(const VlScope* parent,
 			   const PtExpr* pt_expr)
 {
   // モジュール内の識別子を探索する．
-  auto handle = find_obj_up(parent, pt_expr, parent->parent_module());
+  auto handle{find_obj_up(parent, pt_expr, parent->parent_module())};
   if ( handle == nullptr ) {
     // 見つからなかった．
     error_not_found(pt_expr);
@@ -484,17 +484,17 @@ ExprGen::instantiate_genvar(const VlScope* parent,
 			    const PtExpr* pt_expr,
 			    int val)
 {
-  bool has_range_select = (pt_expr->left_range() && pt_expr->right_range());
-
-  SizeType isize = pt_expr->index_num();
+  bool has_range_select{(pt_expr->left_range() && pt_expr->right_range())};
+  SizeType isize{pt_expr->index_num()};
   if (  isize > 1 || (isize == 1 && has_range_select) ) {
     // 配列型ではない．
     error_dimension_mismatch(pt_expr);
     return nullptr;
   }
-  bool has_bit_select = (isize == 1);
+
+  bool has_bit_select{(isize == 1)};
   if ( has_bit_select ) {
-    int index1 = 0;
+    int index1{0};
     if ( !evaluate_int(parent, pt_expr->index(0), index1, true) ) {
       return nullptr;
     }
@@ -502,10 +502,10 @@ ExprGen::instantiate_genvar(const VlScope* parent,
     val &= 1;
   }
   else if ( has_range_select ) {
-    int index1 = 0;
-    int index2 = 0;
-    bool stat1 = evaluate_int(parent, pt_expr->left_range(), index1, true);
-    bool stat2 = evaluate_int(parent, pt_expr->right_range(), index2, true);
+    int index1{0};
+    int index2{0};
+    bool stat1{evaluate_int(parent, pt_expr->left_range(), index1, true)};
+    bool stat2{evaluate_int(parent, pt_expr->right_range(), index2, true)};
     if ( !stat1 || !stat2 ) {
       return nullptr;
     }
@@ -534,27 +534,27 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 				 bool& has_bit_select)
 {
   // 配列の次元
-  SizeType dsize = 0;
+  SizeType dsize{0};
   // プライマリ式の次元 (ビット指定を含んでいる可能性あり)
-  SizeType isize = pt_expr->index_num();
+  SizeType isize {pt_expr->index_num()};
 
   // 範囲指定があるとき true となるフラグ
   has_range_select = (pt_expr->left_range() && pt_expr->right_range());
 
   // 答え
-  ElbExpr* primary = nullptr;
+  ElbExpr* primary{nullptr};
   VlValueType value_type;
   if ( handle->type() == VpiObjType::Parameter ) {
     // パラメータの場合
-    auto param = handle->parameter();
+    auto param{handle->parameter()};
     primary = mgr().new_Primary(pt_expr, param);
     is_array = false;
     value_type = param->value_type();
   }
   else {
     // それ以外の宣言要素の場合
-    auto decl = handle->decl();
-    auto declarray = handle->declarray();
+    auto decl{handle->decl()};
+    auto declarray{handle->declarray()};
     if ( decl != nullptr ) {
       primary = mgr().new_Primary(pt_expr, decl);
       is_array = false;
@@ -573,14 +573,14 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
       value_type = declarray->value_type();
 
       // 添字が定数ならオフセットを計算する．
-      SizeType offset = 0;
-      SizeType mlt = 1;
-      bool const_index = true;
+      SizeType offset{0};
+      SizeType mlt{1};
+      bool const_index{true};
       for ( SizeType i = 0; i < dsize; ++ i ) {
-	SizeType j = dsize - i - 1;
-	auto pt_expr1 = pt_expr->index(j);
+	SizeType j{dsize - i - 1};
+	auto pt_expr1{pt_expr->index(j)};
 	int index_val;
-	bool stat = evaluate_int(parent, pt_expr1, index_val, false);
+	bool stat{evaluate_int(parent, pt_expr1, index_val, false)};
 	if ( !stat ) {
 	  const_index = false;
 	  break;
@@ -596,8 +596,8 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 	vector<ElbExpr*> index_list;
 	index_list.reserve(dsize);
 	for ( SizeType i = 0; i < dsize; ++ i ) {
-	  auto pt_expr1 = pt_expr->index(i);
-	  auto expr1 = instantiate_expr(parent, env, pt_expr1);
+	  auto pt_expr1{pt_expr->index(i)};
+	  auto expr1{instantiate_expr(parent, env, pt_expr1)};
 	  if ( !expr1 ) {
 	    return nullptr;
 	  }

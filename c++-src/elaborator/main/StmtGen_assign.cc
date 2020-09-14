@@ -35,20 +35,20 @@ StmtGen::instantiate_assign(const VlScope* parent,
 			    const PtStmt* pt_stmt,
 			    bool block)
 {
-  auto pt_lhs = pt_stmt->lhs();
+  auto pt_lhs{pt_stmt->lhs()};
   ElbVarLhsEnv env1(env);
-  auto lhs = instantiate_lhs(parent, env1, pt_lhs);
+  auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
   if ( !lhs ) {
     return nullptr;
   }
 
-  auto pt_rhs = pt_stmt->rhs();
-  auto rhs = instantiate_rhs(parent, env, pt_rhs, lhs);
+  auto pt_rhs{pt_stmt->rhs()};
+  auto rhs{instantiate_rhs(parent, env, pt_rhs, lhs)};
   if ( !rhs ) {
     return nullptr;
   }
 
-  auto pt_control = pt_stmt->control();
+  auto pt_control{pt_stmt->control()};
   if ( pt_control && env.inside_function() ) {
     // function 内のインスタンス化なのでコントロールは付いていないはず
     ostringstream buf;
@@ -61,9 +61,9 @@ StmtGen::instantiate_assign(const VlScope* parent,
     return nullptr;
   }
 
-  auto control = instantiate_control(parent, env, pt_control);
-  auto stmt = mgr().new_Assignment(parent, process, pt_stmt,
-				       lhs, rhs, block, control);
+  auto control{instantiate_control(parent, env, pt_control)};
+  auto stmt{mgr().new_Assignment(parent, process, pt_stmt,
+				 lhs, rhs, block, control)};
 
   return stmt;
 }
@@ -79,20 +79,20 @@ StmtGen::instantiate_pca(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtStmt* pt_stmt)
 {
-  auto pt_lhs = pt_stmt->lhs();
+  auto pt_lhs{pt_stmt->lhs()};
   ElbPcaLhsEnv env1(env);
-  auto lhs = instantiate_lhs(parent, env1, pt_lhs);
+  auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
   if ( !lhs ) {
     return nullptr;
   }
 
-  auto pt_rhs = pt_stmt->rhs();
-  auto rhs = instantiate_rhs(parent, env, pt_rhs, lhs);
+  auto pt_rhs{pt_stmt->rhs()};
+  auto rhs{instantiate_rhs(parent, env, pt_rhs, lhs)};
   if ( !rhs ) {
     return nullptr;
   }
 
-  auto stmt = mgr().new_AssignStmt(parent, process, pt_stmt, lhs, rhs);
+  auto stmt{mgr().new_AssignStmt(parent, process, pt_stmt, lhs, rhs)};
 
   return stmt;
 }
@@ -108,14 +108,14 @@ StmtGen::instantiate_deassign(const VlScope* parent,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  auto pt_lhs = pt_stmt->lhs();
+  auto pt_lhs{pt_stmt->lhs()};
   ElbPcaLhsEnv env1(env);
-  auto lhs = instantiate_lhs(parent, env1, pt_lhs);
+  auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
   if ( !lhs ) {
     return nullptr;
   }
 
-  auto stmt = mgr().new_DeassignStmt(parent, process, pt_stmt, lhs);
+  auto stmt{mgr().new_DeassignStmt(parent, process, pt_stmt, lhs)};
 
   return stmt;
 }
@@ -131,20 +131,20 @@ StmtGen::instantiate_force(const VlScope* parent,
 			   const ElbEnv& env,
 			   const PtStmt* pt_stmt)
 {
-  auto pt_lhs = pt_stmt->lhs();
+  auto pt_lhs{pt_stmt->lhs()};
   ElbForceLhsEnv env1(env);
-  auto lhs = instantiate_lhs(parent, env1, pt_lhs);
+  auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
   if ( !lhs ) {
     return nullptr;
   }
 
-  auto pt_rhs = pt_stmt->rhs();
-  auto rhs = instantiate_rhs(parent, env, pt_rhs, lhs);
+  auto pt_rhs{pt_stmt->rhs()};
+  auto rhs{instantiate_rhs(parent, env, pt_rhs, lhs)};
   if ( !rhs ) {
     return nullptr;
   }
 
-  auto stmt = mgr().new_ForceStmt(parent, process, pt_stmt, lhs, rhs);
+  auto stmt{mgr().new_ForceStmt(parent, process, pt_stmt, lhs, rhs)};
 
   return stmt;
 }
@@ -160,14 +160,14 @@ StmtGen::instantiate_release(const VlScope* parent,
 			     const ElbEnv& env,
 			     const PtStmt* pt_stmt)
 {
-  auto pt_lhs = pt_stmt->lhs();
+  auto pt_lhs{pt_stmt->lhs()};
   ElbForceLhsEnv env1(env);
-  auto lhs = instantiate_lhs(parent, env1, pt_lhs);
+  auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
   if ( !lhs ) {
     return nullptr;
   }
 
-  auto stmt = mgr().new_ReleaseStmt(parent, process, pt_stmt, lhs);
+  auto stmt{mgr().new_ReleaseStmt(parent, process, pt_stmt, lhs)};
 
   return stmt;
 }

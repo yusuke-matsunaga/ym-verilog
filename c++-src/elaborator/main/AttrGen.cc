@@ -38,16 +38,16 @@ AttrGen::~AttrGen()
 void
 AttrGen::instantiate_attribute(const PtiAttrInfo& attr_info)
 {
-  auto pt_obj = attr_info.obj();
+  auto pt_obj{attr_info.obj()};
   if ( mHash.count(pt_obj) == 0 ) {
     // また未生成なので作る．
-    auto pt_attr_list = attr_info.attr_list();
-    bool def = attr_info.def();
+    auto pt_attr_list{attr_info.attr_list()};
+    bool def{attr_info.def()};
     vector<const VlAttribute*> attr_list;
     for ( auto pt_ai: pt_attr_list ) {
-      auto pt_as_list = pt_ai->attrspec_list();
+      auto pt_as_list{pt_ai->attrspec_list()};
       for ( auto pt_as: pt_as_list ) {
-	auto expr = instantiate_constant_expr(nullptr, pt_as->expr());
+	auto expr{instantiate_constant_expr(nullptr, pt_as->expr())};
 	if ( !expr ) {
 	  // エラー．たぶん expr() が constant_expression ではなかった．
 	  // でも無視する．

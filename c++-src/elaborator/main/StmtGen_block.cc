@@ -59,8 +59,8 @@ StmtGen::instantiate_parblock(const VlScope* parent,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  auto stmt_list = instantiate_stmt_list(parent, process, env, pt_stmt);
-  auto stmt = mgr().new_Fork(parent, process, pt_stmt, stmt_list);
+  auto stmt_list{instantiate_stmt_list(parent, process, env, pt_stmt)};
+  auto stmt{mgr().new_Fork(parent, process, pt_stmt, stmt_list)};
 
   return stmt;
 }
@@ -76,8 +76,8 @@ StmtGen::instantiate_seqblock(const VlScope* parent,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  auto stmt_list = instantiate_stmt_list(parent, process, env, pt_stmt);
-  auto stmt = mgr().new_Begin(parent, process, pt_stmt, stmt_list);
+  auto stmt_list{instantiate_stmt_list(parent, process, env, pt_stmt)};
+  auto stmt{mgr().new_Begin(parent, process, pt_stmt, stmt_list)};
 
   return stmt;
 }
@@ -93,11 +93,11 @@ StmtGen::instantiate_namedparblock(const VlScope* parent,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  auto block = find_namedobj(parent, pt_stmt->name());
+  auto block{find_namedobj(parent, pt_stmt->name())};
   ASSERT_COND( block );
 
-  auto stmt_list = instantiate_stmt_list(block, process, env, pt_stmt);
-  auto stmt = mgr().new_NamedFork(block, process, pt_stmt, stmt_list);
+  auto stmt_list{instantiate_stmt_list(block, process, env, pt_stmt)};
+  auto stmt{mgr().new_NamedFork(block, process, pt_stmt, stmt_list)};
 
   return stmt;
 }
@@ -113,11 +113,11 @@ StmtGen::instantiate_namedseqblock(const VlScope* parent,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  auto block = find_namedobj(parent, pt_stmt->name());
+  auto block{find_namedobj(parent, pt_stmt->name())};
   ASSERT_COND( block );
 
-  auto stmt_list = instantiate_stmt_list(block, process, env, pt_stmt);
-  auto stmt = mgr().new_NamedBegin(block, process, pt_stmt, stmt_list);
+  auto stmt_list{instantiate_stmt_list(block, process, env, pt_stmt)};
+  auto stmt{mgr().new_NamedBegin(block, process, pt_stmt, stmt_list)};
 
   return stmt;
 }
@@ -135,11 +135,11 @@ StmtGen::instantiate_stmt_list(const VlScope* parent,
 			       const ElbEnv& env,
 			       const PtStmt* pt_stmt)
 {
-  SizeType stmt_num = pt_stmt->stmt_num();
+  SizeType stmt_num{pt_stmt->stmt_num()};
   vector<const VlStmt*> stmt_list;
   stmt_list.reserve(stmt_num);
   for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
-    auto stmt1 = instantiate_stmt(parent, process, env, pt_stmt1);
+    auto stmt1{instantiate_stmt(parent, process, env, pt_stmt1)};
     if ( !stmt1 ) {
       return vector<const VlStmt*>{};
     }

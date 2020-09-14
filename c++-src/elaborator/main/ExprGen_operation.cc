@@ -28,8 +28,8 @@ ExprGen::instantiate_opr(const VlScope* parent,
 			 const ElbEnv& env,
 			 const PtExpr* pt_expr)
 {
-  auto op_type = pt_expr->op_type();
-  SizeType opr_size = pt_expr->operand_num();
+  auto op_type{pt_expr->op_type()};
+  SizeType opr_size{pt_expr->operand_num()};
 
   ElbExpr* opr0 = nullptr;
   ElbExpr* opr1 = nullptr;
@@ -123,12 +123,12 @@ ExprGen::instantiate_opr(const VlScope* parent,
     {
       vector<ElbExpr*> opr_list(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
-	auto pt_expr1 = pt_expr->operand(i);
-	auto expr1 = instantiate_expr(parent, env, pt_expr1);
+	auto pt_expr1{pt_expr->operand(i)};
+	auto expr1{instantiate_expr(parent, env, pt_expr1)};
 	if ( !expr1 ) {
 	  return nullptr;
 	}
-	auto type1 = expr1->value_type();
+	auto type1{expr1->value_type()};
 	if ( type1.is_real_type() ) {
 	  error_illegal_real_type(pt_expr1);
 	  return nullptr;
@@ -142,21 +142,21 @@ ExprGen::instantiate_opr(const VlScope* parent,
 
   case VpiOpType::MultiConcat:
     {
-      auto pt_expr0 = pt_expr->operand(0);
+      auto pt_expr0{pt_expr->operand(0)};
       int rep_num;
-      bool stat = evaluate_int(parent, pt_expr0, rep_num, true);
+      bool stat{evaluate_int(parent, pt_expr0, rep_num, true)};
       if ( !stat ) {
 	return nullptr;
       }
-      auto rep_expr = instantiate_expr(parent, env, pt_expr0);
+      auto rep_expr{instantiate_expr(parent, env, pt_expr0)};
       vector<ElbExpr*> opr_list(opr_size - 1);
       for ( SizeType i = 1; i < opr_size; ++ i ) {
-	auto pt_expr1 = pt_expr->operand(i);
-	auto expr1 = instantiate_expr(parent, env, pt_expr1);
+	auto pt_expr1{pt_expr->operand(i)};
+	auto expr1{instantiate_expr(parent, env, pt_expr1)};
 	if ( !expr1 ) {
 	  return nullptr;
 	}
-	auto type1 = expr1->value_type();
+	auto type1{expr1->value_type()};
 	if ( type1.is_real_type() ) {
 	  error_illegal_real_type(pt_expr1);
 	  return nullptr;

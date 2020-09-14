@@ -559,7 +559,7 @@ ObjDict::clear()
 void
 ObjDict::add(const VlScope* obj)
 {
-  auto handle = new ElbScopeHandle(obj);
+  auto handle{new ElbScopeHandle(obj)};
   add_handle(handle);
 }
 
@@ -567,7 +567,7 @@ ObjDict::add(const VlScope* obj)
 void
 ObjDict::add(const VlTaskFunc* obj)
 {
-  auto handle = new ElbTaskFuncHandle(obj);
+  auto handle{new ElbTaskFuncHandle(obj)};
   add_handle(handle);
 }
 
@@ -575,7 +575,7 @@ ObjDict::add(const VlTaskFunc* obj)
 void
 ObjDict::add(ElbDecl* obj)
 {
-  auto handle = new ElbDeclHandle(obj);
+  auto handle{new ElbDeclHandle(obj)};
   add_handle(handle);
 }
 
@@ -583,7 +583,7 @@ ObjDict::add(ElbDecl* obj)
 void
 ObjDict::add(const VlDeclArray* obj)
 {
-  auto handle = new ElbDeclArrayHandle(obj);
+  auto handle{new ElbDeclArrayHandle(obj)};
   add_handle(handle);
 }
 
@@ -591,7 +591,7 @@ ObjDict::add(const VlDeclArray* obj)
 void
 ObjDict::add(ElbParameter* obj)
 {
-  auto handle = new ElbParamHandle(obj);
+  auto handle{new ElbParamHandle(obj)};
   add_handle(handle);
 }
 
@@ -599,7 +599,7 @@ ObjDict::add(ElbParameter* obj)
 void
 ObjDict::add(const VlModule* obj)
 {
-  auto handle = new ElbModuleHandle(obj);
+  auto handle{new ElbModuleHandle(obj)};
   add_handle(handle);
 }
 
@@ -607,7 +607,7 @@ ObjDict::add(const VlModule* obj)
 void
 ObjDict::add(const VlModuleArray* obj)
 {
-  auto handle = new ElbModuleArrayHandle(obj);
+  auto handle{new ElbModuleArrayHandle(obj)};
   add_handle(handle);
 }
 
@@ -615,7 +615,7 @@ ObjDict::add(const VlModuleArray* obj)
 void
 ObjDict::add(const VlPrimArray* obj)
 {
-  auto handle = new ElbPrimArrayHandle(obj);
+  auto handle{new ElbPrimArrayHandle(obj)};
   add_handle(handle);
 }
 
@@ -623,7 +623,7 @@ ObjDict::add(const VlPrimArray* obj)
 void
 ObjDict::add(const VlPrimitive* obj)
 {
-  auto handle = new ElbPrimitiveHandle(obj);
+  auto handle{new ElbPrimitiveHandle(obj)};
   add_handle(handle);
 }
 
@@ -631,7 +631,7 @@ ObjDict::add(const VlPrimitive* obj)
 void
 ObjDict::add(ElbGfRoot* obj)
 {
-  auto handle = new ElbGfRootHandle(obj);
+  auto handle{new ElbGfRootHandle(obj)};
   add_handle(handle);
 }
 
@@ -639,7 +639,7 @@ ObjDict::add(ElbGfRoot* obj)
 void
 ObjDict::add(ElbGenvar* obj)
 {
-  auto handle = new ElbGenvarHandle(obj);
+  auto handle{new ElbGenvarHandle(obj)};
   add_handle(handle);
 }
 
@@ -656,7 +656,7 @@ ObjDict::find(const VlScope* parent,
 	      const string& name) const
 {
   KeyObjHandle key{parent, name};
-  auto p = mHash.find(&key);
+  auto p{mHash.find(&key)};
   if ( p != mHash.end() ) {
     return *p;
   }

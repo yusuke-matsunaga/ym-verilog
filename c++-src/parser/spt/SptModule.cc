@@ -419,7 +419,7 @@ SptPort::portref() const
 
 // 内部のポート結線リストのサイズの取得
 // @return 内部のポート結線リストのサイズ
-int
+SizeType
 SptPort::portref_size() const
 {
   return mPortRefArray.size();

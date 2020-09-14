@@ -42,7 +42,7 @@ public:
 
   /// @brief 内部のポート結線リストのサイズの取得
   virtual
-  int
+  SizeType
   portref_size() const = 0;
 
   /// @brief 内部のポート結線リストの取得

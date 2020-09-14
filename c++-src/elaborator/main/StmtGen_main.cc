@@ -148,7 +148,7 @@ StmtGen::instantiate_stmt(const VlScope* parent,
     return nullptr;
   }
 
-  const VlStmt* stmt = nullptr;
+  const VlStmt* stmt{nullptr};
   switch ( pt_stmt->type() ) {
   case PtStmtType::Disable:
     stmt = instantiate_disable(parent, process, pt_stmt);
@@ -327,7 +327,7 @@ StmtGen::instantiate_disable(const VlScope* parent,
 
   // disable はモジュール境界を越えない？
   // 仕様書には何も書いていないのでたぶん越えられる．
-  auto handle = find_obj_up(parent, pt_stmt, nullptr);
+  auto handle{find_obj_up(parent, pt_stmt, nullptr)};
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -339,7 +339,7 @@ StmtGen::instantiate_disable(const VlScope* parent,
     return nullptr;
   }
 
-  auto type = handle->type();
+  auto type{handle->type()};
   if ( type != VpiObjType::NamedBegin &&
        type != VpiObjType::NamedFork &&
        type != VpiObjType::Task ) {
@@ -353,8 +353,9 @@ StmtGen::instantiate_disable(const VlScope* parent,
 		    buf.str());
     return nullptr;
   }
-  auto scope = handle->scope();
-  auto stmt = mgr().new_DisableStmt(parent, process, pt_stmt, scope);
+
+  auto scope{handle->scope()};
+  auto stmt{mgr().new_DisableStmt(parent, process, pt_stmt, scope)};
 
   return stmt;
 }
@@ -370,11 +371,11 @@ StmtGen::instantiate_enable(const VlScope* parent,
 			    const ElbEnv& env,
 			    const PtStmt* pt_stmt)
 {
-  const auto& fr = pt_stmt->file_region();
+  const auto& fr{pt_stmt->file_region()};
 
   // タスクを探し出して設定する．
   // タスク名の探索はモジュール境界を越える．
-  auto handle = find_obj_up(parent, pt_stmt, nullptr);
+  auto handle{find_obj_up(parent, pt_stmt, nullptr)};
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -393,15 +394,17 @@ StmtGen::instantiate_enable(const VlScope* parent,
 		    MsgType::Error,
 		    "ELAB",
 		    buf.str());
+    return nullptr;
   }
-  auto task = handle->taskfunc();
+
+  auto task{handle->taskfunc()};
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
   vector<ElbExpr*> arg_list;
   arg_list.reserve(pt_stmt->arg_num());
   for ( auto pt_expr: pt_stmt->arg_list() ) {
-    auto expr = instantiate_expr(parent, env, pt_expr);
+    auto expr{instantiate_expr(parent, env, pt_expr)};
     if ( !expr ) {
       // エラーが起った．
       return nullptr;
@@ -410,7 +413,7 @@ StmtGen::instantiate_enable(const VlScope* parent,
   }
 
   // task call ステートメントの生成
-  auto stmt = mgr().new_TaskCall(parent, process, pt_stmt, task, arg_list);
+  auto stmt{mgr().new_TaskCall(parent, process, pt_stmt, task, arg_list)};
 
   return stmt;
 }
@@ -426,12 +429,12 @@ StmtGen::instantiate_sysenable(const VlScope* parent,
 			       const ElbEnv& env,
 			       const PtStmt* pt_stmt)
 {
-  const auto& fr = pt_stmt->file_region();
+  const auto& fr{pt_stmt->file_region()};
 
-  auto name = pt_stmt->name();
+  auto name{pt_stmt->name()};
 
   // UserSystf を取り出す．
-  auto user_systf = find_user_systf(name);
+  auto user_systf{find_user_systf(name)};
   if ( user_systf == nullptr ) {
     ostringstream buf;
     buf << name << " : No such system task.";
@@ -447,20 +450,22 @@ StmtGen::instantiate_sysenable(const VlScope* parent,
   vector<ElbExpr*> arg_list;
   arg_list.reserve(pt_stmt->arg_num());
   for ( auto pt_expr: pt_stmt->arg_list() ) {
-    ElbExpr* arg = nullptr;
     // 空の引数があるのでエラーと区別する．
     if ( pt_expr ) {
-      arg = instantiate_arg(parent, env, pt_expr);
+      auto arg{instantiate_arg(parent, env, pt_expr)};
       if ( !arg ) {
 	// エラーが起こった
 	return nullptr;
       }
+      arg_list.push_back(arg);
     }
-    arg_list.push_back(arg);
+    else {
+      arg_list.push_back(nullptr);
+    }
   }
 
   // system task call ステートメントの生成
-  auto stmt = mgr().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list);
+  auto stmt{mgr().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list)};
 
   return stmt;
 }
@@ -476,14 +481,18 @@ StmtGen::instantiate_ctrlstmt(const VlScope* parent,
 			      const ElbEnv& env,
 			      const PtStmt* pt_stmt)
 {
-  auto body = instantiate_stmt(parent, process, env, pt_stmt->body());
-  auto control = instantiate_control(parent, env, pt_stmt->control());
+  auto pt_body{pt_stmt->body()};
+  auto body{instantiate_stmt(parent, process, env, pt_body)};
+
+  auto pt_control{pt_stmt->control()};
+  auto control{instantiate_control(parent, env, pt_control)};
+
   if ( !body || !control ) {
     return nullptr;
   }
 
   // delay / event control ステートメントの生成
-  auto stmt = mgr().new_CtrlStmt(parent, process, pt_stmt, control, body);
+  auto stmt{mgr().new_CtrlStmt(parent, process, pt_stmt, control, body)};
 
   return stmt;
 }
@@ -502,7 +511,7 @@ StmtGen::instantiate_control(const VlScope* parent,
   }
 
   if ( pt_control->type() == PtCtrlType::Delay ) {
-    auto delay = instantiate_expr(parent, env, pt_control->delay());
+    auto delay{instantiate_expr(parent, env, pt_control->delay())};
     if ( delay ) {
       return mgr().new_DelayControl(pt_control, delay);
     }
@@ -510,11 +519,11 @@ StmtGen::instantiate_control(const VlScope* parent,
   }
 
   // イベントリストの生成を行う．
-  SizeType event_num = pt_control->event_num();
+  SizeType event_num{pt_control->event_num()};
   vector<ElbExpr*> event_list;
   event_list.reserve(event_num);
   for ( auto pt_expr: pt_control->event_list() ) {
-    auto expr = instantiate_event_expr(parent, env, pt_expr);
+    auto expr{instantiate_event_expr(parent, env, pt_expr)};
     if ( !expr ) {
       return nullptr;
     }
@@ -525,7 +534,7 @@ StmtGen::instantiate_control(const VlScope* parent,
     return mgr().new_EventControl(pt_control, event_list);
   }
 
-  auto rep = instantiate_expr(parent, env, pt_control->rep_expr());
+  auto rep{instantiate_expr(parent, env, pt_control->rep_expr())};
   if ( !rep ) {
     return nullptr;
   }
@@ -541,13 +550,13 @@ StmtGen::instantiate_eventstmt(const VlScope* parent,
 			       const VlProcess* process,
 			       const PtStmt* pt_stmt)
 {
-  auto pt_expr = pt_stmt->primary();
-  auto named_event = instantiate_namedevent(parent, pt_expr);
+  auto pt_expr{pt_stmt->primary()};
+  auto named_event{instantiate_namedevent(parent, pt_expr)};
   if ( !named_event ) {
     return nullptr;
   }
 
-  auto stmt = mgr().new_EventStmt(parent, process, pt_stmt, named_event);
+  auto stmt{mgr().new_EventStmt(parent, process, pt_stmt, named_event)};
 
   return stmt;
 }
@@ -561,7 +570,7 @@ StmtGen::instantiate_nullstmt(const VlScope* parent,
 			      const VlProcess* process,
 			      const PtStmt* pt_stmt)
 {
-  auto stmt = mgr().new_NullStmt(parent, process, pt_stmt);
+  auto stmt{mgr().new_NullStmt(parent, process, pt_stmt)};
 
   return stmt;
 }

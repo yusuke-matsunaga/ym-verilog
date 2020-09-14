@@ -136,18 +136,17 @@ bool
 ItemGen::defparam_override(const DefParamStub& stub,
 			   const VlScope* ulimit)
 {
-  auto module = stub.mModule;
-  auto pt_header = stub.mPtHeader;
-  auto pt_defparam = stub.mPtDefparam;
+  auto module{stub.mModule};
+  auto pt_header{stub.mPtHeader};
+  auto pt_defparam{stub.mPtDefparam};
+  const auto& fr{pt_defparam->file_region()};
 
-  const auto& fr = pt_defparam->file_region();
-
-  auto handle = find_obj_up(module, pt_defparam, ulimit);
+  auto handle{find_obj_up(module, pt_defparam, ulimit)};
   if ( !handle ) {
     return false;
   }
 
-  auto param = handle->parameter();
+  auto param{handle->parameter()};
   if ( !param ) {
     ostringstream buf;
     buf << "\"" << pt_defparam->fullname() << "\" is not a parameter.";
@@ -175,24 +174,26 @@ ItemGen::defparam_override(const DefParamStub& stub,
     return true;
   }
 
-  auto rhs_expr = pt_defparam->expr();
-  auto value = evaluate_expr(module, rhs_expr, true);
+  auto rhs_expr{pt_defparam->expr()};
+  auto value{evaluate_expr(module, rhs_expr, true)};
 
-  ostringstream buf;
-  buf << "instantiating defparam: " << param->full_name()
-      << " = " << rhs_expr->decompile() << ".";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  fr,
-		  MsgType::Info,
-		  "ELAB",
-		  buf.str());
+  {
+    ostringstream buf;
+    buf << "instantiating defparam: " << param->full_name()
+	<< " = " << rhs_expr->decompile() << ".";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    fr,
+		    MsgType::Info,
+		    "ELAB",
+		    buf.str());
+  }
 
   param->set_init_expr(rhs_expr, value);
 
   auto dp = mgr().new_DefParam(module,
-				   pt_header,
-				   pt_defparam,
-				   param, rhs_expr, value);
+			       pt_header,
+			       pt_defparam,
+			       param, rhs_expr, value);
   reg_defparam(dp);
 
   return true;
@@ -205,29 +206,29 @@ void
 ItemGen::instantiate_cont_assign(const VlScope* parent,
 				 const PtItem* pt_header)
 {
-  auto module = parent->parent_module();
-  auto pt_delay = pt_header->delay();
-  auto delay = instantiate_delay(parent, pt_delay);
-  auto ca_head = mgr().new_CaHead(module, pt_header, delay);
+  auto module{parent->parent_module()};
+  auto pt_delay{pt_header->delay()};
+  auto delay{instantiate_delay(parent, pt_delay)};
+  auto ca_head{mgr().new_CaHead(module, pt_header, delay)};
 
   ElbEnv env;
   ElbNetLhsEnv env1(env);
   for ( auto pt_elem: pt_header->contassign_list() ) {
     // 左辺式の生成
-    auto pt_lhs = pt_elem->lhs();
-    auto lhs = instantiate_lhs(parent, env1, pt_lhs);
+    auto pt_lhs{pt_elem->lhs()};
+    auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
     if ( !lhs ) {
       return;
     }
 
     // 右辺式の生成
-    auto pt_rhs = pt_elem->rhs();
-    auto rhs = instantiate_rhs(parent, env, pt_rhs, lhs);
+    auto pt_rhs{pt_elem->rhs()};
+    auto rhs{instantiate_rhs(parent, env, pt_rhs, lhs)};
     if ( !rhs ) {
       return;
     }
 
-    auto ca = mgr().new_ContAssign(ca_head, pt_elem, lhs, rhs);
+    auto ca{mgr().new_ContAssign(ca_head, pt_elem, lhs, rhs)};
     reg_contassign(ca);
 
     ostringstream buf;
@@ -248,12 +249,12 @@ void
 ItemGen::instantiate_process(const VlScope* parent,
 			     const PtItem* pt_item)
 {
-  auto process = mgr().new_Process(parent, pt_item);
+  auto process{mgr().new_Process(parent, pt_item)};
   reg_process(process);
 
   ElbEnv env;
-  auto body = instantiate_stmt(parent, process, env,
-			       pt_item->body());
+  auto body{instantiate_stmt(parent, process, env,
+			     pt_item->body())};
   ASSERT_COND( body );
 
   process->set_stmt(body);
@@ -278,9 +279,9 @@ void
 ItemGen::phase1_genblock(const VlScope* parent,
 			 const PtItem* pt_genblock)
 {
-  auto* name = pt_genblock->name();
+  auto* name{pt_genblock->name()};
   if ( name != nullptr ) {
-    auto genblock = mgr().new_GenBlock(parent, pt_genblock);
+    auto genblock{mgr().new_GenBlock(parent, pt_genblock)};
     reg_internalscope(genblock);
 
     parent = genblock;
@@ -326,7 +327,7 @@ ItemGen::phase1_gencase(const VlScope* parent,
   bool found = false;
   for ( auto pt_caseitem: pt_gencase->caseitem_list() ) {
     // default(ラベルリストが空) なら常にマッチする．
-    SizeType n = pt_caseitem->label_num();
+    SizeType n{pt_caseitem->label_num()};
     bool match = (n == 0);
     for ( auto pt_expr: pt_caseitem->label_list() ) {
       BitVector label_val;
@@ -362,11 +363,11 @@ void
 ItemGen::phase1_genfor(const VlScope* parent,
 		       const PtItem* pt_genfor)
 {
-  const auto& fr = pt_genfor->file_region();
-  auto name0 = pt_genfor->name();
+  const auto& fr{pt_genfor->file_region()};
+  auto name0{pt_genfor->name()};
   ASSERT_COND( name0 != nullptr );
 
-  auto handle = find_obj(parent, pt_genfor->loop_var());
+  auto handle{find_obj(parent, pt_genfor->loop_var())};
   if ( !handle ) {
     ostringstream buf;
     buf << pt_genfor->loop_var() << " : Not found.";
@@ -378,7 +379,7 @@ ItemGen::phase1_genfor(const VlScope* parent,
     return;
   }
 
-  auto genvar = handle->genvar();
+  auto genvar{handle->genvar()};
   if ( !genvar ) {
     ostringstream buf;
     buf << pt_genfor->loop_var() << " : Not a genvar.";
@@ -402,7 +403,7 @@ ItemGen::phase1_genfor(const VlScope* parent,
   }
 
   // 子供のスコープの検索用オブジェクト
-  auto gfroot = mgr().new_GfRoot(parent, pt_genfor);
+  auto gfroot{mgr().new_GfRoot(parent, pt_genfor)};
   reg_gfroot(gfroot);
 
   {
@@ -434,13 +435,13 @@ ItemGen::phase1_genfor(const VlScope* parent,
 
     // スコープ名生成のために genvar の値を取得
     {
-      int gvi = genvar->value();
-      auto genblock = mgr().new_GfBlock(parent, pt_genfor, gvi);
+      int gvi{genvar->value()};
+      auto genblock{mgr().new_GfBlock(parent, pt_genfor, gvi)};
       gfroot->add(gvi, genblock);
       reg_internalscope(genblock);
 
-      auto pt_item = genvar->pt_item();
-      auto genvar1 = mgr().new_Genvar(genblock, pt_item, gvi);
+      auto pt_item{genvar->pt_item()};
+      auto genvar1{mgr().new_Genvar(genblock, pt_item, gvi)};
       reg_genvar(genvar1);
 
       phase1_generate(genblock, pt_genfor);

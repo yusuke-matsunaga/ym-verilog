@@ -85,7 +85,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 			    ElbTaskFunc* taskfunc,
 			    const vector<const PtIOHead*>& pt_head_array)
 {
-  const VlScope* scope = nullptr;
+  const VlScope* scope{nullptr};
   if ( module ) {
     scope = module;
   }
@@ -95,15 +95,15 @@ DeclGen::instantiate_iodecl(ElbModule* module,
   ASSERT_COND( scope != nullptr );
 
   for ( auto pt_head: pt_head_array ) {
-    auto def_aux_type = pt_head->aux_type();
-    bool sign = pt_head->is_signed();
-    auto pt_left = pt_head->left_range();
-    auto pt_right = pt_head->right_range();
-    bool has_range = (pt_left != nullptr) && (pt_right != nullptr);
+    auto def_aux_type{pt_head->aux_type()};
+    bool sign{pt_head->is_signed()};
+    auto pt_left{pt_head->left_range()};
+    auto pt_right{pt_head->right_range()};
+    bool has_range{(pt_left != nullptr) && (pt_right != nullptr)};
 
     // 範囲指定を持っている場合には範囲を計算する．
-    int left_val = 0;
-    int right_val = 0;
+    int left_val{0};
+    int right_val{0};
     if ( !evaluate_range(scope,
 			 pt_left, pt_right,
 			 left_val, right_val) ) {
@@ -114,7 +114,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 
     // ヘッダ情報の生成
     // ちなみに IOHead は範囲の情報を持たない．
-    ElbIOHead* head = nullptr;
+    ElbIOHead* head{nullptr};
     if ( module ) {
       head = mgr().new_IOHead(module, pt_head);
     }
@@ -125,8 +125,8 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 
     for ( auto pt_item: pt_head->item_list() ) {
       // IO定義と変数/ネット定義が一致しているか調べる．
-      auto handle = find_obj(scope, pt_item->name());
-      ElbDecl* decl = nullptr;
+      auto handle{find_obj(scope, pt_item->name())};
+      ElbDecl* decl{nullptr};
       if ( handle ) {
 	// 同名の要素が見つかった．
 	if ( def_aux_type != VpiAuxType::None ) {
@@ -168,8 +168,8 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	// decl と型が一致しているか調べる．
 	// IEEE 1364-2001 12.3.3 Port declarations
 	if ( decl->has_range() ) {
-	  int left_val2 = decl->left_range_val();
-	  int right_val2 = decl->right_range_val();
+	  int left_val2{decl->left_range_val()};
+	  int right_val2{decl->right_range_val()};
 	  if ( !has_range ) {
 	    // decl は範囲を持っているが IO は持っていない．
 	    // これはエラーにしなくてよいのだろうか？
@@ -207,11 +207,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
       }
       else {
 	// 同名の要素が見つからなかったので作る必要がある．
-	auto aux_type = def_aux_type;
+	auto aux_type{def_aux_type};
 	if ( aux_type == VpiAuxType::None ) {
 	  if ( module ) {
 	    // モジュール IO の場合は `default_net_type を参照する．
-	    auto net_type = module->def_net_type();
+	    auto net_type{module->def_net_type()};
 	    if ( net_type == VpiNetType::None ) {
 	      ostringstream buf;
 	      buf << pt_item->name() << " : Implicit declaration is inhibited "
@@ -232,7 +232,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	}
 
 	// ヘッダを生成する．
-	ElbDeclHead* head = nullptr;
+	ElbDeclHead* head{nullptr};
 	if ( has_range ) {
 	  head = mgr().new_DeclHead(scope, pt_head, aux_type,
 				    pt_left, pt_right,
@@ -244,8 +244,8 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	ASSERT_COND( head != nullptr );
 
 	// 初期値を生成する．
-	auto pt_init = pt_item->init_value();
-	ElbExpr* init = nullptr;
+	auto pt_init{pt_item->init_value()};
+	ElbExpr* init{nullptr};
 	if ( module ) {
 	  if ( aux_type == VpiAuxType::Net && pt_init ) {
 	    // net 型の場合(ここに来るのは暗黙宣言のみ)は初期値を持てない．
@@ -271,7 +271,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	}
 
 	decl = mgr().new_Decl(head, pt_item, init);
-	int tag = 0;
+	int tag{0};
 	switch ( aux_type ) {
 	case VpiAuxType::Net: tag = vpiNet; break;
 	case VpiAuxType::Reg: tag = vpiReg; break;
@@ -292,14 +292,16 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	ASSERT_NOT_REACHED;
       }
 
-      ostringstream buf;
-      buf << "IODecl(" << pt_item->name() << ")@"
-	  << scope->full_name() << " created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_head->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "IODecl(" << pt_item->name() << ")@"
+	    << scope->full_name() << " created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_head->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
   }
 }
@@ -357,32 +359,32 @@ DeclGen::instantiate_param_head(const VlScope* scope,
 				const PtDeclHead* pt_head,
 				bool is_local)
 {
-  auto module = scope->parent_module();
-  auto pt_left = pt_head->left_range();
-  auto* pt_right = pt_head->right_range();
-  ElbParamHead* param_head = nullptr;
+  auto module{scope->parent_module()};
+  auto pt_left{pt_head->left_range()};
+  auto* pt_right{pt_head->right_range()};
+  ElbParamHead* param_head{nullptr};
   if ( pt_left && pt_right ) {
-    int left_val = 0;
-    int right_val = 0;
+    int left_val{0};
+    int right_val{0};
     if ( !evaluate_range(scope, pt_left, pt_right,
 			 left_val, right_val) ) {
       return;
     }
     param_head = mgr().new_ParamHead(scope,
-					 pt_head,
-					 pt_left, pt_right,
-					 left_val, right_val);
+				     pt_head,
+				     pt_left, pt_right,
+				     left_val, right_val);
   }
   else {
     param_head = mgr().new_ParamHead(scope,
-					 pt_head);
+				     pt_head);
   }
 
   for ( auto pt_item: pt_head->item_list() ) {
     const auto& file_region{pt_item->file_region()};
-    auto param = mgr().new_Parameter(param_head,
-					 pt_item,
-					 is_local);
+    auto param{mgr().new_Parameter(param_head,
+				   pt_item,
+				   is_local)};
     ASSERT_COND( param );
     reg_parameter(vpiParameter, param);
 
@@ -390,23 +392,25 @@ DeclGen::instantiate_param_head(const VlScope* scope,
     auto attr_list{attribute_list(pt_head)};
     mgr().reg_attr(param, attr_list);
 
-    ostringstream buf;
-    buf << "Parameter(" << param->full_name() << ") created.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    file_region,
-		    MsgType::Info,
-		    "ELAB",
-		    buf.str());
+    {
+      ostringstream buf;
+      buf << "Parameter(" << param->full_name() << ") created.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      file_region,
+		      MsgType::Info,
+		      "ELAB",
+		      buf.str());
+    }
 
     // 右辺の式は constant expression のはずなので今つくる．
-    auto pt_init_expr = pt_item->init_value();
-    auto value = evaluate_expr(scope, pt_init_expr, true);
+    auto pt_init_expr{pt_item->init_value()};
+    auto value{evaluate_expr(scope, pt_init_expr, true)};
     param->set_init_expr(pt_init_expr, value);
 
     // ダブっている感じがするけど同じことを表す parameter assign 文
     // をつくってモジュールに追加する．
-    auto pa = mgr().new_NamedParamAssign(module, pt_item,
-					     param, pt_init_expr, value);
+    auto pa{mgr().new_NamedParamAssign(module, pt_item,
+				       param, pt_init_expr, value)};
     reg_paramassign(pa);
   }
 }
@@ -418,15 +422,15 @@ void
 DeclGen::instantiate_net_head(const VlScope* scope,
 			      const PtDeclHead* pt_head)
 {
-  auto pt_left = pt_head->left_range();
-  auto pt_right = pt_head->right_range();
-  auto pt_delay = pt_head->delay();
-  bool has_delay = (pt_delay != nullptr);
+  auto pt_left{pt_head->left_range()};
+  auto pt_right{pt_head->right_range()};
+  auto pt_delay{pt_head->delay()};
+  bool has_delay{(pt_delay != nullptr)};
 
-  ElbDeclHead* net_head = nullptr;
+  ElbDeclHead* net_head{nullptr};
   if ( pt_left && pt_right ) {
-    int left_val = 0;
-    int right_val = 0;
+    int left_val{0};
+    int right_val{0};
     if ( !evaluate_range(scope, pt_left, pt_right,
 			 left_val, right_val) ) {
       return;
@@ -448,9 +452,9 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 
   for ( auto pt_item: pt_head->item_list() ) {
     // init_value() が 0 でなければ初期割り当てを持つということ．
-    auto pt_init = pt_item->init_value();
+    auto pt_init{pt_item->init_value()};
 
-    SizeType dim_size = pt_item->range_num();
+    SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
       // 配列
 
@@ -463,24 +467,26 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 	continue;
       }
 
-      auto net_array = mgr().new_DeclArray(net_head, pt_item, range_src);
+      auto net_array{mgr().new_DeclArray(net_head, pt_item, range_src)};
       reg_declarray(vpiNetArray, net_array);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(net_array, attr_list);
 
-      ostringstream buf;
-      buf << "NetArray(" << net_array->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "NetArray(" << net_array->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
     else {
       // 単一の要素
-      auto net = mgr().new_Decl(net_head, pt_item);
+      auto net{mgr().new_Decl(net_head, pt_item)};
       reg_decl(vpiNet, net);
 
       if ( pt_init ) {
@@ -495,13 +501,15 @@ DeclGen::instantiate_net_head(const VlScope* scope,
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(net, attr_list);
 
-      ostringstream buf;
-      buf << "Net(" << net->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "Net(" << net->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
   }
 }
@@ -513,8 +521,8 @@ void
 DeclGen::link_net_delay(ElbDeclHead* net_head,
 			const PtDelay* pt_delay)
 {
-  auto scope = net_head->parent_scope();
-  auto delay = instantiate_delay(scope, pt_delay);
+  auto scope{net_head->parent_scope()};
+  auto delay{instantiate_delay(scope, pt_delay)};
   if ( delay ) {
     net_head->set_delay(delay);
   }
@@ -528,10 +536,10 @@ DeclGen::link_net_assign(ElbDecl* net,
 			 const PtDeclItem* pt_item)
 {
   // 実体は左辺が net の代入文を作る．
-  auto lhs = mgr().new_Primary(pt_item, net);
-  auto scope = net->parent_scope();
-  auto pt_init = pt_item->init_value();
-  auto rhs = instantiate_rhs(scope, ElbEnv(), pt_init, lhs);
+  auto lhs{mgr().new_Primary(pt_item, net)};
+  auto scope{net->parent_scope()};
+  auto pt_init{pt_item->init_value()};
+  auto rhs{instantiate_rhs(scope, ElbEnv(), pt_init, lhs)};
   if ( !rhs ) {
     return;
   }
@@ -539,8 +547,8 @@ DeclGen::link_net_assign(ElbDecl* net,
   net->set_init(rhs);
 
   // 対応する continuous assign 文を作る．
-  auto module = scope->parent_module();
-  auto ca = mgr().new_ContAssign(module, pt_item, lhs, rhs);
+  auto module{scope->parent_module()};
+  auto ca{mgr().new_ContAssign(module, pt_item, lhs, rhs)};
   reg_contassign(ca);
 }
 
@@ -551,13 +559,13 @@ void
 DeclGen::instantiate_reg_head(const VlScope* scope,
 			      const PtDeclHead* pt_head)
 {
-  auto pt_left = pt_head->left_range();
-  auto pt_right = pt_head->right_range();
+  auto pt_left{pt_head->left_range()};
+  auto pt_right{pt_head->right_range()};
 
-  ElbDeclHead* reg_head = nullptr;
+  ElbDeclHead* reg_head{nullptr};
   if ( pt_left && pt_right ) {
-    int left_val = 0;
-    int right_val = 0;
+    int left_val{0};
+    int right_val{0};
     if ( !evaluate_range(scope, pt_left, pt_right,
 			 left_val, right_val) ) {
       return;
@@ -572,8 +580,8 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
   ASSERT_COND( reg_head != nullptr );
 
   for ( auto pt_item: pt_head->item_list() ) {
-    auto pt_init = pt_item->init_value();
-    SizeType dim_size = pt_item->range_num();
+    auto pt_init{pt_item->init_value()};
+    SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
       // 配列の場合
 
@@ -586,45 +594,49 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 	continue;
       }
 
-      auto reg_array = mgr().new_DeclArray(reg_head,
-					       pt_item,
-					       range_src);
+      auto reg_array{mgr().new_DeclArray(reg_head,
+					 pt_item,
+					 range_src)};
       reg_declarray(vpiRegArray, reg_array);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(reg_array, attr_list);
 
-      ostringstream buf;
-      buf << "RegArray(" << reg_array->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "RegArray(" << reg_array->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
     else {
       // 単独の要素
       // 初期値を持つ場合
       // 初期値は constant_expression なので今作る．
-      auto init = instantiate_constant_expr(scope, pt_init);
+      auto init{instantiate_constant_expr(scope, pt_init)};
       // エラーの時には init = nullptr となるがそれでも処理は続ける．
       // もちろんエラーは記録されている．
 
-      auto reg = mgr().new_Decl(reg_head, pt_item, init);
+      auto reg{mgr().new_Decl(reg_head, pt_item, init)};
       reg_decl(vpiReg, reg);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(reg, attr_list);
 
-      ostringstream buf;
-      buf << "Reg(" << reg->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "Reg(" << reg->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
   }
 }
@@ -638,10 +650,10 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 {
   ASSERT_COND( pt_head->data_type() != VpiVarType::None );
 
-  auto var_head = mgr().new_DeclHead(scope, pt_head);
+  auto var_head{mgr().new_DeclHead(scope, pt_head)};
   for ( auto pt_item: pt_head->item_list() ) {
-    auto pt_init = pt_item->init_value();
-    SizeType dim_size = pt_item->range_num();
+    auto pt_init{pt_item->init_value()};
+    SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
       // 配列の場合
 
@@ -654,45 +666,49 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 	continue;
       }
 
-      auto var_array = mgr().new_DeclArray(var_head,
-					       pt_item,
-					       range_src);
+      auto var_array{mgr().new_DeclArray(var_head,
+					 pt_item,
+					 range_src)};
       reg_declarray(vpiVariables, var_array);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(var_array, attr_list);
 
-      ostringstream buf;
-      buf << "VarArray(" << var_array->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "VarArray(" << var_array->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
     else {
       // 単独の変数
       // 初期値を持つ場合
       // 初期値は constant_expression なので今作る．
-      auto init = instantiate_constant_expr(scope, pt_init);
+      auto init{instantiate_constant_expr(scope, pt_init)};
       // エラーの時には init = nullptr となるがそれでも処理は続ける．
       // もちろんエラーは記録されている．
 
-      auto var = mgr().new_Decl(var_head, pt_item, init);
+      auto var{mgr().new_Decl(var_head, pt_item, init)};
       reg_decl(vpiVariables, var);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(var, attr_list);
 
-      ostringstream buf;
-      buf << "Var(" << var->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "Var(" << var->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
   }
 }
@@ -704,9 +720,9 @@ void
 DeclGen::instantiate_event_head(const VlScope* scope,
 				const PtDeclHead* pt_head)
 {
-  auto event_head = mgr().new_DeclHead(scope, pt_head);
+  auto event_head{mgr().new_DeclHead(scope, pt_head)};
   for ( auto pt_item: pt_head->item_list() ) {
-    SizeType dim_size = pt_item->range_num();
+    SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
       // 配列
 
@@ -716,37 +732,41 @@ DeclGen::instantiate_event_head(const VlScope* scope,
 	continue;
       }
 
-      auto ne_array = mgr().new_DeclArray(event_head, pt_item, range_src);
+      auto ne_array{mgr().new_DeclArray(event_head, pt_item, range_src)};
       reg_declarray(vpiNamedEventArray, ne_array);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(ne_array, attr_list);
 
-      ostringstream buf;
-      buf << "NamedEventArray(" << ne_array->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "NamedEventArray(" << ne_array->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
     else {
       // 単一の要素
-      auto named_event = mgr().new_Decl(event_head, pt_item);
+      auto named_event{mgr().new_Decl(event_head, pt_item)};
       reg_decl(vpiNamedEvent, named_event);
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(named_event, attr_list);
 
-      ostringstream buf;
-      buf << "NamedEvent(" << named_event->full_name() << ") created.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_item->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "NamedEvent(" << named_event->full_name() << ") created.";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_item->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
   }
 }
@@ -759,16 +779,18 @@ DeclGen::instantiate_genvar_head(const VlScope* scope,
 				 const PtDeclHead* pt_head)
 {
   for ( auto pt_item: pt_head->item_list() ) {
-    auto genvar = mgr().new_Genvar(scope, pt_item, 0);
+    auto genvar{mgr().new_Genvar(scope, pt_item, 0)};
     reg_genvar(genvar);
 
-    ostringstream buf;
-    buf << "Genvar(" << genvar->full_name() << ") created.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    pt_item->file_region(),
-		    MsgType::Info,
-		    "ELAB",
-		    buf.str());
+    {
+      ostringstream buf;
+      buf << "Genvar(" << genvar->full_name() << ") created.";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      pt_item->file_region(),
+		      MsgType::Info,
+		      "ELAB",
+		      buf.str());
+    }
   }
 }
 
@@ -781,15 +803,15 @@ DeclGen::instantiate_dimension_list(const VlScope* scope,
 				    const PtDeclItem* pt_item,
 				    vector<ElbRangeSrc>& range_src)
 {
-  SizeType n = pt_item->range_num();
+  SizeType n{pt_item->range_num()};
   range_src.reserve(n);
 
-  bool ok = true;
+  bool ok{true};
   for ( auto pt_range: pt_item->range_list() ) {
-    auto pt_left = pt_range->left();
-    auto pt_right = pt_range->right();
-    int left_val = 0;
-    int right_val = 0;
+    auto pt_left{pt_range->left()};
+    auto pt_right{pt_range->right()};
+    int left_val{0};
+    int right_val{0};
     if ( !evaluate_range(scope, pt_left, pt_right,
 			 left_val, right_val) ) {
       ok = false;
