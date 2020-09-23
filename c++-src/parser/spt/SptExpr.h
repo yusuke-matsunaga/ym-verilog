@@ -135,7 +135,7 @@ public:
   /// @return サイズ\n
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   const_size() const override;
 
   /// @brief 整数型の値の取得
@@ -555,7 +555,7 @@ public:
   const_type() const override;
 
   // 整数型の定数のサイズの取得
-  int
+  SizeType
   const_size() const override;
 
   // 整数型の値の取得

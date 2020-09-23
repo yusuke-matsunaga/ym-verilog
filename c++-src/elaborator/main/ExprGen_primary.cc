@@ -60,8 +60,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
   SizeType isize{pt_expr->index_num()};
 
   // 名前に対応したオブジェクトのハンドル
-  ObjHandle* handle = nullptr;
-
+  ObjHandle* handle{nullptr};
   if ( env.is_constant() ) {
     handle = find_const_handle(parent, pt_expr);
     if ( handle == nullptr ) {
@@ -137,6 +136,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
     }
     else if ( isize == 1 ) {
       auto pt_expr1{pt_expr->index(0)};
+
       int index;
       bool stat{evaluate_int(parent, pt_expr1, index, true)};
       if ( !stat ) {
@@ -224,7 +224,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
       }
       return mgr().new_BitSelect(pt_expr, primary, pt_expr1, index_val);
     }
-    auto index = instantiate_expr(parent, index_env, pt_expr1);
+    auto index{instantiate_expr(parent, index_env, pt_expr1)};
     if ( !index ) {
       return nullptr;
     }

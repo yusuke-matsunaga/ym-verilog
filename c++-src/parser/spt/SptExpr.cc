@@ -187,7 +187,7 @@ SptExpr::const_type() const
 // @return サイズ\n
 // サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
 // このクラスでは 0 を返す．
-int
+SizeType
 SptExpr::const_size() const
 {
   return 0;
@@ -690,7 +690,7 @@ SptConstant::~SptConstant()
 
 // @brief 整数型の定数のサイズの取得
 // @return サイズ
-int
+SizeType
 SptConstant::const_size() const
 {
   return mSize;

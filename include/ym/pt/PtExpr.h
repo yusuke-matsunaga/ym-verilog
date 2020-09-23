@@ -116,7 +116,7 @@ public:
   ///
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   virtual
-  int
+  SizeType
   const_size() const = 0;
 
   /// @brief 整数型の値の取得

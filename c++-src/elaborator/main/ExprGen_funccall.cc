@@ -78,7 +78,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
 			      const ElbEnv& env,
 			      const PtExpr* pt_expr)
 {
-  const VlTaskFunc* child_func = nullptr;
+  const VlTaskFunc* child_func{nullptr};
   if ( env.is_constant() ) {
     // 定数関数を探し出す．
     if ( pt_expr->namebranch_num() > 0 ) {
@@ -184,7 +184,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   auto name{pt_expr->name()};
 
   // system function を探し出す．
-  auto user_systf = find_user_systf(name);
+  auto user_systf{find_user_systf(name)};
   if ( user_systf == nullptr ) {
     error_no_such_sysfunction(pt_expr);
     return nullptr;
@@ -198,7 +198,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     auto pt_expr1{pt_expr->operand(i)};
-    ElbExpr* arg = nullptr;
+    ElbExpr* arg{nullptr};
     if ( pt_expr ) {
       arg = instantiate_arg(parent, env, pt_expr1);
       if ( !arg ) {

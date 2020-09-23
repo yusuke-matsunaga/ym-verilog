@@ -15,6 +15,7 @@
 #include "ym/vl/VlStmt.h"
 #include "ym/vl/VlExpr.h"
 #include "ym/MsgMgr.h"
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -65,8 +66,10 @@ Evaluator::operator()(const vector<VlValue>& arg_list)
 const VlScope*
 Evaluator::evaluate_stmt(const VlStmt* stmt)
 {
+  // disable が実行された場合の対象のスコープ
+  const VlScope* break_scope{nullptr};
+
   // ここでは個々のステートメント用の関数にディスパッチするだけ．
-  const VlScope* break_scope = nullptr;
   switch ( stmt->type() ) {
   case VpiObjType::Begin:
     break_scope = evaluate_seqblock(stmt);
@@ -180,14 +183,14 @@ Evaluator::evaluate_assign(const VlStmt* stmt)
 
   // lhs に val を代入する．
   auto lhs{stmt->lhs()};
-  SizeType nl = lhs->lhs_elem_num();
+  SizeType nl{lhs->lhs_elem_num()};
   if ( nl == 1 ) {
     assign_value(lhs, val);
   }
   else {
     // 左辺が連結式の場合
     auto bv{val.bitvector_value()};
-    SizeType base = 0;
+    SizeType base{0};
     for ( SizeType i = 0; i < nl; ++ i ) {
       auto expr{lhs->lhs_elem(i)};
       SizeType w{expr->bit_size()};
@@ -250,9 +253,11 @@ Evaluator::assign_value(const VlExpr* expr,
       auto index_expr{expr->declarray_index(i)};
       index_array[i] = evaluate_int(index_expr);
     }
+
     SizeType offset;
     bool stat = declarray->calc_array_offset(index_array, offset);
     ASSERT_COND( stat );
+
     if ( expr->is_primary() ) {
       // プライマリ
       reg_val(declarray, offset, val);
@@ -300,7 +305,7 @@ Evaluator::evaluate_repeat(const VlStmt* stmt)
   auto rep_expr{stmt->expr()};
   int rep_num{evaluate_int(rep_expr)};
   auto body_stmt{stmt->body_stmt()};
-  for ( int i = 0; i < rep_num; ++ i ) {
+  for ( int i: Range(rep_num) ) {
     auto break_scope{evaluate_stmt(body_stmt)};
     if ( break_scope ) {
       return break_scope;
@@ -596,12 +601,14 @@ Evaluator::evaluate_primary(const VlExpr* expr)
     SizeType n{expr->declarray_dimension()};
     vector<int> index_array(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      auto index_expr = expr->declarray_index(i);
+      auto index_expr{expr->declarray_index(i)};
       index_array[i] = evaluate_int(index_expr);
     }
+
     SizeType offset;
     bool stat = declarray->calc_array_offset(index_array, offset);
     ASSERT_COND( stat );
+
     base_val = get_val(declarray, offset);
   }
   else {
@@ -612,17 +619,17 @@ Evaluator::evaluate_primary(const VlExpr* expr)
     return base_val;
   }
   else if ( expr->is_bitselect() ) {
-    auto index_expr = expr->index();
-    int index = evaluate_int(index_expr);
-    auto bv = base_val.bitvector_value();
+    auto index_expr{expr->index()};
+    int index{evaluate_int(index_expr)};
+    auto bv{base_val.bitvector_value()};
     return VlValue(bv.bit_select_op(index));
   }
   else if ( expr->is_partselect() ) {
-    auto left_expr = expr->left_range();
-    int left_index = evaluate_int(left_expr);
-    auto right_expr = expr->right_range();
-    int right_index = evaluate_int(right_expr);
-    auto bv = base_val.bitvector_value();
+    auto left_expr{expr->left_range()};
+    int left_index{evaluate_int(left_expr)};
+    auto right_expr{expr->right_range()};
+    int right_index{evaluate_int(right_expr)};
+    auto bv{base_val.bitvector_value()};
     return VlValue(bv.part_select_op(left_index, right_index));
   }
 
@@ -654,7 +661,7 @@ Evaluator::evaluate_funccall(const VlExpr* expr)
 int
 Evaluator::evaluate_int(const VlExpr* expr)
 {
-  auto val = evaluate_expr(expr);
+  auto val{evaluate_expr(expr)};
   if ( !val.is_int_compat() ) {
     if ( mPutError ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -673,7 +680,7 @@ Evaluator::evaluate_int(const VlExpr* expr)
 bool
 Evaluator::evaluate_bool(const VlExpr* expr)
 {
-  auto val = evaluate_expr(expr);
+  auto val{evaluate_expr(expr)};
   if ( !val.is_int_compat() ) {
     if ( mPutError ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -744,15 +751,15 @@ Evaluator::reg_val(const VlDeclBase* obj,
   Key key{obj, offset};
   BitVector bv;
   if ( mValMap.count(key) > 0 ) {
-    auto val0 = mValMap.at(key);
-    ASSERT_COND( val.is_bitvector_compat() );
+    auto val0{mValMap.at(key)};
+    ASSERT_COND( val0.is_bitvector_compat() );
     bv = val0.bitvector_value();
   }
   else {
     bv = BitVector(VlScalarVal::x(), obj->bit_size());
   }
 
-  auto sv = val.scalar_value();
+  auto sv{val.scalar_value()};
   bv.bit_select_op(index, sv);
   mValMap.emplace(key, VlValue(bv));
 }
@@ -789,8 +796,8 @@ Evaluator::reg_val(const VlDeclBase* obj,
   Key key{obj, offset};
   BitVector bv;
   if ( mValMap.count(key) > 0 ) {
-    auto val0 = mValMap.at(key);
-    ASSERT_COND( val.is_bitvector_compat() );
+    auto val0{mValMap.at(key)};
+    ASSERT_COND( val0.is_bitvector_compat() );
     bv = val0.bitvector_value();
   }
   else {

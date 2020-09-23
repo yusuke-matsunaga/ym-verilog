@@ -115,7 +115,7 @@ public:
   /// @return サイズ\n
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
   /// @note このクラスでは 0 を返す．
-  int
+  SizeType
   const_size() const override;
 
   /// @brief 整数型の値の取得
@@ -1507,7 +1507,7 @@ protected:
 
   // コンストラクタ
   CptIntConstant3(const FileRegion& file_region,
-		  int size,
+		  SizeType size,
 		  VpiConstType const_type,
 		  const char* value);
 
@@ -1525,7 +1525,7 @@ public:
   const_type() const override;
 
   // 整数型の定数のサイズの取得
-  int
+  SizeType
   const_size() const override;
 
   // 文字列型の値の取得
@@ -1542,7 +1542,7 @@ private:
   VpiConstType mConstType;
 
   // サイズ
-  int mSize;
+  SizeType mSize;
 
   // 値を表す文字列
   const char* mValue;

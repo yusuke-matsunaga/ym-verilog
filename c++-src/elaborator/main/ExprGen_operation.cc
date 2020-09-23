@@ -31,11 +31,11 @@ ExprGen::instantiate_opr(const VlScope* parent,
   auto op_type{pt_expr->op_type()};
   SizeType opr_size{pt_expr->operand_num()};
 
-  ElbExpr* opr0 = nullptr;
-  ElbExpr* opr1 = nullptr;
-  ElbExpr* opr2 = nullptr;
-  ElbExpr* expr = nullptr;
-  bool real_check = false;
+  ElbExpr* opr0{nullptr};
+  ElbExpr* opr1{nullptr};
+  ElbExpr* opr2{nullptr};
+  ElbExpr* expr{nullptr};
+  bool real_check{false};
   switch ( op_type ) {
   case VpiOpType::Posedge:
   case VpiOpType::Negedge:
@@ -49,7 +49,9 @@ ExprGen::instantiate_opr(const VlScope* parent,
   case VpiOpType::UnaryOr:
   case VpiOpType::UnaryNor:
   case VpiOpType::UnaryXor:
-  case VpiOpType::UnaryXNor: real_check = true;
+  case VpiOpType::UnaryXNor:
+    real_check = true;
+    // わざと次の case に続く．
   case VpiOpType::Plus:
   case VpiOpType::Minus:
   case VpiOpType::Not:
@@ -71,7 +73,9 @@ ExprGen::instantiate_opr(const VlScope* parent,
   case VpiOpType::LShift:
   case VpiOpType::RShift:
   case VpiOpType::ArithLShift:
-  case VpiOpType::ArithRShift: real_check = true;
+  case VpiOpType::ArithRShift:
+    real_check = true;
+    // わざと次の case に続く．
   case VpiOpType::Add:
   case VpiOpType::Sub:
   case VpiOpType::Mult:
@@ -143,11 +147,13 @@ ExprGen::instantiate_opr(const VlScope* parent,
   case VpiOpType::MultiConcat:
     {
       auto pt_expr0{pt_expr->operand(0)};
+
       int rep_num;
       bool stat{evaluate_int(parent, pt_expr0, rep_num, true)};
       if ( !stat ) {
 	return nullptr;
       }
+
       auto rep_expr{instantiate_expr(parent, env, pt_expr0)};
       vector<ElbExpr*> opr_list(opr_size - 1);
       for ( SizeType i = 1; i < opr_size; ++ i ) {

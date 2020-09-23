@@ -34,7 +34,7 @@ ExprGen::evaluate_int(const VlScope* parent,
 		      int& value,
 		      bool put_error)
 {
-  auto val = evaluate_expr(parent, pt_expr, put_error);
+  auto val{evaluate_expr(parent, pt_expr, put_error)};
   if ( !val.is_int_compat() ) {
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -62,7 +62,8 @@ ExprGen::evaluate_scalar(const VlScope* parent,
 			 VlScalarVal& value,
 			 bool put_error)
 {
-  auto val = evaluate_expr(parent, pt_expr, put_error);
+  auto val{evaluate_expr(parent, pt_expr, put_error)};
+  // この変換は失敗しない．
   value = val.scalar_value();
   return true;
 }
@@ -79,7 +80,8 @@ ExprGen::evaluate_bool(const VlScope* parent,
 		       bool& value,
 		       bool put_error)
 {
-  auto val = evaluate_expr(parent, pt_expr, put_error);
+  auto val{evaluate_expr(parent, pt_expr, put_error)};
+  // この変換は失敗しない．
   value = val.logic_value().to_bool();
   return true;
 }
@@ -96,7 +98,7 @@ ExprGen::evaluate_bitvector(const VlScope* parent,
 			    BitVector& value,
 			    bool put_error)
 {
-  auto val = evaluate_expr(parent, pt_expr, put_error);
+  auto val{evaluate_expr(parent, pt_expr, put_error)};
   if ( !val.is_bitvector_compat() ) {
     if ( put_error ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -162,11 +164,11 @@ ExprGen::evaluate_opr(const VlScope* parent,
 		      const PtExpr* pt_expr,
 		      bool put_error)
 {
-  auto op_type = pt_expr->op_type();
-  SizeType op_size = pt_expr->operand_num();
-  vector<VlValue> val(3);
+  auto op_type{pt_expr->op_type()};
+  SizeType op_size{pt_expr->operand_num()};
 
   // オペランドの値の評価を行う．
+  vector<VlValue> val(op_size);
   for ( SizeType i = 0; i < op_size; ++ i ) {
     val[i] = evaluate_expr(parent, pt_expr->operand(i), put_error);
     if ( val[i].is_error() ) {
@@ -383,9 +385,10 @@ ExprGen::evaluate_primary(const VlScope* parent,
     return VlValue();
   }
 
-  bool has_range_select = (pt_expr->left_range() && pt_expr->right_range());
+  SizeType isize{pt_expr->index_num()};
+  bool has_bit_select{(isize == 1)};
+  bool has_range_select{(pt_expr->left_range() && pt_expr->right_range())};
 
-  SizeType isize = pt_expr->index_num();
   if (  isize > 1 || (isize == 1 && has_range_select) ) {
     // 配列型ではない．
     if ( put_error ) {
@@ -393,31 +396,30 @@ ExprGen::evaluate_primary(const VlScope* parent,
     }
     return VlValue();
   }
-  bool has_bit_select = (isize == 1);
 
-  int index1 = 0;
-  int index2 = 0;
+  int index1{0};
+  int index2{0};
   if ( has_bit_select ) {
     if ( !evaluate_int(parent, pt_expr->index(0), index1, put_error) ) {
       return VlValue();
     }
   }
   if ( has_range_select ) {
-    auto pt_left = pt_expr->left_range();
-    bool stat1 = evaluate_int(parent, pt_left, index1, put_error);
+    auto pt_left{pt_expr->left_range()};
+    bool stat1{evaluate_int(parent, pt_left, index1, put_error)};
     if ( !stat1 ) {
       return VlValue();
     }
 
-    auto pt_right = pt_expr->right_range();
-    bool stat2 = evaluate_int(parent, pt_right, index2, put_error);
+    auto pt_right{pt_expr->right_range()};
+    bool stat2{evaluate_int(parent, pt_right, index2, put_error)};
     if ( !stat2 ) {
       return VlValue();
     }
   }
 
   // モジュール内の識別子を探索する．
-  auto handle = find_obj_up(parent, pt_expr, parent->parent_module());
+  auto handle{find_obj_up(parent, pt_expr, parent->parent_module())};
   if ( !handle ) {
     // 見つからなかった．
     if ( put_error ) {
@@ -427,7 +429,7 @@ ExprGen::evaluate_primary(const VlScope* parent,
   }
 
   // そのオブジェクトが genvar の場合
-  auto genvar = handle->genvar();
+  auto genvar{handle->genvar()};
   if ( genvar ) {
     if ( has_bit_select ) {
       // ビット選択
@@ -452,7 +454,7 @@ ExprGen::evaluate_primary(const VlScope* parent,
 
   // それ以外の宣言要素の場合
   // しかしこの場合には parameter でなければならない．
-  auto param = handle->parameter();
+  auto param{handle->parameter()};
   if ( !param ) {
     if ( put_error ) {
       error_not_a_parameter(pt_expr);
@@ -460,8 +462,8 @@ ExprGen::evaluate_primary(const VlScope* parent,
     return VlValue();
   }
 
-  auto pt_init_expr = param->init_expr();
-  auto val = evaluate_expr(parent, pt_init_expr, true);
+  auto pt_init_expr{param->init_expr()};
+  auto val{evaluate_expr(parent, pt_init_expr, true)};
   if ( param->value_type().is_real_type() ) {
     if ( has_bit_select || has_range_select ) {
       if ( put_error ) {
@@ -479,7 +481,7 @@ ExprGen::evaluate_primary(const VlScope* parent,
 	}
 	return VlValue();
       }
-      SizeType offset;
+      SizeType offset{0};
       if ( !param->calc_bit_offset(index1, offset) ) {
 	// インデックスが範囲外だった．
 	// エラーではなく X になる．
@@ -497,7 +499,7 @@ ExprGen::evaluate_primary(const VlScope* parent,
       switch ( pt_expr->range_mode() ) {
       case VpiRangeMode::Const:
 	{
-	  bool big = (index1 >= index2);
+	  bool big{(index1 >= index2)};
 	  if ( big ^ param->is_big_endian() ) {
 	    if ( put_error ) {
 	      error_range_order(pt_expr);
@@ -509,7 +511,7 @@ ExprGen::evaluate_primary(const VlScope* parent,
 
       case VpiRangeMode::Plus:
 	if ( param->is_big_endian() ) {
-	  int range = index2;
+	  int range{index2};
 	  index2 = index1;
 	  index1 = index1 + range - 1;
 	}
@@ -523,7 +525,7 @@ ExprGen::evaluate_primary(const VlScope* parent,
 	  index2 = index1 - index2 + 1;
 	}
 	else {
-	  int range = index2;
+	  int range{index2};
 	  index2 = index1;
 	  index1 = index1 - range + 1;
 	}
@@ -534,13 +536,15 @@ ExprGen::evaluate_primary(const VlScope* parent,
 	ASSERT_NOT_REACHED;
 	break;
       }
+
       SizeType msb_offset;
-      bool stat1 = param->calc_bit_offset(index1, msb_offset);
       SizeType lsb_offset;
-      bool stat2 = param->calc_bit_offset(index2, lsb_offset);
+      bool stat1{param->calc_bit_offset(index1, msb_offset)};
+      bool stat2{param->calc_bit_offset(index2, lsb_offset)};
       if ( stat1 && stat2 ) {
 	return VlValue(val.bitvector_value().part_select_op(msb_offset, lsb_offset));
       }
+
       SizeType bw;
       if ( index1 < index2 ) {
 	bw = index2 - index1 + 1;
@@ -562,9 +566,9 @@ VlValue
 ExprGen::evaluate_const(const VlScope* parent,
 			const PtExpr* pt_expr)
 {
-  SizeType size = pt_expr->const_size();
-  bool is_signed = false;
-  SizeType base = 0;
+  SizeType size{pt_expr->const_size()};
+  bool is_signed{false};
+  SizeType base{0};
   switch ( pt_expr->const_type() ) {
   case VpiConstType::Int:
     if ( pt_expr->const_str() == nullptr ) {
@@ -577,24 +581,28 @@ ExprGen::evaluate_const(const VlScope* parent,
 
   case VpiConstType::SignedBinary:
     is_signed = true;
+    // わざと次の case につづく
   case VpiConstType::Binary:
     base = 2;
     break;
 
   case VpiConstType::SignedOct:
     is_signed = true;
+    // わざと次の case につづく
   case VpiConstType::Oct:
     base = 8;
     break;
 
   case VpiConstType::SignedDec:
     is_signed = true;
+    // わざと次の case につづく
   case VpiConstType::Dec:
     base = 10;
     break;
 
   case VpiConstType::SignedHex:
     is_signed = true;
+    // わざと次の case につづく
   case VpiConstType::Hex:
     base = 16;
     break;
@@ -620,8 +628,6 @@ ExprGen::evaluate_funccall(const VlScope* parent,
 			   const PtExpr* pt_expr,
 			   bool put_error)
 {
-  // 定数関数を探し出す．
-
   if ( pt_expr->namebranch_num() > 0 ) {
     // 階層名は使えない．
     if ( put_error ) {
@@ -654,6 +660,7 @@ ExprGen::evaluate_funccall(const VlScope* parent,
     return VlValue();
   }
 
+  // 定数関数を探し出す．
   auto child_func{find_constant_function(module, name)};
   if ( child_func == nullptr ) {
     pt_func->set_in_use();
@@ -671,7 +678,7 @@ ExprGen::evaluate_funccall(const VlScope* parent,
   }
 
   // 引数の生成
-  SizeType n = pt_expr->operand_num();
+  SizeType n{pt_expr->operand_num()};
   if ( n != child_func->io_num() ) {
     // 引数の数が合わなかった．
     if ( put_error ) {
@@ -682,15 +689,15 @@ ExprGen::evaluate_funccall(const VlScope* parent,
 
   vector<VlValue> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1 = pt_expr->operand(i);
-    auto val1 = evaluate_expr(parent, pt_expr1, put_error);
+    auto pt_expr1{pt_expr->operand(i)};
+    auto val1{evaluate_expr(parent, pt_expr1, put_error)};
     if ( val1.is_error() ) {
       // エラーが起った．
       return VlValue();
     }
-    auto io_decl = child_func->io(i);
-    auto decl = io_decl->decl();
-    auto decl_type = decl->value_type();
+    auto io_decl{child_func->io(i)};
+    auto decl{io_decl->decl()};
+    auto decl_type{decl->value_type()};
     if ( decl_type.is_real_type() ) {
       if ( !val1.is_real_compat() ) {
 	// 型が異なる．
@@ -714,7 +721,7 @@ ExprGen::evaluate_funccall(const VlScope* parent,
 
   // 評価を行う．
   Evaluator eval(child_func, put_error);
-  auto val = eval(arg_list);
+  auto val{eval(arg_list)};
 
   return val;
 }

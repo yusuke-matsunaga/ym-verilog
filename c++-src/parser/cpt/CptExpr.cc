@@ -157,7 +157,7 @@ CptExpr::const_type() const
 // @return サイズ\n
 // サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
 // このクラスでは 0 を返す．
-int
+SizeType
 CptExpr::const_size() const
 {
   return 0;
@@ -988,7 +988,7 @@ CptIntConstant2::const_str() const
 
 // コンストラクタ
 CptIntConstant3::CptIntConstant3(const FileRegion& file_region,
-				 int size,
+				 SizeType size,
 				 VpiConstType const_type,
 				 const char* value) :
   CptConstant(file_region),
@@ -1011,7 +1011,7 @@ CptIntConstant3::const_type() const
 }
 
 // 整数型の定数のサイズの取得
-int
+SizeType
 CptIntConstant3::const_size() const
 {
   return mSize;
