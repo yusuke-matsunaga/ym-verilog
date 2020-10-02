@@ -23,6 +23,19 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
+#define DOUT cerr
+
+const ymuint debug_none       = 0x00000000;
+const ymuint debug_objdict    = 0x00000001;
+const ymuint debug_find_scope = 0x00000010;
+const ymuint debug_all        = 0xFFFFFFFF;
+
+#if 1
+const ymuint debug = debug_none;
+#else
+const ymuint debug = debug_all;
+#endif
+
 //////////////////////////////////////////////////////////////////////
 // クラス ObjHandle
 //////////////////////////////////////////////////////////////////////
@@ -567,6 +580,15 @@ ObjDict::add(const VlScope* obj)
 void
 ObjDict::add(const VlTaskFunc* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_taskfunc( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbTaskFuncHandle(obj)};
   add_handle(handle);
 }
@@ -575,6 +597,15 @@ ObjDict::add(const VlTaskFunc* obj)
 void
 ObjDict::add(ElbDecl* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_decl( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbDeclHandle(obj)};
   add_handle(handle);
 }
@@ -583,6 +614,15 @@ ObjDict::add(ElbDecl* obj)
 void
 ObjDict::add(const VlDeclArray* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_declarray( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbDeclArrayHandle(obj)};
   add_handle(handle);
 }
@@ -599,6 +639,15 @@ ObjDict::add(ElbParameter* obj)
 void
 ObjDict::add(const VlModule* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_module( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbModuleHandle(obj)};
   add_handle(handle);
 }
@@ -607,6 +656,15 @@ ObjDict::add(const VlModule* obj)
 void
 ObjDict::add(const VlModuleArray* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_modulearray( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbModuleArrayHandle(obj)};
   add_handle(handle);
 }
@@ -615,22 +673,51 @@ ObjDict::add(const VlModuleArray* obj)
 void
 ObjDict::add(const VlPrimArray* obj)
 {
-  auto handle{new ElbPrimArrayHandle(obj)};
-  add_handle(handle);
+  if ( obj->name() != string() ) {
+    if ( debug & debug_objdict ) {
+      auto parent{obj->parent_scope()};
+      DOUT << "reg_primarray( " << obj->name() << " @ "
+	   << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+    }
+    auto handle{new ElbPrimArrayHandle(obj)};
+    add_handle(handle);
+  }
 }
 
 // @brief 要素を追加する．
 void
 ObjDict::add(const VlPrimitive* obj)
 {
-  auto handle{new ElbPrimitiveHandle(obj)};
-  add_handle(handle);
+  if ( obj->name() != string() ) {
+    if ( debug & debug_objdict ) {
+      auto parent{obj->parent_scope()};
+      DOUT << "reg_primitive( " << obj->name() << " @ "
+	   << parent->full_name()
+	   << " ["
+	   << hex << reinterpret_cast<ympuint>(parent) << dec
+	   << "] )" << endl << endl;
+    }
+    auto handle{new ElbPrimitiveHandle(obj)};
+    add_handle(handle);
+  }
 }
 
 // @brief 要素を追加する．
 void
 ObjDict::add(ElbGfRoot* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_gfroot( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbGfRootHandle(obj)};
   add_handle(handle);
 }
@@ -639,6 +726,15 @@ ObjDict::add(ElbGfRoot* obj)
 void
 ObjDict::add(ElbGenvar* obj)
 {
+  if ( debug & debug_objdict ) {
+    auto parent{obj->parent_scope()};
+    DOUT << "reg_genvar( " << obj->name() << " @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   auto handle{new ElbGenvarHandle(obj)};
   add_handle(handle);
 }
@@ -655,12 +751,30 @@ ObjHandle*
 ObjDict::find(const VlScope* parent,
 	      const string& name) const
 {
+  if ( debug & debug_find_scope ) {
+    DOUT << "find_obj( " << name << ", @ "
+	 << parent->full_name()
+	 << " ["
+	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << "] )" << endl << endl;
+  }
+
   KeyObjHandle key{parent, name};
   auto p{mHash.find(&key)};
   if ( p != mHash.end() ) {
+    if ( debug & debug_find_scope ) {
+      DOUT << "--> Found"
+	   << endl << endl;
+    }
+
     return *p;
   }
   else {
+    if ( debug & debug_find_scope ) {
+      DOUT << "--> Not Found"
+	   << endl << endl;
+    }
+
     return nullptr;
   }
 }

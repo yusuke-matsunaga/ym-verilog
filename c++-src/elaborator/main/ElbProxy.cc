@@ -9,16 +9,20 @@
 
 #include "ElbProxy.h"
 #include "ElbEnv.h"
+#include "ElbError.h"
 #include "ModuleGen.h"
 #include "DeclGen.h"
 #include "ItemGen.h"
 #include "StmtGen.h"
 #include "ExprGen.h"
+#include "ExprEval.h"
 #include "AttrGen.h"
 
 #include "elaborator/ElbExpr.h"
-#include "ym/pt/PtExpr.h"
 #include "parser/PtDumper.h"
+
+#include "ym/pt/PtExpr.h"
+#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -44,12 +48,15 @@ ElbProxy::~ElbProxy()
 // @param[in] item_gen 構成要素生成用のオブジェクト
 // @param[in] stmt_gen ステートメント生成用のオブジェクト
 // @param[in] expr_gen 式生成用のオブジェクト
+// @param[in] expr_eval 定数式評価用のオブジェクト
+// @param[in] attr_gen 属性生成用のオブジェクト
 void
 ElbProxy::init(ModuleGen* module_gen,
 	       DeclGen* decl_gen,
 	       ItemGen* item_gen,
 	       StmtGen* stmt_gen,
 	       ExprGen* expr_gen,
+	       ExprEval* expr_eval,
 	       AttrGen* attr_gen)
 {
   mModuleGen = module_gen;
@@ -57,6 +64,7 @@ ElbProxy::init(ModuleGen* module_gen,
   mItemGen = item_gen;
   mStmtGen = stmt_gen;
   mExprGen = expr_gen;
+  mExprEval = expr_eval;
   mAttrGen = attr_gen;
 }
 
@@ -288,101 +296,104 @@ ElbProxy::instantiate_delay(const VlScope* parent,
   return mExprGen->instantiate_delay(parent, pt_head);
 }
 
-// @brief 式の値を評価する．
+// @brief 定数式の値を評価する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
-// @param[in] put_error エラーを出力する時，true にする．
+// @return 評価した値を返す．
+//
+// * 定数式でなければ EvalError 例外を送出する．
 VlValue
 ElbProxy::evaluate_expr(const VlScope* parent,
-			const PtExpr* pt_expr,
-			bool put_error)
+			const PtExpr* pt_expr)
 {
-  return mExprGen->evaluate_expr(parent, pt_expr, put_error);
+  return mExprEval->evaluate_expr(parent, pt_expr);
 }
 
-// @brief PtExpr を評価し int 値を返す．
+// @brief 定数式を評価し int 値を返す．
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
-// @param[out] value 評価値を格納する変数
-// @param[in] put_error エラーを出力する時，true にする．
-// @note 定数でなければエラーメッセージを出力し false を返す．
-bool
+// @return 評価した値を返す．
+//
+// * 定数式でなければ EvalError 例外を送出する．
+// * 評価結果が int でなければ EvalError 例外を送出する．
+int
 ElbProxy::evaluate_int(const VlScope* parent,
-		       const PtExpr* pt_expr,
-		       int& value,
-		       bool put_error)
+		       const PtExpr* pt_expr)
 {
-  return mExprGen->evaluate_int(parent, pt_expr, value, put_error);
+  return mExprEval->evaluate_int(parent, pt_expr);
 }
 
-// @brief PtExpr を評価しスカラー値を返す．
+// @brief 定数式ならばを評価し int 値を返す．
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
-// @param[out] value 評価値を格納する変数
-// @param[in] put_error エラーを出力する時，true にする．
-// @note 定数でなければエラーメッセージを出力し false を返す．
-bool
+// @param[out] is_const 定数式の時に true を返す．
+// @return 評価した値を返す．
+//
+// * 評価結果が int でなければ EvalError 例外を送出する．
+int
+ElbProxy::evaluate_int_if_const(const VlScope* parent,
+				const PtExpr* pt_expr,
+				bool& is_const)
+{
+  return mExprEval->evaluate_int_if_const(parent, pt_expr, is_const);
+}
+
+// @brief 定数式を評価しスカラー値を返す．
+// @param[in] parent 親のスコープ
+// @param[in] pt_expr 式を表すパース木
+// @return 評価した値を返す．
+//
+// * 定数式でなければ EvalError 例外を送出する．
+// * いかなる型でもスカラー値に変換可能
+VlScalarVal
 ElbProxy::evaluate_scalar(const VlScope* parent,
-			  const PtExpr* pt_expr,
-			  VlScalarVal& value,
-			  bool put_error)
+			  const PtExpr* pt_expr)
 {
-  return mExprGen->evaluate_scalar(parent, pt_expr, value, put_error);
+  return mExprEval->evaluate_scalar(parent, pt_expr);
 }
 
-// @brief PtExpr を評価し bool 値を返す．
+// @brief 定数式を評価し bool 値を返す．
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
-// @param[out] value 評価値を格納する変数
-// @param[in] put_error エラーを出力する時，true にする．
-// @note 定数でなければエラーメッセージを出力し false を返す．
+// @return 評価した値を返す．
+//
+// * 定数式でなければ EvalError 例外を送出する．
+// * いかなる型でも bool 値に変換可能
 bool
 ElbProxy::evaluate_bool(const VlScope* parent,
-			const PtExpr* pt_expr,
-			bool& value,
-			bool put_error)
+			const PtExpr* pt_expr)
 {
-  return mExprGen->evaluate_bool(parent, pt_expr, value, put_error);
+  return mExprEval->evaluate_bool(parent, pt_expr);
 }
 
-// @brief PtExpr を評価しビットベクタ値を返す．
+// @brief 定数式を評価しビットベクタ値を返す．
 // @param[in] parent 親のスコープ
 // @param[in] pt_expr 式を表すパース木
-// @param[out] value 評価値を格納する変数
-// @param[in] put_error エラーを出力する時，true にする．
-// @note 定数でなければエラーメッセージを出力し false を返す．
-bool
+// @return 評価した値を返す．
+//
+// * 定数式でなければ EvalError 例外を送出する．
+// * 評価結果がビットベクタ型でなければ EvalError 例外を送出する．
+BitVector
 ElbProxy::evaluate_bitvector(const VlScope* parent,
-			     const PtExpr* pt_expr,
-			     BitVector& value,
-			     bool put_error)
+			     const PtExpr* pt_expr)
 {
-  return mExprGen->evaluate_bitvector(parent, pt_expr, value, put_error);
+  return mExprEval->evaluate_bitvector(parent, pt_expr);
 }
 
 // @brief 範囲を表す式を評価する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_left 範囲のMSBを表すパース木
 // @param[in] pt_right 範囲のLSBを表すパース木
-// @param[in] left_val 範囲の MSB の値
-// @param[in] right_val 範囲の LSB の値
-bool
+// @param[return] 範囲の MSB と LSB の値のペアを返す．
+//
+// * 定数式でなければ EvalError 例外を送出する．
+// * 評価結果が int でなければ EvalError 例外を送出する．
+pair<int, int>
 ElbProxy::evaluate_range(const VlScope* parent,
 			 const PtExpr* pt_left,
-			 const PtExpr* pt_right,
-			 int& left_val,
-			 int& right_val)
+			 const PtExpr* pt_right)
 {
-  left_val = 0;
-  right_val = 0;
-  if ( pt_left && pt_right ) {
-    bool stat1 = evaluate_int(parent, pt_left, left_val, true);
-    bool stat2 = evaluate_int(parent, pt_right, right_val, true);
-    if ( !stat1 || !stat2 ) {
-      return false;
-    }
-  }
-  return true;
+  return mExprEval->evaluate_range(parent, pt_left, pt_right);
 }
 
 // @brief 構文木要素に対応する属性リストを返す．
@@ -403,6 +414,59 @@ ElbProxy::attribute_list(const PtBase* pt_obj1,
   const auto& ans1{mAttrGen->attribute_list(pt_obj2)};
   ans.insert(ans.end(), ans1.begin(), ans1.end());
   return ans;
+}
+
+// @brief エラーメッセージを出力する．
+// @param[in] error エラー情報
+void
+ElbProxy::put_error(const ElbError& error)
+{
+  MsgMgr::put_msg(error.file(), error.line(),
+		  error.file_region(),
+		  MsgType::Error,
+		  error.label().c_str(),
+		  error.message());
+}
+
+// @brief 警告メッセージを出力する．
+// @param[in] file ソースファイル名
+// @param[in] line ソースファイル上の行番号
+// @param[in] loc 警告箇所
+// @param[in] label ラベル
+// @param[in] msg メッセージ
+void
+ElbProxy::put_warning(const char* file,
+		      int line,
+		      const FileRegion& loc,
+		      const char* label,
+		      const string& msg)
+
+{
+  MsgMgr::put_msg(file, line,
+		  loc,
+		  MsgType::Warning,
+		  label,
+		  msg);
+}
+
+// @brief 情報メッセージを出力する．
+// @param[in] file ソースファイル名
+// @param[in] line ソースファイル上の行番号
+// @param[in] loc 対象の箇所
+// @param[in] label ラベル
+// @param[in] msg メッセージ
+void
+ElbProxy::put_info(const char* file,
+		   int line,
+		   const FileRegion& loc,
+		   const char* label,
+		   const string& msg)
+{
+  MsgMgr::put_msg(file, line,
+		  loc,
+		  MsgType::Info,
+		  label,
+		  msg);
 }
 
 END_NAMESPACE_YM_VERILOG

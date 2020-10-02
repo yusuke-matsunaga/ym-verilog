@@ -332,6 +332,13 @@ private:
 			const ElbEnv& env,
 			const PtStmt* pt_stmt);
 
+  /// @brief ステートメントブロックのスコープを生成する．
+  /// @param[in] parent 親のスコープ環境
+  /// @param[in] pt_stmt 対応するパース木の要素
+  const VlScope*
+  new_StmtBlockScope(const VlScope* parent,
+		     const PtStmt* pt_stmt);
+
 };
 
 END_NAMESPACE_YM_VERILOG

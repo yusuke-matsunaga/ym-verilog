@@ -15,6 +15,7 @@
 #include "ItemGen.h"
 #include "StmtGen.h"
 #include "ExprGen.h"
+#include "ExprEval.h"
 #include "AttrGen.h"
 #include "DefParamStub.h"
 #include "ElbStub.h"
@@ -29,6 +30,7 @@
 #include "parser/PtMgr.h"
 
 #include "elaborator/ElbModule.h"
+#include "elaborator/ElbModuleArray.h"
 #include "elaborator/ElbGfRoot.h"
 #include "elaborator/ElbDecl.h"
 #include "elaborator/ElbParameter.h"
@@ -41,10 +43,9 @@
 
 BEGIN_NAMESPACE_YM_VERILOG
 
-#define dout cerr
+#define DOUT cerr
 
 const ymuint debug_none       = 0x00000000;
-const ymuint debug_objdict    = 0x00000001;
 const ymuint debug_find_scope = 0x00000010;
 const ymuint debug_all        = 0xFFFFFFFF;
 
@@ -82,24 +83,27 @@ Elaborator::Elaborator(ElbMgr& elb_mgr,
   mItemGen{new ItemGen(*this, elb_mgr)},
   mStmtGen{new StmtGen(*this, elb_mgr)},
   mExprGen{new ExprGen(*this, elb_mgr)},
+  mExprEval{new ExprEval(*this, elb_mgr)},
   mAttrGen{new AttrGen(*this, elb_mgr)}
 {
   mAllowEmptyIORange = true;
 
   mUdpGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		mExprGen.get(), mAttrGen.get());
+		mExprGen.get(), mExprEval.get(), mAttrGen.get());
   mModuleGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		   mExprGen.get(), mAttrGen.get());
+		   mExprGen.get(), mExprEval.get(), mAttrGen.get());
   mDeclGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		 mExprGen.get(), mAttrGen.get());
+		 mExprGen.get(), mExprEval.get(), mAttrGen.get());
   mItemGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		 mExprGen.get(), mAttrGen.get());
+		 mExprGen.get(), mExprEval.get(), mAttrGen.get());
   mStmtGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		 mExprGen.get(), mAttrGen.get());
+		 mExprGen.get(), mExprEval.get(), mAttrGen.get());
   mExprGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		 mExprGen.get(), mAttrGen.get());
+		 mExprGen.get(), mExprEval.get(), mAttrGen.get());
+  mExprEval->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
+		  mExprGen.get(), mExprEval.get(), mAttrGen.get());
   mAttrGen->init(mModuleGen.get(), mDeclGen.get(), mItemGen.get(), mStmtGen.get(),
-		 mExprGen.get(), mAttrGen.get());
+		 mExprGen.get(), mExprEval.get(), mAttrGen.get());
 }
 
 // @brief デストラクタ
@@ -175,7 +179,6 @@ Elaborator::operator()(const PtMgr& pt_mgr)
   // トップレベル階層の生成
   /// toplevel は実体を持たない仮想的なスコープ
   auto toplevel{mMgr.new_Toplevel()};
-  mMgr.reg_toplevel(toplevel);
 
   // トップモジュールの生成
   for ( auto pt_module: pt_module_list ) {
@@ -357,252 +360,6 @@ Elaborator::find_constant_function(const VlScope* parent,
   }
 }
 
-// @brief internal scope を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_internalscope(const VlScope* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_internalscope( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl
-	 << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_internalscope(obj);
-}
-
-// @brief タスクを登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_task(const VlTaskFunc* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_task( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_task(obj);
-}
-
-// @brief 関数を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_function(const VlTaskFunc* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_function( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_function(obj);
-}
-
-// @brief 宣言要素を登録する．
-// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_decl(int tag,
-		     ElbDecl* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_decl( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_decl(tag, obj);
-}
-
-// @brief 配列型の宣言要素を登録する．
-// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_declarray(int tag,
-			  const VlDeclArray* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_declarray( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_declarray(tag, obj);
-}
-
-// @brief パラメータを登録する．
-// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_parameter(int tag,
-			  ElbParameter* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_decl( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_decl(tag, obj);
-}
-
-// @brief モジュール配列を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_modulearray(const VlModuleArray* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_modulearray( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mMgr.reg_modulearray(obj);
-}
-
-// @brief ElbModule を登録する．
-// @param[in] module 登録するモジュール
-void
-Elaborator::reg_module(ElbModule* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_module( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-  mModuleDefDict.add(obj);
-  mMgr.reg_module(obj);
-}
-
-// @brief プリミティブ配列を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_primarray(ElbPrimArray* obj)
-{
-  if ( obj->name() != string() ) {
-    if ( debug & debug_objdict ) {
-      auto parent{obj->parent_scope()};
-      dout << "reg_primarray( " << obj->name() << " @ "
-	   << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-    }
-    mObjDict.add(obj);
-  }
-  mMgr.reg_primarray(obj);
-}
-
-// @brief プリミティブを登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_primitive(ElbPrimitive* obj)
-{
-  if ( obj->name() != string() ) {
-    if ( debug & debug_objdict ) {
-      auto parent{obj->parent_scope()};
-      dout << "reg_primitive( " << obj->name() << " @ "
-	   << parent->full_name()
-	   << " ["
-	   << hex << reinterpret_cast<ympuint>(parent) << dec
-	   << "] )" << endl << endl;
-    }
-    mObjDict.add(obj);
-  }
-  mMgr.reg_primitive(obj);
-}
-
-// @brief defparam を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_defparam(const VlDefParam* obj)
-{
-  mMgr.reg_defparam(obj);
-}
-
-// @brief paramassign を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_paramassign(const VlParamAssign* obj)
-{
-  mMgr.reg_paramassign(obj);
-}
-
-// @brief continuous assignment を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_contassign(const VlContAssign* obj)
-{
-  mMgr.reg_contassign(obj);
-}
-
-// @brief process を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_process(ElbProcess* obj)
-{
-  mMgr.reg_process(obj);
-}
-
-// @brief genvar を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_genvar(ElbGenvar* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_genvar( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-}
-
-// @brief gfroot を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-Elaborator::reg_gfroot(ElbGfRoot* obj)
-{
-  if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
-    dout << "reg_gfroot( " << obj->name() << " @ "
-	 << parent->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
-	 << "] )" << endl << endl;
-  }
-  mObjDict.add(obj);
-}
-
 // @brief constant function を登録する．
 // @param[in] func 関数
 void
@@ -619,173 +376,6 @@ int
 Elaborator::find_cell_id(const string& name) const
 {
   return mCellLibrary.cell_id(name);
-}
-
-// @brief スコープと名前から名前付き要素を取り出す．
-// @param[in] parent 検索対象のスコープ
-// @param[in] name 名前
-// @return parent というスコープ内の name という要素を返す．
-// @return なければ nullptr を返す．
-ObjHandle*
-Elaborator::find_obj(const VlScope* scope,
-		     const string& name) const
-{
-  if ( debug & debug_find_scope ) {
-    dout << "find_obj( " << name << ", @ "
-	 << scope->full_name()
-	 << " ["
-	 << hex << reinterpret_cast<ympuint>(scope) << dec
-	 << "] )" << endl << endl;
-  }
-
-  auto handle{mObjDict.find(scope, name)};
-  if ( handle == nullptr ) {
-    if ( debug & debug_find_scope ) {
-      dout << "--> Not Found"
-	   << endl << endl;
-    }
-    // なければ nullptr を返す。
-    return nullptr;
-  }
-
-  if ( debug & debug_find_scope ) {
-    dout << "--> Found"
-	 << endl << endl;
-  }
-
-  return handle;
-}
-
-// @brief スコープと名前からスコープを取り出す．
-// @param[in] parent 検索対象のスコープ
-// @param[in] name 名前
-// @return parent というスコープ内の name というスコープを返す．
-// @return なければ nullptr を返す．
-const VlScope*
-Elaborator::find_namedobj(const VlScope* parent,
-			  const string& name) const
-{
-  auto handle{find_obj(parent, name)};
-  if ( handle != nullptr ) {
-    return handle->scope();
-  }
-  else {
-    return nullptr;
-  }
-}
-
-// @brief 名前によるオブジェクトの探索
-// @param[in] base_scope 起点となるスコープ
-// @param[in] pt_objy 階層名付きのオブジェクト
-// @param[in] ulimit 探索する名前空間の上限
-// @return 見付かったオブジェクトを返す．
-// 見付からなかったら nullptr を返す．
-ObjHandle*
-Elaborator::find_obj_up(const VlScope* base_scope,
-			const PtHierNamedBase* pt_obj,
-			const VlScope* ulimit)
-{
-  // まず nb の部分の解決を行う．
-  base_scope = find_scope_up(base_scope, pt_obj, ulimit);
-  if ( base_scope == nullptr ) {
-    return nullptr;
-  }
-
-  if ( debug & debug_find_scope ) {
-    dout << "find_obj_up( " << pt_obj->name() << " )@"
-	 << base_scope->full_name() << endl;
-  }
-
-  // base_scope を起点として name というオブジェクトを探す．
-  for ( ; base_scope; base_scope = base_scope->parent_scope() ) {
-    auto handle{find_obj(base_scope, pt_obj->name())};
-    if ( handle ) {
-      // 見つけた
-      if ( debug & debug_find_scope ) {
-	dout << "--> Found: " << handle->name() << " @ "
-	     << base_scope->name() << endl << endl;
-      }
-      return handle;
-    }
-    // base_scope が上限だったのでこれ以上 upward search できない．
-    if ( base_scope == ulimit ) {
-      if ( debug & debug_find_scope ) {
-	dout << "--> Not found: reaches to ulimit" << endl << endl;
-      }
-      return nullptr;
-    }
-  }
-  // ダミー
-  return nullptr;
-}
-
-// base_scope を起点として (name_branch, "" ) という名前のスコープを探す．
-// なければ親のスコープに対して同様の探索を繰り返す．
-const VlScope*
-Elaborator::find_scope_up(const VlScope* base_scope,
-			  const PtHierNamedBase* pt_obj,
-			  const VlScope* ulimit)
-{
-  if ( debug & debug_find_scope ) {
-    dout << "find_scope_up( "
-	 << pt_obj->fullname()
-	 << " ) @"
-	 << base_scope->full_name() << endl;
-  }
-
-  SizeType n{pt_obj->namebranch_num()};
-  auto cur_scope{base_scope};
-  for ( auto name_branch: pt_obj->namebranch_list() ) {
-    auto top_name{name_branch->name()};
-    const VlScope* top_scope{nullptr};
-    // まず普通に探す．
-    auto handle{find_obj(cur_scope, top_name)};
-    if ( handle ) {
-      if ( name_branch->has_index() ) {
-	top_scope = handle->array_elem(name_branch->index());
-      }
-      else {
-	top_scope = handle->scope();
-      }
-    }
-    else if ( !name_branch->has_index() ) {
-      // モジュール定義名として探す．
-      auto module{mModuleDefDict.find(cur_scope, top_name)};
-      if ( module ) {
-	top_scope = module;
-      }
-    }
-    if ( top_scope == nullptr) {
-      // cur_scope が上限もしくは cur_scope の親がいなければ
-      // upward search できない．
-      if ( cur_scope == ulimit || cur_scope->parent_scope() == nullptr ) {
-
-	if ( debug & debug_find_scope ) {
-	  dout << "--> Not Found" << endl << endl;
-	}
-
-	return nullptr;
-      }
-
-      // upward search を行う．
-      if ( debug & debug_find_scope ) {
-	dout << " upward search" << endl;
-      }
-      cur_scope = cur_scope->parent_scope();
-    }
-    else {
-      // downward search を行う．
-      if ( debug & debug_find_scope ) {
-	dout << " downward search" << endl;
-      }
-      cur_scope = top_scope;
-    }
-  }
-
-  if ( debug & debug_find_scope ) {
-    dout << "--> Found: " << cur_scope->full_name() << endl << endl;
-  }
-  return cur_scope;
 }
 
 END_NAMESPACE_YM_VERILOG

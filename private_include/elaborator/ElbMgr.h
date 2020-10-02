@@ -14,6 +14,8 @@
 #include "ym/clib.h"
 
 #include "elaborator/ElbFactory.h"
+#include "elaborator/ObjDict.h"
+#include "elaborator/ModDefDict.h"
 #include "elaborator/TagDict.h"
 #include "elaborator/AttrHash.h"
 
@@ -157,6 +159,55 @@ public:
   vector<const VlProcess*>
   find_process_list(const VlScope* parent) const;
 
+  /// @brief スコープと名前から名前付き要素を取り出す．
+  /// @param[in] parent 検索対象のスコープ
+  /// @param[in] name 名前
+  /// @return parent というスコープ内の name という要素を返す．
+  /// @return なければ nullptr を返す．
+  ObjHandle*
+  find_obj(const VlScope* parent,
+	   const string& name) const;
+
+  /// @brief スコープと名前からスコープを取り出す．
+  /// @param[in] parent 検索対象のスコープ
+  /// @param[in] name 名前
+  /// @return parent というスコープ内の name というスコープを返す．
+  /// @return なければ nullptr を返す．
+  const VlScope*
+  find_namedobj(const VlScope* parent,
+		const string& name) const;
+
+  /// @brief スコープと階層名から要素を取り出す．
+  /// @param[in] base_scope 起点となるスコープ
+  /// @param[in] pt_objy 階層名付きのオブジェクト
+  /// @param[in] ulimit 探索する名前空間の上限
+  /// @return 見付かったオブジェクトを返す．
+  /// 見付からなかったら nullptr を返す．
+  ObjHandle*
+  find_obj_up(const VlScope* base_scope,
+	      const PtHierNamedBase* pt_obj,
+	      const VlScope* ulimit);
+
+  /// @brief 名前からモジュール定義を取り出す．
+  /// @param[in] name 名前
+  /// @return name という名のモジュール定義
+  /// @return なければ nullptr を返す．
+  const PtModule*
+  find_moduledef(const string& name) const;
+
+
+private:
+  //////////////////////////////////////////////////////////////////////
+  // 検索の下請け関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief base_scope を起点として (nb, "") という名前のスコープを探す．
+  /// なければ親のスコープに対して同様の探索を繰り返す．
+  const VlScope*
+  find_scope_up(const VlScope* base_scope,
+		const PtHierNamedBase* pt_obj,
+		const VlScope* ulimit);
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -168,85 +219,10 @@ public:
   void
   reg_user_systf(const VlUserSystf* systf);
 
-  /// @brief UDP を登録する．
-  /// @param[in] def_name 定義名
-  /// @param[in] udp 登録する UDP
-  void
-  reg_udp(const string& def_name,
-	  const VlUdpDefn* udp);
-
-  /// @brief グローバルスコープを登録する．
-  void
-  reg_toplevel(const VlScope* toplevel);
-
   /// @brief internal scope を登録する．
   /// @param[in] obj 登録するオブジェクト
   void
   reg_internalscope(const VlScope* obj);
-
-  /// @brief 宣言要素を登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_decl(int tag,
-	   const VlDecl* obj);
-
-  /// @brief 宣言要素を登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_declarray(int tag,
-		const VlDeclArray* obj);
-
-  /// @brief defparam を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_defparam(const VlDefParam* obj);
-
-  /// @brief paramassign を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_paramassign(const VlParamAssign* obj);
-
-  /// @brief モジュール配列を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_modulearray(const VlModuleArray* obj);
-
-  /// @brief モジュールを登録する．
-  /// @param[in] module 登録するモジュール
-  void
-  reg_module(const VlModule* module);
-
-  /// @brief プリミティブ配列を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_primarray(const VlPrimArray* obj);
-
-  /// @brief プリミティブを登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_primitive(const VlPrimitive* obj);
-
-  /// @brief タスクを登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_task(const VlTaskFunc* obj);
-
-  /// @brief 関数を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_function(const VlTaskFunc* obj);
-
-  /// @brief continuous assignment を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_contassign(const VlContAssign* obj);
-
-  /// @brief process を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_process(const VlProcess* obj);
 
 
 public:
@@ -432,11 +408,13 @@ public:
 	       int right_val);
 
   /// @brief 宣言要素を生成する．
+  /// @param[in] tag タグ
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木の宣言要素
   /// @param[in] init 初期値
   ElbDecl*
-  new_Decl(ElbDeclHead* head,
+  new_Decl(int tag,
+	   ElbDeclHead* head,
 	   const PtNamedBase* pt_item,
 	   const VlExpr* init = nullptr);
 
@@ -448,12 +426,13 @@ public:
 	     VpiNetType net_type);
 
   /// @brief 宣言要素の配列を生成する．
-  /// @param[in] parent 親のスコープ
+  /// @param[in] tag タグ
   /// @param[in] head ヘッダ
   /// @param[in] pt_item パース木の宣言要素
   /// @param[in] range_src 範囲の配列
   const VlDeclArray*
-  new_DeclArray(ElbDeclHead* head,
+  new_DeclArray(int tag,
+		ElbDeclHead* head,
 		const PtNamedBase* pt_item,
 		const vector<ElbRangeSrc>& range_src);
 
@@ -1272,6 +1251,12 @@ private:
 
   // topmodule のリスト
   vector<const VlModule*> mTopmoduleList;
+
+  // 名前をキーにしたオブジェクトの辞書
+  ObjDict mObjDict;
+
+  // モジュール定義名の辞書
+  ModDefDict mModuleDefDict;
 
   // UserSystf の辞書
   unordered_map<string, const VlUserSystf*> mSystfHash;

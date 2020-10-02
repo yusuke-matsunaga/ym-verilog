@@ -174,13 +174,13 @@ ItemGen::defparam_override(const DefParamStub& stub,
     return true;
   }
 
-  auto rhs_expr{pt_defparam->expr()};
-  auto value{evaluate_expr(module, rhs_expr, true)};
+  auto pt_rhs_expr{pt_defparam->expr()};
+  auto value{evaluate_expr(module, pt_rhs_expr)};
 
   {
     ostringstream buf;
     buf << "instantiating defparam: " << param->full_name()
-	<< " = " << rhs_expr->decompile() << ".";
+	<< " = " << pt_rhs_expr->decompile() << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
 		    fr,
 		    MsgType::Info,
@@ -188,13 +188,12 @@ ItemGen::defparam_override(const DefParamStub& stub,
 		    buf.str());
   }
 
-  param->set_init_expr(rhs_expr, value);
+  param->set_init_expr(pt_rhs_expr, value);
 
   auto dp = mgr().new_DefParam(module,
 			       pt_header,
 			       pt_defparam,
-			       param, rhs_expr, value);
-  reg_defparam(dp);
+			       param, pt_rhs_expr, value);
 
   return true;
 }
@@ -229,16 +228,17 @@ ItemGen::instantiate_cont_assign(const VlScope* parent,
     }
 
     auto ca{mgr().new_ContAssign(ca_head, pt_elem, lhs, rhs)};
-    reg_contassign(ca);
 
-    ostringstream buf;
-    buf << "instantiating continuous assign: "
-	<< lhs->decompile() << " = " << rhs->decompile() << ".";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    pt_elem->file_region(),
-		    MsgType::Info,
-		    "ELAB",
-		    buf.str());
+    {
+      ostringstream buf;
+      buf << "instantiating continuous assign: "
+	  << lhs->decompile() << " = " << rhs->decompile() << ".";
+      MsgMgr::put_msg(__FILE__, __LINE__,
+		      pt_elem->file_region(),
+		      MsgType::Info,
+		      "ELAB",
+		      buf.str());
+    }
   }
 }
 
@@ -250,7 +250,6 @@ ItemGen::instantiate_process(const VlScope* parent,
 			     const PtItem* pt_item)
 {
   auto process{mgr().new_Process(parent, pt_item)};
-  reg_process(process);
 
   ElbEnv env;
   auto body{instantiate_stmt(parent, process, env,
@@ -281,10 +280,7 @@ ItemGen::phase1_genblock(const VlScope* parent,
 {
   auto* name{pt_genblock->name()};
   if ( name != nullptr ) {
-    auto genblock{mgr().new_GenBlock(parent, pt_genblock)};
-    reg_internalscope(genblock);
-
-    parent = genblock;
+    parent = mgr().new_GenBlock(parent, pt_genblock);
   }
   phase1_generate(parent, pt_genblock);
 }
@@ -296,10 +292,8 @@ void
 ItemGen::phase1_genif(const VlScope* parent,
 		      const PtItem* pt_genif)
 {
-  bool cond;
-  if ( !evaluate_bool(parent, pt_genif->expr(), cond, true) ) {
-    return;
-  }
+  auto pt_cond{pt_genif->expr()};
+  bool cond{evaluate_bool(parent, pt_cond)};
   if ( cond ) {
     phase1_genitem(parent,
 		   pt_genif->then_declhead_list(),
@@ -319,10 +313,8 @@ void
 ItemGen::phase1_gencase(const VlScope* parent,
 			const PtItem* pt_gencase)
 {
-  BitVector val;
-  if ( !evaluate_bitvector(parent, pt_gencase->expr(), val, true) ) {
-    return;
-  }
+  auto pt_expr{pt_gencase->expr()};
+  BitVector val{evaluate_bitvector(parent, pt_expr)};
 
   bool found = false;
   for ( auto pt_caseitem: pt_gencase->caseitem_list() ) {
@@ -330,10 +322,7 @@ ItemGen::phase1_gencase(const VlScope* parent,
     SizeType n{pt_caseitem->label_num()};
     bool match = (n == 0);
     for ( auto pt_expr: pt_caseitem->label_list() ) {
-      BitVector label_val;
-      if ( !evaluate_bitvector(parent, pt_expr, label_val, true) ) {
-	continue;
-      }
+      BitVector label_val{evaluate_bitvector(parent, pt_expr)};
       if ( label_val == val ) {
 	match = true;
 	break;
@@ -404,13 +393,10 @@ ItemGen::phase1_genfor(const VlScope* parent,
 
   // 子供のスコープの検索用オブジェクト
   auto gfroot{mgr().new_GfRoot(parent, pt_genfor)};
-  reg_gfroot(gfroot);
 
   {
-    int val;
-    if ( !evaluate_int(parent, pt_genfor->init_expr(), val, true) ) {
-      return;
-    }
+    auto pt_expr{pt_genfor->init_expr()};
+    int val{evaluate_int(parent, pt_expr)};
     if ( val < 0 ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      fr,
@@ -425,10 +411,8 @@ ItemGen::phase1_genfor(const VlScope* parent,
 
   for ( ; ; ) {
     // 終了条件のチェック
-    bool val;
-    if ( !evaluate_bool(parent, pt_genfor->expr(), val, true) ) {
-      break;
-    }
+    auto pt_expr{pt_genfor->expr()};
+    bool val{evaluate_bool(parent, pt_expr)};
     if ( !val ) {
       break;
     }
@@ -438,21 +422,17 @@ ItemGen::phase1_genfor(const VlScope* parent,
       int gvi{genvar->value()};
       auto genblock{mgr().new_GfBlock(parent, pt_genfor, gvi)};
       gfroot->add(gvi, genblock);
-      reg_internalscope(genblock);
 
       auto pt_item{genvar->pt_item()};
       auto genvar1{mgr().new_Genvar(genblock, pt_item, gvi)};
-      reg_genvar(genvar1);
 
       phase1_generate(genblock, pt_genfor);
     }
 
     // genvar の増加分の処理．
     {
-      int val;
-      if ( !evaluate_int(parent, pt_genfor->next_expr(), val, true) ) {
-	break;
-      }
+      auto pt_expr{pt_genfor->next_expr()};
+      int val{evaluate_int(parent, pt_expr)};
       if ( val < 0 ) {
 	MsgMgr::put_msg(__FILE__, __LINE__,
 			fr,

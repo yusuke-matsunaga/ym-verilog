@@ -50,36 +50,28 @@ ItemGen::phase1_tf(const VlScope* parent,
 	 << endl;
   }
 
-  ElbTaskFunc* taskfunc = nullptr;
-
+  ElbTaskFunc* taskfunc{nullptr};
   if ( pt_item->type() == PtItemType::Task ) {
     taskfunc = mgr().new_Task(parent, pt_item);
-    reg_task(taskfunc);
   }
   else {
     ASSERT_COND( pt_item->type() == PtItemType::Func );
 
-    auto pt_left = pt_item->left_range();
-    auto pt_right = pt_item->right_range();
+    auto pt_left{pt_item->left_range()};
+    auto pt_right{pt_item->right_range()};
     if ( pt_left && pt_right ) {
-      int left_val = 0;
-      int right_val = 0;
-      if ( !evaluate_range(parent,
-			   pt_left, pt_right,
-			   left_val, right_val) ) {
-	return;
-      }
-      taskfunc = mgr().new_Function(parent,	pt_item,
-					pt_left, pt_right,
-					left_val, right_val,
-					false);
+      int left_val;
+      int right_val;
+      tie(left_val, right_val) = evaluate_range(parent, pt_left, pt_right);
+      taskfunc = mgr().new_Function(parent, pt_item,
+				    pt_left, pt_right,
+				    left_val, right_val,
+				    false);
     }
     else {
-      taskfunc = mgr().new_Function(parent,	pt_item, false);
+      taskfunc = mgr().new_Function(parent, pt_item, false);
     }
     ASSERT_COND( taskfunc != nullptr );
-
-    reg_function(taskfunc);
   }
 
   // 宣言要素の生成(phase1 では parameter と genvar のみ)
@@ -89,16 +81,18 @@ ItemGen::phase1_tf(const VlScope* parent,
   auto attr_list{attribute_list(pt_item)};
   mgr().reg_attr(taskfunc, attr_list);
 
-  ostringstream buf;
-  buf << "instantiating task/func : " << taskfunc->full_name() << ".";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  pt_item->file_region(),
-		  MsgType::Info,
-		  "ELAB",
-		  buf.str());
+  {
+    ostringstream buf;
+    buf << "instantiating task/func : " << taskfunc->full_name() << ".";
+    MsgMgr::put_msg(__FILE__, __LINE__,
+		    pt_item->file_region(),
+		    MsgType::Info,
+		    "ELAB",
+		    buf.str());
+  }
 
   // 本体のステートメント内部のスコープの生成
-  auto pt_body = pt_item->body();
+  auto pt_body{pt_item->body()};
   phase1_stmt(taskfunc, pt_body);
 
   // 残りの仕事は phase2, phase3 で行う．
@@ -136,25 +130,21 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
 
   if ( taskfunc->type() == VpiObjType::Function ) {
     // 関数名と同名の変数の生成
-    int left_val = taskfunc->left_range_val();
-    int right_val = taskfunc->right_range_val();
-    ElbDeclHead* head = nullptr;
+    int left_val{taskfunc->left_range_val()};
+    int right_val{taskfunc->right_range_val()};
+    ElbDeclHead* head{nullptr};
     if ( taskfunc->has_range() ) {
       head = mgr().new_DeclHead(taskfunc, pt_item,
-				    pt_item->left_range(), pt_item->right_range(),
-				    left_val, right_val);
+				pt_item->left_range(), pt_item->right_range(),
+				left_val, right_val);
     }
     else {
       head = mgr().new_DeclHead(taskfunc, pt_item);
     }
     ASSERT_COND( head );
 
-    auto decl = mgr().new_Decl(head, pt_item);
-    int tag = vpiVariables;
-    if ( pt_item->data_type() == VpiVarType::None ) {
-      tag = vpiReg;
-    }
-    reg_decl(tag, decl);
+    int tag{ (pt_item->data_type() == VpiVarType::None) ? vpiReg : vpiVariables };
+    auto decl{mgr().new_Decl(tag, head, pt_item)};
 
     taskfunc->set_ovar(decl);
   }
@@ -184,8 +174,8 @@ ItemGen::phase3_tf(ElbTaskFunc* taskfunc,
 
   // 本体のステートメントの生成
   ElbTfEnv env(taskfunc);
-  auto pt_body = pt_item->body();
-  auto body = instantiate_stmt(taskfunc, nullptr, env, pt_body);
+  auto pt_body{pt_item->body()};
+  auto body{instantiate_stmt(taskfunc, nullptr, env, pt_body)};
   if ( body ) {
     taskfunc->set_stmt(body);
   }
@@ -216,26 +206,23 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
 	 << endl;
   }
 
-  auto pt_left = pt_function->left_range();
-  auto pt_right = pt_function->right_range();
+  auto pt_left{pt_function->left_range()};
+  auto pt_right{pt_function->right_range()};
 
-  ElbTaskFunc* func = nullptr;
-  const VlScope* scope = nullptr;
-  ElbDeclHead* head = nullptr;
+  ElbTaskFunc* func{nullptr};
+  const VlScope* scope{nullptr};
+  ElbDeclHead* head{nullptr};
   if ( pt_left && pt_right ) {
-    int left_val = 0;
-    int right_val = 0;
-    if ( !evaluate_range(parent, pt_left, pt_right,
-			 left_val, right_val) ) {
-      return nullptr;
-    }
+    int left_val;
+    int right_val;
+    tie(left_val, right_val) = evaluate_range(parent, pt_left, pt_right);
     func = mgr().new_Function(parent, pt_function,
-				  pt_left, pt_right,
-				  left_val, right_val,
-				  true);
+			      pt_left, pt_right,
+			      left_val, right_val,
+			      true);
     head = mgr().new_DeclHead(func, pt_function,
-				  pt_left, pt_right,
-				  left_val, right_val);
+			      pt_left, pt_right,
+			      left_val, right_val);
   }
   else {
     func = mgr().new_Function(parent, pt_function, true);
@@ -254,12 +241,8 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
   instantiate_decl(func, pt_function->declhead_list());
 
   // 関数名と同名の変数の生成
-  auto decl = mgr().new_Decl(head, pt_function);
-  int tag = vpiVariables;
-  if ( pt_function->data_type() == VpiVarType::None ) {
-    tag = vpiReg;
-  }
-  reg_decl(tag, decl);
+  int tag{ (pt_function->data_type() == VpiVarType::None) ? vpiReg : vpiVariables };
+  auto decl{mgr().new_Decl(tag, head, pt_function)};
 
   func->set_ovar(decl);
 
@@ -267,12 +250,12 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
   instantiate_iodecl(func, pt_function->iohead_list());
 
   // 本体のステートメント内部のスコープの生成
-  auto pt_body = pt_function->body();
+  auto pt_body{pt_function->body()};
   phase1_stmt(func, pt_body, true);
 
   // 本体のステートメントの生成
   ElbConstantFunctionEnv env(scope);
-  auto body = instantiate_stmt(scope, nullptr, env, pt_body);
+  auto body{instantiate_stmt(scope, nullptr, env, pt_body)};
   if ( body ) {
     func->set_stmt(body);
   }

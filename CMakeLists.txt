@@ -123,14 +123,16 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/DeclGen.cc
   c++-src/elaborator/main/Elaborator.cc
   c++-src/elaborator/main/ElbEnv.cc
+  c++-src/elaborator/main/ElbError.cc
   c++-src/elaborator/main/ElbProxy.cc
   c++-src/elaborator/main/ElbStubList.cc
-  c++-src/elaborator/main/ExprGen_error.cc
+  c++-src/elaborator/main/ErrorGen.cc
   c++-src/elaborator/main/ExprGen_funccall.cc
   c++-src/elaborator/main/ExprGen_main.cc
   c++-src/elaborator/main/ExprGen_operation.cc
   c++-src/elaborator/main/ExprGen_primary.cc
-  c++-src/elaborator/main/ExprGen_eval.cc
+  c++-src/elaborator/main/ExprEval.cc
+  c++-src/elaborator/main/FuncEval.cc
   c++-src/elaborator/main/ItemGen_main.cc
   c++-src/elaborator/main/ItemGen_module_inst.cc
   c++-src/elaborator/main/ItemGen_primitive.cc
@@ -142,8 +144,6 @@ set (elaborator_SOURCES
   c++-src/elaborator/main/StmtGen_cond.cc
   c++-src/elaborator/main/StmtGen_main.cc
   c++-src/elaborator/main/UdpGen.cc
-
-  c++-src/elaborator/eval/Evaluator.cc
   )
 
 set (parser_SOURCES

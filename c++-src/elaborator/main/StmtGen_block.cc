@@ -149,4 +149,15 @@ StmtGen::instantiate_stmt_list(const VlScope* parent,
   return stmt_list;
 }
 
+// @brief ステートメントブロックのスコープを生成する．
+// @param[in] parent 親のスコープ環境
+// @param[in] pt_stmt 対応するパース木の要素
+const VlScope*
+StmtGen::new_StmtBlockScope(const VlScope* parent,
+			    const PtStmt* pt_stmt)
+{
+  auto scope{mgr().new_StmtBlockScope(parent, pt_stmt)};
+  return scope;
+}
+
 END_NAMESPACE_YM_VERILOG

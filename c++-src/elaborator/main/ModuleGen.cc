@@ -10,6 +10,7 @@
 #include "ModuleGen.h"
 #include "ElbParamCon.h"
 #include "ElbStub.h"
+#include "ErrorGen.h"
 
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtPort.h"
@@ -71,7 +72,6 @@ ModuleGen::phase1_topmodule(const VlScope* toplevel,
 			       pt_module,
 			       nullptr,
 			       nullptr)};
-  reg_module(module);
 
   // attribute instance の生成
   const auto& attr_list{attribute_list(pt_module)};
@@ -144,7 +144,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
     }
     if ( paramport_list.size() < param_con_list.size() ) {
       // 実際のパラメータの数より割り当てリストの要素数が多い．
-      error_too_many_param(param_con_list);
+      ErrorGen::too_many_param(__FILE__, __LINE__, param_con_list);
     }
   }
 
@@ -156,8 +156,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
     auto name{paramport_list[index]}; ++ index;
     auto handle{find_obj(module, name)};
     if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
-      error_no_param(pt_con, name);
-      continue;
+      ErrorGen::no_param(__FILE__, __LINE__, pt_con, name);
     }
 
     auto param{handle->parameter()};
@@ -169,7 +168,6 @@ ModuleGen::phase1_module_item(ElbModule* module,
 
     auto pa{mgr().new_NamedParamAssign(module, pt_con,
 				       param, expr, value)};
-    reg_paramassign(pa);
   }
 
   // それ以外の要素を実体化する．
@@ -255,19 +253,16 @@ ModuleGen::instantiate_portref(ElbModule* module,
   auto name{pt_portref->name()};
   auto handle{find_obj(module, name)};
   if ( !handle ) {
-    error_not_found(pt_portref->file_region(), name);
-    return nullptr;
+    ErrorGen::not_found(__FILE__, __LINE__, pt_portref->file_region(), name);
   }
 
   if ( handle->declarray() ) {
-    error_port_array(pt_portref->file_region(), handle->declarray());
-    return nullptr;
+    ErrorGen::port_array(__FILE__, __LINE__, pt_portref->file_region(), handle->declarray());
   }
 
   auto decl{handle->decl()};
   if ( decl == nullptr ) {
-    error_illegal_port(pt_portref->file_region(), name);
-    return nullptr;
+    ErrorGen::illegal_port(__FILE__, __LINE__, pt_portref->file_region(), name);
   }
 
   auto primary{mgr().new_Primary(pt_portref, decl)};
@@ -280,12 +275,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
   auto pt_left{pt_portref->left_range()};
   auto pt_right{pt_portref->right_range()};
   if ( pt_index ) {
-    int index_val;
-    bool stat{evaluate_int(module, pt_index, index_val, true)};
-    if ( !stat ) {
-      return nullptr;
-    }
-
+    int index_val{evaluate_int(module, pt_index)};
     SizeType offset;
     bool stat2{decl->calc_bit_offset(index_val, offset)};
     if ( !stat2 ) {
@@ -295,11 +285,9 @@ ModuleGen::instantiate_portref(ElbModule* module,
     return mgr().new_BitSelect(pt_portref, primary, pt_index, index_val);
   }
   if ( pt_left && pt_right ) {
-    int left_val{0};
-    int right_val{0};
-    if ( !evaluate_range(module, pt_left, pt_right, left_val, right_val) ) {
-      return nullptr;
-    }
+    int left_val;
+    int right_val;
+    tie(left_val, right_val) = evaluate_range(module, pt_left, pt_right);
 
     SizeType offset;
     bool stat1{decl->calc_bit_offset(left_val, offset)};
@@ -313,90 +301,10 @@ ModuleGen::instantiate_portref(ElbModule* module,
       warning_right_index_out_of_range(pt_right->file_region());
     }
     return mgr().new_PartSelect(pt_portref, primary,
-				    pt_left, pt_right,
-				    left_val, right_val);
+				pt_left, pt_right,
+				left_val, right_val);
   }
   return primary;
-}
-
-// @brief パラメータポートの割り当て数が多すぎる．
-// @param[in] param_con_list パラメータポートの割り当てリスト
-void
-ModuleGen::error_too_many_param(const vector<ElbParamCon>& param_con_list)
-{
-  auto last{param_con_list.back()};
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  last.mPtCon->file_region(),
-		  MsgType::Error,
-		  "ELAB",
-		  "Too many parameters.");
-}
-
-// @brief パラメータポートに現れるパラメータが存在しない．
-// @param[in] pt_con パラメータポート割り当てのパース木
-// @param[in] name パラメータ名
-void
-ModuleGen::error_no_param(const PtConnection* pt_con,
-			  const char* name)
-{
-  ostringstream buf;
-  buf << name << " : No such parameter.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  pt_con->file_region(),
-		  MsgType::Error,
-		  "ELAB",
-		  buf.str());
-}
-
-// @brief 対象の要素が見つからない．
-// @param[in] file_region ファイル位置
-// @param[in] name 名前
-void
-ModuleGen::error_not_found(const FileRegion& file_region,
-			   const char* name)
-{
-  ostringstream buf;
-  buf << name
-      << ": Not found.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  file_region,
-		  MsgType::Error,
-		  "ELAB",
-		  buf.str());
-}
-
-// @brief ポートに配列が使われている．
-// @param[in] file_region ファイル位置
-// @param[in] array 配列
-void
-ModuleGen::error_port_array(const FileRegion& file_region,
-			    const VlDeclArray* array)
-{
-  ostringstream buf;
-  buf << array->full_name()
-      << ": Array shall not be connected to a module port.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  file_region,
-		  MsgType::Error,
-		  "ELAB",
-		  buf.str());
-}
-
-// @brief ポートに使われている要素が宣言要素でなかった．
-// @param[in] file_region ファイル位置
-// @param[in] name 名前
-void
-ModuleGen::error_illegal_port(const FileRegion& file_region,
-			      const char* name)
-{
-  ostringstream buf;
-  buf << name
-      << ": Illegal type for port connection.";
-  MsgMgr::put_msg(__FILE__, __LINE__,
-		  file_region,
-		  MsgType::Error,
-		  "ELAB",
-		  buf.str());
 }
 
 // @brief 添字が範囲外

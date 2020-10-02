@@ -23,6 +23,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 class BitVector;
 class ElbEnv;
+class ElbError;
 class ElbParamCon;
 class ElbScope;
 class PtiAttrInfo;
@@ -57,6 +58,7 @@ public:
   /// @param[in] item_gen 構成要素生成用のオブジェクト
   /// @param[in] stmt_gen ステートメント生成用のオブジェクト
   /// @param[in] expr_gen 式生成用のオブジェクト
+  /// @param[in] expr_eval 定数式評価用のオブジェクト
   /// @param[in] attr_gen 属性生成用のオブジェクト
   void
   init(ModuleGen* module_gen,
@@ -64,6 +66,7 @@ public:
        ItemGen* item_gen,
        StmtGen* stmt_gen,
        ExprGen* expr_gen,
+       ExprEval* expr_eval,
        AttrGen* attr_gen);
 
 
@@ -167,110 +170,10 @@ protected:
   // 要素を登録する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief UDP を登録する．
-  /// @param[in] def_name 定義名
-  /// @param[in] udp 登録する UDP
-  void
-  reg_udp(const string& def_name,
-	  const VlUdpDefn* udp);
-
-  /// @brief internal scope を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_internalscope(const VlScope* obj);
-
-  /// @brief タスクを登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_task(const VlTaskFunc* obj);
-
-  /// @brief 関数を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_function(const VlTaskFunc* obj);
-
-  /// @brief 宣言要素を登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_decl(int tag,
-	   ElbDecl* obj);
-
-  /// @brief 配列型の宣言要素を登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_declarray(int tag,
-		const VlDeclArray* obj);
-
-  /// @brief パラメータを登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_parameter(int tag,
-		ElbParameter* obj);
-
-  /// @brief モジュール配列を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_modulearray(const VlModuleArray* obj);
-
-  /// @brief ElbModule を登録する．
-  /// @param[in] module 登録するモジュール
-  void
-  reg_module(ElbModule* module);
-
-  /// @brief プリミティブ配列を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_primarray(ElbPrimArray* obj);
-
-  /// @brief プリミティブを登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_primitive(ElbPrimitive* obj);
-
-  /// @brief defparam を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_defparam(const VlDefParam* obj);
-
-  /// @brief paramassign を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_paramassign(const VlParamAssign* obj);
-
-  /// @brief continuous assignment を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_contassign(const VlContAssign* obj);
-
-  /// @brief process を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_process(ElbProcess* obj);
-
-  /// @brief genvar を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_genvar(ElbGenvar* obj);
-
-  /// @brief gfroot を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_gfroot(ElbGfRoot* obj);
-
   /// @brief constant function を登録する．
   /// @param[in] func 関数
   void
   reg_constant_function(const VlTaskFunc* func);
-
-  /// @brief 属性リストを登録する．
-  /// @param[in] パース木の属性定義
-  /// @param[in] attr_list 属性リスト
-  void
-  reg_attr_list(const PtAttrInst* pt_attr,
-		const vector<const VlAttribute*>& attr_list);
 
   /// @brief 属性リストを登録する．
   /// @param[in] obj 対象のオブジェクト
@@ -543,75 +446,84 @@ protected:
   instantiate_delay(const VlScope* parent,
 		    const PtItem* pt_head);
 
-  /// @brief 式の値を評価する．
+  /// @brief 定数式の値を評価する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
-  /// @param[in] put_error エラーを出力する時，true にする．
+  /// @return 評価した値を返す．
+  ///
+  /// * 定数式でなければ EvalError 例外を送出する．
   VlValue
   evaluate_expr(const VlScope* parent,
-		const PtExpr* pt_expr,
-		bool put_error);
+		const PtExpr* pt_expr);
 
-  /// @brief PtExpr を評価し int 値を返す．
+  /// @brief 定数式を評価し int 値を返す．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
-  /// @param[out] value 評価値を格納する変数
-  /// @param[in] put_error エラーを出力する時，true にする．
-  /// @note 定数でなければエラーメッセージを出力し false を返す．
-  bool
+  /// @return 評価した値を返す．
+  ///
+  /// * 定数式でなければ EvalError 例外を送出する．
+  /// * 評価結果が int でなければ EvalError 例外を送出する．
+  int
   evaluate_int(const VlScope* parent,
-	       const PtExpr* pt_expr,
-	       int& value,
-	       bool put_error);
+	       const PtExpr* pt_expr);
 
-  /// @brief PtExpr を評価しスカラー値を返す．
+  /// @brief 定数式ならばを評価し int 値を返す．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
-  /// @param[out] value 評価値を格納する変数
-  /// @param[in] put_error エラーを出力する時，true にする．
-  /// @note 定数でなければエラーメッセージを出力し false を返す．
-  bool
+  /// @param[out] is_const 定数式の時に true を返す．
+  /// @return 評価した値を返す．
+  ///
+  /// * 評価結果が int でなければ EvalError 例外を送出する．
+  int
+  evaluate_int_if_const(const VlScope* parent,
+			const PtExpr* pt_expr,
+			bool& is_const);
+
+  /// @brief 定数式を評価しスカラー値を返す．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] pt_expr 式を表すパース木
+  /// @return 評価した値を返す．
+  ///
+  /// * 定数式でなければ EvalError 例外を送出する．
+  /// * いかなる型でもスカラー値に変換可能
+  VlScalarVal
   evaluate_scalar(const VlScope* parent,
-		  const PtExpr* pt_expr,
-		  VlScalarVal& value,
-		  bool put_error);
+		  const PtExpr* pt_expr);
 
-  /// @brief PtExpr を評価し bool 値を返す．
+  /// @brief 定数式を評価し bool 値を返す．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
-  /// @param[out] value 評価値を格納する変数
-  /// @param[in] put_error エラーを出力する時，true にする．
-  /// @note 定数でなければエラーメッセージを出力し false を返す．
+  /// @return 評価した値を返す．
+  ///
+  /// * 定数式でなければ EvalError 例外を送出する．
+  /// * いかなる型でも bool 値に変換可能
   bool
   evaluate_bool(const VlScope* parent,
-		const PtExpr* pt_expr,
-		bool& value,
-		bool put_error);
+		const PtExpr* pt_expr);
 
-  /// @brief PtExpr を評価しビットベクタ値を返す．
+  /// @brief 定数式を評価しビットベクタ値を返す．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
-  /// @param[out] value 評価値を格納する変数
-  /// @param[in] put_error エラーを出力する時，true にする．
-  /// @note 定数でなければエラーメッセージを出力し false を返す．
-  bool
+  /// @return 評価した値を返す．
+  ///
+  /// * 定数式でなければ EvalError 例外を送出する．
+  /// * 評価結果がビットベクタ型でなければ EvalError 例外を送出する．
+  BitVector
   evaluate_bitvector(const VlScope* parent,
-		     const PtExpr* pt_expr,
-		     BitVector& value,
-		     bool put_error);
+		     const PtExpr* pt_expr);
 
   /// @brief 範囲を表す式を評価する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_left 範囲のMSBを表すパース木
   /// @param[in] pt_right 範囲のLSBを表すパース木
-  /// @param[out] left_val 範囲の MSB の値
-  /// @param[out] right_val 範囲の LSB の値
-  bool
+  /// @param[return] 範囲の MSB と LSB の値のペアを返す．
+  ///
+  /// * 定数式でなければ EvalError 例外を送出する．
+  /// * 評価結果が int でなければ EvalError 例外を送出する．
+  pair<int, int>
   evaluate_range(const VlScope* parent,
 		 const PtExpr* pt_left,
-		 const PtExpr* pt_right,
-		 int& left_val,
-		 int& right_val);
+		 const PtExpr* pt_right);
 
 
 protected:
@@ -629,6 +541,43 @@ protected:
   vector<const VlAttribute*>
   attribute_list(const PtBase* pt_obj1,
 		 const PtBase* pt_obj2);
+
+
+protected:
+  //////////////////////////////////////////////////////////////////////
+  // メッセージ出力
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief エラーメッセージを出力する．
+  /// @param[in] error エラー情報
+  void
+  put_error(const ElbError& error);
+
+  /// @brief 警告メッセージを出力する．
+  /// @param[in] file ソースファイル名
+  /// @param[in] line ソースファイル上の行番号
+  /// @param[in] loc 警告箇所
+  /// @param[in] label ラベル
+  /// @param[in] msg メッセージ
+  void
+  put_warning(const char* file,
+	      int line,
+	      const FileRegion& loc,
+	      const char* label,
+	      const string& msg);
+
+  /// @brief 情報メッセージを出力する．
+  /// @param[in] file ソースファイル名
+  /// @param[in] line ソースファイル上の行番号
+  /// @param[in] loc 対象の箇所
+  /// @param[in] label ラベル
+  /// @param[in] msg メッセージ
+  void
+  put_info(const char* file,
+	   int line,
+	   const FileRegion& loc,
+	   const char* label,
+	   const string& msg);
 
 
 protected:
@@ -666,6 +615,9 @@ private:
 
   // 式生成用のオブジェクト
   ExprGen* mExprGen;
+
+  // 定数式評価用のオブジェクト
+  ExprEval* mExprEval;
 
   // attribute instance 生成用のオブジェクト
   AttrGen* mAttrGen;
@@ -709,7 +661,7 @@ ObjHandle*
 ElbProxy::find_obj(const VlScope* parent,
 		   const string& name) const
 {
-  return mElaborator.find_obj(parent, name);
+  return mMgr.find_obj(parent, name);
 }
 
 // @brief スコープと名前からスコープを取り出す．
@@ -722,7 +674,7 @@ const VlScope*
 ElbProxy::find_namedobj(const VlScope* parent,
 			const string& name) const
 {
-  return mElaborator.find_namedobj(parent, name);
+  return mMgr.find_namedobj(parent, name);
 }
 
 // @brief 名前によるオブジェクトの探索
@@ -738,7 +690,7 @@ ElbProxy::find_obj_up(const VlScope* base_scope,
 		      const PtHierNamedBase* pt_obj,
 		      const VlScope* ulimit)
 {
-  return mElaborator.find_obj_up(base_scope, pt_obj, ulimit);
+  return mMgr.find_obj_up(base_scope, pt_obj, ulimit);
 }
 
 // @brief セルの探索
@@ -760,167 +712,6 @@ const ClibCell&
 ElbProxy::get_cell(int cell_id) const
 {
   return mElaborator.mCellLibrary.cell(cell_id);
-}
-
-// @brief UDP を登録する．
-// @param[in] def_name 定義名
-// @param[in] udp 登録する UDP
-inline
-void
-ElbProxy::reg_udp(const string& def_name,
-		  const VlUdpDefn* udp)
-{
-  mMgr.reg_udp(def_name, udp);
-}
-
-// @brief internal scope を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_internalscope(const VlScope* obj)
-{
-  mElaborator.reg_internalscope(obj);
-}
-
-// @brief タスクを登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_task(const VlTaskFunc* obj)
-{
-  mElaborator.reg_task(obj);
-}
-
-// @brief 関数を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_function(const VlTaskFunc* obj)
-{
-  mElaborator.reg_function(obj);
-}
-
-// @brief 宣言要素を登録する．
-/// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_decl(int tag,
-		   ElbDecl* obj)
-{
-  mElaborator.reg_decl(tag, obj);
-}
-
-// @brief 配列型の宣言要素を登録する．
-/// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_declarray(int tag,
-			const VlDeclArray* obj)
-{
-  mElaborator.reg_declarray(tag, obj);
-}
-
-// @brief パラメータを登録する．
-// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_parameter(int tag,
-			ElbParameter* obj)
-{
-  mElaborator.reg_parameter(tag, obj);
-}
-
-// @brief モジュール配列を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_modulearray(const VlModuleArray* obj)
-{
-  mElaborator.reg_modulearray(obj);
-}
-
-// @brief モジュールを登録する．
-// @param[in] module 登録するモジュール
-inline
-void
-ElbProxy::reg_module(ElbModule* module)
-{
-  mElaborator.reg_module(module);
-}
-
-// @brief プリミティブ配列を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_primarray(ElbPrimArray* obj)
-{
-  mElaborator.reg_primarray(obj);
-}
-
-// @brief プリミティブを登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_primitive(ElbPrimitive* obj)
-{
-  mElaborator.reg_primitive(obj);
-}
-
-// @brief defparam を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_defparam(const VlDefParam* obj)
-{
-  mElaborator.reg_defparam(obj);
-}
-
-// @brief paramassign を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_paramassign(const VlParamAssign* obj)
-{
-  mElaborator.reg_paramassign(obj);
-}
-
-// @brief continuous assignment を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_contassign(const VlContAssign* obj)
-{
-  mElaborator.reg_contassign(obj);
-}
-
-// @brief process を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_process(ElbProcess* obj)
-{
-  mElaborator.reg_process(obj);
-}
-
-// @brief genvar を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_genvar(ElbGenvar* obj)
-{
-  mElaborator.reg_genvar(obj);
-}
-
-// @brief gfroot を登録する．
-// @param[in] obj 登録するオブジェクト
-inline
-void
-ElbProxy::reg_gfroot(ElbGfRoot* obj)
-{
-  mElaborator.reg_gfroot(obj);
 }
 
 // @brief 名前からモジュール定義を取り出す．
@@ -965,17 +756,6 @@ void
 ElbProxy::reg_constant_function(const VlTaskFunc* func)
 {
   mElaborator.reg_constant_function(func);
-}
-
-// @brief 属性リストを登録する．
-// @param[in] パース木の属性定義
-// @param[in] attr_list 属性リスト
-inline
-void
-ElbProxy::reg_attr_list(const PtAttrInst* pt_attr,
-			const vector<const VlAttribute*>& attr_list)
-{
-  return mElaborator.mAttrDict.add(pt_attr, attr_list);
 }
 
 // @brief 属性リストを登録する．

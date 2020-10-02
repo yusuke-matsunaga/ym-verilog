@@ -9,6 +9,7 @@
 
 #include "ExprGen.h"
 #include "ElbEnv.h"
+#include "ErrorGen.h"
 
 #include "ym/BitVector.h"
 #include "ym/pt/PtExpr.h"
@@ -40,7 +41,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
   case VpiOpType::Posedge:
   case VpiOpType::Negedge:
     ASSERT_COND( opr_size == 1 );
-    error_illegal_edge_descriptor(pt_expr);
+    ErrorGen::illegal_edge_descriptor(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case VpiOpType::BitNeg:
@@ -61,7 +62,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
       return nullptr;
     }
     if ( real_check && opr0->value_type().is_real_type() ) {
-      error_illegal_real_type(pt_expr->operand0());
+      ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr->operand0());
       return nullptr;
     }
     return mgr().new_UnaryOp(pt_expr, op_type, opr0);
@@ -100,11 +101,11 @@ ExprGen::instantiate_opr(const VlScope* parent,
     }
     if ( real_check ) {
       if ( opr0->value_type().is_real_type() ) {
-	error_illegal_real_type(pt_expr->operand0());
+	ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr->operand0());
 	return nullptr;
       }
       if ( opr1->value_type().is_real_type() ) {
-	error_illegal_real_type(pt_expr->operand1());
+	ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr->operand1());
 	return nullptr;
       }
     }
@@ -134,7 +135,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
 	}
 	auto type1{expr1->value_type()};
 	if ( type1.is_real_type() ) {
-	  error_illegal_real_type(pt_expr1);
+	  ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr1);
 	  return nullptr;
 	}
 	opr_list[i] = expr1;
@@ -148,12 +149,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
     {
       auto pt_expr0{pt_expr->operand(0)};
 
-      int rep_num;
-      bool stat{evaluate_int(parent, pt_expr0, rep_num, true)};
-      if ( !stat ) {
-	return nullptr;
-      }
-
+      int rep_num{evaluate_int(parent, pt_expr0)};
       auto rep_expr{instantiate_expr(parent, env, pt_expr0)};
       vector<ElbExpr*> opr_list(opr_size - 1);
       for ( SizeType i = 1; i < opr_size; ++ i ) {
@@ -164,7 +160,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
 	}
 	auto type1{expr1->value_type()};
 	if ( type1.is_real_type() ) {
-	  error_illegal_real_type(pt_expr1);
+	  ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr1);
 	  return nullptr;
 	}
 	opr_list[i - 1] = expr1;

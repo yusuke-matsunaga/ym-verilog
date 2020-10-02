@@ -107,8 +107,7 @@ StmtGen::phase1_stmt(const VlScope* parent,
   case PtStmtType::NamedParBlock:
   case PtStmtType::NamedSeqBlock:
     {
-      auto block_scope{mgr().new_StmtBlockScope(parent, pt_stmt)};
-      reg_internalscope(block_scope);
+      auto block_scope{new_StmtBlockScope(parent, pt_stmt)};
 
       for ( auto pt_stmt1: pt_stmt->stmt_list() ) {
 	phase1_stmt(block_scope, pt_stmt1);

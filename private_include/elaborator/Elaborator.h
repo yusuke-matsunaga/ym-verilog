@@ -15,7 +15,6 @@
 #include "ym/ClibCellLibrary.h"
 
 #include "ObjDict.h"
-#include "ModDefDict.h"
 #include "AttrDict.h"
 #include "ElbStubList.h"
 
@@ -34,6 +33,7 @@ class DeclGen;
 class ItemGen;
 class StmtGen;
 class ExprGen;
+class ExprEval;
 class AttrGen;
 class DefParamStub;
 
@@ -136,96 +136,20 @@ private:
   find_cell_id(const string& name) const;
 
 
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 要素を生成・登録する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief トップレベルのスコープを生成する
+  const VlScope*
+  new_Toplevel();
+
+
 private:
   //////////////////////////////////////////////////////////////////////
   // 要素を登録する関数
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief internal scope を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_internalscope(const VlScope* obj);
-
-  /// @brief タスクを登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_task(const VlTaskFunc* obj);
-
-  /// @brief 関数を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_function(const VlTaskFunc* obj);
-
-  /// @brief 宣言要素を登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_decl(int tag,
-	   ElbDecl* obj);
-
-  /// @brief 配列型の宣言要素を登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_declarray(int tag,
-		const VlDeclArray* obj);
-
-  /// @brief パラメータを登録する．
-  /// @param[in] tag タグ
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_parameter(int tag,
-		ElbParameter* obj);
-
-  /// @brief モジュール配列を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_modulearray(const VlModuleArray* obj);
-
-  /// @brief ElbModule を登録する．
-  /// @param[in] module 登録するモジュール
-  void
-  reg_module(ElbModule* module);
-
-  /// @brief プリミティブ配列を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_primarray(ElbPrimArray* obj);
-
-  /// @brief プリミティブを登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_primitive(ElbPrimitive* obj);
-
-  /// @brief defparam を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_defparam(const VlDefParam* obj);
-
-  /// @brief paramassign を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_paramassign(const VlParamAssign* obj);
-
-  /// @brief continuous assignment を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_contassign(const VlContAssign* obj);
-
-  /// @brief process を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_process(ElbProcess* obj);
-
-  /// @brief genvar を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_genvar(ElbGenvar* obj);
-
-  /// @brief gfroot を登録する．
-  /// @param[in] obj 登録するオブジェクト
-  void
-  reg_gfroot(ElbGfRoot* obj);
 
   /// @brief constant function を登録する．
   /// @param[in] func 関数
@@ -233,6 +157,7 @@ private:
   reg_constant_function(const VlTaskFunc* func);
 
 
+#if 0
 public:
   //////////////////////////////////////////////////////////////////////
   // 検索関数
@@ -279,6 +204,7 @@ private:
   find_scope_up(const VlScope* base_scope,
 		const PtHierNamedBase* pt_obj,
 		const VlScope* ulimit);
+#endif
 
 
 private:
@@ -319,17 +245,14 @@ private:
   // 式生成用のオブジェクト
   unique_ptr<ExprGen> mExprGen;
 
+  // 定数式評価用のオブジェクト
+  unique_ptr<ExprEval> mExprEval;
+
   // attribute instance 生成用のオブジェクト
   unique_ptr<AttrGen> mAttrGen;
 
   // 関数定義の辞書
   unordered_map<string, const PtItem*> mFuncDict;
-
-  // 名前をキーにしたオブジェクトの辞書
-  ObjDict mObjDict;
-
-  // モジュール定義名の辞書
-  ModDefDict mModuleDefDict;
 
   // constant function の辞書
   ObjDict mCfDict;

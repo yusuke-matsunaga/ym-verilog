@@ -56,9 +56,9 @@ void
 ItemGen::instantiate_gateheader(const VlScope* parent,
 				const PtItem* pt_head)
 {
-  auto pt_delay = pt_head->delay();
-  bool has_delay = (pt_delay != nullptr);
-  auto prim_head = mgr().new_PrimHead(parent, pt_head, has_delay);
+  auto pt_delay{pt_head->delay()};
+  bool has_delay{(pt_delay != nullptr)};
+  auto prim_head{mgr().new_PrimHead(parent, pt_head, has_delay)};
   if ( has_delay ) {
     add_phase3stub(make_stub(this, &ItemGen::link_gate_delay,
 			     prim_head, pt_delay));
@@ -89,54 +89,52 @@ ItemGen::instantiate_gateheader(const VlScope* parent,
       continue;
     }
 
-    auto pt_left = pt_inst->left_range();
-    auto pt_right = pt_inst->right_range();
+    auto pt_left{pt_inst->left_range()};
+    auto pt_right{pt_inst->right_range()};
     if ( pt_left && pt_right ) {
       // 配列の場合
-      int left_val = 0;
-      int right_val = 0;
-      if ( !evaluate_range(parent, pt_left, pt_right,
-			   left_val, right_val) ) {
-	return;
-      }
-
-      auto prim_array= mgr().new_PrimitiveArray(prim_head,
-						    pt_inst,
-						    pt_left, pt_right,
-						    left_val, right_val);
-      reg_primarray(prim_array);
+      int left_val;
+      int right_val;
+      tie(left_val, right_val) = evaluate_range(parent, pt_left, pt_right);
+      auto prim_array{mgr().new_PrimitiveArray(prim_head,
+					       pt_inst,
+					       pt_left, pt_right,
+					       left_val, right_val)};
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(prim_array, attr_list);
 
-      ostringstream buf;
-      buf << "instantiating primitive array: " << prim_array->full_name();
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      fr,
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "instantiating primitive array: " << prim_array->full_name();
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			fr,
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
 
       add_phase3stub(make_stub(this, &ItemGen::link_prim_array,
 			       prim_array, pt_inst));
     }
     else {
       // 単一の要素の場合
-      auto prim = mgr().new_Primitive(prim_head, pt_inst);
-      reg_primitive(prim);
+      auto prim{mgr().new_Primitive(prim_head, pt_inst)};
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
       mgr().reg_attr(prim, attr_list);
 
-      ostringstream buf;
-      buf << "instantiating primitive: " << prim->full_name();
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      fr,
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+      {
+	ostringstream buf;
+	buf << "instantiating primitive: " << prim->full_name();
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			fr,
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
 
       add_phase3stub(make_stub(this, &ItemGen::link_primitive,
 			       prim, pt_inst));
@@ -153,20 +151,20 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
 			       const PtItem* pt_head,
 			       const VlUdpDefn* udpdefn)
 {
-  SizeType param_size = pt_head->paramassign_num();
-  auto pt_delay = pt_head->delay();
-  bool has_delay = ( pt_delay || param_size == 1 );
-  auto prim_head = mgr().new_UdpHead(parent,
-					 pt_head,
-					 udpdefn,
-					 has_delay);
+  SizeType param_size{pt_head->paramassign_num()};
+  auto pt_delay{pt_head->delay()};
+  bool has_delay{( pt_delay || param_size == 1 )};
+  auto prim_head{mgr().new_UdpHead(parent,
+				   pt_head,
+				   udpdefn,
+				   has_delay)};
   if ( has_delay ) {
     add_phase3stub(make_stub(this, &ItemGen::link_udp_delay,
 			     prim_head, pt_head));
   }
 
   for ( auto pt_inst: pt_head->inst_list() ) {
-    SizeType port_num = pt_inst->port_num();
+    SizeType port_num{pt_inst->port_num()};
     if ( port_num > 0 && pt_inst->port(0)->name() != nullptr ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      pt_inst->file_region(),
@@ -185,22 +183,17 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
       continue;
     }
 
-    auto pt_left = pt_inst->left_range();
-    auto pt_right = pt_inst->right_range();
+    auto pt_left{pt_inst->left_range()};
+    auto pt_right{pt_inst->right_range()};
     if ( pt_left && pt_right ) {
       // 配列
-      int left_val = 0;
-      int right_val = 0;
-      if ( !evaluate_range(parent, pt_left, pt_right,
-			   left_val, right_val) ) {
-	return;
-      }
-
-      auto prim_array= mgr().new_PrimitiveArray(prim_head,
-						    pt_inst,
-						    pt_left, pt_right,
-						    left_val, right_val);
-      reg_primarray(prim_array);
+      int left_val;
+      int right_val;
+      tie(left_val, right_val) = evaluate_range(parent, pt_left, pt_right);
+      auto prim_array{mgr().new_PrimitiveArray(prim_head,
+					       pt_inst,
+					       pt_left, pt_right,
+					       left_val, right_val)};
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
@@ -211,8 +204,7 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
     }
     else {
       // 単一の要素
-      auto primitive = mgr().new_Primitive(prim_head, pt_inst);
-      reg_primitive(primitive);
+      auto primitive{mgr().new_Primitive(prim_head, pt_inst)};
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
@@ -233,16 +225,16 @@ ItemGen::instantiate_cell(const VlScope* parent,
 			  const PtItem* pt_head,
 			  int cell_id)
 {
-  auto prim_head = mgr().new_CellHead(parent, pt_head, cell_id);
-  const auto& cell = get_cell(cell_id);
+  auto prim_head{mgr().new_CellHead(parent, pt_head, cell_id)};
+  const auto& cell{get_cell(cell_id)};
   for ( auto pt_inst: pt_head->inst_list() ) {
     // ポート数のチェックを行う．
-    SizeType port_num = pt_inst->port_num();
+    SizeType port_num{pt_inst->port_num()};
     if ( port_num > 0 && pt_inst->port(0)->name() != nullptr ) {
       // 名前による結合
       for ( auto pt_con: pt_inst->port_list() ) {
-	const char* pin_name = pt_con->name();
-	int pin_id = cell.pin_id(pin_name);
+	const char* pin_name{pt_con->name()};
+	int pin_id{cell.pin_id(pin_name)};
 	if ( pin_id == -1 ) {
 	  ostringstream buf;
 	  buf << pin_name << ": No such pin.";
@@ -267,22 +259,17 @@ ItemGen::instantiate_cell(const VlScope* parent,
     }
 
     // インスタンスの生成を行う．
-    auto pt_left = pt_inst->left_range();
-    auto pt_right = pt_inst->right_range();
+    auto pt_left{pt_inst->left_range()};
+    auto pt_right{pt_inst->right_range()};
     if ( pt_left && pt_right ) {
       // 配列
-      int left_val = 0;
-      int right_val = 0;
-      if ( !evaluate_range(parent, pt_left, pt_right,
-			   left_val, right_val) ) {
-	return;
-      }
-
-      auto prim_array = mgr().new_PrimitiveArray(prim_head,
-						     pt_inst,
-						     pt_left, pt_right,
-						     left_val, right_val);
-      reg_primarray(prim_array);
+      int left_val;
+      int right_val;
+      tie(left_val, right_val) = evaluate_range(parent, pt_left, pt_right);
+      auto prim_array{mgr().new_PrimitiveArray(prim_head,
+					       pt_inst,
+					       pt_left, pt_right,
+					       left_val, right_val)};
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
@@ -293,8 +280,7 @@ ItemGen::instantiate_cell(const VlScope* parent,
     }
     else {
       // 単一の要素
-      auto primitive = mgr().new_Primitive(prim_head, pt_inst);
-      reg_primitive(primitive);
+      auto primitive{mgr().new_Primitive(prim_head, pt_inst)};
 
       // attribute instance の生成
       auto attr_list{attribute_list(pt_head)};
@@ -313,8 +299,8 @@ void
 ItemGen::link_gate_delay(ElbPrimHead* prim_head,
 			 const PtDelay* pt_delay)
 {
-  auto parent = prim_head->parent_scope();
-  auto delay = instantiate_delay(parent, pt_delay);
+  auto parent{prim_head->parent_scope()};
+  auto delay{instantiate_delay(parent, pt_delay)};
   prim_head->set_delay(delay);
 }
 
@@ -326,10 +312,10 @@ void
 ItemGen::link_udp_delay(ElbPrimHead* prim_head,
 			const PtItem* pt_head)
 {
-  auto parent = prim_head->parent_scope();
-  SizeType param_size = pt_head->paramassign_num();
-  auto pt_delay = pt_head->delay();
-  const VlDelay* delay = instantiate_delay(parent, pt_delay);
+  auto parent{prim_head->parent_scope()};
+  SizeType param_size{pt_head->paramassign_num()};
+  auto pt_delay{pt_head->delay()};
+  const VlDelay* delay{instantiate_delay(parent, pt_delay)};
   if ( delay == nullptr && param_size == 1 ) {
     // ordered_param_list が実は遅延式だった．
     delay = instantiate_delay(parent, pt_head);
@@ -346,17 +332,17 @@ void
 ItemGen::link_prim_array(ElbPrimArray* prim_array,
 			 const PtInst* pt_inst)
 {
-  auto parent = prim_array->parent_scope();
-  SizeType arraysize = prim_array->elem_num();
+  auto parent{prim_array->parent_scope()};
+  SizeType arraysize{prim_array->elem_num()};
 
   // ポートの情報を得るために先頭の要素を取り出す．
-  auto prim = prim_array->elem_by_offset(0);
+  auto prim{prim_array->elem_by_offset(0)};
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  SizeType index = 0;
+  SizeType index{0};
   for ( auto pt_con: pt_inst->port_list() ) {
-    auto pt_expr = pt_con->expr();
+    auto pt_expr{pt_con->expr()};
     if ( !pt_expr ) {
       // 空の接続式は許されない．
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -367,9 +353,9 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
       continue;
     }
 
-    auto term = prim->prim_term(index);
+    auto term{prim->prim_term(index)};
     ++ index;
-    ElbExpr* tmp = nullptr;
+    ElbExpr* tmp{nullptr};
     if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
@@ -382,7 +368,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
       continue;
     }
 
-    auto type = tmp->value_type();
+    auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      tmp->file_region(),
@@ -391,11 +377,12 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
 		      "Real expression cannot connect to UDP port.");
       continue;
     }
-    SizeType expr_size = type.size();
+
+    SizeType expr_size{type.size()};
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       for ( SizeType i = 0; i < arraysize; ++ i ) {
-	auto prim = prim_array->_primitive_by_offset(i);
+	auto prim{prim_array->_primitive_by_offset(i)};
 	prim->connect(index, tmp);
       }
     }
@@ -403,15 +390,15 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
       // サイズがなければ1ビットに直してから接続する．
       tmp->set_reqsize(VlValueType(false, true, 1));
       for ( SizeType i = 0; i < arraysize; ++ i ) {
-	auto prim = prim_array->_primitive_by_offset(i);
+	auto prim{prim_array->_primitive_by_offset(i)};
 	prim->connect(index, tmp);
       }
     }
     else if ( expr_size == arraysize ) {
       // tmp を 1 ビットずつに分割して接続する．
       for ( SizeType i = 0; i < arraysize; ++ i ) {
-	auto prim = prim_array->_primitive_by_offset(i);
-	auto bit = mgr().new_BitSelect(pt_expr, tmp, i);
+	auto prim{prim_array->_primitive_by_offset(i)};
+	auto bit{mgr().new_BitSelect(pt_expr, tmp, i)};
 	prim->connect(index, bit);
       }
     }
@@ -435,21 +422,21 @@ void
 ItemGen::link_primitive(ElbPrimitive* primitive,
 			const PtInst* pt_inst)
 {
-  auto parent = primitive->parent_scope();
+  auto parent{primitive->parent_scope()};
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  SizeType index = 0;
+  SizeType index{0};
   for ( auto pt_con: pt_inst->port_list() ) {
     // UDP instance の場合には ai_list は無視する．
-    auto pt_expr = pt_con->expr();
+    auto pt_expr{pt_con->expr()};
     if ( !pt_expr ) {
       continue;
     }
 
-    auto term = primitive->prim_term(index);
+    auto term{primitive->prim_term(index)};
     ++ index;
-    ElbExpr* tmp = nullptr;
+    ElbExpr* tmp{nullptr};
     if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
@@ -462,7 +449,7 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
       continue;
     }
 
-    auto type = tmp->value_type();
+    auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      tmp->file_region(),
@@ -472,7 +459,7 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
       continue;
     }
 
-    SizeType expr_size = type.size();
+    SizeType expr_size{type.size()};
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       primitive->connect(index, tmp);
@@ -502,20 +489,20 @@ void
 ItemGen::link_cell_array(ElbPrimArray* prim_array,
 			 const PtInst* pt_inst)
 {
-  auto parent = prim_array->parent_scope();
-  SizeType arraysize = prim_array->elem_num();
+  auto parent{prim_array->parent_scope()};
+  SizeType arraysize{prim_array->elem_num()};
 
   // ポートの情報を得るために先頭の要素を取り出す．
-  auto prim = prim_array->elem_by_offset(0);
+  auto prim{prim_array->elem_by_offset(0)};
 
   // YACC の文法から一つでも named_con なら全部そう
-  bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
+  bool conn_by_name{(pt_inst->port(0)->name() != nullptr)};
 
-  const auto& cell = get_cell(prim->cell_id());
+  const auto& cell{get_cell(prim->cell_id())};
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  SizeType pos = 0;
+  SizeType pos{0};
   for ( auto pt_con: pt_inst->port_list() ) {
     int index;
     if ( conn_by_name ) {
@@ -536,7 +523,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       index = pos;
       ++ pos;
     }
-    auto pt_expr = pt_con->expr();
+    auto pt_expr{pt_con->expr()};
     if ( !pt_expr ) {
       // 空の接続式は許されない．
       MsgMgr::put_msg(__FILE__, __LINE__,
@@ -547,8 +534,8 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       continue;
     }
 
-    auto term = prim->prim_term(index);
-    ElbExpr* tmp = nullptr;
+    auto term{prim->prim_term(index)};
+    ElbExpr* tmp{nullptr};
     if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
@@ -561,7 +548,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       continue;
     }
 
-    auto type = tmp->value_type();
+    auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      tmp->file_region(),
@@ -571,11 +558,11 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       continue;
     }
 
-    SizeType expr_size = type.size();
+    SizeType expr_size{type.size()};
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       for ( SizeType i = 0; i < arraysize; ++ i ) {
-	auto prim = prim_array->_primitive_by_offset(i);
+	auto prim{prim_array->_primitive_by_offset(i)};
 	prim->connect(index, tmp);
       }
     }
@@ -583,15 +570,15 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       // サイズがなければ1ビットに直してから接続する．
       tmp->set_reqsize(VlValueType(false, true, 1));
       for ( SizeType i = 0; i < arraysize; ++ i ) {
-	auto prim = prim_array->_primitive_by_offset(i);
+	auto prim{prim_array->_primitive_by_offset(i)};
 	prim->connect(index, tmp);
       }
     }
     else if ( expr_size == arraysize ) {
       // tmp を 1 ビットずつに分割して接続する．
       for ( SizeType i = 0; i < arraysize; ++ i ) {
-	auto prim = prim_array->_primitive_by_offset(i);
-	auto bit = mgr().new_BitSelect(pt_expr, tmp, i);
+	auto prim{prim_array->_primitive_by_offset(i)};
+	auto bit{mgr().new_BitSelect(pt_expr, tmp, i)};
 	prim->connect(index, bit);
       }
     }
@@ -615,20 +602,20 @@ void
 ItemGen::link_cell(ElbPrimitive* primitive,
 		   const PtInst* pt_inst)
 {
-  auto parent = primitive->parent_scope();
+  auto parent{primitive->parent_scope()};
 
   // YACC の文法から一つでも named_con なら全部そう
-  bool conn_by_name = (pt_inst->port(0)->name() != nullptr);
+  bool conn_by_name{(pt_inst->port(0)->name() != nullptr)};
 
-  const auto& cell = get_cell(primitive->cell_id());
+  const auto& cell{get_cell(primitive->cell_id())};
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
-  SizeType pos = 0;
+  SizeType pos{0};
   for ( auto pt_con: pt_inst->port_list() ) {
     SizeType index;
     if ( conn_by_name ) {
-      int pin_id = cell.pin_id(pt_con->name());
+      int pin_id{cell.pin_id(pt_con->name())};
       if ( pin_id == -1 ) {
 	ostringstream buf;
 	buf << pt_con->name() << ": No such pin.";
@@ -646,13 +633,13 @@ ItemGen::link_cell(ElbPrimitive* primitive,
       ++ pos;
     }
     // ai_list は無視する．
-    auto pt_expr = pt_con->expr();
+    auto pt_expr{pt_con->expr()};
     if ( !pt_expr ) {
       continue;
     }
 
-    auto term = primitive->prim_term(index);
-    ElbExpr* tmp = nullptr;
+    auto term{primitive->prim_term(index)};
+    ElbExpr* tmp{nullptr};
     if ( term->direction() == VpiDir::Input ) {
       // 入力に接続するのは通常の右辺式
       tmp = instantiate_expr(parent, env1, pt_expr);
@@ -665,7 +652,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
       continue;
     }
 
-    auto type = tmp->value_type();
+    auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
       MsgMgr::put_msg(__FILE__, __LINE__,
 		      tmp->file_region(),
@@ -675,7 +662,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
       continue;
     }
 
-    SizeType expr_size = type.size();
+    SizeType expr_size{type.size()};
     if ( expr_size == 1 ) {
       // サイズが等しければそのまま接続する．
       primitive->connect(index, tmp);

@@ -111,16 +111,8 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
 
     const auto& ifr{pt_init_value->file_region()};
 
-    VlScalarVal val;
-    if ( !evaluate_scalar(nullptr, pt_init_value, val, true) ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      ifr,
-		      MsgType::Error,
-		      "ELAB",
-		      "Only 1-bit constants are allowed here.");
-      return;
-    }
     // 初期値を設定する．
+    VlScalarVal val = evaluate_scalar(nullptr, pt_init_value);
     udp->set_initial(pt_init_value, val);
   }
 
@@ -346,9 +338,6 @@ UdpGen::instantiate_udp(const PtUdp* pt_udp)
       ++ pos;
     }
   }
-
-  // UDP を登録する．
-  reg_udp(def_name, udp);
 }
 
 END_NAMESPACE_YM_VERILOG

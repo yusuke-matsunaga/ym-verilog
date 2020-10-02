@@ -1,8 +1,8 @@
-#ifndef EVALUATOR_H
-#define EVALUATOR_H
+#ifndef FUNCEVAL_H
+#define FUNCEVAL_H
 
-/// @file Evaluator.h
-/// @brief Evaluator のヘッダファイル
+/// @file FuncEval.h
+/// @brief FuncEval のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2020 Yusuke Matsunaga
@@ -17,7 +17,7 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class Evaluator Evaluator.h "Evaluator.h"
+/// @class FuncEval FuncEval.h "FuncEval.h"
 /// @brief 関数の値の評価を行うクラス
 ///
 /// constant expression を elaboration 中に評価するために用いる．
@@ -32,18 +32,16 @@ BEGIN_NAMESPACE_YM_VERILOG
 /// 要素とみなす．
 /// ただし，これは値の割り当てマップのなかだけの話．
 //////////////////////////////////////////////////////////////////////
-class Evaluator
+class FuncEval
 {
 public:
 
   /// @brief コンストラクタ
   /// @param[in] function 関数
-  /// @param[in] put_error エラーを出力する時 true にするフラグ
-  Evaluator(const VlTaskFunc* function,
-	    bool put_error);
+  FuncEval(const VlTaskFunc* function);
 
   /// @brief デストラクタ
-  ~Evaluator();
+  ~FuncEval();
 
 
 public:
@@ -330,9 +328,6 @@ private:
   // 対象の関数
   const VlTaskFunc* mFunction;
 
-  // エラー出力フラグ
-  bool mPutError;
-
   // 値割り当ての辞書
   unordered_map<Key, VlValue, Hash, Eq> mValMap;
 
@@ -340,4 +335,4 @@ private:
 
 END_NAMESPACE_YM_VERILOG
 
-#endif // EVALUATOR_H
+#endif // FUNCEVAL_H

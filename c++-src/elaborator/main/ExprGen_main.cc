@@ -9,6 +9,7 @@
 
 #include "ExprGen.h"
 #include "ElbEnv.h"
+#include "ErrorGen.h"
 
 #include "ym/BitVector.h"
 #include "ym/pt/PtItem.h"
@@ -16,8 +17,6 @@
 #include "ym/pt/PtMisc.h"
 
 #include "elaborator/ElbExpr.h"
-
-#include "ym/MsgMgr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -71,12 +70,12 @@ ExprGen::instantiate_expr(const VlScope* parent,
   case PtExprType::SysFuncCall:
     if ( env.inside_constant_function() ) {
       // constant_function 内では system function は使えない．
-      error_illegal_sysfunccall_in_cf(pt_expr);
+      ErrorGen::illegal_sysfunccall_in_cf(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
     if ( env.is_constant() ) {
       // 定数式内では system function は使えない．
-      error_illegal_sysfunccall_in_ce(pt_expr);
+      ErrorGen::illegal_sysfunccall_in_ce(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
     return instantiate_sysfunccall(parent, env, pt_expr);
@@ -132,11 +131,7 @@ ExprGen::instantiate_event_expr(const VlScope* parent,
       { // これのみがイベント式の特徴
 	ASSERT_COND(pt_expr->operand_num() == 1 );
 	auto opr0 = instantiate_expr(parent, env, pt_expr->operand0());
-	if ( !opr0 ) {
-	  return nullptr;
-	}
-	auto expr = mgr().new_UnaryOp(pt_expr,
-					  pt_expr->op_type(), opr0);
+	auto expr = mgr().new_UnaryOp(pt_expr, pt_expr->op_type(), opr0);
 
 	// attribute instance の生成
 	auto attr_list{attribute_list(pt_expr)};
@@ -160,17 +155,17 @@ ExprGen::instantiate_event_expr(const VlScope* parent,
 
   case PtExprType::Const:
     // イベント式の根元には定数は使えない．
-    error_illegal_constant_in_event_expression(pt_expr);
+    ErrorGen::illegal_constant_in_event_expression(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case PtExprType::FuncCall:
     // イベント式の根元には関数呼び出しは使えない．
-    error_illegal_funccall_in_event_expression(pt_expr);
+    ErrorGen::illegal_funccall_in_event_expression(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case PtExprType::SysFuncCall:
     // イベント式の根元にはシステム関数呼び出しは使えない．
-    error_illegal_sysfunccall_in_event_expression(pt_expr);
+    ErrorGen::illegal_sysfunccall_in_event_expression(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   default:
@@ -230,9 +225,6 @@ ExprGen::instantiate_lhs(const VlScope* parent,
 	SizeType pos{opr_size - i - 1};
 	auto pt_expr1{pt_expr->operand(pos)};
 	auto expr1{instantiate_lhs_sub(parent, env, pt_expr1, elem_array)};
-	if ( !expr1 ) {
-	  return nullptr;
-	}
 	opr_list[pos] = expr1;
       }
       auto expr{mgr().new_Lhs(pt_expr, opr_list, elem_array)};
@@ -244,7 +236,7 @@ ExprGen::instantiate_lhs(const VlScope* parent,
       return expr;
     }
     // それ以外の演算子はエラー
-    error_illegal_operator_in_lhs(pt_expr);
+    ErrorGen::illegal_operator_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
 
@@ -252,15 +244,15 @@ ExprGen::instantiate_lhs(const VlScope* parent,
     return instantiate_primary(parent, env, pt_expr);
 
   case PtExprType::Const:
-    error_illegal_constant_in_lhs(pt_expr);
+    ErrorGen::illegal_constant_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case PtExprType::FuncCall:
-    error_illegal_funccall_in_lhs(pt_expr);
+    ErrorGen::illegal_funccall_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case PtExprType::SysFuncCall:
-    error_illegal_sysfunccall_in_lhs(pt_expr);
+    ErrorGen::illegal_sysfunccall_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   default:
@@ -310,7 +302,7 @@ ExprGen::instantiate_lhs_sub(const VlScope* parent,
     }
     else {
       // それ以外の演算子はエラー
-      error_illegal_operator_in_lhs(pt_expr);
+      ErrorGen::illegal_operator_in_lhs(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
 
@@ -323,15 +315,15 @@ ExprGen::instantiate_lhs_sub(const VlScope* parent,
     }
 
   case PtExprType::Const:
-    error_illegal_constant_in_lhs(pt_expr);
+    ErrorGen::illegal_constant_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case PtExprType::FuncCall:
-    error_illegal_funccall_in_lhs(pt_expr);
+    ErrorGen::illegal_funccall_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   case PtExprType::SysFuncCall:
-    error_illegal_sysfunccall_in_lhs(pt_expr);
+    ErrorGen::illegal_sysfunccall_in_lhs(__FILE__, __LINE__, pt_expr);
     return nullptr;
 
   default:

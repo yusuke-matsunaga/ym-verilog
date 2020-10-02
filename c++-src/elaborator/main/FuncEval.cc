@@ -1,20 +1,20 @@
 
-/// @file Evaluator.cc
-/// @brief Evaluator の実装ファイル
+/// @file FuncEval.cc
+/// @brief FuncEval の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
 
-#include "elaborator/Evaluator.h"
+#include "FuncEval.h"
+#include "ErrorGen.h"
 #include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlIODecl.h"
 #include "ym/vl/VlDecl.h"
 #include "ym/vl/VlDeclArray.h"
 #include "ym/vl/VlStmt.h"
 #include "ym/vl/VlExpr.h"
-#include "ym/MsgMgr.h"
 #include "ym/Range.h"
 
 
@@ -22,23 +22,20 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
 // @param[in] function 関数
-// @param[in] put_error エラーを出力する時 true にするフラグ
-Evaluator::Evaluator(const VlTaskFunc* function,
-		     bool put_error) :
-  mFunction(function),
-  mPutError{put_error}
+FuncEval::FuncEval(const VlTaskFunc* function) :
+  mFunction{function}
 {
 }
 
 // @brief デストラクタ
-Evaluator::~Evaluator()
+FuncEval::~FuncEval()
 {
 }
 
 // @brief 関数を評価する．
 // @param[in] arg_list 引数のリスト
 VlValue
-Evaluator::operator()(const vector<VlValue>& arg_list)
+FuncEval::operator()(const vector<VlValue>& arg_list)
 {
   // 入力変数の値をセットする．
   SizeType io_num{mFunction->io_num()};
@@ -64,7 +61,7 @@ Evaluator::operator()(const vector<VlValue>& arg_list)
 
 // ステートメントを実行する．
 const VlScope*
-Evaluator::evaluate_stmt(const VlStmt* stmt)
+FuncEval::evaluate_stmt(const VlStmt* stmt)
 {
   // disable が実行された場合の対象のスコープ
   const VlScope* break_scope{nullptr};
@@ -136,7 +133,7 @@ Evaluator::evaluate_stmt(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_seqblock(const VlStmt* stmt)
+FuncEval::evaluate_seqblock(const VlStmt* stmt)
 {
   SizeType n{stmt->child_stmt_num()};
   for ( SizeType i = 0; i < n; ++ i ) {
@@ -152,7 +149,7 @@ Evaluator::evaluate_seqblock(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_namedseqblock(const VlStmt* stmt)
+FuncEval::evaluate_namedseqblock(const VlStmt* stmt)
 {
   SizeType n{stmt->child_stmt_num()};
   for ( SizeType i = 0; i < n; ++ i ) {
@@ -173,7 +170,7 @@ Evaluator::evaluate_namedseqblock(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_assign(const VlStmt* stmt)
+FuncEval::evaluate_assign(const VlStmt* stmt)
 {
   ASSERT_COND( stmt->control() == nullptr );
   ASSERT_COND( stmt->is_blocking() );
@@ -209,7 +206,7 @@ Evaluator::evaluate_assign(const VlStmt* stmt)
 //
 // expr は primary か bit-select, part-select
 void
-Evaluator::assign_value(const VlExpr* expr,
+FuncEval::assign_value(const VlExpr* expr,
 			const VlValue& val)
 {
   // 対象が
@@ -283,7 +280,7 @@ Evaluator::assign_value(const VlExpr* expr,
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_while(const VlStmt* stmt)
+FuncEval::evaluate_while(const VlStmt* stmt)
 {
   auto cond_expr{stmt->expr()};
   auto body_stmt{stmt->body_stmt()};
@@ -300,7 +297,7 @@ Evaluator::evaluate_while(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_repeat(const VlStmt* stmt)
+FuncEval::evaluate_repeat(const VlStmt* stmt)
 {
   auto rep_expr{stmt->expr()};
   int rep_num{evaluate_int(rep_expr)};
@@ -318,7 +315,7 @@ Evaluator::evaluate_repeat(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_for(const VlStmt* stmt)
+FuncEval::evaluate_for(const VlStmt* stmt)
 {
   auto cond_expr{stmt->expr()};
   auto init_stmt{stmt->init_stmt()};
@@ -345,7 +342,7 @@ Evaluator::evaluate_for(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_forever(const VlStmt* stmt)
+FuncEval::evaluate_forever(const VlStmt* stmt)
 {
   auto body_stmt{stmt->body_stmt()};
   for ( ; ; ) {
@@ -361,7 +358,7 @@ Evaluator::evaluate_forever(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_if(const VlStmt* stmt)
+FuncEval::evaluate_if(const VlStmt* stmt)
 {
   auto cond_expr{stmt->expr()};
   if ( evaluate_bool(cond_expr) ) {
@@ -376,7 +373,7 @@ Evaluator::evaluate_if(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_ifelse(const VlStmt* stmt)
+FuncEval::evaluate_ifelse(const VlStmt* stmt)
 {
   auto cond_expr{stmt->expr()};
   if ( evaluate_bool(cond_expr) ) {
@@ -395,7 +392,7 @@ Evaluator::evaluate_ifelse(const VlStmt* stmt)
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_case(const VlStmt* stmt)
+FuncEval::evaluate_case(const VlStmt* stmt)
 {
   auto case_type{stmt->case_type()};
   auto expr{stmt->expr()};
@@ -417,7 +414,7 @@ Evaluator::evaluate_case(const VlStmt* stmt)
 // @param[in] val case 文の値
 // @param[in] caseitem 対象の caseitem
 bool
-Evaluator::match(VpiCaseType case_type,
+FuncEval::match(VpiCaseType case_type,
 		 const VlValue& val,
 		 const VlCaseItem* caseitem)
 {
@@ -452,7 +449,7 @@ Evaluator::match(VpiCaseType case_type,
 // @param[in] stmt 対象のステートメント
 // @return break 対象のスコープを返す．
 const VlScope*
-Evaluator::evaluate_disable(const VlStmt* stmt)
+FuncEval::evaluate_disable(const VlStmt* stmt)
 {
   return stmt->target_scope();
 }
@@ -460,7 +457,7 @@ Evaluator::evaluate_disable(const VlStmt* stmt)
 // @brief 式の評価を行う．
 // @param[in] expr 対象の式を表す構文木要素
 VlValue
-Evaluator::evaluate_expr(const VlExpr* expr)
+FuncEval::evaluate_expr(const VlExpr* expr)
 {
   switch ( expr->type() ) {
   case VpiObjType::Operation:   return evaluate_opr(expr);
@@ -478,7 +475,7 @@ Evaluator::evaluate_expr(const VlExpr* expr)
 // @brief 演算子に対して式の値を評価する．
 // @param[in] expr 対象の式
 VlValue
-Evaluator::evaluate_opr(const VlExpr* expr)
+FuncEval::evaluate_opr(const VlExpr* expr)
 {
   SizeType n_op{expr->operand_num()};
   // オペランドの値を評価する．
@@ -580,7 +577,7 @@ Evaluator::evaluate_opr(const VlExpr* expr)
 // @brief 定数に対して式の値を評価する．
 // @param[in] expr 対象の式
 VlValue
-Evaluator::evaluate_const(const VlExpr* expr)
+FuncEval::evaluate_const(const VlExpr* expr)
 {
   return expr->constant_value();
 }
@@ -588,7 +585,7 @@ Evaluator::evaluate_const(const VlExpr* expr)
 // @brief プライマリに対して式の値を評価する．
 // @param[in] expr 対象の式
 VlValue
-Evaluator::evaluate_primary(const VlExpr* expr)
+FuncEval::evaluate_primary(const VlExpr* expr)
 {
   auto decl{expr->decl_obj()};
   auto declarray{expr->declarray_obj()};
@@ -640,7 +637,7 @@ Evaluator::evaluate_primary(const VlExpr* expr)
 // @brief 関数呼び出しに対して式の値を評価する．
 // @param[in] expr 対象の式
 VlValue
-Evaluator::evaluate_funccall(const VlExpr* expr)
+FuncEval::evaluate_funccall(const VlExpr* expr)
 {
   auto func{expr->function()};
 
@@ -652,25 +649,18 @@ Evaluator::evaluate_funccall(const VlExpr* expr)
     arg_list[i] = evaluate_expr(expr->argument(i));
   }
 
-  Evaluator eval(func, mPutError);
+  FuncEval eval(func);
   return eval(arg_list);
 }
 
 // @brief 式を評価して整数値を返す．
 // @param[in] expr 対象の式
 int
-Evaluator::evaluate_int(const VlExpr* expr)
+FuncEval::evaluate_int(const VlExpr* expr)
 {
   auto val{evaluate_expr(expr)};
   if ( !val.is_int_compat() ) {
-    if ( mPutError ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      expr->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Integer value required.");
-    }
-    return 0;
+    ErrorGen::int_required(__FILE__, __LINE__, expr->file_region());
   }
   return val.int_value();
 }
@@ -678,19 +668,9 @@ Evaluator::evaluate_int(const VlExpr* expr)
 // @brief 式を評価して整数値を返す．
 // @param[in] expr 対象の式
 bool
-Evaluator::evaluate_bool(const VlExpr* expr)
+FuncEval::evaluate_bool(const VlExpr* expr)
 {
   auto val{evaluate_expr(expr)};
-  if ( !val.is_int_compat() ) {
-    if ( mPutError ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      expr->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Integer value required.");
-    }
-    return 0;
-  }
   return val.logic_value().to_bool();
 }
 
@@ -700,7 +680,7 @@ Evaluator::evaluate_bool(const VlExpr* expr)
 //
 // 単独のオブジェクト用
 void
-Evaluator::reg_val(const VlDeclBase* obj,
+FuncEval::reg_val(const VlDeclBase* obj,
 		   const VlValue& val)
 {
   reg_val(obj, 0, val);
@@ -713,7 +693,7 @@ Evaluator::reg_val(const VlDeclBase* obj,
 //
 // 配列要素用
 void
-Evaluator::reg_val(const VlDeclBase* obj,
+FuncEval::reg_val(const VlDeclBase* obj,
 		   SizeType offset,
 		   const VlValue& val)
 {
@@ -728,7 +708,7 @@ Evaluator::reg_val(const VlDeclBase* obj,
 //
 // 単独のオブジェクト用
 void
-Evaluator::reg_val(const VlDeclBase* obj,
+FuncEval::reg_val(const VlDeclBase* obj,
 		   const VlValue& val,
 		   int index)
 {
@@ -743,7 +723,7 @@ Evaluator::reg_val(const VlDeclBase* obj,
 //
 // 配列要素用
 void
-Evaluator::reg_val(const VlDeclBase* obj,
+FuncEval::reg_val(const VlDeclBase* obj,
 		   SizeType offset,
 		   const VlValue& val,
 		   int index)
@@ -771,7 +751,7 @@ Evaluator::reg_val(const VlDeclBase* obj,
 //
 // 単独のオブジェクト用
 void
-Evaluator::reg_val(const VlDeclBase* obj,
+FuncEval::reg_val(const VlDeclBase* obj,
 		   const VlValue& val,
 		   int left,
 		   int right)
@@ -787,7 +767,7 @@ Evaluator::reg_val(const VlDeclBase* obj,
 //
 // 配列要素用
 void
-Evaluator::reg_val(const VlDeclBase* obj,
+FuncEval::reg_val(const VlDeclBase* obj,
 		   SizeType offset,
 		   const VlValue& val,
 		   int left,
@@ -813,7 +793,7 @@ Evaluator::reg_val(const VlDeclBase* obj,
 //
 // 単独のオブジェクト用
 VlValue
-Evaluator::get_val(const VlDeclBase* obj)
+FuncEval::get_val(const VlDeclBase* obj)
 {
   return get_val(obj, 0);
 }
@@ -824,7 +804,7 @@ Evaluator::get_val(const VlDeclBase* obj)
 //
 // 配列要素用
 VlValue
-Evaluator::get_val(const VlDeclBase* obj,
+FuncEval::get_val(const VlDeclBase* obj,
 		   SizeType offset)
 {
   Key key{obj, offset};

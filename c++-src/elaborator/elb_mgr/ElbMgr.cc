@@ -21,6 +21,8 @@
 #include "ym/vl/VlTaskFunc.h"
 #include "ym/vl/VlUserSystf.h"
 #include "ym/vl/VlUdp.h"
+#include "ym/pt/PtUdp.h"
+#include "ym/pt/PtMisc.h"
 #include "elaborator/ElbGfRoot.h"
 #include "elaborator/ElbUdp.h"
 #include "elaborator/ElbModule.h"
@@ -37,6 +39,18 @@
 
 
 BEGIN_NAMESPACE_YM_VERILOG
+
+#define DOUT cerr
+
+const ymuint debug_none       = 0x00000000;
+const ymuint debug_find_scope = 0x00000010;
+const ymuint debug_all        = 0xFFFFFFFF;
+
+#if 1
+const ymuint debug = debug_none;
+#else
+const ymuint debug = debug_all;
+#endif
 
 // @brief コンストラクタ
 ElbMgr::ElbMgr() :
@@ -95,24 +109,6 @@ ElbMgr::find_udp(const string& name) const
   }
 }
 
-// @brief UDP を登録する．
-// @param[in] def_name 定義名
-// @param[in] udp 登録する UDP
-void
-ElbMgr::reg_udp(const string& def_name,
-		const VlUdpDefn* udp)
-{
-  mUdpList.push_back(udp);
-  mUdpHash[def_name] = udp;
-}
-
-// @brief グローバルスコープを登録する．
-void
-ElbMgr::reg_toplevel(const VlScope* toplevel)
-{
-  mTopLevel = toplevel;
-}
-
 // @brief topmodule のリストを返す．
 const vector<const VlModule*>&
 ElbMgr::topmodule_list() const
@@ -142,122 +138,157 @@ ElbMgr::reg_user_systf(const VlUserSystf* systf)
   mSystfHash[systf->name()] = systf;
 }
 
+// @brief スコープと名前から名前付き要素を取り出す．
+// @param[in] parent 検索対象のスコープ
+// @param[in] name 名前
+// @return parent というスコープ内の name という要素を返す．
+// @return なければ nullptr を返す．
+ObjHandle*
+ElbMgr::find_obj(const VlScope* parent,
+		 const string& name) const
+{
+  return mObjDict.find(parent, name);
+}
+
+// @brief スコープと名前からスコープを取り出す．
+// @param[in] parent 検索対象のスコープ
+// @param[in] name 名前
+// @return parent というスコープ内の name というスコープを返す．
+// @return なければ nullptr を返す．
+const VlScope*
+ElbMgr::find_namedobj(const VlScope* parent,
+		      const string& name) const
+{
+  auto handle{find_obj(parent, name)};
+  if ( handle != nullptr ) {
+    return handle->scope();
+  }
+  else {
+    return nullptr;
+  }
+}
+
+// @brief 名前によるオブジェクトの探索
+// @param[in] base_scope 起点となるスコープ
+// @param[in] pt_objy 階層名付きのオブジェクト
+// @param[in] ulimit 探索する名前空間の上限
+// @return 見付かったオブジェクトを返す．
+// 見付からなかったら nullptr を返す．
+ObjHandle*
+ElbMgr::find_obj_up(const VlScope* base_scope,
+		    const PtHierNamedBase* pt_obj,
+		    const VlScope* ulimit)
+{
+  // まず nb の部分の解決を行う．
+  base_scope = find_scope_up(base_scope, pt_obj, ulimit);
+  if ( base_scope == nullptr ) {
+    return nullptr;
+  }
+
+  if ( debug & debug_find_scope ) {
+    DOUT << "find_obj_up( " << pt_obj->name() << " )@"
+	 << base_scope->full_name() << endl;
+  }
+
+  // base_scope を起点として name というオブジェクトを探す．
+  for ( ; base_scope; base_scope = base_scope->parent_scope() ) {
+    auto handle{find_obj(base_scope, pt_obj->name())};
+    if ( handle ) {
+      // 見つけた
+      if ( debug & debug_find_scope ) {
+	DOUT << "--> Found: " << handle->name() << " @ "
+	     << base_scope->name() << endl << endl;
+      }
+      return handle;
+    }
+    // base_scope が上限だったのでこれ以上 upward search できない．
+    if ( base_scope == ulimit ) {
+      if ( debug & debug_find_scope ) {
+	DOUT << "--> Not found: reaches to ulimit" << endl << endl;
+      }
+      return nullptr;
+    }
+  }
+  // ダミー
+  return nullptr;
+}
+
+// base_scope を起点として (name_branch, "" ) という名前のスコープを探す．
+// なければ親のスコープに対して同様の探索を繰り返す．
+const VlScope*
+ElbMgr::find_scope_up(const VlScope* base_scope,
+		      const PtHierNamedBase* pt_obj,
+		      const VlScope* ulimit)
+{
+  if ( debug & debug_find_scope ) {
+    DOUT << "find_scope_up( "
+	 << pt_obj->fullname()
+	 << " ) @"
+	 << base_scope->full_name() << endl;
+  }
+
+  SizeType n{pt_obj->namebranch_num()};
+  auto cur_scope{base_scope};
+  for ( auto name_branch: pt_obj->namebranch_list() ) {
+    auto top_name{name_branch->name()};
+    const VlScope* top_scope{nullptr};
+    // まず普通に探す．
+    auto handle{find_obj(cur_scope, top_name)};
+    if ( handle ) {
+      if ( name_branch->has_index() ) {
+	top_scope = handle->array_elem(name_branch->index());
+      }
+      else {
+	top_scope = handle->scope();
+      }
+    }
+    else if ( !name_branch->has_index() ) {
+      // モジュール定義名として探す．
+      auto module{mModuleDefDict.find(cur_scope, top_name)};
+      if ( module ) {
+	top_scope = module;
+      }
+    }
+    if ( top_scope == nullptr) {
+      // cur_scope が上限もしくは cur_scope の親がいなければ
+      // upward search できない．
+      if ( cur_scope == ulimit || cur_scope->parent_scope() == nullptr ) {
+
+	if ( debug & debug_find_scope ) {
+	  DOUT << "--> Not Found" << endl << endl;
+	}
+
+	return nullptr;
+      }
+
+      // upward search を行う．
+      if ( debug & debug_find_scope ) {
+	DOUT << " upward search" << endl;
+      }
+      cur_scope = cur_scope->parent_scope();
+    }
+    else {
+      // downward search を行う．
+      if ( debug & debug_find_scope ) {
+	DOUT << " downward search" << endl;
+      }
+      cur_scope = top_scope;
+    }
+  }
+
+  if ( debug & debug_find_scope ) {
+    DOUT << "--> Found: " << cur_scope->full_name() << endl << endl;
+  }
+  return cur_scope;
+}
+
 // @brief internal scope を登録する．
 // @param[in] obj 登録するオブジェクト
 void
 ElbMgr::reg_internalscope(const VlScope* obj)
 {
+  mObjDict.add(obj);
   mTagDict.add_internalscope(obj);
-}
-
-// @brief 宣言要素を登録する．
-// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_decl(int tag,
-		 const VlDecl* obj)
-{
-  if ( tag ) {
-    mTagDict.add_decl(tag, obj);
-  }
-}
-
-// @brief 配列型の宣言要素を登録する．
-// @param[in] tag タグ
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_declarray(int tag,
-		      const VlDeclArray* obj)
-{
-  if ( tag ) {
-    if ( tag == vpiVariables ) {
-      // ちょっと汚い補正
-      tag += 100;
-    }
-    mTagDict.add_declarray(tag, obj);
-  }
-}
-
-// @brief defparam を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_defparam(const VlDefParam* obj)
-{
-  mTagDict.add_defparam(obj);
-}
-
-// @brief paramassign を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_paramassign(const VlParamAssign* obj)
-{
-  mTagDict.add_paramassign(obj);
-}
-
-// @brief モジュール配列を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_modulearray(const VlModuleArray* obj)
-{
-  mTagDict.add_modulearray(obj);
-}
-
-// @brief モジュールを登録する．
-void
-ElbMgr::reg_module(const VlModule* obj)
-{
-  mTagDict.add_module(obj);
-  if ( obj->parent_scope() == mTopLevel ) {
-    mTopmoduleList.push_back(obj);
-  }
-}
-
-// @brief プリミティブ配列を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_primarray(const VlPrimArray* obj)
-{
-  mTagDict.add_primarray(obj);
-}
-
-// @brief プリミティブを登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_primitive(const VlPrimitive* obj)
-{
-  mTagDict.add_primitive(obj);
-}
-
-// @brief タスクを登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_task(const VlTaskFunc* obj)
-{
-  mTagDict.add_task(obj);
-}
-
-// @brief 関数を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_function(const VlTaskFunc* obj)
-{
-  mTagDict.add_function(obj);
-}
-
-// @brief continuous assignment を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_contassign(const VlContAssign* obj)
-{
-  mTagDict.add_contassign(obj);
-}
-
-// @brief process を登録する．
-// @param[in] obj 登録するオブジェクト
-void
-ElbMgr::reg_process(const VlProcess* obj)
-{
-  mTagDict.add_process(obj);
 }
 
 // @brief 属性リストを登録する．
@@ -276,6 +307,7 @@ ElbMgr::new_Toplevel()
 {
   auto scope{factory().new_Toplevel()};
   mObjList.push_back(scope);
+  mTopLevel = scope;
   return scope;
 }
 
@@ -288,6 +320,7 @@ ElbMgr::new_StmtBlockScope(const VlScope* parent,
 {
   auto scope{factory().new_StmtBlockScope(parent, pt_stmt)};
   mObjList.push_back(scope);
+  reg_internalscope(scope);
   return scope;
 }
 
@@ -300,6 +333,7 @@ ElbMgr::new_GenBlock(const VlScope* parent,
 {
   auto scope{factory().new_GenBlock(parent, pt_item)};
   mObjList.push_back(scope);
+  reg_internalscope(scope);
   return scope;
 }
 
@@ -310,6 +344,7 @@ ElbMgr::new_GfRoot(const VlScope* parent,
 {
   auto gfroot{factory().new_GfRoot(parent, pt_item)};
   mObjList.push_back(gfroot);
+  mObjDict.add(gfroot);
   return gfroot;
 }
 
@@ -324,6 +359,7 @@ ElbMgr::new_GfBlock(const VlScope* parent,
 {
   auto gfblock{factory().new_GfBlock(parent, pt_item, gvi)};
   mObjList.push_back(gfblock);
+  reg_internalscope(gfblock);
   return gfblock;
 }
 
@@ -336,6 +372,8 @@ ElbMgr::new_UdpDefn(const PtUdp* pt_udp,
 {
   auto udp{factory().new_UdpDefn(pt_udp, is_protected)};
   mObjList.push_back(udp);
+  mUdpList.push_back(udp);
+  mUdpHash[pt_udp->name()] = udp;
   return udp;
 }
 
@@ -352,6 +390,12 @@ ElbMgr::new_Module(const VlScope* parent,
 {
   auto module{factory().new_Module(parent, pt_module, pt_head, pt_inst)};
   mObjList.push_back(module);
+  mObjDict.add(module);
+  mModuleDefDict.add(module);
+  mTagDict.add_module(module);
+  if ( parent == mTopLevel ) {
+    mTopmoduleList.push_back(module);
+  }
   return module;
 }
 
@@ -377,6 +421,8 @@ ElbMgr::new_ModuleArray(const VlScope* parent,
   auto modulearray{factory().new_ModuleArray(parent, pt_module, pt_head, pt_inst,
 					     left, right, left_val, right_val)};
   mObjList.push_back(modulearray);
+  mObjDict.add(modulearray);
+  mTagDict.add_modulearray(modulearray);
   return modulearray;
 }
 
@@ -512,16 +558,20 @@ ElbMgr::new_DeclHead(const VlScope* parent,
 }
 
 // @brief 宣言要素を生成する．
+// @param[in] tag タグ
 // @param[in] head ヘッダ
 // @param[in] pt_item パース木の宣言要素
 // @param[in] init 初期値
 ElbDecl*
-ElbMgr::new_Decl(ElbDeclHead* head,
+ElbMgr::new_Decl(int tag,
+		 ElbDeclHead* head,
 		 const PtNamedBase* pt_item,
 		 const VlExpr* init)
 {
   auto decl{factory().new_Decl(head, pt_item, init)};
   mObjList.push_back(decl);
+  mObjDict.add(decl);
+  mTagDict.add_decl(tag, decl);
   return decl;
 }
 
@@ -534,21 +584,29 @@ ElbMgr::new_ImpNet(const VlScope* parent,
 {
   auto decl{factory().new_ImpNet(parent, pt_expr, net_type)};
   mObjList.push_back(decl);
+  mTagDict.add_decl(vpiNet, decl);
   return decl;
 }
 
 // @brief 宣言要素の配列を生成する．
-// @param[in] parent 親のスコープ
+// @param[in] tag タグ
 // @param[in] head ヘッダ
 // @param[in] pt_item パース木の宣言要素
 // @param[in] range_src 範囲の配列
 const VlDeclArray*
-ElbMgr::new_DeclArray(ElbDeclHead* head,
+ElbMgr::new_DeclArray(int tag,
+		      ElbDeclHead* head,
 		      const PtNamedBase* pt_item,
 		      const vector<ElbRangeSrc>& range_src)
 {
   auto decl{factory().new_DeclArray(head, pt_item, range_src)};
   mObjList.push_back(decl);
+  mObjDict.add(decl);
+  if ( tag == vpiVariables ) {
+    // ちょっと汚い補正
+    tag += 100;
+  }
+  mTagDict.add_declarray(tag, decl);
   return decl;
 }
 
@@ -597,6 +655,8 @@ ElbMgr::new_Parameter(ElbParamHead* head,
 {
   auto param{factory().new_Parameter(head, pt_item, is_local)};
   mObjList.push_back(param);
+  mObjDict.add(param);
+  mTagDict.add_decl(vpiParameter, param);
   return param;
 }
 
@@ -611,6 +671,7 @@ ElbMgr::new_Genvar(const VlScope* parent,
 {
   auto genvar{factory().new_Genvar(parent, pt_item, val)};
   mObjList.push_back(genvar);
+  mObjDict.add(genvar);
   return genvar;
 }
 
@@ -642,6 +703,7 @@ ElbMgr::new_ContAssign(ElbCaHead* head,
 {
   auto contassign{factory().new_ContAssign(head, pt_obj, lhs, rhs)};
   mObjList.push_back(contassign);
+  mTagDict.add_contassign(contassign);
   return contassign;
 }
 
@@ -658,6 +720,7 @@ ElbMgr::new_ContAssign(const VlModule* module,
 {
   auto contassign{factory().new_ContAssign(module, pt_obj, lhs, rhs)};
   mObjList.push_back(contassign);
+  mTagDict.add_contassign(contassign);
   return contassign;
 }
 
@@ -676,6 +739,7 @@ ElbMgr::new_ParamAssign(const VlModule* module,
   auto paramassign{factory().new_ParamAssign(module, pt_obj, param,
 					     rhs_expr, rhs_value)};
   mObjList.push_back(paramassign);
+  mTagDict.add_paramassign(paramassign);
   return paramassign;
 }
 
@@ -694,6 +758,7 @@ ElbMgr::new_NamedParamAssign(const VlModule* module,
   auto paramassign{factory().new_NamedParamAssign(module, pt_obj, param,
 						  rhs_expr, rhs_value)};
   mObjList.push_back(paramassign);
+  mTagDict.add_paramassign(paramassign);
   return paramassign;
 }
 
@@ -715,6 +780,7 @@ ElbMgr::new_DefParam(const VlModule* module,
   auto defparam{factory().new_DefParam(module, pt_header, pt_defparam,
 				       param, rhs_expr, rhs_value)};
   mObjList.push_back(defparam);
+  mTagDict.add_defparam(defparam);
   return defparam;
 }
 
@@ -771,6 +837,8 @@ ElbMgr::new_Primitive(ElbPrimHead* head,
 {
   auto prim{factory().new_Primitive(head, pt_inst)};
   mObjList.push_back(prim);
+  mObjDict.add(prim);
+  mTagDict.add_primitive(prim);
   return prim;
 }
 
@@ -792,6 +860,7 @@ ElbMgr::new_PrimitiveArray(ElbPrimHead* head,
   auto prim{factory().new_PrimitiveArray(head, pt_inst, left, right,
 					 left_val, right_val)};
   mObjList.push_back(prim);
+  mTagDict.add_primarray(prim);
   return prim;
 }
 
@@ -843,7 +912,10 @@ ElbMgr::new_Function(const VlScope* parent,
 		     bool const_func)
 {
   auto func{factory().new_Function(parent, pt_item, const_func)};
+  #warning "reg_Function" で共通化すべき
   mObjList.push_back(func);
+  mObjDict.add(func);
+  mTagDict.add_function(func);
   return func;
 }
 
@@ -869,6 +941,8 @@ ElbMgr::new_Function(const VlScope* parent,
 				   left_val, right_val,
 				   const_func)};
   mObjList.push_back(func);
+  mObjDict.add(func);
+  mTagDict.add_function(func);
   return func;
 }
 
@@ -881,6 +955,8 @@ ElbMgr::new_Task(const VlScope* parent,
 {
   auto task{factory().new_Task(parent, pt_item)};
   mObjList.push_back(task);
+  mObjDict.add(task);
+  mTagDict.add_task(task);
   return task;
 }
 
@@ -893,6 +969,7 @@ ElbMgr::new_Process(const VlScope* parent,
 {
   auto process{factory().new_Process(parent, pt_item)};
   mObjList.push_back(process);
+  mTagDict.add_process(process);
   return process;
 }
 

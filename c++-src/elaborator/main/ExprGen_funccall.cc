@@ -9,6 +9,7 @@
 
 #include "ExprGen.h"
 #include "ElbEnv.h"
+#include "ErrorGen.h"
 
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtItem.h"
@@ -82,7 +83,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   if ( env.is_constant() ) {
     // 定数関数を探し出す．
     if ( pt_expr->namebranch_num() > 0 ) {
-      error_hname_in_ce(pt_expr);
+      ErrorGen::hname_in_ce(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
 
@@ -95,12 +96,12 @@ ExprGen::instantiate_funccall(const VlScope* parent,
     auto module{parent->parent_module()};
     auto pt_func{find_funcdef(module, name)};
     if ( !pt_func ) {
-      error_no_such_function(pt_expr);
+      ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
 
     if ( pt_func->is_in_use() ) {
-      error_uses_itself(pt_expr);
+      ErrorGen::uses_itself(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
 
@@ -112,7 +113,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
       pt_func->clear_in_use();
     }
     if ( !child_func ) {
-      error_not_a_constant_function(pt_expr);
+      ErrorGen::not_a_constant_function(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
   }
@@ -120,11 +121,11 @@ ExprGen::instantiate_funccall(const VlScope* parent,
     // 関数本体を探し出す．
     auto handle{find_obj_up(parent, pt_expr, nullptr)};
     if ( handle == nullptr ) {
-      error_no_such_function(pt_expr);
+      ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
     if ( handle->type() != VpiObjType::Function ) {
-      error_not_a_function(pt_expr);
+      ErrorGen::not_a_function(__FILE__, __LINE__, pt_expr);
       return nullptr;
     }
     child_func = handle->taskfunc();
@@ -134,7 +135,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   // 引数の生成
   SizeType n{pt_expr->operand_num()};
   if ( n != child_func->io_num() ) {
-    error_n_of_arguments_mismatch(pt_expr);
+    ErrorGen::n_of_arguments_mismatch(__FILE__, __LINE__, pt_expr);
     return nullptr;
   }
 
@@ -149,7 +150,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
     auto io_decl{child_func->io(i)};
     auto decl{io_decl->decl()};
     if ( decl->value_type() != expr1->value_type() ) {
-      error_illegal_argument_type(pt_expr);
+      ErrorGen::illegal_argument_type(__FILE__, __LINE__, pt_expr);
       if ( debug ) {
 	dout << "decl->value_type() = ";
 	put_value_type(dout, decl->value_type());
@@ -186,7 +187,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   // system function を探し出す．
   auto user_systf{find_user_systf(name)};
   if ( user_systf == nullptr ) {
-    error_no_such_sysfunction(pt_expr);
+    ErrorGen::no_such_sysfunction(__FILE__, __LINE__, pt_expr);
     return nullptr;
   }
 
