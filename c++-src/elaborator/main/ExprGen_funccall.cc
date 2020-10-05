@@ -119,14 +119,12 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
   else {
     // 関数本体を探し出す．
-    auto handle{find_obj_up(parent, pt_expr, nullptr)};
+    auto handle{mgr().find_obj_up(parent, pt_expr, nullptr)};
     if ( handle == nullptr ) {
       ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
     if ( handle->type() != VpiObjType::Function ) {
       ErrorGen::not_a_function(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
     child_func = handle->taskfunc();
     ASSERT_COND( child_func );
@@ -185,10 +183,9 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   auto name{pt_expr->name()};
 
   // system function を探し出す．
-  auto user_systf{find_user_systf(name)};
+  auto user_systf{mgr().find_user_systf(name)};
   if ( user_systf == nullptr ) {
     ErrorGen::no_such_sysfunction(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
 #warning "TODO: 2011-02-09-04 引数の個数と型のチェック"

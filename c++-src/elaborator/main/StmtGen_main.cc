@@ -326,7 +326,7 @@ StmtGen::instantiate_disable(const VlScope* parent,
 
   // disable はモジュール境界を越えない？
   // 仕様書には何も書いていないのでたぶん越えられる．
-  auto handle{find_obj_up(parent, pt_stmt, nullptr)};
+  auto handle{mgr().find_obj_up(parent, pt_stmt, nullptr)};
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -374,7 +374,7 @@ StmtGen::instantiate_enable(const VlScope* parent,
 
   // タスクを探し出して設定する．
   // タスク名の探索はモジュール境界を越える．
-  auto handle{find_obj_up(parent, pt_stmt, nullptr)};
+  auto handle{mgr().find_obj_up(parent, pt_stmt, nullptr)};
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -433,7 +433,7 @@ StmtGen::instantiate_sysenable(const VlScope* parent,
   auto name{pt_stmt->name()};
 
   // UserSystf を取り出す．
-  auto user_systf{find_user_systf(name)};
+  auto user_systf{mgr().find_user_systf(name)};
   if ( user_systf == nullptr ) {
     ostringstream buf;
     buf << name << " : No such system task.";

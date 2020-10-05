@@ -154,7 +154,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
   for ( const auto& param_con: param_con_list ) {
     auto pt_con{param_con.mPtCon};
     auto name{paramport_list[index]}; ++ index;
-    auto handle{find_obj(module, name)};
+    auto handle{mgr().find_obj(module, name)};
     if ( handle == nullptr || handle->type() != VpiObjType::Parameter ) {
       ErrorGen::no_param(__FILE__, __LINE__, pt_con, name);
     }
@@ -251,7 +251,7 @@ ModuleGen::instantiate_portref(ElbModule* module,
 			       const PtExpr* pt_portref)
 {
   auto name{pt_portref->name()};
-  auto handle{find_obj(module, name)};
+  auto handle{mgr().find_obj(module, name)};
   if ( !handle ) {
     ErrorGen::not_found(__FILE__, __LINE__, pt_portref->file_region(), name);
   }

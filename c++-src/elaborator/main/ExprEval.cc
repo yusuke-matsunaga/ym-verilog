@@ -431,7 +431,7 @@ ExprEval::evaluate_primary(const VlScope* parent,
   }
 
   // モジュール内の識別子を探索する．
-  auto handle{find_obj_up(parent, pt_expr, parent->parent_module())};
+  auto handle{mgr().find_obj_up(parent, pt_expr, parent->parent_module())};
   if ( !handle ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);

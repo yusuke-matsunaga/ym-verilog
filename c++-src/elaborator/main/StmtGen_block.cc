@@ -93,7 +93,7 @@ StmtGen::instantiate_namedparblock(const VlScope* parent,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  auto block{find_namedobj(parent, pt_stmt->name())};
+  auto block{mgr().find_namedobj(parent, pt_stmt->name())};
   ASSERT_COND( block );
 
   auto stmt_list{instantiate_stmt_list(block, process, env, pt_stmt)};
@@ -113,7 +113,7 @@ StmtGen::instantiate_namedseqblock(const VlScope* parent,
 				   const ElbEnv& env,
 				   const PtStmt* pt_stmt)
 {
-  auto block{find_namedobj(parent, pt_stmt->name())};
+  auto block{mgr().find_namedobj(parent, pt_stmt->name())};
   ASSERT_COND( block );
 
   auto stmt_list{instantiate_stmt_list(block, process, env, pt_stmt)};

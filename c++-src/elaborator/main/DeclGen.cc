@@ -126,7 +126,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 
     for ( auto pt_item: pt_head->item_list() ) {
       // IO定義と変数/ネット定義が一致しているか調べる．
-      auto handle{find_obj(scope, pt_item->name())};
+      auto handle{mgr().find_obj(scope, pt_item->name())};
       ElbDecl* decl{nullptr};
       if ( handle ) {
 	// 同名の要素が見つかった．

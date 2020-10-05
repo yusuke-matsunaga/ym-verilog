@@ -70,7 +70,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
   }
   else if ( env.inside_constant_function() ) {
     // まず関数内の識別子を探索する．
-    handle = find_obj_up(parent, pt_expr, env.constant_function());
+    handle = mgr().find_obj_up(parent, pt_expr, env.constant_function());
     if ( handle == nullptr && !env.is_lhs() ) {
       // 右辺ならモジュール内の定数識別子を探索する．
       handle = find_const_handle(parent, pt_expr);
@@ -84,7 +84,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
   else {
     // 通常のスコープで探索する．
     // たぶんモジュール内でいいはず．
-    handle = find_obj_up(parent, pt_expr,  parent->parent_module());
+    handle = mgr().find_obj_up(parent, pt_expr,  parent->parent_module());
     if ( handle == nullptr ) {
       // 見つからなくてもデフォルトネットタイプが kVpiNone でないかぎり
       // 暗黙の1ビットネット宣言を行う．
@@ -97,7 +97,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	   def_nettype != VpiNetType::None ) {
 	auto decl{mgr().new_ImpNet(parent, pt_expr, def_nettype)};
 
-	handle = find_obj(parent, name);
+	handle = mgr().find_obj(parent, name);
 	// 今作ったはずなので絶対見つかるはず．
 	ASSERT_COND( handle );
       }
@@ -402,7 +402,7 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
   ASSERT_COND( pt_expr->right_range() == nullptr );
 
   // 名前に対応したオブジェクトのハンドルを求める．
-  auto handle{find_obj_up(parent, pt_expr, nullptr)};
+  auto handle{mgr().find_obj_up(parent, pt_expr, nullptr)};
   if ( handle == nullptr ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
@@ -453,7 +453,7 @@ ExprGen::find_const_handle(const VlScope* parent,
 			   const PtExpr* pt_expr)
 {
   // モジュール内の識別子を探索する．
-  auto handle{find_obj_up(parent, pt_expr, parent->parent_module())};
+  auto handle{mgr().find_obj_up(parent, pt_expr, parent->parent_module())};
   if ( handle == nullptr ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);

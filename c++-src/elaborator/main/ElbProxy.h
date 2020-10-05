@@ -85,49 +85,6 @@ protected:
   // 検索用の関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 名前から UDP 定義を取出す．
-  /// @param[in] name 名前
-  /// @return name という名の UDP を返す．
-  /// @return なければ nullptr を返す．
-  const VlUdpDefn*
-  find_udp(const string& name) const;
-
-  /// @brief 名前から UserSystf を取出す．
-  /// @param[in] name 名前
-  /// @return name という名のユーザー定義関数を返す．
-  /// @return なければ nullptr を返す．
-  const VlUserSystf*
-  find_user_systf(const string& name) const;
-
-  /// @brief スコープと名前から名前付き要素を取り出す．
-  /// @param[in] parent 検索対象のスコープ
-  /// @param[in] name 名前
-  /// @return parent というスコープ内の name という要素を返す．
-  /// @return なければ nullptr を返す．
-  ObjHandle*
-  find_obj(const VlScope* parent,
-	   const string& name) const;
-
-  /// @brief スコープと名前からスコープを取り出す．
-  /// @param[in] parent 検索対象のスコープ
-  /// @param[in] name 名前
-  /// @return parent というスコープ内の name というスコープを返す．
-  /// @return なければ nullptr を返す．
-  const VlScope*
-  find_namedobj(const VlScope* parent,
-		const string& name) const;
-
-  /// @brief 名前によるオブジェクトの探索
-  /// @param[in] base_scope 起点となるスコープ
-  /// @param[in] pt_obj 階層名付きのオブジェクト
-  /// @param[in] ulimit 探索する名前空間の上限
-  /// @return 見付かったオブジェクトを返す．
-  /// 見付からなかったら nullptr を返す．
-  ObjHandle*
-  find_obj_up(const VlScope* base_scope,
-	      const PtHierNamedBase* pt_obj,
-	      const VlScope* ulimit);
-
   /// @brief 名前からモジュール定義を取り出す．
   /// @param[in] name 名前
   /// @return name という名のモジュール定義
@@ -628,70 +585,6 @@ private:
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
-
-// @brief 名前から UDP 定義を取出す．
-// @param[in] name 名前
-// @return name という名の UDP を返す．
-// @return なければ nullptr を返す．
-inline
-const VlUdpDefn*
-ElbProxy::find_udp(const string& name) const
-{
-  return mMgr.find_udp(name);
-}
-
-// @brief 名前から UserSystf を取出す．
-// @param[in] name 名前
-// @return name という名のユーザー定義関数を返す．
-// @return なければ nullptr を返す．
-inline
-const VlUserSystf*
-ElbProxy::find_user_systf(const string& name) const
-{
-  return mMgr.find_user_systf(name);
-}
-
-// @brief スコープと名前から名前付き要素を取り出す．
-// @param[in] parent 検索対象のスコープ
-// @param[in] name 名前
-// @return parent というスコープ内の name という要素を返す．
-// @return なければ nullptr を返す．
-inline
-ObjHandle*
-ElbProxy::find_obj(const VlScope* parent,
-		   const string& name) const
-{
-  return mMgr.find_obj(parent, name);
-}
-
-// @brief スコープと名前からスコープを取り出す．
-// @param[in] parent 検索対象のスコープ
-// @param[in] name 名前
-// @return parent というスコープ内の name というスコープを返す．
-// @return なければ nullptr を返す．
-inline
-const VlScope*
-ElbProxy::find_namedobj(const VlScope* parent,
-			const string& name) const
-{
-  return mMgr.find_namedobj(parent, name);
-}
-
-// @brief 名前によるオブジェクトの探索
-// @param[in] base_scope 起点となるスコープ
-// @param[in] nb_array 階層名の上部 (nullptr の場合も有りうる)
-// @param[in] name 末尾の名前
-// @param[in] ulimit 探索する名前空間の上限
-// @return 見付かったオブジェクトを返す．
-// 見付からなかったら nullptr を返す．
-inline
-ObjHandle*
-ElbProxy::find_obj_up(const VlScope* base_scope,
-		      const PtHierNamedBase* pt_obj,
-		      const VlScope* ulimit)
-{
-  return mMgr.find_obj_up(base_scope, pt_obj, ulimit);
-}
 
 // @brief セルの探索
 // @param[in] name セル名

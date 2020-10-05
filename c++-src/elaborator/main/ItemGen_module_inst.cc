@@ -129,7 +129,7 @@ ItemGen::phase1_muheader(const VlScope* parent,
   }
 
   // 次に udp を探す．
-  auto udpdefn{find_udp(defname)};
+  auto udpdefn{mgr().find_udp(defname)};
   if ( udpdefn ) {
     // ただしこの場合, mParamList は空でなければならない．
     // 問題は delay が mParamList に見える場合があるということ．
