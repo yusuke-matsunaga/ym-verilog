@@ -650,7 +650,7 @@ ItemGen::link_module(ElbModule* module,
 
     // attribute instance の生成
     auto attr_list{attribute_list(pt_con)};
-    reg_attr(port, attr_list);
+    mgr().reg_attr(port, attr_list);
   }
 }
 

@@ -132,14 +132,6 @@ protected:
   void
   reg_constant_function(const VlTaskFunc* func);
 
-  /// @brief 属性リストを登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] def 定義側の属性の時 true とするフラグ
-  /// @param[in] attr_list 属性リスト
-  void
-  reg_attr(const VlObj* obj,
-	   const vector<const VlAttribute*>& attr_list);
-
 
 protected:
   //////////////////////////////////////////////////////////////////////
@@ -649,18 +641,6 @@ void
 ElbProxy::reg_constant_function(const VlTaskFunc* func)
 {
   mElaborator.reg_constant_function(func);
-}
-
-// @brief 属性リストを登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] def 定義側の属性の時 true とするフラグ
-// @param[in] attr_list 属性リスト
-inline
-void
-ElbProxy::reg_attr(const VlObj* obj,
-		   const vector<const VlAttribute*>& attr_list)
-{
-  mMgr.reg_attr(obj, attr_list);
 }
 
 // @brief 後で処理する defparam 文を登録する．
