@@ -109,9 +109,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
     bool has_range{(pt_left != nullptr) && (pt_right != nullptr)};
 
     // 範囲指定を持っている場合には範囲を計算する．
-    int left_val;
-    int right_val;
-    tie(left_val, right_val) = evaluate_range(scope, pt_left, pt_right);
+    int left_val{0};
+    int right_val{0};
+    if ( has_range ) {
+      tie(left_val, right_val) = evaluate_range(scope, pt_left, pt_right);
+    }
 
     // ヘッダ情報の生成
     // ちなみに IOHead は範囲の情報を持たない．
