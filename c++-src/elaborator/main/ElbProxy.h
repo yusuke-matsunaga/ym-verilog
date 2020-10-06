@@ -264,8 +264,8 @@ protected:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_item_array 要素定義の配列
   void
-  phase1_item(const VlScope* parent,
-	      const vector<const PtItem*>& pt_item_array);
+  phase1_items(const VlScope* parent,
+	       const vector<const PtItem*>& pt_item_array);
 
   /// @brief constant function の生成を行う．
   /// @param[in] parent 親のスコープ

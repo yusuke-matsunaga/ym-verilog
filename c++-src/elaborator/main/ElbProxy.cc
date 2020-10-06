@@ -133,10 +133,10 @@ ElbProxy::instantiate_decl(const VlScope* parent,
 // @param[in] parent 親のスコープ
 // @param[in] pt_item_array 要素定義の配列
 void
-ElbProxy::phase1_item(const VlScope* parent,
-		      const vector<const PtItem*>& pt_item_array)
+ElbProxy::phase1_items(const VlScope* parent,
+		       const vector<const PtItem*>& pt_item_array)
 {
-  mItemGen->phase1_item(parent, pt_item_array);
+  mItemGen->phase1_items(parent, pt_item_array);
 }
 
 // @brief constant function の生成を行う．

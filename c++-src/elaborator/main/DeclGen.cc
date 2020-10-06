@@ -236,15 +236,16 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	auto pt_init{pt_item->init_value()};
 	ElbExpr* init{nullptr};
 	if ( module ) {
-	  if ( aux_type == VpiAuxType::Net && pt_init ) {
-	    // net 型の場合(ここに来るのは暗黙宣言のみ)は初期値を持てない．
-	    ErrorGen::impnet_with_init(__FILE__, __LINE__, pt_item);
+	  if ( pt_init != nullptr ) {
+	    // 初期値を持つ場合
+	    if ( aux_type == VpiAuxType::Net ) {
+	      // net 型の場合(ここに来るのは暗黙宣言のみ)は初期値を持てない．
+	      ErrorGen::impnet_with_init(__FILE__, __LINE__, pt_item);
+	    }
+	    // これは verilog_grammer.yy の list_of_variable_port_identifiers
+	    // に対応するので必ず constant_expression である．
+	    init = instantiate_constant_expr(scope, pt_init);
 	  }
-	  // 初期値を持つ場合
-	  // これは verilog_grammer.yy の list_of_variable_port_identifiers
-	  // に対応するので必ず constant_expression である．
-	  init = instantiate_constant_expr(scope, pt_init);
-	  // エラーの場合には init = nullptr となるが処理は続ける．
 	}
 	else {
 	  // task/function の IO 宣言には初期値はない．
@@ -493,9 +494,7 @@ DeclGen::link_net_delay(ElbDeclHead* net_head,
 {
   auto scope{net_head->parent_scope()};
   auto delay{instantiate_delay(scope, pt_delay)};
-  if ( delay ) {
-    net_head->set_delay(delay);
-  }
+  net_head->set_delay(delay);
 }
 
 // @brief net の初期値を生成する．
@@ -578,11 +577,12 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
     }
     else {
       // 単独の要素
-      // 初期値を持つ場合
-      // 初期値は constant_expression なので今作る．
-      auto init{instantiate_constant_expr(scope, pt_init)};
-      // エラーの時には init = nullptr となるがそれでも処理は続ける．
-      // もちろんエラーは記録されている．
+      const VlExpr* init{nullptr};
+      if ( pt_init != nullptr ) {
+	// 初期値を持つ場合
+	// 初期値は constant_expression なので今作る．
+	init = instantiate_constant_expr(scope, pt_init);
+      }
 
       auto reg{mgr().new_Decl(vpiReg, reg_head, pt_item, init)};
 
@@ -645,11 +645,12 @@ DeclGen::instantiate_var_head(const VlScope* scope,
     }
     else {
       // 単独の変数
-      // 初期値を持つ場合
-      // 初期値は constant_expression なので今作る．
-      auto init{instantiate_constant_expr(scope, pt_init)};
-      // エラーの時には init = nullptr となるがそれでも処理は続ける．
-      // もちろんエラーは記録されている．
+      const VlExpr* init{nullptr};
+      if ( pt_init != nullptr ) {
+	// 初期値を持つ場合
+	// 初期値は constant_expression なので今作る．
+	init = instantiate_constant_expr(scope, pt_init);
+      }
 
       auto var{mgr().new_Decl(vpiVariables, var_head, pt_item, init)};
 

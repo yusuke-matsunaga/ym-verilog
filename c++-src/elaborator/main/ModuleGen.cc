@@ -171,7 +171,7 @@ ModuleGen::phase1_module_item(ElbModule* module,
   }
 
   // それ以外の要素を実体化する．
-  phase1_item(module, pt_module->item_list());
+  phase1_items(module, pt_module->item_list());
 
   // phase2 で行う処理を登録しておく．
   add_phase2stub(module, pt_module);

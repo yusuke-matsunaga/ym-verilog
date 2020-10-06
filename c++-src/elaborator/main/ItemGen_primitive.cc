@@ -9,6 +9,7 @@
 
 #include "ItemGen.h"
 #include "ElbEnv.h"
+#include "ErrorGen.h"
 
 #include "ym/BitVector.h"
 
@@ -166,21 +167,11 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
   for ( auto pt_inst: pt_head->inst_list() ) {
     SizeType port_num{pt_inst->port_num()};
     if ( port_num > 0 && pt_inst->port(0)->name() != nullptr ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_inst->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "UDP instance cannot have named port list.");
-      continue;
+      ErrorGen::named_port_in_udp_instance(__FILE__, __LINE__, pt_inst);
     }
 
     if ( udpdefn->port_num() != port_num ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_inst->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Number of ports mismatch.");
-      continue;
+      ErrorGen::port_num_mismatch(__FILE__, __LINE__, pt_inst);
     }
 
     auto pt_left{pt_inst->left_range()};
@@ -233,28 +224,16 @@ ItemGen::instantiate_cell(const VlScope* parent,
     if ( port_num > 0 && pt_inst->port(0)->name() != nullptr ) {
       // 名前による結合
       for ( auto pt_con: pt_inst->port_list() ) {
-	const char* pin_name{pt_con->name()};
+	auto pin_name{pt_con->name()};
 	int pin_id{cell.pin_id(pin_name)};
 	if ( pin_id == -1 ) {
-	  ostringstream buf;
-	  buf << pin_name << ": No such pin.";
-	  MsgMgr::put_msg(__FILE__, __LINE__,
-			  pt_con->file_region(),
-			  MsgType::Error,
-			  "ELAB",
-			  buf.str());
-	  continue;
+	  ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
 	}
       }
     }
     else {
       if ( cell.pin_num() != port_num ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_inst->file_region(),
-			MsgType::Error,
-			"ELAB",
-			"Number of ports mismatch.");
-	continue;
+	ErrorGen::port_num_mismatch(__FILE__, __LINE__, pt_inst);
       }
     }
 
@@ -315,7 +294,7 @@ ItemGen::link_udp_delay(ElbPrimHead* prim_head,
   auto parent{prim_head->parent_scope()};
   SizeType param_size{pt_head->paramassign_num()};
   auto pt_delay{pt_head->delay()};
-  const VlDelay* delay{instantiate_delay(parent, pt_delay)};
+  auto delay{instantiate_delay(parent, pt_delay)};
   if ( delay == nullptr && param_size == 1 ) {
     // ordered_param_list が実は遅延式だった．
     delay = instantiate_delay(parent, pt_head);
@@ -345,12 +324,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
     auto pt_expr{pt_con->expr()};
     if ( !pt_expr ) {
       // 空の接続式は許されない．
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_con->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Empty expression in UDP/primitive instance port.");
-      continue;
+      ErrorGen::empty_port_expression(__FILE__, __LINE__, pt_con);
     }
 
     auto term{prim->prim_term(index)};
@@ -370,12 +344,7 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
 
     auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      tmp->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Real expression cannot connect to UDP port.");
-      continue;
+      ErrorGen::real_type_in_port_list(__FILE__, __LINE__, tmp);
     }
 
     SizeType expr_size{type.size()};
@@ -403,14 +372,9 @@ ItemGen::link_prim_array(ElbPrimArray* prim_array,
       }
     }
     else {
-      ostringstream buf;
-      buf << (index + 1) << num_suffix(index + 1)
-	  << " port expression has illegal size.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_con->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      buf.str());
+      auto def_name{prim_array->head()->def_name()};
+      ErrorGen::port_size_mismatch(__FILE__, __LINE__, pt_con->expr(),
+				   def_name, index);
     }
   }
 }
@@ -445,18 +409,10 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
       // それ以外は左辺式
       tmp = instantiate_lhs(parent, env2, pt_expr);
     }
-    if ( !tmp ) {
-      continue;
-    }
 
     auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      tmp->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Real expression cannot connect to UDP port.");
-      continue;
+      ErrorGen::real_type_in_port_list(__FILE__, __LINE__, tmp);
     }
 
     SizeType expr_size{type.size()};
@@ -470,14 +426,9 @@ ItemGen::link_primitive(ElbPrimitive* primitive,
       primitive->connect(index, tmp);
     }
     else {
-      ostringstream buf;
-      buf << (index + 1) << num_suffix(index + 1)
-	  << " port expression has illegal size.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_con->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      buf.str());
+      auto def_name{primitive->head()->def_name()};
+      ErrorGen::port_size_mismatch(__FILE__, __LINE__, pt_con->expr(),
+				   def_name, index);
     }
   }
 }
@@ -508,14 +459,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
     if ( conn_by_name ) {
       int pin_id = cell.pin_id(pt_con->name());
       if ( pin_id == -1 ) {
-	ostringstream buf;
-	buf << pt_con->name() << ": No such pin.";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_con->file_region(),
-			MsgType::Error,
-			"ELAB",
-			buf.str());
-	continue;
+	ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
       }
       index = pin_id;
     }
@@ -526,12 +470,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
     auto pt_expr{pt_con->expr()};
     if ( !pt_expr ) {
       // 空の接続式は許されない．
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_con->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Empty expression in UDP/primitive instance port.");
-      continue;
+      ErrorGen::empty_port_expression(__FILE__, __LINE__, pt_con);
     }
 
     auto term{prim->prim_term(index)};
@@ -544,18 +483,10 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       // それ以外は左辺式
       tmp = instantiate_lhs(parent, env2, pt_expr);
     }
-    if ( !tmp ) {
-      continue;
-    }
 
     auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      tmp->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Real expression cannot connect to UDP port.");
-      continue;
+      ErrorGen::real_type_in_port_list(__FILE__, __LINE__, tmp);
     }
 
     SizeType expr_size{type.size()};
@@ -583,14 +514,9 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
       }
     }
     else {
-      ostringstream buf;
-      buf << (index + 1) << num_suffix(index + 1)
-	  << " port expression has illegal size.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_con->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      buf.str());
+      auto def_name{prim_array->head()->def_name()};
+      ErrorGen::port_size_mismatch(__FILE__, __LINE__, pt_con->expr(),
+				   def_name, index);
     }
   }
 }
@@ -617,14 +543,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
     if ( conn_by_name ) {
       int pin_id{cell.pin_id(pt_con->name())};
       if ( pin_id == -1 ) {
-	ostringstream buf;
-	buf << pt_con->name() << ": No such pin.";
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_con->file_region(),
-			MsgType::Error,
-			"ELAB",
-			buf.str());
-	continue;
+	ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
       }
       index = pin_id;
     }
@@ -654,12 +573,7 @@ ItemGen::link_cell(ElbPrimitive* primitive,
 
     auto type{tmp->value_type()};
     if ( type.is_real_type() ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      tmp->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      "Real expression cannot connect to UDP port.");
-      continue;
+      ErrorGen::real_type_in_port_list(__FILE__, __LINE__, tmp);
     }
 
     SizeType expr_size{type.size()};
@@ -673,14 +587,9 @@ ItemGen::link_cell(ElbPrimitive* primitive,
       primitive->connect(index, tmp);
     }
     else {
-      ostringstream buf;
-      buf << (index + 1) << num_suffix(index + 1)
-	  << " port expression has illegal size.";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_con->file_region(),
-		      MsgType::Error,
-		      "ELAB",
-		      buf.str());
+      auto def_name{primitive->head()->def_name()};
+      ErrorGen::port_size_mismatch(__FILE__, __LINE__, pt_con->expr(),
+				   def_name, index);
     }
   }
 }

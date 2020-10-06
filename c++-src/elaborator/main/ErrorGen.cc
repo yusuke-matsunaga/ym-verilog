@@ -10,12 +10,31 @@
 #include "ErrorGen.h"
 #include "ElbError.h"
 #include "ElbParamCon.h"
+#include "ym/pt/PtModule.h"
 #include "ym/pt/PtDecl.h"
+#include "ym/pt/PtItem.h"
 #include "ym/pt/PtExpr.h"
 #include "ym/vl/VlDeclArray.h"
+#include "ym/vl/VlExpr.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
+
+BEGIN_NONAMESPACE
+
+// 英語の序数の接尾語を作る関数
+const char*
+num_suffix(int num)
+{
+  switch ( num ) {
+  case 1: return "st";
+  case 2: return "nd";
+  case 3: return "rd";
+  default: return "th";
+  }
+}
+
+END_NONAMESPACE
 
 // @brief パラメータポートの割り当て数が多すぎる．
 // @param[in] file ファイル名
@@ -215,6 +234,330 @@ ErrorGen::conflict_io_range(const char* file,
   error_common(file, line, pt_item->file_region(),
 	       "ELABXXX",
 	       buf.str());
+}
+
+// @brief 対象が parameter ではなかった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::not_a_parameter(const char* file,
+			  int line,
+			  const PtDefParam* pt_item)
+{
+  ostringstream buf;
+  buf << "\"" << pt_item->fullname() << "\" is not a parameter.";
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief 対象が localparam だった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::is_a_localparam(const char* file,
+			  int line,
+			  const PtDefParam* pt_item)
+{
+  ostringstream buf;
+  buf << "\"" << pt_item->fullname()
+      << "\" is a localparam, which shall not be override.";
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief 重複した generate case ラベル
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::duplicate_gencase_labels(const char* file,
+				   int line,
+				   const PtItem* pt_item)
+{
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       "Matches more than one labels.");
+}
+
+// @brief generate for 文の変数が見つからない．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::genvar_not_found(const char* file,
+			   int line,
+			   const PtItem* pt_item)
+{
+  ostringstream buf;
+  buf << pt_item->loop_var() << " : Not found.";
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief genvar でなかった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::not_a_genvar(const char* file,
+		       int line,
+		       const PtItem* pt_item)
+{
+  ostringstream buf;
+  buf << pt_item->loop_var() << " : Not a genvar.";
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief 他の generate for loop ですでに用いられている．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::genvar_in_use(const char* file,
+			int line,
+			const PtItem* pt_item)
+{
+  ostringstream buf;
+  buf << pt_item->loop_var() << " : Already in use.";
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief genvar の初期値が負の値だった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::genvar_negative(const char* file,
+			  int line,
+			  const PtItem* pt_item)
+{
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       "genvar should not be negative.");
+}
+
+// @brief モジュールの依存関係が循環している．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_module 対象の構文木要素
+void
+ErrorGen::cyclic_dependency(const char* file,
+			    int line,
+			    const PtModule* pt_module)
+{
+  ostringstream buf;
+  buf << pt_module->name() << " : instantiated within itself.";
+  error_common(file, line, pt_module->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief 名無しのモジュール定義
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_inst 対象の構文木要素
+void
+ErrorGen::noname_module(const char* file,
+			int line,
+			const PtInst* pt_inst)
+{
+  error_common(file, line, pt_inst->file_region(),
+	       "ELABXXX",
+	       "No module instance name given.");
+}
+
+// @brief UDP インスタンスに名前付きのparameter割り当てがあった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::udp_with_named_paramassign(const char* file,
+				     int line,
+				     const PtItem* pt_item)
+{
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       "UDP instance cannot have named parameter list.");
+}
+
+// @brief UDP インスタンスにparameter割り当てがあった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::udp_with_ordered_paramassign(const char* file,
+				       int line,
+				       const PtItem* pt_item)
+{
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       "UDP instance cannot have ordered parameter list.");
+}
+
+// @brief セルインスタンスにparameter割り当てがあった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_inst 対象の構文木要素
+void
+ErrorGen::cell_with_paramassign(const char* file,
+				int line,
+				const PtItem* pt_item)
+{
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       "Cell instance cannot have parameter list.");
+}
+
+// @brief インスタンスが見つからなかった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_item 対象の構文木要素
+void
+ErrorGen::instance_not_found(const char* file,
+			     int line,
+			     const PtItem* pt_item)
+{
+  ostringstream buf;
+  buf << pt_item->name() << " : No such module or UDP.";
+  error_common(file, line, pt_item->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief モジュールインスタンスのポート数が合わない．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_inst 対象の構文木要素
+void
+ErrorGen::too_many_items_in_port_list(const char* file,
+				      int line,
+				      const PtInst* pt_inst)
+{
+  error_common(file, line, pt_inst->file_region(),
+	       "ELABXXX",
+	       "Too many items in the port list.");
+}
+
+// @brief ポート名が存在しなかった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_con 対象の構文木要素
+void
+ErrorGen::illegal_port_name(const char* file,
+			    int line,
+			    const PtConnection* pt_con)
+{
+  auto port_name{pt_con->name()};
+  ostringstream buf;
+  buf << port_name << " : does not exist in the port list.";
+  error_common(file, line, pt_con->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief ポートに real 型の式を接続していた．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] expr 対象の式
+void
+ErrorGen::real_type_in_port_list(const char* file,
+				 int line,
+				 const VlExpr* expr)
+{
+  error_common(file, line, expr->file_region(),
+	       "ELABXXX",
+	       "Real expression cannot connect to module port.");
+
+}
+
+// @brief ポートサイズが合わない．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_expr 対象の式
+// @param[in] name モジュール名
+// @param[in] index ポート番号(0から始まる)
+void
+ErrorGen::port_size_mismatch(const char* file,
+			     int line,
+			     const PtExpr* pt_expr,
+			     const string& name,
+			     int index)
+{
+  ostringstream buf;
+  buf << name << " : "
+      << (index + 1) << num_suffix(index + 1)
+      << " port : port size does not match with the expression.";
+  error_common(file, line, pt_expr->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief UDP instance に名前付きポート割り当てがあった．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_inst 対象の構文木要素
+void
+ErrorGen::named_port_in_udp_instance(const char* file,
+				     int line,
+				     const PtInst* pt_inst)
+{
+  error_common(file, line, pt_inst->file_region(),
+	       "ELABXXX",
+	       "UDP instance cannot have named port list.");
+}
+
+// @brief UDP instance のポート数が合わない．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_inst 対象の構文木要素
+void
+ErrorGen::port_num_mismatch(const char* file,
+			    int line,
+			    const PtInst* pt_inst)
+{
+  error_common(file, line, pt_inst->file_region(),
+	       "ELABXXX",
+	       "Number of ports mismatch.");
+}
+
+// @brief cell instance のピン名が合わない．
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_con 対象の構文木要素
+void
+ErrorGen::illegal_pin_name(const char* file,
+			   int line,
+			   const PtConnection* pt_con)
+{
+  auto pin_name{pt_con->name()};
+  ostringstream buf;
+  buf << pin_name << ": No such pin.";
+  error_common(file, line, pt_con->file_region(),
+	       "ELABXXX",
+	       buf.str());
+}
+
+// @brief 空のポート式
+// @param[in] file ファイル名
+// @param[in] line 行番号
+// @param[in] pt_con 対象の構文木要素
+void
+ErrorGen::empty_port_expression(const char* file,
+				int line,
+				const PtConnection* pt_con)
+{
+  error_common(__FILE__, __LINE__, pt_con->file_region(),
+	       "ELABXXX",
+	       "Empty expression in UDP/primitive instance port is not allowed.");
 }
 
 // @brief constant function 中にシステム関数呼び出し

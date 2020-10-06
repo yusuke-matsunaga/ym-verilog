@@ -42,7 +42,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
   case VpiOpType::Negedge:
     ASSERT_COND( opr_size == 1 );
     ErrorGen::illegal_edge_descriptor(__FILE__, __LINE__, pt_expr);
-    return nullptr;
+    break;
 
   case VpiOpType::BitNeg:
   case VpiOpType::UnaryAnd:
@@ -58,12 +58,8 @@ ExprGen::instantiate_opr(const VlScope* parent,
   case VpiOpType::Not:
     ASSERT_COND( opr_size == 1 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
-    if ( !opr0 ) {
-      return nullptr;
-    }
     if ( real_check && opr0->value_type().is_real_type() ) {
       ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr->operand0());
-      return nullptr;
     }
     return mgr().new_UnaryOp(pt_expr, op_type, opr0);
 
@@ -96,17 +92,12 @@ ExprGen::instantiate_opr(const VlScope* parent,
     ASSERT_COND( opr_size == 2 );
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     opr1 = instantiate_expr(parent, env, pt_expr->operand1());
-    if ( !opr0 || !opr1 ) {
-      return nullptr;
-    }
     if ( real_check ) {
       if ( opr0->value_type().is_real_type() ) {
 	ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr->operand0());
-	return nullptr;
       }
       if ( opr1->value_type().is_real_type() ) {
 	ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr->operand1());
-	return nullptr;
       }
     }
     expr = mgr().new_BinaryOp(pt_expr, op_type, opr0, opr1);
@@ -118,9 +109,6 @@ ExprGen::instantiate_opr(const VlScope* parent,
     opr0 = instantiate_expr(parent, env, pt_expr->operand0());
     opr1 = instantiate_expr(parent, env, pt_expr->operand1());
     opr2 = instantiate_expr(parent, env, pt_expr->operand2());
-    if ( !opr0 || !opr1 || !opr2 ) {
-      return nullptr;
-    }
     expr = mgr().new_TernaryOp(pt_expr, op_type, opr0, opr1, opr2);
     break;
 
@@ -130,13 +118,9 @@ ExprGen::instantiate_opr(const VlScope* parent,
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	auto pt_expr1{pt_expr->operand(i)};
 	auto expr1{instantiate_expr(parent, env, pt_expr1)};
-	if ( !expr1 ) {
-	  return nullptr;
-	}
 	auto type1{expr1->value_type()};
 	if ( type1.is_real_type() ) {
 	  ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr1);
-	  return nullptr;
 	}
 	opr_list[i] = expr1;
       }
@@ -155,13 +139,9 @@ ExprGen::instantiate_opr(const VlScope* parent,
       for ( SizeType i = 1; i < opr_size; ++ i ) {
 	auto pt_expr1{pt_expr->operand(i)};
 	auto expr1{instantiate_expr(parent, env, pt_expr1)};
-	if ( !expr1 ) {
-	  return nullptr;
-	}
 	auto type1{expr1->value_type()};
 	if ( type1.is_real_type() ) {
 	  ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr1);
-	  return nullptr;
 	}
 	opr_list[i - 1] = expr1;
       }

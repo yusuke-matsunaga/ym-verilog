@@ -11,6 +11,7 @@
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
+#include "ym/vl/VlFwd.h"
 #include "ym/FileRegion.h"
 
 
@@ -170,6 +171,226 @@ public:
   conflict_io_range(const char* file,
 		    int line,
 		    const PtIOItem* pt_item);
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // item 要素生成に関するエラー
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 対象が parameter ではなかった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  not_a_parameter(const char* file,
+		  int line,
+		  const PtDefParam* pt_item);
+
+  /// @brief 対象が localparam だった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  is_a_localparam(const char* file,
+		  int line,
+		  const PtDefParam* pt_item);
+
+  /// @brief 重複した generate case ラベル
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  duplicate_gencase_labels(const char* file,
+			   int line,
+			   const PtItem* pt_item);
+
+  /// @brief generate for 文の変数が見つからない．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  genvar_not_found(const char* file,
+		   int line,
+		   const PtItem* pt_item);
+
+  /// @brief genvar でなかった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  not_a_genvar(const char* file,
+	       int line,
+	       const PtItem* pt_item);
+
+  /// @brief 他の generate for loop ですでに用いられている．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  genvar_in_use(const char* file,
+		int line,
+		const PtItem* pt_item);
+
+  /// @brief genvar の値が負の値だった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  genvar_negative(const char* file,
+		  int line,
+		  const PtItem* pt_item);
+
+  /// @brief モジュールの依存関係が循環している．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_module 対象の構文木要素
+  static
+  void
+  cyclic_dependency(const char* file,
+		    int line,
+		    const PtModule* pt_module);
+
+  /// @brief 名無しのモジュール定義
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_inst 対象の構文木要素
+  static
+  void
+  noname_module(const char* file,
+		int line,
+		const PtInst* pt_inst);
+
+  /// @brief UDP インスタンスに名前付きのparameter割り当てがあった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  udp_with_named_paramassign(const char* file,
+			     int line,
+			     const PtItem* pt_item);
+
+  /// @brief UDP インスタンスにparameter割り当てがあった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  udp_with_ordered_paramassign(const char* file,
+			       int line,
+			       const PtItem* pt_item);
+
+  /// @brief セルインスタンスにparameter割り当てがあった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  cell_with_paramassign(const char* file,
+			int line,
+			const PtItem* pt_item);
+
+  /// @brief インスタンスが見つからなかった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_item 対象の構文木要素
+  static
+  void
+  instance_not_found(const char* file,
+		     int line,
+		     const PtItem* pt_item);
+
+  /// @brief モジュールインスタンスのポート数が合わない．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_inst 対象の構文木要素
+  static
+  void
+  too_many_items_in_port_list(const char* file,
+			      int line,
+			      const PtInst* pt_inst);
+
+  /// @brief ポート名が存在しなかった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_con 対象の構文木要素
+  static
+  void
+  illegal_port_name(const char* file,
+		    int line,
+		    const PtConnection* pt_con);
+
+  /// @brief ポートに real 型の式を接続していた．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] expr 対象の式
+  static
+  void
+  real_type_in_port_list(const char* file,
+			 int line,
+			 const VlExpr* expr);
+
+  /// @brief ポートサイズが合わない．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_expr 対象の式
+  /// @param[in] name モジュール名
+  /// @param[in] index ポート番号(0から始まる)
+  static
+  void
+  port_size_mismatch(const char* file,
+		     int line,
+		     const PtExpr* pt_expr,
+		     const string& name,
+		     int index);
+
+  /// @brief UDP instance に名前付きポート割り当てがあった．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_inst 対象の構文木要素
+  static
+  void
+  named_port_in_udp_instance(const char* file,
+			     int line,
+			     const PtInst* pt_inst);
+
+  /// @brief UDP instance のポート数が合わない．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_inst 対象の構文木要素
+  static
+  void
+  port_num_mismatch(const char* file,
+		    int line,
+		    const PtInst* pt_inst);
+
+  /// @brief cell instance のピン名が合わない．
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_con 対象の構文木要素
+  static
+  void
+  illegal_pin_name(const char* file,
+		   int line,
+		   const PtConnection* pt_con);
+
+  /// @brief 空のポート式
+  /// @param[in] file ファイル名
+  /// @param[in] line 行番号
+  /// @param[in] pt_con 対象の構文木要素
+  static
+  void
+  empty_port_expression(const char* file,
+			int line,
+			const PtConnection* pt_con);
 
 
 public:

@@ -46,10 +46,10 @@ public:
 
   /// @brief スコープに関係する要素を実体化する．
   /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item_array 要素定義の配列
+  /// @param[in] pt_item_array 要素定義のリスト
   void
-  phase1_item(const VlScope* parent,
-	      const vector<const PtItem*>& pt_item_array);
+  phase1_items(const VlScope* parent,
+	       const vector<const PtItem*>& pt_item_array);
 
   /// @brief defparam 文によるパラメータ割り当てを行う．
   /// @param[in] stub defparam 文の情報
@@ -71,6 +71,13 @@ private:
   //////////////////////////////////////////////////////////////////////
   // 下請け関数
   //////////////////////////////////////////////////////////////////////
+
+  /// @brief スコープに関係する要素を実体化する．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] pt_item 要素定義
+  void
+  phase1_item(const VlScope* parent,
+	      const PtItem* pt_item);
 
   /// @brief continous assignment に関連した式の名前解決を行う．
   /// @param[in] parent 親のスコープ
@@ -113,6 +120,33 @@ private:
   void
   phase1_muheader(const VlScope* parent,
 		  const PtItem* pt_head);
+
+  /// @brief module instance の生成を行う．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] pt_head ヘッダ
+  /// @param[in] pt_module モジュールの構文木要素
+  void
+  phase1_module(const VlScope* parent,
+		const PtItem* pt_head,
+		const PtModule* pt_module);
+
+  /// @brief UDP instance の生成を行う．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] pt_head ヘッダ
+  /// @param[in] udpdefn UDP
+  void
+  phase1_udp(const VlScope* parent,
+	     const PtItem* pt_head,
+	     const VlUdpDefn* udpdefn);
+
+  /// @brief cell instance の生成を行う．
+  /// @param[in] parent 親のスコープ
+  /// @param[in] pt_head ヘッダ
+  /// @param[in] cell_id セル番号
+  void
+  phase1_cell(const VlScope* parent,
+	      const PtItem* pt_head,
+	      int cell_id);
 
   /// @brief module array のインスタンス化を行う．
   /// @param[in] parent 親のスコープ

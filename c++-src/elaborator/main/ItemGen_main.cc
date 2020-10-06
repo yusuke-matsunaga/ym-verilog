@@ -12,6 +12,8 @@
 #include "DefParamStub.h"
 #include "ElbEnv.h"
 #include "ElbStub.h"
+#include "ElbError.h"
+#include "ErrorGen.h"
 
 #include "ym/BitVector.h"
 
@@ -53,12 +55,24 @@ ItemGen::~ItemGen()
 
 // @brief スコープに関係する要素を実体化する．
 // @param[in] parent 親のスコープ
-// @param[in] pt_item_array 要素定義の配列
+// @param[in] pt_item_array 要素定義のリスト
 void
-ItemGen::phase1_item(const VlScope* parent,
-		     const vector<const PtItem*>& pt_item_array)
+ItemGen::phase1_items(const VlScope* parent,
+		      const vector<const PtItem*>& pt_item_array)
 {
   for ( auto pt_item: pt_item_array ) {
+    phase1_item(parent, pt_item);
+  }
+}
+
+// @brief スコープに関係する要素を実体化する．
+// @param[in] parent 親のスコープ
+// @param[in] pt_item 要素定義
+void
+ItemGen::phase1_item(const VlScope* parent,
+		     const PtItem* pt_item)
+{
+  try {
     switch ( pt_item->type() ) {
     case PtItemType::DefParam:
       // 実際には登録するだけ
@@ -125,8 +139,12 @@ ItemGen::phase1_item(const VlScope* parent,
       break;
 
     default:
+      ASSERT_NOT_REACHED;
       break;
     }
+  }
+  catch ( const ElbError& error ) {
+    put_error(error);
   }
 }
 
@@ -139,36 +157,37 @@ ItemGen::defparam_override(const DefParamStub& stub,
   auto module{stub.mModule};
   auto pt_header{stub.mPtHeader};
   auto pt_defparam{stub.mPtDefparam};
-  const auto& fr{pt_defparam->file_region()};
 
   auto handle{mgr().find_obj_up(module, pt_defparam, ulimit)};
   if ( !handle ) {
+    // 見つからなかった．
     return false;
   }
 
   auto param{handle->parameter()};
   if ( !param ) {
-    ostringstream buf;
-    buf << "\"" << pt_defparam->fullname() << "\" is not a parameter.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    fr,
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
+    // 対象がパラメータではなかった．
+    try {
+      ErrorGen::not_a_parameter(__FILE__, __LINE__, pt_defparam);
+    }
+    // ただし無視する．
+    catch ( const ElbError& error ) {
+      put_error(error);
+    }
 
     // もうこれ以降は処理したくないので true を返す．
     return true;
   }
 
   if ( param->is_local_param() ) {
-    ostringstream buf;
-    buf << "\"" << param->name()
-	<< "\" is a localparam, which shall not be override.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    fr,
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
+    // 対象が localparam だった(書き換えできない)
+    try {
+      ErrorGen::is_a_localparam(__FILE__, __LINE__, pt_defparam);
+    }
+    // ただし無視する．
+    catch ( const ElbError& error ) {
+      put_error(error);
+    }
 
     // もうこれ以降は処理したくないので true を返す．
     return true;
@@ -182,7 +201,7 @@ ItemGen::defparam_override(const DefParamStub& stub,
     buf << "instantiating defparam: " << param->full_name()
 	<< " = " << pt_rhs_expr->decompile() << ".";
     MsgMgr::put_msg(__FILE__, __LINE__,
-		    fr,
+		    pt_defparam->file_region(),
 		    MsgType::Info,
 		    "ELAB",
 		    buf.str());
@@ -205,6 +224,8 @@ void
 ItemGen::instantiate_cont_assign(const VlScope* parent,
 				 const PtItem* pt_header)
 {
+  // delay の実体化でエラーが置きても nullptr になっているだけで処理を続ける．
+  // エラーメッセージは出力されている．
   auto module{parent->parent_module()};
   auto pt_delay{pt_header->delay()};
   auto delay{instantiate_delay(parent, pt_delay)};
@@ -213,31 +234,30 @@ ItemGen::instantiate_cont_assign(const VlScope* parent,
   ElbEnv env;
   ElbNetLhsEnv env1(env);
   for ( auto pt_elem: pt_header->contassign_list() ) {
-    // 左辺式の生成
-    auto pt_lhs{pt_elem->lhs()};
-    auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
-    if ( !lhs ) {
-      return;
+    try {
+      // 左辺式の生成
+      auto pt_lhs{pt_elem->lhs()};
+      auto lhs{instantiate_lhs(parent, env1, pt_lhs)};
+
+      // 右辺式の生成
+      auto pt_rhs{pt_elem->rhs()};
+      auto rhs{instantiate_rhs(parent, env, pt_rhs, lhs)};
+
+      auto ca{mgr().new_ContAssign(ca_head, pt_elem, lhs, rhs)};
+
+      {
+	ostringstream buf;
+	buf << "instantiating continuous assign: "
+	    << lhs->decompile() << " = " << rhs->decompile() << ".";
+	MsgMgr::put_msg(__FILE__, __LINE__,
+			pt_elem->file_region(),
+			MsgType::Info,
+			"ELAB",
+			buf.str());
+      }
     }
-
-    // 右辺式の生成
-    auto pt_rhs{pt_elem->rhs()};
-    auto rhs{instantiate_rhs(parent, env, pt_rhs, lhs)};
-    if ( !rhs ) {
-      return;
-    }
-
-    auto ca{mgr().new_ContAssign(ca_head, pt_elem, lhs, rhs)};
-
-    {
-      ostringstream buf;
-      buf << "instantiating continuous assign: "
-	  << lhs->decompile() << " = " << rhs->decompile() << ".";
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      pt_elem->file_region(),
-		      MsgType::Info,
-		      "ELAB",
-		      buf.str());
+    catch ( const ElbError& error ) {
+      put_error(error);
     }
   }
 }
@@ -249,14 +269,17 @@ void
 ItemGen::instantiate_process(const VlScope* parent,
 			     const PtItem* pt_item)
 {
-  auto process{mgr().new_Process(parent, pt_item)};
+  try {
+    auto process{mgr().new_Process(parent, pt_item)};
 
-  ElbEnv env;
-  auto body{instantiate_stmt(parent, process, env,
-			     pt_item->body())};
-  ASSERT_COND( body );
-
-  process->set_stmt(body);
+    ElbEnv env;
+    auto body{instantiate_stmt(parent, process, env,
+			       pt_item->body())};
+    process->set_stmt(body);
+  }
+  catch ( const ElbError& error ) {
+    put_error(error);
+  }
 }
 
 // @brief generate block を実際にインスタンス化を行う．
@@ -316,7 +339,7 @@ ItemGen::phase1_gencase(const VlScope* parent,
   auto pt_expr{pt_gencase->expr()};
   BitVector val{evaluate_bitvector(parent, pt_expr)};
 
-  bool found = false;
+  bool already_matched = false;
   for ( auto pt_caseitem: pt_gencase->caseitem_list() ) {
     // default(ラベルリストが空) なら常にマッチする．
     SizeType n{pt_caseitem->label_num()};
@@ -329,18 +352,15 @@ ItemGen::phase1_gencase(const VlScope* parent,
       }
     }
     if ( match ) {
-      if ( found ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			pt_gencase->file_region(),
-			MsgType::Error,
-			"ELAB",
-			"Matches more than one labels.");
-	return;
+      if ( already_matched ) {
+	ErrorGen::duplicate_gencase_labels(__FILE__, __LINE__, pt_gencase);
       }
-      found = true;
-      phase1_genitem(parent,
-		     pt_caseitem->declhead_list(),
-		     pt_caseitem->item_list());
+      else {
+	already_matched = true;
+	phase1_genitem(parent,
+		       pt_caseitem->declhead_list(),
+		       pt_caseitem->item_list());
+      }
     }
   }
 }
@@ -352,68 +372,68 @@ void
 ItemGen::phase1_genfor(const VlScope* parent,
 		       const PtItem* pt_genfor)
 {
-  const auto& fr{pt_genfor->file_region()};
+  // Genvar を使用中にするオブジェクト
+  // デストラクタの起動されるタイミングで
+  // 使用中のフラグを降ろす．
+  // このメカニズムにより例外が送出されても正しく働く
+  class GenvarHolder
+  {
+  public:
+
+    GenvarHolder(ElbGenvar* genvar) :
+      mGenvar{genvar}
+    {
+      mGenvar->set_inuse();
+    }
+
+    ~GenvarHolder()
+    {
+      mGenvar->reset_inuse();
+    }
+
+  private:
+
+    ElbGenvar* mGenvar;
+
+  };
+
   auto name0{pt_genfor->name()};
   ASSERT_COND( name0 != nullptr );
 
   auto handle{mgr().find_obj(parent, pt_genfor->loop_var())};
   if ( !handle ) {
-    ostringstream buf;
-    buf << pt_genfor->loop_var() << " : Not found.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    fr,
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
-    return;
+    // 見つからなかった．
+    ErrorGen::genvar_not_found(__FILE__, __LINE__, pt_genfor);
   }
 
   auto genvar{handle->genvar()};
   if ( !genvar ) {
-    ostringstream buf;
-    buf << pt_genfor->loop_var() << " : Not a genvar.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    fr,
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
-    return;
+    // genvar ではなかった．
+    ErrorGen::not_a_genvar(__FILE__, __LINE__, pt_genfor);
   }
   if ( genvar->is_inuse() ) {
     // すでに他の generate-for loop が使用中
-    ostringstream buf;
-    buf << pt_genfor->loop_var() << " : Already in use.";
-    MsgMgr::put_msg(__FILE__, __LINE__,
-		    fr,
-		    MsgType::Error,
-		    "ELAB",
-		    buf.str());
-    return;
+    ErrorGen::genvar_in_use(__FILE__, __LINE__, pt_genfor);
   }
+
+  // genvar を使用中にする．
+  GenvarHolder holder(genvar);
 
   // 子供のスコープの検索用オブジェクト
   auto gfroot{mgr().new_GfRoot(parent, pt_genfor)};
 
-  {
-    auto pt_expr{pt_genfor->init_expr()};
-    int val{evaluate_int(parent, pt_expr)};
-    if ( val < 0 ) {
-      MsgMgr::put_msg(__FILE__, __LINE__,
-		      fr,
-		      MsgType::Error,
-		      "ELAB",
-		      "genvar should not be negative.");
-      return;
-    }
-    genvar->set_value(val);
-    genvar->set_inuse();
+  auto pt_init_expr{pt_genfor->init_expr()};
+  int init_val{evaluate_int(parent, pt_init_expr)};
+  if ( init_val < 0 ) {
+    ErrorGen::genvar_negative(__FILE__, __LINE__, pt_genfor);
   }
+  genvar->set_value(init_val);
 
   for ( ; ; ) {
     // 終了条件のチェック
-    auto pt_expr{pt_genfor->expr()};
-    bool val{evaluate_bool(parent, pt_expr)};
-    if ( !val ) {
+    auto pt_cond_expr{pt_genfor->expr()};
+    bool cond_val{evaluate_bool(parent, pt_cond_expr)};
+    if ( !cond_val ) {
       break;
     }
 
@@ -430,21 +450,13 @@ ItemGen::phase1_genfor(const VlScope* parent,
     }
 
     // genvar の増加分の処理．
-    {
-      auto pt_expr{pt_genfor->next_expr()};
-      int val{evaluate_int(parent, pt_expr)};
-      if ( val < 0 ) {
-	MsgMgr::put_msg(__FILE__, __LINE__,
-			fr,
-			MsgType::Error,
-			"ELAB",
-			"genvar should not be negative.");
-	break;
-      }
-      genvar->set_value(val);
+    auto pt_next_expr{pt_genfor->next_expr()};
+    int next_val{evaluate_int(parent, pt_next_expr)};
+    if ( next_val < 0 ) {
+      ErrorGen::genvar_negative(__FILE__, __LINE__, pt_genfor);
+      genvar->set_value(next_val);
     }
   }
-  genvar->reset_inuse();
 }
 
 // @brief generate block の要素でスコープに関連するものの生成を行う．
@@ -457,7 +469,7 @@ ItemGen::phase1_genitem(const VlScope* parent,
 			const vector<const PtDeclHead*>& pt_decl_array,
 			const vector<const PtItem*>& pt_item_array)
 {
-  phase1_item(parent, pt_item_array);
+  phase1_items(parent, pt_item_array);
   auto stub{make_stub<ElbProxy,
 	    const VlScope*,
 	    const vector<const PtDeclHead*>&>(static_cast<ElbProxy*>(this),

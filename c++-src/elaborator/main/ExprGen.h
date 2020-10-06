@@ -48,7 +48,8 @@ public:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された ElbExpr のポインタを返す．
-  /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_expr(const VlScope* parent,
 		   const ElbEnv& env,
@@ -58,7 +59,8 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された ElbExpr のポインタを返す．
-  /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_constant_expr(const VlScope* parent,
 			    const PtExpr* pt_expr);
@@ -67,7 +69,8 @@ public:
   /// @param[in] parent 親のスコープ
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
-  /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_event_expr(const VlScope* parent,
 			 const ElbEnv& env,
@@ -78,7 +81,8 @@ public:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された ElbExpr のポインタを返す．
-  /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_arg(const VlScope* parent,
 		  const ElbEnv& env,
@@ -89,7 +93,8 @@ public:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された ElbExpr のポインタを返す．
-  /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_lhs(const VlScope* parent,
 		  const ElbEnv& env,
@@ -98,6 +103,8 @@ public:
   /// @brief PtExpr(primary) から named_event を生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_expr 式を表すパース木
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_namedevent(const VlScope* parent,
 			 const PtExpr* pt_expr);
@@ -105,6 +112,9 @@ public:
   /// @brief PtDelay から ElbExpr を生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_delay 遅延を表すパース木
+  ///
+  /// 不適切な式ならば内部でエラーメッセージを出力して nullptr を返す．
+  /// 例外は送出しない
   const VlDelay*
   instantiate_delay(const VlScope* parent,
 		    const PtDelay* pt_delay);
@@ -112,8 +122,12 @@ public:
   /// @brief PtOrderedCon から ElbExpr を生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head 順序付き割り当て式
+  ///
   /// これは PtInst の前にある # つきの式がパラメータ割り当てなのか
   /// 遅延なのかわからないので PtOrderedCon で表していることによる．
+  ///
+  /// 不適切な式ならば内部でエラーメッセージを出力して nullptr を返す．
+  /// 例外は送出しない
   const VlDelay*
   instantiate_delay(const VlScope* parent,
 		    const PtItem* pt_head);
@@ -121,15 +135,16 @@ public:
   /// @brief instantiate_delay の下請け関数
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_obj 遅延式を表すパース木
-  /// @param[in] n 要素数
-  /// @param[in] expr_array 遅延式の配列
-  /// @note pt_obj は PtDelay か PtItem のどちらか
-  /// @note n は最大で 3
+  /// @param[in] pt_expr_array 遅延式の配列
+  ///
+  /// * pt_obj は PtDelay か PtItem のどちらか
+  /// * 配列の要素数は最大で 3
+  ///
+  /// 不適切な式ならば内部でエラーメッセージを出力して nullptr を返す．
   const VlDelay*
   instantiate_delay_sub(const VlScope* parent,
 			const PtBase* pt_obj,
-			SizeType n,
-			const PtExpr* expr_array[]);
+			const vector<const PtExpr*>& pt_expr_array);
 
 
 private:
@@ -143,7 +158,8 @@ private:
   /// @param[in] pt_expr 式を表すパース木
   /// @param[out] elem_array 生成した左辺式の要素を格納するベクタ
   /// @return 生成した式を返す．
-  /// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_lhs_sub(const VlScope* parent,
 		      const ElbEnv& env,
@@ -155,7 +171,8 @@ private:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された式を返す．
-  /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_primary(const VlScope* parent,
 		      const ElbEnv& env,
@@ -166,7 +183,8 @@ private:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された式を返す．
-  /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_opr(const VlScope* parent,
 		  const ElbEnv& env,
@@ -177,7 +195,8 @@ private:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された式を返す．
-  /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_funccall(const VlScope* parent,
 		       const ElbEnv& env,
@@ -189,7 +208,8 @@ private:
   /// @param[in] env 生成時の環境
   /// @param[in] pt_expr 式を表すパース木
   /// @return 生成された式を返す．
-  /// @note エラーが起きたらエラーメッセージを出力し，nullptr を返す．
+  ///
+  /// 不適切な式ならば ElbError 例外を送出する．
   ElbExpr*
   instantiate_sysfunccall(const VlScope* parent,
 			  const ElbEnv& env,
@@ -235,7 +255,9 @@ private:
   /// @param[in] decl_type 対象の宣言要素の型
   /// @param[in] is_array 対象が配列の時 true を渡す．
   /// @param[in] has_select ビット/範囲指定を持つ時 true を渡す．
-  bool
+  ///
+  /// 不適切な場合，例外が送出される．
+  void
   check_decl(const ElbEnv& env,
 	     const PtExpr* pt_expr,
 	     VpiObjType decl_type,

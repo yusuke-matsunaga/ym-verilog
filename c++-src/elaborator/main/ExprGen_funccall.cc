@@ -83,8 +83,8 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   if ( env.is_constant() ) {
     // 定数関数を探し出す．
     if ( pt_expr->namebranch_num() > 0 ) {
+      // 階層名は受け付けない．
       ErrorGen::hname_in_ce(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
 
     // 関数名
@@ -96,13 +96,13 @@ ExprGen::instantiate_funccall(const VlScope* parent,
     auto module{parent->parent_module()};
     auto pt_func{find_funcdef(module, name)};
     if ( !pt_func ) {
+      // 関数が見つからなかった．
       ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
 
     if ( pt_func->is_in_use() ) {
+      // 自分自身を呼び出している．
       ErrorGen::uses_itself(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
 
     child_func = find_constant_function(module, name);
@@ -113,17 +113,19 @@ ExprGen::instantiate_funccall(const VlScope* parent,
       pt_func->clear_in_use();
     }
     if ( !child_func ) {
+      // 定数関数ではなかった．
       ErrorGen::not_a_constant_function(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
   }
   else {
     // 関数本体を探し出す．
     auto handle{mgr().find_obj_up(parent, pt_expr, nullptr)};
     if ( handle == nullptr ) {
+      // 関数が見つからなかった．
       ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
     }
     if ( handle->type() != VpiObjType::Function ) {
+      // 関数ではなかった．
       ErrorGen::not_a_function(__FILE__, __LINE__, pt_expr);
     }
     child_func = handle->taskfunc();
@@ -133,22 +135,17 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   // 引数の生成
   SizeType n{pt_expr->operand_num()};
   if ( n != child_func->io_num() ) {
+    // 引数の数が合わなかった．
     ErrorGen::n_of_arguments_mismatch(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
     auto pt_expr1{pt_expr->operand(i)};
     auto expr1{instantiate_expr(parent, env, pt_expr1)};
-    if ( !expr1 ) {
-      // エラーが起った．
-      return nullptr;
-    }
     auto io_decl{child_func->io(i)};
     auto decl{io_decl->decl()};
     if ( decl->value_type() != expr1->value_type() ) {
-      ErrorGen::illegal_argument_type(__FILE__, __LINE__, pt_expr);
       if ( debug ) {
 	dout << "decl->value_type() = ";
 	put_value_type(dout, decl->value_type());
@@ -157,6 +154,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
 	put_value_type(dout, expr1->value_type());
 	dout << endl;
       }
+      ErrorGen::illegal_argument_type(__FILE__, __LINE__, pt_expr);
     }
     arg_list[i] = expr1;
   }
@@ -199,10 +197,6 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
     ElbExpr* arg{nullptr};
     if ( pt_expr ) {
       arg = instantiate_arg(parent, env, pt_expr1);
-      if ( !arg ) {
-	// エラーが起った．
-	return nullptr;
-      }
     }
     else {
       // 関数呼び出しと異なり，空の引数がありうる．

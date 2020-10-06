@@ -43,12 +43,10 @@ ExprGen::instantiate_primary(const VlScope* parent,
     if ( env.is_constant() ) {
       // 階層つき識別子はだめ
       ErrorGen::hname_in_ce(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
     if ( env.inside_constant_function() ) {
       // 階層つき識別子はだめ
       ErrorGen::hname_in_cf(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
   }
 
@@ -62,11 +60,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
   ObjHandle* handle{nullptr};
   if ( env.is_constant() ) {
     handle = find_const_handle(parent, pt_expr);
-    if ( handle == nullptr ) {
-      // エラーが起こった．
-      // メッセージは find_const_handle() 内で出力されている．
-      return nullptr;
-    }
   }
   else if ( env.inside_constant_function() ) {
     // まず関数内の識別子を探索する．
@@ -74,11 +67,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
     if ( handle == nullptr && !env.is_lhs() ) {
       // 右辺ならモジュール内の定数識別子を探索する．
       handle = find_const_handle(parent, pt_expr);
-    }
-    if ( handle == nullptr ) {
-      // エラーが起こった．
-      // メッセージは find_const_handle() 内で出力されている．
-      return nullptr;
     }
   }
   else {
@@ -104,7 +92,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
     }
     if ( handle == nullptr ) {
       ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
   }
 
@@ -149,7 +136,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
       }
     }
     ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   if ( !env.is_lhs() ) {
@@ -178,22 +164,15 @@ ExprGen::instantiate_primary(const VlScope* parent,
 					 is_array,
 					 has_range_select,
 					 has_bit_select);
-  if ( primary == nullptr ) {
-    // エラー
-    // メッセージは instantiate_decl() 内で出力されている．
-    return nullptr;
-  }
 
   auto decl_base{primary->decl_base()};
   ASSERT_COND( decl_base != nullptr );
   auto decl_type{decl_base->type()};
 
-  if ( !check_decl(env, pt_expr, decl_type, is_array,
-		   has_range_select | has_bit_select) ) {
-    // エラー
-    // メッセージは check_decl() 内で出力されている．
-    return nullptr;
-  }
+  // 式をチェックする．
+  // 不適切な場合は例外が送出される．
+  check_decl(env, pt_expr, decl_type, is_array,
+	     has_range_select | has_bit_select);
 
   if ( has_bit_select ) {
     // ビット指定付きの場合
@@ -222,9 +201,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
     else {
       // 可変インデックスだった．
       auto index{instantiate_expr(parent, index_env, pt_expr1)};
-      if ( !index ) {
-	return nullptr;
-      }
       return mgr().new_BitSelect(pt_expr, primary, index);
     }
   }
@@ -241,7 +217,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	if ( big ^ decl_base->is_big_endian() ) {
 	  // 範囲の順番が逆
 	  ErrorGen::range_order(__FILE__, __LINE__, pt_expr);
-	  return nullptr;
 	}
 
 	SizeType offset;
@@ -323,9 +298,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	else {
 	  // 可変インデックスだった．
 	  auto base{instantiate_expr(parent, index_env, pt_base)};
-	  if ( !base ) {
-	    return nullptr;
-	  }
 	  return mgr().new_PlusPartSelect(pt_expr, primary,
 					  base, pt_range, range_val);
 	}
@@ -374,9 +346,6 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	else {
 	  // 可変インデックスだった．
 	  auto base{instantiate_expr(parent, index_env, pt_base)};
-	  if ( !base ) {
-	    return nullptr;
-	  }
 	  return mgr().new_MinusPartSelect(pt_expr, primary,
 					   base, pt_range, range_val);
 	}
@@ -406,7 +375,6 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
   if ( handle == nullptr ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   // 配列要素などの処理を行う．
@@ -422,11 +390,6 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
 					 is_array,
 					 has_range_select,
 					 has_bit_select);
-  if ( primary == nullptr ) {
-    // エラー
-    // メッセージは instantiate_decl() 内で出力されている．
-    return nullptr;
-  }
 
   auto decl_base{primary->decl_base()};
   ASSERT_COND( decl_base != nullptr );
@@ -434,12 +397,10 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
   if ( decl_type != VpiObjType::NamedEvent ) {
     // 型が違う
     ErrorGen::not_a_namedevent(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
   if ( has_range_select || has_bit_select ) {
     // 部分選択，ビット選択は使えない．
     ErrorGen::select_for_namedevent(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   return primary;
@@ -457,13 +418,11 @@ ExprGen::find_const_handle(const VlScope* parent,
   if ( handle == nullptr ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   // handle が持つオブジェクトは genvar か parameter でなければならない．
   if ( handle->genvar() == nullptr && handle->parameter() == nullptr ) {
     ErrorGen::not_a_parameter(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   return handle;
@@ -483,7 +442,6 @@ ExprGen::instantiate_genvar(const VlScope* parent,
   if (  isize > 1 || (isize == 1 && has_range_select) ) {
     // 配列型ではない．
     ErrorGen::dimension_mismatch(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   bool has_bit_select{(isize == 1)};
@@ -552,7 +510,6 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
       if ( isize != dsize && (isize != dsize + 1 || has_range_select) ) {
 	// 次元が合わない．
 	ErrorGen::dimension_mismatch(__FILE__, __LINE__, pt_expr);
-	return nullptr;
       }
 
       is_array = true;
@@ -585,9 +542,6 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 	for ( SizeType i = 0; i < dsize; ++ i ) {
 	  auto pt_expr1{pt_expr->index(i)};
 	  auto expr1{instantiate_expr(parent, env, pt_expr1)};
-	  if ( !expr1 ) {
-	    return nullptr;
-	  }
 	  index_list.push_back(expr1);
 	}
 
@@ -598,7 +552,6 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
   if ( primary == nullptr ) {
     // 適切な型ではなかった．
     ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   // ビット指定があるとき true となるフラグ
@@ -614,13 +567,11 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
   if ( isize != dsize ) {
     // 次元が会わない．
     ErrorGen::dimension_mismatch(__FILE__, __LINE__, pt_expr);
-    return nullptr;
   }
 
   if ( has_range_select || has_bit_select ) {
     if ( value_type.is_real_type() ) {
       ErrorGen::select_for_real(__FILE__, __LINE__, pt_expr);
-      return nullptr;
     }
   }
 
@@ -628,7 +579,7 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 }
 
 // @brief decl の型が適切がチェックする．
-bool
+void
 ExprGen::check_decl(const ElbEnv& env,
 		    const PtExpr* pt_expr,
 		    VpiObjType decl_type,
@@ -640,12 +591,10 @@ ExprGen::check_decl(const ElbEnv& env,
     if ( is_array ) {
       // 配列要素はダメ
       ErrorGen::array_in_pca(__FILE__, __LINE__, pt_expr);
-      return false;
     }
     if ( has_select ) {
       // 部分指定はダメ
       ErrorGen::select_in_pca(__FILE__, __LINE__, pt_expr);
-      return false;
     }
     if ( decl_type != VpiObjType::Reg &&
 	 decl_type != VpiObjType::IntegerVar &&
@@ -653,7 +602,6 @@ ExprGen::check_decl(const ElbEnv& env,
 	 decl_type != VpiObjType::TimeVar) {
       // reg/変数以外はダメ
       ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-      return false;
     }
   }
   else if ( env.is_force_lhs() ) {
@@ -661,12 +609,10 @@ ExprGen::check_decl(const ElbEnv& env,
     if ( is_array ) {
       // 配列要素はダメ
       ErrorGen::array_in_force(__FILE__, __LINE__, pt_expr);
-      return false;
     }
     if ( has_select ) {
       // 部分指定はダメ
       ErrorGen::select_in_force(__FILE__, __LINE__, pt_expr);
-      return false;
     }
     if ( decl_type != VpiObjType::Net &&
 	 decl_type != VpiObjType::Reg &&
@@ -675,7 +621,6 @@ ExprGen::check_decl(const ElbEnv& env,
 	 decl_type != VpiObjType::TimeVar) {
       // net/reg/変数以外はダメ
       ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-      return false;
     }
   }
   else if ( env.is_net_lhs() ) {
@@ -683,7 +628,6 @@ ExprGen::check_decl(const ElbEnv& env,
 	 (decl_type != VpiObjType::NetArray || !is_array) ) {
       // net 以外はダメ
       ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-      return false;
     }
   }
   else if ( env.is_var_lhs() ) {
@@ -695,7 +639,6 @@ ExprGen::check_decl(const ElbEnv& env,
 	 decl_type != VpiObjType::VarSelect ) {
       // reg/変数以外はダメ
       ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-      return false;
     }
   }
   else {
@@ -706,7 +649,6 @@ ExprGen::check_decl(const ElbEnv& env,
 	   decl_type != VpiObjType::SpecParam ) {
 	// 定数(parameter)でないのでダメ
 	ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-	return false;
       }
     }
 
@@ -714,15 +656,12 @@ ExprGen::check_decl(const ElbEnv& env,
     if ( decl_type == VpiObjType::RealVar && has_select ) {
       // real の部分選択は無効
       ErrorGen::select_for_real(__FILE__, __LINE__, pt_expr);
-      return false;
     }
     if ( decl_type == VpiObjType::NamedEvent && !env.is_event_expr() ) {
       // イベント式以外では名前つきイベントは使えない．
       ErrorGen::illegal_object(__FILE__, __LINE__, pt_expr);
-      return false;
     }
   }
-  return true;
 }
 
 END_NAMESPACE_YM_VERILOG
