@@ -379,8 +379,7 @@ VlDumperImpl::put(const char* label,
 void
 VlDumperImpl::put_parent_file(const FileLoc& file_loc)
 {
-  vector<FileLoc> file_list;
-  file_loc.parent_loc_list(file_list);
+  auto file_list{file_loc.parent_loc_list()};
   for ( const auto& loc: file_list ) {
     VlDumpHeader x(this, "mParentFile", "IncFile", false);
     mStream << "name = " << loc.filename()

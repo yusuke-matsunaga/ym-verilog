@@ -31,7 +31,7 @@ elaborate_mode(const vector<string>& filename_list,
 	       int loop,
 	       bool dump_vpi)
 {
-  MsgHandler* tmh = new StreamMsgHandler(&cerr);
+  MsgHandler* tmh = new StreamMsgHandler(cerr);
   if ( all_msg ) {
     tmh->set_mask(kMsgMaskAll);
   }

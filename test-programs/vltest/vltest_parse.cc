@@ -27,7 +27,7 @@ parse_mode(const vector<string>& filename_list,
 	   int loop,
 	   bool dump_pt)
 {
-  MsgHandler* tmh = new StreamMsgHandler(&cerr);
+  MsgHandler* tmh = new StreamMsgHandler(cerr);
   MsgMgr::attach_handler(tmh);
 
   SearchPathList splist;

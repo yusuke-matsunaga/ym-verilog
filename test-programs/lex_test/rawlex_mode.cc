@@ -29,7 +29,7 @@ rawlex_mode(const vector<string>& filename_list,
 	    bool verbose,
 	    bool dump_token)
 {
-  MsgHandler* handler = new StreamMsgHandler(&cerr);
+  MsgHandler* handler = new StreamMsgHandler(cerr);
   MsgMgr::attach_handler(handler);
 
   int c = loop + 1;
