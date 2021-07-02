@@ -5,9 +5,8 @@
 /// @brief PtItem のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -58,10 +57,10 @@ public:
   paramassign_num() const = 0;
 
   /// @brief パラメータ割り当ての取得
-  /// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
   virtual
   const PtConnection*
-  paramassign(SizeType pos) const = 0;
+  paramassign(SizeType pos) ///< [in] 位置 ( 0 <= pos < paramassign_num() )
+    const = 0;
 
   /// @brief パラメータ割り当てのリストの取得
   vector<const PtConnection*>
@@ -73,10 +72,10 @@ public:
   defparam_num() const = 0;
 
   /// @brief defparam の取得
-  /// @param[in] pos 位置 ( 0 <= pos < defparam_num() )
   virtual
   const PtDefParam*
-  defparam(SizeType pos) const = 0;
+  defparam(SizeType pos) ///< [in] 位置 ( 0 <= pos < defparam_num() )
+    const = 0;
 
   /// @brief defparam リストの取得
   vector<const PtDefParam*>
@@ -88,10 +87,10 @@ public:
   contassign_num() const = 0;
 
   /// @brief continuous assign の取得
-  /// @param[in] pos 位置 ( 0 <= pos < contassign_num() )
   virtual
   const PtContAssign*
-  contassign(SizeType pos) const = 0;
+  contassign(SizeType pos) ///< [in] 位置 ( 0 <= pos < contassign_num() )
+    const = 0;
 
   /// @brief continuous assign リストの取得
   vector<const PtContAssign*>
@@ -103,10 +102,10 @@ public:
   inst_num() const = 0;
 
   /// @brief module/UDP/gate instance の取得
-  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
   virtual
   const PtInst*
-  inst(SizeType pos) const = 0;
+  inst(SizeType pos) ///< [in] 位置 ( 0 <= pos < inst_num() )
+    const = 0;
 
   /// @brief module/UDP/gate instance リストの取得
   vector<const PtInst*>
@@ -130,10 +129,10 @@ public:
   iohead_num() const = 0;
 
   /// @brief IO宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
   virtual
   const PtIOHead*
-  iohead(SizeType pos) const = 0;
+  iohead(SizeType pos) ///< [in] 位置 ( 0 <= pos < iohead_num() )
+    const = 0;
 
   /// @brief IO宣言ヘッダリストの取得
   vector<const PtIOHead*>
@@ -145,10 +144,10 @@ public:
   declhead_num() const = 0;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   virtual
   const PtDeclHead*
-  declhead(SizeType pos) const = 0;
+  declhead(SizeType pos) ///< [in] 位置 ( 0 <= pos < declhead_num() )
+    const = 0;
 
   /// @brief 宣言ヘッダリストの取得
   vector<const PtDeclHead*>
@@ -160,10 +159,10 @@ public:
   item_num() const = 0;
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   virtual
   const PtItem*
-  item(SizeType pos) const = 0;
+  item(SizeType pos) ///< [in] 位置 ( 0 <= pos < item_num() )
+    const = 0;
 
   /// @brief item リストの取得
   vector<const PtItem*>
@@ -234,10 +233,10 @@ public:
   terminal_num() const = 0;
 
   /// @brief ターミナルの取得
-  /// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
   virtual
   const PtExpr*
-  terminal(SizeType pos) const = 0;
+  terminal(SizeType pos) ///< [in] 位置 ( 0 <= pos < terminal_num() )
+    const = 0;
 
   /// @brief ターミナルリストの取得
   vector<const PtExpr*>
@@ -261,10 +260,10 @@ public:
   then_declhead_num() const = 0;
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < then_declhead_num() )
   virtual
   const PtDeclHead*
-  then_declhead(SizeType pos) const = 0;
+  then_declhead(SizeType pos) ///< [in] 位置 ( 0 <= pos < then_declhead_num() )
+    const = 0;
 
   /// @brief 条件が成り立った時に生成される宣言ヘッダリストの取得
   vector<const PtDeclHead*>
@@ -276,10 +275,10 @@ public:
   then_item_num() const = 0;
 
   /// @brief 条件が成り立ったときに生成される item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < then_item_num() )
   virtual
   const PtItem*
-  then_item(SizeType pos) const = 0;
+  then_item(SizeType pos) ///< [in] 位置 ( 0 <= pos < then_item_num() )
+    const = 0;
 
   /// @brief 条件が成り立った時に生成されるitemリストの取得
   vector<const PtItem*>
@@ -291,10 +290,10 @@ public:
   else_declhead_num() const = 0;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < else_declhead_num() )
   virtual
   const PtDeclHead*
-  else_declhead(SizeType pos) const = 0;
+  else_declhead(SizeType pos) ///< [in] 位置 ( 0 <= pos < else_declhead_num() )
+    const = 0;
 
   /// @brief 条件が成り立たなかった時に生成される宣言ヘッダリストの取得
   vector<const PtDeclHead*>
@@ -306,10 +305,10 @@ public:
   else_item_num() const = 0;
 
   /// @brief 条件が成り立たなかったときに生成される item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < else_item_num() )
   virtual
   const PtItem*
-  else_item(SizeType pos) const = 0;
+  else_item(SizeType pos) ///< [in] 位置 ( 0 <= pos < else_item_num() )
+    const = 0;
 
   /// @brief 条件が成り立たなかった時に生成されるitemリストの取得
   vector<const PtItem*>
@@ -321,10 +320,10 @@ public:
   caseitem_num() const = 0;
 
   /// @brief case item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
   virtual
   const PtGenCaseItem*
-  caseitem(SizeType pos) const = 0;
+  caseitem(SizeType pos) ///< [in] 位置 ( 0 <= pos < caseitem_num() )
+    const = 0;
 
   /// @brief case item リストの取得
   vector<const PtGenCaseItem*>
@@ -435,10 +434,10 @@ public:
   port_num() const = 0;
 
   /// @brief ポートの取得
-  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   virtual
   const PtConnection*
-  port(SizeType pos) const = 0;
+  port(SizeType pos) ///< [in] 位置 ( 0 <= pos < port_num() )
+    const = 0;
 
   /// @brief ポートリストの取得
   vector<const PtConnection*>
@@ -467,10 +466,10 @@ public:
   label_num() const = 0;
 
   /// @brief ラベルの取得
-  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
   virtual
   const PtExpr*
-  label(SizeType pos) const = 0;
+  label(SizeType pos) ///< [in] 位置 ( 0 <= pos < label_num() )
+    const = 0;
 
   /// @brief ラベルリストの取得
   vector<const PtExpr*>
@@ -534,10 +533,10 @@ public:
   input_num() const = 0;
 
   /// @brief 入力の取得
-  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
   virtual
   const PtExpr*
-  input(SizeType pos) const = 0;
+  input(SizeType pos) ///< [in] 位置 ( 0 <= pos < input_num() )
+    const = 0;
 
   /// @brief 入力のリストの取得
   vector<const PtExpr*>
@@ -562,10 +561,10 @@ public:
   output_num() const = 0;
 
   /// @brief 出力の取得
-  /// @param[in] pos 位置 ( 0 <= pos < output_num() )
   virtual
   const PtExpr*
-  output(SizeType pos) const = 0;
+  output(SizeType pos) ///< [in] 位置 ( 0 <= pos < output_num() )
+    const = 0;
 
   /// @brief 出力リストの取得
   vector<const PtExpr*>

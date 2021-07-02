@@ -262,31 +262,31 @@ VlDumperImpl::put(const char* label,
 {
   VlDumpHeader x(this, label, "VlValue");
   switch ( value.type() ) {
-  case VlValue::INT:
+  case VlValue::Type::INT:
     put("int_value()", value.int_value());
     break;
 
-  case VlValue::UINT:
+  case VlValue::Type::UINT:
     put("uint_value()", value.uint_value());
     break;
 
-  case VlValue::SCALAR:
+  case VlValue::Type::SCALAR:
     put("scalar_value()", value.scalar_value());
     break;
 
-  case VlValue::REAL:
+  case VlValue::Type::REAL:
     put("real_value()", value.real_value());
     break;
 
-  case VlValue::TIME:
+  case VlValue::Type::TIME:
     put("time_value()", value.time_value());
     break;
 
-  case VlValue::BITVECTOR:
+  case VlValue::Type::BITVECTOR:
     put("bitvector_value()", value.bitvector_value());
     break;
 
-  case VlValue::ERROR:
+  case VlValue::Type::ERROR:
     mStream << "ErrorType";
     break;
   }

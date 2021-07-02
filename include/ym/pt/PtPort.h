@@ -5,9 +5,8 @@
 /// @brief PtPort のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -46,16 +45,16 @@ public:
   portref_size() const = 0;
 
   /// @brief 内部のポート結線リストの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   const PtExpr*
-  portref_elem(int pos) const = 0;
+  portref_elem(int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const = 0;
 
   /// @brief 内部ポート結線の方向の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   virtual
   VpiDir
-  portref_dir(int pos) const = 0;
+  portref_dir(int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const = 0;
 
 };
 

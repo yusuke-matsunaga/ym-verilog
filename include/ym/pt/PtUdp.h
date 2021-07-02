@@ -5,9 +5,8 @@
 /// @brief PtUdp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -39,10 +38,10 @@ public:
   port_num() const = 0;
 
   /// @brief ポートを取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   virtual
   const PtPort*
-  port(SizeType pos) const = 0;
+  port(SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
+  ) const = 0;
 
   /// @brief ポートのリストを取り出す．
   vector<const PtPort*>
@@ -54,10 +53,10 @@ public:
   iohead_num() const = 0;
 
   /// @brief 入出力宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
   virtual
   const PtIOHead*
-  iohead(SizeType pos) const = 0;
+  iohead(SizeType pos ///< [in] 位置 ( 0 <= pos < iohead_num() )
+  ) const = 0;
 
   /// @brief 入出力のリストの取得
   vector<const PtIOHead*>
@@ -74,10 +73,10 @@ public:
   table_num() const = 0;
 
   /// @brief テーブルの要素を取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < table_num() )
   virtual
   const PtUdpEntry*
-  table(SizeType pos) const = 0;
+  table(SizeType pos ///< [in] 位置 ( 0 <= pos < table_num() )
+  ) const = 0;
 
   /// @brief テーブルのリストを返す．
   vector<const PtUdpEntry*>
@@ -106,10 +105,10 @@ public:
   input_num() const = 0;
 
   /// @brief 入力値を取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
   virtual
   const PtUdpValue*
-  input(SizeType pos) const = 0;
+  input(SizeType pos ///< [in] 位置 ( 0 <= pos < input_num() )
+  ) const = 0;
 
   /// @brief 入力値のリストを取り出す．
   vector<const PtUdpValue*>

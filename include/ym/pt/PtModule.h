@@ -5,9 +5,8 @@
 /// @brief PtModule のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -122,10 +121,10 @@ public:
   paramport_num() const = 0;
 
   /// @brief パラメータポート宣言の取得
-  /// @param[in] pos 位置 ( 0 <= pos < paramport_num() )
   virtual
   const PtDeclHead*
-  paramport(SizeType pos) const = 0;
+  paramport(SizeType pos ///< [in] 位置 ( 0 <= pos < paramport_num() )
+  ) const = 0;
 
   /// @brief パラメータポート宣言のリストを返す．
   vector<const PtDeclHead*>
@@ -137,10 +136,10 @@ public:
   port_num() const = 0;
 
   /// @brief ポートを取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   virtual
   const PtPort*
-  port(SizeType pos) const = 0;
+  port(SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
+  ) const = 0;
 
   /// @brief ポートのリストを返す．
   vector<const PtPort*>
@@ -152,10 +151,10 @@ public:
   iohead_num() const = 0;
 
   /// @brief 入出力宣言の取得
-  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
   virtual
   const PtIOHead*
-  iohead(SizeType pos) const = 0;
+  iohead(SizeType pos ///< [in] 位置 ( 0 <= pos < iohead_num() )
+  ) const = 0;
 
   /// @brief 入出力宣言のヘッダのリストを返す．
   vector<const PtIOHead*>
@@ -173,10 +172,10 @@ public:
   declhead_num() const = 0;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   virtual
   const PtDeclHead*
-  declhead(SizeType pos) const = 0;
+  declhead(SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const = 0;
 
   /// @brief 宣言ヘッダのリストを返す．
   vector<const PtDeclHead*>
@@ -188,10 +187,10 @@ public:
   item_num() const = 0;
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   virtual
   const PtItem*
-  item(SizeType pos) const = 0;
+  item(SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const = 0;
 
   /// @brief item のリストを返す．
   vector<const PtItem*>

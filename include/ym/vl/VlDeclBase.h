@@ -5,9 +5,8 @@
 /// @brief VlDeclBase のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlFwd.h"
@@ -49,25 +48,29 @@ public:
   has_range() const = 0;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
+  ///
+  /// 範囲を持たないときの値は不定
   virtual
   int
   left_range_val() const = 0;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
+  ///
+  /// 範囲を持たないときの値は不定
   virtual
   int
   right_range_val() const = 0;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   left_range_string() const = 0;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   right_range_string() const = 0;
@@ -88,14 +91,13 @@ public:
   bit_size() const = 0;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   virtual
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const = 0;
+  calc_bit_offset(int index,       ///< [in] インデックス
+		  SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const = 0;
 
   /// @brief データ型の取得
   /// @retval kVpiVarInteger 整数型

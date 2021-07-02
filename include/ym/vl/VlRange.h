@@ -5,9 +5,8 @@
 /// @brief VlRange のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlObj.h"
 #include "ym/vl/VlFwd.h"
@@ -58,46 +57,44 @@ public:
   right_range_string() const = 0;
 
   /// @brief 範囲のチェック
-  /// @param[in] index インデックス
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   virtual
   bool
-  is_in(int index) const = 0;
+  is_in(int index ///< [in] インデックス
+  ) const = 0;
 
   /// @brief LSB からのオフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset index の LSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   virtual
   bool
-  calc_offset(int index,
-	      SizeType& offset) const = 0;
+  calc_offset(int index,       ///< [in] インデックス
+	      SizeType& offset ///< [out] index の LSB からのオフセット
+  ) const = 0;
 
   /// @brief MSB からのオフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset index の MSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   virtual
   bool
-  calc_roffset(int index,
-	       SizeType& offset) const = 0;
+  calc_roffset(int index,       ///< [in] インデックス
+	       SizeType& offset ///< [out] index の MSB からのオフセット
+  ) const = 0;
 
   /// @brief offset の逆関数
-  /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   virtual
   int
-  index(SizeType offset) const = 0;
+  index(SizeType offset ///< [in] LSB からのオフセット値
+  ) const = 0;
 
   /// @brief roffset の逆関数
-  /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   virtual
   int
-  rindex(SizeType roffset) const = 0;
+  rindex(SizeType roffset ///< [in] MSB からのオフセット値
+  ) const = 0;
 
 };
 

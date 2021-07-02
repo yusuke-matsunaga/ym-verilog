@@ -209,22 +209,22 @@ VlValue
 operator-(const VlValue& src)
 {
   switch ( src.type() ) {
-  case VlValue::INT:
+  case VlValue::Type::INT:
     return VlValue( - src.int_value() );
 
-  case VlValue::UINT:
-  case VlValue::SCALAR:
+  case VlValue::Type::UINT:
+  case VlValue::Type::SCALAR:
     return VlValue( static_cast<ymuint>(- src.int_value()) );
 
-  case VlValue::REAL:
+  case VlValue::Type::REAL:
     return VlValue( - src.real_value() );
 
-  case VlValue::TIME:
+  case VlValue::Type::TIME:
     // これは意味があるとは思えないのでビットベクタに変換する．
-  case VlValue::BITVECTOR:
+  case VlValue::Type::BITVECTOR:
     return VlValue( - src.bitvector_value() );
 
-  case VlValue::ERROR:
+  case VlValue::Type::ERROR:
     return src;
   }
   ASSERT_NOT_REACHED;

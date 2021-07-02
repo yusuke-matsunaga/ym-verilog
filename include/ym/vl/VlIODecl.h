@@ -5,9 +5,8 @@
 /// @brief VlIODecl のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlObj.h"
 #include "ym/vl/VlFwd.h"
@@ -53,25 +52,29 @@ public:
   has_range() const = 0;
 
   /// @brief MSB の値を返す．
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   int
   left_range_val() const = 0;
 
   /// @brief LSB の値を返す．
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   int
   right_range_val() const = 0;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   left_range_string() const = 0;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   right_range_string() const = 0;
@@ -87,25 +90,29 @@ public:
   decl() const = 0;
 
   /// @brief 親のモジュールの取得
-  /// @note モジュールのIOの時にのみ意味を持つ．
+  ///
+  /// モジュールのIOの時にのみ意味を持つ．
   virtual
   const VlModule*
   module() const = 0;
 
   /// @brief 親の UDP の取得
-  /// @note UDPのIOの時にのみ意味を持つ．
+  ///
+  /// UDPのIOの時にのみ意味を持つ．
   virtual
   const VlUdpDefn*
   udp_defn() const = 0;
 
   /// @brief 親のタスクの取得
-  /// @note タスクのIOの時にのみ意味を持つ．
+  ///
+  /// タスクのIOの時にのみ意味を持つ．
   virtual
   const VlTaskFunc*
   task() const = 0;
 
   /// @brief 親の関数の取得
-  /// @note 関数のIOの時にのみ意味を持つ．
+  ///
+  /// 関数のIOの時にのみ意味を持つ．
   virtual
   const VlTaskFunc*
   function() const = 0;

@@ -5,14 +5,13 @@
 /// @brief パース木のクラス Pt のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 /// @defgroup PtGroup パース木の構成要素
 /// @ingroup VlGroup
 ///
 /// パース木の構成要素
-
 
 #include "ym/FileRegion.h"
 

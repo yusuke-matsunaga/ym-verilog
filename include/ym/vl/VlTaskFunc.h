@@ -5,9 +5,8 @@
 /// @brief VlTaskFunc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlScope.h"
 #include "ym/vl/VlFwd.h"
@@ -39,10 +38,10 @@ public:
   io_num() const = 0;
 
   /// @brief 入出力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   virtual
   const VlIODecl*
-  io(SizeType pos) const = 0;
+  io(SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
+  ) const = 0;
 
   /// @brief 本体のステートメントを得る．
   virtual
@@ -74,25 +73,29 @@ public:
   has_range() const = 0;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
+  ///
+  /// 範囲を持たないときの値は不定
   virtual
   int
   left_range_val() const = 0;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
+  ///
+  /// 範囲を持たないときの値は不定
   virtual
   int
   right_range_val() const = 0;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   left_range_string() const = 0;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   right_range_string() const = 0;

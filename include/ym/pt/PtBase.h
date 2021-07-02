@@ -5,9 +5,8 @@
 /// @brief Pt の基底クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
@@ -99,27 +98,17 @@ public:
 
   /// @brief 階層ブランチのリストを返す．
   vector<const PtNameBranch*>
-  namebranch_list() const;
+  namebranch_list() const
+  {
+    SizeType n = namebranch_num();
+    vector<const PtNameBranch*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = namebranch(i);
+    }
+    return vec;
+  }
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 階層ブランチのリストを返す．
-inline
-vector<const PtNameBranch*>
-PtHierNamedBase::namebranch_list() const
-{
-  SizeType n = namebranch_num();
-  vector<const PtNameBranch*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = namebranch(i);
-  }
-  return vec;
-}
 
 END_NAMESPACE_YM_VERILOG
 

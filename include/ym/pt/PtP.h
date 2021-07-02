@@ -20,14 +20,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 /// @brief PtDeclH の派生クラスを区別するための列挙型
 enum class PtDeclType {
-  Param,      //< @brief parameter
-  LocalParam, //< @brief localparam
-  Reg,        //< @brief reg
-  Var,        //< @brief variables
-  Genvar,     //< @brief genvar
-  Net,        //< @brief net
-  Event,      //< @brief named event
-  SpecParam   //< @brief specparam
+  Param,      ///< @brief parameter
+  LocalParam, ///< @brief localparam
+  Reg,        ///< @brief reg
+  Var,        ///< @brief variables
+  Genvar,     ///< @brief genvar
+  Net,        ///< @brief net
+  Event,      ///< @brief named event
+  SpecParam   ///< @brief specparam
 };
 
 /// @brief PtItem の派生クラスの識別コード
@@ -81,26 +81,18 @@ enum class PtStmtType {
 
 /// @brief PtExpr の派生クラスを識別するための列挙型
 enum class PtExprType {
-  /// @brief 演算子
-  Opr,
-  /// @brief 関数呼び出し
-  FuncCall,
-  /// @brief システム関数呼び出し
-  SysFuncCall,
-  /// @brief プライマリ
-  Primary,
-  /// @brief 定数
-  Const
+  Opr,         ///< 演算子
+  FuncCall,    ///< 関数呼び出し
+  SysFuncCall, ///< システム関数呼び出し
+  Primary,     ///< プライマリ
+  Const        ///< 定数
 };
 
 /// @brief コントロールの型を区別するための列挙型
 enum class PtCtrlType {
-  /// @brief delay control
-  Delay,
-  /// @brief event control
-  Event,
-  /// @brief repeat control
-  Repeat
+  Delay, ///< [in] delay control
+  Event, ///< [in] event control
+  Repeat ///< [in] repeat control
 };
 
 

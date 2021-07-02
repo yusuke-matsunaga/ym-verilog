@@ -5,9 +5,8 @@
 /// @brief VlPrimitive のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlFwd.h"
@@ -89,16 +88,16 @@ public:
   elem_num() const = 0;
 
   /// @brief 要素のプリミティブを返す．
-  /// @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
   virtual
   const VlPrimitive*
-  elem_by_offset(SizeType offset) const = 0;
+  elem_by_offset(SizeType offset ///< [in] 位置番号 ( 0 <= offset < elem_num() )
+  ) const = 0;
 
   /// @brief 要素を返す．
-  /// @param[in] index インデックス
   virtual
   const VlPrimitive*
-  elem_by_index(int index) const = 0;
+  elem_by_index(int index ///< [in] インデックス
+  ) const = 0;
 
 };
 
@@ -126,7 +125,8 @@ public:
   def_name() const = 0;
 
   /// @brief UDP 定義を返す．
-  /// @note prim_type() が kVpiSeqPrim と kVpiConbPrim の場合のみ意味を持つ．
+  ///
+  /// prim_type() が kVpiSeqPrim と kVpiConbPrim の場合のみ意味を持つ．
   virtual
   const VlUdpDefn*
   udp_defn() const = 0;
@@ -157,10 +157,10 @@ public:
   port_num() const = 0;
 
   /// @brief ポート端子を得る．
-  /// @param[in] pos 位置番号 ( 0 <= pos < port_num() )
   virtual
   const VlPrimTerm*
-  prim_term(SizeType pos) const = 0;
+  prim_term(SizeType pos ///< [in] 位置番号 ( 0 <= pos < port_num() )
+  ) const = 0;
 
 };
 

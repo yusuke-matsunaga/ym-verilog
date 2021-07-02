@@ -5,9 +5,8 @@
 /// @brief PtExpr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -62,11 +61,11 @@ public:
   operand2() const = 0;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(SizeType pos) const = 0;
+  operand(SizeType pos) ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+    const = 0;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
@@ -82,10 +81,10 @@ public:
   index_num() const = 0;
 
   /// @brief インデックスの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   virtual
   const PtExpr*
-  index(SizeType pos) const = 0;
+  index(SizeType pos) ///< [in] 位置番号 ( 0 <= pos < index_num() )
+    const = 0;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード

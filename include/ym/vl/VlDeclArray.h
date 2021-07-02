@@ -5,9 +5,8 @@
 /// @brief VlDeclArray のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlDeclBase.h"
 
@@ -42,10 +41,10 @@ public:
   dimension() const = 0;
 
   /// @brief 範囲の取得
-  /// @param[in] pos 位置 ( 0 <= pos < dimension() )
   virtual
   const VlRange*
-  range(SizeType pos) const = 0;
+  range(SizeType pos ///< [in] 位置 ( 0 <= pos < dimension() )
+  ) const = 0;
 
   /// @brief 配列の要素数の取得
   virtual
@@ -53,24 +52,22 @@ public:
   array_size() const = 0;
 
   /// @brief 1次元配列の場合にインデックスからオフセットを計算する．
-  /// @param[in] index インデックス
-  /// @param[out] offset index に対するオフセット値
   /// @retval true index が範囲内だった．
   /// @retval false index が範囲外だった．
   virtual
   bool
-  calc_array_offset(int index,
-		    SizeType& offset) const = 0;
+  calc_array_offset(int index,       ///< [in] インデックス
+		    SizeType& offset ///< [out] index に対するオフセット値
+  ) const = 0;
 
   /// @brief 他次元配列の場合にインデックスのリストからオフセットを計算する．
-  /// @param[in] index_list インデックスのリスト
-  /// @param[out] offset index_list に対するオフセット値
   /// @retval true オフセットが正しく計算できた．
   /// @retval false index_list のいずれかの値が範囲外だった．
   virtual
   bool
-  calc_array_offset(const vector<int>& index_list,
-		    SizeType& offset) const = 0;
+  calc_array_offset(const vector<int>& index_list, ///< [in] インデックスのリスト
+		    SizeType& offset               ///< [out] index_list に対するオフセット値
+  ) const = 0;
 
 };
 

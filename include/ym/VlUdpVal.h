@@ -5,9 +5,8 @@
 /// @brief VlUdpVal のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 
@@ -39,14 +38,14 @@ public:
 
   /// @brief 値を表す文字からのコンストラクタ
   explicit
-  VlUdpVal(char symbol = '-');
+  VlUdpVal(char symbol = '-'); ///< [in] 値を表すシンボル
 
   /// @brief 値を表す2つの文字からのコンストラクタ
-  VlUdpVal(char symbol1,
-	   char symbol2);
+  VlUdpVal(char symbol1,  ///< [in] 変化前のシンボル
+	   char symbol2); ///< [in] 変化後のシンボル
 
   /// @brief デストラクタ
-  ~VlUdpVal();
+  ~VlUdpVal() = default;
 
 
 public:
@@ -74,19 +73,17 @@ public:
 
   /// @brief 等価比較
   bool
-  operator==(const VlUdpVal& right) const;
-
-  /// @brief 非等価比較
-  bool
-  operator!=(const VlUdpVal& right) const;
-
-  /// @brief 包含性チェック
-  bool
-  operator<=(const VlUdpVal& right) const;
+  operator==(const VlUdpVal& right) const ///< [in] オペランド
+  {
+    return mData == right.mData;
+  }
 
   /// @brief 包含性チェック
   bool
-  operator>=(const VlUdpVal& right) const;
+  operator<=(const VlUdpVal& right) const ///< [in] オペランド
+  {
+    return (mData & right.mData) == mData;
+  }
 
 
 private:
@@ -104,9 +101,27 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 実際の値
-  ymuint16 mData;
+  ymuint16 mData{0UL};
 
 };
+
+/// @brief 非等価比較
+inline
+bool
+operator!=(const VlUdpVal& left,  ///< [in] 第1オペランド
+	   const VlUdpVal& right) ///< [in] 第2オペランド
+{
+  return !left.operator==(right);
+}
+
+/// @brief 包含性チェック
+inline
+bool
+operator>=(const VlUdpVal& left,  ///< [in] 第1オペランド
+	   const VlUdpVal& right) ///< [in] 第2オペランド
+{
+  return right.operator<=(left);
+}
 
 /// @brief ストリーム出力
 /// @relates VlUdpVal
@@ -116,42 +131,6 @@ ostream&
 operator<<(ostream& s,
 	   const VlUdpVal& val);
 
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 等価比較
-inline
-bool
-VlUdpVal::operator==(const VlUdpVal& right) const
-{
-  return mData == right.mData;
-}
-
-// @brief 非等価比較
-inline
-bool
-VlUdpVal::operator!=(const VlUdpVal& right) const
-{
-  return mData != right.mData;
-}
-
-// @brief 包含性チェック
-inline
-bool
-VlUdpVal::operator<=(const VlUdpVal& right) const
-{
-  return (mData & right.mData) == mData;
-}
-
-// @brief 包含性チェック
-inline
-bool
-VlUdpVal::operator>=(const VlUdpVal& right) const
-{
-  return (right.mData & mData) == right.mData;
-}
 
 END_NAMESPACE_YM_VERILOG
 

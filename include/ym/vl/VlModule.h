@@ -54,16 +54,16 @@ public:
   elem_num() const = 0;
 
   /// @brief 要素を返す．
-  /// @param[in] offset 位置番号 (0 <= offset < elem_num())
   virtual
   const VlModule*
-  elem_by_offset(SizeType offset) const = 0;
+  elem_by_offset(SizeType offset ///< [in] 位置番号 (0 <= offset < elem_num())
+  ) const = 0;
 
   /// @brief 要素を返す．
-  /// @param[in] index インデックス
   virtual
   const VlModule*
-  elem_by_index(int index) const = 0;
+  elem_by_index(int index ///< [in] インデックス
+  ) const = 0;
 
 };
 
@@ -176,13 +176,15 @@ public:
   is_array() const = 0;
 
   /// @brief インデックスの値を返す．
-  /// @note 配列要素の時のみ意味を持つ．
+  ///
+  /// 配列要素の時のみ意味を持つ．
   virtual
   int
   index() const = 0;
 
   /// @brief 親の配列を返す．
-  /// @note 配列要素の時のみ意味を持つ．
+  ///
+  /// 配列要素の時のみ意味を持つ．
   virtual
   const VlModuleArray*
   module_array() const = 0;
@@ -193,11 +195,11 @@ public:
   port_num() const = 0;
 
   /// @brief ポートの取得
-  /// @param[in] pos 取得するポートの位置 (0 <= pos < port_num())
   /// @return pos 番目のポートを返す．
   virtual
   const VlPort*
-  port(SizeType pos) const = 0;
+  port(SizeType pos ///< [in] 取得するポートの位置 (0 <= pos < port_num())
+  ) const = 0;
 
   /// @brief 入出力数を得る．
   virtual
@@ -205,10 +207,10 @@ public:
   io_num() const = 0;
 
   /// @brief 入出力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   virtual
   const VlIODecl*
-  io(SizeType pos) const = 0;
+  io(SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
+  ) const = 0;
 
 };
 

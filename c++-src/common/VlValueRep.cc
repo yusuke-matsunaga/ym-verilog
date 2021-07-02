@@ -20,7 +20,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 VlValue::Type
 VlValueError::type() const
 {
-  return VlValue::ERROR;
+  return Type::ERROR;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
@@ -131,10 +131,10 @@ VlValueInt::VlValueInt(int val) :
 }
 
 // @brief 型を返す．
-VlValue::Type
+VlValueRep::Type
 VlValueInt::type() const
 {
-  return VlValue::INT;
+  return Type::INT;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
@@ -248,10 +248,10 @@ VlValueUint::VlValueUint(ymuint val) :
 }
 
 // @brief 型を返す．
-VlValue::Type
+VlValueRep::Type
 VlValueUint::type() const
 {
-  return VlValue::UINT;
+  return Type::UINT;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
@@ -365,10 +365,10 @@ VlValueScalar::VlValueScalar(const VlScalarVal& val) :
 }
 
 // @brief 型を返す．
-VlValue::Type
+VlValueRep::Type
 VlValueScalar::type() const
 {
-  return VlValue::SCALAR;
+  return Type::SCALAR;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
@@ -482,10 +482,10 @@ VlValueReal::VlValueReal(double val) :
 }
 
 // @brief 型を返す．
-VlValue::Type
+VlValueRep::Type
 VlValueReal::type() const
 {
-  return VlValue::REAL;
+  return Type::REAL;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
@@ -599,10 +599,10 @@ VlValueTime::VlValueTime(VlTime val) :
 }
 
 // @brief 型を返す．
-VlValue::Type
+VlValueRep::Type
 VlValueTime::type() const
 {
-  return VlValue::TIME;
+  return Type::TIME;
 }
 
 // @brief 整数型に変換可能な時に true を返す．
@@ -716,10 +716,10 @@ VlValueBitVector::VlValueBitVector(const BitVector& val) :
 }
 
 // @brief 型を返す．
-VlValue::Type
+VlValueRep::Type
 VlValueBitVector::type() const
 {
-  return VlValue::BITVECTOR;
+  return Type::BITVECTOR;
 }
 
 // @brief 整数型に変換可能な時に true を返す．

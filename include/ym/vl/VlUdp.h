@@ -5,9 +5,8 @@
 /// @brief VlUdp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlObj.h"
 #include "ym/vl/VlFwd.h"
@@ -45,10 +44,10 @@ public:
   port_num() const = 0;
 
   /// @brief 入力の宣言要素を返す．
-  /// @param[in] pos 入力番号 ( 0 <= pos < port_num() - 1 )
   virtual
   const VlIODecl*
-  input(SizeType pos) const = 0;
+  input(SizeType pos ///< [in] 入力番号 ( 0 <= pos < port_num() - 1 )
+  ) const = 0;
 
   /// @brief 出力の宣言要素を返す．
   virtual
@@ -77,10 +76,10 @@ public:
   table_size() const = 0;
 
   /// @brief table entry を返す．
-  /// @param[in] pos 行番号
   virtual
   const VlTableEntry*
-  table_entry(SizeType pos) const = 0;
+  table_entry(SizeType pos ///< [in] 行番号
+  ) const = 0;
 
 };
 

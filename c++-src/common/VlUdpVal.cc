@@ -226,11 +226,6 @@ VlUdpVal::VlUdpVal(ymuint16 val) :
 {
 }
 
-// @brief デストラクタ
-VlUdpVal::~VlUdpVal()
-{
-}
-
 // @brief レベルシンボルの時に true を返す．
 bool
 VlUdpVal::is_level_symbol() const

@@ -5,9 +5,8 @@
 /// @brief PtStmt のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -46,10 +45,10 @@ public:
   arg_num() const = 0;
 
   /// @brief 引数の取得
-  /// @param[in] pos 位置 ( 0 <= pos < arg_num() )
   virtual
   const PtExpr*
-  arg(SizeType pos) const = 0;
+  arg(SizeType pos ///< [in] 位置 ( 0 <= pos < arg_num() )
+  ) const = 0;
 
   /// @brief 引数のリストの取得
   vector<const PtExpr*>
@@ -110,10 +109,10 @@ public:
   caseitem_num() const = 0;
 
   /// @brief case item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
   virtual
   const PtCaseItem*
-  caseitem(SizeType pos) const = 0;
+  caseitem(SizeType pos ///< [in] 位置 ( 0 <= pos < caseitem_num() )
+  ) const = 0;
 
   /// @brief case item のリストの取得
   vector<const PtCaseItem*>
@@ -140,11 +139,11 @@ public:
   declhead_num() const = 0;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   virtual
   const PtDeclHead*
-  declhead(SizeType pos) const = 0;
+  declhead(SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const = 0;
 
   /// @brief 宣言ヘッダのリストの取得
   vector<const PtDeclHead*>
@@ -157,11 +156,11 @@ public:
   stmt_num() const = 0;
 
   /// @brief 子供のステートメントの取得
-  /// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
   /// @note kParBlock/kSeqBlock で意味のある関数
   virtual
   const PtStmt*
-  stmt(SizeType pos) const = 0;
+  stmt(SizeType pos ///< [in] 位置 ( 0 <= pos < stmt_num() )
+  ) const = 0;
 
   /// @brief 子供のステートメントのリストの取得
   vector<const PtStmt*>
@@ -190,10 +189,10 @@ public:
   label_num() const = 0;
 
   /// @brief ラベルの取得
-  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
   virtual
   const PtExpr*
-  label(SizeType pos) const = 0;
+  label(SizeType pos ///< [in] 位置 ( 0 <= pos < label_num() )
+  ) const = 0;
 
   /// @brief ラベルリストの取得
   vector<const PtExpr*>

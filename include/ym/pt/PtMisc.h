@@ -5,9 +5,8 @@
 /// @brief その他のの部品クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -49,12 +48,12 @@ public:
   event_num() const = 0;
 
   /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
   ///
   /// event control/repeat control の場合のみ意味を持つ
   virtual
   const PtExpr*
-  event(SizeType pos) const = 0;
+  event(SizeType pos ///< [in] 位置 ( 0 <= pos < event_num() )
+  ) const = 0;
 
   /// @brief イベントリストの取得
   vector<const PtExpr*>
@@ -150,12 +149,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値の取得
-  /// @param[in] pos 取得する遅延値の位置(0 〜 2)
   /// @return pos 番目の遅延を表す式\n
   /// 該当する要素がなければ nullptr を返す．
   virtual
   const PtExpr*
-  value(SizeType pos) const = 0;
+  value(SizeType pos ///< [in] 取得する遅延値の位置(0 〜 2)
+  ) const = 0;
 
 };
 
@@ -225,10 +224,10 @@ public:
   attrspec_num() const = 0;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
   virtual
   const PtAttrSpec*
-  attrspec(SizeType pos) const = 0;
+  attrspec(SizeType pos ///< [in] 位置 ( 0 <= pos < attrspec_num() )
+  ) const = 0;
 
   /// @brief 要素のリストの取得
   vector<const PtAttrSpec*>

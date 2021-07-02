@@ -5,9 +5,8 @@
 /// @brief VlDelay のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlObj.h"
 
@@ -19,6 +18,7 @@ class VlExpr;
 //////////////////////////////////////////////////////////////////////
 /// @class VlDelay VlDelay.h "ym/vl/VlDelay.h"
 /// @brief 遅延式を表す基底クラス
+///
 /// 基本的には VlExpr の配列だが要素数は3以下である．
 //////////////////////////////////////////////////////////////////////
 class VlDelay :
@@ -35,10 +35,10 @@ public:
   elem_num() const = 0;
 
   /// @brief 値を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < elem_num() )
   virtual
   const VlExpr*
-  expr(SizeType pos) const = 0;
+  expr(SizeType pos ///< [in] 位置番号 ( 0 <= pos < elem_num() )
+  ) const = 0;
 
   /// @brief Verilog-HDL の文字列を得る．
   virtual

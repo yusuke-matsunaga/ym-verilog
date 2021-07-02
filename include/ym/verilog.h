@@ -5,7 +5,7 @@
 /// @brief ym-verilog に共通な定義ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2016 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2016, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 /// @namespace nsYm::nsVerilog
@@ -194,9 +194,20 @@ enum class VpiDir {
 };
 
 /// @brief VpiDir のストリーム出力
+inline
 ostream&
-operator<<(ostream& s,
-	   VpiDir dir);
+operator<<(ostream& s, ///< [in] 出力ストリーム
+	   VpiDir dir) ///< [in] 方向
+{
+  switch ( dir ) {
+  case VpiDir::Input:       s << "Input"; break;
+  case VpiDir::Output:      s << "Output"; break;
+  case VpiDir::Inout:       s << "Inout"; break;
+  case VpiDir::MixedIO:     s << "Mixed IO"; break;
+  case VpiDir::NoDirection: s << "No Direction"; break;
+  }
+  return s;
+}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -472,14 +483,10 @@ enum class VpiVarType {
 /// @brief 範囲指定のモード
 //////////////////////////////////////////////////////////////////////
 enum class VpiRangeMode {
-  /// @brief 範囲指定なし
-  No    = 0,
-  /// @brief 固定
-  Const = 1, // [ a : b ]
-  /// @brief 可変(プラス)
-  Plus  = 2, // [ a +: b ]
-  /// @brief 可変(マイナス)
-  Minus = 3  // [ a -: b ]
+  No    = 0, ///< 範囲指定なし
+  Const = 1, ///< 固定 (例: [ a : b ])
+  Plus  = 2, ///< 可変(プラス) (例: [ a +: b ])
+  Minus = 3  ///< 可変(マイナス) (例: [ a -: b ])
 };
 
 
@@ -487,14 +494,10 @@ enum class VpiRangeMode {
 /// @brief IO宣言で用いられる補助的な型
 //////////////////////////////////////////////////////////////////////
 enum class VpiAuxType {
-  /// @brief 型無し
-  None = 0,
-  /// @brief net 型
-  Net  = 1,
-  /// @brief reg 型
-  Reg  = 2,
-  /// @brief 変数型
-  Var  = 3
+  None = 0, ///< [in] 型無し
+  Net  = 1, ///< [in] net 型
+  Reg  = 2, ///< [in] reg 型
+  Var  = 3  ///< [in] 変数型
 };
 
 
@@ -502,12 +505,9 @@ enum class VpiAuxType {
 /// @brief vectored/scalared 指定の値
 //////////////////////////////////////////////////////////////////////
 enum class VpiVsType {
-  /// @brief 指定なし
-  None     = 0,
-  /// @brief ベクター型
-  Vectored = 1,
-  /// @brief スカラー型
-  Scalared = 2
+  None     = 0, ///< [in] 指定なし
+  Vectored = 1, ///< [in] ベクター型
+  Scalared = 2  ///< [in] スカラー型
 };
 
 
@@ -532,27 +532,6 @@ enum class VpiSpecPathType {
 };
 
 /// @}
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief VpiDir のストリーム出力
-inline
-ostream&
-operator<<(ostream& s,
-	   VpiDir dir)
-{
-  switch ( dir ) {
-  case VpiDir::Input:       s << "Input"; break;
-  case VpiDir::Output:      s << "Output"; break;
-  case VpiDir::Inout:       s << "Inout"; break;
-  case VpiDir::MixedIO:     s << "Mixed IO"; break;
-  case VpiDir::NoDirection: s << "No Direction"; break;
-  }
-  return s;
-}
-
 
 using nsVerilog::BitVector;
 using nsVerilog::VlLineWatcher;

@@ -5,9 +5,8 @@
 /// @brief 宣言要素関係の部品クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtBase.h"
 
@@ -79,10 +78,10 @@ public:
   item_num() const = 0;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   virtual
   const PtIOItem*
-  item(SizeType pos) const = 0;
+  item(SizeType pos) ///< [in] 位置 ( 0 <= pos < item_num() )
+    const = 0;
 
   /// @brief 要素のリストを返す．
   vector<const PtIOItem*>
@@ -198,10 +197,10 @@ public:
   item_num() const = 0;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   virtual
   const PtDeclItem*
-  item(SizeType pos) const = 0;
+  item(SizeType pos) ///< [in] 位置 ( 0 <= pos < item_num() )
+    const = 0;
 
   /// @brief 要素のリストを返す．
   vector<const PtDeclItem*>
@@ -230,10 +229,10 @@ public:
   range_num() const = 0;
 
   /// @brief 範囲の取得
-  /// @param[in] pos 位置 ( 0 <= pos < range_num() )
   virtual
   const PtRange*
-  range(SizeType pos) const = 0;
+  range(SizeType pos) ///< [in] 位置 ( 0 <= pos < range_num() )
+    const = 0;
 
   /// @brief 要素のリストを返す．
   vector<const PtRange*>

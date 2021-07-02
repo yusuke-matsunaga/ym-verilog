@@ -5,13 +5,12 @@
 /// @brief VlControl のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 // IEEE Std 1364-2001 26.6.29 Delay control
 // IEEE Std 1364-2001 26.6.30 Event control
 // IEEE Std 1364-2001 26.6.31 Repeat control
-
 
 #include "ym/vl/VlObj.h"
 
@@ -63,10 +62,10 @@ public:
   event_num() const = 0;
 
   /// @brief イベント条件式を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
   virtual
   const VlExpr*
-  event(SizeType pos) const = 0;
+  event(SizeType pos ///< [in] 位置番号 ( 0 <= pos < event_num() )
+  ) const = 0;
 
 };
 
