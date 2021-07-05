@@ -27,7 +27,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 ///   - サイズ
 ///   - 符号の有無
 ///   - 基数
-///
 /// を持つ．
 //////////////////////////////////////////////////////////////////////
 class BitVector
@@ -40,13 +39,15 @@ public:
 
   /// @brief unsigned int からのコンストラクタ
   ///
-  /// 空のコンストラクタでもある
+  /// 空のコンストラクタでもある<br>
   /// 結果の型は
   /// - サイズは無し
   /// - 符号なし
   /// - 基数は10
   explicit
-  BitVector(unsigned int val = 0); ///< [in] 値
+  BitVector(
+    unsigned int val = 0 ///< [in] 値
+  );
 
   /// @brief int からのキャスト用コンストラクタ
   ///
@@ -54,8 +55,11 @@ public:
   /// - サイズは無し
   /// - 符号あり
   /// - 基数は10
+  ///
   explicit
-  BitVector(int val); ///< [in] 値
+  BitVector(
+    int val ///< [in] 値
+  );
 
   /// @brief bool からの変換コンストラクタ
   ///
@@ -63,8 +67,11 @@ public:
   /// - サイズはあり(1ビット)
   /// - 符号なし
   /// - 基数は2
+  ///
   explicit
-  BitVector(bool value); ///< [in] ブール値
+  BitVector(
+    bool value ///< [in] ブール値
+  );
 
   /// @brief time 型からの変換コンストラクタ
   ///
@@ -73,18 +80,22 @@ public:
   /// - 符号なし
   /// - 基数は10
   explicit
-  BitVector(VlTime time); ///< [in] time 値
+  BitVector(
+    VlTime time ///< [in] time 値
+  );
 
   /// @brief スカラ値からのキャスト用コンストラクタ
   ///
-  /// size を指定するとその数分 value を繰り返す．
+  /// size を指定するとその数分 value を繰り返す．<br>
   /// 結果の型は
   /// - サイズはあり(= size)
   /// - 符号なし
   /// - 基数は2
   explicit
-  BitVector(const VlScalarVal& value, ///< [in] 値 (kVpiScalar{0, 1, X, Z}
-	    SizeType size = 1);       ///< [in] サイズ (ビット幅)
+  BitVector(
+    const VlScalarVal& value, ///< [in] 値 (kVpiScalar{0, 1, X, Z}
+    SizeType size = 1         ///< [in] サイズ (ビット幅)
+  );
 
   /// @brief C文字列からの変換用コンストラクタ
   ///
@@ -93,7 +104,9 @@ public:
   /// - 符号なし
   /// - 基数は2
   explicit
-  BitVector(const char* str); ///< [in] 文字列 (C文字列)
+  BitVector(
+    const char* str ///< [in] 文字列 (C文字列)
+  );
 
   /// @brief string 文字列からの変換用コンストラクタ
   ///
@@ -102,32 +115,44 @@ public:
   /// - 符号なし
   /// - 基数は2
   explicit
-  BitVector(const string& str); ///< [in] 文字列 (string)
+  BitVector(
+    const string& str ///< [in] 文字列 (string)
+  );
 
   /// @brief 浮動小数点数をビットベクタにする
   /// @warning 整数で表せない範囲の場合には値は不定
   /// @todo 整数を経由しない方法に書き換えること
   explicit
-  BitVector(double val); ///< [in] 浮動小数点数
+  BitVector(
+    double val ///< [in] 浮動小数点数
+  );
 
   /// @brief Verilog-HDL 形式の文字列からの変換コンストラクタ
   ///
   /// とはいってもサイズと基数は str に含まれていない
-  BitVector(SizeType size,      ///< [in] サイズ
-	    bool is_signed,     ///< [in] 符号の有無を表すフラグ
-	    int base,           ///< [in] 基数を表す数字 (2, 8, 10, 16 のみが妥当な値)
-	    const string& str); ///< [in] 値の内容を表すVerilog-HDL形式の文字列
+  BitVector(
+    SizeType size,    ///< [in] サイズ
+    bool is_signed,   ///< [in] 符号の有無を表すフラグ
+    int base,         ///< [in] 基数を表す数字 (2, 8, 10, 16 のみが妥当な値)
+    const string& str ///< [in] 値の内容を表すVerilog-HDL形式の文字列
+  );
 
   /// @brief 連結演算用のコンストラクタ
   ///
   /// src_list の内容を連結したものをセットする
-  BitVector(const vector<BitVector>& src_list); ///< [in] 連結する値のリスト
+  BitVector(
+    const vector<BitVector>& src_list ///< [in] 連結する値のリスト
+  );
 
   /// @brief コピーコンストラクタ
-  BitVector(const BitVector& src); ///< [in] コピー元のオブジェクト
+  BitVector(
+    const BitVector& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief ムーブコンストラクタ
-  BitVector(BitVector&& src); ///< [in] ムーブ元のオブジェクト
+  BitVector(
+    BitVector&& src ///< [in] ムーブ元のオブジェクト
+  );
 
   /// @brief ビット長の変換を行うコピーコンストラクタもどき
   ///
@@ -136,25 +161,33 @@ public:
   ///   * unsigned なら上位に0を補う．signed なら符号拡張を行う．
   ///   * MSB が x か z の場合には x または z を補う．
   /// - src のビット長が size よりも長ければ切り捨てる．
-  BitVector(const BitVector& src, ///< [in] 返還元ののビットベクタ
-	    SizeType size);       ///< [in] 指定サイズ
+  BitVector(
+    const BitVector& src, ///< [in] 返還元ののビットベクタ
+    SizeType size         ///< [in] 指定サイズ
+  );
 
   /// @brief ビット長の変換と属性の変更を行うコピーコンストラクタもどき
-  BitVector(const BitVector& src, ///< [in] 変換元のオブジェクト
-	    SizeType size,        ///< [in] 指定サイズ
-	    bool is_sized,        ///< [in] サイズの有無
-	    bool is_signed,       ///< [in] 符号の有無
-	    int base);            ///< [in] 基数
+  BitVector(
+    const BitVector& src, ///< [in] 変換元のオブジェクト
+    SizeType size,        ///< [in] 指定サイズ
+    bool is_sized,        ///< [in] サイズの有無
+    bool is_signed,       ///< [in] 符号の有無
+    int base              ///< [in] 基数
+  );
 
   /// @brief コピー代入演算子
   /// @return 代入後の自分自身の参照を返す．
   BitVector&
-  operator=(const BitVector& src); ///< [in] コピー元のオブジェクト
+  operator=(
+    const BitVector& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief ムーブ代入演算子
   /// @return 代入後の自分自身の参照を返す．
   BitVector&
-  operator=(BitVector&& src); ///< [in] ムーブ元のオブジェクト
+  operator=(
+    BitVector&& src ///< [in] ムーブ元のオブジェクト
+  );
 
   /// @brief 符号なし整数からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -164,7 +197,9 @@ public:
   /// - 符号なし
   /// - 基数は10
   BitVector&
-  operator=(unsigned int val); ///< [in] 値
+  operator=(
+    unsigned int val ///< [in] 値
+  );
 
   /// @brief int からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -174,7 +209,9 @@ public:
   /// - 符号あり
   /// - 基数は10
   BitVector&
-  operator=(int val); ///< [in] 値
+  operator=(
+    int val ///< [in] 値
+  );
 
   /// @brief bool からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -184,7 +221,9 @@ public:
   /// - 符号なし
   /// - 基数は2
   BitVector&
-  operator=(bool value); ///< [in] 値
+  operator=(
+    bool value ///< [in] 値
+  );
 
   /// @brief time 型からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -194,7 +233,9 @@ public:
   /// - 符号なし
   /// - 基数は10
   BitVector&
-  operator=(VlTime time); ///< [in] time 値
+  operator=(
+    VlTime time ///< [in] time 値
+  );
 
   /// @brief スカラ値からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -204,7 +245,9 @@ public:
   /// - 符号なし
   /// - 基数は2
   BitVector&
-  operator=(const VlScalarVal& value); ///< [in] 値 (0, 1, X, Z)
+  operator=(
+    const VlScalarVal& value ///< [in] 値 (0, 1, X, Z)
+  );
 
   /// @brief C文字列からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -214,7 +257,9 @@ public:
   /// - 符号なし
   /// - 基数は2
   BitVector&
-  operator=(const char* str); ///< [in] C文字列
+  operator=(
+    const char* str ///< [in] C文字列
+  );
 
   /// @brief string 文字列からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
@@ -224,22 +269,28 @@ public:
   /// - 符号なし
   /// - 基数は2
   BitVector&
-  operator=(const string& str); ///< [in] 文字列 (string)
+  operator=(
+    const string& str ///< [in] 文字列 (string)
+  );
 
   /// @brief 浮動小数点数からの代入演算子
   /// @return 代入後の自分自身の参照を返す．
   /// @warning 整数で表せない範囲の場合には値は不定
   /// @todo 整数を経由しない方法に書き換えること
   BitVector&
-  operator=(double val); ///< [in] 浮動小数点数
+  operator=(
+    double val ///< [in] 浮動小数点数
+  );
 
   /// @brief ビット長の変換と属性の変更を行う代入演算子もどき
   void
-  set_with_attr(const BitVector& src, ///< [in] 変換元のオブジェクト
-		SizeType size,        ///< [in] 指定サイズ
-		bool is_sized,        ///< [in] サイズの有無
-		bool is_signed,       ///< [in] 符号の有無
-		int base);            ///< [in] 基数
+  set_with_attr(
+    const BitVector& src, ///< [in] 変換元のオブジェクト
+    SizeType size,        ///< [in] 指定サイズ
+    bool is_sized,        ///< [in] サイズの有無
+    bool is_signed,       ///< [in] 符号の有無
+    int base              ///< [in] 基数
+  );
 
   /// @brief Verilog-HDL (IEEE1364-2001) 形式の文字列から値をセットする関数．
   /// @retval true 正しく変換できた
@@ -247,12 +298,16 @@ public:
   ///
   /// もちろん IEEE1364-1995 の形式も OK
   bool
-  set_from_verilog_string(const string& str); ///< [in] Verilog形式の文字列
+  set_from_verilog_string(
+    const string& str ///< [in] Verilog形式の文字列
+  );
 
   /// @brief 型変換を行う．
   /// @return 自分自身への参照を返す．
   const BitVector&
-  coerce(const VlValueType& type); ///< [in] 要求される型(サイズも含む)
+  coerce(
+    const VlValueType& type ///< [in] 要求される型(サイズも含む)
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -268,25 +323,33 @@ public:
   /// @return 生成されたオブジェクト
   static
   BitVector
-  zero(SizeType size = 1); ///< [in] ビット数．デフォルトは 1
+  zero(
+    SizeType size = 1 ///< [in] ビット数．デフォルトは 1
+  );
 
   /// @brief 1 を表すオブジェクトを生成する
   /// @return 生成されたオブジェクト
   static
   BitVector
-  one(SizeType size = 1); ///< [in] ビット数．デフォルトは 1
+  one(
+    SizeType size = 1 ///< [in] ビット数．デフォルトは 1
+  );
 
   /// @brief X を表すオブジェクトを生成する
   /// @return 生成されたオブジェクト
   static
   BitVector
-  x(SizeType size = 1); ///< [in] ビット数．デフォルトは 1
+  x(
+    SizeType size = 1 ///< [in] ビット数．デフォルトは 1
+  );
 
   /// @brief Z を表すオブジェクトを生成する
   /// @return 生成されたオブジェクト
   static
   BitVector
-  z(SizeType size = 1); ///< [in] ビット数．デフォルトは 1
+  z(
+    SizeType size = 1 ///< [in] ビット数．デフォルトは 1
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -319,42 +382,54 @@ public:
   ///
   /// 自分自身に src を足したものを代入する
   const BitVector&
-  operator+=(const BitVector& src); ///< [in] オペランド
+  operator+=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief 減算つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身から src を引いたものを代入する
   const BitVector&
-  operator-=(const BitVector& src); ///< [in] オペランド
+  operator-=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief 乗算つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身に src を掛けたものを代入する
   const BitVector&
-  operator*=(const BitVector& src); ///< [in] オペランド
+  operator*=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief 除算つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src で割ったものを代入する
   const BitVector&
-  operator/=(const BitVector& src); ///< [in] オペランド
+  operator/=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief 剰余算つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src で割った余りを代入する
   const BitVector&
-  operator%=(const BitVector& src); ///< [in] オペランド
+  operator%=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// 巾乗つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src 乗したものを代入する
   const BitVector&
-  power(const BitVector& src); ///< [in] オペランド
+  power(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -388,21 +463,27 @@ public:
   ///
   /// 自分自身と src との bit-wise AND を代入する
   const BitVector&
-  operator&=(const BitVector& src); ///< [in] オペランド
+  operator&=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief Or つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身と src との OR を代入する
   const BitVector&
-  operator|=(const BitVector& src); ///< [in] オペランド
+  operator|=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief XOR つき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身と src との XOR を代入する
   const BitVector&
-  operator^=(const BitVector& src); ///< [in] オペランド
+  operator^=(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -475,37 +556,46 @@ public:
   ///
   /// 自分自身を src だけ論理左シフトしたものを代入する．
   const BitVector&
-  operator<<=(const BitVector& src); ///< [in] シフト量 (BitVector)
+  operator<<=(
+    const BitVector& src ///< [in] シフト量 (BitVector)
+  );
 
   /// @brief 論理左シフトつき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src だけ論理左シフトしたものを代入する．
   const BitVector&
-  operator<<=(int src); ///< [in] シフト量 (int)
+  operator<<=(
+    int src ///< [in] シフト量 (int)
+  );
 
   /// @brief 論理右シフトつき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src だけ論理右シフトしたものを代入する．
   const BitVector&
-  operator>>=(const BitVector& src); ///< [in] シフト量 (BitVector)
+  operator>>=(
+    const BitVector& src ///< [in] シフト量 (BitVector)
+  );
 
   /// @brief 論理右シフトつき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src だけ論理右シフトしたものを代入する．
   const BitVector&
-  operator>>=(int src); ///< [in] シフト量 (int)
+  operator>>=(
+    int src ///< [in] シフト量 (int)
+  );
 
   /// @brief 算術左シフトつき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src だけ算術左シフトしたものを代入する．
   const BitVector&
-  alshift(const BitVector& src) ///< [in] シフト量 (BitVector)
-  {
-    // 実は論理左シフトそのもの
+  alshift(
+    const BitVector& src ///< [in] シフト量 (BitVector)
+  )
+  { // 実は論理左シフトそのもの
     return operator<<=(src);
   }
 
@@ -514,9 +604,10 @@ public:
   ///
   /// 自分自身を src だけ算術左シフトしたものを代入する．
   const BitVector&
-  alshift(int src) ///< [in] シフト量 (int)
-  {
-    // 実は論理左シフトそのもの
+  alshift(
+    int src ///< [in] シフト量 (int)
+  )
+  { // 実は論理左シフトそのもの
     return operator<<=(src);
   }
 
@@ -525,14 +616,18 @@ public:
   ///
   /// 自分自身を src だけ算術右シフトしたものを代入する．
   const BitVector&
-  arshift(const BitVector& src); ///< [in] シフト量 (BitVector)
+  arshift(
+    const BitVector& src ///< [in] シフト量 (BitVector)
+  );
 
   /// @brief 算術右シフトつき代入
   /// @return 自分自身を返す．
   ///
   /// 自分自身を src だけ算術右シフトしたものを代入する．
   const BitVector&
-  arshift(int src); ///< [in] シフト量 (int)
+  arshift(
+    int src ///< [in] シフト量 (int)
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -551,24 +646,29 @@ public:
   /// @brief part-select 演算子
   /// @return 選択された範囲のビットベクタ
   BitVector
-  part_select_op(int msb,        ///< [in] 選択範囲の MSB
-		 int lsb) const; ///< [in] 選択範囲の LSB
+  part_select_op(
+    int msb, ///< [in] 選択範囲の MSB
+    int lsb  ///< [in] 選択範囲の LSB
+  ) const;
 
   /// @brief part-select 書き込み
   ///
   /// - [msb:lsb] の範囲に val を書き込む
   /// - 範囲外ならなにもしない．
   void
-  part_select_op(int msb,               ///< [in] 選択範囲の MSB
-		 int lsb,	        ///< [in] 選択範囲の LSB
-		 const BitVector& val); ///< [in]書き込む値
+  part_select_op(
+    int msb,             ///< [in] 選択範囲の MSB
+    int lsb,	         ///< [in] 選択範囲の LSB
+    const BitVector& val ///< [in]書き込む値
+  );
 
   /// @brief bit-select 演算子
   /// @return bpos で指定された位置の値
   VlScalarVal
-  bit_select_op(int bpos) const ///< [in] 選択するビット位置
-  {
-    // 範囲外のチェックは value() でやっている．
+  bit_select_op(
+    int bpos ///< [in] 選択するビット位置
+  ) const
+  { // 範囲外のチェックは value() でやっている．
     return value(bpos);
   }
 
@@ -577,8 +677,10 @@ public:
   /// - bpos の位置に val を書き込む．
   /// - 範囲外ならないもしない．
   void
-  bit_select_op(int bpos,         ///< [in] 選択するビット位置
-		VlScalarVal val); ///< [in] 書き込む値
+  bit_select_op(
+    int bpos,       ///< [in] 選択するビット位置
+    VlScalarVal val ///< [in] 書き込む値
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -590,38 +692,28 @@ public:
 
   /// @brief 値の型を返す．
   VlValueType
-  value_type() const
-  {
-    return VlValueType(is_signed(), is_sized(), size());
-  }
+  value_type() const { return VlValueType(is_signed(), is_sized(), size()); }
 
   /// @brief srcの値をビットごとにマージする．
   /// @return 自分自身
   ///
   /// 異なっているビットは X となる．
   const BitVector&
-  merge(const BitVector& src); ///< [in] オペランド
+  merge(
+    const BitVector& src ///< [in] オペランド
+  );
 
   /// @brief サイズを返す．
   SizeType
-  size() const
-  {
-    return mSize;
-  }
+  size() const { return mSize; }
 
   /// @brief 実際のサイズはともかくサイズの指定があるかどうかを返す．
   bool
-  is_sized() const
-  {
-    return mFlags[0];
-  }
+  is_sized() const { return mFlags[0]; }
 
   /// @brief 符号付きの場合に true を返す
   bool
-  is_signed() const
-  {
-    return mFlags[1];
-  }
+  is_signed() const { return mFlags[1]; }
 
   /// @brief 表示用の基数を得る．
   ///
@@ -629,22 +721,15 @@ public:
   int
   base() const
   {
-    if ( mFlags[2] ) {
-      if ( mFlags[3] ) {
-	return 16;
-      }
-      else {
-	return 10;
-      }
+    int v = static_cast<int>(mFlags[2]) * 2 + static_cast<int>(mFlags[3]);
+    switch ( v ) {
+    case 0: return 2;
+    case 1: return 8;
+    case 2: return 10;
+    case 3: return 16;
     }
-    else {
-      if ( mFlags[3] ) {
-	return 8;
-      }
-      else {
-	return 2;
-      }
-    }
+    ASSERT_NOT_REACHED;
+    return 0;
   }
 
   /// @brief pos ビット目の値を得る．
@@ -652,7 +737,9 @@ public:
   ///
   /// pos が範囲を越えていたら X を返す．
   VlScalarVal
-  value(int pos) const; ///< [in] 取得するビット位置
+  value(
+    int pos ///< [in] 取得するビット位置
+  ) const;
 
   /// @brief 符号付きかつ負数の時に true を返す
   bool
@@ -687,39 +774,27 @@ public:
   ///
   /// 具体的には size() が 32以下で x や z を含んでいないこと
   bool
-  is_uint32() const
-  {
-    return (size() <= BLOCK_SIZE && !has_xz());
-  }
+  is_uint32() const { return (size() <= BLOCK_SIZE && !has_xz()); }
 
   /// @brief is_uint32 の条件を満たしているときに ymuint32 に変換する．
   ///
   /// 上の条件を満たしていないときの値は不定
   /// (というか実際にどういう値を返すのかはソースコードを見ればわかる)
   ymuint32
-  to_uint32() const
-  {
-    return static_cast<ymuint32>(mVal1.get()[0]);
-  }
+  to_uint32() const { return static_cast<ymuint32>(mVal1.get()[0]); }
 
   /// @brief int の数値に変換可能なら true を返す．
   ///
   /// 実際には is_uint32() と同一
   bool
-  is_int() const
-  {
-    return (size() <= BLOCK_SIZE && !has_xz());
-  }
+  is_int() const { return (size() <= BLOCK_SIZE && !has_xz()); }
 
   /// @brief is_int の条件を満たしているときに int に変換する．
   ///
   /// 上の条件を満たしていないときの値は不定
   /// (というか実際にどういう値を返すのかはソースコードを見ればわかる)
   int
-  to_int() const
-  {
-    return static_cast<int>(mVal1.get()[0]);
-  }
+  to_int() const { return static_cast<int>(mVal1.get()[0]); }
 
   /// @brief 値を double 型に変換する．
   ///
@@ -737,10 +812,7 @@ public:
   ///
   /// 実際には LSB を返すだけ．
   VlScalarVal
-  to_scalar() const
-  {
-    return value(0);
-  }
+  to_scalar() const { return value(0); }
 
   /// @brief 論理値として評価する．
   /// @retval 0 0 の時
@@ -753,19 +825,13 @@ public:
   ///
   /// to_logic() と同様で，かつ X/Z を false と見なす．
   bool
-  to_bool() const
-  {
-    return to_logic().is_one();
-  }
+  to_bool() const { return to_logic().is_one(); }
 
   /// @brief time 型に変換可能なら true を返す．
   ///
   /// 具体的には size() が 64 以下で X/Z を含んでいないこと
   bool
-  is_time() const
-  {
-    return (size() <= 64 && !has_xz());
-  }
+  is_time() const { return (size() <= 64 && !has_xz()); }
 
   /// @brief 内容を time 型に変換する．
   ///
@@ -785,7 +851,9 @@ public:
   /// opt_base が 2, 8, 10, 16 の時には内部で持っている基数を無視して
   /// opt_base を基数と見なす．
   string
-  verilog_string(int opt_base = 0) const; ///< [in] 基数
+  verilog_string(
+    int opt_base = 0 ///< [in] 基数
+  ) const;
 
   /// @brief 内容を10進数で表した文字列を返す．
   string
@@ -796,21 +864,27 @@ public:
   ///
   /// skip_zeros が true なら上位は0は出力しない．
   string
-  bin_str(bool skip_zeros = true) const; ///< [in] 0スキップフラグ
+  bin_str(
+    bool skip_zeros = true ///< [in] 0スキップフラグ
+  ) const;
 
   /// @brief 内容を8進数で表した文字列を返す．
   /// @return 内容を8進数で表した文字列を返す．
   ///
   /// skip_zeros が true なら上位は0は出力しない．
   string
-  oct_str(bool skip_zeros = true) const; ///< [in] 0スキップフラグ
+  oct_str(
+    bool skip_zeros = true ///< [in] 0スキップフラグ
+  ) const;
 
   /// @brief 内容を16進数で表した文字列を返す．
   /// @return 内容を16進数で表した文字列を返す．
   ///
   /// skip_zeros が true なら上位は0は出力しない．
   string
-  hex_str(bool skip_zeros = true) const; ///< [in] 0スキップフラグ
+  hex_str(
+    bool skip_zeros = true ///< [in] 0スキップフラグ
+  ) const;
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -826,8 +900,10 @@ public:
   /// @return src1 < src2 の時 true を返す．
   static
   bool
-  lt_base(const BitVector& src1,  ///< [in] 第1オペランド
-	  const BitVector& src2); ///< [in] 第2オペランド
+  lt_base(
+    const BitVector& src1, ///< [in] 第1オペランド
+    const BitVector& src2  ///< [in] 第2オペランド
+  );
 
   /// @brief 等価比較演算用の共通関数
   /// @return 等しいと見なすとき true を返す．
@@ -838,9 +914,11 @@ public:
   ///   - 3 x と z をワイルドカードと見なす等価比較
   static
   bool
-  eq_base(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2, ///< [in] 第2オペランド
-	  int mode);             ///< [in] モード
+  eq_base(
+    const BitVector& src1, ///< [in] 第1オペランド
+    const BitVector& src2, ///< [in] 第2オペランド
+    int mode               ///< [in] モード
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -950,21 +1028,6 @@ private:
   dec_str_sub(const uword* val,
 	      int n);
 
-  /// @brief ビット長からブロック数を得る．
-  static
-  SizeType
-  block(SizeType size);
-
-  /// @brief ビット長から最後のブロックのシフト数を得る．
-  static
-  SizeType
-  shift(SizeType size);
-
-  /// @brief size からマスクパタンを作る
-  static
-  uword
-  mask(SizeType size);
-
 
 private:
   //////////////////////////////////////////////////////////////////////
@@ -972,11 +1035,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ビット長
-  SizeType mSize;
+  SizeType mSize{0U};
 
   // sized, signed, base をパックした変数
   // base は 2ビットを使って 2, 8, 10, 16 を符号化する．
-  bitset<4> mFlags;
+  bitset<4> mFlags{0};
 
   // 値を保持するベクタ
   // サイズは block(mSize)
@@ -985,7 +1048,7 @@ private:
   unique_ptr<uword> mVal1;
 
 
-private:
+public:
   //////////////////////////////////////////////////////////////////////
   // 定数
   //////////////////////////////////////////////////////////////////////
@@ -993,14 +1056,6 @@ private:
   /// @brief uword のビット長
   static
   const SizeType BLOCK_SIZE = sizeof(uword) * 8;
-
-  /// @brief すべてが0のパタン
-  static
-  const uword ALL0 = 0x0000000000000000;
-
-  /// @brief すべてが1のパタン
-  static
-  const uword ALL1 = 0xFFFFFFFFFFFFFFFF;
 
 };
 
@@ -1027,7 +1082,9 @@ private:
 /// 符号の有無は変わらない．
 inline
 BitVector
-operator-(const BitVector& src) ///< [in] オペランド
+operator-(
+  const BitVector& src ///< [in] オペランド
+)
 {
   return BitVector(src).complement();
 }
@@ -1037,8 +1094,10 @@ operator-(const BitVector& src) ///< [in] オペランド
 /// @return src1 + src2 を返す
 inline
 BitVector
-operator+(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator+(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) += src2;
 }
@@ -1048,8 +1107,10 @@ operator+(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 - src2 を返す
 inline
 BitVector
-operator-(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator-(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) -= src2;
 }
@@ -1059,8 +1120,10 @@ operator-(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 * src2 を返す
 inline
 BitVector
-operator*(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator*(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) *= src2;
 }
@@ -1070,8 +1133,10 @@ operator*(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 / src2 を返す
 inline
 BitVector
-operator/(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator/(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) /= src2;
 }
@@ -1081,8 +1146,10 @@ operator/(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 % src2 を返す
 inline
 BitVector
-operator%(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator%(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) %= src2;
 }
@@ -1092,8 +1159,10 @@ operator%(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 の src2 乗を返す
 inline
 BitVector
-power(const BitVector& src1, ///< [in] 第1オペランド
-      const BitVector& src2) ///< [in] 第2オペランド
+power(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1).power(src2);
 }
@@ -1124,15 +1193,19 @@ power(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval 0 src1 >= src2 の時
 /// @retval X 比較不能の時
 VlScalarVal
-lt(const BitVector& src1,  ///< [in] 第1オペランド
-   const BitVector& src2); ///< [in] 第2オペランド
+lt(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @param[in] src1, src2 オペランド
 /// @return src1 < src2 を返す
 bool
-operator<(const BitVector& src1,  ///< [in] 第1オペランド
-	  const BitVector& src2); ///< [in] 第2オペランド
+operator<(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @brief greater than 比較演算
@@ -1141,8 +1214,10 @@ operator<(const BitVector& src1,  ///< [in] 第1オペランド
 /// @retval X 比較不能の時
 inline
 VlScalarVal
-gt(const BitVector& src1, ///< [in] 第1オペランド
-   const BitVector& src2) ///< [in] 第2オペランド
+gt(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return lt(src2, src1);
 }
@@ -1152,8 +1227,10 @@ gt(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 > src2 を返す
 inline
 bool
-operator>(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator>(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return operator<(src2, src1);
 }
@@ -1165,8 +1242,10 @@ operator>(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval X 比較不能の時
 inline
 VlScalarVal
-le(const BitVector& src1, ///< [in] 第1オペランド
-   const BitVector& src2) ///< [in] 第2オペランド
+le(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return !lt(src2, src1);
 }
@@ -1176,8 +1255,10 @@ le(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 <= src2 を返す
 inline
 bool
-operator<=(const BitVector& src1, ///< [in] 第1オペランド
-	   const BitVector& src2) ///< [in] 第2オペランド
+operator<=(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return !operator<(src2, src1);
 }
@@ -1189,8 +1270,10 @@ operator<=(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval X 比較不能の時
 inline
 VlScalarVal
-ge(const BitVector& src1, ///< [in] 第1オペランド
-   const BitVector& src2) ///< [in] 第2オペランド
+ge(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return !lt(src1, src2);
 }
@@ -1200,8 +1283,10 @@ ge(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 >= src2 を返す
 inline
 bool
-operator>=(const BitVector& src1, ///< [in] 第1オペランド
-	   const BitVector& src2) ///< [in] 第2オペランド
+operator>=(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return !operator<(src1, src2);
 }
@@ -1228,29 +1313,37 @@ operator>=(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval 0 src1 != src2 の時
 /// @retval X 比較不能の時
 VlScalarVal
-eq(const BitVector& src1,  ///< [in] 第1オペランド
-   const BitVector& src2); ///< [in] 第2オペランド
+eq(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @brief x が 0 および 1 と等価と見なせるとした場合の等価比較演算子
 /// @return 等価と見なせるとき true を返す．
 bool
-eq_with_x(const BitVector& src1,  ///< [in] 第1オペランド
-	  const BitVector& src2); ///< [in] 第2オペランド
+eq_with_x(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @brief x および z が 0 および 1 と等価と見なせるとした場合の等価比較演算子
 /// @return 等価と見なせるとき true を返す．
 bool
-eq_with_xz(const BitVector& src1,  ///< [in] 第1オペランド
-	   const BitVector& src2); ///< [in] 第2オペランド
+eq_with_xz(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @brief 等価比較演算子 (bool)
 /// @return 1 src1 == src2 を返す．
 bool
-operator==(const BitVector& src1,  ///< [in] 第1オペランド
-	   const BitVector& src2); ///< [in] 第2オペランド
+operator==(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @brief 非等価比較演算子
@@ -1259,8 +1352,10 @@ operator==(const BitVector& src1,  ///< [in] 第1オペランド
 /// @retval kVpiScalarX 比較不能の時
 inline
 VlScalarVal
-ne(const BitVector& src1, ///< [in] 第1オペランド
-   const BitVector& src2) ///< [in] 第2オペランド
+ne(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return !eq(src1, src2);
 }
@@ -1270,8 +1365,10 @@ ne(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval 1 src1 != src2 を返す．
 inline
 bool
-operator!=(const BitVector& src1, ///< [in] 第1オペランド
-	   const BitVector& src2) ///< [in] 第2オペランド
+operator!=(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return !operator==(src1, src2);
 }
@@ -1299,7 +1396,9 @@ operator!=(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval 1 src が偽の時
 /// @retval X 計算不能の時
 VlScalarVal
-operator!(const BitVector& src); ///< [in] オペランド
+operator!(
+  const BitVector& src ///< [in] オペランド
+);
 
 /// @relates BitVector
 /// @brief AND演算
@@ -1307,8 +1406,10 @@ operator!(const BitVector& src); ///< [in] オペランド
 /// @retval 1 src1 と src2 がともに真の時
 /// @retval X 計算不能の時
 VlScalarVal
-operator&&(const BitVector& src1, ///< [in] 第1オペランド
-	   const BitVector& src2); ///< [in] 第2オペランド
+operator&&(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @relates BitVector
 /// @brief OR演算
@@ -1316,8 +1417,10 @@ operator&&(const BitVector& src1, ///< [in] 第1オペランド
 /// @retval 1 src1 と src2 のどちらか一方が真の時
 /// @retval X 計算不能の時
 VlScalarVal
-operator||(const BitVector& src1,  ///< [in] 第1オペランド
-	   const BitVector& src2); ///< [in] 第2オペランド
+operator||(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -1344,7 +1447,9 @@ operator||(const BitVector& src1,  ///< [in] 第1オペランド
 /// @return src のビットごとに否定したもの
 inline
 BitVector
-operator~(const BitVector& src) ///< [in] オペランド
+operator~(
+  const BitVector& src ///< [in] オペランド
+)
 {
   return BitVector(src).negate();
 }
@@ -1354,8 +1459,10 @@ operator~(const BitVector& src) ///< [in] オペランド
 /// @return src1 と src2 をビットごとに AND したもの
 inline
 BitVector
-operator&(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator&(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) &= src2;
 }
@@ -1365,8 +1472,10 @@ operator&(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 と src2 をビットごとに OR したもの
 inline
 BitVector
-operator|(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator|(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) |= src2;
 }
@@ -1376,8 +1485,10 @@ operator|(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 と src2 をビットごとに XOR したもの
 inline
 BitVector
-operator^(const BitVector& src1, ///< [in] 第1オペランド
-	  const BitVector& src2) ///< [in] 第2オペランド
+operator^(
+  const BitVector& src1, ///< [in] 第1オペランド
+  const BitVector& src2  ///< [in] 第2オペランド
+)
 {
   return BitVector(src1) ^= src2;
 }
@@ -1399,8 +1510,10 @@ operator^(const BitVector& src1, ///< [in] 第1オペランド
 /// @return src1 を src2 だけ論理左シフトしたもの
 inline
 BitVector
-operator<<(const BitVector& src1, ///< [in] 元の値
-	   const BitVector& src2) ///< [in] シフト量 (BitVector)
+operator<<(
+  const BitVector& src1, ///< [in] 元の値
+  const BitVector& src2  ///< [in] シフト量 (BitVector)
+)
 {
   return BitVector(src1) <<= src2;
 }
@@ -1410,8 +1523,10 @@ operator<<(const BitVector& src1, ///< [in] 元の値
 /// @return src1 を src2 だけ論理左シフトしたもの
 inline
 BitVector
-operator<<(const BitVector& src1, ///< [in] 元の値
-	   int src2)              ///< [in] シフト量 (int)
+operator<<(
+  const BitVector& src1, ///< [in] 元の値
+  int src2               ///< [in] シフト量 (int)
+)
 {
   return BitVector(src1) <<= src2;
 }
@@ -1421,8 +1536,10 @@ operator<<(const BitVector& src1, ///< [in] 元の値
 /// @return src1 を src2 だけ論理右シフトしたもの
 inline
 BitVector
-operator>>(const BitVector& src1, ///< [in] 元の値
-	   const BitVector& src2) ///< [in] シフト量 (BitVector)
+operator>>(
+  const BitVector& src1, ///< [in] 元の値
+  const BitVector& src2 ///< [in] シフト量 (BitVector)
+)
 {
   return BitVector(src1) >>= src2;
 }
@@ -1432,8 +1549,10 @@ operator>>(const BitVector& src1, ///< [in] 元の値
 /// @return src1 を src2 だけ論理右シフトしたもの
 inline
 BitVector
-operator>>(const BitVector& src1,  ///< [in] 元の値
-	   int src2) 		   ///< [in] シフト量 (int)
+operator>>(
+  const BitVector& src1,  ///< [in] 元の値
+  int src2  		  ///< [in] シフト量 (int)
+)
 {
   return BitVector(src1) >>= src2;
 }
@@ -1444,8 +1563,10 @@ operator>>(const BitVector& src1,  ///< [in] 元の値
 /// 算術左シフト
 inline
 BitVector
-alshift(const BitVector& src1, ///< [in] 元の値
-	const BitVector& src2) ///< [in] シフト量 (BitVector)
+alshift(
+  const BitVector& src1, ///< [in] 元の値
+  const BitVector& src2  ///< [in] シフト量 (BitVector)
+)
 {
   // 実は論理左シフトそのもの
   return operator<<(src1, src2);
@@ -1456,8 +1577,10 @@ alshift(const BitVector& src1, ///< [in] 元の値
 /// @return src1 を src2 だけ算術左シフトしたもの
 inline
 BitVector
-alshift(const BitVector& src1, ///< [in] 元の値
-	int src2) 	       ///< [in] シフト量 (int)
+alshift(
+  const BitVector& src1, ///< [in] 元の値
+  int src2   	         ///< [in] シフト量 (int)
+)
 {
   // 実は論理左シフトそのもの
   return operator<<(src1, src2);
@@ -1468,8 +1591,10 @@ alshift(const BitVector& src1, ///< [in] 元の値
 /// @return src1 を src2 だけ算術右シフトしたもの
 inline
 BitVector
-arshift(const BitVector& src1, ///< [in] 元の値
-	const BitVector& src2) ///< [in] シフト量 (BitVector)
+arshift(
+  const BitVector& src1, ///< [in] 元の値
+  const BitVector& src2  ///< [in] シフト量 (BitVector)
+)
 {
   return BitVector(src1).arshift(src2);
 }
@@ -1479,8 +1604,10 @@ arshift(const BitVector& src1, ///< [in] 元の値
 /// @return src1 を src2 だけ算術右シフトしたもの
 inline
 BitVector
-arshift(const BitVector& src1, ///< [in] 元の値
-	int src2) 	       ///< [in] シフト量 (int)
+arshift(
+  const BitVector& src1, ///< [in] 元の値
+  int src2  	         ///< [in] シフト量 (int)
+)
 {
   return BitVector(src1).arshift(src2);
 }
@@ -1512,17 +1639,21 @@ arshift(const BitVector& src1, ///< [in] 元の値
 /// @brief 条件演算
 /// @return 演算結果
 BitVector
-ite(const BitVector& src1,  ///< [in] 条件
-    const BitVector& src2,  ///< [in] 条件が真の時に選ばれる値
-    const BitVector& src3); ///< [in] 条件が偽の時に選ばれる値
+ite(
+  const BitVector& src1, ///< [in] 条件
+  const BitVector& src2, ///< [in] 条件が真の時に選ばれる値
+  const BitVector& src3  ///< [in] 条件が偽の時に選ばれる値
+);
 
 /// @relates BitVector
 /// @brief 条件演算
 /// @return 演算結果
 BitVector
-ite(const VlScalarVal& src1, ///< [in] 条件
-    const BitVector& src2,   ///< [in] 条件が真の時に選ばれる値
-    const BitVector& src3);  ///< [in] 条件が偽の時に選ばれる値
+ite(
+  const VlScalarVal& src1, ///< [in] 条件
+  const BitVector& src2,   ///< [in] 条件が真の時に選ばれる値
+  const BitVector& src3    ///< [in] 条件が偽の時に選ばれる値
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -1542,14 +1673,18 @@ ite(const VlScalarVal& src1, ///< [in] 条件
 /// @brief 連結演算
 /// @return 連結した結果を返す．
 BitVector
-concat(const vector<BitVector>& src_list); ///< [in] 連結する値のリスト
+concat(
+  const vector<BitVector>& src_list ///< [in] 連結する値のリスト
+);
 
 /// @relates BitVector
 /// @brief 繰り返し連結演算
 /// @return src_list の内容を rep 回繰り返して連結したもの
 BitVector
-multi_concat(const BitVector& rep,               ///< [in] 繰り返し数
-	     const vector<BitVector>& src_list); ///< [in] 連結する値のリスト
+multi_concat(
+  const BitVector& rep,             ///< [in] 繰り返し数
+  const vector<BitVector>& src_list ///< [in] 連結する値のリスト
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -1564,404 +1699,16 @@ multi_concat(const BitVector& rep,               ///< [in] 繰り返し数
 /// @return s を返す．
 inline
 ostream&
-operator<<(ostream& s,              ///< [in] 出力ストリーム
-	   const BitVector& bitval) ///< [in] 出力対象のビットベクタ
+operator<<(
+  ostream& s,             ///< [in] 出力ストリーム
+  const BitVector& bitval ///< [in] 出力対象のビットベクタ
+)
 {
   return s << bitval.verilog_string();
 }
 
 /// @}
 //////////////////////////////////////////////////////////////////////
-
-#if 0
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// 単項のマイナス(complement)演算子
-inline
-BitVector
-operator-(const BitVector& src)
-
-// 加算
-inline
-BitVector
-operator+(const BitVector& src1,
-	  const BitVector& src2)
-
-// 減算
-inline
-BitVector
-operator-(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return BitVector(src1) -= src2;
-}
-
-// 乗算
-inline
-BitVector
-operator*(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return BitVector(src1) *= src2;
-}
-
-// 除算
-inline
-BitVector
-operator/(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return BitVector(src1) /= src2;
-}
-
-// 剰余算
-inline
-BitVector
-operator%(const BitVector& src1,
-	  const BitVector& src2)
-
-// 巾乗
-inline
-BitVector
-power(const BitVector& src1,
-      const BitVector& src2)
-{
-  return BitVector(src1).power(src2);
-}
-
-// greater than 比較演算
-inline
-VlScalarVal
-gt(const BitVector& src1,
-   const BitVector& src2)
-{
-  return lt(src2, src1);
-}
-
-// greater than 比較演算 (bool)
-inline
-bool
-operator>(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return operator<(src2, src1);
-}
-
-// less than or equal 比較演算
-inline
-VlScalarVal
-le(const BitVector& src1,
-   const BitVector& src2)
-{
-  return !lt(src2, src1);
-}
-
-// less than or equal 比較演算 (bool)
-inline
-bool
-operator<=(const BitVector& src1,
-	   const BitVector& src2)
-{
-  return !operator<(src2, src1);
-}
-
-// greater than or equal 比較演算
-inline
-VlScalarVal
-ge(const BitVector& src1,
-   const BitVector& src2)
-{
-  return !lt(src1, src2);
-}
-
-// greater than or equal 比較演算 (bool)
-inline
-bool
-operator>=(const BitVector& src1,
-	   const BitVector& src2)
-{
-  return !operator<(src1, src2);
-}
-
-// 非等価比較演算子
-inline
-VlScalarVal
-ne(const BitVector& src1,
-   const BitVector& src2)
-{
-  return !eq(src1, src2);
-}
-
-// 非等価比較演算子 (bool)
-inline
-bool
-operator!=(const BitVector& src1,
-	   const BitVector& src2)
-{
-  return !operator==(src1, src2);
-}
-
-// 論理否定
-inline
-BitVector
-operator~(const BitVector& src)
-{
-  return BitVector(src).negate();
-}
-
-// 論理積
-inline
-BitVector
-operator&(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return BitVector(src1) &= src2;
-}
-
-// 論理和
-inline
-BitVector
-operator|(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return BitVector(src1) |= src2;
-}
-
-// 排他的論理和
-inline
-BitVector
-operator^(const BitVector& src1,
-	  const BitVector& src2)
-{
-  return BitVector(src1) ^= src2;
-}
-
-// 論理左シフト
-inline
-BitVector
-operator<<(const BitVector& src1,
-	   const BitVector& src2)
-{
-  return BitVector(src1) <<= src2;
-}
-
-// 論理左シフト src2 が int のバージョン
-inline
-BitVector
-operator<<(const BitVector& src1,
-	   int src2)
-{
-  return BitVector(src1) <<= src2;
-}
-
-// 論理右シフト
-inline
-BitVector
-operator>>(const BitVector& src1,
-	   const BitVector& src2)
-{
-  return BitVector(src1) >>= src2;
-}
-
-// 論理右シフト src2 が int のバージョン
-inline
-BitVector
-operator>>(const BitVector& src1,
-	   int src2)
-{
-  return BitVector(src1) >>= src2;
-}
-
-// 算術左シフトつき代入
-inline
-const BitVector&
-BitVector::alshift(const BitVector& src)
-{
-  // 実は論理左シフトそのもの
-  return operator<<=(src);
-}
-
-// 算術左シフトつき代入
-// src が int のバージョン
-inline
-const BitVector&
-BitVector::alshift(int src)
-{
-  // 実は論理左シフトそのもの
-  return operator<<=(src);
-}
-
-// 算術左シフト
-inline
-BitVector
-alshift(const BitVector& src1,
-	const BitVector& src2)
-{
-  // 実は論理左シフトそのもの
-  return operator<<(src1, src2);
-}
-
-// 算術左シフト src2 が int のバージョン
-inline
-BitVector
-alshift(const BitVector& src1,
-	int src2)
-{
-  // 実は論理左シフトそのもの
-  return operator<<(src1, src2);
-}
-
-// 算術右シフト
-inline
-BitVector
-arshift(const BitVector& src1,
-	const BitVector& src2)
-{
-  return BitVector(src1).arshift(src2);
-}
-
-// 算術右シフト src2 が int のバージョン
-inline
-BitVector
-arshift(const BitVector& src1,
-	int src2)
-{
-  return BitVector(src1).arshift(src2);
-}
-
-// @brief 型を返す．
-inline
-VlValueType
-BitVector::value_type() const
-{
-  return VlValueType(is_signed(), is_sized(), size());
-}
-
-// サイズを返す．
-inline
-SizeType
-BitVector::size() const
-{
-  return mSize;
-}
-
-// 実際のサイズはともかくサイズの指定があるかどうかを返す．
-inline
-bool
-BitVector::is_sized() const
-{
-  return mFlags & 1;
-}
-
-// 符号付きの場合に true を返す
-inline
-bool
-BitVector::is_signed() const
-{
-  return (mFlags >> 1) & 1;
-}
-
-// 表示用の基数を得る．
-inline
-int
-BitVector::base() const
-{
-  return mFlags >> 2;
-}
-
-// 符合付きかつ負数の時に true を返す
-inline
-bool
-BitVector::is_negative() const
-{
-  return is_signed() && value(size() - 1).is_one();
-}
-
-// 32ビットの符合なし数に変換可能なら true を返す．
-// 具体的には size() が 32以下で x や z を含んでいないこと
-inline
-bool
-BitVector::is_uint32() const
-{
-  return (size() <= BLOCK_SIZE && !has_xz());
-}
-
-// 上の条件を満たしているときに ymuint32 に変換する．
-// 上の条件を満たしていないときの値は不定
-// (というか実際にどういう値を返すのかは見ればわかる)
-inline
-ymuint32
-BitVector::to_uint32() const
-{
-  return static_cast<ymuint32>(mVal1.get()[0]);
-}
-
-// int の数値に変換可能なら true を返す．
-// 具体的には size が BLOCK_SIZE 以下で x や z を含んでいないこと
-inline
-bool
-BitVector::is_int() const
-{
-  return (size() <= BLOCK_SIZE && !has_xz());
-}
-
-// 上の条件を満たしているときに int に変換する．
-// 上の条件を満たしていないときの値は不定
-// (というか実際にどういう値を返すのかは見ればわかる)
-inline
-int
-BitVector::to_int() const
-{
-  return static_cast<int>(mVal1.get()[0]);
-}
-
-// 1ビットのスカラー値に変換する．
-// 実際には LSB を返すだけ．
-inline
-VlScalarVal
-BitVector::to_scalar() const
-{
-  return value(0);
-}
-
-// 内容をブール値に変換する．
-inline
-bool
-BitVector::to_bool() const
-{
-  return to_logic().is_one();
-}
-
-// time 型に変換可能なら true を返す．
-// 具体的には size が 64 以下で x や z を含んでいないこと
-inline
-bool
-BitVector::is_time() const
-{
-  return (size() <= 64 && !has_xz());
-}
-
-// @brief 内容を time 型に変換する．
-inline
-VlTime
-BitVector::to_time() const
-{
-  PLI_UINT32 l = static_cast<PLI_UINT32>(mVal1.get()[0]);
-  PLI_UINT32 h = static_cast<PLI_UINT32>(mVal1.get()[1]);
-  return VlTime(l, h);
-}
-
-// bit-select 演算子
-inline
-VlScalarVal
-BitVector::bit_select_op(int bpos) const
-{
-  // 範囲外のチェックは value() でやっている．
-  return value(bpos);
-}
-#endif
 
 END_NAMESPACE_YM_VERILOG
 

@@ -3,9 +3,8 @@
 /// @brief VlMgr の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/VlMgr.h"
 
@@ -29,8 +28,8 @@ VlMgr::VlMgr() :
 
 // @brief デストラクタ
 VlMgr::~VlMgr()
-{
-}
+{ // PtMgr と ElbMgr の定義が必要なので
+} // ヘッダファイル中でインラインにはできない．
 
 // @brief 内容をクリアする．
 void

@@ -64,7 +64,8 @@ public:
   /// @brief イベント条件式を返す．
   virtual
   const VlExpr*
-  event(SizeType pos ///< [in] 位置番号 ( 0 <= pos < event_num() )
+  event(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < event_num() )
   ) const = 0;
 
 };

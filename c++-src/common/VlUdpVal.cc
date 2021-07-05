@@ -221,8 +221,8 @@ VlUdpVal::VlUdpVal(char symbol1,
 }
 
 // @brief 値を直接指定するコンストラクタ
-VlUdpVal::VlUdpVal(ymuint16 val) :
-  mData(val)
+VlUdpVal::VlUdpVal(ymuint16 val)
+  : mData(val)
 {
 }
 
@@ -256,8 +256,6 @@ VlUdpVal::is_composite_symbol() const
 
 // @brief ストリーム出力
 // @relates VlUdpVal
-// @param[in] s 出力先のストリーム
-// @param[in] val 値
 ostream&
 operator<<(ostream& s,
 	   const VlUdpVal& val)

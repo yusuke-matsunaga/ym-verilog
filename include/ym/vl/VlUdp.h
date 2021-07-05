@@ -46,7 +46,8 @@ public:
   /// @brief 入力の宣言要素を返す．
   virtual
   const VlIODecl*
-  input(SizeType pos ///< [in] 入力番号 ( 0 <= pos < port_num() - 1 )
+  input(
+    SizeType pos ///< [in] 入力番号 ( 0 <= pos < port_num() - 1 )
   ) const = 0;
 
   /// @brief 出力の宣言要素を返す．
@@ -78,7 +79,8 @@ public:
   /// @brief table entry を返す．
   virtual
   const VlTableEntry*
-  table_entry(SizeType pos ///< [in] 行番号
+  table_entry(
+    SizeType pos ///< [in] 行番号
   ) const = 0;
 
 };
@@ -94,7 +96,7 @@ class VlTableEntry :
 public:
 
   /// @brief デストラクタ
-  ~VlTableEntry() { }
+  ~VlTableEntry() = default;
 
 
 public:

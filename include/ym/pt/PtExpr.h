@@ -64,8 +64,9 @@ public:
   /// @return pos 番目のオペランド
   virtual
   const PtExpr*
-  operand(SizeType pos) ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
-    const = 0;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const = 0;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
@@ -83,8 +84,9 @@ public:
   /// @brief インデックスの取得
   virtual
   const PtExpr*
-  index(SizeType pos) ///< [in] 位置番号 ( 0 <= pos < index_num() )
-    const = 0;
+  index(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < index_num() )
+  ) const = 0;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード

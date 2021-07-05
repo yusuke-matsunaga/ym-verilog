@@ -43,7 +43,8 @@ public:
   /// @brief 範囲の取得
   virtual
   const VlRange*
-  range(SizeType pos ///< [in] 位置 ( 0 <= pos < dimension() )
+  range(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < dimension() )
   ) const = 0;
 
   /// @brief 配列の要素数の取得
@@ -56,8 +57,9 @@ public:
   /// @retval false index が範囲外だった．
   virtual
   bool
-  calc_array_offset(int index,       ///< [in] インデックス
-		    SizeType& offset ///< [out] index に対するオフセット値
+  calc_array_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index に対するオフセット値
   ) const = 0;
 
   /// @brief 他次元配列の場合にインデックスのリストからオフセットを計算する．
@@ -65,8 +67,9 @@ public:
   /// @retval false index_list のいずれかの値が範囲外だった．
   virtual
   bool
-  calc_array_offset(const vector<int>& index_list, ///< [in] インデックスのリスト
-		    SizeType& offset               ///< [out] index_list に対するオフセット値
+  calc_array_offset(
+    const vector<int>& index_list, ///< [in] インデックスのリスト
+    SizeType& offset               ///< [out] index_list に対するオフセット値
   ) const = 0;
 
 };

@@ -37,7 +37,8 @@ public:
   /// @brief 値を返す．
   virtual
   const VlExpr*
-  expr(SizeType pos ///< [in] 位置番号 ( 0 <= pos < elem_num() )
+  expr(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < elem_num() )
   ) const = 0;
 
   /// @brief Verilog-HDL の文字列を得る．

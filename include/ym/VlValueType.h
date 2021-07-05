@@ -36,9 +36,11 @@ public:
   VlValueType() = default;
 
   /// @brief 内容を指定するコンストラクタ
-  VlValueType(bool has_sign, ///< [in] 符号の有無
-	      bool has_size, ///< [in] サイズ指定の有無
-	      SizeType size) ///< [in] サイズ(ビット幅)
+  VlValueType(
+    bool has_sign, ///< [in] 符号の有無
+    bool has_size, ///< [in] サイズ指定の有無
+    SizeType size  ///< [in] サイズ(ビット幅)
+  )
   {
     mData = kSignMask * has_sign |
       kSizeMask * has_size |
@@ -69,65 +71,43 @@ public:
 
   /// @brief 型の指定がない時に true を返す．
   bool
-  is_no_type() const
-  {
-    return (mData & (kBvMask | kRealMask)) == 0U;
-  }
+  is_no_type() const { return (mData & (kBvMask | kRealMask)) == 0U; }
 
   /// @brief 整数型の時に true を返す．
   bool
-  is_int_type() const
-  {
-    return mData == kIntData;
-  }
+  is_int_type() const { return mData == kIntData; }
 
   /// @brief time 型の時に true を返す．
   bool
-  is_time_type() const
-  {
-    return mData == kTimeData;
-  }
+  is_time_type() const { return mData == kTimeData; }
 
   /// @brief ビットベクタ型の時に true を返す．
   ///
   /// 整数型/time型も含む．
   bool
-  is_bitvector_type() const
-  {
-    return static_cast<bool>((mData >> kBvBit) & 1U);
-  }
+  is_bitvector_type() const { return static_cast<bool>((mData >> kBvBit) & 1U); }
 
   /// @brief 実数型の時に true を返す．
   bool
-  is_real_type() const
-  {
-    return mData == kRealData;
-  }
+  is_real_type() const { return mData == kRealData; }
 
   /// @brief 符号付きの時に true を返す．
   bool
-  is_signed() const
-  {
-    return static_cast<bool>((mData >> kSignBit) & 1U);
-  }
+  is_signed() const { return static_cast<bool>((mData >> kSignBit) & 1U); }
 
   /// @brief サイズ指定付きの時に true を返す．
   bool
-  is_sized() const
-  {
-    return static_cast<bool>((mData >> kSizeBit) & 1U);
-  }
+  is_sized() const { return static_cast<bool>((mData >> kSizeBit) & 1U); }
 
   /// @brief サイズを返す．
   SizeType
-  size() const
-  {
-    return (mData >> kSizeShift);
-  }
+  size() const { return (mData >> kSizeShift); }
 
   /// @brief 等価比較演算子
   bool
-  operator==(const VlValueType& right) const
+  operator==(
+    const VlValueType& right ///< [in] オペランド
+  ) const
   {
     return mData == right.mData;
   }
@@ -139,8 +119,9 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を直接指定するコンストラクタ
-  VlValueType(SizeType data) ///< [in] 内部の値
-    : mData{data}
+  VlValueType(
+    SizeType data ///< [in] 内部の値
+  ) : mData{data}
   {
   }
 
@@ -215,8 +196,10 @@ private:
 /// @brief 非等価比較演算子
 inline
 bool
-operator!=(const VlValueType& left,  ///< [in] 第1オペランド
-	   const VlValueType& right) ///< [in] 第2オペランド
+operator!=(
+  const VlValueType& left, ///< [in] 第1オペランド
+  const VlValueType& right ///< [in] 第2オペランド
+)
 {
   return !left.operator==(right);
 }
@@ -225,8 +208,10 @@ operator!=(const VlValueType& left,  ///< [in] 第1オペランド
 /// @relates VlValueType
 inline
 ostream&
-operator<<(ostream& s,              ///< [in] 出力先のストリーム
-	   const VlValueType& type) ///< [in] 型
+operator<<(
+  ostream& s,             ///< [in] 出力先のストリーム
+  const VlValueType& type ///< [in] 型
+)
 {
   if ( type.is_no_type() ) {
     s << "NO TYPE";

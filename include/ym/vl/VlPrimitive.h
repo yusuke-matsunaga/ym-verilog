@@ -90,13 +90,15 @@ public:
   /// @brief 要素のプリミティブを返す．
   virtual
   const VlPrimitive*
-  elem_by_offset(SizeType offset ///< [in] 位置番号 ( 0 <= offset < elem_num() )
+  elem_by_offset(
+    SizeType offset ///< [in] 位置番号 ( 0 <= offset < elem_num() )
   ) const = 0;
 
   /// @brief 要素を返す．
   virtual
   const VlPrimitive*
-  elem_by_index(int index ///< [in] インデックス
+  elem_by_index(
+    int index ///< [in] インデックス
   ) const = 0;
 
 };
@@ -159,7 +161,8 @@ public:
   /// @brief ポート端子を得る．
   virtual
   const VlPrimTerm*
-  prim_term(SizeType pos ///< [in] 位置番号 ( 0 <= pos < port_num() )
+  prim_term(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < port_num() )
   ) const = 0;
 
 };
@@ -177,7 +180,7 @@ protected:
 
   /// @brief デストラクタ
   virtual
-  ~VlPrimTerm() {}
+  ~VlPrimTerm() = default;
 
 
 public:

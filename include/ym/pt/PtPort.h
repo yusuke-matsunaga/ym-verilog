@@ -47,13 +47,15 @@ public:
   /// @brief 内部のポート結線リストの取得
   virtual
   const PtExpr*
-  portref_elem(int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  portref_elem(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
   ) const = 0;
 
   /// @brief 内部ポート結線の方向の取得
   virtual
   VpiDir
-  portref_dir(int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  portref_dir(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
   ) const = 0;
 
 };

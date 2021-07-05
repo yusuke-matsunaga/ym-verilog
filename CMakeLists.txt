@@ -58,7 +58,10 @@ add_subdirectory ( test-programs )
 # ===================================================================
 
 set (common_SOURCES
-  c++-src/common/BitVector.cc
+  c++-src/common/BitVector_constructor.cc
+  c++-src/common/BitVector_misc.cc
+  c++-src/common/BitVector_op1.cc
+  c++-src/common/BitVector_op2.cc
   c++-src/common/VlMgr.cc
   c++-src/common/VlUdpVal.cc
   c++-src/common/VlValue.cc

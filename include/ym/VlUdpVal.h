@@ -38,11 +38,15 @@ public:
 
   /// @brief 値を表す文字からのコンストラクタ
   explicit
-  VlUdpVal(char symbol = '-'); ///< [in] 値を表すシンボル
+  VlUdpVal(
+    char symbol = '-' ///< [in] 値を表すシンボル
+  );
 
   /// @brief 値を表す2つの文字からのコンストラクタ
-  VlUdpVal(char symbol1,  ///< [in] 変化前のシンボル
-	   char symbol2); ///< [in] 変化後のシンボル
+  VlUdpVal(
+    char symbol1, ///< [in] 変化前のシンボル
+    char symbol2  ///< [in] 変化後のシンボル
+  );
 
   /// @brief デストラクタ
   ~VlUdpVal() = default;
@@ -73,14 +77,18 @@ public:
 
   /// @brief 等価比較
   bool
-  operator==(const VlUdpVal& right) const ///< [in] オペランド
+  operator==(
+    const VlUdpVal& right ///< [in] オペランド
+  ) const
   {
     return mData == right.mData;
   }
 
   /// @brief 包含性チェック
   bool
-  operator<=(const VlUdpVal& right) const ///< [in] オペランド
+  operator<=(
+    const VlUdpVal& right ///< [in] オペランド
+  ) const
   {
     return (mData & right.mData) == mData;
   }
@@ -108,8 +116,10 @@ private:
 /// @brief 非等価比較
 inline
 bool
-operator!=(const VlUdpVal& left,  ///< [in] 第1オペランド
-	   const VlUdpVal& right) ///< [in] 第2オペランド
+operator!=(
+  const VlUdpVal& left, ///< [in] 第1オペランド
+  const VlUdpVal& right ///< [in] 第2オペランド
+)
 {
   return !left.operator==(right);
 }
@@ -117,19 +127,21 @@ operator!=(const VlUdpVal& left,  ///< [in] 第1オペランド
 /// @brief 包含性チェック
 inline
 bool
-operator>=(const VlUdpVal& left,  ///< [in] 第1オペランド
-	   const VlUdpVal& right) ///< [in] 第2オペランド
+operator>=(
+  const VlUdpVal& left, ///< [in] 第1オペランド
+  const VlUdpVal& right ///< [in] 第2オペランド
+)
 {
   return right.operator<=(left);
 }
 
 /// @brief ストリーム出力
 /// @relates VlUdpVal
-/// @param[in] s 出力先のストリーム
-/// @param[in] val 値
 ostream&
-operator<<(ostream& s,
-	   const VlUdpVal& val);
+operator<<(
+  ostream& s,         ///< [in] 出力先のストリーム
+  const VlUdpVal& val ///< [in] 値
+);
 
 
 END_NAMESPACE_YM_VERILOG

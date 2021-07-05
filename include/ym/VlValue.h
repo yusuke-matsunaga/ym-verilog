@@ -116,8 +116,9 @@ public:
   /// @brief ビットベクタ型の値を返す．
   virtual
   BitVector
-  bitvector_value(const VlValueType& req_type) ///< [in] 要求されるデータの型
-    const = 0;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const = 0;
 
   /// @brief 自身の複製を返す．
   virtual
@@ -155,50 +156,74 @@ public:
   VlValue();
 
   /// @brief コピーコンストラクタ
-  VlValue(const VlValue& src); ///< [in] コピー元のオブジェクト
+  VlValue(
+    const VlValue& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief ムーブコンストラクタ
-  VlValue(VlValue&& src); ///< [in] ムーブ元のオブジェクト
+  VlValue(
+    VlValue&& src ///< [in] ムーブ元のオブジェクト
+  );
 
   /// @brief 整数値からのコンストラクタ
   explicit
-  VlValue(int val); ///< [in] 値
+  VlValue(
+    int val ///< [in] 値
+  );
 
   /// @brief ymuint からのコンストラクタ
   explicit
-  VlValue(unsigned int val); ///< [in] 値
+  VlValue(
+    unsigned int val ///< [in] 値
+  );
 
   /// @brief スカラー値からのコンストラクタ
   explicit
-  VlValue(const VlScalarVal& val); ///< [in] 値
+  VlValue(
+    const VlScalarVal& val ///< [in] 値
+  );
 
   /// @brief time からのコンストラクタ
   explicit
-  VlValue(VlTime val); ///< [in] 値
+  VlValue(
+    VlTime val ///< [in] 値
+  );
 
   /// @brief 実数からのコンストラクタ
   explicit
-  VlValue(double val); ///< [in] 値
+  VlValue(
+    double val ///< [in] 値
+  );
 
   /// @brief ビットベクタからのコンストラクタ
   explicit
-  VlValue(const BitVector& val); ///< [in] 値
+  VlValue(
+    const BitVector& val ///< [in] 値
+  );
 
   /// @brief 型変換を伴うコンストラクタ
-  VlValue(const VlValue& src,             ///< [in] コピー元のオブジェクト
-	  const VlValueType& value_type); ///< [in] 型
+  VlValue(
+    const VlValue& src,           ///< [in] コピー元のオブジェクト
+    const VlValueType& value_type ///< [in] 型
+  );
 
   /// @brief 型変換を伴うコンストラクタ
-  VlValue(VlValue&& src,                  ///< [in] ムーブ元のオブジェクト
-	  const VlValueType& value_type); ///< [in] 型
+  VlValue(
+    VlValue&& src,                ///< [in] ムーブ元のオブジェクト
+    const VlValueType& value_type ///< [in] 型
+  );
 
   /// @brief コピー代入演算子
   const VlValue&
-  operator=(const VlValue& src); ///< [in] コピー元のオブジェクト
+  operator=(
+    const VlValue& src ///< [in] コピー元のオブジェクト
+  );
 
   /// @brief ムーブ代入演算子
   const VlValue&
-  operator=(VlValue&& src); ///< [in] ムーブ元のオブジェクト
+  operator=(
+    VlValue&& src ///< [in] ムーブ元のオブジェクト
+  );
 
   /// @brief デストラクタ
   ~VlValue();
@@ -211,27 +236,39 @@ public:
 
   /// @brief 整数値を設定する．
   void
-  set(int val); ///< [in] 値
+  set(
+    int val ///< [in] 値
+  );
 
   /// @brief ymuint の値をセットする．
   void
-  set(unsigned int val);  ///< [in] 値
+  set(
+    unsigned int val  ///< [in] 値
+  );
 
   /// @brief スカラー値をセットする．
   void
-  set(const VlScalarVal& val); ///< [in] 値
+  set(
+    const VlScalarVal& val ///< [in] 値
+  );
 
   /// @brief time の値をセットする．
   void
-  set(VlTime val); ///< [in] 値
+  set(
+    VlTime val ///< [in] 値
+  );
 
   /// @brief 実数値をセットする．
   void
-  set(double val); ///< [in] 値
+  set(
+    double val ///< [in] 値
+  );
 
   /// @brief ビットベクタの値をセットする．
   void
-  set(const BitVector& val); ///< [in] 値
+  set(
+    const BitVector& val ///< [in] 値
+  );
 
 
 public:
@@ -402,8 +439,10 @@ public:
 
   /// @brief ビットベクタ型の値を返す．
   BitVector
-  bitvector_value(const VlValueType& req_type ///< [in] 要求されるデータの型
-		  = VlValueType()) const
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+    = VlValueType()
+  ) const
   {
     return mRep->bitvector_value(req_type);
   }
@@ -432,49 +471,63 @@ private:
 /// パタンとして2の補数を求めるだけで
 /// 符号の有無は変わらない．
 VlValue
-operator-(const VlValue& src); ///< [in] オペランド
+operator-(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @relates VlValue
 /// @brief 加算
 /// @return src1 + src2 を返す
 VlValue
-operator+(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator+(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 減算
 /// @return src1 - src2 を返す
 VlValue
-operator-(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator-(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 乗算
 /// @return src1 * src2 を返す
 VlValue
-operator*(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator*(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 除算
 /// @return src1 / src2 を返す
 VlValue
-operator/(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator/(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 剰余算
 /// @return src1 % src2 を返す
 VlValue
-operator%(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator%(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 巾乗
 /// @return src1 の src2 乗を返す
 VlValue
-power(const VlValue& src1,  ///< [in] 第1オペランド
-      const VlValue& src2); ///< [in] 第2オペランド
+power(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -502,15 +555,19 @@ power(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 0 src1 >= src2 の時
 /// @retval X 比較不能の時
 VlValue
-lt(const VlValue& src1,  ///< [in] 第1オペランド
-   const VlValue& src2); ///< [in] 第2オペランド
+lt(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief less than 比較演算 (bool)
 /// @return src1 < src2 を返す
 bool
-operator<(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator<(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief greater than 比較演算
@@ -518,15 +575,19 @@ operator<(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 0 src1 <= src2 の時
 /// @retval X 比較不能の時
 VlValue
-gt(const VlValue& src1,  ///< [in] 第1オペランド
-   const VlValue& src2); ///< [in] 第2オペランド
+gt(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief greater than 比較演算 (bool)
 /// @return src1 > src2 を返す
 bool
-operator>(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+operator>(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief less than or equal 比較演算
@@ -534,15 +595,19 @@ operator>(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 0 src1 > src2 の時
 /// @retval X 比較不能の時
 VlValue
-le(const VlValue& src1,  ///< [in] 第1オペランド
-   const VlValue& src2); ///< [in] 第2オペランド
+le(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief less than or equal 比較演算 (bool)
 /// @return src1 <= src2 を返す
 bool
-operator<=(const VlValue& src1,  ///< [in] 第1オペランド
-	   const VlValue& src2); ///< [in] 第2オペランド
+operator<=(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief greater than or equal 比較演算
@@ -550,15 +615,19 @@ operator<=(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 0 src1 < src2 の時
 /// @retval X 比較不能の時
 VlValue
-ge(const VlValue& src1,  ///< [in] 第1オペランド
-   const VlValue& src2); ///< [in] 第2オペランド
+ge(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief greater than or equal 比較演算 (bool)
 /// @return src1 >= src2 を返す
 bool
-operator>=(const VlValue& src1,  ///< [in] 第1オペランド
-	   const VlValue& src2); ///< [in] 第2オペランド
+operator>=(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -582,29 +651,37 @@ operator>=(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 0 src1 != src2 の時
 /// @retval X 比較不能の時
 VlValue
-eq(const VlValue& src1,  ///< [in] 第1オペランド
-   const VlValue& src2); ///< [in] 第2オペランド
+eq(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief x が 0 および 1 と等価と見なせるとした場合の等価比較演算子
 /// @return 等価と見なせるとき true を返す．
 VlValue
-eq_with_x(const VlValue& src1,  ///< [in] 第1オペランド
-	  const VlValue& src2); ///< [in] 第2オペランド
+eq_with_x(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief x および z が 0 および 1 と等価と見なせるとした場合の等価比較演算子
 /// @return 等価と見なせるとき true を返す．
 VlValue
-eq_with_xz(const VlValue& src1,  ///< [in] 第1オペランド
-	   const VlValue& src2); ///< [in] 第2オペランド
+eq_with_xz(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 等価比較演算子 (bool)
 /// @return 1 src1 == src2 を返す．
 bool
-operator==(const VlValue& src1,  ///< [in] 第1オペランド
-	   const VlValue& src2); ///< [in] 第2オペランド
+operator==(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 非等価比較演算子
@@ -612,15 +689,19 @@ operator==(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 0 src1 == src2 の時
 /// @retval X 比較不能の時
 VlValue
-ne(const VlValue& src1,  ///< [in] 第1オペランド
-   const VlValue& src2); ///< [in] 第2オペランド
+ne(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief 非等価比較演算子 (bool)
 /// @retval 1 src1 != src2 を返す．
 bool
-operator!=(const VlValue& src1,  ///< [in] 第1オペランド
-	   const VlValue& src2); ///< [in] 第2オペランド
+operator!=(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -645,7 +726,9 @@ operator!=(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 1 src が偽の時
 /// @retval X 計算不能の時
 VlValue
-log_not(const VlValue& src); ///< [in] オペランド
+log_not(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @relates VlValue
 /// @brief AND演算
@@ -653,8 +736,10 @@ log_not(const VlValue& src); ///< [in] オペランド
 /// @retval 1 src1 と src2 がともに真の時
 /// @retval X 計算不能の時
 VlValue
-log_and(const VlValue& src1,  ///< [in] 第1オペランド
-	const VlValue& src2); ///< [in] 第2オペランド
+log_and(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief OR演算
@@ -662,8 +747,10 @@ log_and(const VlValue& src1,  ///< [in] 第1オペランド
 /// @retval 1 src1 と src2 のどちらか一方が真の時
 /// @retval X 計算不能の時
 VlValue
-log_or(const VlValue& src1,  ///< [in] 第1オペランド
-       const VlValue& src2); ///< [in] 第2オペランド
+log_or(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -689,35 +776,45 @@ log_or(const VlValue& src1,  ///< [in] 第1オペランド
 /// @brief bitwise NOT 演算
 /// @return src のビットごとに否定したもの
 VlValue
-bit_negate(const VlValue& src); ///< [in] オペランド
+bit_negate(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @relates VlValue
 /// @brief bitwise AND 演算
 /// @return src1 と src2 をビットごとに AND したもの
 VlValue
-bit_and(const VlValue& src1,  ///< [in] 第1オペランド
-	const VlValue& src2); ///< [in] 第2オペランド
+bit_and(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief bitwise OR 演算
 /// @return src1 と src2 をビットごとに OR したもの
 VlValue
-bit_or(const VlValue& src1,  ///< [in] 第1オペランド
-       const VlValue& src2); ///< [in] 第2オペランド
+bit_or(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief bitwise XOR 演算
 /// @return src1 と src2 をビットごとに XOR したもの
 VlValue
-bit_xor(const VlValue& src1,  ///< [in] 第1オペランド
-	const VlValue& src2); ///< [in] 第2オペランド
+bit_xor(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @relates VlValue
 /// @brief bitwise XNOR 演算
 /// @return src1 と src2 をビットごとに XNOR したもの
 VlValue
-bit_xnor(const VlValue& src1,  ///< [in] 第1オペランド
-	 const VlValue& src2); ///< [in] 第2オペランド
+bit_xnor(
+  const VlValue& src1, ///< [in] 第1オペランド
+  const VlValue& src2  ///< [in] 第2オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -735,42 +832,54 @@ bit_xnor(const VlValue& src1,  ///< [in] 第1オペランド
 ///
 /// すべてのビットの AND を計算する
 VlValue
-reduction_and(const VlValue& src); ///< [in] オペランド
+reduction_and(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @brief リダクションOR
 /// @return 演算結果を返す．
 ///
 /// すべてのビットの OR を計算する
 VlValue
-reduction_or(const VlValue& src); ///< [in] オペランド
+reduction_or(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @brief リダクションXOR
 /// @return 演算結果を返す．
 ///
 /// すべてのビットの XOR を計算する
 VlValue
-reduction_xor(const VlValue& src); ///< [in] オペランド
+reduction_xor(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @brief リダクションNAND
 /// @return 演算結果を返す．
 ///
 /// すべてのビットの NAND を計算する
 VlValue
-reduction_nand(const VlValue& src); ///< [in] オペランド
+reduction_nand(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @brief リダクションNOR
 /// @return 演算結果を返す．
 ///
 /// すべてのビットの NOR を計算する
 VlValue
-reduction_nor(const VlValue& src); ///< [in] オペランド
+reduction_nor(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @brief リダクションXNOR
 /// @return 演算結果を返す．
 ///
 /// すべてのビットの XNOR を計算する
 VlValue
-reduction_xnor(const VlValue& src); ///< [in] オペランド
+reduction_xnor(
+  const VlValue& src ///< [in] オペランド
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -788,58 +897,74 @@ reduction_xnor(const VlValue& src); ///< [in] オペランド
 /// @brief 論理左シフト
 /// @return src1 を src2 だけ論理左シフトしたもの
 VlValue
-operator<<(const VlValue& src1,  ///< [in] 元の値
-	   const VlValue& src2); ///< [in] シフト量 (VlValue)
+operator<<(
+  const VlValue& src1, ///< [in] 元の値
+  const VlValue& src2  ///< [in] シフト量 (VlValue)
+);
 
 /// @relates VlValue
 /// @brief 論理左シフト
 /// @return src1 を src2 だけ論理左シフトしたもの
 VlValue
-operator<<(const VlValue& src1, ///< [in] 元の値
-	   ymuint32 src2);      ///< [in] シフト量 (ymuint32)
+operator<<(
+  const VlValue& src1, ///< [in] 元の値
+  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+);
 
 /// @relates VlValue
 /// @brief 論理右シフト
 /// @return src1 を src2 だけ論理右シフトしたもの
 VlValue
-operator>>(const VlValue& src1,  ///< [in] 元の値
-	   const VlValue& src2); ///< [in] シフト量 (VlValue)
+operator>>(
+  const VlValue& src1, ///< [in] 元の値
+  const VlValue& src2  ///< [in] シフト量 (VlValue)
+);
 
 /// @relates VlValue
 /// @brief 論理右シフト
 /// @return src1 を src2 だけ論理右シフトしたもの
 VlValue
-operator>>(const VlValue& src1, ///< [in] 元の値
-	   ymuint32 src2);      ///< [in] シフト量 (ymuint32)
+operator>>(
+  const VlValue& src1, ///< [in] 元の値
+  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+);
 
 /// @relates VlValue
 /// @brief 算術左シフト
 /// @return src1 を src2 だけ算術左シフトしたもの
 /// 算術左シフト
 VlValue
-alshift(const VlValue& src1,  ///< [in] 元の値
-	const VlValue& src2); ///< [in] シフト量 (VlValue)
+alshift(
+  const VlValue& src1, ///< [in] 元の値
+  const VlValue& src2  ///< [in] シフト量 (VlValue)
+);
 
 /// @relates VlValue
 /// @brief 算術左シフト
 /// @return src1 を src2 だけ算術左シフトしたもの
 VlValue
-alshift(const VlValue& src1, ///< [in] 元の値
-	ymuint32 src2);	     ///< [in] シフト量 (ymuint32)
+alshift(
+  const VlValue& src1, ///< [in] 元の値
+  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+);
 
 /// @relates VlValue
 /// @brief 算術右シフト
 /// @return src1 を src2 だけ算術右シフトしたもの
 VlValue
-arshift(const VlValue& src1,  ///< [in] 元の値
-	const VlValue& src2); ///< [in] シフト量 (VlValue)
+arshift(
+  const VlValue& src1, ///< [in] 元の値
+  const VlValue& src2  ///< [in] シフト量 (VlValue)
+);
 
 /// @relates VlValue
 /// @brief 算術右シフト
 /// @return src1 を src2 だけ算術右シフトしたもの
 VlValue
-arshift(const VlValue& src1, ///< [in] 元の値
-	ymuint32 src2);	     ///< [in] シフト量 (ymuint32)
+arshift(
+  const VlValue& src1, ///< [in] 元の値
+  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -868,17 +993,21 @@ arshift(const VlValue& src1, ///< [in] 元の値
 /// @brief 条件演算
 /// @return 演算結果
 VlValue
-ite(const VlValue& src1,  ///< [in] 条件
-    const VlValue& src2,  ///< [in] src1 が真の時に選ばれる値
-    const VlValue& src3); ///< [in] src1 が偽の時に選ばれる値
+ite(
+  const VlValue& src1, ///< [in] 条件
+  const VlValue& src2, ///< [in] src1 が真の時に選ばれる値
+  const VlValue& src3  ///< [in] src1 が偽の時に選ばれる値
+);
 
 /// @relates VlValue
 /// @brief 条件演算
 /// @return 演算結果
 VlValue
-ite(const VlScalarVal& src1, ///< [in] 条件
-    const VlValue& src2,     ///< [in] src1 が真の時に選ばれる値
-    const VlValue& src3);    ///< [in] src1 が偽の時に選ばれる値
+ite(
+  const VlScalarVal& src1, ///< [in] 条件
+  const VlValue& src2,     ///< [in] src1 が真の時に選ばれる値
+  const VlValue& src3      ///< [in] src1 が偽の時に選ばれる値
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////
@@ -898,13 +1027,17 @@ ite(const VlScalarVal& src1, ///< [in] 条件
 /// @brief 連結演算
 /// @return 連結した結果を返す．
 VlValue
-concat(const vector<VlValue>& src_list); ///< [in] 連結する値のリスト
+concat(
+  const vector<VlValue>& src_list ///< [in] 連結する値のリスト
+);
 
 /// @relates VlValue
 /// @brief 繰り返し連結演算
 /// @return src_list[1~n-1] の内容を src_list[0] 回繰り返して連結したもの
 VlValue
-multi_concat(const vector<VlValue>& src_list); ///< [in] 連結する値のリスト
+multi_concat(
+  const vector<VlValue>& src_list ///< [in] 連結する値のリスト
+);
 
 /// @}
 //////////////////////////////////////////////////////////////////////

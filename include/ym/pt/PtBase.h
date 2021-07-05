@@ -87,10 +87,11 @@ public:
   namebranch_num() const = 0;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   virtual
   const PtNameBranch*
-  namebranch(SizeType pos) const = 0;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const = 0;
 
   /// @brief 階層名を展開する．
   string

@@ -36,7 +36,9 @@ public:
   ///
   /// val が 0 の時のみ 0 に，それ以外は 1 にする．
   explicit
-  VlScalarVal(int val) ///< [in] 値
+  VlScalarVal(
+    int val ///< [in] 値
+  )
   {
     if ( val == 0 ) {
       mData = kScalar0;
@@ -50,7 +52,9 @@ public:
   ///
   /// val が 0 の時のみ 0 に，それ以外は 1 にする．
   explicit
-  VlScalarVal(unsigned int val) ///< [in] 値
+  VlScalarVal(
+    unsigned int val ///< [in] 値
+  )
   {
     if ( val == 0U ) {
       mData = kScalar0;
@@ -64,7 +68,9 @@ public:
   ///
   /// val が 0.0 の時のみ 0 に，それ以外は 1 にする．
   explicit
-  VlScalarVal(double val) ///< [in] 値
+  VlScalarVal(
+    double val ///< [in] 値
+  )
   {
     if ( val == 0.0 ) {
       mData = kScalar0;
@@ -78,7 +84,9 @@ public:
   ///
   /// val が false なら 0 に，true なら 1 にする．
   explicit
-  VlScalarVal(bool val) ///< [in] 値
+  VlScalarVal(
+    bool val ///< [in] 値
+  )
   {
     if ( val ) {
       mData = kScalar1;
@@ -227,7 +235,9 @@ public:
 
   /// @brief 選言(Conjunction)
   VlScalarVal
-  operator&&(const VlScalarVal& right) const ///< [in] オペランド
+  operator&&(
+    const VlScalarVal& right ///< [in] オペランド
+  ) const
   {
     if ( is_zero() || right.is_zero() ) {
       return VlScalarVal::zero();
@@ -240,7 +250,9 @@ public:
 
   /// @brief 連言(Disjunction)
   VlScalarVal
-  operator||(const VlScalarVal& right) const ///< [in] オペランド
+  operator||(
+    const VlScalarVal& right ///< [in] オペランド
+  ) const
   {
     if ( is_one() || right.is_one() ) {
       return VlScalarVal::one();
@@ -253,14 +265,18 @@ public:
 
   /// @brief 値が等しいときに true を返す．
   bool
-  operator==(const VlScalarVal& right) const ///< [in] オペランド
+  operator==(
+    const VlScalarVal& right ///< [in] オペランド
+  ) const
   {
     return mData == right.mData;
   }
 
   /// @brief 値が等しくないときに true を返す．
   bool
-  operator!=(const VlScalarVal& right) const ///< [in] オペランド
+  operator!=(
+    const VlScalarVal& right ///< [in] オペランド
+  ) const
   {
     return mData != right.mData;
   }
@@ -273,12 +289,14 @@ public:
 
   /// @brief 等価比較
   ///
-  /// どちらか一方に X/Z を含む時，答も X になる．
+  /// どちらか一方に X/Z を含む時，答も X になる．<br>
   /// eq と neq は相補的でないことに注意
   friend
   VlScalarVal
-  eq(const VlScalarVal& left,  ///< [in] 第1オペランド
-     const VlScalarVal& right) ///< [in] 第2オペランド
+  eq(
+    const VlScalarVal& left, ///< [in] 第1オペランド
+    const VlScalarVal& right ///< [in] 第2オペランド
+  )
   {
     if ( left.is_xz() || right.is_xz() ) {
       return VlScalarVal::x();
@@ -291,12 +309,14 @@ public:
 
   /// @brief  非等価比較
   ///
-  /// どちらか一方に X/Z を含む時，答も X になる．
+  /// どちらか一方に X/Z を含む時，答も X になる．<br>
   /// eq と neq は相補的でないことに注意
   friend
   VlScalarVal
-  neq(const VlScalarVal& left,  ///< [in] 第1オペランド
-      const VlScalarVal& right) ///< [in] 第2オペランド
+  neq(
+    const VlScalarVal& left, ///< [in] 第1オペランド
+    const VlScalarVal& right ///< [in] 第2オペランド
+  )
   {
     if ( left.is_xz() || right.is_xz() ) {
       return VlScalarVal::x();
@@ -315,10 +335,7 @@ private:
 
   /// @brief 値を直接指定するコンストラクタ
   explicit
-  VlScalarVal(ymuint8 val)
-    : mData{val}
-  {
-  }
+  VlScalarVal(ymuint8 val) : mData{val} { }
 
 
 private:
@@ -357,8 +374,10 @@ private:
 /// @relates VlScalarVal
 inline
 ostream&
-operator<<(ostream& s,             ///< [in] 出力先のストリーム
-	   const VlScalarVal& val) ///< [in] 値
+operator<<(
+  ostream& s,            ///< [in] 出力先のストリーム
+  const VlScalarVal& val ///< [in] 値
+)
 {
   if ( val.is_zero() ) {
     s << "0";

@@ -61,7 +61,8 @@ public:
   /// @retval false index が範囲外
   virtual
   bool
-  is_in(int index ///< [in] インデックス
+  is_in(
+    int index ///< [in] インデックス
   ) const = 0;
 
   /// @brief LSB からのオフセット値の取得
@@ -69,8 +70,9 @@ public:
   /// @retval false index が範囲外
   virtual
   bool
-  calc_offset(int index,       ///< [in] インデックス
-	      SizeType& offset ///< [out] index の LSB からのオフセット
+  calc_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index の LSB からのオフセット
   ) const = 0;
 
   /// @brief MSB からのオフセット値の取得
@@ -78,22 +80,25 @@ public:
   /// @retval false index が範囲外
   virtual
   bool
-  calc_roffset(int index,       ///< [in] インデックス
-	       SizeType& offset ///< [out] index の MSB からのオフセット
+  calc_roffset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index の MSB からのオフセット
   ) const = 0;
 
   /// @brief offset の逆関数
   /// @return offset に対応したインデックスを返す．
   virtual
   int
-  index(SizeType offset ///< [in] LSB からのオフセット値
+  index(
+    SizeType offset ///< [in] LSB からのオフセット値
   ) const = 0;
 
   /// @brief roffset の逆関数
   /// @return roffset に対応したインデックスを返す．
   virtual
   int
-  rindex(SizeType roffset ///< [in] MSB からのオフセット値
+  rindex(
+    SizeType roffset ///< [in] MSB からのオフセット値
   ) const = 0;
 
 };

@@ -40,7 +40,8 @@ public:
   /// @brief 入出力の取得
   virtual
   const VlIODecl*
-  io(SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
+  io(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
   ) const = 0;
 
   /// @brief 本体のステートメントを得る．

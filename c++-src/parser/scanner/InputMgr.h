@@ -5,15 +5,14 @@
 /// @brief InputMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2013-2014, 2019 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2013-2014, 2019, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 
 #include "ym/File.h"
 #include "ym/FileRegion.h"
-#include "ym/InputFileObj.h"
+#include "ym/Scanner.h"
 #include "ym/MsgHandler.h"
 #include "ym/StrBuff.h"
 
@@ -31,10 +30,10 @@ class InputMgr
 public:
 
   /// @brief コンストラクタ
-  InputMgr();
+  InputMgr() = default;
 
   /// @brief デストラクタ
-  ~InputMgr();
+  ~InputMgr() = default;
 
 
 public:
@@ -43,53 +42,64 @@ public:
   /// @{
 
   /// @brief 初期状態に戻す．
-  /// @note 読み込みの途中でこれを呼ぶと大変なことになる．
+  ///
+  /// 読み込みの途中でこれを呼ぶと大変なことになる．
   /// 普通は正常に読み終わったあとか, エラーの後で呼ぶ．
   void
   clear();
 
   /// @brief サーチパスリストを設定する．
-  /// @param[in] searchpath セットするサーチパス
   void
-  set_searchpath(const SearchPathList& searchpath = SearchPathList());
+  set_searchpath(
+    const SearchPathList& searchpath ///< [in] セットするサーチパス
+  )
+  {
+    mSearchPathList = searchpath;
+  }
 
   /// @brief 設定されているサーチパスを考慮して filename を探す．
-  /// @param[in] filename ファイル名
   /// @return 実際の絶対パス
-  /// @note PathName::is_valid() で結果がわかる．
+  ///
+  /// PathName::is_valid() で結果がわかる．
   PathName
-  search_file(const string& filename);
+  search_file(
+    const string& filename ///< [in] ファイル名
+  )
+  {
+    // filename が存在して読めなければならない．
+    return mSearchPathList.search(PathName(filename));
+  }
 
   /// @brief ファイルをオープンする．
-  /// @param[in] filename ファイル名
-  /// @param[in] parent_file インクルード元のファイル情報
   /// @retval true オープンに成功した．
   /// @retval false ファイルが開けなかった
   bool
-  open_file(const string& filename,
-	    const FileLoc& parent_file = FileLoc());
+  open_file(
+    const string& filename,                ///< [in] ファイル名
+    const FileLoc& parent_file = FileLoc() ///< [in] インクルード元のファイル情報
+  );
 
   /// @brief ファイルのオープン済チェック
-  /// @param[in] filename チェックするファイル名
   /// @retval true name という名のファイルがオープンされている．
   /// @retval false name というなのファイルはオープンされていない．
   bool
-  check_file(const char* filename) const;
+  check_file(
+    const char* filename ///< [in] チェックするファイル名
+  ) const;
 
   /// @brief 現在のファイル位置を強制的に書き換える．
-  /// @param[in] new_filename 新しいファイル名
-  /// @param[in] line     新しい行番号
-  /// @param[in] level
-  ///           - 0 インクルード関係のレベル変化無し
-  ///           - 1 新しいファイルはインクルードされたファイル
-  ///           - 2 新しいファイルはインクルードもとのファイル
   void
-  set_file_loc(const char* new_filename,
-	       int line,
-	       int level);
+  set_file_loc(
+    const char* new_filename, ///< [in] 新しいファイル名
+    int line,                 ///< [in] 新しい行番号
+    int level                 ///< [in] インクルードレベル
+                              ///<   - 0 インクルード関係のレベル変化無し
+                              ///<   - 1 新しいファイルはインクルードされたファイル
+                              ///<   - 2 新しいファイルはインクルードもとのファイル
+  );
 
   /// @brief 現在のファイルを返す．
-  InputFileObj&
+  Scanner&
   cur_file() const;
 
   /// @brief 現在のファイル名を返す．
@@ -114,25 +124,25 @@ public:
   ///
   /// 実際には peek(); acept() と等価
   int
-  get();
+  get() { return cur_file().get(); }
 
   /// @brief 次の文字を読み出す．
   ///
   /// ファイル位置の情報等は変わらない
   int
-  peek();
+  peek() { return cur_file().peek(); }
 
   /// @brief 直前の peek() を確定させる．
   void
-  accept();
+  accept() { cur_file().accept(); }
 
   /// @brief ファイルの末尾の時にtrue を返す．
   bool
-  is_eof() const;
+  is_eof() const { return cur_file().is_eof(); }
 
   /// @brief 現在の位置を返す．
   FileLoc
-  cur_loc() const;
+  cur_loc() const { return cur_file().cur_pos(); }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -155,8 +165,8 @@ private:
   // ファイルストリームのスタック
   vector<ifstream> mFsStack;
 
-  // ファイル情報のスタック
-  vector<unique_ptr<InputFileObj>> mFileStack;
+  // ファイルごとのスキャナーのスタック
+  vector<unique_ptr<Scanner>> mFileStack;
 
 };
 

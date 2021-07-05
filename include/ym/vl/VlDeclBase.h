@@ -95,8 +95,9 @@ public:
   /// @retval false インデックスが範囲外の時
   virtual
   bool
-  calc_bit_offset(int index,       ///< [in] インデックス
-		  SizeType& offset ///< [out] インデックスに対するオフセット値
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
   ) const = 0;
 
   /// @brief データ型の取得

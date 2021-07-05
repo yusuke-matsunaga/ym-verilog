@@ -28,8 +28,10 @@ public:
   VlTime() = default;
 
   /// @brief 2つの値を指定するコンストラクタ
-  VlTime(PLI_UINT32 l, ///< [in] 下位32ビットの値
-	 PLI_UINT32 h) ///< [in] 上位32ビットの値
+  VlTime(
+    PLI_UINT32 l, ///< [in] 下位32ビットの値
+    PLI_UINT32 h  ///< [in] 上位32ビットの値
+  )
   {
     ymuint64 tmp = h;
     mValue = (tmp << 32) | l;
@@ -37,30 +39,37 @@ public:
 
   /// @brief 符号なし整数からの変換コンストラクタ
   explicit
-  VlTime(unsigned int val) ///< [in] 値
-    : mValue(val)
+  VlTime(
+    unsigned int val ///< [in] 値
+  ) : mValue(val)
   {
   }
 
   /// @brief double からの変換コンストラクタ
   explicit
-  VlTime(double val) ///< [in] 値
+  VlTime(
+    double val ///< [in] 値
+  )
   {
     set(val);
   }
 
   /// @brief コピーコンストラクタ
-  VlTime(const VlTime& src) ///< [in] コピー元の値
-  = default;
+  VlTime(
+    const VlTime& src ///< [in] コピー元の値
+  ) = default;
 
   /// @brief 代入演算子
   VlTime&
-  operator=(const VlTime& src) ///< [in] コピー元の値
-  = default;
+  operator=(
+    const VlTime& src ///< [in] コピー元の値
+  ) = default;
 
   /// @brief 加算つき代入演算子
   const VlTime&
-  operator+=(const VlTime& src) ///< [in] オペランド
+  operator+=(
+    const VlTime& src ///< [in] オペランド
+  )
   {
     mValue += src.mValue;
     return *this;
@@ -77,8 +86,10 @@ public:
 
   /// @brief 2つの値を指定する．
   void
-  set(PLI_UINT32 l, ///< [in] 下位32ビットの値
-      PLI_UINT32 h) ///< [in] 上位32ビットの値
+  set(
+    PLI_UINT32 l, ///< [in] 下位32ビットの値
+    PLI_UINT32 h  ///< [in] 上位32ビットの値
+  )
   {
     ymuint64 tmp = h;
     mValue = (tmp << 32) | l;
@@ -86,14 +97,18 @@ public:
 
   /// @brief 符号なし整数の値を設定する．
   void
-  set(unsigned int val) ///< [in] 値
+  set(
+    unsigned int val ///< [in] 値
+  )
   {
     mValue = val;
   }
 
   /// @brief double の値を設定する．
   void
-  set(double val) ///< [in] 値
+  set(
+    double val ///< [in] 値
+  )
   {
     if ( val < 0.0 ) {
       // 負数は0にする．
@@ -183,8 +198,10 @@ private:
 /// @return op1 + op2
 inline
 VlTime
-operator+(VlTime op1, ///< [in] 第1オペランド
-	  VlTime op2) ///< [in] 第2オペランド
+operator+(
+  VlTime op1, ///< [in] 第1オペランド
+  VlTime op2  ///< [in] 第2オペランド
+)
 {
   return VlTime(op1).operator+=(op2);
 }
@@ -193,8 +210,10 @@ operator+(VlTime op1, ///< [in] 第1オペランド
 /// @return op1 と op2 が等しいとき true を返す．
 inline
 bool
-operator==(VlTime op1, ///< [in] 第1オペランド
-	   VlTime op2) ///< [in] 第2オペランド
+operator==(
+  VlTime op1, ///< [in] 第1オペランド
+  VlTime op2  ///< [in] 第2オペランド
+)
 {
   if ( op1.value() == op2.value() ) {
     return true;
@@ -208,8 +227,10 @@ operator==(VlTime op1, ///< [in] 第1オペランド
 /// @return op1 < op2 のとき true を返す．
 inline
 bool
-operator<(VlTime op1, ///< [in] 第1オペランド
-	  VlTime op2) ///< [in] 第2オペランド
+operator<(
+  VlTime op1, ///< [in] 第1オペランド
+  VlTime op2  ///< [in] 第2オペランド
+)
 {
   if ( op1.value() < op2.value() ) {
     return true;
@@ -223,8 +244,10 @@ operator<(VlTime op1, ///< [in] 第1オペランド
 /// @return op1 <= op2 のとき true を返す．
 inline
 bool
-operator<=(VlTime op1, ///< [in] 第1オペランド
-	   VlTime op2) ///< [in] 第2オペランド
+operator<=(
+  VlTime op1, ///< [in] 第1オペランド
+  VlTime op2  ///< [in] 第2オペランド
+)
 {
   return !(op2 < op1);
 }
@@ -233,8 +256,10 @@ operator<=(VlTime op1, ///< [in] 第1オペランド
 /// @return op1 > op2 のとき true を返す．
 inline
 bool
-operator>(VlTime op1, ///< [in] 第1オペランド
-	  VlTime op2) ///< [in] 第2オペランド
+operator>(
+  VlTime op1, ///< [in] 第1オペランド
+  VlTime op2  ///< [in] 第2オペランド
+)
 {
   return op2 < op1;
 }
@@ -243,8 +268,10 @@ operator>(VlTime op1, ///< [in] 第1オペランド
 /// @return op1 >= op2 のとき true を返す．
 inline
 bool
-operator>=(VlTime op1, ///< [in] 第1オペランド
-	   VlTime op2) ///< [in] 第2オペランド
+operator>=(
+  VlTime op1, ///< [in] 第1オペランド
+  VlTime op2  ///< [in] 第2オペランド
+)
 {
   return !(op1 < op2);
 }

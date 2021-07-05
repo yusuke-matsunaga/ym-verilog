@@ -52,12 +52,21 @@ public:
   /// event control/repeat control の場合のみ意味を持つ
   virtual
   const PtExpr*
-  event(SizeType pos ///< [in] 位置 ( 0 <= pos < event_num() )
+  event(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < event_num() )
   ) const = 0;
 
   /// @brief イベントリストの取得
   vector<const PtExpr*>
-  event_list() const;
+  event_list() const
+  {
+    SizeType n = event_num();
+    vector<const PtExpr*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = event(i);
+    }
+    return vec;
+  }
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
@@ -153,7 +162,8 @@ public:
   /// 該当する要素がなければ nullptr を返す．
   virtual
   const PtExpr*
-  value(SizeType pos ///< [in] 取得する遅延値の位置(0 〜 2)
+  value(
+    SizeType pos ///< [in] 取得する遅延値の位置(0 〜 2)
   ) const = 0;
 
 };
@@ -199,7 +209,15 @@ public:
 
   /// @brief インデックスを含めた名前を返す．
   string
-  expand_name() const;
+  expand_name() const
+  {
+    ostringstream buf;
+    buf << name();
+    if ( has_index() ) {
+      buf << "[" << index() << "]";
+    }
+    return buf.str();
+  }
 
 };
 
@@ -226,12 +244,21 @@ public:
   /// @brief 要素の取得
   virtual
   const PtAttrSpec*
-  attrspec(SizeType pos ///< [in] 位置 ( 0 <= pos < attrspec_num() )
+  attrspec(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < attrspec_num() )
   ) const = 0;
 
   /// @brief 要素のリストの取得
   vector<const PtAttrSpec*>
-  attrspec_list() const;
+  attrspec_list() const
+  {
+    SizeType n = attrspec_num();
+    vector<const PtAttrSpec*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = attrspec(i);
+    }
+    return vec;
+  }
 
 };
 
@@ -263,50 +290,6 @@ public:
   expr() const = 0;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief インデックスを含めた名前を返す．
-inline
-string
-PtNameBranch::expand_name() const
-{
-  ostringstream buf;
-  buf << name();
-  if ( has_index() ) {
-    buf << "[" << index() << "]";
-  }
-  return buf.str();
-}
-
-// @brief イベントリストの取得
-inline
-vector<const PtExpr*>
-PtControl::event_list() const
-{
-  SizeType n = event_num();
-  vector<const PtExpr*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = event(i);
-  }
-  return vec;
-}
-
-// @brief 要素のリストの取得
-inline
-vector<const PtAttrSpec*>
-PtAttrInst::attrspec_list() const
-{
-  SizeType n = attrspec_num();
-  vector<const PtAttrSpec*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = attrspec(i);
-  }
-  return vec;
-}
 
 END_NAMESPACE_YM_VERILOG
 

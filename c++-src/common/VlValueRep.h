@@ -5,9 +5,8 @@
 /// @brief VlValueRep (とその派生クラス)のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/VlValue.h"
 #include "ym/BitVector.h"
@@ -88,9 +87,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*
@@ -172,9 +172,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*
@@ -265,9 +266,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*
@@ -358,9 +360,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*
@@ -451,9 +454,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*
@@ -544,9 +548,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*
@@ -637,9 +642,10 @@ private:
   time_value() const override;
 
   /// @brief ビットベクタ型の値を返す．
-  /// @param[in] req_type 要求されるデータの型
   BitVector
-  bitvector_value(const VlValueType& req_type) const override;
+  bitvector_value(
+    const VlValueType& req_type ///< [in] 要求されるデータの型
+  ) const override;
 
   /// @brief 自身の複製を返す．
   VlValueRep*

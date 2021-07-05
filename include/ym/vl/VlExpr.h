@@ -129,7 +129,8 @@ public:
   /// それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  declarray_index(SizeType pos ///< [in] 位置番号 ( 0 <= pos < declarray_dimension() )
+  declarray_index(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < declarray_dimension() )
   ) const = 0;
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
@@ -259,7 +260,8 @@ public:
   /// それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  operand(SizeType pos ///< [in] 位置番号 ( 0 <= pos < operand_num() )
+  operand(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < operand_num() )
   ) const = 0;
 
   /// @brief 繰り返し数を返す．
@@ -316,7 +318,8 @@ public:
   /// それ以外では nullptr を返す．
   virtual
   const VlExpr*
-  argument(SizeType pos ///< [in] 位置番号 ( 0 <= pos < argument_num() )
+  argument(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < argument_num() )
   ) const = 0;
 
   /// @brief 左辺式の要素数の取得
@@ -332,7 +335,8 @@ public:
   /// 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   virtual
   const VlExpr*
-  lhs_elem(SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
+  lhs_elem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
   ) const = 0;
 
 };

@@ -56,13 +56,15 @@ public:
   /// @brief 要素を返す．
   virtual
   const VlModule*
-  elem_by_offset(SizeType offset ///< [in] 位置番号 (0 <= offset < elem_num())
+  elem_by_offset(
+    SizeType offset ///< [in] 位置番号 (0 <= offset < elem_num())
   ) const = 0;
 
   /// @brief 要素を返す．
   virtual
   const VlModule*
-  elem_by_index(int index ///< [in] インデックス
+  elem_by_index(
+    int index ///< [in] インデックス
   ) const = 0;
 
 };
@@ -198,7 +200,8 @@ public:
   /// @return pos 番目のポートを返す．
   virtual
   const VlPort*
-  port(SizeType pos ///< [in] 取得するポートの位置 (0 <= pos < port_num())
+  port(
+    SizeType pos ///< [in] 取得するポートの位置 (0 <= pos < port_num())
   ) const = 0;
 
   /// @brief 入出力数を得る．
@@ -209,7 +212,8 @@ public:
   /// @brief 入出力の取得
   virtual
   const VlIODecl*
-  io(SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
+  io(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
   ) const = 0;
 
 };

@@ -40,12 +40,21 @@ public:
   /// @brief ポートを取り出す．
   virtual
   const PtPort*
-  port(SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
+  port(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
   ) const = 0;
 
   /// @brief ポートのリストを取り出す．
   vector<const PtPort*>
-  port_list() const;
+  port_list() const
+  {
+    SizeType n = port_num();
+    vector<const PtPort*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = port(i);
+    }
+    return vec;
+  }
 
   /// @brief 入出力宣言ヘッダ配列の要素数の取得
   virtual
@@ -55,12 +64,21 @@ public:
   /// @brief 入出力宣言ヘッダの取得
   virtual
   const PtIOHead*
-  iohead(SizeType pos ///< [in] 位置 ( 0 <= pos < iohead_num() )
+  iohead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < iohead_num() )
   ) const = 0;
 
   /// @brief 入出力のリストの取得
   vector<const PtIOHead*>
-  iohead_list() const;
+  iohead_list() const
+  {
+    SizeType n = iohead_num();
+    vector<const PtIOHead*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = iohead(i);
+    }
+    return vec;
+  }
 
   /// @brief 初期値を取出す．
   virtual
@@ -75,12 +93,21 @@ public:
   /// @brief テーブルの要素を取り出す．
   virtual
   const PtUdpEntry*
-  table(SizeType pos ///< [in] 位置 ( 0 <= pos < table_num() )
+  table(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < table_num() )
   ) const = 0;
 
   /// @brief テーブルのリストを返す．
   vector<const PtUdpEntry*>
-  table_list() const;
+  table_list() const
+  {
+    SizeType n = table_num();
+    vector<const PtUdpEntry*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = table(i);
+    }
+    return vec;
+  }
 
 };
 
@@ -107,12 +134,21 @@ public:
   /// @brief 入力値を取り出す．
   virtual
   const PtUdpValue*
-  input(SizeType pos ///< [in] 位置 ( 0 <= pos < input_num() )
+  input(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < input_num() )
   ) const = 0;
 
   /// @brief 入力値のリストを取り出す．
   vector<const PtUdpValue*>
-  input_list() const;
+  input_list() const
+  {
+    SizeType n = input_num();
+    vector<const PtUdpValue*> vec(n);
+    for ( SizeType i = 0; i < n; ++ i ) {
+      vec[i] = input(i);
+    }
+    return vec;
+  }
 
   /// @brief 現状態の値を取り出す．
   virtual
@@ -147,63 +183,6 @@ public:
   symbol() const = 0;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief ポートのリストを取り出す．
-inline
-vector<const PtPort*>
-PtUdp::port_list() const
-{
-  SizeType n = port_num();
-  vector<const PtPort*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = port(i);
-  }
-  return vec;
-}
-
-// @brief 入出力のリストの取得
-inline
-vector<const PtIOHead*>
-PtUdp::iohead_list() const
-{
-  SizeType n = iohead_num();
-  vector<const PtIOHead*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = iohead(i);
-  }
-  return vec;
-}
-
-// @brief テーブルのリストを返す．
-inline
-vector<const PtUdpEntry*>
-PtUdp::table_list() const
-{
-  SizeType n = table_num();
-  vector<const PtUdpEntry*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = table(i);
-  }
-  return vec;
-}
-
-// @brief 入力値のリストを取り出す．
-inline
-vector<const PtUdpValue*>
-PtUdpEntry::input_list() const
-{
-  SizeType n = input_num();
-  vector<const PtUdpValue*> vec(n);
-  for ( SizeType i = 0; i < n; ++ i ) {
-    vec[i] = input(i);
-  }
-  return vec;
-}
 
 END_NAMESPACE_YM_VERILOG
 

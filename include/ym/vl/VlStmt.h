@@ -86,7 +86,8 @@ public:
   ///  - kVpiTaskCall
   virtual
   const VlExpr*
-  arg(SizeType pos ///< [in] 位置 (0 <= pos < arg_num())
+  arg(
+    SizeType pos ///< [in] 位置 (0 <= pos < arg_num())
   ) const = 0;
 
   /// @brief control の取得
@@ -203,7 +204,8 @@ public:
   /// default caseitem がある場合には常に最後の要素となる．
   virtual
   const VlCaseItem*
-  caseitem(SizeType pos ///< [in] 位置番号 ( 0 <= pos < caseitem_num() )
+  caseitem(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < caseitem_num() )
   ) const = 0;
 
   /// @brief 初期化代入文の取得
@@ -242,7 +244,8 @@ public:
   ///  - kVpiNamedFork
   virtual
   const VlStmt*
-  child_stmt(SizeType pos ///< [in] 位置番号 (0 <= pos < stmt_num())
+  child_stmt(
+    SizeType pos ///< [in] 位置番号 (0 <= pos < stmt_num())
   ) const = 0;
 
   /// @brief disable 対象のスコープを得る．
@@ -276,7 +279,8 @@ public:
   /// @brief 条件式を返す．
   virtual
   const VlExpr*
-  expr(SizeType pos ///< [in] 位置番号 ( 0 <= pos < expr_num() )
+  expr(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < expr_num() )
   ) const = 0;
 
   /// @brief 本体のステートメントを返す．
