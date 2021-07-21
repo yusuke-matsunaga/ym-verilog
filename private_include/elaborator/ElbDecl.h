@@ -5,9 +5,8 @@
 /// @brief ElbDecl のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/VlValueType.h"
 #include "ym/vl/VlDecl.h"
@@ -91,14 +90,14 @@ public:
   bit_size() const = 0;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   virtual
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const = 0;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [in] インデックスに対するオフセット値
+  ) const = 0;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -164,10 +163,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式の設定
-  /// @note このクラスではなにもしない．
+  ///
+  /// このクラスではなにもしない．
   virtual
   void
-  set_delay(const VlDelay* delay);
+  set_delay(
+    const VlDelay* delay ///< [in] 遅延式
+  );
 
 };
 
@@ -204,12 +206,13 @@ public:
   set_signed() = 0;
 
   /// @brief 初期値の設定
-  /// @param[in] expr 初期値
   ///
   /// このクラスでは何もしない．
   virtual
   void
-  set_init(const VlExpr* expr);
+  set_init(
+    const VlExpr* expr ///< [in] 初期値
+  );
 
 };
 

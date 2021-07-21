@@ -5,9 +5,8 @@
 /// @brief 宣言要素関係の部品クラスのヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtPort.h"
 #include "ym/pt/PtDecl.h"
@@ -29,12 +28,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief portref の方向を設定する．
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  /// @param[in] dir 方向
   virtual
   void
-  _set_portref_dir(int pos,
-		   VpiDir dir) = 0;
+  _set_portref_dir(
+    int pos,   ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+    VpiDir dir ///< [in] 方向
+  ) = 0;
 
 };
 
@@ -52,10 +51,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素の配列
   virtual
   void
-  set_elem(PtiIOItemArray&& elem_array) = 0;
+  set_elem(
+    PtiIOItemArray&& elem_array ///< [in] 要素の配列
+  ) = 0;
 
 };
 
@@ -73,10 +73,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素の配列
   virtual
   void
-  set_elem(PtiDeclItemArray&& elem_array) = 0;
+  set_elem(
+    PtiDeclItemArray&& elem_array ///< [in] 要素の配列
+  ) = 0;
 
 };
 

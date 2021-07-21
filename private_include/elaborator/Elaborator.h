@@ -5,9 +5,8 @@
 /// @brief Elaborator のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
@@ -51,10 +50,10 @@ class Elaborator
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-  /// @param[in] cell_library セルライブラリ
-  Elaborator(ElbMgr& elb_mgr,
-	     const ClibCellLibrary& cell_library);
+  Elaborator(
+    ElbMgr& elb_mgr,                    ///< [in] Elbオブジェクトを管理するクラス
+    const ClibCellLibrary& cell_library ///< [in] セルライブラリ
+  );
 
   /// @brief デストラクタ
   ~Elaborator();
@@ -63,12 +62,13 @@ public:
 public:
 
   /// @brief エラボレーションを行う．
-  /// @param[in] pt_mgr パース木を管理するクラス
   /// @return エラー数を返す．
   ///
   /// この関数は一度しか呼べない．
   int
-  operator()(const PtMgr& pt_mgr);
+  operator()(
+    const PtMgr& pt_mgr ///< [in] パース木を管理するクラス
+  );
 
 
 private:
@@ -77,26 +77,29 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 後で処理する defparam 文を登録する．
-  /// @param[in] header アイテムテンプレートのヘッダ (defparam を持つ)
-  /// @param[in] defparam defparam 文のテンプレート
   void
-  add_defparamstub(const VlModule* module,
-		   const PtItem* header);
+  add_defparamstub(
+    const VlModule* module, ///< [in] アイテムテンプレートのヘッダ (defparam を持つ)
+    const PtItem* header    ///< [in] defparam 文のテンプレート
+  );
 
   /// @brief phase1 で行う処理を登録する．
-  /// @param[in] stub phase1 で行う処理を表すスタブ
   void
-  add_phase1stub(ElbStub* stub);
+  add_phase1stub(
+    ElbStub* stub ///< [in] phase1 で行う処理を表すスタブ
+  );
 
   /// @brief phase2 で行う処理を登録する．
-  /// @param[in] stub phase2 で行う処理を表すスタブ
   void
-  add_phase2stub(ElbStub* stub);
+  add_phase2stub(
+    ElbStub* stub ///< [in] phase2 で行う処理を表すスタブ
+  );
 
   /// @brief phase3 で行う処理を登録する．
-  /// @param[in] stub phase3 で行う処理を表すスタブ
   void
-  add_phase3stub(ElbStub* stub);
+  add_phase3stub(
+    ElbStub* stub ///< [in] phase3 で行う処理を表すスタブ
+  );
 
 
 private:
@@ -105,35 +108,37 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 名前からモジュール定義を取り出す．
-  /// @param[in] name 名前
   /// @return name という名のモジュール定義
   /// @return なければ nullptr を返す．
   const PtModule*
-  find_moduledef(const string& name) const;
+  find_moduledef(
+    const string& name ///< [in] 名前
+  ) const;
 
   /// @brief 関数定義を探す．
-  /// @param[in] module 親のモジュール
-  /// @param[in] name 関数名
   const PtItem*
-  find_funcdef(const VlModule* module,
-	       const string& name) const;
+  find_funcdef(
+    const VlModule* module, ///< [in] 親のモジュール
+    const string& name      ///< [in] 関数名
+  ) const;
 
   /// @brief constant function を取り出す．
-  /// @param[in] parent 検索対象のスコープ
-  /// @param[in] name 名前
   /// @return parent というスコープ内の name という関数を返す．
   /// @return なければ nullptr を返す．
   const VlTaskFunc*
-  find_constant_function(const VlScope* parent,
-			 const string& name) const;
+  find_constant_function(
+    const VlScope* parent, ///< [in] 検索対象のスコープ
+    const string& name     ///< [in] 名前
+  ) const;
 
   /// @brief セルの探索
-  /// @param[in] name セル名
   /// @return name という名のセル番号を返す．
   ///
   /// なければ -1 を返す．
   int
-  find_cell_id(const string& name) const;
+  find_cell_id(
+    const string& name ///< [in] セル名
+  ) const;
 
 
 public:
@@ -152,65 +157,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief constant function を登録する．
-  /// @param[in] func 関数
   void
-  reg_constant_function(const VlTaskFunc* func);
-
-
-#if 0
-public:
-  //////////////////////////////////////////////////////////////////////
-  // 検索関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief スコープと名前から名前付き要素を取り出す．
-  /// @param[in] parent 検索対象のスコープ
-  /// @param[in] name 名前
-  /// @return parent というスコープ内の name という要素を返す．
-  /// @return なければ nullptr を返す．
-  ObjHandle*
-  find_obj(const VlScope* parent,
-	   const string& name) const;
-
-  /// @brief スコープと名前からスコープを取り出す．
-  /// @param[in] parent 検索対象のスコープ
-  /// @param[in] name 名前
-  /// @return parent というスコープ内の name というスコープを返す．
-  /// @return なければ nullptr を返す．
-  const VlScope*
-  find_namedobj(const VlScope* parent,
-		const string& name) const;
-
-  /// @brief スコープと階層名から要素を取り出す．
-  /// @param[in] base_scope 起点となるスコープ
-  /// @param[in] pt_objy 階層名付きのオブジェクト
-  /// @param[in] ulimit 探索する名前空間の上限
-  /// @return 見付かったオブジェクトを返す．
-  /// 見付からなかったら nullptr を返す．
-  ObjHandle*
-  find_obj_up(const VlScope* base_scope,
-	      const PtHierNamedBase* pt_obj,
-	      const VlScope* ulimit);
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 検索の下請け関数
-  //////////////////////////////////////////////////////////////////////
-
-  /// @brief base_scope を起点として (nb, "") という名前のスコープを探す．
-  /// なければ親のスコープに対して同様の探索を繰り返す．
-  const VlScope*
-  find_scope_up(const VlScope* base_scope,
-		const PtHierNamedBase* pt_obj,
-		const VlScope* ulimit);
-#endif
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる型定義
-  //////////////////////////////////////////////////////////////////////
+  reg_constant_function(
+    const VlTaskFunc* func ///< [in] 関数
+  );
 
 
 private:

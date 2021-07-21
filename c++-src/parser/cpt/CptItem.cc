@@ -1093,7 +1093,7 @@ CptFactory::new_DefParam(const FileRegion& file_region,
 {
   ++ mNumDefParam;
   void* p{mAlloc.get_memory(sizeof(CptDefParam))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptDefParam(file_region,
 			       PtiArray<const PtNameBranch>(mAlloc, nb_array),

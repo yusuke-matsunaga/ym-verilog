@@ -528,7 +528,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 {
   ++ mNumPrimaryH;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryH))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryH(file_region,
 			       PtiArray<const PtNameBranch>(mAlloc, nb_array),
@@ -544,7 +544,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 {
   ++ mNumPrimaryHI;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryHI))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHI(file_region,
 				PtiArray<const PtNameBranch>(mAlloc, nb_array),
@@ -563,7 +563,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 {
   ++ mNumPrimaryHR;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryHR))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHR(file_region,
 				PtiArray<const PtNameBranch>(mAlloc, nb_array),
@@ -583,7 +583,7 @@ CptFactory::new_Primary(const FileRegion& file_region,
 {
   ++ mNumPrimaryHIR;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryHIR))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHIR(file_region,
 				 PtiArray<const PtNameBranch>(mAlloc, nb_array),
@@ -628,7 +628,7 @@ CptFactory::new_CPrimary(const FileRegion& file_region,
 {
   ++ mNumPrimaryHCI;
   void* p{mAlloc.get_memory(sizeof(CptPrimaryCI))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptPrimaryHCI(file_region,
 				 PtiArray<const PtNameBranch>(mAlloc, nb_array),

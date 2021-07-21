@@ -5,9 +5,8 @@
 /// @brief ElbExpr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlExpr.h"
 #include "ym/VlValueType.h"
@@ -52,15 +51,25 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
+  ///
+  /// 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  set_reqsize(const VlValueType& type);
+  set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  )
+  {
+    mReqType = type;
+    _set_reqsize(type);
+  }
 
   /// @brief 要求される式のサイズを自分で決めてセットする．
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
+  ///
+  /// 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  set_selfsize();
+  set_selfsize()
+  {
+    set_reqsize(value_type());
+  }
 
 
 protected:
@@ -69,11 +78,13 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief set_reqsize() の下請け関数
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
+  ///
+  /// 必要であればオペランドに対して再帰的に処理を行なう．
   virtual
   void
-  _set_reqsize(const VlValueType& type) = 0;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) = 0;
 
 
 public:
@@ -84,21 +95,27 @@ public:
   // 二項演算のタイプとサイズを決める．
   static
   VlValueType
-  calc_type(const VlValueType& type0,
-	    const VlValueType& type1);
+  calc_type(
+    const VlValueType& type0,
+    const VlValueType& type1
+  );
 
 
   // 巾乗演算のタイプとサイズを決める．
   static
   VlValueType
-  calc_type2(const VlValueType& type0,
-	     const VlValueType& type1);
+  calc_type2(
+    const VlValueType& type0,
+    const VlValueType& type1
+  );
 
   // 出力に要求されているサイズから自分のサイズを決める．
   static
   VlValueType
-  update_size(const VlValueType& type,
-	      const VlValueType& req_type);
+  update_size(
+    const VlValueType& type,
+    const VlValueType& req_type
+  );
 
 
 private:
@@ -110,31 +127,6 @@ private:
   VlValueType mReqType;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
-inline
-void
-ElbExpr::set_reqsize(const VlValueType& type)
-{
-  mReqType = type;
-  _set_reqsize(type);
-}
-
-// @brief 要求される式のサイズを自分で決めてセットする．
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
-inline
-void
-ElbExpr::set_selfsize()
-{
-  set_reqsize(value_type());
-}
 
 END_NAMESPACE_YM_VERILOG
 

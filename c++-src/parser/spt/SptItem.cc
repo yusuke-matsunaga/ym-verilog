@@ -1124,7 +1124,7 @@ SptFactory::new_DefParam(const FileRegion& file_region,
 			 PuHierName* hname,
 			 const PtExpr* value)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptDefParam(file_region,
 			      PtiNameBranchArray(mAlloc, nb_array),

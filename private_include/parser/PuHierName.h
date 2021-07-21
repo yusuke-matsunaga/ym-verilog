@@ -1,15 +1,12 @@
 ﻿#ifndef LIBYM_YM_PARSER_PUHIERNAME_H
 #define LIBYM_YM_PARSER_PUHIERNAME_H
 
-/// @file libym/parser/PuHierName.h
+/// @file parser/PuHierName.h
 /// @brief PuHierName のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// $Id: PuHierName.h 2507 2009-10-17 16:24:02Z matsunaga $
-///
-/// Copyright (C) 2005-2006 Yusuke Matsunaga
+/// Copyright (C) 2005-2006, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "parser/PtiFwd.h"
 #include "parser/PtrList.h"
@@ -18,7 +15,7 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
-/// @class PuHeirName Putils.h "Putils.h"
+/// @class PuHeirName Putils.h "parser/Putils.h"
 /// @ingroup VlParser
 /// @brief 階層つき名を表すクラス
 ///
@@ -34,23 +31,34 @@ class PuHierName
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] nb 階層ブランチ
-  /// @param[in] name 名前
-  PuHierName(const PtNameBranch* nb,
-	     const char* name);
+  PuHierName(
+    const PtNameBranch* nb, ///< [in] 階層ブランチ
+    const char* name        ///< [in] 名前
+  ) : mNbList{new PtrList<const PtNameBranch>},
+      mTailName(name)
+  {
+    mNbList->push_back(nb);
+  }
 
   /// @brief デストラクタ
-  ~PuHierName();
+  ~PuHierName()
+  {
+    delete mNbList;
+  }
 
 
 public:
 
   /// @brief 階層を追加する．
-  /// @param[in] nb 追加する階層ブランチ
-  /// @param[in] tail_name 追加する最下層の名前
   void
-  add(const PtNameBranch* nb,
-      const char* tail_name);
+  add(
+    const PtNameBranch* nb, ///< [in] 追加する階層ブランチ
+    const char* tail_name   ///< [in] 追加する最下層の名前
+  )
+  {
+    mNbList->push_back(nb);
+    mTailName = tail_name;
+  }
 
 
 public:
@@ -59,12 +67,21 @@ public:
   ///
   /// この関数を呼ぶと mNbList は破壊される．
   vector<const PtNameBranch*>
-  name_branch();
+  name_branch_to_vector()
+  {
+    auto ans{mNbList->to_vector()};
+    delete mNbList;
+    mNbList = nullptr;
+    return ans;
+  }
 
   /// @brief 最下層の名前を取り出す．
   /// @return 最下層の名前
   const char*
-  tail_name() const;
+  tail_name() const
+  {
+    return mTailName;
+  }
 
 
 private:
@@ -79,64 +96,6 @@ private:
   const char* mTailName;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 単一の文字列からのコンストラクタ
-// @param[in] alloc メモリアロケータ
-// @param[in] nb 階層ブランチ
-// @param[in] name 名前
-inline
-PuHierName::PuHierName(const PtNameBranch* nb,
-		       const char* name) :
-  mNbList{new PtrList<const PtNameBranch>},
-  mTailName(name)
-{
-  mNbList->push_back(nb);
-}
-
-// @brief デストラクタ
-inline
-PuHierName::~PuHierName()
-{
-  delete mNbList;
-}
-
-// 今の tail_name を階層名のブランチとしてその下に tail_name を
-// 追加する．
-inline
-void
-PuHierName::add(const PtNameBranch* nb,
-		const char* tail_name)
-{
-  mNbList->push_back(nb);
-  mTailName = tail_name;
-}
-
-// @brief 階層ブランチを PtNameBranchArray の形で取り出す．
-//
-// この関数を呼ぶと mNbList は破壊される．
-inline
-vector<const PtNameBranch*>
-PuHierName::name_branch()
-{
-  auto ans{mNbList->to_vector()};
-  delete mNbList;
-  mNbList = nullptr;
-  return ans;
-}
-
-// @brief 最下層の名前を取り出す．
-// @return 最下層の名前
-inline
-const char*
-PuHierName::tail_name() const
-{
-  return mTailName;
-}
 
 END_NAMESPACE_YM_VERILOG
 

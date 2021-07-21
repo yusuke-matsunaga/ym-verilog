@@ -371,7 +371,7 @@ const PtStmt*
 SptFactory::new_Disable(const FileRegion& file_region,
 			PuHierName* hname)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptStmt(file_region,
 			  PtStmtType::Disable,
@@ -418,7 +418,7 @@ SptFactory::new_Enable(const FileRegion& file_region,
 		       PuHierName* hname,
 		       const vector<const PtExpr*>& arg_array)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptStmt(file_region,
 			  PtStmtType::Enable,

@@ -927,7 +927,7 @@ const PtExpr*
 SptFactory::new_Primary(const FileRegion& file_region,
 			PuHierName* hname)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     PtiNameBranchArray(mAlloc, nb_array),
@@ -947,7 +947,7 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			PuHierName* hname,
 			const vector<const PtExpr*>& index_array)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     PtiNameBranchArray(mAlloc, nb_array),
@@ -972,7 +972,7 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* left,
 			const PtExpr* right)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     PtiNameBranchArray(mAlloc, nb_array),
@@ -1000,7 +1000,7 @@ SptFactory::new_Primary(const FileRegion& file_region,
 			const PtExpr* left,
 			const PtExpr* right)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     PtiNameBranchArray(mAlloc, nb_array),
@@ -1063,7 +1063,7 @@ SptFactory::new_CPrimary(const FileRegion& file_region,
 			 PuHierName* hname,
 			 const vector<const PtExpr*>& index_array)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptPrimary(file_region,
 			     PtiNameBranchArray(mAlloc, nb_array),
@@ -1102,7 +1102,7 @@ SptFactory::new_FuncCall(const FileRegion& file_region,
 			 PuHierName* hname,
 			 const vector<const PtExpr*>& arg_array)
 {
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto node = new SptFuncCall(file_region, PtExprType::FuncCall,
 			      PtiNameBranchArray(mAlloc, nb_array),

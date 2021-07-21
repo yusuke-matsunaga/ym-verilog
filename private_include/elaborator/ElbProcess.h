@@ -5,9 +5,8 @@
 /// @brief ElbProcess のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlProcess.h"
 #include "ElbFwd.h"
@@ -38,10 +37,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 本体のステートメントをセットする．
-  /// @param[in] stmt 本体のステートメント
   virtual
   void
-  set_stmt(const VlStmt* stmt) = 0;
+  set_stmt(
+    const VlStmt* stmt ///< [in] 本体のステートメント
+  ) = 0;
 
 };
 

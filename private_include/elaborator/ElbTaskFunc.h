@@ -5,9 +5,8 @@
 /// @brief ElbTaskFunc のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlTaskFunc.h"
 
@@ -28,19 +27,20 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力を追加する．
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木のIO宣言要素
-  /// @param[in] decl 対応する宣言要素
   virtual
   void
-  add_iodecl(ElbIOHead* head,
-	     const PtIOItem* pt_item,
-	     const VlDecl* decl) = 0;
+  add_iodecl(
+    ElbIOHead* head,         ///< [in] ヘッダ
+    const PtIOItem* pt_item, ///< [in] パース木のIO宣言要素
+    const VlDecl* decl       ///< [in] 対応する宣言要素
+  ) = 0;
 
   /// @brief 本体のステートメントをセットする．
   virtual
   void
-  set_stmt(const VlStmt* stmt) = 0;
+  set_stmt(
+    const VlStmt* stmt ///< [in] 本体のステートメント
+  ) = 0;
 
 
 public:
@@ -50,10 +50,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力変数をセットする．
-  /// @param[in] ovar 出力変数
   virtual
   void
-  set_ovar(ElbDecl* ovar) = 0;
+  set_ovar(
+    ElbDecl* ovar ///< [in] 出力変数
+  ) = 0;
 
 };
 

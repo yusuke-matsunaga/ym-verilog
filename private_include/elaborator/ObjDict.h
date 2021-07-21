@@ -5,9 +5,8 @@
 /// @brief ObjDict のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 #include "ObjHandle.h"
@@ -41,53 +40,77 @@ public:
 
   /// @brief スコープを追加する．
   void
-  add(const VlScope* obj);
+  add(
+    const VlScope* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(const VlTaskFunc* obj);
+  add(
+    const VlTaskFunc* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(ElbDecl* obj);
+  add(
+    ElbDecl* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(const VlDeclArray* obj);
+  add(
+    const VlDeclArray* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(ElbParameter* obj);
+  add(
+    ElbParameter* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(const VlModule* obj);
+  add(
+    const VlModule* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(const VlModuleArray* obj);
+  add(
+    const VlModuleArray* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(const VlPrimArray* obj);
+  add(
+    const VlPrimArray* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(const VlPrimitive* obj);
+  add(
+    const VlPrimitive* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(ElbGfRoot* obj);
+  add(
+    ElbGfRoot* obj
+  );
 
   /// @brief 要素を追加する．
   void
-  add(ElbGenvar* obj);
+  add(
+    ElbGenvar* obj
+  );
 
   /// @brief 名前から該当する要素を検索する．
   /// @note なければ nullptr を返す．
   ObjHandle*
-  find(const VlScope* parent,
-       const string& name) const;
+  find(
+    const VlScope* parent,
+    const string& name
+  ) const;
 
 
 private:
@@ -97,7 +120,9 @@ private:
 
   /// @brief ハンドルを追加する．
   void
-  add_handle(ObjHandle* handle);
+  add_handle(
+    ObjHandle* handle
+  );
 
 
 private:

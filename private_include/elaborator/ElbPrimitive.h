@@ -5,9 +5,8 @@
 /// @brief ElbPrimitive のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlPrimitive.h"
 #include "elaborator/ElbHead.h"
@@ -71,7 +70,9 @@ public:
   /// @brief 遅延式を設定する．
   virtual
   void
-  set_delay(const VlDelay* expr) = 0;
+  set_delay(
+    const VlDelay* expr ///< [in] 遅延式
+  ) = 0;
 
 };
 
@@ -101,12 +102,16 @@ public:
   /// @brief 要素のプリミティブを取り出す．
   virtual
   ElbPrimitive*
-  _primitive_by_offset(SizeType offset) = 0;
+  _primitive_by_offset(
+    SizeType offset ///< [in] オフセット
+  ) = 0;
 
   /// @brief 要素のプリミティブを取り出す．
   virtual
   ElbPrimitive*
-  _primitive_by_index(int index) = 0;;
+  _primitive_by_index(
+    int index ///< [in] インデックス
+  ) = 0;;
 
   /// @brief ヘッダを得る．
   virtual
@@ -138,12 +143,12 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 接続する．
-  /// @param[in] pos ポート番号 (0 から始まる)
-  /// @param[in] expr 接続する式
   virtual
   void
-  connect(SizeType pos,
-	  const VlExpr* expr) = 0;
+  connect(
+    SizeType pos,      ///< [in] ポート番号 (0 から始まる)
+    const VlExpr* expr ///< [in] 接続する式
+  ) = 0;
 
   /// @brief ヘッダを得る．
   virtual
@@ -157,21 +162,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力ポート数を計算する．
-  /// @param[in] type プリミティブの型
-  /// @param[in] port_size 全ポート数
-  /// @param[out] output_num 出力ポート数
-  /// @param[out] inout_num 入出力ポート数
-  /// @param[out] input_num 入力ポート数
   /// @retval 1 port_size が多すぎる．
   /// @retval 0 port_size が範囲内に収まっている．
   /// @retval -1 port_size が少なすぎる．
   static
   int
-  get_port_size(VpiPrimType type,
-		SizeType port_size,
-		SizeType& output_num,
-		SizeType& inout_num,
-		SizeType& input_num);
+  get_port_size(
+    VpiPrimType type,     ///< [in] プリミティブの型
+    SizeType port_size,   ///< [in] 全ポート数
+    SizeType& output_num, ///< [out] 出力ポート数
+    SizeType& inout_num,  ///< [out] 入出力ポート数
+    SizeType& input_num   ///< [out] 入力ポート数
+  );
 
 };
 

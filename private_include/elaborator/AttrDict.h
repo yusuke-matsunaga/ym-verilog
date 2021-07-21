@@ -5,12 +5,10 @@
 /// @brief AttrDict のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
-
 #include "ElbFwd.h"
 
 
@@ -39,26 +37,35 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 登録する．
-  /// @param[in] pt_attr パース木の属性定義
-  /// @param[in] attr_list 登録する属性のリスト
   void
-  add(const PtAttrInst* pt_attr,
-      const vector<const VlAttribute*>& attr_list);
+  add(
+    const PtAttrInst* pt_attr,                  ///< [in] パース木の属性定義
+    const vector<const VlAttribute*>& attr_list ///< [in] 登録する属性のリスト
+  )
+  {
+    mHash.emplace(pt_attr, attr_list);
+  }
 
   /// @brief 属性リストを取り出す．
-  /// @param[in] pt_attr パース木の属性定義
   vector<const VlAttribute*>
-  find(const PtAttrInst* pt_attr) const;
+  find(
+    const PtAttrInst* pt_attr ///< [in] パース木の属性定義
+  ) const
+  {
+    if ( mHash.count(pt_attr) > 0 ) {
+      return mHash.at(pt_attr);
+    }
+    else {
+      return {};
+    }
+  }
 
   /// @brief 内容をクリアする．
   void
-  clear();
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 下請け関数
-  //////////////////////////////////////////////////////////////////////
+  clear()
+  {
+    mHash.clear();
+  }
 
 
 private:
@@ -70,45 +77,6 @@ private:
   unordered_map<const PtAttrInst*, vector<const VlAttribute*>> mHash;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 要素を追加する．
-// @param[in] pt_attr パース木の属性定義
-// @param[in] attr_list 登録する属性のリスト
-inline
-void
-AttrDict::add(const PtAttrInst* pt_attr,
-	      const vector<const VlAttribute*>& attr_list)
-{
-  mHash.emplace(pt_attr, attr_list);
-}
-
-// @brief 属性リストを取り出す．
-// @param[in] pt_attr パース木の属性定義
-inline
-vector<const VlAttribute*>
-AttrDict::find(const PtAttrInst* pt_attr) const
-{
-  if ( mHash.count(pt_attr) > 0 ) {
-    return mHash.at(pt_attr);
-  }
-  else {
-    return {};
-  }
-}
-
-// @brief 内容をクリアする．
-inline
-void
-AttrDict::clear()
-{
-  mHash.clear();
-}
-
 
 END_NAMESPACE_YM_VERILOG
 

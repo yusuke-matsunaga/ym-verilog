@@ -59,12 +59,12 @@ using PtiUdpValueArray    = PtiArray<const PtUdpValue>;
 
 /// @relates PtiNameBranchArray
 /// @brief 階層名を作り出す関数
-/// @param[in] nb_array 階層ブランチリスト
-/// @param[in] name 末尾の名前
 /// @return 階層名を展開したものを返す．
 string
-expand_full_name(const PtiNameBranchArray* nb_array,
-		 const char* name);
+expand_full_name(
+  const PtiNameBranchArray* nb_array, ///< [in] 階層ブランチリスト
+  const char* name                    ///< [in] 末尾の名前
+);
 
 END_NAMESPACE_YM_VERILOG
 

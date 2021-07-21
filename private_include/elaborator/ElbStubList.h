@@ -5,9 +5,8 @@
 /// @brief ElbStubList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 
@@ -28,22 +27,26 @@ public:
   ElbStubList() = default;
 
   /// @brief コピーコンストラクタ
-  /// @param[in] src コピー元のオブジェクト
-  ElbStubList(const ElbStubList& src) = default;
+  ElbStubList(
+    const ElbStubList& src ///< [in] コピー元のオブジェクト
+  ) = default;
 
   /// @brief ムーブコンストラクタ
-  /// @param[in] src ムーブ元のオブジェクト
-  ElbStubList(ElbStubList&& src) = default;
+  ElbStubList(
+    ElbStubList&& src ///< [in] ムーブ元のオブジェクト
+  ) = default;
 
   /// @brief コピー代入演算子
-  /// @param[in] src コピー元のオブジェクト
   ElbStubList&
-  operator=(const ElbStubList& src) = default;
+  operator=(
+    const ElbStubList& src ///< [in] コピー元のオブジェクト
+  ) = default;
 
   /// @breif ムーブ代入演算子
-  /// @param[in] src ムーブ元のオブジェクト
   ElbStubList&
-  operator=(ElbStubList&& src) = default;
+  operator=(
+    ElbStubList&& src ///< [in] ムーブ元のオブジェクト
+  ) = default;
 
   /// @brief デストラクタ
   ~ElbStubList();
@@ -53,7 +56,9 @@ public:
 
   /// @brief 末尾に要素を追加する．
   void
-  push_back(ElbStub* elem);
+  push_back(
+    ElbStub* elem ///< [in] 追加する要素
+  );
 
   /// @brief 空の時 true を返す．
   bool
@@ -64,6 +69,7 @@ public:
   /// 結果としてリストは空になる．
   void
   eval();
+
 
 private:
 

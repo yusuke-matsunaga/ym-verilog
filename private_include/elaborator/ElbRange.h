@@ -5,9 +5,8 @@
 /// @brief ElbRange のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlRange.h"
 #include "ym/pt/PtP.h"
@@ -19,17 +18,27 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 /// @class ElbRangeSrc ElbRange.h "ElbRange.h"
 /// @brief ElbRange を作るための情報を持つデータ構造
+///
+/// いわゆるビルダクラス
 //////////////////////////////////////////////////////////////////////
 class ElbRangeSrc
 {
 public:
 
   /// @brief コンストラクタ
-  ElbRangeSrc(const PtRange* pt_range,
-	      const PtExpr* left,
-	      const PtExpr* right,
-	      int left_val,
-	      int right_val);
+  ElbRangeSrc(
+    const PtRange* pt_range,
+    const PtExpr* left,
+    const PtExpr* right,
+    int left_val,
+    int right_val
+  ) : mPtRange{pt_range},
+      mLeftRange{left},
+      mRightRange{right},
+      mLeftVal{left_val},
+      mRightVal{right_val}
+  {
+  }
 
   /// @brief デストラクタ
   ~ElbRangeSrc() = default;
@@ -39,23 +48,23 @@ public:
 
   /// @brief パース木の範囲定義を返す．
   const PtRange*
-  pt_range() const;
+  pt_range() const { return mPtRange; }
 
   /// @brief 範囲の MSB の式を返す．
   const PtExpr*
-  left_range() const;
+  left_range() const { return mLeftRange; }
 
   /// @brief 範囲の LSB の式を返す．
   const PtExpr*
-  right_range() const;
+  right_range() const { return mRightRange; }
 
   /// @brief 範囲の MSB の値を返す．
   int
-  left_range_val() const;
+  left_range_val() const { return mLeftVal; }
 
   /// @brief 範囲の LSB の値を返す．
   int
-  right_range_val() const;
+  right_range_val() const { return mRightVal; }
 
 
 private:
@@ -95,72 +104,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を設定する．
-  /// @param[in] src 元となる情報
   virtual
   void
-  set(const ElbRangeSrc& src) = 0;
+  set(
+    const ElbRangeSrc& src ///< [in] 元となる情報
+  ) = 0;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-inline
-ElbRangeSrc::ElbRangeSrc(const PtRange* pt_range,
-			 const PtExpr* left,
-			 const PtExpr* right,
-			 int left_val,
-			 int right_val) :
-  mPtRange{pt_range},
-  mLeftRange{left},
-  mRightRange{right},
-  mLeftVal{left_val},
-  mRightVal{right_val}
-{
-}
-
-// @brief パース木の範囲定義を返す．
-inline
-const PtRange*
-ElbRangeSrc::pt_range() const
-{
-  return mPtRange;
-}
-
-// @brief 範囲の MSB の式を返す．
-inline
-const PtExpr*
-ElbRangeSrc::left_range() const
-{
-  return mLeftRange;
-}
-
-// @brief 範囲の LSB の式を返す．
-inline
-const PtExpr*
-ElbRangeSrc::right_range() const
-{
-  return mRightRange;
-}
-
-// @brief 範囲の MSB の値を返す．
-inline
-int
-ElbRangeSrc::left_range_val() const
-{
-  return mLeftVal;
-}
-
-// @brief 範囲の LSB の値を返す．
-inline
-int
-ElbRangeSrc::right_range_val() const
-{
-  return mRightVal;
-}
 
 END_NAMESPACE_YM_VERILOG
 

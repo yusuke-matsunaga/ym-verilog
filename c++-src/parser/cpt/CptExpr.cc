@@ -1189,7 +1189,7 @@ CptFactory::new_FuncCall(const FileRegion& file_region,
 {
   ++ mNumFuncCallH;
   auto p{mAlloc.get_memory(sizeof(CptFuncCallH))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptFuncCallH(file_region,
 				PtiArray<const PtNameBranch>(mAlloc, nb_array),

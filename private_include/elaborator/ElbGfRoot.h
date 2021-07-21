@@ -5,9 +5,8 @@
 /// @brief ElbGfRoot のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlNamedObj.h"
 
@@ -30,13 +29,17 @@ public:
   /// @brief 子供のスコープを追加する．
   virtual
   void
-  add(SizeType index,
-      const VlScope* block) = 0;
+  add(
+    SizeType index,      ///< [in] インデックス
+    const VlScope* block ///< [in] 子供のスコープ
+  ) = 0;
 
   /// @brief 子供のスコープを取り出す．
   virtual
   const VlScope*
-  elem_by_index(SizeType index) = 0;
+  elem_by_index(
+    SizeType index ///< [in] インデックス
+  ) = 0;
 
 };
 

@@ -5,9 +5,8 @@
 /// @brief AttrHash のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 #include "ElbFwd.h"
@@ -37,20 +36,19 @@ public:
   clear();
 
   /// @brief 属性を追加する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] def 定義側の属性の時 true とするフラグ
-  /// @param[in] attr_list 付加する属性リスト
   void
-  add(const VlObj* obj,
-      bool def,
-      const vector<const VlAttribute*>& attr_list);
+  add(
+    const VlObj* obj,                           ///< [in] 対象のオブジェクト
+    bool def,                                   ///< [in] 定義側の属性の時 true とするフラグ
+    const vector<const VlAttribute*>& attr_list ///< [in] 付加する属性リスト
+  );
 
   /// @brief 属性を取り出す．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] def 定義側の属性の時 true とするフラグ
   vector<const VlAttribute*>
-  find(const VlObj* obj,
-       bool def) const;
+  find(
+    const VlObj* obj, ///< [in] 対象のオブジェクト
+    bool def          ///< [in] 定義側の属性の時 true とするフラグ
+  ) const;
 
 
 private:
@@ -62,21 +60,22 @@ private:
   {
     // 対応する属性リスト
     vector<const VlAttribute*> mAttrList[2];
-
   };
 
 
 private:
 
   /// @brief 新しい Cell を生成する．
-  /// @param[in] obj 対象のオブジェクト
   Cell*
-  new_cell(const VlObj* obj);
+  new_cell(
+    const VlObj* obj ///< [in] 対象のオブジェクト
+  );
 
   /// @brief オブジェクトから対応する Cell を取り出す．
-  /// @param[in] obj 対象のオブジェクト
   Cell*
-  find_cell(const VlObj* obj) const;
+  find_cell(
+    const VlObj* obj ///< [in] 対象のオブジェクト
+  ) const;
 
 
 private:

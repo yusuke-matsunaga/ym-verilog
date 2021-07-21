@@ -5,9 +5,8 @@
 /// @brief ObjHandle のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/verilog.h"
 #include "ym/FileRegion.h"
@@ -95,7 +94,9 @@ public:
   /// このクラスでは nullptr を返す．
   virtual
   const VlScope*
-  array_elem(int index) const;
+  array_elem(
+    int index ///< [in] インデックス
+  ) const;
 
   /// @brief VlDecl を返す．
   ///

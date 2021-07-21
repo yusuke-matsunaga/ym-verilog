@@ -5,7 +5,7 @@
 /// @brief ElbParameter のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "elaborator/ElbHead.h"
@@ -38,13 +38,15 @@ public:
   parent_scope() const = 0;
 
   /// @brief 符号の取得
-  /// @param[in] val 値
   /// @retval true 符号つき
   /// @retval false 符号なし
-  /// @note ヘッダに型指定がない時は値から情報を得る．
+  ///
+  /// ヘッダに型指定がない時は値から情報を得る．
   virtual
   bool
-  is_signed(const VlValue& val) const = 0;
+  is_signed(
+    const VlValue& val ///< [in] 値
+  ) const = 0;
 
   /// @brief 範囲指定を持つとき true を返す．
   virtual
@@ -52,25 +54,29 @@ public:
   has_range() const = 0;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
+  ///
+  /// 範囲を持たないときの値は不定
   virtual
   int
   left_range_val() const = 0;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
+  ///
+  /// 範囲を持たないときの値は不定
   virtual
   int
   right_range_val() const = 0;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   left_range_string() const = 0;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
+  ///
+  /// 範囲を持たない時の値は不定
   virtual
   string
   right_range_string() const = 0;
@@ -86,31 +92,35 @@ public:
   is_little_endian() const = 0;
 
   /// @brief ビット幅を返す．
-  /// @param[in] val 値
-  /// @note ヘッダが型指定を持たない時には値から情報を得る．
+  ///
+  /// ヘッダが型指定を持たない時には値から情報を得る．
   virtual
   SizeType
-  bit_size(const VlValue& val) const = 0;
+  bit_size(
+    const VlValue& val ///< [in] 値
+  ) const = 0;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
-  /// @param[in] val 値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  /// @note ヘッダが型指定を持たない時には値から情報を得る．
+  ///
+  /// ヘッダが型指定を持たない時には値から情報を得る．
   virtual
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset,
-		  const VlValue& val) const = 0;
+  calc_bit_offset(
+    int index,         ///< [in] インデックス
+    SizeType& offset,  ///< [out] インデックスに対するオフセット値
+    const VlValue& val ///< [in] 値
+  ) const = 0;
 
   /// @breif 値の型を返す．
-  /// @param[in] val 値
-  /// @note ヘッダが型指定を持たない時には値から情報を得る．
+  ///
+  /// ヘッダが型指定を持たない時には値から情報を得る．
   virtual
   VlValueType
-  value_type(const VlValue& val) const = 0;
+  value_type(
+    const VlValue& val ///< [in] 値
+  ) const = 0;
 
   /// @brief データ型の取得
   virtual
@@ -146,12 +156,12 @@ public:
   value() const = 0;
 
   /// @brief parameter の値の設定
-  /// @param[in] expr 値を表す式
-  /// @param[in] value 値
   virtual
   void
-  set_init_expr(const PtExpr* expr,
-		const VlValue& value) = 0;
+  set_init_expr(
+    const PtExpr* expr,  ///< [in] 値を表す式
+    const VlValue& value ///< [in] 値
+  ) = 0;
 
 };
 

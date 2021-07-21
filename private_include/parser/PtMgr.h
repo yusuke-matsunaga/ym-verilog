@@ -5,9 +5,8 @@
 /// @brief PtMgr のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/pt/PtP.h"
 #include "alloc/Alloc.h"
@@ -51,27 +50,29 @@ public:
   pt_udp_list() const;
 
   /// @brief インスタンス記述で用いられている名前かどうか調べる．
-  /// @param[in] name 調べる名前
   /// @return 用いられていたら true を返す．
   bool
-  check_def_name(const string& name) const;
+  check_def_name(
+    const string& name ///< [in] 調べる名前
+  ) const;
 
   /// @brief 関数を探す．
-  /// @param[in] module 親のモジュール
-  /// @param[in] name 関数名
   ///
   /// なければ nullptr を返す．
   const PtItem*
-  find_function(const PtModule* module,
-		const string& name) const;
+  find_function(
+    const PtModule* module, ///< [in] 親のモジュール
+    const string& name      ///< [in] 関数名
+  ) const;
 
   /// @brief attribute instance を取り出す．
-  /// @param[in] pt_obj 対象の構文木の要素
   /// @return PtAttrInst のリスト
   ///
   /// 空の場合もある．
   vector<const PtAttrInst*>
-  find_attr_list(const PtBase* pt_obj) const;
+  find_attr_list(
+    const PtBase* pt_obj ///< [in] 対象の構文木の要素
+  ) const;
 
   /// @brief 全ての属性リストのリストを返す．
   vector<const PtiAttrInfo>
@@ -91,23 +92,31 @@ public:
   ///
   /// 内部で reg_pt() を呼んでいる．
   void
-  reg_udp(const PtUdp* udp);
+  reg_udp(
+    const PtUdp* udp
+  );
 
   /// @brief モジュール定義を追加する．
   ///
   /// 内部で reg_pt() を呼んでいる．
   void
-  reg_module(const PtModule* module);
+  reg_module(
+    const PtModule* module
+  );
 
   /// @brief インスタンス定義名を追加する．
   void
-  reg_defname(const string& name);
+  reg_defname(
+    const string& name
+  );
 
   /// @brief attribute instance を登録する．
   void
-  reg_attrinst(const PtBase* pt_obj,
-	       PtrList<const PtAttrInst>* ai_list,
-	       bool def = false);
+  reg_attrinst(
+    const PtBase* pt_obj,
+    PtrList<const PtAttrInst>* ai_list,
+    bool def = false
+  );
 
   /// @brief 文字列領域を確保する．
   /// @param[in] str 文字列
@@ -115,7 +124,9 @@ public:
   ///
   /// 同一の文字列は共有する．
   const char*
-  save_string(const char* str);
+  save_string(
+    const char* str
+  );
 
 
 public:

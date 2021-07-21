@@ -5,7 +5,7 @@
 /// @brief RawLex のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/verilog.h"
@@ -76,22 +76,25 @@ public:
   /// @{
 
   /// @brief 初期状態に戻す．
-  /// @note 読み込みの途中でこれを呼ぶと大変なことになる．
+  ///
+  /// 読み込みの途中でこれを呼ぶと大変なことになる．
   /// 普通は正常に読み終わったあとか, エラーの後で呼ぶ．
   void
   clear();
 
   /// @brief サーチパスリストを設定する．
-  /// @param[in] searchpath セットするサーチパス
   void
-  set_searchpath(const SearchPathList& searchpath = SearchPathList());
+  set_searchpath(
+    const SearchPathList& searchpath = SearchPathList() ///< [in] セットするサーチパス
+  );
 
   /// @brief ファイルをオープンする．
-  /// @param[in] filename ファイル名
   /// @retval true オープンに成功した．
   /// @retval false ファイルが開けなかった
   bool
-  open_file(const string& filename);
+  open_file(
+    const string& filename ///< [in] ファイル名
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -115,22 +118,34 @@ public:
   /// @brief 最後に読んだトークンの位置を返す．
   /// @return 最後に読んだトークンのファイル上の位置
   FileRegion
-  cur_token_loc() const;
+  cur_token_loc() const
+  {
+    return mCurPos;
+  }
 
   /// @brief 最後に読んだ文字列を返す．
   /// @return 最後に読んだ文字列
   const char*
-  cur_string() const;
+  cur_string() const
+  {
+    return mCurString;
+  }
 
   /// @brief 最後に読んだ文字列を unsigned integer に変換する．
   /// @return 最後に読んだ文字列を unsigned integer に変換したもの
   ymuint
-  cur_uint() const;
+  cur_uint() const
+  {
+    return mCurUint;
+  }
 
   /// @brief 最後に読んだ文字列を real number に変換する．
   /// @return 最後に読んだ文字列を real number に変換したもの
   double
-  cur_rnumber() const;
+  cur_rnumber() const
+  {
+    return strtod(mCurString, static_cast<char**>(nullptr));
+  }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -142,16 +157,20 @@ public:
   /// @{
 
   /// @brief 行番号ウオッチャーを設定する．
-  /// @param[in] watcher 登録対象のウオッチャー
-  /// @note watcher がすでに登録されていればなにもしない．
+  ///
+  /// watcher がすでに登録されていればなにもしない．
   void
-  reg_watcher(VlLineWatcher* watcher);
+  reg_watcher(
+    VlLineWatcher* watcher ///< [in] 登録対象のウオッチャー
+  );
 
   /// @brief 行番号ウオッチャーの登録を解除する．
-  /// @param[in] watcher 登録削除対象のウオッチャー
-  /// @note watcher が登録されていなければなにもしない．
+  ///
+  /// watcher が登録されていなければなにもしない．
   void
-  unreg_watcher(VlLineWatcher* watcher);
+  unreg_watcher(
+    VlLineWatcher* watcher ///< [in] 登録削除対象のウオッチャー
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -163,30 +182,33 @@ public:
   /// @{
 
   /// @brief プラグインの追加
-  /// @param[in] name プラグインを起動するコンパイラディレクティブ名
-  /// @param[in] plugin 登録するプラグイン
   void
-  add_plugin(const char* name,
-	     LexPlugin* plugin);
+  add_plugin(
+    const char* name, ///< [in] プラグインを起動するコンパイラディレクティブ名
+    LexPlugin* plugin ///< [in] 登録するプラグイン
+  );
 
   /// @brief プラグインの削除
-  /// @param[in] name 削除するプラグイン名
   /// @retval true 削除が成功した．
   /// @retval false name という名のプラグインが存在しなかった．
   bool
-  erase_plugin(const char* name);
+  erase_plugin(
+    const char* name ///< [in] 削除するプラグイン名
+  );
 
   /// @brief プラグインを登録できるか調べる．
-  /// @param[in] name プラグイン名
   /// @return true 登録可能
   /// @return false 同名の定義済みプラグインがあり，登録不可能
   bool
-  check_pluginname(const char* name);
+  check_pluginname(
+    const char* name ///< [in] プラグイン名
+  );
 
   /// @brief 内部状態の追加
-  /// @param[in] state 登録する内部状態
   void
-  add_state(LexState* state);
+  add_state(
+    LexState* state ///< [in] 登録する内部状態
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -198,9 +220,10 @@ public:
   /// @{
 
   /// @brief デバッグモードのセット
-  /// @param[in] flag true ならすべてのトークンの情報を標準エラーに出力する
   void
-  set_debug(bool flag = true);
+  set_debug(
+    bool flag = true ///< [in] true ならすべてのトークンの情報を標準エラーに出力する
+  );
 
   /// @brief デバッグモードの取得
   bool
@@ -217,25 +240,31 @@ public:
 
   /// @brief `resetall の処理
   void
-  resetall(const FileRegion& file_region);
+  resetall(
+    const FileRegion& file_region ///< [in] ファイル位置の情報
+  );
 
   /// @brief マクロ定義の検査
-  /// @param[in] name 名前
   /// @return name という名のマクロが定義されていたら true を返す．
   bool
-  is_macro_defined(const char* name) const;
+  is_macro_defined(
+    const char* name ///< [in] 名前
+  ) const;
 
   /// @brief マクロの多重展開のチェック
-  /// @param[in] name 名前
   /// @return マクロ展開が自己ループしていたら true を返す．
   bool
-  check_macro(const char* name) const;
+  check_macro(
+    const char* name ///< [in] 名前
+  ) const;
 
   /// @brief マクロの追加
   void
-  push_macro(const char* name,
-	     const TokenInfo* top,
-	     TokenList* param_array);
+  push_macro(
+    const char* name,      ///< [in] 名前
+    const TokenInfo* top,  ///< [in] トークンの先頭
+    TokenList* param_array ///< [in] 引数のリスト
+  );
 
   /// @brief `ifdef/`ifndef 文の現在の条件の取得
   /// @retval true 条件が成り立っている
@@ -253,13 +282,17 @@ public:
   flip_cond();
 
   /// @brief 改行文字を読み込んだときに呼ばれる関数
-  /// @param[in] line 行番号
   void
-  check_line(ymuint line);
+  check_line(
+    int line ///< [in] 行番号
+  );
 
   /// @brief コンテキストを返す．
   Context
-  context();
+  context()
+  {
+    return mContext;
+  }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -271,34 +304,36 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief トークンの読み出しを行う．
-  /// @param[out] buff 結果の文字列を格納するバッファ
-  /// @param[out] token_loc トークンの位置情報
   int
   _read_token();
 
   /// @brief 2進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
   /// @return トークンを返す．
   int
-  read_bin_str(int c);
+  read_bin_str(
+    int c ///< [in] 最初の文字
+  );
 
   /// @brief 8進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
   /// @return トークンを返す．
   int
-  read_oct_str(int c);
+  read_oct_str(
+    int c ///< [in] 最初の文字
+  );
 
   /// @brief 10進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
   /// @return トークンを返す．
   int
-  read_dec_str(int c);
+  read_dec_str(
+    int c ///< [in] 最初の文字
+  );
 
   /// @brief 16進数モードの読み込みを行う．
-  /// @param[in] c 最初の文字
   /// @return トークンを返す．
   int
-  read_hex_str(int c);
+  read_hex_str(
+    int c ///< [in] 最初の文字
+  );
 
   /// @brief 識別子に用いられる文字([a-zA-Z0-9_$])が続く限り読みつづける．
   void
@@ -306,7 +341,8 @@ private:
 
   /// @brief 二重引用符用の読み込み
   /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
+  ///
+  /// 可能性のあるトークンは
   ///  - STRING
   ///  - ERROR
   int
@@ -314,7 +350,8 @@ private:
 
   /// @brief escaped identifier 用の読み込み
   /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
+  ///
+  /// 可能性のあるトークンは
   ///  - SPACE
   ///  - IDENTIFIER
   ///  - ERROR
@@ -323,7 +360,8 @@ private:
 
   /// @brief 数字を読み込む．
   /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
+  ///
+  /// 可能性のあるトークンは
   ///  - UNUM_INT
   ///  - RNUMBER
   ///  - ERROR
@@ -336,7 +374,8 @@ private:
 
   /// @brief '/' を読み込んだ後の処理
   /// @return トークン番号を返す．
-  /// @note 可能性のあるトークンは
+  ///
+  /// 可能性のあるトークンは
   ///  - COMMENT1
   ///  - COMMENT2
   ///  - '/'
@@ -421,7 +460,7 @@ private:
 
 };
 
-
+#if 0
 //////////////////////////////////////////////////////////////////////
 // インライン関数の定義
 //////////////////////////////////////////////////////////////////////
@@ -469,6 +508,7 @@ RawLex::context()
 {
   return mContext;
 }
+#endif
 
 END_NAMESPACE_YM_VERILOG
 

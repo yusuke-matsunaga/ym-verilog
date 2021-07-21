@@ -5,11 +5,12 @@
 /// @brief PtiAttrInfo のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2020 Yusuke Matsunaga
+/// Copyright (C) 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
 
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
+
 
 BEGIN_NAMESPACE_YM_VERILOG
 
@@ -22,12 +23,15 @@ class PtiAttrInfo
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_obj 元の構文木要素
-  /// @param[in] pt_attr_list attribute instance の構文木要素のリスト
-  /// @param[in] def 定義側の時 true とするフラグ
-  PtiAttrInfo(const PtBase* pt_obj,
-	      const vector<const PtAttrInst*>& pt_att_list,
-	      bool def = false);
+  PtiAttrInfo(
+    const PtBase* pt_obj,                          ///< [in] 元の構文木要素
+    const vector<const PtAttrInst*>& pt_attr_list, ///< [in] attribute instance の構文木要素のリスト
+    bool def = false                               ///< [in] 定義側の時 true とするフラグ
+  ) : mObj{pt_obj},
+      mAttrList{pt_attr_list},
+      mDef{def}
+  {
+  }
 
   /// @brief デストラクタ
   ~PtiAttrInfo() = default;
@@ -40,15 +44,24 @@ public:
 
   /// 元の構文木要素を返す．
   const PtBase*
-  obj() const;
+  obj() const
+  {
+    return mObj;
+  }
 
   /// @brief 属性リストを返す．
   const vector<const PtAttrInst*>&
-  attr_list() const;
+  attr_list() const
+  {
+    return mAttrList;
+  }
 
   /// @brief 定義側の属性の時 true を返す．
   bool
-  def() const;
+  def() const
+  {
+    return mDef;
+  }
 
 
 private:
@@ -66,49 +79,6 @@ private:
   bool mDef;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief コンストラクタ
-// @param[in] pt_obj 元の構文木要素
-// @param[in] pt_attr_list attribute instance の構文木要素のリスト
-// @param[in] def 定義側の時 true とするフラグ
-inline
-PtiAttrInfo::PtiAttrInfo(const PtBase* pt_obj,
-			 const vector<const PtAttrInst*>& pt_attr_list,
-			 bool def) :
-  mObj{pt_obj},
-  mAttrList{pt_attr_list},
-  mDef{def}
-{
-}
-
-// 元の構文木要素を返す．
-inline
-const PtBase*
-PtiAttrInfo::obj() const
-{
-  return mObj;
-}
-
-// @brief 属性リストを返す．
-inline
-const vector<const PtAttrInst*>&
-PtiAttrInfo::attr_list() const
-{
-  return mAttrList;
-}
-
-// @brief 定義側の属性の時 true を返す．
-inline
-bool
-PtiAttrInfo::def() const
-{
-  return mDef;
-}
 
 END_NAMESPACE_YM_VERILOG
 

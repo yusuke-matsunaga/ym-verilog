@@ -1456,7 +1456,7 @@ CptFactory::new_Disable(const FileRegion& file_region,
 {
   ++ mNumDisableH;
   void* p{mAlloc.get_memory(sizeof(CptDisableH))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptDisableH(file_region,
 			       PtiArray<const PtNameBranch>(mAlloc, nb_array),
@@ -1484,7 +1484,7 @@ CptFactory::new_Enable(const FileRegion& file_region,
 {
   ++ mNumEnableH;
   void* p{mAlloc.get_memory(sizeof(CptEnableH))};
-  auto nb_array = hname->name_branch();
+  auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
   auto obj{new (p) CptEnableH(file_region,
 			      PtiArray<const PtNameBranch>(mAlloc, nb_array),

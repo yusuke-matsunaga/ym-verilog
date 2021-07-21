@@ -5,9 +5,8 @@
 /// @brief EiGenvar のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ElbDecl.h"
 #include "ym/pt/PtP.h"

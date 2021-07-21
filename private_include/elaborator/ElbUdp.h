@@ -5,9 +5,8 @@
 /// @brief ElbUdp のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
+/// Copyright (C) 2005-2011, 2014, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "ym/vl/VlUdp.h"
 
@@ -25,10 +24,10 @@ class ElbUdpDefn :
 public:
 
   /// @brief コンストラクタ
-  ElbUdpDefn() { }
+  ElbUdpDefn() = default;
 
   /// @brief デストラクタ
-  ~ElbUdpDefn() { }
+  ~ElbUdpDefn() = default;
 
 
 public:
@@ -37,33 +36,30 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力オブジェクトの内容を設定する．
-  /// @param[in] pos ポート中の位置
-  /// @param[in] file_region ソースファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] dir 向き
   virtual
   void
-  set_io(SizeType pos,
-	 const PtIOHead* pt_header,
-	 const PtIOItem* pt_item) = 0;
+  set_io(
+    SizeType pos,              ///< [in] ポート中の位置
+    const PtIOHead* pt_header, ///< [in] パース木のヘッダ
+    const PtIOItem* pt_item    ///< [in] パース木の要素
+  ) = 0;
 
   /// @brief 初期値を設定する．
-  /// @param[in] init_expr 初期値を表す式
-  /// @param[in] init_val 初期値
   virtual
   void
-  set_initial(const PtExpr* init_expr,
-	      const VlScalarVal& init_val) = 0;
+  set_initial(
+    const PtExpr* init_expr,    ///< [in] 初期値を表す式
+    const VlScalarVal& init_val ///< [in] 初期値
+  ) = 0;
 
   /// @brief table entry の内容を設定する．
-  /// @param[in] pos 行番号
-  /// @param[in] pt_udp_entry パース木の一行分の定義
-  /// @param[in] vals シンボル値の配列
   virtual
   void
-  set_tableentry(SizeType pos,
-		 const PtUdpEntry* pt_udp_entry,
-		 const vector<VlUdpVal>& vals) = 0;
+  set_tableentry(
+    SizeType pos,                   ///< [in] 行番号
+    const PtUdpEntry* pt_udp_entry, ///< [in] パース木の一行分の定義
+    const vector<VlUdpVal>& vals    ///< [in] シンボル値の配列
+  ) = 0;
 
 };
 
@@ -78,10 +74,10 @@ class ElbTableEntry :
 public:
 
   /// @brief コンストラクタ
-  ElbTableEntry() { }
+  ElbTableEntry() = default;
 
   /// @brief デストラクタ
-  ~ElbTableEntry() { }
+  ~ElbTableEntry() = default;
 
 
 public:
@@ -92,8 +88,10 @@ public:
   /// @brief 設定する．
   virtual
   void
-  set(const PtUdpEntry* pt_entry,
-      const vector<VlUdpVal>& vals) = 0;
+  set(
+    const PtUdpEntry* pt_entry,  ///< [in] パース木の要素
+    const vector<VlUdpVal>& vals ///< [in] 値の配列
+  ) = 0;
 
 };
 

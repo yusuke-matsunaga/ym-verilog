@@ -5,9 +5,8 @@
 /// @brief PtrList のヘッダファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
+/// Copyright (C) 2005-2010, 2014, 2020, 2021 Yusuke Matsunaga
 /// All rights reserved.
-
 
 #include "PtiFwd.h"
 
@@ -44,31 +43,57 @@ class PtrListIterator
 public:
 
   /// @brief コンストラクタ
-  PtrListIterator();
+  PtrListIterator() = default;
 
   /// @brief コピーコンストラクタ
-  PtrListIterator(const PtrListIterator& src);
+  PtrListIterator(
+    const PtrListIterator& src ///< [in] ソース
+  ) = default;
 
   /// @brief PtrList が用いるコンストラクタ
-  PtrListIterator(PtrListCell<T>* cell);
+  explicit
+  PtrListIterator(
+    PtrListCell<T>* cell ///< [in] 要素
+  ) : mCell{cell}
+  {
+  }
 
   /// @brief デストラクタ
-  ~PtrListIterator();
+  ~PtrListIterator() = default;
 
 
 public:
 
   /// @brief 内容を取り出す演算子
   T*
-  operator*() const;
+  operator*() const
+  {
+    if ( mCell ) {
+      return mCell->mPtr;
+    }
+    else {
+      return nullptr;
+    }
+  }
 
   /// @brief 次の要素を指す．
-  const PtrListIterator&
-  operator++();
+  PtrListIterator&
+  operator++()
+  {
+    if ( mCell ) {
+      mCell = mCell->mLink;
+    }
+    return *this;
+  }
 
   /// @brief 等価比較演算子
   bool
-  operator==(const PtrListIterator& right) const;
+  operator==(
+    const PtrListIterator& right ///< [in] 相手のオペランド
+  ) const
+  {
+    return mCell == right.mCell;
+  }
 
 
 private:
@@ -77,9 +102,22 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // セル
-  PtrListCell<T>* mCell;
+  PtrListCell<T>* mCell{nullptr};
 
 };
+
+
+/// @brief 非等価比較演算子
+template <typename T>
+inline
+bool
+operator!=(
+  const PtrListIterator<T>& left,
+  const PtrListIterator<T>& right
+)
+{
+  return !left.operator==(right);
+}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -101,52 +139,115 @@ public:
 public:
 
   /// @brief コンストラクタ
-  /// @note 空のリストを作る
-  PtrList();
+  PtrList() = default;
 
   /// @brief デストラクタ
-  ~PtrList();
+  ~PtrList()
+  {
+    clear();
+  }
 
 
 public:
 
   /// @brief リストのクリア
   void
-  clear();
+  clear()
+  {
+    for ( auto cell = mTop; cell; ) {
+      auto next{cell->mLink};
+      delete cell;
+      cell = next;
+    }
+    mTop = nullptr;
+    mEnd = nullptr;
+    mNum = 0;
+  }
 
   /// @brief 要素を先頭に追加
   void
-  push_front(T1* elem);
+  push_front(
+    T1* elem ///< [in] 追加する要素
+  )
+  {
+    auto cell{new Cell{elem, nullptr}};
+    cell->mLink = mTop;
+    mTop = cell;
+    if ( mEnd == nullptr ) {
+      mEnd = cell;
+    }
+    ++ mNum;
+  }
 
   /// @brief 要素を末尾に追加
-  /// @param[in] elem 追加する要素
   void
-  push_back(T1* elem);
+  push_back(
+    T1* elem ///< [in] 追加する要素
+  )
+  {
+    auto cell{new Cell{elem, nullptr}};
+    if ( mEnd ) {
+      mEnd->mLink = cell;
+    }
+    else {
+      mTop = cell;
+    }
+    mEnd = cell;
+    ++ mNum;
+  }
 
   /// @brief 要素数の取得
   /// @return 要素数
   SizeType
-  size() const;
+  size() const
+  {
+    return mNum;
+  }
 
   /// @brief 空の時に true を返す．
   bool
-  empty() const;
+  empty() const
+  {
+    return mNum == 0;
+  }
 
   /// @brief 先頭の反復子を返す．
   const_iterator
-  begin() const;
+  begin() const
+  {
+    return PtrListIterator<T1>(mTop);
+  }
 
   /// @brief 末尾の反復子を返す．
   const_iterator
-  end() const;
+  end() const
+  {
+    return PtrListIterator<T1>(nullptr);
+  }
 
   /// @brief 先頭の要素を返す．
   T1*
-  front() const;
+  front() const
+  {
+    if ( mTop ) {
+      return mTop->mPtr;
+    }
+    else {
+      return nullptr;
+    }
+  }
 
   /// @brief 末尾の要素を返す．
   T1*
-  back() const;
+  back() const
+  {
+    if ( mEnd ) {
+      return mEnd->mPtr;
+    }
+    else {
+      return nullptr;
+    }
+  }
 
 
 public:
@@ -157,7 +258,16 @@ public:
   /// @brief 内容をvectorにコピーする．
   /// @note この処理の後ではリストは空になる．
   vector<T2*>
-  to_vector();
+  to_vector()
+  {
+    vector<T2*> vec; vec.reserve(mNum);
+    for ( auto elem: *this ) {
+      vec.push_back(elem);
+    }
+    clear();
+    delete this;
+    return vec;
+  }
 
 
 private:
@@ -166,17 +276,17 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 先頭の要素
-  Cell* mTop;
+  Cell* mTop{nullptr};
 
   // 末尾の要素
-  Cell* mEnd;
+  Cell* mEnd{nullptr};
 
   // 要素数
-  SizeType mNum;
+  SizeType mNum{0};
 
 };
 
-
+#if 0
 //////////////////////////////////////////////////////////////////////
 // PtrListIterator のインライン関数の定義
 //////////////////////////////////////////////////////////////////////
@@ -423,6 +533,8 @@ PtrList<T1, T2>::to_vector()
   delete this;
   return vec;
 }
+
+#endif
 
 END_NAMESPACE_YM_VERILOG
 
