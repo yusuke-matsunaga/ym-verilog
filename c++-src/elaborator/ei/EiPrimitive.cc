@@ -18,8 +18,9 @@
 #include "ym/pt/PtMisc.h"
 
 #include "ym/ClibCell.h"
-#include "ym/ClibCellPin.h"
-#include "ym/ClibObjList.h"
+#include "ym/ClibPin.h"
+
+#include "ym/Range.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -808,7 +809,8 @@ EiPrimitive::init_port(SizeType port_num,
 {
   mPortArray = vector<EiPrimTerm>(port_num);
 
-  for ( auto& pin: cell.pin_list() ) {
+  for ( auto id: Range(cell.pin_num()) ) {
+    auto& pin = cell.pin(id);
     VpiDir dir;
     if ( pin.is_input() ) {
       dir = VpiDir::Input;
@@ -822,8 +824,7 @@ EiPrimitive::init_port(SizeType port_num,
     else {
       ASSERT_NOT_REACHED;
     }
-    int pid = pin.pin_id();
-    mPortArray[pid].set(this, pid, dir);
+    mPortArray[id].set(this, id, dir);
   }
 }
 

@@ -18,7 +18,7 @@
 #include "ym/pt/PtMisc.h"
 
 #include "ym/ClibCell.h"
-#include "ym/ClibCellPin.h"
+#include "ym/ClibPin.h"
 
 #include "elaborator/ElbUdp.h"
 #include "elaborator/ElbPrimitive.h"
@@ -225,8 +225,8 @@ ItemGen::instantiate_cell(const VlScope* parent,
       // 名前による結合
       for ( auto pt_con: pt_inst->port_list() ) {
 	auto pin_name{pt_con->name()};
-	int pin_id{cell.pin_id(pin_name)};
-	if ( pin_id == -1 ) {
+	auto pin_id{cell.pin_id(pin_name)};
+	if ( pin_id == CLIB_NULLID ) {
 	  ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
 	}
       }
@@ -541,8 +541,8 @@ ItemGen::link_cell(ElbPrimitive* primitive,
   for ( auto pt_con: pt_inst->port_list() ) {
     SizeType index;
     if ( conn_by_name ) {
-      int pin_id{cell.pin_id(pt_con->name())};
-      if ( pin_id == -1 ) {
+      auto pin_id{cell.pin_id(pt_con->name())};
+      if ( pin_id == CLIB_NULLID ) {
 	ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
       }
       index = pin_id;
