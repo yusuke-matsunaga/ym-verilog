@@ -226,7 +226,7 @@ add_custom_target ( verilog_grammer ALL
 # Create custom command for bison/yacc (note the DEPENDS)
 add_custom_command (
   COMMAND "${BISON_EXECUTABLE}"
-  -y "${CMAKE_CURRENT_SOURCE_DIR}/c++-src/parser/main/verilog_grammer.yy"
+  "${CMAKE_CURRENT_SOURCE_DIR}/c++-src/parser/main/verilog_grammer.yy"
   -o "${CMAKE_CURRENT_BINARY_DIR}/verilog_grammer.cc"
   -d -v
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/verilog_grammer.cc"
