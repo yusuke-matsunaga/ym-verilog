@@ -261,13 +261,15 @@ main(int argc,
 
   ClibCellLibrary cell_library;
   if ( liberty_name != nullptr ) {
-    if ( !cell_library.read_liberty(liberty_name) ) {
+    cell_library = ClibCellLibrary::read_liberty(liberty_name);
+    if ( !cell_library.is_valid() ) {
       cerr << liberty_name << ": read failed" << endl;
       return 0;
     }
   }
   else if ( mislib_name != nullptr ) {
-    if ( !cell_library.read_mislib(mislib_name) ) {
+    cell_library = ClibCellLibrary::read_mislib(mislib_name);
+    if ( !cell_library.is_valid() ) {
       cerr << mislib_name << mislib_name << ": read failed" << endl;
       return 0;
     }
