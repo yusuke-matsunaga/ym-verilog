@@ -11,7 +11,7 @@
 
 #include "ym/MsgMgr.h"
 #include "ym/StreamMsgHandler.h"
-#include "ym/StopWatch.h"
+#include "ym/Timer.h"
 
 #include "scanner/Lex.h"
 
@@ -45,7 +45,7 @@ rawlex_mode(const vector<string>& filename_list,
       lex.reg_watcher(mw);
     }
 
-    StopWatch timer;
+    Timer timer;
     timer.start();
 
     for ( auto filename: filename_list ) {
@@ -69,7 +69,7 @@ rawlex_mode(const vector<string>& filename_list,
 
     timer.stop();
     if ( verbose ) {
-      USTime time = timer.time();
+      auto time = timer.get_time();
       cout << "Time: " << time << endl;
     }
 

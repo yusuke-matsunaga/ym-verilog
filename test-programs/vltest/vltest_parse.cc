@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ym/StopWatch.h"
+#include "ym/Timer.h"
 #include "ym/VlMgr.h"
 #include "VlTestLineWatcher.h"
 #include "parser/PtDumper.h"
@@ -46,7 +46,7 @@ parse_mode(const vector<string>& filename_list,
 #if 0
     try {
 #endif
-      StopWatch timer;
+      Timer timer;
       timer.start();
       VlMgr vlmgr;
       for ( auto name: filename_list ) {
@@ -60,7 +60,7 @@ parse_mode(const vector<string>& filename_list,
 	}
       }
       timer.stop();
-      USTime time = timer.time();
+      auto time = timer.get_time();
       if ( verbose ) {
 	cerr << "Parsing time: " << time << endl;
       }

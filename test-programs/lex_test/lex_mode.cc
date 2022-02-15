@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ym/StopWatch.h"
+#include "ym/Timer.h"
 #include "VlTestLineWatcher.h"
 
 #include "ym/MsgMgr.h"
@@ -46,7 +46,7 @@ lex_mode(const vector<string>& filename_list,
       lex.reg_watcher(mw);
     }
 
-    StopWatch timer;
+    Timer timer;
     timer.start();
 
     int nt_id = 0;
@@ -103,7 +103,7 @@ lex_mode(const vector<string>& filename_list,
     }
 
     timer.stop();
-    USTime time = timer.time();
+    auto time = timer.get_time();
 
     if ( verbose ) {
       cout << "Total " << setw(10) << nt_id << " IDENTIFIER tokens" << endl

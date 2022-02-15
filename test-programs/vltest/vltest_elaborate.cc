@@ -7,7 +7,7 @@
 /// All rights reserved.
 
 
-#include "ym/StopWatch.h"
+#include "ym/Timer.h"
 #include "VlTestLineWatcher.h"
 #include "ym/VlMgr.h"
 #include "VlDumper.h"
@@ -58,7 +58,7 @@ elaborate_mode(const vector<string>& filename_list,
 #if !defined(YM_DEBUG)
     try {
 #endif
-      StopWatch timer;
+      Timer timer;
       timer.start();
       VlMgr vlmgr;
       for ( auto name: filename_list ) {
@@ -73,19 +73,19 @@ elaborate_mode(const vector<string>& filename_list,
       }
 
       timer.stop();
-      USTime time = timer.time();
+      auto time = timer.get_time();
       if ( verbose ) {
 	cerr << "Parsing time: " << time << endl;
       }
 
       if ( !MsgMgr::error_num() ) {
-	StopWatch timer;
+	Timer timer;
 	timer.start();
 
 	vlmgr.elaborate(cell_library);
 
 	timer.stop();
-	USTime time = timer.time();
+	auto time = timer.get_time();
 	if ( verbose ) {
 	  cerr << "Elaborating time: " << time << endl;
 	}
