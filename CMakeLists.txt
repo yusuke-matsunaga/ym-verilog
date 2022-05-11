@@ -50,7 +50,7 @@ include_directories(
 # ===================================================================
 
 #add_subdirectory ( cython-src )
-add_subdirectory ( test-programs )
+add_subdirectory ( tests/programs )
 
 
 # ===================================================================
