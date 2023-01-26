@@ -88,7 +88,7 @@ VlDumperImpl::put_stmt(const char* label,
   case VpiObjType::Disable:         nm = "Disable"; break;
   case VpiObjType::DelayControl:    nm = "DelayControl"; break;
   case VpiObjType::EventControl:    nm = "EventControl"; break;
-  default: assert_not_reached( __FILE__, __LINE__);
+  default: ASSERT_NOT_REACHED;
   }
 
   VlDumpHeader x(this, label, nm);

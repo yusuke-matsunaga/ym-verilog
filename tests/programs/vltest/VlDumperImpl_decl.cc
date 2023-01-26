@@ -108,7 +108,7 @@ VlDumperImpl::put_decl(const char* label,
   case VpiObjType::NamedEvent:      nm = "NamedEvent"; break;
   case VpiObjType::Parameter:       nm = "Parameter"; break;
   case VpiObjType::SpecParam:       nm = "SpecParam"; break;
-  default: assert_not_reached( __FILE__, __LINE__ );
+  default: ASSERT_NOT_REACHED;
   }
   VlDumpHeader x(this, label, nm);
 
@@ -257,7 +257,7 @@ VlDumperImpl::put_declarray(const char* label,
   case VpiObjType::RealVar:         nm = "RealVar"; break;
   case VpiObjType::TimeVar:         nm = "TimeVar"; break;
   case VpiObjType::NamedEventArray: nm = "NamedEventArray"; break;
-  default: assert_not_reached( __FILE__, __LINE__ );
+  default: ASSERT_NOT_REACHED;
   }
   VlDumpHeader x(this, label, nm);
 
