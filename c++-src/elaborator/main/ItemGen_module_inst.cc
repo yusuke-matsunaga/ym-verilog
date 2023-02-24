@@ -60,9 +60,9 @@ ItemGen::phase1_muheader(const VlScope* parent,
   }
 
   // 正式な仕様にはないが，セルライブラリを探す．
-  int cell_id{find_cell_id(defname)};
-  if ( cell_id != -1 ) {
-    phase1_cell(parent, pt_head, cell_id);
+  auto cell = find_cell(defname);
+  if ( cell.is_valid() ) {
+    phase1_cell(parent, pt_head, cell);
     return;
   }
 
@@ -223,11 +223,11 @@ ItemGen::phase1_udp(const VlScope* parent,
 // @brief cell instance の生成を行う．
 // @param[in] parent 親のスコープ
 // @param[in] pt_head ヘッダ
-// @param[in] cell_id セル番号
+// @param[in] cell セル
 void
 ItemGen::phase1_cell(const VlScope* parent,
 		     const PtItem* pt_head,
-		     int cell_id)
+		     ClibCell cell)
 {
   // この場合, parameter 割り当てリストは空でなければならない．
   auto pa_array{pt_head->paramassign_list()};
@@ -237,7 +237,7 @@ ItemGen::phase1_cell(const VlScope* parent,
 
   // 今すぐには処理できないのでキューに積む．
   add_phase2stub(make_stub(this, &ItemGen::instantiate_cell,
-			   parent, pt_head, cell_id));
+			   parent, pt_head, cell));
 }
 
 // @brief module array instance の入出力端子の接続を行う．

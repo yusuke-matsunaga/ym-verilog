@@ -357,7 +357,7 @@ public:
   new_CellHead(
     const VlScope* parent,   ///< [in] 親のスコープ
     const PtItem* pt_header, ///< [in] パース木の定義
-    int cell_id              ///< [in] セル番号
+    const ClibCell& cell     ///< [in] セル
   ) = 0;
 
   /// @brief プリミティブインスタンスを生成する．

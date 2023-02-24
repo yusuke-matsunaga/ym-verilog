@@ -9,6 +9,7 @@
 /// All rights reserved.
 
 #include "ym/vl/VlPrimitive.h"
+#include "ym/clib.h"
 #include "elaborator/ElbHead.h"
 #include "elaborator/ElbFwd.h"
 
@@ -47,10 +48,10 @@ public:
   const VlUdpDefn*
   udp_defn() const = 0;
 
-  /// @brief セル番号を返す．
+  /// @brief セルを返す．
   virtual
-  int
-  cell_id() const = 0;
+  ClibCell
+  cell() const = 0;
 
   /// @brief 0 の強さを得る．
   virtual

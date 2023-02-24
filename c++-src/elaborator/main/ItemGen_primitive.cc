@@ -210,23 +210,22 @@ ItemGen::instantiate_udpheader(const VlScope* parent,
 // @brief セル instance の生成を行う
 // @param[in] parent 親のスコープ
 // @param[in] pt_head ヘッダ
-// @param[in] cell_id セル番号
+// @param[in] cell セル
 void
 ItemGen::instantiate_cell(const VlScope* parent,
 			  const PtItem* pt_head,
-			  int cell_id)
+			  ClibCell cell)
 {
-  auto prim_head{mgr().new_CellHead(parent, pt_head, cell_id)};
-  const auto& cell{get_cell(cell_id)};
+  auto prim_head = mgr().new_CellHead(parent, pt_head, cell);
   for ( auto pt_inst: pt_head->inst_list() ) {
     // ポート数のチェックを行う．
     SizeType port_num{pt_inst->port_num()};
     if ( port_num > 0 && pt_inst->port(0)->name() != nullptr ) {
       // 名前による結合
       for ( auto pt_con: pt_inst->port_list() ) {
-	auto pin_name{pt_con->name()};
-	auto pin_id{cell.pin_id(pin_name)};
-	if ( pin_id == CLIB_NULLID ) {
+	auto pin_name = pt_con->name();
+	auto pin = cell.pin(pin_name);
+	if ( pin.is_invalid() ) {
 	  ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
 	}
       }
@@ -449,7 +448,7 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name{(pt_inst->port(0)->name() != nullptr)};
 
-  const auto& cell{get_cell(prim->cell_id())};
+  auto cell = prim->cell();
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
@@ -457,11 +456,11 @@ ItemGen::link_cell_array(ElbPrimArray* prim_array,
   for ( auto pt_con: pt_inst->port_list() ) {
     int index;
     if ( conn_by_name ) {
-      int pin_id = cell.pin_id(pt_con->name());
-      if ( pin_id == -1 ) {
+      auto pin = cell.pin(pt_con->name());
+      if ( pin.is_invalid() ) {
 	ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
       }
-      index = pin_id;
+      index = pin.pin_id();
     }
     else {
       index = pos;
@@ -528,12 +527,12 @@ void
 ItemGen::link_cell(ElbPrimitive* primitive,
 		   const PtInst* pt_inst)
 {
-  auto parent{primitive->parent_scope()};
+  auto parent = primitive->parent_scope();
 
   // YACC の文法から一つでも named_con なら全部そう
   bool conn_by_name{(pt_inst->port(0)->name() != nullptr)};
 
-  const auto& cell{get_cell(primitive->cell_id())};
+  auto cell = primitive->cell();
 
   ElbEnv env1;
   ElbNetLhsEnv env2(env1);
@@ -541,18 +540,18 @@ ItemGen::link_cell(ElbPrimitive* primitive,
   for ( auto pt_con: pt_inst->port_list() ) {
     SizeType index;
     if ( conn_by_name ) {
-      auto pin_id{cell.pin_id(pt_con->name())};
-      if ( pin_id == CLIB_NULLID ) {
+      auto pin = cell.pin(pt_con->name());
+      if ( pin.is_invalid() ) {
 	ErrorGen::illegal_pin_name(__FILE__, __LINE__, pt_con);
       }
-      index = pin_id;
+      index = pin.pin_id();
     }
     else {
       index = pos;
       ++ pos;
     }
     // ai_list は無視する．
-    auto pt_expr{pt_con->expr()};
+    auto pt_expr = pt_con->expr();
     if ( !pt_expr ) {
       continue;
     }

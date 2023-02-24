@@ -12,6 +12,7 @@
 #include "ym/pt/PtP.h"
 #include "ym/vl/VlFwd.h"
 #include "ym/ClibCellLibrary.h"
+#include "ym/ClibCell.h"
 
 #include "ObjDict.h"
 #include "AttrDict.h"
@@ -132,11 +133,11 @@ private:
   ) const;
 
   /// @brief セルの探索
-  /// @return name という名のセル番号を返す．
+  /// @return name という名のセルを返す．
   ///
-  /// なければ -1 を返す．
-  int
-  find_cell_id(
+  /// なければ不正値を返す．
+  ClibCell
+  find_cell(
     const string& name ///< [in] セル名
   ) const;
 

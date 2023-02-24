@@ -369,13 +369,12 @@ Elaborator::reg_constant_function(const VlTaskFunc* func)
 }
 
 // @brief セルの探索
-// @param[in] name セル名
-// @return name という名のセル番号を返す．
-// @note なければ -1 を返す．
-int
-Elaborator::find_cell_id(const string& name) const
+ClibCell
+Elaborator::find_cell(
+  const string& name
+) const
 {
-  return mCellLibrary.cell_id(name);
+  return mCellLibrary.cell(name);
 }
 
 END_NAMESPACE_YM_VERILOG

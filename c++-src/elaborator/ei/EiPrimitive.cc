@@ -72,13 +72,13 @@ EiFactory::new_UdpHead(const VlScope* parent,
 // @brief セルプリミティブのヘッダを生成する．
 // @param[in] parent 親のスコープ
 // @param[in] pt_header パース木の定義
-// @param[in] cell_id セル番号
+// @param[in] cell セル
 ElbPrimHead*
 EiFactory::new_CellHead(const VlScope* parent,
 			const PtItem* pt_header,
-			int cell_id)
+			const ClibCell& cell)
 {
-  auto head = new EiPrimHeadC(parent, pt_header, cell_id);
+  auto head = new EiPrimHeadC(parent, pt_header, cell);
   return head;
 }
 
@@ -239,11 +239,12 @@ EiPrimHead::udp_defn() const
   return nullptr;
 }
 
-// @brief セル番号を返す．
-int
-EiPrimHead::cell_id() const
+// @brief セルを返す．
+ClibCell
+EiPrimHead::cell() const
 {
-  return -1;
+  // 不正値
+  return {};
 }
 
 // @brief 0 の強さを得る．
@@ -399,12 +400,12 @@ EiPrimHeadUD::set_delay(const VlDelay* expr)
 // @brief コンストラクタ
 // @param[in] parent 親のスコープ
 // @param[in] pt_header パース木の定義
-// @param[in] cell_id セル番号
+// @param[in] cell セル
 EiPrimHeadC::EiPrimHeadC(const VlScope* parent,
 			 const PtItem* pt_header,
-			 int cell_id) :
+			 const ClibCell& cell) :
   EiPrimHead(parent, pt_header),
-  mCellId{cell_id}
+  mCell{cell}
 {
 }
 
@@ -424,16 +425,14 @@ EiPrimHeadC::prim_type() const
 string
 EiPrimHeadC::def_name() const
 {
-#warning "TODO:2020-88-12: EiPrimHeadC: でセル名の取得"
-  //return mCell->name().c_str();
-  return "";
+  return mCell.name();
 }
 
 // @brief セル番号を返す．
-int
-EiPrimHeadC::cell_id() const
+ClibCell
+EiPrimHeadC::cell() const
 {
-  return mCellId;
+  return mCell;
 }
 
 
@@ -547,10 +546,10 @@ EiPrimArray::udp_defn() const
 }
 
 // @brief セル番号を返す．
-int
-EiPrimArray::cell_id() const
+ClibCell
+EiPrimArray::cell() const
 {
-  return head()->cell_id();
+  return head()->cell();
 }
 
 // @brief 0 の強さを得る．
@@ -732,10 +731,10 @@ EiPrimitive::udp_defn() const
 }
 
 // @brief セル番号を返す．
-int
-EiPrimitive::cell_id() const
+ClibCell
+EiPrimitive::cell() const
 {
-  return head()->cell_id();
+  return head()->cell();
 }
 
 // @brief 0 の強さを得る．
@@ -804,13 +803,15 @@ EiPrimitive::init_port(SizeType port_num)
 // @param[in] port_num ポート数
 // @param[in] cell セル
 void
-EiPrimitive::init_port(SizeType port_num,
-		       const ClibCell& cell)
+EiPrimitive::init_port(
+  SizeType port_num,
+  const ClibCell& cell
+)
 {
   mPortArray = vector<EiPrimTerm>(port_num);
 
   for ( auto id: Range(cell.pin_num()) ) {
-    auto& pin = cell.pin(id);
+    auto pin = cell.pin(id);
     VpiDir dir;
     if ( pin.is_input() ) {
       dir = VpiDir::Input;

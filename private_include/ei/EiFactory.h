@@ -363,11 +363,11 @@ public:
   /// @brief セルプリミティブのヘッダを生成する．
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_header パース木の定義
-  /// @param[in] cell_id セル番号
+  /// @param[in] cell セル
   ElbPrimHead*
   new_CellHead(const VlScope* parent,
 	       const PtItem* pt_header,
-	       int cell_id) override;
+	       const ClibCell& cell) override;
 
   /// @brief プリミティブインスタンスを生成する．
   /// @param[in] head ヘッダ

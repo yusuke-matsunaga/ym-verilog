@@ -13,6 +13,7 @@
 #include "ym/VlValue.h"
 #include "ym/pt/PtP.h"
 #include "ym/ClibCellLibrary.h"
+#include "ym/ClibCell.h"
 #include "elaborator/Elaborator.h"
 #include "elaborator/ElbMgr.h"
 #include "elaborator/ElbFactory.h"
@@ -110,16 +111,11 @@ protected:
 
   /// @brief セルの探索
   /// @param[in] name セル名
-  /// @return name という名のセル番号を返す．
+  /// @return name という名のセルを返す．
   ///
-  /// なければ -1 を返す．
-  int
-  find_cell_id(const string& name) const;
-
-  /// @brief セルの取得
-  /// @param[in] cell_id セル番号
-  const ClibCell&
-  get_cell(int cell_id) const;
+  /// なければ不正値を返す．
+  ClibCell
+  find_cell(const string& name) const;
 
 
 protected:
@@ -584,19 +580,10 @@ private:
 //
 // なければ -1 を返す．
 inline
-int
-ElbProxy::find_cell_id(const string& name) const
+ClibCell
+ElbProxy::find_cell(const string& name) const
 {
-  return mElaborator.find_cell_id(name);
-}
-
-// @brief セルの取得
-// @param[in] cell_id セル番号
-inline
-const ClibCell&
-ElbProxy::get_cell(int cell_id) const
-{
-  return mElaborator.mCellLibrary.cell(cell_id);
+  return mElaborator.find_cell(name);
 }
 
 // @brief 名前からモジュール定義を取り出す．

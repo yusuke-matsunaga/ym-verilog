@@ -146,7 +146,7 @@ private:
   void
   phase1_cell(const VlScope* parent,
 	      const PtItem* pt_head,
-	      int cell_id);
+	      ClibCell cell);
 
   /// @brief module array のインスタンス化を行う．
   /// @param[in] parent 親のスコープ
@@ -196,11 +196,11 @@ private:
   /// @brief セル instance の生成を行う
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_head ヘッダ
-  /// @param[in] cell_id セル番号
+  /// @param[in] cell セル
   void
   instantiate_cell(const VlScope* parent,
 		   const PtItem* pt_head,
-		   int cell_id);
+		   ClibCell cell);
 
   /// @brief gate delay の生成を行う
   /// @param[in] prim_head ゲートプリミティブのヘッダ

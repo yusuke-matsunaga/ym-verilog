@@ -8,9 +8,9 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbPrimitive.h"
 #include "ei/EiRange.h"
+#include "ym/ClibCell.h"
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -61,9 +61,9 @@ public:
   const VlUdpDefn*
   udp_defn() const override;
 
-  /// @brief セル番号を返す．
-  int
-  cell_id() const override;
+  /// @brief セルを返す．
+  ClibCell
+  cell() const override;
 
   /// @brief 0 の強さを得る．
   VpiStrength
@@ -250,10 +250,10 @@ public:
   /// @brief コンストラクタ
   /// @param[in] parent 親のスコープ
   /// @param[in] pt_header パース木の定義
-  /// @param[in] cell_id セル番号
+  /// @param[in] cell セル
   EiPrimHeadC(const VlScope* parent,
 	      const PtItem* pt_header,
-	      int cell_id);
+	      const ClibCell& cell);
 
   /// @brief デストラクタ
   ~EiPrimHeadC();
@@ -272,9 +272,9 @@ public:
   string
   def_name() const override;
 
-  /// @brief セル番号を返す．
-  int
-  cell_id() const override;
+  /// @brief セルを返す．
+  ClibCell
+  cell() const override;
 
 
 private:
@@ -282,8 +282,8 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  // セル番号
-  int mCellId;
+  // セル
+  ClibCell mCell;
 
 };
 
@@ -345,9 +345,9 @@ public:
   const VlUdpDefn*
   udp_defn() const override;
 
-  /// @brief セル番号を返す．
-  int
-  cell_id() const override;
+  /// @brief セルを返す．
+  ClibCell
+  cell() const override;
 
   /// @brief 0 の強さを得る．
   VpiStrength
@@ -651,9 +651,9 @@ public:
   const VlUdpDefn*
   udp_defn() const override;
 
-  /// @brief セル番号を返す．
-  int
-  cell_id() const override;
+  /// @brief セルを返す．
+  ClibCell
+  cell() const override;
 
   /// @brief 0 の強さを得る．
   VpiStrength
