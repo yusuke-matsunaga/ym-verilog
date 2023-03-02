@@ -194,47 +194,6 @@ public:
   // IO 宣言関係
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief IO 宣言のヘッダの生成
-  /// @return 生成された IO宣言ヘッダ
-  virtual
-  PtiIOHead*
-  new_IOHead(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiDir dir,           ///< [in] IO の種類 (input, inout, output)
-    bool sign             ///< [in] 符号付きのとき true となるフラグ
-  ) = 0;
-
-  /// @brief IO 宣言のヘッダの生成 (reg 型)
-  /// @return 生成された IO宣言ヘッダ
-  virtual
-  PtiIOHead*
-  new_RegIOHead(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiDir dir,           ///< [in] IO の種類 (input, inout, output)
-    bool sign             ///< [in] 符号付きのとき true となるフラグ
-  ) = 0;
-
-  /// @brief IO 宣言のヘッダの生成 (ネット型)
-  /// @return 生成された IO宣言ヘッダ
-  virtual
-  PtiIOHead*
-  new_NetIOHead(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiDir dir,           ///< [in] IO の種類 (input, inout, output)
-    VpiNetType net_type,  ///< [in] 補助的なネット型
-    bool sign
-  ) = 0;
-
-  /// @brief IO 宣言のヘッダの生成 (変数型)
-  /// @return 生成された IO宣言ヘッダ
-  virtual
-  PtiIOHead*
-  new_VarIOHead(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiDir dir,           ///< [in] IO の種類 (input, inout, output)
-    VpiVarType var_type   ///< [in] 補助的な変数型
-  ) = 0;
-
   /// @brief 範囲付きの IO 宣言のヘッダの生成
   /// @return 生成された IO宣言ヘッダ
   virtual
@@ -272,13 +231,14 @@ public:
     const PtExpr* right	  ///< [in] 範囲の右側の式
   ) = 0;
 
-  /// @brief IO 宣言の要素の生成
-  /// @return 生成された要素
+  /// @brief IO 宣言のヘッダの生成 (変数型)
+  /// @return 生成された IO宣言ヘッダ
   virtual
-  const PtIOItem*
-  new_IOItem(
+  PtiIOHead*
+  new_VarIOHead(
     const FileRegion& fr, ///< [in] ファイル位置の情報
-    const char* name      ///< [in] 要素名
+    VpiDir dir,           ///< [in] IO の種類 (input, inout, output)
+    VpiVarType var_type   ///< [in] 補助的な変数型
   ) = 0;
 
   /// @brief 初期値付き IO 宣言の要素の生成
@@ -295,15 +255,6 @@ public:
   //////////////////////////////////////////////////////////////////////
   // その他の宣言関係
   //////////////////////////////////////////////////////////////////////
-
-  /// @brief パラメータ宣言のヘッダの生成 (型指定なし)
-  /// @return 生成されたパラメータ
-  virtual
-  PtiDeclHead*
-  new_ParamH(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    bool local = false    ///< [in] local param の時 true にするフラグ
-  ) = 0;
 
   /// @brief 範囲指定型パラメータ宣言のヘッダの生成
   /// @return 生成されたパラメータ
@@ -325,14 +276,6 @@ public:
     const FileRegion& fr, ///< [in] ファイル位置の情報
     VpiVarType var_type,  ///< [in] データ型
     bool local = false    ///< [in] local param の時 true にするフラグ
-  ) = 0;
-
-  /// @brief specparam 宣言のヘッダの生成
-  /// @return 生成された specparam
-  virtual
-  PtiDeclHead*
-  new_SpecParamH(
-    const FileRegion& fr ///< [in] ファイル位置の情報
   ) = 0;
 
   /// @brief 範囲指定型 specparam 宣言のヘッダの生成
@@ -370,15 +313,6 @@ public:
     VpiVarType var_type   ///< [in] データ型
   ) = 0;
 
-  /// @brief 1ビット型 reg 宣言のヘッダの生成
-  /// @return 生成された reg
-  virtual
-  PtiDeclHead*
-  new_RegH(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    bool sign             ///< [in] 符号付きの時 true となるフラグ
-  ) = 0;
-
   /// @brief 範囲指定型 reg 宣言のヘッダの生成
   /// @return 生成された reg
   virtual
@@ -388,91 +322,6 @@ public:
     bool sign,            ///< [in] 符号付きの時 true となるフラグ
     const PtExpr* left,   ///< [in] 範囲の左側の式
     const PtExpr* right   ///< [in] 範囲の右側の式
-  ) = 0;
-
-  /// @brief 1ビット型 net 宣言のヘッダの生成
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiNetType type,      ///< [in] net の型
-    bool sign             ///< [in] 符号の有無を表すフラグ
-  ) = 0;
-
-  /// @brief 1ビット型 net 宣言のヘッダの生成 (strength あり)
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr,      ///< [in] ファイル位置の情報
-    VpiNetType type,           ///< [in] net の型
-    bool sign,                 ///< [in] 符号の有無を表すフラグ
-    const PtStrength* strength ///< [in] 信号強度
-  ) = 0;
-
-  /// @brief 1ビット型 net 宣言のヘッダの生成 (遅延あり)
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiNetType type,	  ///< [in] net の型
-    bool sign,		  ///< [in] 符号の有無を表すフラグ
-    const PtDelay* delay  ///< [in] 遅延
-  ) = 0;
-
-  /// @brief 1ビット型 net 宣言のヘッダの生成 (strength, 遅延あり)
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr,       ///< [in] ファイル位置の情報
-    VpiNetType type,	        ///< [in] net の型
-    bool sign,		        ///< [in] 符号の有無を表すフラグ
-    const PtStrength* strength, ///< [in] 信号強度
-    const PtDelay* delay        ///< [in] 遅延
-  ) = 0;
-
-  /// @brief 範囲指定型 net 宣言のヘッダの生成
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiNetType type,      ///< [in] net の型
-    VpiVsType vstype,     ///< [in] vector/scalar 指定
-    bool sign,            ///< [in] 符号の有無を表すフラグ
-    const PtExpr* left,   ///< [in] 範囲の左側の式
-    const PtExpr* right   ///< [in] 範囲の右側の式
-  ) = 0;
-
-  /// @brief 範囲指定型 net 宣言のヘッダの生成 (strengthあり)
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr,       ///< [in] ファイル位置の情報
-    VpiNetType type,	        ///< [in] net の型
-    VpiVsType vstype,	        ///< [in] vector/scalar 指定
-    bool sign,		        ///< [in] 符号の有無を表すフラグ
-    const PtExpr* left,	        ///< [in] 範囲の左側の式
-    const PtExpr* right,        ///< [in] 範囲の右側の式
-    const PtStrength* strength  ///< [in] 信号強度
-  ) = 0;
-
-  /// @brief 範囲指定型 net 宣言のヘッダの生成 (遅延あり)
-  /// @return 生成されたネット
-  virtual
-  PtiDeclHead*
-  new_NetH(
-    const FileRegion& fr, ///< [in] ファイル位置の情報
-    VpiNetType type,	  ///< [in] net の型
-    VpiVsType vstype,	  ///< [in] vector/scalar 指定
-    bool sign,		  ///< [in] 符号の有無を表すフラグ
-    const PtExpr* left,	  ///< [in] 範囲の左側の式
-    const PtExpr* right,  ///< [in] 範囲の右側の式
-    const PtDelay* delay  ///< [in] 遅延
   ) = 0;
 
   /// @brief 範囲指定型 net 宣言のヘッダの生成 (strength, 遅延あり)
@@ -560,35 +409,6 @@ public:
     const FileRegion& fr, ///< [in] ファイル位置の情報
     PuHierName* hname,    ///< [in] 階層名
     const PtExpr* value   ///< [in] 値を表す式
-  ) = 0;
-
-  /// @brief continuous assign 文のヘッダの生成
-  /// @return 生成された continuous assign 文のヘッダ
-  virtual
-  const PtItem*
-  new_ContAssignH(
-    const FileRegion& fr,                         ///< [in] ファイル位置の情報
-    const vector<const PtContAssign*>& elem_array ///< [in] 要素のリスト
-  ) = 0;
-
-  /// @brief continuous assign 文のヘッダの生成 (strengthつき)
-  /// @return 生成された continuous assign 文のヘッダ
-  virtual
-  const PtItem*
-  new_ContAssignH(
-    const FileRegion& fr,                         ///< [in] ファイル位置の情報
-    const PtStrength* strength,                   ///< [in] 信号強度
-    const vector<const PtContAssign*>& elem_array ///< [in] 要素のリスト
-  ) = 0;
-
-  /// @brief continuous assign 文のヘッダの生成 (遅延付き)
-  /// @return 生成された continuous assign 文のヘッダ
-  virtual
-  const PtItem*
-  new_ContAssignH(
-    const FileRegion& fr,                         ///< [in] ファイル位置の情報
-    const PtDelay* delay,                         ///< [in] 遅延値
-    const vector<const PtContAssign*>& elem_array ///< [in] 要素のリスト
   ) = 0;
 
   /// @brief continuous assign 文のヘッダの生成 (strength, 遅延付き)
@@ -688,38 +508,6 @@ public:
     const PtStmt* stmt				 ///< [in] 本体のステートメント
   ) = 0;
 
-  /// @brief gate instance 文のヘッダの生成
-  /// @return 生成された gate instance 文のヘッダ
-  virtual
-  const PtItem*
-  new_GateH(
-    const FileRegion& fr,                   ///< [in] ファイル位置の情報
-    VpiPrimType type,                       ///< [in] primitive の型
-    const vector<const PtInst*>& elem_array ///< [in] 要素の配列
-  ) = 0;
-
-  /// @brief gate instance 文のヘッダの生成 (strength付き)
-  /// @return 生成された gate instance 文のヘッダ
-  virtual
-  const PtItem*
-  new_GateH(
-    const FileRegion& fr,                   ///< [in] ファイル位置の情報
-    VpiPrimType type,			    ///< [in] primitive の型
-    const PtStrength* strength,             ///< [in] 信号強度
-    const vector<const PtInst*>& elem_array ///< [in] 要素の配列
-  ) = 0;
-
-  /// @brief gate instance 文のヘッダの生成 (遅延付き)
-  /// @return 生成された gate instance 文のヘッダ
-  virtual
-  const PtItem*
-  new_GateH(
-    const FileRegion& fr,                   ///< [in] ファイル位置の情報
-    VpiPrimType type,			    ///< [in] primitive の型
-    const PtDelay* delay,		    ///< [in] 遅延値
-    const vector<const PtInst*>& elem_array ///< [in] 要素の配列
-  ) = 0;
-
   /// @brief gate instance 文のヘッダの生成 (strength, 遅延付き)
   /// @return 生成された gate instance 文のヘッダ
   virtual
@@ -728,38 +516,6 @@ public:
     const FileRegion& fr,                   ///< [in] ファイル位置の情報
     VpiPrimType type,			    ///< [in] primitive の型
     const PtStrength* strength,		    ///< [in] 信号強度
-    const PtDelay* delay,		    ///< [in] 遅延値
-    const vector<const PtInst*>& elem_array ///< [in] 要素の配列
-  ) = 0;
-
-  /// @brief module instance/UDP instance 文のヘッダの生成
-  /// @return 生成された module instance/UDP instance 文のヘッダ
-  virtual
-  const PtItem*
-  new_MuH(
-    const FileRegion& fr,                   ///< [in] ファイル位置の情報
-    const char* def_name,                   ///< [in] 定義名
-    const vector<const PtInst*>& elem_array ///< [in] 要素の配列
-  ) = 0;
-
-  /// @brief module instance/UDP instance 文のヘッダの生成 (strength付き)
-  /// @return 生成された module instance/UDP instance 文のヘッダ
-  virtual
-  const PtItem*
-  new_MuH(
-    const FileRegion& fr,                   ///< [in] ファイル位置の情報
-    const char* def_name,		    ///< [in] 定義名
-    const PtStrength* strength,             ///< [in] 信号強度
-    const vector<const PtInst*>& elem_array ///< [in] 要素の配列
-  ) = 0;
-
-  /// @brief module instance/UDP instance 文のヘッダの生成 (遅延付き)
-  /// @return 生成された module instance/UDP instance 文のヘッダ
-  virtual
-  const PtItem*
-  new_MuH(
-    const FileRegion& fr,                   ///< [in] ファイル位置の情報
-    const char* def_name,		    ///< [in] 定義名
     const PtDelay* delay,		    ///< [in] 遅延値
     const vector<const PtInst*>& elem_array ///< [in] 要素の配列
   ) = 0;
@@ -787,30 +543,11 @@ public:
     const vector<const PtInst*>& elem_array       ///< [in] 要素の配列
   ) = 0;
 
-  /// @brief module instance/UDP/gate instance の要素の生成
-  /// @return 生成された module instance/UDP instance の要素
-  virtual
-  const PtInst*
-  new_Inst(
-    const FileRegion& fr,                        ///< [in] ファイル位置の情報
-    const vector<const PtConnection*>& con_array ///< [in] ポート割り当ての配列
-  ) = 0;
-
-  /// @brief 名前付き module instance/UDP/gate instance の要素の生成
-  /// @return 生成された module instance/UDP instance の要素
-  virtual
-  const PtInst*
-  new_InstN(
-    const FileRegion& fr,                        ///< [in] ファイル位置の情報
-    const char* name,                            ///< [in] 名前
-    const vector<const PtConnection*>& con_array ///< [in] ポート割り当ての配列
-  ) = 0;
-
   /// @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
   /// @return 生成された module instance/UDP instance の要素
   virtual
   const PtInst*
-  new_InstV(
+  new_Inst(
     const FileRegion& fr,                        ///< [in] ファイル位置の情報
     const char* name,				 ///< [in] 名前
     const PtExpr* left,                          ///< [in] 範囲の左側の式

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "CptInst.h"
 #include "parser/CptFactory.h"
 #include "parser/PtiArray.h"
@@ -20,12 +19,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptGateH::CptGateH(const FileRegion& file_region,
-		   VpiPrimType prim_type,
-		   PtiInstArray&& inst_array) :
-  mFileRegion(file_region),
-  mPrimType(prim_type),
-  mInstArray{move(inst_array)}
+CptGateH::CptGateH(
+  const FileRegion& file_region,
+  VpiPrimType prim_type,
+  PtiInstArray&& inst_array
+) : mFileRegion{file_region},
+    mPrimType{prim_type},
+    mInstArray{move(inst_array)}
 {
 }
 
@@ -63,9 +63,10 @@ CptGateH::inst_num() const
 }
 
 // @brief module/UDP/gate instance の取得
-// @param[in] pos 位置 ( 0 <= pos < inst_num() )
 const PtInst*
-CptGateH::inst(SizeType pos) const
+CptGateH::inst(
+  SizeType pos
+) const
 {
   return mInstArray[pos];
 }
@@ -76,12 +77,13 @@ CptGateH::inst(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptGateHS::CptGateHS(const FileRegion& file_region,
-		     VpiPrimType prim_type,
-		     const PtStrength* strength,
-		     PtiInstArray&& inst_array) :
-  CptGateH(file_region, prim_type, move(inst_array)),
-  mStrength(strength)
+CptGateHS::CptGateHS(
+  const FileRegion& file_region,
+  VpiPrimType prim_type,
+  const PtStrength* strength,
+  PtiInstArray&& inst_array
+) : CptGateH{file_region, prim_type, move(inst_array)},
+    mStrength{strength}
 {
 }
 
@@ -103,12 +105,13 @@ CptGateHS::strength() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptGateHD::CptGateHD(const FileRegion& file_region,
-		     VpiPrimType prim_type,
-		     const PtDelay* delay,
-		     PtiInstArray&& inst_array) :
-  CptGateH(file_region, prim_type, move(inst_array)),
-  mDelay(delay)
+CptGateHD::CptGateHD(
+  const FileRegion& file_region,
+  VpiPrimType prim_type,
+  const PtDelay* delay,
+  PtiInstArray&& inst_array
+) : CptGateH{file_region, prim_type, move(inst_array)},
+    mDelay{delay}
 {
 }
 
@@ -130,14 +133,15 @@ CptGateHD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptGateHSD::CptGateHSD(const FileRegion& file_region,
-		       VpiPrimType prim_type,
-		       const PtStrength* strength,
-		       const PtDelay* delay,
-		       PtiInstArray&& inst_array) :
-  CptGateH(file_region, prim_type, move(inst_array)),
-  mStrength(strength),
-  mDelay(delay)
+CptGateHSD::CptGateHSD(
+  const FileRegion& file_region,
+  VpiPrimType prim_type,
+  const PtStrength* strength,
+  const PtDelay* delay,
+  PtiInstArray&& inst_array
+) : CptGateH{file_region, prim_type, move(inst_array)},
+    mStrength{strength},
+    mDelay{delay}
 {
 }
 
@@ -166,12 +170,13 @@ CptGateHSD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptMuH::CptMuH(const FileRegion& file_region,
-	       const char* def_name,
-	       PtiInstArray&& inst_array) :
-  mFileRegion(file_region),
-  mName(def_name),
-  mInstArray{move(inst_array)}
+CptMuH::CptMuH(
+  const FileRegion& file_region,
+  const char* def_name,
+  PtiInstArray&& inst_array
+) : mFileRegion{file_region},
+    mName{def_name},
+    mInstArray{move(inst_array)}
 {
 }
 
@@ -209,9 +214,10 @@ CptMuH::inst_num() const
 }
 
 // @brief module/UDP/gate instance の取得
-// @param[in] pos 位置 ( 0 <= pos < inst_num() )
 const PtInst*
-CptMuH::inst(SizeType pos) const
+CptMuH::inst(
+  SizeType pos
+) const
 {
   return mInstArray[pos];
 }
@@ -222,12 +228,13 @@ CptMuH::inst(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptMuHP::CptMuHP(const FileRegion& file_region,
-		 const char* def_name,
-		 PtiConnectionArray&& con_array,
-		 PtiInstArray&& inst_array) :
-  CptMuH(file_region, def_name, move(inst_array)),
-  mParamAssignArray{move(con_array)}
+CptMuHP::CptMuHP(
+  const FileRegion& file_region,
+  const char* def_name,
+  PtiConnectionArray&& con_array,
+  PtiInstArray&& inst_array
+) : CptMuH{file_region, def_name, move(inst_array)},
+    mParamAssignArray{move(con_array)}
 {
 }
 
@@ -244,9 +251,10 @@ CptMuHP::paramassign_num() const
 }
 
 // @brief パラメータ割り当ての取得
-// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
 const PtConnection*
-CptMuHP::paramassign(SizeType pos) const
+CptMuHP::paramassign(
+  SizeType pos
+) const
 {
   return mParamAssignArray[pos];
 }
@@ -257,12 +265,13 @@ CptMuHP::paramassign(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptMuHS::CptMuHS(const FileRegion& file_region,
-		 const char* def_name,
-		 const PtStrength* strength,
-		 PtiInstArray&& inst_array) :
-  CptMuH(file_region, def_name, move(inst_array)),
-  mStrength(strength)
+CptMuHS::CptMuHS(
+  const FileRegion& file_region,
+  const char* def_name,
+  const PtStrength* strength,
+  PtiInstArray&& inst_array
+) : CptMuH{file_region, def_name, move(inst_array)},
+    mStrength{strength}
 {
 }
 
@@ -284,12 +293,13 @@ CptMuHS::strength() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptMuHD::CptMuHD(const FileRegion& file_region,
-		 const char* def_name,
-		 const PtDelay* delay,
-		 PtiInstArray&& inst_array) :
-  CptMuH(file_region, def_name, move(inst_array)),
-  mDelay(delay)
+CptMuHD::CptMuHD(
+  const FileRegion& file_region,
+  const char* def_name,
+  const PtDelay* delay,
+  PtiInstArray&& inst_array
+) : CptMuH{file_region, def_name, move(inst_array)},
+    mDelay{delay}
 {
 }
 
@@ -311,14 +321,15 @@ CptMuHD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptMuHSD::CptMuHSD(const FileRegion& file_region,
-		   const char* def_name,
-		   const PtStrength* strength,
-		   const PtDelay* delay,
-		   PtiInstArray&& inst_array) :
-  CptMuH(file_region, def_name, move(inst_array)),
-  mStrength(strength),
-  mDelay(delay)
+CptMuHSD::CptMuHSD(
+  const FileRegion& file_region,
+  const char* def_name,
+  const PtStrength* strength,
+  const PtDelay* delay,
+  PtiInstArray&& inst_array
+) : CptMuH{file_region, def_name, move(inst_array)},
+    mStrength{strength},
+    mDelay{delay}
 {
 }
 
@@ -347,10 +358,11 @@ CptMuHSD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptInst::CptInst(const FileRegion& file_region,
-		 PtiConnectionArray&& con_array) :
-  mFileRegion(file_region),
-  mPortArray{move(con_array)}
+CptInst::CptInst(
+  const FileRegion& file_region,
+  PtiConnectionArray&& con_array
+) : mFileRegion{file_region},
+    mPortArray{move(con_array)}
 {
 }
 
@@ -367,8 +379,6 @@ CptInst::file_region() const
 }
 
 // @brief 名前の取得
-// @return 名前
-// このクラスでは nullptr を返す．
 const char*
 CptInst::name() const
 {
@@ -376,8 +386,6 @@ CptInst::name() const
 }
 
 // @brief 範囲の左側の式の取得
-// @return 範囲の左側の式
-// このクラスでは nullptr を返す．
 const PtExpr*
 CptInst::left_range() const
 {
@@ -385,8 +393,6 @@ CptInst::left_range() const
 }
 
 // @brief 範囲の右側の式の取得
-// @return 範囲の右側の式
-// このクラスでは nullptr を返す．
 const PtExpr*
 CptInst::right_range() const
 {
@@ -401,9 +407,10 @@ CptInst::port_num() const
 }
 
 // @brief ポートの取得
-// @param[in] pos 位置 ( 0 <= pos < port_num() )
 const PtConnection*
-CptInst::port(SizeType pos) const
+CptInst::port(
+  SizeType pos
+) const
 {
   return mPortArray[pos];
 }
@@ -414,11 +421,12 @@ CptInst::port(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptInstN::CptInstN(const FileRegion& file_region,
-		   const char* name,
-		   PtiConnectionArray&& con_array) :
-  CptInst(file_region, move(con_array)),
-  mName(name)
+CptInstN::CptInstN(
+  const FileRegion& file_region,
+  const char* name,
+  PtiConnectionArray&& con_array
+) : CptInst{file_region, move(con_array)},
+    mName{name}
 {
 }
 
@@ -440,14 +448,15 @@ CptInstN::name() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptInstR::CptInstR(const FileRegion& file_region,
-		   const char* name,
-		   const PtExpr* left,
-		   const PtExpr* right,
-		   PtiConnectionArray&& con_array) :
-  CptInstN(file_region, name, move(con_array)),
-  mLeftRange(left),
-  mRightRange(right)
+CptInstR::CptInstR(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* left,
+  const PtExpr* right,
+  PtiConnectionArray&& con_array
+) : CptInstN{file_region, name, move(con_array)},
+    mLeftRange{left},
+    mRightRange{right}
 {
 }
 
@@ -477,168 +486,141 @@ CptInstR::right_range() const
 
 // gate instance 文のヘッダを生成する．
 const PtItem*
-CptFactory::new_GateH(const FileRegion& file_region,
-		      VpiPrimType type,
-		      const vector<const PtInst*>& inst_array)
+CptFactory::new_GateH(
+  const FileRegion& file_region,
+  VpiPrimType type,
+  const PtStrength* strength,
+  const PtDelay* delay,
+  const vector<const PtInst*>& inst_array
+)
 {
-  ++ mNumGateH;
-  void* p{mAlloc.get_memory(sizeof(CptGateH))};
-  auto obj{new (p) CptGateH(file_region, type,
-			    PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
-}
-
-// gate instance 文のヘッダを生成する．
-const PtItem*
-CptFactory::new_GateH(const FileRegion& file_region,
-		      VpiPrimType type,
-		      const PtStrength* strength,
-		      const vector<const PtInst*>& inst_array)
-{
-  ++ mNumGateHS;
-  void* p{mAlloc.get_memory(sizeof(CptGateHS))};
-  auto obj{new (p) CptGateHS(file_region, type, strength,
-			     PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
-}
-
-// gate instance 文のヘッダを生成する．
-const PtItem*
-CptFactory::new_GateH(const FileRegion& file_region,
-		      VpiPrimType type,
-		      const PtDelay* delay,
-		      const vector<const PtInst*>& inst_array)
-{
-  ++ mNumGateHD;
-  void* p{mAlloc.get_memory(sizeof(CptGateHD))};
-  auto obj{new (p) CptGateHD(file_region, type, delay,
-			     PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
-}
-
-// gate instance 文のヘッダを生成する．
-const PtItem*
-CptFactory::new_GateH(const FileRegion& file_region,
-		      VpiPrimType type,
-		      const PtStrength* strength,
-		      const PtDelay* delay,
-		      const vector<const PtInst*>& inst_array)
-{
-  ++ mNumGateHSD;
-  void* p{mAlloc.get_memory(sizeof(CptGateHSD))};
-  auto obj{new (p) CptGateHSD(file_region, type, strength, delay,
-			      PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
+  if ( strength == nullptr ) {
+    if ( delay == nullptr ) {
+      ++ mNumGateH;
+      void* p = mAlloc.get_memory(sizeof(CptGateH));
+      auto obj = new (p) CptGateH{file_region, type,
+				  PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+    else {
+      ++ mNumGateHD;
+      void* p = mAlloc.get_memory(sizeof(CptGateHD));
+      auto obj = new (p) CptGateHD{file_region, type, delay,
+				   PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+  }
+  else {
+    if ( delay == nullptr ) {
+      ++ mNumGateHS;
+      void* p = mAlloc.get_memory(sizeof(CptGateHS));
+      auto obj = new (p) CptGateHS{file_region, type, strength,
+				   PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+    else {
+      ++ mNumGateHSD;
+      void* p = mAlloc.get_memory(sizeof(CptGateHSD));
+      auto obj = new (p) CptGateHSD{file_region, type, strength, delay,
+				    PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+  }
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
 const PtItem*
-CptFactory::new_MuH(const FileRegion& file_region,
-		    const char* def_name,
-		    const vector<const PtInst*>& inst_array)
+CptFactory::new_MuH(
+  const FileRegion& file_region,
+  const char* def_name,
+  const PtStrength* strength,
+  const PtDelay* delay,
+  const vector<const PtInst*>& inst_array
+)
 {
-  ++ mNumMuH;
-  void* p{mAlloc.get_memory(sizeof(CptMuH))};
-  auto obj{new (p) CptMuH(file_region, def_name,
-			  PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
+  if ( strength == nullptr ) {
+    if ( delay == nullptr ) {
+      ++ mNumMuH;
+      void* p = mAlloc.get_memory(sizeof(CptMuH));
+      auto obj = new (p) CptMuH{file_region, def_name,
+				PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+    else {
+      ++ mNumMuHS;
+      void* p = mAlloc.get_memory(sizeof(CptMuHS));
+      auto obj = new (p) CptMuHS{file_region, def_name, strength,
+				 PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+  }
+  else {
+    if ( delay == nullptr ) {
+      ++ mNumMuHD;
+      void* p = mAlloc.get_memory(sizeof(CptMuHD));
+      auto obj = new (p) CptMuHD{file_region, def_name, delay,
+				 PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+    else {
+      ++ mNumMuHSD;
+      void* p = mAlloc.get_memory(sizeof(CptMuHSD));
+      auto obj = new (p) CptMuHSD{file_region, def_name, strength, delay,
+				  PtiArray<const PtInst>(mAlloc, inst_array)};
+      return obj;
+    }
+  }
 }
 
 // module instance/UDP instance 文のヘッダを生成する．
 const PtItem*
-CptFactory::new_MuH(const FileRegion& file_region,
-		    const char* def_name,
-		    const PtStrength* strength,
-		    const vector<const PtInst*>& inst_array)
-{
-  ++ mNumMuHS;
-  void* p{mAlloc.get_memory(sizeof(CptMuHS))};
-  auto obj{new (p) CptMuHS(file_region, def_name, strength,
-			   PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
-}
-
-// module instance/UDP instance 文のヘッダを生成する．
-const PtItem*
-CptFactory::new_MuH(const FileRegion& file_region,
-		    const char* def_name,
-		    const PtDelay* delay,
-		    const vector<const PtInst*>& inst_array)
-{
-  ++ mNumMuHD;
-  void* p{mAlloc.get_memory(sizeof(CptMuHD))};
-  auto obj{new (p) CptMuHD(file_region, def_name, delay,
-			   PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
-}
-
-// module instance/UDP instance 文のヘッダを生成する．
-const PtItem*
-CptFactory::new_MuH(const FileRegion& file_region,
-		    const char* def_name,
-		    const PtStrength* strength,
-		    const PtDelay* delay,
-		    const vector<const PtInst*>& inst_array)
-{
-  ++ mNumMuHSD;
-  void* p{mAlloc.get_memory(sizeof(CptMuHSD))};
-  auto obj{new (p) CptMuHSD(file_region, def_name, strength, delay,
-			    PtiArray<const PtInst>(mAlloc, inst_array))};
-  return obj;
-}
-
-// module instance/UDP instance 文のヘッダを生成する．
-const PtItem*
-CptFactory::new_MuH(const FileRegion& file_region,
-		    const char* def_name,
-		    const vector<const PtConnection*>& con_array,
-		    const vector<const PtInst*>& inst_array)
+CptFactory::new_MuH(
+  const FileRegion& file_region,
+  const char* def_name,
+  const vector<const PtConnection*>& con_array,
+  const vector<const PtInst*>& inst_array
+)
 {
   ++ mNumMuHP;
-  void* p{mAlloc.get_memory(sizeof(CptMuHP))};
-  auto obj{new (p) CptMuHP(file_region, def_name,
-			   PtiArray<const PtConnection>(mAlloc, con_array),
-			   PtiArray<const PtInst>(mAlloc, inst_array))};
+  void* p = mAlloc.get_memory(sizeof(CptMuHP));
+  auto obj = new (p) CptMuHP{file_region, def_name,
+			     PtiArray<const PtConnection>(mAlloc, con_array),
+			     PtiArray<const PtInst>(mAlloc, inst_array)};
   return obj;
 }
 
 // module instance/UDP instance の要素を生成する．
 const PtInst*
-CptFactory::new_Inst(const FileRegion& file_region,
-		     const vector<const PtConnection*>& con_array)
+CptFactory::new_Inst(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* left,
+  const PtExpr* right,
+  const vector<const PtConnection*>& con_array
+)
 {
-  ++ mNumInst;
-  void* p{mAlloc.get_memory(sizeof(CptInst))};
-  auto obj{new (p) CptInst(file_region,
-			   PtiArray<const PtConnection>(mAlloc, con_array))};
-  return obj;
-}
+  if ( name == nullptr ) {
+    ++ mNumInst;
+    void* p = mAlloc.get_memory(sizeof(CptInst));
+    auto obj = new (p) CptInst{file_region,
+			       PtiArray<const PtConnection>(mAlloc, con_array)};
+    return obj;
+  }
 
-// module instance/UDP instance の要素を生成する．
-const PtInst*
-CptFactory::new_InstN(const FileRegion& file_region,
-		      const char* name,
-		      const vector<const PtConnection*>& con_array)
-{
-  ++ mNumInstN;
-  void* p{mAlloc.get_memory(sizeof(CptInstN))};
-  auto obj{new (p) CptInstN(file_region, name,
-			    PtiArray<const PtConnection>(mAlloc, con_array))};
-  return obj;
-}
+  if ( left == nullptr ) {
+    ASSERT_COND( right == nullptr );
+    ++ mNumInstN;
+    void* p = mAlloc.get_memory(sizeof(CptInstN));
+    auto obj = new (p) CptInstN{file_region, name,
+				PtiArray<const PtConnection>(mAlloc, con_array)};
+    return obj;
+  }
 
-// module instance/UDP instance の要素を生成する．
-const PtInst*
-CptFactory::new_InstV(const FileRegion& file_region,
-		      const char* name,
-		      const PtExpr* left,
-		      const PtExpr* right,
-		      const vector<const PtConnection*>& con_array)
-{
+  ASSERT_COND( right != nullptr );
   ++ mNumInstR;
-  void* p{mAlloc.get_memory(sizeof(CptInstR))};
-  auto obj{new (p) CptInstR(file_region, name, left, right,
-			    PtiArray<const PtConnection>(mAlloc, con_array))};
+  void* p = mAlloc.get_memory(sizeof(CptInstR));
+  auto obj = new (p) CptInstR{file_region, name, left, right,
+			      PtiArray<const PtConnection>(mAlloc, con_array)};
   return obj;
 }
 

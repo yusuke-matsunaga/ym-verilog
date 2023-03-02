@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "SptDecl.h"
 #include "parser/SptFactory.h"
 
@@ -18,31 +17,23 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param dir IO の種類
-// @param aux_type 補助的な型
-// @param sign 符号の有無を表すフラグ
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-// net_type と var_type は両方同時に指定されることはない．
-// 少なくとも一つは kVpiNone(net_type) か VpiVarType::None(var_type)
-// になっていなければならない．
-SptIOHead::SptIOHead(const FileRegion& file_region,
-		     VpiDir dir,
-		     VpiAuxType aux_type,
-		     VpiNetType net_type,
-		     VpiVarType var_type,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right) :
-  mFileRegion{file_region},
-  mDir{dir},
-  mAuxType{aux_type},
-  mNetType{net_type},
-  mVarType{var_type},
-  mSigned{sign},
-  mLeftRange{left},
-  mRightRange{right}
+SptIOHead::SptIOHead(
+  const FileRegion& file_region,
+  VpiDir dir,
+  VpiAuxType aux_type,
+  VpiNetType net_type,
+  VpiVarType var_type,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right
+) : mFileRegion{file_region},
+    mDir{dir},
+    mAuxType{aux_type},
+    mNetType{net_type},
+    mVarType{var_type},
+    mSigned{sign},
+    mLeftRange{left},
+    mRightRange{right}
 {
 }
 
@@ -52,7 +43,6 @@ SptIOHead::~SptIOHead()
 }
 
 // ファイル位置の取得
-// @return ファイル位置
 FileRegion
 SptIOHead::file_region() const
 {
@@ -60,7 +50,6 @@ SptIOHead::file_region() const
 }
 
 // 型の取得
-// @return 型
 VpiDir
 SptIOHead::direction() const
 {
@@ -68,7 +57,6 @@ SptIOHead::direction() const
 }
 
 // 補助的な型の取得
-// @return 補助的な型
 VpiAuxType
 SptIOHead::aux_type() const
 {
@@ -76,7 +64,6 @@ SptIOHead::aux_type() const
 }
 
 // 補助的なネット型の取得
-// @return ネット型
 VpiNetType
 SptIOHead::net_type() const
 {
@@ -84,7 +71,6 @@ SptIOHead::net_type() const
 }
 
 // 補助的な変数型の取得
-// @return 変数型
 VpiVarType
 SptIOHead::var_type() const
 {
@@ -92,8 +78,6 @@ SptIOHead::var_type() const
 }
 
 // 符号の取得
-// @retval true 符号付き
-// @retval false 符号なし
 bool
 SptIOHead::is_signed() const
 {
@@ -101,8 +85,6 @@ SptIOHead::is_signed() const
 }
 
 // 範囲のMSBの取得
-// @retval 範囲のMSB
-// @retval nullptr 範囲を持たないとき
 const PtExpr*
 SptIOHead::left_range() const
 {
@@ -110,8 +92,6 @@ SptIOHead::left_range() const
 }
 
 // 範囲のLSBの取得
-// @retval 範囲のLSB
-// @retval nullptr 範囲を持たないとき
 const PtExpr*
 SptIOHead::right_range() const
 {
@@ -126,17 +106,19 @@ SptIOHead::item_num() const
 }
 
 // @brief 要素の取得
-// @param[in] pos 位置 ( 0 <= pos < item_num() )
 const PtIOItem*
-SptIOHead::item(SizeType pos) const
+SptIOHead::item(
+  SizeType pos
+) const
 {
   return mItemArray[pos];
 }
 
 // @brief 要素リストの設定
-// @param[in] elem_array 要素の配列
 void
-SptIOHead::set_elem(PtiIOItemArray&& elem_array)
+SptIOHead::set_elem(
+  PtiIOItemArray&& elem_array
+)
 {
   mItemArray = move(elem_array);
 }
@@ -147,15 +129,13 @@ SptIOHead::set_elem(PtiIOItemArray&& elem_array)
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param name 名前
-// @param init_value 初期値
-SptIOItem::SptIOItem(const FileRegion& file_region,
-		     const char* name,
-		     const PtExpr* init_value) :
-  mFileRegion{file_region},
-  mName{name},
-  mInitValue{init_value}
+SptIOItem::SptIOItem(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* init_value
+) : mFileRegion{file_region},
+    mName{name},
+    mInitValue{init_value}
 {
 }
 
@@ -165,7 +145,6 @@ SptIOItem::~SptIOItem()
 }
 
 // ファイル位置の取得
-// @return ファイル位置
 FileRegion
 SptIOItem::file_region() const
 {
@@ -173,7 +152,6 @@ SptIOItem::file_region() const
 }
 
 // 名前の取得
-// @return 名前
 const char*
 SptIOItem::name() const
 {
@@ -181,8 +159,6 @@ SptIOItem::name() const
 }
 
 // 初期値の取得
-// @retval 初期値
-// @retval nullptr 初期値を持たないとき
 const PtExpr*
 SptIOItem::init_value() const
 {
@@ -195,37 +171,27 @@ SptIOItem::init_value() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param type 宣言要素の型
-// @param sign 符号の有無を表すフラグ
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-// @param net_type net 型
-// @param vs_type vectored/scalared 属性
-// @param strength 信号強度
-// @param delay 遅延
-// net_type/vs_type/strength/delay が意味を持つのは type == kNet の
-// 時のみ
-SptDeclHead::SptDeclHead(const FileRegion& file_region,
-			 PtDeclType type,
-			 bool sign,
-			 const PtExpr* left,
-			 const PtExpr* right,
-			 VpiVarType var_type,
-			 VpiNetType net_type,
-			 VpiVsType vs_type,
-			 const PtStrength* strength,
-			 const PtDelay* delay) :
-  mFileRegion{file_region},
-  mType{type},
-  mSigned{sign},
-  mLeftRange{left},
-  mRightRange{right},
-  mVarType{var_type},
-  mNetType{net_type},
-  mVsType{vs_type},
-  mStrength{strength},
-  mDelay{delay}
+SptDeclHead::SptDeclHead(
+  const FileRegion& file_region,
+  PtDeclType type,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  VpiVarType var_type,
+  VpiNetType net_type,
+  VpiVsType vs_type,
+  const PtStrength* strength,
+  const PtDelay* delay
+) : mFileRegion{file_region},
+    mType{type},
+    mSigned{sign},
+    mLeftRange{left},
+    mRightRange{right},
+    mVarType{var_type},
+    mNetType{net_type},
+    mVsType{vs_type},
+    mStrength{strength},
+    mDelay{delay}
 {
 }
 
@@ -235,7 +201,6 @@ SptDeclHead::~SptDeclHead()
 }
 
 // ファイル位置の取得
-// @return ファイル位置
 FileRegion
 SptDeclHead::file_region() const
 {
@@ -243,7 +208,6 @@ SptDeclHead::file_region() const
 }
 
 // 宣言要素の型の取得
-// @return 宣言要素の型
 PtDeclType
 SptDeclHead::type() const
 {
@@ -251,8 +215,6 @@ SptDeclHead::type() const
 }
 
 // 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 SptDeclHead::is_signed() const
 {
@@ -260,8 +222,6 @@ SptDeclHead::is_signed() const
 }
 
 // 範囲のMSBの取得
-// @retval 範囲のMSB
-// @retval nullptr 範囲を持たないとき
 const PtExpr*
 SptDeclHead::left_range() const
 {
@@ -269,8 +229,6 @@ SptDeclHead::left_range() const
 }
 
 // 範囲のLSBの取得
-// @retval 範囲のLSB
-// @retval nullptr 範囲を持たないとき
 const PtExpr*
 SptDeclHead::right_range() const
 {
@@ -278,8 +236,6 @@ SptDeclHead::right_range() const
 }
 
 // データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval VpiVarType::None 上記以外
 VpiVarType
 SptDeclHead::data_type() const
 {
@@ -287,8 +243,6 @@ SptDeclHead::data_type() const
 }
 
 // net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
 VpiNetType
 SptDeclHead::net_type() const
 {
@@ -296,9 +250,6 @@ SptDeclHead::net_type() const
 }
 
 // vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
 VpiVsType
 SptDeclHead::vs_type() const
 {
@@ -306,8 +257,6 @@ SptDeclHead::vs_type() const
 }
 
 // strength の取得
-// @retval strength
-// @retval nullptr strength の指定なし
 const PtStrength*
 SptDeclHead::strength() const
 {
@@ -315,8 +264,6 @@ SptDeclHead::strength() const
 }
 
 // delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
 const PtDelay*
 SptDeclHead::delay() const
 {
@@ -331,17 +278,19 @@ SptDeclHead::item_num() const
 }
 
 // @brief 要素の取得
-// @param[in] pos 位置 ( 0 <= pos < item_num() )
 const PtDeclItem*
-SptDeclHead::item(SizeType pos) const
+SptDeclHead::item(
+  SizeType pos
+) const
 {
   return mItemArray[pos];
 }
 
 // @brief 要素リストの設定
-// @param[in] elem_array 要素の配列
 void
-SptDeclHead::set_elem(PtiDeclItemArray&& elem_array)
+SptDeclHead::set_elem(
+  PtiDeclItemArray&& elem_array
+)
 {
   mItemArray = move(elem_array);
 }
@@ -352,20 +301,15 @@ SptDeclHead::set_elem(PtiDeclItemArray&& elem_array)
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param name 名前
-// @param range_array 範囲の配列
-// @param init_value 初期値
-// range_array と init_value の両方が同時に使われることはない．
-// どちらか一方は必ず nullptr である．両方 nullptr の場合もあり得る．
-SptDeclItem::SptDeclItem(const FileRegion& file_region,
-			 const char* name,
-			 PtiRangeArray&& range_array,
-			 const PtExpr* init_value) :
-  mFileRegion{file_region},
-  mName{name},
-  mRangeArray{move(range_array)},
-  mInitValue{init_value}
+SptDeclItem::SptDeclItem(
+  const FileRegion& file_region,
+  const char* name,
+  PtiRangeArray&& range_array,
+  const PtExpr* init_value
+) : mFileRegion{file_region},
+    mName{name},
+    mRangeArray{move(range_array)},
+    mInitValue{init_value}
 {
 }
 
@@ -375,7 +319,6 @@ SptDeclItem::~SptDeclItem()
 }
 
 // ファイル位置の取得
-// @return ファイル位置
 FileRegion
 SptDeclItem::file_region() const
 {
@@ -383,7 +326,6 @@ SptDeclItem::file_region() const
 }
 
 // 名前の取得
-// @return 名前
 const char*
 SptDeclItem::name() const
 {
@@ -398,16 +340,15 @@ SptDeclItem::range_num() const
 }
 
 // @brief 範囲の取得
-// @param[in] pos 位置 ( 0 <= pos < range_num() )
 const PtRange*
-SptDeclItem::range(SizeType pos) const
+SptDeclItem::range(
+  SizeType pos
+) const
 {
   return mRangeArray[pos];
 }
 
 // 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
 const PtExpr*
 SptDeclItem::init_value() const
 {
@@ -421,12 +362,13 @@ SptDeclItem::init_value() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-SptRange::SptRange(const FileRegion& file_region,
-		   const PtExpr* msb,
-		   const PtExpr* lsb) :
-  mFileRegion{file_region},
-  mMsb{msb},
-  mLsb{lsb}
+SptRange::SptRange(
+  const FileRegion& file_region,
+  const PtExpr* msb,
+  const PtExpr* lsb
+) : mFileRegion{file_region},
+    mMsb{msb},
+    mLsb{lsb}
 {
 }
 
@@ -461,164 +403,81 @@ SptRange::right() const
 // IO 宣言関係のオブジェクトを生成する関数
 //////////////////////////////////////////////////////////////////////
 
-// @brief IO 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] sign 符号付きのとき true となるフラグ
-// @return 生成された IO宣言ヘッダ
-PtiIOHead*
-SptFactory::new_IOHead(const FileRegion& file_region,
-		       VpiDir dir,
-		       bool sign)
-{
-  auto node = new SptIOHead(file_region,
-			    dir, VpiAuxType::None, VpiNetType::None,
-			    VpiVarType::None,
-			    sign, nullptr, nullptr);
-  return node;
-}
-
-// @brief IO 宣言のヘッダの生成 (reg 型)
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] sign 符号付きのとき true となるフラグ
-// @return 生成された IO宣言ヘッダ
-PtiIOHead*
-SptFactory::new_RegIOHead(const FileRegion& file_region,
-			  VpiDir dir,
-			  bool sign)
-{
-  auto node = new SptIOHead(file_region,
-			    dir, VpiAuxType::Reg, VpiNetType::None,
-			    VpiVarType::None,
-			    sign, nullptr, nullptr);
-  return node;
-}
-
-// @brief IO 宣言のヘッダの生成 (ネット型)
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] net_type 補助的なネット型
-// @param[in] sign 符号付きのとき true となるフラグ
-// @return 生成された IO宣言ヘッダ
-PtiIOHead*
-SptFactory::new_NetIOHead(const FileRegion& file_region,
-			  VpiDir dir,
-			  VpiNetType net_type,
-			  bool sign)
-{
-  auto node = new SptIOHead(file_region,
-			    dir, VpiAuxType::Net, net_type,
-			    VpiVarType::None,
-			    sign, nullptr, nullptr);
-  return node;
-}
-
-// @brief IO 宣言のヘッダの生成 (変数型)
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] var_type 補助的な変数型
-// @return 生成された IO宣言ヘッダ
-PtiIOHead*
-SptFactory::new_VarIOHead(const FileRegion& file_region,
-			  VpiDir dir,
-			  VpiVarType var_type)
-{
-  auto node = new SptIOHead(file_region,
-			    dir, VpiAuxType::Var, VpiNetType::None,
-			    var_type,
-			    false, nullptr, nullptr);
-  return node;
-}
-
 // @brief 範囲付きの IO 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] sign 符号付きのとき true となるフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成された IO宣言ヘッダ
 PtiIOHead*
-SptFactory::new_IOHead(const FileRegion& file_region,
-		       VpiDir dir,
-		       bool sign,
-		       const PtExpr* left,
-		       const PtExpr* right)
+SptFactory::new_IOHead(
+  const FileRegion& file_region,
+  VpiDir dir,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right)
 {
-  auto node = new SptIOHead(file_region,
+  auto node = new SptIOHead{file_region,
 			    dir, VpiAuxType::None, VpiNetType::None,
 			    VpiVarType::None,
-			    sign, left, right);
+			    sign, left, right};
   return node;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (reg 型)
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] sign 符号付きのとき true となるフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成された IO宣言ヘッダ
 PtiIOHead*
-SptFactory::new_RegIOHead(const FileRegion& file_region,
-			  VpiDir dir,
-			  bool sign,
-			  const PtExpr* left,
-			  const PtExpr* right)
+SptFactory::new_RegIOHead(
+  const FileRegion& file_region,
+  VpiDir dir,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right
+)
 {
-  auto node = new SptIOHead(file_region,
+  auto node = new SptIOHead{file_region,
 			    dir, VpiAuxType::Reg, VpiNetType::None,
 			    VpiVarType::None,
-			    sign, left, right);
+			    sign, left, right};
   return node;
 }
 
 // @brief 範囲付きの IO 宣言のヘッダの生成 (ネット型)
-// @param[in] file_region ファイル位置の情報
-// @param[in] dir IO の種類
-// @param[in] net_type 補助的なネット型
-// @param[in] sign 符号付きのとき true となるフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成された IO宣言ヘッダ
 PtiIOHead*
-SptFactory::new_NetIOHead(const FileRegion& file_region,
-			  VpiDir dir,
-			  VpiNetType net_type,
-			  bool sign,
-			  const PtExpr* left,
-			  const PtExpr* right)
+SptFactory::new_NetIOHead(
+  const FileRegion& file_region,
+  VpiDir dir,
+  VpiNetType net_type,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right
+)
 {
-  auto node = new SptIOHead(file_region,
+  auto node = new SptIOHead{file_region,
 			    dir, VpiAuxType::Net, net_type,
 			    VpiVarType::None,
-			    sign, left, right);
+			    sign, left, right};
   return node;
 }
 
-// @brief IO 宣言の要素の生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] name 要素名
-// @return 生成された要素
-const PtIOItem*
-SptFactory::new_IOItem(const FileRegion& file_region,
-		       const char* name)
+// @brief IO 宣言のヘッダの生成 (変数型)
+PtiIOHead*
+SptFactory::new_VarIOHead(
+  const FileRegion& file_region,
+  VpiDir dir,
+  VpiVarType var_type
+)
 {
-  auto node = new SptIOItem(file_region, name, nullptr);
+  auto node = new SptIOHead{file_region,
+			    dir, VpiAuxType::Var, VpiNetType::None,
+			    var_type,
+			    false, nullptr, nullptr};
   return node;
 }
 
 // @brief 初期値付き IO 宣言の要素の生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] name 要素名
-// @param[in] init_value 初期値を表す式
-// @return 生成された要素
 const PtIOItem*
-SptFactory::new_IOItem(const FileRegion& file_region,
-		       const char* name,
-		       const PtExpr* init_value)
+SptFactory::new_IOItem(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* init_value
+)
 {
-  auto node = new SptIOItem(file_region, name, init_value);
+  auto node = new SptIOItem{file_region, name, init_value};
   return node;
 }
 
@@ -627,30 +486,7 @@ SptFactory::new_IOItem(const FileRegion& file_region,
 // その他の宣言関係
 //////////////////////////////////////////////////////////////////////
 
-// @brief パラメータ宣言のヘッダの生成 (型指定なし)
-// @param[in] file_region ファイル位置の情報
-// @return 生成されたパラメータ
-PtiDeclHead*
-SptFactory::new_ParamH(
-  const FileRegion& file_region,
-  bool local
-)
-{
-  auto type = local ? PtDeclType::LocalParam : PtDeclType::Param;
-  auto node = new SptDeclHead(file_region,
-			      type,
-			      false, nullptr, nullptr,
-			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			      nullptr, nullptr);
-  return node;
-}
-
 // @brief 範囲指定型パラメータ宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] sign 符号付きのとき true となるフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成されたパラメータ
 PtiDeclHead*
 SptFactory::new_ParamH(
   const FileRegion& file_region,
@@ -661,18 +497,15 @@ SptFactory::new_ParamH(
 )
 {
   auto type = local ? PtDeclType::LocalParam : PtDeclType::Param;
-  auto node = new SptDeclHead(file_region,
+  auto node = new SptDeclHead{file_region,
 			      type,
-			     sign, left, right,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+			      sign, left, right,
+			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief 組み込み型パラメータ宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] var_type データ型
-// @return 生成されたパラメータ
 PtiDeclHead*
 SptFactory::new_ParamH(
   const FileRegion& file_region,
@@ -681,81 +514,64 @@ SptFactory::new_ParamH(
 )
 {
   auto type = local ? PtDeclType::LocalParam : PtDeclType::Param;
-  auto node = new SptDeclHead(file_region,
+  auto node = new SptDeclHead{file_region,
 			      type,
-			     false, nullptr, nullptr,
-			     var_type, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief specparam 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @return 生成された specparam
-PtiDeclHead*
-SptFactory::new_SpecParamH(const FileRegion& file_region)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::SpecParam,
-			     false, nullptr, nullptr,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+			      false, nullptr, nullptr,
+			      var_type, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief 範囲指定型 specparam 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成された specparam
 PtiDeclHead*
-SptFactory::new_SpecParamH(const FileRegion& file_region,
-			   const PtExpr* left,
-			   const PtExpr* right)
+SptFactory::new_SpecParamH(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+)
 {
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::SpecParam,
-			     false, left, right,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+  auto node = new SptDeclHead{file_region,
+			      PtDeclType::SpecParam,
+			      false, left, right,
+			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief イベント宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @return 生成されたイベント
 PtiDeclHead*
-SptFactory::new_EventH(const FileRegion& file_region)
+SptFactory::new_EventH(
+  const FileRegion& file_region
+)
 {
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Event,
-			     false, nullptr, nullptr,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+  auto node = new SptDeclHead{file_region,
+			      PtDeclType::Event,
+			      false, nullptr, nullptr,
+			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief genvar 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @return 生成された genvar
 PtiDeclHead*
-SptFactory::new_GenvarH(const FileRegion& file_region)
+SptFactory::new_GenvarH(
+  const FileRegion& file_region
+)
 {
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Genvar,
-			     false, nullptr, nullptr,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+  auto node = new SptDeclHead{file_region,
+			      PtDeclType::Genvar,
+			      false, nullptr, nullptr,
+			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief 変数宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] var_type データ型
-// @return 生成された変数
 PtiDeclHead*
-SptFactory::new_VarH(const FileRegion& file_region,
-		     VpiVarType var_type)
+SptFactory::new_VarH(
+  const FileRegion& file_region,
+  VpiVarType var_type
+)
 {
   bool sign = false;
   switch ( var_type ) {
@@ -766,291 +582,102 @@ SptFactory::new_VarH(const FileRegion& file_region,
   default:
     break;
   }
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Var,
-			     sign, nullptr, nullptr,
-			     var_type, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief 1ビット型 reg 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] sign 符号の有無を表すフラグ
-// @return 生成された reg
-PtiDeclHead*
-SptFactory::new_RegH(const FileRegion& file_region,
-		     bool sign)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Reg,
-			     sign, nullptr, nullptr,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+  auto node = new SptDeclHead{file_region,
+			      PtDeclType::Var,
+			      sign, nullptr, nullptr,
+			      var_type, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief 範囲指定型 reg 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] sign 符号付きの時 true となるフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成された reg
 PtiDeclHead*
-SptFactory::new_RegH(const FileRegion& file_region,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right)
+SptFactory::new_RegH(
+  const FileRegion& file_region,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right
+)
 {
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Reg,
-			     sign, left, right,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief 1ビット型 net 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] sign 符号の有無を表すフラグ
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, nullptr, nullptr,
-			     VpiVarType::None, type, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief 1ビット型 net 宣言のヘッダの生成 (strength あり)
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] strength 信号強度
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign,
-		     const PtStrength* strength)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, nullptr, nullptr,
-			     VpiVarType::None, type, VpiVsType::None,
-			     strength, nullptr);
-  return node;
-}
-
-// @brief 1ビット型 net 宣言のヘッダの生成 (遅延あり)
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] delay 遅延
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign,
-		     const PtDelay* delay)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, nullptr, nullptr,
-			     VpiVarType::None, type, VpiVsType::None,
-			     nullptr, delay);
-  return node;
-}
-
-// @brief 1ビット型 net 宣言のヘッダの生成 (strength, 遅延あり)
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] strength 信号強度
-// @param[in] delay 遅延
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign,
-		     const PtStrength* strength,
-		     const PtDelay* delay)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, nullptr, nullptr,
-			     VpiVarType::None, type, VpiVsType::None,
-			     strength, delay);
-  return node;
-}
-
-// @brief 範囲指定型 net 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-/// @param[in] type net の型
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] vstype vector/scalar 指定
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, left, right,
-			     VpiVarType::None, type, vstype,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief 範囲指定型 net 宣言のヘッダの生成 (strengthあり)
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] vstype vector/scalar 指定
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] strength 信号強度
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtStrength* strength)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, left, right,
-			     VpiVarType::None, type, vstype,
-			     strength, nullptr);
-  return node;
-}
-
-// @brief 範囲指定型 net 宣言のヘッダの生成 (遅延あり)
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] vstype vector/scalar 指定
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] delay 遅延
-// @return 生成されたネット
-PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtDelay* delay)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, left, right,
-			     VpiVarType::None, type, vstype,
-			     nullptr, delay);
+  auto node = new SptDeclHead{file_region,
+			      PtDeclType::Reg,
+			      sign, left, right,
+			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr};
   return node;
 }
 
 // @brief 範囲指定型 net 宣言のヘッダの生成 (strength, 遅延あり)
-// @param[in] file_region ファイル位置の情報
-// @param[in] type net の型
-// @param[in] vstype vector/scalar 指定
-// @param[in] sign 符号の有無を表すフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] strength 信号強度
-// @param[in] delay 遅延
-// @return 生成されたネット
 PtiDeclHead*
-SptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtStrength* strength,
-		     const PtDelay* delay)
+SptFactory::new_NetH(
+  const FileRegion& file_region,
+  VpiNetType type,
+  VpiVsType vstype,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  const PtStrength* strength,
+  const PtDelay* delay
+)
 {
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::Net,
-			     sign, left, right,
-			     VpiVarType::None, type, vstype,
-			     strength, delay);
+  auto node = new SptDeclHead{file_region,
+			      PtDeclType::Net,
+			      sign, left, right,
+			      VpiVarType::None, type, vstype,
+			      strength, delay};
   return node;
 }
 
 // @brief 宣言要素の生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] name 名前
-// @return 生成された要素
 const PtDeclItem*
-SptFactory::new_DeclItem(const FileRegion& file_region,
-			 const char* name)
+SptFactory::new_DeclItem(
+  const FileRegion& file_region,
+  const char* name
+)
 {
-  auto node = new SptDeclItem(file_region, name,
-			      PtiArray<const PtRange>(),
-			      nullptr);
+  auto node = new SptDeclItem{file_region, name,
+    PtiArray<const PtRange>{},
+    nullptr};
   return node;
 }
 
 // @brief 初期値付き宣言要素の生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] name 名前
-// @param[in] init_value 初期値を表す式
-// @return 生成された要素
 const PtDeclItem*
-SptFactory::new_DeclItem(const FileRegion& file_region,
-			 const char* name,
-			 const PtExpr* init_value)
+SptFactory::new_DeclItem(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* init_value
+)
 {
-  auto node = new SptDeclItem(file_region, name,
-			      PtiArray<const PtRange>(),
-			      init_value);
+  auto node = new SptDeclItem{file_region, name,
+    PtiArray<const PtRange>{},
+    init_value};
   return node;
 }
 
 // @brief 配列型宣言要素の生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] name 名前
-// @param[in] range_array 配列の各次元の範囲のリスト
-// @return 生成された要素
 const PtDeclItem*
-SptFactory::new_DeclItem(const FileRegion& file_region,
-			 const char* name,
-			 const vector<const PtRange*>& range_array)
+SptFactory::new_DeclItem(
+  const FileRegion& file_region,
+  const char* name,
+  const vector<const PtRange*>& range_array
+)
 {
-  auto node = new SptDeclItem(file_region, name,
+  auto node = new SptDeclItem{file_region, name,
 			      PtiArray<const PtRange>(mAlloc, range_array),
-			      nullptr);
+			      nullptr};
   return node;
 }
 
 // @brief 範囲の生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] msb MSB を表す式
-// @param[in] lsb LSB を表す式
 const PtRange*
-SptFactory::new_Range(const FileRegion& file_region,
-		      const PtExpr* msb,
-		      const PtExpr* lsb)
+SptFactory::new_Range(
+  const FileRegion& file_region,
+  const PtExpr* msb,
+  const PtExpr* lsb
+)
 {
-  auto node = new SptRange(file_region, msb, lsb);
+  auto node = new SptRange{file_region, msb, lsb};
   return node;
 }
 

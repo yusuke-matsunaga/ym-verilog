@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "CptDecl.h"
 #include "alloc/Alloc.h"
 #include "parser/CptFactory.h"
@@ -20,9 +19,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptDeclHead::CptDeclHead(const FileRegion& file_region) :
-  mFileRegion(file_region)
+CptDeclHead::CptDeclHead(
+  const FileRegion& file_region
+) : mFileRegion{file_region}
 {
 }
 
@@ -39,9 +38,6 @@ CptDeclHead::file_region() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
-// @note このクラスでは false を返す．
 bool
 CptDeclHead::is_signed() const
 {
@@ -49,9 +45,6 @@ CptDeclHead::is_signed() const
 }
 
 // @brief 範囲のMSBの取得
-// @retval 範囲のMSB 範囲を持つとき
-// @retval nullptr 範囲を持たないとき
-// @note このクラスでは nullptr を返す．
 const PtExpr*
 CptDeclHead::left_range() const
 {
@@ -59,9 +52,6 @@ CptDeclHead::left_range() const
 }
 
 // @brief 範囲のLSBの取得
-// @retval 範囲のLSB 範囲を持つとき
-// @retval nullptr 範囲を持たないとき
-// @note このクラスでは nullptr を返す．
 const PtExpr*
 CptDeclHead::right_range() const
 {
@@ -69,9 +59,6 @@ CptDeclHead::right_range() const
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
-// @note このクラスでは kVpiVarNone を返す．
 VpiVarType
 CptDeclHead::data_type() const
 {
@@ -79,9 +66,6 @@ CptDeclHead::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
-// @note このクラスでは kVpiNone を返す．
 VpiNetType
 CptDeclHead::net_type() const
 {
@@ -89,10 +73,6 @@ CptDeclHead::net_type() const
 }
 
 // @brief vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
-// @note このクラスでは kVpiVsNone を返す．
 VpiVsType
 CptDeclHead::vs_type() const
 {
@@ -100,9 +80,6 @@ CptDeclHead::vs_type() const
 }
 
 // @brief strength の取得
-// @retval strength
-// @retval nullptr strength の指定なし
-// @note このクラスでは nullptr を返す．
 const PtStrength*
 CptDeclHead::strength() const
 {
@@ -110,9 +87,6 @@ CptDeclHead::strength() const
 }
 
 // @brief delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
-// @note このクラスでは nullptr を返す．
 const PtDelay*
 CptDeclHead::delay() const
 {
@@ -127,17 +101,19 @@ CptDeclHead::item_num() const
 }
 
 // @brief 要素の取得
-// @param[in] pos 位置 ( 0 <= pos < item_num() )
 const PtDeclItem*
-CptDeclHead::item(SizeType pos) const
+CptDeclHead::item(
+  SizeType pos
+) const
 {
   return mItemArray[pos];
 }
 
 // @brief 要素リストの設定
-// @param[in] elem_array 要素の配列
 void
-CptDeclHead::set_elem(PtiDeclItemArray&& elem_array)
+CptDeclHead::set_elem(
+  PtiDeclItemArray&& elem_array
+)
 {
   mItemArray = move(elem_array);
 }
@@ -148,9 +124,9 @@ CptDeclHead::set_elem(PtiDeclItemArray&& elem_array)
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptParamH::CptParamH(const FileRegion& file_region) :
-  CptDeclHead(file_region)
+CptParamH::CptParamH(
+  const FileRegion& file_region
+) : CptDeclHead{file_region}
 {
 }
 
@@ -160,7 +136,6 @@ CptParamH::~CptParamH()
 }
 
 // 宣言要素の型の取得
-// @return 宣言要素の型
 PtDeclType
 CptParamH::type() const
 {
@@ -173,9 +148,9 @@ CptParamH::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptLocalParamH::CptLocalParamH(const FileRegion& file_region) :
-  CptDeclHead(file_region)
+CptLocalParamH::CptLocalParamH(
+  const FileRegion& file_region
+) : CptDeclHead{file_region}
 {
 }
 
@@ -185,7 +160,6 @@ CptLocalParamH::~CptLocalParamH()
 }
 
 // 宣言要素の型の取得
-// @return 宣言要素の型
 PtDeclType
 CptLocalParamH::type() const
 {
@@ -198,15 +172,13 @@ CptLocalParamH::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptParamHV::CptParamHV(const FileRegion& file_region,
-		       const PtExpr* left,
-		       const PtExpr* right) :
-  CptParamH(file_region),
-  mLeftRange(left),
-  mRightRange(right)
+CptParamHV::CptParamHV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptParamH{file_region},
+    mLeftRange{left},
+    mRightRange{right}
 {
 }
 
@@ -216,8 +188,6 @@ CptParamHV::~CptParamHV()
 }
 
 // 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 CptParamHV::is_signed() const
 {
@@ -226,7 +196,6 @@ CptParamHV::is_signed() const
 }
 
 // 範囲のMSBの取得
-// @return 範囲のMSB
 const PtExpr*
 CptParamHV::left_range() const
 {
@@ -234,7 +203,6 @@ CptParamHV::left_range() const
 }
 
 // 範囲のLSBの取得
-// @return 範囲のLSB
 const PtExpr*
 CptParamHV::right_range() const
 {
@@ -247,13 +215,11 @@ CptParamHV::right_range() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptParamHSV::CptParamHSV(const FileRegion& file_region,
-			 const PtExpr* left,
-			 const PtExpr* right) :
-  CptParamHV(file_region, left, right)
+CptParamHSV::CptParamHSV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptParamHV{file_region, left, right}
 {
 }
 
@@ -263,8 +229,6 @@ CptParamHSV::~CptParamHSV()
 }
 
 // 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 CptParamHSV::is_signed() const
 {
@@ -278,13 +242,11 @@ CptParamHSV::is_signed() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptLocalParamHV::CptLocalParamHV(const FileRegion& file_region,
-				 const PtExpr* left,
-				 const PtExpr* right) :
-  CptParamHV(file_region, left, right)
+CptLocalParamHV::CptLocalParamHV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptParamHV{file_region, left, right}
 {
 }
 
@@ -306,13 +268,11 @@ CptLocalParamHV::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptLocalParamHSV::CptLocalParamHSV(const FileRegion& file_region,
-				   const PtExpr* left,
-				   const PtExpr* right) :
-  CptParamHSV(file_region, left, right)
+CptLocalParamHSV::CptLocalParamHSV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptParamHSV{file_region, left, right}
 {
 }
 
@@ -334,12 +294,11 @@ CptLocalParamHSV::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param var_type データ型
-CptParamHT::CptParamHT(const FileRegion& file_region,
-		       VpiVarType var_type) :
-  CptDeclHead(file_region),
-  mVarType(var_type)
+CptParamHT::CptParamHT(
+  const FileRegion& file_region,
+  VpiVarType var_type
+) : CptDeclHead{file_region},
+    mVarType{var_type}
 {
 }
 
@@ -356,8 +315,6 @@ CptParamHT::type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 CptParamHT::is_signed() const
 {
@@ -372,8 +329,6 @@ CptParamHT::is_signed() const
 }
 
 // データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 CptParamHT::data_type() const
 {
@@ -386,11 +341,10 @@ CptParamHT::data_type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param var_type データ型
-CptLocalParamHT::CptLocalParamHT(const FileRegion& file_region,
-				 VpiVarType var_type) :
-  CptParamHT(file_region, var_type)
+CptLocalParamHT::CptLocalParamHT(
+  const FileRegion& file_region,
+  VpiVarType var_type
+) : CptParamHT{file_region, var_type}
 {
 }
 
@@ -412,9 +366,9 @@ CptLocalParamHT::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptRegH::CptRegH(const FileRegion& file_region) :
-  CptDeclHead(file_region)
+CptRegH::CptRegH(
+  const FileRegion& file_region
+) : CptDeclHead{file_region}
 {
 }
 
@@ -436,8 +390,9 @@ CptRegH::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptRegHS::CptRegHS(const FileRegion& file_region) :
-  CptRegH(file_region)
+CptRegHS::CptRegHS(
+  const FileRegion& file_region
+) : CptRegH{file_region}
 {
 }
 
@@ -460,15 +415,13 @@ CptRegHS::is_signed() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptRegHV::CptRegHV(const FileRegion& file_region,
-		   const PtExpr* left,
-		   const PtExpr* right) :
-  CptRegH(file_region),
-  mLeftRange(left),
-  mRightRange(right)
+CptRegHV::CptRegHV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptRegH{file_region},
+    mLeftRange{left},
+    mRightRange{right}
 {
 }
 
@@ -485,7 +438,6 @@ CptRegHV::is_signed() const
 }
 
 // 範囲のMSBの取得
-// @return 範囲のMSB
 const PtExpr*
 CptRegHV::left_range() const
 {
@@ -493,7 +445,6 @@ CptRegHV::left_range() const
 }
 
 // 範囲のLSBの取得
-// @return 範囲のLSB
 const PtExpr*
 CptRegHV::right_range() const
 {
@@ -506,13 +457,11 @@ CptRegHV::right_range() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptRegHSV::CptRegHSV(const FileRegion& file_region,
-		     const PtExpr* left,
-		     const PtExpr* right) :
-  CptRegHV(file_region, left, right)
+CptRegHSV::CptRegHSV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptRegHV{file_region, left, right}
 {
 }
 
@@ -534,12 +483,11 @@ CptRegHSV::is_signed() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param var_type データ型
-CptVarH::CptVarH(const FileRegion& file_region,
-		 VpiVarType var_type) :
-  CptDeclHead(file_region),
-  mVarType(var_type)
+CptVarH::CptVarH(
+  const FileRegion& file_region,
+  VpiVarType var_type
+) : CptDeclHead{file_region},
+    mVarType{var_type}
 {
 }
 
@@ -556,8 +504,6 @@ CptVarH::type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 CptVarH::is_signed() const
 {
@@ -572,8 +518,6 @@ CptVarH::is_signed() const
 }
 
 // データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 CptVarH::data_type() const
 {
@@ -586,9 +530,9 @@ CptVarH::data_type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptGenvarH::CptGenvarH(const FileRegion& file_region) :
-  CptDeclHead(file_region)
+CptGenvarH::CptGenvarH(
+  const FileRegion& file_region
+) : CptDeclHead{file_region}
 {
 }
 
@@ -610,12 +554,11 @@ CptGenvarH::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-CptNetH::CptNetH(const FileRegion& file_region,
-		 VpiNetType net_type,
-		 bool sign) :
-  CptDeclHead(file_region)
+CptNetH::CptNetH(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  bool sign
+) : CptDeclHead{file_region}
 {
   mFlags = (static_cast<ymuint32>(net_type) << 1) | static_cast<ymuint32>(sign);
 }
@@ -626,7 +569,6 @@ CptNetH::~CptNetH()
 }
 
 // 宣言要素の型の取得
-// @return 宣言要素の型
 PtDeclType
 CptNetH::type() const
 {
@@ -653,15 +595,13 @@ CptNetH::is_signed() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param strength 信号強度
-CptNetHS::CptNetHS(const FileRegion& file_region,
-		   VpiNetType net_type,
-		   bool sign,
-		   const PtStrength* strength) :
-  CptNetH(file_region, net_type, sign),
-  mStrength(strength)
+CptNetHS::CptNetHS(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  bool sign,
+  const PtStrength* strength
+) : CptNetH{file_region, net_type, sign},
+    mStrength{strength}
 {
 }
 
@@ -683,15 +623,13 @@ CptNetHS::strength() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param delay 遅延
-CptNetHD::CptNetHD(const FileRegion& file_region,
-		   VpiNetType net_type,
-		   bool sign,
-		   const PtDelay* delay) :
-  CptNetH(file_region, net_type, sign),
-  mDelay(delay)
+CptNetHD::CptNetHD(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  bool sign,
+  const PtDelay* delay
+) : CptNetH{file_region, net_type, sign},
+    mDelay{delay}
 {
 }
 
@@ -713,18 +651,15 @@ CptNetHD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param strength 信号強度
-// @param delay 遅延
-CptNetHSD::CptNetHSD(const FileRegion& file_region,
-		     VpiNetType net_type,
-		     bool sign,
-		     const PtStrength* strength,
-		     const PtDelay* delay) :
-  CptNetH(file_region, net_type, sign),
-  mStrength(strength),
-  mDelay(delay)
+CptNetHSD::CptNetHSD(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  bool sign,
+  const PtStrength* strength,
+  const PtDelay* delay
+) : CptNetH{file_region, net_type, sign},
+    mStrength{strength},
+    mDelay{delay}
 {
 }
 
@@ -753,21 +688,16 @@ CptNetHSD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param vstype vectored/scalared 属性を表す値
-// @param sign 符号の有無を表すフラグ
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptNetHV::CptNetHV(const FileRegion& file_region,
-		   VpiNetType net_type,
-		   VpiVsType vstype,
-		   bool sign,
-		   const PtExpr* left,
-		   const PtExpr* right) :
-  CptNetH(file_region, net_type, sign),
-  mLeftRange(left),
-  mRightRange(right)
+CptNetHV::CptNetHV(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  VpiVsType vstype,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptNetH{file_region, net_type, sign},
+    mLeftRange{left},
+    mRightRange{right}
 {
   mFlags |= (static_cast<ymuint32>(vstype) << 5);
 }
@@ -778,9 +708,6 @@ CptNetHV::~CptNetHV()
 }
 
 // vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
 VpiVsType
 CptNetHV::vs_type() const
 {
@@ -807,23 +734,17 @@ CptNetHV::right_range() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param vstype vectored/scalared 属性を表す値
-// @param sign 符号の有無を表すフラグ
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-// @param strength 信号強度
-CptNetHVS::CptNetHVS(const FileRegion& file_region,
-		     VpiNetType net_type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtStrength* strength) :
-  CptNetHV(file_region, net_type,
-	   vstype, sign, left, right),
-  mStrength(strength)
+CptNetHVS::CptNetHVS(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  VpiVsType vstype,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  const PtStrength* strength
+) : CptNetHV{file_region, net_type,
+	     vstype, sign, left, right},
+    mStrength{strength}
 {
 }
 
@@ -845,23 +766,17 @@ CptNetHVS::strength() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param vstype vectored/scalared 属性を表す値
-// @param sign 符号の有無を表すフラグ
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-// @param delay 遅延
-CptNetHVD::CptNetHVD(const FileRegion& file_region,
-		     VpiNetType net_type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtDelay* delay) :
-  CptNetHV(file_region, net_type,
-	   vstype, sign, left, right),
-  mDelay(delay)
+CptNetHVD::CptNetHVD(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  VpiVsType vstype,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  const PtDelay* delay
+) : CptNetHV{file_region, net_type,
+	     vstype, sign, left, right},
+    mDelay{delay}
 {
 }
 
@@ -883,26 +798,19 @@ CptNetHVD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param net_type net の型
-// @param vstype vectored/scalared 属性を表す値
-// @param sign 符号の有無を表すフラグ
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-// @param strength 信号強度
-// @param delay 遅延
-CptNetHVSD::CptNetHVSD(const FileRegion& file_region,
-		       VpiNetType net_type,
-		       VpiVsType vstype,
-		       bool sign,
-		       const PtExpr* left,
-		       const PtExpr* right,
-		       const PtStrength* strength,
-		       const PtDelay* delay) :
-  CptNetHV(file_region, net_type,
-	   vstype, sign, left, right),
-  mStrength(strength),
-  mDelay(delay)
+CptNetHVSD::CptNetHVSD(
+  const FileRegion& file_region,
+  VpiNetType net_type,
+  VpiVsType vstype,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  const PtStrength* strength,
+  const PtDelay* delay
+) : CptNetHV{file_region, net_type,
+	     vstype, sign, left, right},
+    mStrength{strength},
+    mDelay{delay}
 {
 }
 
@@ -931,9 +839,9 @@ CptNetHVSD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptEventH::CptEventH(const FileRegion& file_region) :
-  CptDeclHead(file_region)
+CptEventH::CptEventH(
+  const FileRegion& file_region
+) : CptDeclHead{file_region}
 {
 }
 
@@ -955,9 +863,9 @@ CptEventH::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-CptSpecParamH::CptSpecParamH(const FileRegion& file_region) :
-  CptDeclHead(file_region)
+CptSpecParamH::CptSpecParamH(
+  const FileRegion& file_region
+) : CptDeclHead{file_region}
 {
 }
 
@@ -979,15 +887,13 @@ CptSpecParamH::type() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param left 範囲の左側の式
-// @param right 範囲の右側の式
-CptSpecParamHV::CptSpecParamHV(const FileRegion& file_region,
-			       const PtExpr* left,
-			       const PtExpr* right) :
-  CptSpecParamH(file_region),
-  mLeftRange(left),
-  mRightRange(right)
+CptSpecParamHV::CptSpecParamHV(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+) : CptSpecParamH{file_region},
+    mLeftRange{left},
+    mRightRange{right}
 {
 }
 
@@ -1016,9 +922,9 @@ CptSpecParamHV::right_range() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param name 名前
-CptDeclItemBase::CptDeclItemBase(const char* name) :
-  mName(name)
+CptDeclItemBase::CptDeclItemBase(
+  const char* name
+) : mName{name}
 {
 }
 
@@ -1042,16 +948,16 @@ CptDeclItemBase::range_num() const
 }
 
 // @brief 範囲の取得
-// @param[in] pos 位置 ( 0 <= pos < range_num() )
 const PtRange*
-CptDeclItemBase::range(SizeType pos) const
+CptDeclItemBase::range(
+  SizeType pos
+) const
 {
   ASSERT_NOT_REACHED;
   return nullptr;
 }
 
 // 初期値の取得
-// @return ここでは常に nullptr を返す．
 const PtExpr*
 CptDeclItemBase::init_value() const
 {
@@ -1064,12 +970,11 @@ CptDeclItemBase::init_value() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param name 名前
-CptDeclItem::CptDeclItem(const FileRegion& file_region,
-			 const char* name) :
-  CptDeclItemBase(name),
-  mLoc(file_region)
+CptDeclItem::CptDeclItem(
+  const FileRegion& file_region,
+  const char* name
+) : CptDeclItemBase{name},
+    mLoc{file_region}
 {
 }
 
@@ -1091,15 +996,13 @@ CptDeclItem::file_region() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param name 名前
-// @param range_array 範囲のリスト
-CptDeclItemR::CptDeclItemR(const FileRegion& file_region,
-			   const char* name,
-			   PtiRangeArray&& range_array) :
-  CptDeclItemBase(name),
-  mFileRegion(file_region),
-  mRangeArray{move(range_array)}
+CptDeclItemR::CptDeclItemR(
+  const FileRegion& file_region,
+  const char* name,
+  PtiRangeArray&& range_array
+) : CptDeclItemBase{name},
+    mFileRegion{file_region},
+    mRangeArray{move(range_array)}
 {
 }
 
@@ -1123,9 +1026,10 @@ CptDeclItemR::range_num() const
 }
 
 // @brief 範囲の取得
-// @param[in] pos 位置 ( 0 <= pos < range_num() )
 const PtRange*
-CptDeclItemR::range(SizeType pos) const
+CptDeclItemR::range(
+  SizeType pos
+) const
 {
   return mRangeArray[pos];
 }
@@ -1136,16 +1040,14 @@ CptDeclItemR::range(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param name 名前
-// @param init_value 初期値
-CptDeclItemI::CptDeclItemI(const FileRegion& file_region,
-			   const char* name,
-			   const PtExpr* init_value) :
-  CptDeclItem(file_region, name),
-  mInitValue(init_value)
+CptDeclItemI::CptDeclItemI(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* init_value
+) : CptDeclItem{file_region, name},
+    mInitValue{init_value}
 {
-  ASSERT_COND(init_value );
+  ASSERT_COND( init_value );
 }
 
 // デストラクタ
@@ -1157,12 +1059,10 @@ CptDeclItemI::~CptDeclItemI()
 FileRegion
 CptDeclItemI::file_region() const
 {
-  return FileRegion(CptDeclItem::file_region(), mInitValue->file_region());
+  return FileRegion{CptDeclItem::file_region(), mInitValue->file_region()};
 }
 
 // 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
 const PtExpr*
 CptDeclItemI::init_value() const
 {
@@ -1176,12 +1076,13 @@ CptDeclItemI::init_value() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-CptRange::CptRange(const FileRegion& fr,
-		   const PtExpr* msb,
-		   const PtExpr* lsb) :
-  mFileRegion(fr),
-  mMsb(msb),
-  mLsb(lsb)
+CptRange::CptRange(
+  const FileRegion& fr,
+  const PtExpr* msb,
+  const PtExpr* lsb
+) : mFileRegion{fr},
+    mMsb{msb},
+    mLsb{lsb}
 {
 }
 
@@ -1216,27 +1117,6 @@ CptRange::right() const
 // その他の宣言関係
 //////////////////////////////////////////////////////////////////////
 
-// パラメータ宣言のヘッダの生成 (型指定なし)
-PtiDeclHead*
-CptFactory::new_ParamH(
-  const FileRegion& file_region,
-  bool local
-)
-{
-  if ( local ) {
-    ++ mNumLocalParamH;
-    void* p{mAlloc.get_memory(sizeof(CptLocalParamH))};
-    auto obj{new (p) CptLocalParamH(file_region)};
-    return obj;
-  }
-  else {
-    ++ mNumParamH;
-    void* p{mAlloc.get_memory(sizeof(CptParamH))};
-    auto obj{new (p) CptParamH(file_region)};
-    return obj;
-  }
-}
-
 // 範囲指定型パラメータ宣言のヘッダの生成
 PtiDeclHead*
 CptFactory::new_ParamH(
@@ -1248,29 +1128,49 @@ CptFactory::new_ParamH(
 )
 {
   if ( local ) {
-    ++ mNumLocalParamHV;
-    if ( sign ) {
-      void* p{mAlloc.get_memory(sizeof(CptLocalParamHSV))};
-      auto obj{new (p) CptLocalParamHSV(file_region, left, right)};
+    if ( left == nullptr ) {
+      ASSERT_COND( right == nullptr );
+      ++ mNumLocalParamH;
+      void* p = mAlloc.get_memory(sizeof(CptLocalParamH));
+      auto obj = new (p) CptLocalParamH{file_region};
       return obj;
     }
     else {
-      void* p{mAlloc.get_memory(sizeof(CptLocalParamHV))};
-      auto obj{new (p) CptLocalParamHV(file_region, left, right)};
-      return obj;
+      ASSERT_COND( right != nullptr );
+      ++ mNumLocalParamHV;
+      if ( sign ) {
+	void* p = mAlloc.get_memory(sizeof(CptLocalParamHSV));
+	auto obj = new (p) CptLocalParamHSV{file_region, left, right};
+	return obj;
+      }
+      else {
+	void* p = mAlloc.get_memory(sizeof(CptLocalParamHV));
+	auto obj = new (p) CptLocalParamHV{file_region, left, right};
+	return obj;
+      }
     }
   }
   else {
-    ++ mNumParamHV;
-    if ( sign ) {
-      void* p{mAlloc.get_memory(sizeof(CptParamHSV))};
-      auto obj{new (p) CptParamHSV(file_region, left, right)};
+    if ( left == nullptr ) {
+      ASSERT_COND( right == nullptr );
+      ++ mNumParamH;
+      void* p = mAlloc.get_memory(sizeof(CptParamH));
+      auto obj = new (p) CptParamH{file_region};
       return obj;
     }
     else {
-      void* p{mAlloc.get_memory(sizeof(CptParamHV))};
-      auto obj{new (p) CptParamHV(file_region, left, right)};
-      return obj;
+      ASSERT_COND( right != nullptr );
+      ++ mNumParamHV;
+      if ( sign ) {
+	void* p = mAlloc.get_memory(sizeof(CptParamHSV));
+	auto obj = new (p) CptParamHSV{file_region, left, right};
+	return obj;
+      }
+      else {
+	void* p = mAlloc.get_memory(sizeof(CptParamHV));
+	auto obj = new (p) CptParamHV{file_region, left, right};
+	return obj;
+      }
     }
   }
 }
@@ -1285,280 +1185,258 @@ CptFactory::new_ParamH(
 {
   if ( local ) {
     ++ mNumLocalParamHT;
-    void* p{mAlloc.get_memory(sizeof(CptLocalParamHT))};
-    auto obj{new (p) CptLocalParamHT(file_region, var_type)};
+    void* p = mAlloc.get_memory(sizeof(CptLocalParamHT));
+    auto obj = new (p) CptLocalParamHT{file_region, var_type};
     return obj;
   }
   else {
     ++ mNumParamHT;
-    void* p{mAlloc.get_memory(sizeof(CptParamHT))};
-    auto obj{new (p) CptParamHT(file_region, var_type)};
+    void* p = mAlloc.get_memory(sizeof(CptParamHT));
+    auto obj = new (p) CptParamHT{file_region, var_type};
     return obj;
   }
 }
 
 // specparam 宣言のヘッダを生成する．
 PtiDeclHead*
-CptFactory::new_SpecParamH(const FileRegion& file_region)
+CptFactory::new_SpecParamH(
+  const FileRegion& file_region,
+  const PtExpr* left,
+  const PtExpr* right
+)
 {
-  ++ mNumSpecParamH;
-  void* p{mAlloc.get_memory(sizeof(CptSpecParamH))};
-  auto obj{new (p) CptSpecParamH(file_region)};
-  return obj;
-}
-
-// specparam 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_SpecParamH(const FileRegion& file_region,
-			   const PtExpr* left,
-			   const PtExpr* right)
-{
-  ++ mNumSpecParamHV;
-  void* p{mAlloc.get_memory(sizeof(CptSpecParamHV))};
-  auto obj{new (p) CptSpecParamHV(file_region, left, right)};
-  return obj;
+  if ( left == nullptr ) {
+    ASSERT_COND( right == nullptr );
+    ++ mNumSpecParamH;
+    void* p = mAlloc.get_memory(sizeof(CptSpecParamH));
+    auto obj = new (p) CptSpecParamH(file_region);
+    return obj;
+  }
+  else {
+    ASSERT_COND( right != nullptr );
+    ++ mNumSpecParamHV;
+    void* p = mAlloc.get_memory(sizeof(CptSpecParamHV));
+    auto obj = new (p) CptSpecParamHV{file_region, left, right};
+    return obj;
+  }
 }
 
 // event 宣言のヘッダを生成する．
 PtiDeclHead*
-CptFactory::new_EventH(const FileRegion& file_region)
+CptFactory::new_EventH(
+  const FileRegion& file_region
+)
 {
   ++ mNumEventH;
-  void* p{mAlloc.get_memory(sizeof(CptEventH))};
-  auto obj{new (p) CptEventH(file_region)};
+  void* p = mAlloc.get_memory(sizeof(CptEventH));
+  auto obj = new (p) CptEventH{file_region};
   return obj;
 }
 
 // genvar 宣言のヘッダを生成する．
 PtiDeclHead*
-CptFactory::new_GenvarH(const FileRegion& file_region)
+CptFactory::new_GenvarH(
+  const FileRegion& file_region
+)
 {
   ++ mNumGenvarH;
-  void* p{mAlloc.get_memory(sizeof(CptGenvarH))};
-  auto obj{new (p) CptGenvarH(file_region)};
+  void* p = mAlloc.get_memory(sizeof(CptGenvarH));
+  auto obj = new (p) CptGenvarH{file_region};
   return obj;
 }
 
 // 変数宣言のヘッダを生成する．
 PtiDeclHead*
-CptFactory::new_VarH(const FileRegion& file_region,
-		     VpiVarType var_type)
+CptFactory::new_VarH(
+  const FileRegion& file_region,
+  VpiVarType var_type
+)
 {
   ++ mNumVarH;
-  void* p{mAlloc.get_memory(sizeof(CptVarH))};
-  auto obj{new (p) CptVarH(file_region, var_type)};
+  void* p = mAlloc.get_memory(sizeof(CptVarH));
+  auto obj = new (p) CptVarH{file_region, var_type};
   return obj;
 }
 
 // reg 宣言のヘッダを生成する．
 PtiDeclHead*
-CptFactory::new_RegH(const FileRegion& file_region,
-		     bool sign)
+CptFactory::new_RegH(
+  const FileRegion& file_region,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right
+)
 {
-  ++ mNumRegH;
-  if ( sign ) {
-    void* p{mAlloc.get_memory(sizeof(CptRegHS))};
-    auto obj{new (p) CptRegHS(file_region)};
-    return obj;
+  if ( left == nullptr ) {
+    ASSERT_COND( right == nullptr );
+    ++ mNumRegH;
+    if ( sign ) {
+      void* p = mAlloc.get_memory(sizeof(CptRegHS));
+      auto obj = new (p) CptRegHS(file_region);
+      return obj;
+    }
+    else {
+      void* p = mAlloc.get_memory(sizeof(CptRegH));
+      auto obj = new (p) CptRegH{file_region};
+      return obj;
+    }
   }
   else {
-    void* p{mAlloc.get_memory(sizeof(CptRegH))};
-    auto obj{new (p) CptRegH(file_region)};
-    return obj;
+    ASSERT_COND( right != nullptr );
+    ++ mNumRegHV;
+    if ( sign ) {
+      void* p = mAlloc.get_memory(sizeof(CptRegHSV));
+      auto obj = new (p) CptRegHSV{file_region, left, right};
+      return obj;
+    }
+    else {
+      void* p = mAlloc.get_memory(sizeof(CptRegHV));
+      auto obj = new (p) CptRegHV{file_region, left, right};
+      return obj;
+    }
   }
 }
 
-// reg 宣言のヘッダを生成する．
+// net 宣言のヘッダを生成する．
 PtiDeclHead*
-CptFactory::new_RegH(const FileRegion& file_region,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right)
+CptFactory::new_NetH(
+  const FileRegion& file_region,
+  VpiNetType type,
+  VpiVsType vstype,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  const PtStrength* strength,
+  const PtDelay* delay
+)
 {
-  ++ mNumRegHV;
-  if ( sign ) {
-    void* p{mAlloc.get_memory(sizeof(CptRegHSV))};
-    auto obj{new (p) CptRegHSV(file_region, left, right)};
-    return obj;
+  if ( left == nullptr ) {
+    ASSERT_COND( right == nullptr );
+    if ( strength == nullptr ) {
+      if ( delay == nullptr ) {
+	++ mNumNetH;
+	void* p = mAlloc.get_memory(sizeof(CptNetH));
+	auto obj = new (p) CptNetH{file_region, type, sign};
+	return obj;
+      }
+      else {
+	++ mNumNetHD;
+	void* p = mAlloc.get_memory(sizeof(CptNetHD));
+	auto obj = new (p) CptNetHD{file_region,
+				    type, sign,
+				    delay};
+	return obj;
+      }
+    }
+    else {
+      if ( delay == nullptr ) {
+	++ mNumNetHS;
+	void* p = mAlloc.get_memory(sizeof(CptNetHS));
+	auto obj = new (p) CptNetHS{file_region,
+				    type, sign,
+				    strength};
+	return obj;
+      }
+      else {
+	++mNumNetHSD;
+	void* p = mAlloc.get_memory(sizeof(CptNetHSD));
+	auto obj = new (p) CptNetHSD{file_region,
+				     type, sign,
+				     strength, delay};
+	return obj;
+      }
+    }
   }
   else {
-    void* p{mAlloc.get_memory(sizeof(CptRegHV))};
-    auto obj{new (p) CptRegHV(file_region, left, right)};
-    return obj;
+    ASSERT_COND( right != nullptr );
+    if ( strength == nullptr ) {
+      if ( delay == nullptr ) {
+	++ mNumNetHV;
+	void* p = mAlloc.get_memory(sizeof(CptNetHV));
+	auto obj = new (p) CptNetHV{file_region,
+				    type, vstype, sign, left, right};
+	return obj;
+      }
+      else {
+	++ mNumNetHVD;
+	void* p = mAlloc.get_memory(sizeof(CptNetHVD));
+	auto obj = new (p) CptNetHVD{file_region,
+				     type, vstype, sign, left, right,
+				     delay};
+	return obj;
+      }
+    }
+    else {
+      if ( delay == nullptr ) {
+	++ mNumNetHVS;
+	void* p = mAlloc.get_memory(sizeof(CptNetHVS));
+	auto obj = new (p) CptNetHVS{file_region,
+				     type, vstype, sign, left, right,
+				     strength};
+	return obj;
+      }
+      else {
+	++ mNumNetHVSD;
+	void* p = mAlloc.get_memory(sizeof(CptNetHVSD));
+	auto obj = new (p) CptNetHVSD{file_region,
+				      type, vstype, sign, left, right,
+				      strength, delay};
+	return obj;
+      }
+    }
   }
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign)
-{
-  ++ mNumNetH;
-  void* p{mAlloc.get_memory(sizeof(CptNetH))};
-  auto obj{new (p) CptNetH(file_region, type, sign)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign,
-		     const PtStrength* strength)
-{
-  ++ mNumNetHS;
-  void* p{mAlloc.get_memory(sizeof(CptNetHS))};
-  auto obj{new (p) CptNetHS(file_region,
-			    type, sign,
-			    strength)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign,
-		     const PtDelay* delay)
-{
-  ++ mNumNetHD;
-  void* p{mAlloc.get_memory(sizeof(CptNetHD))};
-  auto obj{new (p) CptNetHD(file_region,
-			    type, sign,
-			    delay)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     bool sign,
-		     const PtStrength* strength,
-		     const PtDelay* delay)
-{
-  ++mNumNetHSD;
-  void* p{mAlloc.get_memory(sizeof(CptNetHSD))};
-  auto obj{new (p) CptNetHSD(file_region,
-			     type, sign,
-			     strength, delay)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right)
-{
-  ++ mNumNetHV;
-  void* p{mAlloc.get_memory(sizeof(CptNetHV))};
-  auto obj{new (p) CptNetHV(file_region,
-			    type, vstype, sign, left, right)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtStrength* strength)
-{
-  ++ mNumNetHVS;
-  void* p{mAlloc.get_memory(sizeof(CptNetHVS))};
-  auto obj{new (p) CptNetHVS(file_region,
-			     type, vstype, sign, left, right,
-			     strength)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtDelay* delay)
-{
-  ++ mNumNetHVD;
-  void* p{mAlloc.get_memory(sizeof(CptNetHVD))};
-  auto obj{new (p) CptNetHVD(file_region,
-			     type, vstype, sign, left, right,
-			     delay)};
-  return obj;
-}
-
-// net 宣言のヘッダを生成する．
-PtiDeclHead*
-CptFactory::new_NetH(const FileRegion& file_region,
-		     VpiNetType type,
-		     VpiVsType vstype,
-		     bool sign,
-		     const PtExpr* left,
-		     const PtExpr* right,
-		     const PtStrength* strength,
-		     const PtDelay* delay)
-{
-  ++ mNumNetHVSD;
-  void* p{mAlloc.get_memory(sizeof(CptNetHVSD))};
-  auto obj{new (p) CptNetHVSD(file_region,
-			      type, vstype, sign, left, right,
-			      strength, delay)};
-  return obj;
 }
 
 // 宣言要素を生成する．
 const PtDeclItem*
-CptFactory::new_DeclItem(const FileRegion& file_region,
-			 const char* name)
+CptFactory::new_DeclItem(
+  const FileRegion& file_region,
+  const char* name
+)
 {
   ++ mNumDeclItem;
-  void* p{mAlloc.get_memory(sizeof(CptDeclItem))};
-  auto obj{new (p) CptDeclItem(file_region, name)};
+  void* p = mAlloc.get_memory(sizeof(CptDeclItem));
+  auto obj = new (p) CptDeclItem{file_region, name};
   return obj;
 }
 
 const PtDeclItem*
-CptFactory::new_DeclItem(const FileRegion& file_region,
-			 const char* name,
-			 const PtExpr* init_value)
+CptFactory::new_DeclItem(
+  const FileRegion& file_region,
+  const char* name,
+  const PtExpr* init_value
+)
 {
   ++ mNumDeclItemI;
-  void* p{mAlloc.get_memory(sizeof(CptDeclItemI))};
-  auto obj{new (p) CptDeclItemI(file_region, name, init_value)};
+  void* p = mAlloc.get_memory(sizeof(CptDeclItemI));
+  auto obj = new (p) CptDeclItemI{file_region, name, init_value};
   return obj;
 }
 
 const PtDeclItem*
-CptFactory::new_DeclItem(const FileRegion& file_region,
-			 const char* name,
-			 const vector<const PtRange*>& range_array)
+CptFactory::new_DeclItem(
+  const FileRegion& file_region,
+  const char* name,
+  const vector<const PtRange*>& range_array
+)
 {
   ++ mNumDeclItemR;
-  void* p{mAlloc.get_memory(sizeof(CptDeclItemR))};
-  auto obj{new (p) CptDeclItemR(file_region, name,
-				PtiArray<const PtRange>(mAlloc, range_array))};
+  void* p = mAlloc.get_memory(sizeof(CptDeclItemR));
+  auto obj = new (p) CptDeclItemR{file_region, name,
+				  PtiArray<const PtRange>(mAlloc, range_array)};
   return obj;
 }
 
 const PtRange*
-CptFactory::new_Range(const FileRegion& fr,
-		      const PtExpr* msb,
-		      const PtExpr* lsb)
+CptFactory::new_Range(
+  const FileRegion& fr,
+  const PtExpr* msb,
+  const PtExpr* lsb
+)
 {
   ++ mNumRange;
-  void* p{mAlloc.get_memory(sizeof(CptRange))};
-  auto obj{new (p) CptRange(fr, msb, lsb)};
+  void* p = mAlloc.get_memory(sizeof(CptRange));
+  auto obj = new (p) CptRange{fr, msb, lsb};
   return obj;
 }
 

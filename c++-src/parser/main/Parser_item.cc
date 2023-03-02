@@ -77,7 +77,7 @@ Parser::new_ContAssignH(
   const FileRegion& fr
 )
 {
-  auto item = mFactory->new_ContAssignH(fr, mContAssignList);
+  auto item = mFactory->new_ContAssignH(fr, nullptr, nullptr, mContAssignList);
   return item;
 }
 
@@ -88,7 +88,7 @@ Parser::new_ContAssignH(
   const PtStrength* strength
 )
 {
-  auto item = mFactory->new_ContAssignH(fr, strength, mContAssignList);
+  auto item = mFactory->new_ContAssignH(fr, strength, nullptr, mContAssignList);
   return item;
 }
 
@@ -99,7 +99,7 @@ Parser::new_ContAssignH(
   const PtDelay* delay
 )
 {
-  auto item = mFactory->new_ContAssignH(fr, delay, mContAssignList);
+  auto item = mFactory->new_ContAssignH(fr, nullptr, delay, mContAssignList);
   return item;
 }
 
