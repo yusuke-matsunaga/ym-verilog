@@ -185,7 +185,7 @@ Parser::new_LocalParamH(
   const FileRegion& fr
 )
 {
-  auto decl = mFactory->new_LocalParamH(fr);
+  auto decl = mFactory->new_ParamH(fr, true);
   return decl;
 }
 
@@ -198,18 +198,18 @@ Parser::new_LocalParamH(
   const PtExpr* right
 )
 {
-  auto decl = mFactory->new_LocalParamH(fr, sign, left, right);
+  auto decl = mFactory->new_ParamH(fr, sign, left, right, true);
   return decl;
 }
 
-// @brief 組み込み型パラメータ宣言のヘッダの生成
+// @brief 組み込み型 local param 宣言のヘッダの生成
 PtiDeclHead*
 Parser::new_LocalParamH(
   const FileRegion& fr,
   VpiVarType var_type
 )
 {
-  auto decl = mFactory->new_LocalParamH(fr, var_type);
+  auto decl = mFactory->new_ParamH(fr, var_type, true);
   return decl;
 }
 

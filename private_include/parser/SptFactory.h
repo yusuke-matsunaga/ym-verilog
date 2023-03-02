@@ -318,7 +318,10 @@ public:
   /// @param[in] file_region ファイル位置の情報
   /// @return 生成されたパラメータ
   PtiDeclHead*
-  new_ParamH(const FileRegion& file_region) override;
+  new_ParamH(
+    const FileRegion& file_region,
+    bool local
+  ) override;
 
   /// @brief 範囲指定型パラメータ宣言のヘッダの生成
   /// @param[in] file_region ファイル位置の情報
@@ -327,44 +330,24 @@ public:
   /// @param[in] right 範囲の右側の式
   /// @return 生成されたパラメータ
   PtiDeclHead*
-  new_ParamH(const FileRegion& file_region,
-	     bool sign,
-	     const PtExpr* left,
-	     const PtExpr* right) override;
+  new_ParamH(
+    const FileRegion& file_region,
+    bool sign,
+    const PtExpr* left,
+    const PtExpr* right,
+    bool local
+  ) override;
 
   /// @brief 組み込み型パラメータ宣言のヘッダの生成
   /// @param[in] file_region ファイル位置の情報
   /// @param[in] var_type データ型
   /// @return 生成されたパラメータ
   PtiDeclHead*
-  new_ParamH(const FileRegion& file_region,
-	     VpiVarType var_type) override;
-
-  /// @brief local param 宣言のヘッダの生成 (型指定なし)
-  /// @param[in] file_region ファイル位置の情報
-  /// @return 生成された localparam
-  PtiDeclHead*
-  new_LocalParamH(const FileRegion& file_region) override;
-
-  /// @brief 範囲指定型 local param 宣言のヘッダの生成
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] sign 符号付きのとき true となるフラグ
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @return 生成された localparam
-  PtiDeclHead*
-  new_LocalParamH(const FileRegion& file_region,
-		  bool sign,
-		  const PtExpr* left,
-		  const PtExpr* right) override;
-
-  /// @brief 組み込み型 local param 宣言のヘッダの生成
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] var_type データ型
-  /// @return 生成された localparam
-  PtiDeclHead*
-  new_LocalParamH(const FileRegion& file_region,
-		  VpiVarType var_type) override;
+  new_ParamH(
+    const FileRegion& file_region,
+    VpiVarType var_type,
+    bool local
+  ) override;
 
   /// @brief specparam 宣言のヘッダの生成
   /// @param[in] file_region ファイル位置の情報

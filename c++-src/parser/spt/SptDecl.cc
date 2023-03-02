@@ -631,13 +631,17 @@ SptFactory::new_IOItem(const FileRegion& file_region,
 // @param[in] file_region ファイル位置の情報
 // @return 生成されたパラメータ
 PtiDeclHead*
-SptFactory::new_ParamH(const FileRegion& file_region)
+SptFactory::new_ParamH(
+  const FileRegion& file_region,
+  bool local
+)
 {
+  auto type = local ? PtDeclType::LocalParam : PtDeclType::Param;
   auto node = new SptDeclHead(file_region,
-			     PtDeclType::Param,
-			     false, nullptr, nullptr,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
+			      type,
+			      false, nullptr, nullptr,
+			      VpiVarType::None, VpiNetType::None, VpiVsType::None,
+			      nullptr, nullptr);
   return node;
 }
 
@@ -648,13 +652,17 @@ SptFactory::new_ParamH(const FileRegion& file_region)
 // @param[in] right 範囲の右側の式
 // @return 生成されたパラメータ
 PtiDeclHead*
-SptFactory::new_ParamH(const FileRegion& file_region,
-		       bool sign,
-		       const PtExpr* left,
-		       const PtExpr* right)
+SptFactory::new_ParamH(
+  const FileRegion& file_region,
+  bool sign,
+  const PtExpr* left,
+  const PtExpr* right,
+  bool local
+)
 {
+  auto type = local ? PtDeclType::LocalParam : PtDeclType::Param;
   auto node = new SptDeclHead(file_region,
-			     PtDeclType::Param,
+			      type,
 			     sign, left, right,
 			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);
@@ -666,61 +674,15 @@ SptFactory::new_ParamH(const FileRegion& file_region,
 // @param[in] var_type データ型
 // @return 生成されたパラメータ
 PtiDeclHead*
-SptFactory::new_ParamH(const FileRegion& file_region,
-		       VpiVarType var_type)
+SptFactory::new_ParamH(
+  const FileRegion& file_region,
+  VpiVarType var_type,
+  bool local
+)
 {
+  auto type = local ? PtDeclType::LocalParam : PtDeclType::Param;
   auto node = new SptDeclHead(file_region,
-			     PtDeclType::Param,
-			     false, nullptr, nullptr,
-			     var_type, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief local param 宣言のヘッダの生成 (型指定なし)
-// @param[in] file_region ファイル位置の情報
-// @return 生成された localparam
-PtiDeclHead*
-SptFactory::new_LocalParamH(const FileRegion& file_region)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::LocalParam,
-			     false, nullptr, nullptr,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief 範囲指定型 local param 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] sign 符号付きのとき true となるフラグ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @return 生成された localparam
-PtiDeclHead*
-SptFactory::new_LocalParamH(const FileRegion& file_region,
-			    bool sign,
-			    const PtExpr* left,
-			    const PtExpr* right)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::LocalParam,
-			     sign, left, right,
-			     VpiVarType::None, VpiNetType::None, VpiVsType::None,
-			     nullptr, nullptr);
-  return node;
-}
-
-// @brief 組み込み型 local param 宣言のヘッダの生成
-// @param[in] file_region ファイル位置の情報
-// @param[in] var_type データ型
-// @return 生成された localparam
-PtiDeclHead*
-SptFactory::new_LocalParamH(const FileRegion& file_region,
-			    VpiVarType var_type)
-{
-  auto node = new SptDeclHead(file_region,
-			     PtDeclType::LocalParam,
+			      type,
 			     false, nullptr, nullptr,
 			     var_type, VpiNetType::None, VpiVsType::None,
 			     nullptr, nullptr);

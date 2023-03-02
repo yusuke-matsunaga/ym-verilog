@@ -259,35 +259,28 @@ public:
 
   /// @brief パラメータ宣言のヘッダの生成 (型指定なし)
   PtiDeclHead*
-  new_ParamH(const FileRegion& fr) override;
+  new_ParamH(
+    const FileRegion& fr,
+    bool local
+  ) override;
 
   /// @brief 範囲指定型パラメータ宣言のヘッダの生成
   PtiDeclHead*
-  new_ParamH(const FileRegion& fr,
-	     bool sign,
-	     const PtExpr* left,
-	     const PtExpr* right) override;
+  new_ParamH(
+    const FileRegion& fr,
+    bool sign,
+    const PtExpr* left,
+    const PtExpr* right,
+    bool local
+  ) override;
 
   /// @brief 組み込み型パラメータ宣言のヘッダの生成
   PtiDeclHead*
-  new_ParamH(const FileRegion& fr,
-	     VpiVarType var_type) override;
-
-  /// @brief local param 宣言のヘッダの生成 (型指定なし)
-  PtiDeclHead*
-  new_LocalParamH(const FileRegion& fr) override;
-
-  /// @brief 範囲指定型 local param 宣言のヘッダの生成
-  PtiDeclHead*
-  new_LocalParamH(const FileRegion& fr,
-		  bool sign,
-		  const PtExpr* left,
-		  const PtExpr* right) override;
-
-  /// @brief 組み込み型 local param 宣言のヘッダの生成
-  PtiDeclHead*
-  new_LocalParamH(const FileRegion& fr,
-		  VpiVarType var_type) override;
+  new_ParamH(
+    const FileRegion& fr,
+    VpiVarType var_type,
+    bool local
+  ) override;
 
   /// @brief specparam 宣言のヘッダの生成
   PtiDeclHead*

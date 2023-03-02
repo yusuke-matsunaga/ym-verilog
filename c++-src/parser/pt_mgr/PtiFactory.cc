@@ -40,181 +40,52 @@ PtiFactory::~PtiFactory()
 {
 }
 
-// @brief module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_Inst(
-  const FileRegion& fr,
-  const PtExpr* expr1
+// @brief 順序つき結合子のベクタの生成
+vector<const PtConnection*>
+PtiFactory::new_OrderedConVector(
+  const PtExpr* expr
 )
 {
-  return new_Inst(fr, {new_OrderedCon(expr1)});
+  return vector<const PtConnection*>{new_OrderedCon(expr)};
 }
 
-// @brief module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_Inst(
-  const FileRegion& fr,
+// @brief 順序つき結合子のベクタの生成
+vector<const PtConnection*>
+PtiFactory::new_OrderedConVector(
   const PtExpr* expr1,
   const PtExpr* expr2
 )
 {
-  return new_Inst(fr, {new_OrderedCon(expr1), new_OrderedCon(expr2)});
+  return vector<const PtConnection*>{new_OrderedCon(expr1),
+				     new_OrderedCon(expr2)};
 }
 
-// @brief module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_Inst(
-  const FileRegion& fr,
+// @brief 順序つき結合子のベクタの生成
+vector<const PtConnection*>
+PtiFactory::new_OrderedConVector(
   const PtExpr* expr1,
   const PtExpr* expr2,
   const PtExpr* expr3
 )
 {
-  return new_Inst(fr, {new_OrderedCon(expr1),
-		       new_OrderedCon(expr2),
-		       new_OrderedCon(expr3)});
+  return vector<const PtConnection*>{new_OrderedCon(expr1),
+				     new_OrderedCon(expr2),
+				     new_OrderedCon(expr3)};
 }
 
-// @brief module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_Inst(
-  const FileRegion& fr,
+// @brief 順序つき結合子のベクタの生成
+vector<const PtConnection*>
+PtiFactory::new_OrderedConVector(
   const PtExpr* expr1,
   const PtExpr* expr2,
   const PtExpr* expr3,
   const PtExpr* expr4
 )
 {
-  return new_Inst(fr, {new_OrderedCon(expr1),
-		       new_OrderedCon(expr2),
-		       new_OrderedCon(expr3),
-		       new_OrderedCon(expr4)});
-}
-
-// @brief 名前付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstN(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* expr1
-)
-{
-  return new_InstN(fr, name, {new_OrderedCon(expr1)});
-
-}
-
-// @brief 名前付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstN(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* expr1,
-  const PtExpr* expr2
-)
-{
-  return new_InstN(fr, name, {new_OrderedCon(expr1),
-			      new_OrderedCon(expr2)});
-}
-
-// @brief 名前付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstN(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* expr1,
-  const PtExpr* expr2,
-  const PtExpr* expr3
-)
-{
-  return new_InstN(fr, name, {new_OrderedCon(expr1),
-			      new_OrderedCon(expr2),
-			      new_OrderedCon(expr3)});
-}
-
-// @brief 名前付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstN(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* expr1,
-  const PtExpr* expr2,
-  const PtExpr* expr3,
-  const PtExpr* expr4
-)
-{
-  return new_InstN(fr, name, {new_OrderedCon(expr1),
-			      new_OrderedCon(expr2),
-			      new_OrderedCon(expr3),
-			      new_OrderedCon(expr4)});
-}
-
-// @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstV(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* left,
-  const PtExpr* right,
-  const PtExpr* expr1
-)
-{
-  return new_InstV(fr, name, left, right,
-		   {new_OrderedCon(expr1)});
-}
-
-// @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstV(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* left,
-  const PtExpr* right,
-  const PtExpr* expr1,
-  const PtExpr* expr2
-)
-{
-  return new_InstV(fr, name, left, right,
-		   {new_OrderedCon(expr1),
-		    new_OrderedCon(expr2)});
-}
-
-// @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstV(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* left,
-  const PtExpr* right,
-  const PtExpr* expr1,
-  const PtExpr* expr2,
-  const PtExpr* expr3
-)
-{
-  return new_InstV(fr, name, left, right,
-		   {new_OrderedCon(expr1),
-		    new_OrderedCon(expr2),
-		    new_OrderedCon(expr3)});
-
-}
-
-// @brief 名前と範囲付き module instance/UDP/gate instance の要素の生成
-const PtInst*
-PtiFactory::new_InstV(
-  const FileRegion& fr,
-  const char* name,
-  const PtExpr* left,
-  const PtExpr* right,
-  const PtExpr* expr1,
-  const PtExpr* expr2,
-  const PtExpr* expr3,
-  const PtExpr* expr4
-)
-{
-  return new_InstV(fr, name, left, right,
-		   {new_OrderedCon(expr1),
-		    new_OrderedCon(expr2),
-		    new_OrderedCon(expr3),
-		    new_OrderedCon(expr4)});
+  return vector<const PtConnection*>{new_OrderedCon(expr1),
+				     new_OrderedCon(expr2),
+				     new_OrderedCon(expr3),
+				     new_OrderedCon(expr4)};
 }
 
 // @brief 階層名の生成
