@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "parser/Parser.h"
 #include "parser/PtMgr.h"
 #include "parser/PtiFactory.h"
@@ -25,11 +24,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief UDP定義の開始
-// - port list の初期化
-// - iohead list の初期化
-// - declhead list の初期化
-// - UDP entry list の初期化
-// を行う．
 void
 Parser::init_udp()
 {
@@ -53,12 +47,14 @@ Parser::end_udp()
 
 // UDP を生成する．(Verilog-1995)
 void
-Parser::new_Udp1995(const FileRegion& file_region,
-		    const char* udp_name,
-		    const char* init_name,
-		    const FileRegion& init_loc,
-		    const PtExpr* init_value,
-		    PtrList<const PtAttrInst>* ai_list)
+Parser::new_Udp1995(
+  const FileRegion& file_region,
+  const char* udp_name,
+  const char* init_name,
+  const FileRegion& init_loc,
+  const PtExpr* init_value,
+  PtrList<const PtAttrInst>* ai_list
+)
 {
   auto iohead_array = get_module_io_array();
   const PtIOItem* out_item = nullptr;
@@ -216,12 +212,14 @@ Parser::new_Udp1995(const FileRegion& file_region,
 
 // UDP を生成する．(Verilog-2001)
 void
-Parser::new_Udp2001(const FileRegion& file_region,
-		    const char* udp_name,
-		    const char* init_name,
-		    const FileRegion& init_loc,
-		    const PtExpr* init_value,
-		    PtrList<const PtAttrInst>* ai_list)
+Parser::new_Udp2001(
+  const FileRegion& file_region,
+  const char* udp_name,
+  const char* init_name,
+  const FileRegion& init_loc,
+  const PtExpr* init_value,
+  PtrList<const PtAttrInst>* ai_list
+)
 {
   auto iohead_array = get_module_io_array();
 
@@ -258,16 +256,18 @@ Parser::new_Udp2001(const FileRegion& file_region,
 
 // @brief new_Udp の下請け関数
 void
-Parser::new_Udp(const FileRegion& file_region,
-		const char* udp_name,
-		const char* init_name,
-		const FileRegion& init_loc,
-		const PtExpr* init_value,
-		PtrList<const PtAttrInst>* ai_list,
-		bool is_seq,
-		const PtIOItem* out_item,
-		const vector<const PtPort*>& port_array,
-		const vector<const PtIOHead*>& iohead_array)
+Parser::new_Udp(
+  const FileRegion& file_region,
+  const char* udp_name,
+  const char* init_name,
+  const FileRegion& init_loc,
+  const PtExpr* init_value,
+  PtrList<const PtAttrInst>* ai_list,
+  bool is_seq,
+  const PtIOItem* out_item,
+  const vector<const PtPort*>& port_array,
+  const vector<const PtIOHead*>& iohead_array
+)
 {
   const PtUdp* udp = nullptr;
   if ( is_seq ) {
@@ -334,68 +334,64 @@ Parser::new_Udp(const FileRegion& file_region,
 }
 
 // @brief combinational UDP 用のテーブルエントリの生成
-// @param[in] fr ファイル位置の情報
-// @param[in] output_loc 出力記号の位置
-// @param[in] output_symbol 出力記号
 void
-Parser::new_UdpEntry(const FileRegion& fr,
-		     const FileRegion& output_loc,
-		     char output_symbol)
+Parser::new_UdpEntry(
+  const FileRegion& fr,
+  const FileRegion& output_loc,
+  char output_symbol
+)
 {
-  auto output{mFactory->new_UdpValue(output_loc, output_symbol)};
-  auto entry{mFactory->new_UdpEntry(fr, get_udp_value_array(), output)};
+  auto output = mFactory->new_UdpValue(output_loc, output_symbol);
+  auto entry = mFactory->new_UdpEntry(fr, get_udp_value_array(), output);
   add_udp_entry(entry);
 }
 
 // @brief sequential UDP 用のテーブルエントリの生成
-// @param[in] fr ファイル位置の情報
-// @param[in] current_loc 現状態記号の位置
-// @param[in] current_symbol 現状態記号
-// @param[in] output_loc 出力記号の位置
-// @param[in] output_symbol 出力記号
 void
-Parser::new_UdpEntry(const FileRegion& fr,
-		     const FileRegion& current_loc,
-		     char current_symbol,
-		     const FileRegion& output_loc,
-		     char output_symbol)
+Parser::new_UdpEntry(
+  const FileRegion& fr,
+  const FileRegion& current_loc,
+  char current_symbol,
+  const FileRegion& output_loc,
+  char output_symbol
+)
 {
-  auto current{mFactory->new_UdpValue(current_loc, current_symbol)};
-  auto output{mFactory->new_UdpValue(output_loc, output_symbol)};
-  auto entry{mFactory->new_UdpEntry(fr, get_udp_value_array(), current, output)};
+  auto current = mFactory->new_UdpValue(current_loc, current_symbol);
+  auto output = mFactory->new_UdpValue(output_loc, output_symbol);
+  auto entry = mFactory->new_UdpEntry(fr, get_udp_value_array(), current, output);
   add_udp_entry(entry);
 }
 
 // @brief UdpEntry を追加する．
 inline
 void
-Parser::add_udp_entry(const PtUdpEntry* entry)
+Parser::add_udp_entry(
+  const PtUdpEntry* entry
+)
 {
   mUdpEntryList.push_back(entry);
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
-// @param[in] fr ファイル位置の情報
-// @param[in] symbol シンボル
-// @return 生成された値
 void
-Parser::new_UdpValue(const FileRegion& fr,
-		     char symbol)
+Parser::new_UdpValue(
+  const FileRegion& fr,
+  char symbol
+)
 {
-  auto value{mFactory->new_UdpValue(fr, symbol)};
+  auto value = mFactory->new_UdpValue(fr, symbol);
   add_udp_value(value);
 }
 
 // @brief UDP のテーブルエントリの要素の値の生成
-// @param[in] fr ファイル位置の情報
-// @param[in] symbol1, symbol2 シンボル
-// @return 生成された値
 void
-Parser::new_UdpValue(const FileRegion& fr,
-		     char symbol1,
-		     char symbol2)
+Parser::new_UdpValue(
+  const FileRegion& fr,
+  char symbol1,
+  char symbol2
+)
 {
-  auto value{mFactory->new_UdpValue(fr, symbol1, symbol2)};
+  auto value = mFactory->new_UdpValue(fr, symbol1, symbol2);
   add_udp_value(value);
 }
 

@@ -32,12 +32,16 @@ public:
   /// @param[in] alloc メモリアロケータ
   static
   PtiFactory*
-  make_obj(const string& type,
-	   Alloc& alloc);
+  make_obj(
+    const string& type,
+    Alloc& alloc
+  );
 
   /// @brief コンストラクタ
   /// @param[in] alloc メモリアロケータ
-  PtiFactory(Alloc& alloc);
+  PtiFactory(
+    Alloc& alloc
+  );
 
   /// @brief デストラクタ
   virtual
@@ -1278,29 +1282,6 @@ public:
 	       const PtExpr* expr,
 	       const PtPathDelay* path_delay) = 0;
 
-  /// @brief パス記述の生成
-  /// @param[in] fr ファイル位置の情報
-  /// @param[in] edge
-  /// @param[in] input_array
-  /// @param[in] input_pol
-  /// @param[in] op
-  /// @param[in] output_array
-  /// @param[in] output_pol
-  /// @param[in] expr
-  /// @param[in] path_delay
-  /// @return 生成されたパス記述
-  virtual
-  const PtPathDecl*
-  new_PathDecl(const FileRegion& fr,
-	       int edge,
-	       const vector<const PtExpr*>& input_array,
-	       int input_pol,
-	       VpiPathType op,
-	       const PtExpr* output,
-	       int output_pol,
-	       const PtExpr* expr,
-	       const PtPathDelay* path_delay);
-
   /// @brief path delay value の生成 (値が1個)
   /// @param[in] fr ファイル位置の情報
   /// @param[in] value 値
@@ -1923,17 +1904,6 @@ public:
   /// @brief constant primary の生成
   /// @param[in] fr ファイル位置の情報
   /// @param[in] name 識別子名
-  /// @param[in] index インデックス
-  /// @return 生成された const primary
-  virtual
-  const PtExpr*
-  new_CPrimary(const FileRegion& fr,
-	       const char* name,
-	       const PtExpr* index);
-
-  /// @brief constant primary の生成
-  /// @param[in] fr ファイル位置の情報
-  /// @param[in] name 識別子名
   /// @param[in] index_array インデックスのリスト
   /// @return 生成された const primary
   virtual
@@ -2079,48 +2049,12 @@ public:
 
   /// @brief イベントコントロールの生成
   /// @param[in] fr ファイル位置の情報
-  /// @return 生成されたイベントコントロール
-  virtual
-  const PtControl*
-  new_EventControl(const FileRegion& fr);
-
-  /// @brief イベントコントロールの生成
-  /// @param[in] fr ファイル位置の情報
-  /// @param[in] event イベント
-  /// @return 生成されたイベントコントロール
-  virtual
-  const PtControl*
-  new_EventControl(const FileRegion& fr,
-		   const PtExpr* event);
-
-  /// @brief イベントコントロールの生成
-  /// @param[in] fr ファイル位置の情報
   /// @param[in] event_array イベントのリスト
   /// @return 生成されたイベントコントロール
   virtual
   const PtControl*
   new_EventControl(const FileRegion& fr,
 		   const vector<const PtExpr*>& event_array) = 0;
-
-  /// @brief リピートコントロールの生成
-  /// @param[in] fr ファイル位置の情報
-  /// @param[in] expr 繰り返し数を表す式
-  /// @return 生成されたリピートコントロール
-  virtual
-  const PtControl*
-  new_RepeatControl(const FileRegion& fr,
-		    const PtExpr* expr);
-
-  /// @brief リピートコントロールの生成
-  /// @param[in] fr ファイル位置の情報
-  /// @param[in] expr 繰り返し数を表す式
-  /// @param[in] event 繰り返しの単位となるイベント
-  /// @return 生成されたリピートコントロール
-  virtual
-  const PtControl*
-  new_RepeatControl(const FileRegion& fr,
-		    const PtExpr* expr,
-		    const PtExpr* event);
 
   /// @brief リピートコントロールの生成
   /// @param[in] fr ファイル位置の情報

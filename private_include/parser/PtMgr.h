@@ -160,28 +160,34 @@ private:
   // 文字列の辞書
   unordered_set<string> mStringPool;
 
+  // ハッシュ関数
   struct AttrHash
   {
     SizeType
-    operator()(const PtiAttrInfo& attr_info) const
+    operator()(
+      const PtiAttrInfo& attr_info
+    ) const
     {
       SizeType tmp{reinterpret_cast<SizeType>(attr_info.obj())};
       return (tmp * tmp) >> 16;
     }
   };
 
+  // 等価比較関数
   struct AttrEq
   {
     bool
-    operator()(const PtiAttrInfo& attr_info1,
-	       const PtiAttrInfo& attr_info2) const
+    operator()(
+      const PtiAttrInfo& attr_info1,
+      const PtiAttrInfo& attr_info2
+    ) const
     {
       return attr_info1.obj() == attr_info2.obj();
     }
   };
 
   // 属性リストの辞書
-  // PtBase* をキーにする．
+  // PtAttrInfo をキーにする．
   unordered_set<PtiAttrInfo, AttrHash, AttrEq> mAttrDict;
 
 };

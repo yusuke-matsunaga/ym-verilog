@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "parser/Parser.h"
 
 #include "scanner/Lex.h"
@@ -26,14 +25,6 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief モジュール定義の開始
-// - port list の初期化
-// - paramport list の初期化
-// - iohead list の初期化
-// - paramhead list の初期化
-// - localparamhead list の初期化
-// - declhead list の初期化
-// - item list の初期化
-// を行う．
 void
 Parser::init_module()
 {
@@ -61,10 +52,11 @@ Parser::end_module()
 
 // Verilog1995 タイプのモジュールを生成する．
 void
-Parser::new_Module1995(const FileRegion& file_region,
-		       bool is_macro,
-		       const char* module_name,
-		       PtrList<const PtAttrInst>* ai_list)
+Parser::new_Module1995(
+  const FileRegion& file_region,
+  bool is_macro,
+  const char* module_name,
+  PtrList<const PtAttrInst>* ai_list)
 {
   auto port_vector = get_port_vector();
   auto paramport_array = get_paramport_array();
@@ -125,32 +117,34 @@ Parser::new_Module1995(const FileRegion& file_region,
     }
   }
 
-  auto module{mFactory->new_Module(file_region,
-				  module_name,
-				  is_macro,
-				  is_cell,
-				  is_protected,
-				  time_u, time_p,
-				  nettype, unconn,
-				  delay, decay,
-				  named_port,
-				  portfaults, suppress_faults,
-				  config, library, cell,
-				  paramport_array,
-				  port_vector,
-				  iohead_array,
-				  mCurDeclArray,
-				  mCurItemArray)};
+  auto module = mFactory->new_Module(file_region,
+				     module_name,
+				     is_macro,
+				     is_cell,
+				     is_protected,
+				     time_u, time_p,
+				     nettype, unconn,
+				     delay, decay,
+				     named_port,
+				     portfaults, suppress_faults,
+				     config, library, cell,
+				     paramport_array,
+				     port_vector,
+				     iohead_array,
+				     mCurDeclArray,
+				     mCurItemArray);
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list, true);
 }
 
 // Verilog2001 タイプのモジュールを生成する．
 void
-Parser::new_Module2001(const FileRegion& file_region,
-		       bool is_macro,
-		       const char* module_name,
-		       PtrList<const PtAttrInst>* ai_list)
+Parser::new_Module2001(
+  const FileRegion& file_region,
+  bool is_macro,
+  const char* module_name,
+  PtrList<const PtAttrInst>* ai_list
+)
 {
   auto paramport_array = get_paramport_array();
   auto iohead_array = get_module_io_array();
@@ -183,31 +177,30 @@ Parser::new_Module2001(const FileRegion& file_region,
   // iohead_array からポートの配列を作る．
   auto port_array = new_PortArray(iohead_array);
 
-  auto module{mFactory->new_Module(file_region,
-				  module_name,
-				  is_macro, is_cell, is_protected,
-				  time_u, time_p, nettype,
-				  unconn, delay, decay,
-				  true,
-				  portfaults, suppress_faults,
-				  config, library, cell,
-				  paramport_array,
-				  port_array,
-				  iohead_array,
-				  mCurDeclArray,
-				  mCurItemArray)};
+  auto module = mFactory->new_Module(file_region,
+				     module_name,
+				     is_macro, is_cell, is_protected,
+				     time_u, time_p, nettype,
+				     unconn, delay, decay,
+				     true,
+				     portfaults, suppress_faults,
+				     config, library, cell,
+				     paramport_array,
+				     port_array,
+				     iohead_array,
+				     mCurDeclArray,
+				     mCurItemArray);
   mPtMgr.reg_module(module);
   reg_attrinst(module, ai_list, true);
 }
 
 // @brief ポート宣言とIO宣言の齟齬をチェックする．
-// @param[in] port_vector ポート宣言のリスト
-// @param[in] iohead_array IO宣言のリスト
-// @param[out] iodecl_dirs IO宣言名をキーとして向きを保持する辞書
 void
-Parser::check_IO(const vector<const PtPort*>& port_array,
-		 const vector<const PtIOHead*>& iohead_array,
-		 unordered_map<string, VpiDir>& iodecl_dirs)
+Parser::check_IO(
+  const vector<const PtPort*>& port_array,
+  const vector<const PtIOHead*>& iohead_array,
+  unordered_map<string, VpiDir>& iodecl_dirs
+)
 {
   // port_array をスキャンして中で用いられている名前を portref_dic
   // に登録する．

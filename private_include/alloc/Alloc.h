@@ -44,28 +44,38 @@ public:
   /// @{
 
   /// @brief n バイトの領域を確保する．
-  /// @param[in] n 確保するメモリ量(単位はバイト)
   void*
-  get_memory(SizeType n);
+  get_memory(
+    SizeType n ///< [in] 確保するメモリ量(単位はバイト)
+  );
 
   /// @brief n バイトの領域を開放する．
-  /// @param[in] n 確保したメモリ量(単位はバイト)
-  /// @param[in] blk 開放するメモリ領域の先頭番地
   void
-  put_memory(SizeType n,
-	     void* blk);
+  put_memory(
+    SizeType n, ///< [in] 確保したメモリ量(単位はバイト)
+    void* blk   ///< [in] 開放するメモリ領域の先頭番地
+  );
 
   /// @brief 今までに確保した全ての領域を破棄する．
+  ///
   /// 個々のオブジェクトのデストラクタなどは起動されない
   /// ので使用には注意が必要
   void
   destroy();
 
   /// @brief 配列用の領域を確保する(テンプレート)関数
-  /// @param[in] num 要素数
   template<typename T>
   T*
-  get_array(SizeType num);
+  get_array(
+    SizeType num ///< [in] 要素数
+  )
+  {
+    if ( num <= 0 ) {
+      return nullptr;
+    }
+    void* p = get_memory(sizeof(T) * num);
+    return new (p) T[num];
+  }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -77,14 +87,22 @@ public:
   /// @{
 
   /// @brief メモリ量の制限値を設定する．
-  /// @param[in] limit 制限値(単位はバイト)
-  /// @note limit が 0 の時は制限なし
+  ///
+  /// limit が 0 の時は制限なし
   void
-  set_mem_limit(SizeType limit);
+  set_mem_limit(
+    SizeType limit ///< [in] 制限値(単位はバイト)
+  )
+  {
+    mMemLimit = limit;
+  }
 
   /// @brief メモリ量の制限値を返す．
   SizeType
-  mem_limit() const;
+  mem_limit() const
+  {
+    return mMemLimit;
+  }
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -97,23 +115,37 @@ public:
 
   /// @brief 使用されているメモリ量を返す．
   SizeType
-  used_size() const;
+  used_size() const
+  {
+    return mUsedSize;
+  }
 
   /// @brief used_size() の今までの最大値を返す．
   SizeType
-  max_used_size() const;
+  max_used_size() const
+  {
+    return mMaxUsedSize;
+  }
 
   /// @brief 実際に確保したメモリ量を返す．
   SizeType
-  allocated_size() const;
+  allocated_size() const
+  {
+    return mAllocSize;
+  }
 
   /// @brief 実際に確保した回数を返す．
   SizeType
-  allocated_count() const;
+  allocated_count() const
+  {
+    return mAllocCount;
+  }
 
   /// @brief 内部状態を出力する．
   void
-  print_stats(ostream& s) const;
+  print_stats(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -126,17 +158,19 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 真のアロケート関数
-  /// @param[in] n 確保するメモリ量(単位はバイト)
-  /// @note 確保した総量が制限値を越えていたら 0 を返す．
+  ///
+  /// 確保した総量が制限値を越えていたら 0 を返す．
   void*
-  alloc(SizeType n);
+  alloc(
+    SizeType n ///< [in] 確保するメモリ量(単位はバイト)
+  );
 
   /// @brief 新のフリー関数
-  /// @param[in] n 解放するメモリ量(単位はバイト)
-  /// @param[in] blk 解放するメモリ領域
   void
-  free(SizeType n,
-       void* blk);
+  free(
+    SizeType n, ///< [in] 解放するメモリ量(単位はバイト)
+    void* blk   ///< [in] 解放するメモリ領域
+  );
 
   /// @}
   //////////////////////////////////////////////////////////////////////
@@ -149,18 +183,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 実際にメモリ領域の確保を行う関数
-  /// @param[in] n 確保するメモリ量(単位はバイト)
   virtual
   void*
-  _get_memory(SizeType n) = 0;
+  _get_memory(
+    SizeType n ///< [in] 確保するメモリ量(単位はバイト)
+  ) = 0;
 
   /// @brief 実際にメモリ領域の開放を行う関数
-  /// @param[in] n 確保したメモリ量(単位はバイト)
-  /// @param[in] blk 開放するメモリ領域の先頭番地
   virtual
   void
-  _put_memory(SizeType n,
-	      void* blk) = 0;
+  _put_memory(
+    SizeType n, ///< [in] 確保したメモリ量(単位はバイト)
+    void* blk   ///< [in] 開放するメモリ領域の先頭番地
+  ) = 0;
 
   /// @brief 実際に destory() の処理を行う関数
   virtual
@@ -189,75 +224,6 @@ private:
   SizeType mAllocCount{0};
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-/// @brief 配列用の領域を確保する(テンプレート)関数
-/// @param[in] num 要素数
-template<typename T>
-inline
-T*
-Alloc::get_array(SizeType num)
-{
-  if ( num <= 0 ) {
-    return nullptr;
-  }
-  void* p = get_memory(sizeof(T) * num);
-  return new (p) T[num];
-}
-
-// @brief メモリ量の制限値を設定する．
-// @param[in] limit 制限値(単位はバイト)
-// @note limit が 0 の時は制限なし
-inline
-void
-Alloc::set_mem_limit(SizeType limit)
-{
-  mMemLimit = limit;
-}
-
-// @brief メモリ量の制限値を返す．
-inline
-SizeType
-Alloc::mem_limit() const
-{
-  return mMemLimit;
-}
-
-// @brief 使用されているメモリ量を返す．
-inline
-SizeType
-Alloc::used_size() const
-{
-  return mUsedSize;
-}
-
-// @brief used_size() の今までの最大値を返す．
-inline
-SizeType
-Alloc::max_used_size() const
-{
-  return mMaxUsedSize;
-}
-
-// @brief 実際に確保したメモリ量を返す．
-inline
-SizeType
-Alloc::allocated_size() const
-{
-  return mAllocSize;
-}
-
-// @brief 実際に確保した回数を返す．
-inline
-SizeType
-Alloc::allocated_count() const
-{
-  return mAllocCount;
-}
 
 END_NAMESPACE_YM_VERILOG
 

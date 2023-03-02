@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "parser/PtDumper.h"
 
 #include "ym/pt/PtModule.h"
@@ -35,14 +34,12 @@ class PtHeader
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] s 出力ストリーム
-  /// @param[in] name 名前
-  /// @param[in] type 属性
-  /// @param[in] need_cr マーカの直後に改行するとき true とするフラグ
-  PtHeader(PtDumper& s,
-	   const char* name,
-	   const char* type,
-	   bool need_cr = true);
+  PtHeader(
+    PtDumper& s,         ///< [in] 出力ストリーム
+    const char* name,    ///< [in] 名前
+    const char* type,    ///< [in] 属性
+    bool need_cr = true  ///< [in] マーカの直後に改行するとき true とするフラグ
+  );
 
   /// @brief デストラクタ
   ~PtHeader();
@@ -67,11 +64,11 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] s 出力先のストリーム
-PtDumper::PtDumper(ostream& s) :
-  mStream(s),
-  mIndent(0),
-  mFileLocMode(false)
+PtDumper::PtDumper(
+  ostream& s
+) : mStream(s),
+    mIndent(0),
+    mFileLocMode{false}
 {
 }
 
@@ -95,7 +92,6 @@ PtDumper::disable_file_loc_mode()
 }
 
 // @brief ファイル位置情報の出力モードの取得
-// @return ファイル位置情報を出力するモードのとき true を返す．
 bool
 PtDumper::file_loc_mode() const
 {
@@ -103,10 +99,11 @@ PtDumper::file_loc_mode() const
 }
 
 // @brief パーサーの内部情報の表示
-// @param[in] parser パーサー
 void
-PtDumper::put(const vector<const PtUdp*>& udp_list,
-	      const vector<const PtModule*>& module_list)
+PtDumper::put(
+  const vector<const PtUdp*>& udp_list,
+  const vector<const PtModule*>& module_list
+)
 {
   for ( auto udp: udp_list ) {
     put(udp);
@@ -117,9 +114,10 @@ PtDumper::put(const vector<const PtUdp*>& udp_list,
 }
 
 // @brief UDP を表示する
-// @param[in] udp UDP
 void
-PtDumper::put(const PtUdp* udp)
+PtDumper::put(
+  const PtUdp* udp
+)
 {
   PtHeader x(*this, "UDP", "UDP");
 
@@ -155,11 +153,11 @@ PtDumper::put(const PtUdp* udp)
 }
 
 // @brief UDP テーブルの値を表示する
-// @param[in] label ラベル
-// @param[in] v UDP テーブルの値
 void
-PtDumper::put(const char* label,
-	      const PtUdpValue* v)
+PtDumper::put(
+  const char* label,
+  const PtUdpValue* v
+)
 {
   if ( v == nullptr ) {
     return;
@@ -175,7 +173,9 @@ BEGIN_NONAMESPACE
 
 // 時間の単位を表す文字列を得る．
 string
-unit2str(int unit)
+unit2str(
+  int unit
+)
 {
   if ( unit > 2 || unit < -15 ) {
     return "illegal time unit";
@@ -202,9 +202,10 @@ unit2str(int unit)
 END_NONAMESPACE
 
 // @brief module を表示する
-// @param[in] m モジュール
 void
-PtDumper::put(const PtModule* m)
+PtDumper::put(
+  const PtModule* m
+)
 {
   PtHeader x(*this, "Module", "Module");
 
@@ -272,11 +273,11 @@ PtDumper::put(const PtModule* m)
 }
 
 // @brief IO のヘッダを出力する．
-// @param[in] label ラベル
-// @param[in] io IOヘッダ
 void
-PtDumper::put(const char* label,
-	      const PtIOHead* io)
+PtDumper::put(
+  const char* label,
+  const PtIOHead* io
+)
 {
   const char* nm = nullptr;
   switch ( io->direction() ) {
@@ -310,11 +311,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 宣言のヘッダを出力する．
-// @param[in] label ラベル
-// @param[in] decl 宣言ヘッダ
 void
-PtDumper::put(const char* label,
-	      const PtDeclHead* decl)
+PtDumper::put(
+  const char* label,
+  const PtDeclHead* decl
+)
 {
   const char* nm = nullptr;
   switch ( decl->type() ) {
@@ -401,11 +402,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 要素の出力
-// @param[in] label ラベル
-// @param[in] item 要素
 void
-PtDumper::put(const char* label,
-	      const PtItem* item)
+PtDumper::put(
+  const char* label,
+  const PtItem* item
+)
 {
   if ( item == nullptr ) {
     return;
@@ -609,8 +610,10 @@ PtDumper::put(const char* label,
 #if 0 // PATH_DECL
 // path decl を表示する．
 void
-PtDumper::put(const char* label,
-	      const PtPathDecl* item)
+PtDumper::put(
+  const char* label,
+  const PtPathDecl* item
+)
 {
   PtHeader x(*this, label, "PathDecl");
 
@@ -668,8 +671,10 @@ PtDumper::put(const char* label,
 
 // path delay を表示する．
 PtDumper&
-operator<<(PtDumper& s,
-	   const PtPathDelay* item)
+operator<<(
+  PtDumper& s,
+  const PtPathDelay* item
+)
 {
   PtHeader x1(s, "PathDelay");
 
@@ -688,11 +693,11 @@ operator<<(PtDumper& s,
 #endif
 
 // @brief ステートメントの出力
-// @param[in] label ラベル
-// @param[in] stmt ステートメント
 void
-PtDumper::put(const char* label,
-	      const PtStmt* stmt)
+PtDumper::put(
+  const char* label,
+  const PtStmt* stmt
+)
 {
   if ( stmt == nullptr ) {
     return;
@@ -835,11 +840,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 式の内容を出力する
-// @param[in] label ラベル
-// @param[in] expr 式
 void
-PtDumper::put(const char* label,
-	      const PtExpr* expr)
+PtDumper::put(
+  const char* label,
+  const PtExpr* expr
+)
 {
   if ( expr == nullptr ) {
     return;
@@ -940,9 +945,10 @@ PtDumper::put(const char* label,
 }
 
 // @brief インクルード元のファイル情報の出力
-// @param[in] file_loc ファイルの位置情報
 void
-PtDumper::put_parent_file(const FileLoc& file_loc)
+PtDumper::put_parent_file(
+  const FileLoc& file_loc
+)
 {
   auto file_list{file_loc.parent_loc_list()};
   for ( auto loc: file_list ) {
@@ -954,8 +960,10 @@ PtDumper::put_parent_file(const FileLoc& file_loc)
 
 /// @brief 宣言を出力する．
 void
-PtDumper::put_decls(const vector<const PtIOHead*>& iohead_array,
-		    const vector<const PtDeclHead*>& declhead_array)
+PtDumper::put_decls(
+  const vector<const PtIOHead*>& iohead_array,
+  const vector<const PtDeclHead*>& declhead_array
+)
 {
   for ( auto io: iohead_array ) {
     put("mIODecl", io);
@@ -966,13 +974,12 @@ PtDumper::put_decls(const vector<const PtIOHead*>& iohead_array,
 }
 
 // @brief 宣言と要素を出力する．
-// @param[in] label ラベル
-// @param[in] decl_array 宣言の配列
-// @param[in] item_array 要素の配列
 void
-PtDumper::put_decl_item(const char* label,
-			const vector<const PtDeclHead*>& decl_array,
-			const vector<const PtItem*>& item_array)
+PtDumper::put_decl_item(
+  const char* label,
+  const vector<const PtDeclHead*>& decl_array,
+  const vector<const PtItem*>& item_array
+)
 {
   PtHeader x(*this, label, "GenBlock");
 
@@ -986,7 +993,9 @@ PtDumper::put_decl_item(const char* label,
 
 // @brief 階層名の出力
 void
-PtDumper::put(const vector<const PtNameBranch*>& nb_array)
+PtDumper::put(
+  const vector<const PtNameBranch*>& nb_array
+)
 {
   for ( auto nb: nb_array ) {
     put("mNameBranch", nb);
@@ -994,11 +1003,11 @@ PtDumper::put(const vector<const PtNameBranch*>& nb_array)
 }
 
 // @brief ブール型データの出力
-// @param[in] label ラベル
-// @param[in] b ブール値
 void
-PtDumper::put(const char* label,
-	      bool b)
+PtDumper::put(
+  const char* label,
+  bool b
+)
 {
   PtHeader x(*this, label, "bool", false);
   if ( b ) {
@@ -1010,33 +1019,33 @@ PtDumper::put(const char* label,
 }
 
 // @brief 整数型データの出力
-// @param[in] label ラベル
-// @param[in] d 整数値
 void
-PtDumper::put(const char* label,
-	      int d)
+PtDumper::put(
+  const char* label,
+  int d
+)
 {
   PtHeader x(*this, label, "int", false);
   mStream << d;
 }
 
 // @brief 実数型データの出力
-// @param[in] label ラベル
-// @param[in] r 実数値
 void
-PtDumper::put(const char* label,
-	      double r)
+PtDumper::put(
+  const char* label,
+  double r
+)
 {
   PtHeader x(*this, label, "real", false);
   mStream << r;
 }
 
 // @brief 文字列型データの出力
-// @param[in] label ラベル
-// @param[in] str 文字列
 void
-PtDumper::put(const char* label,
-	      const char* str)
+PtDumper::put(
+  const char* label,
+  const char* str
+)
 {
   PtHeader x(*this, label, "string", false);
   if ( str ) {
@@ -1045,21 +1054,21 @@ PtDumper::put(const char* label,
 }
 
 // @brief 文字列型データの出力
-// @param[in] label ラベル
-// @param[in] str 文字列
 void
-PtDumper::put(const char* label,
-	      const string& str)
+PtDumper::put(
+  const char* label,
+  const string& str
+)
 {
   put(label, str.c_str());
 }
 
 // @brief 補助的なデータ型の出力
-// @param[in] label ラベル
-// @param[in] aux_type 補助的なデータ型
 void
-PtDumper::put(const char* label,
-	      VpiAuxType aux_type)
+PtDumper::put(
+  const char* label,
+  VpiAuxType aux_type
+)
 {
   PtHeader x(*this, label, "aux_type", false);
   switch ( aux_type ) {
@@ -1072,11 +1081,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief ネット型の出力
-// @param[in] label ラベル
-// @param[in] net_type ネット型
 void
-PtDumper::put(const char* label,
-	      VpiNetType net_type)
+PtDumper::put(
+  const char* label,
+  VpiNetType net_type
+)
 {
   PtHeader x(*this, label, "net_type", false);
   switch ( net_type ) {
@@ -1097,11 +1106,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 変数型の出力
-// @param[in] label ラベル
-// @param[in] var_type 変数型
 void
-PtDumper::put(const char* label,
-	      VpiVarType var_type)
+PtDumper::put(
+  const char* label,
+  VpiVarType var_type
+)
 {
   PtHeader x(*this, label, "var_type", false);
   switch ( var_type ) {
@@ -1115,22 +1124,22 @@ PtDumper::put(const char* label,
 }
 
 // @brief 方向の出力
-// @param[in] label ラベル
-// @param[in] direction 方向
 void
-PtDumper::put(const char* label,
-	      VpiDir direction)
+PtDumper::put(
+  const char* label,
+  VpiDir direction
+)
 {
   PtHeader x(*this, label, "direction", false);
   mStream << direction;
 }
 
 // @brief unconnected drive の出力
-// @param[in] label ラベル
-// @param[in] ud unconnected drive
 void
-PtDumper::put(const char* label,
-	      VpiUnconnDrive ud)
+PtDumper::put(
+  const char* label,
+  VpiUnconnDrive ud
+)
 {
   PtHeader x(*this, label, "unconn_drive", false);
   switch ( ud ) {
@@ -1142,11 +1151,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief default delay mode の出力
-// @param[in] label ラベル
-// @param[in] delay_mode default delay mode
 void
-PtDumper::put(const char* label,
-	      VpiDefDelayMode delay_mode)
+PtDumper::put(
+  const char* label,
+  VpiDefDelayMode delay_mode
+)
 {
   PtHeader x(*this, label, "def_delay_mode", false);
   switch ( delay_mode ) {
@@ -1161,11 +1170,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief primitive型の出力
-// @param[in] label ラベル
-// @param[in] prim_type primitive 型
 void
-PtDumper::put(const char* label,
-	      VpiPrimType prim_type)
+PtDumper::put(
+  const char* label,
+  VpiPrimType prim_type
+)
 {
   PtHeader x(*this, label, "prim_type", false);
   switch ( prim_type ) {
@@ -1202,11 +1211,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 演算子型の出力
-// @param[in] label ラベル
-// @param[in] op_type 演算子型
 void
-PtDumper::put(const char* label,
-	      VpiOpType op_type)
+PtDumper::put(
+  const char* label,
+  VpiOpType op_type
+)
 {
   PtHeader x(*this, label, "op_type", false);
   switch ( op_type ) {
@@ -1258,11 +1267,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 定数型の出力
-// @param[in] label ラベル
-// @param[in] const_type 定数型
 void
-PtDumper::put(const char* label,
-	      VpiConstType const_type)
+PtDumper::put(
+  const char* label,
+  VpiConstType const_type
+)
 {
   PtHeader x(*this, label, "const_type", false);
   switch ( const_type ) {
@@ -1282,11 +1291,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief strength の出力
-// @param[in] label ラベル
-// @param[in] strength strength
 void
-PtDumper::put(const char* label,
-	      VpiStrength strength)
+PtDumper::put(
+  const char* label,
+  VpiStrength strength
+)
 {
   PtHeader x(*this, label, "strength", false);
   switch ( strength ) {
@@ -1304,11 +1313,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief vectored/scalared 属性の出力
-// @param[in] label ラベル
-// @param[in] vs_type vectored/scalared 属性
 void
-PtDumper::put(const char* label,
-	      VpiVsType vs_type)
+PtDumper::put(
+  const char* label,
+  VpiVsType vs_type
+)
 {
   PtHeader x(*this, label, "vs_type", false);
   switch ( vs_type ) {
@@ -1320,11 +1329,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 範囲指定モードの出力
-// @param[in] label ラベル
-// @param[in] range_mode
 void
-PtDumper::put(const char* label,
-	      VpiRangeMode range_mode)
+PtDumper::put(
+  const char* label,
+  VpiRangeMode range_mode
+)
 {
   PtHeader x(*this, label, "range_mode", false);
   switch ( range_mode ) {
@@ -1337,11 +1346,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief FileLoc の情報を出力する．
-// @param[in] label ラベル
-// @param[in] file_loc ファイルの位置情報
 void
-PtDumper::put(const char* label,
-	      const FileLoc& file_loc)
+PtDumper::put(
+  const char* label,
+  const FileLoc& file_loc
+)
 {
   if ( !file_loc_mode() ) {
     return;
@@ -1363,11 +1372,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief FileRegion の情報を出力する．
-// @param[in] label ラベル
-// @param[in] file_region ファイル領域の情報
 void
-PtDumper::put(const char* label,
-	      const FileRegion& file_region)
+PtDumper::put(
+  const char* label,
+  const FileRegion& file_region
+)
 {
   if ( !file_loc_mode() ) {
     return;
@@ -1419,11 +1428,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 属性インスタンスを出力する．
-// @param[in] label ラベル
-// @param[in] attr_top 属性インスタンスの先頭
 void
-PtDumper::put(const char* label,
-	      const PtAttrInst* attr)
+PtDumper::put(
+  const char* label,
+  const PtAttrInst* attr
+)
 {
   if ( attr == nullptr ) {
     return;
@@ -1446,11 +1455,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief コントロールの内容を表示する．
-// @param[in] label ラベル
-// @param[in] ctrl コントロール
 void
-PtDumper::put(const char* label,
-	      const PtControl* ctrl)
+PtDumper::put(
+  const char* label,
+  const PtControl* ctrl
+)
 {
   if ( ctrl == nullptr ) {
     return;
@@ -1474,11 +1483,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief strength の内容を表示する．
-// @param[in] label ラベル
-// @param[in] str 信号強度
 void
-PtDumper::put(const char* label,
-	      const PtStrength* str)
+PtDumper::put(
+  const char* label,
+  const PtStrength* str
+)
 {
   if ( str == nullptr ) {
     return;
@@ -1499,11 +1508,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 遅延情報を出力する．
-// @param[in] label ラベル
-// @param[in] delay 遅延
 void
-PtDumper::put(const char* label,
-	      const PtDelay* delay)
+PtDumper::put(
+  const char* label,
+  const PtDelay* delay
+)
 {
   if ( delay == nullptr ) {
     return;
@@ -1518,11 +1527,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 接続情報を表示する．
-// @param[in] label ラベル
-// @param[in] con 接続情報
 void
-PtDumper::put(const char* label,
-	      const PtConnection* con)
+PtDumper::put(
+  const char* label,
+  const PtConnection* con
+)
 {
   if ( con == nullptr ) {
     return;
@@ -1554,11 +1563,11 @@ PtDumper::put(const char* label,
 }
 
 // @brief 階層ブランチの情報を出力する
-// @param[in] label ラベル
-// @param[in] nm 階層ブランチ
 void
-PtDumper::put(const char* label,
-	      const PtNameBranch* nb)
+PtDumper::put(
+  const char* label,
+  const PtNameBranch* nb
+)
 {
   PtHeader x(*this, label, "NameBranch");
 
@@ -1569,13 +1578,12 @@ PtDumper::put(const char* label,
 }
 
 // @brief 開始マーカを出力する．
-// @param[in] label マーカのラベル
-// @param[in] type タイプ
-// @param[in] need_cr true の時はマーカ出力後に改行する．
 void
-PtDumper::put_begin(const char* label,
-		    const char* type,
-		    bool need_cr)
+PtDumper::put_begin(
+  const char* label,
+  const char* type,
+  bool need_cr
+)
 {
   for (int i = 0; i < mIndent; ++ i) {
     mStream << "  ";
@@ -1589,9 +1597,10 @@ PtDumper::put_begin(const char* label,
 }
 
 // @brief 終了マーカを出力する．
-// @param[in] label マーカのラベル
 void
-PtDumper::put_end(const char* label)
+PtDumper::put_end(
+  const char* label
+)
 {
   -- mIndent;
   if ( mDoCR.back() ) {
@@ -1609,16 +1618,13 @@ PtDumper::put_end(const char* label)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] s 出力ストリーム
-// @param[in] name 名前
-// @param[in] type 属性
-// @param[in] need_cr マーカの直後に改行するとき true とするフラグ
-PtHeader::PtHeader(PtDumper& s,
-		   const char* name,
-		   const char* type,
-		   bool need_cr) :
-  mS(s),
-  mName(name)
+PtHeader::PtHeader(
+  PtDumper& s,
+  const char* name,
+  const char* type,
+  bool need_cr
+) : mS(s),
+    mName(name)
 {
   mS.put_begin(mName.c_str(), type, need_cr);
 }

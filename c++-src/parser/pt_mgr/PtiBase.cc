@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "parser/PtiDecl.h"
 #include "parser/PtiExpr.h"
 #include "ym/pt/PtMisc.h"
@@ -22,13 +21,17 @@ BEGIN_NAMESPACE_YM_VERILOG
 BEGIN_NONAMESPACE
 
 string
-decompile_impl(const PtExpr* expr,
-	       int ppri);
+decompile_impl(
+  const PtExpr* expr,
+  int ppri
+);
 
 // @brief 演算子の場合の decompile() 処理
 string
-decompile_opr(const PtExpr* expr,
-	      int ppri)
+decompile_opr(
+  const PtExpr* expr,
+  int ppri
+)
 {
   // 各演算子を表す文字列のテーブル
   static const char* sym_table[] = {
@@ -239,10 +242,11 @@ decompile_opr(const PtExpr* expr,
 }
 
 // @brief decompile() の下請け関数
-// @param[in] ppri 直前の演算子の優先順位
 string
-decompile_impl(const PtExpr* expr,
-	       int ppri)
+decompile_impl(
+  const PtExpr* expr,
+  int ppri
+)
 {
   switch ( expr->type() ) {
   case PtExprType::Opr:
@@ -351,7 +355,6 @@ PtiExpr::decompile() const
 {
   return decompile_impl(this, 0);
 }
-
 
 
 //////////////////////////////////////////////////////////////////////

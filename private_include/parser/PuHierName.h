@@ -69,7 +69,7 @@ public:
   vector<const PtNameBranch*>
   name_branch_to_vector()
   {
-    auto ans{mNbList->to_vector()};
+    auto ans = mNbList->to_vector();
     delete mNbList;
     mNbList = nullptr;
     return ans;

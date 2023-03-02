@@ -32,7 +32,6 @@ PtMgr::~PtMgr()
 }
 
 // @brief 登録されているモジュールのリストを返す．
-// @return 登録されているモジュールのリスト
 const vector<const PtModule*>&
 PtMgr::pt_module_list() const
 {
@@ -40,7 +39,6 @@ PtMgr::pt_module_list() const
 }
 
 // @brief 登録されている UDP のリストを返す．
-// @return 登録されている UDP のリスト
 const vector<const PtUdp*>&
 PtMgr::pt_udp_list() const
 {
@@ -48,21 +46,19 @@ PtMgr::pt_udp_list() const
 }
 
 // @brief インスタンス記述で用いられている名前かどうか調べる．
-// @param[in] name 調べる名前
-// @return 用いられていたら true を返す．
 bool
-PtMgr::check_def_name(const string& name) const
+PtMgr::check_def_name(
+  const string& name
+) const
 {
   return mDefNames.count(name) > 0;
 }
 
 // @brief attribute instance を取り出す．
-// @param[in] pt_obj 対象の構文木の要素
-// @return PtAttrInst のリスト
-//
-// 空の場合もある．
 vector<const PtAttrInst*>
-PtMgr::find_attr_list(const PtBase* pt_obj) const
+PtMgr::find_attr_list(
+  const PtBase* pt_obj
+) const
 {
   PtiAttrInfo key{pt_obj, {}};
   if ( mAttrDict.count(key) > 0 ) {
@@ -100,33 +96,39 @@ PtMgr::clear()
 }
 
 // UDP の登録
-// @param udp 登録する UDP
 void
-PtMgr::reg_udp(const PtUdp* udp)
+PtMgr::reg_udp(
+  const PtUdp* udp
+)
 {
   mUdpList.push_back(udp);
 }
 
 // モジュールの登録
-// @param module 登録するモジュール
 void
-PtMgr::reg_module(const PtModule* module)
+PtMgr::reg_module(
+  const PtModule* module
+)
 {
   mModuleList.push_back(module);
 }
 
 // @brief インスタンス定義名を追加する．
 void
-PtMgr::reg_defname(const string& name)
+PtMgr::reg_defname(
+  const string& name
+)
 {
   mDefNames.insert(name);
 }
 
 // @brief attribute instance を登録する．
 void
-PtMgr::reg_attrinst(const PtBase* pt_obj,
-		    PtrList<const PtAttrInst>* ai_list,
-		    bool def)
+PtMgr::reg_attrinst(
+  const PtBase* pt_obj,
+  PtrList<const PtAttrInst>* ai_list,
+  bool def
+)
 {
   if ( ai_list ) {
     mAttrDict.emplace(PtiAttrInfo{pt_obj, ai_list->to_vector(), def});
@@ -134,12 +136,10 @@ PtMgr::reg_attrinst(const PtBase* pt_obj,
 }
 
 // @brief 文字列領域を確保する．
-// @param[in] str 文字列
-// @return 文字列を返す．
-//
-// 同一の文字列は共有する．
 const char*
-PtMgr::save_string(const char* str)
+PtMgr::save_string(
+  const char* str
+)
 {
   auto p = mStringPool.find(str);
   if ( p == mStringPool.end() ) {

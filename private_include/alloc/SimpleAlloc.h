@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2018, 2019 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "alloc/Alloc.h"
 
 
@@ -24,14 +23,14 @@ class SimpleAlloc :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] page_size このオブジェクトが管理するメモリ量の単位
   ///
   /// page_size 以上のメモリ領域はデフォルトのアロケーターを使用する．
   explicit
-  SimpleAlloc(SizeType page_size = 4096);
+  SimpleAlloc(
+    SizeType page_size = 4096 ///< [in] このオブジェクトが管理するメモリ量の単位
+  );
 
   /// @brief デストラクタ
-  virtual
   ~SimpleAlloc();
 
 
@@ -41,18 +40,20 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief n バイトの領域を確保する．
-  /// @param[in] n 確保するメモリ量(単位はバイト)
   void*
-  _get_memory(SizeType n) override;
+  _get_memory(
+    SizeType n ///< [in] 確保するメモリ量(単位はバイト)
+  ) override;
 
   /// @brief n バイトの領域を開放する．
-  /// @param[in] n 確保したメモリ量(単位はバイト)
-  /// @param[in] blk 開放するメモリ領域の先頭番地
   void
-  _put_memory(SizeType n,
-	      void* blk) override;
+  _put_memory(
+    SizeType n, ///< [in] 確保したメモリ量(単位はバイト)
+    void* blk   ///< [in] 開放するメモリ領域の先頭番地
+  ) override;
 
   /// @brief 今までに確保した全ての領域を破棄する．
+  ///
   /// 個々のオブジェクトのデストラクタなどは起動されない
   /// ので使用には注意が必要
   void
@@ -67,11 +68,15 @@ private:
   /// @brief アラインメントを考慮してサイズを調節する．
   static
   SizeType
-  align(SizeType req_size);
+  align(
+    SizeType req_size
+  );
 
   /// @brief 利用可能なブロックを見つける．
   void*
-  find_block(SizeType alloc_size);
+  find_block(
+    SizeType alloc_size
+  );
 
   /// @brief 通常ページの実際のメモリサイズ
   SizeType
@@ -89,7 +94,9 @@ private:
   {
     // size のメモリを確保する．
     void*
-    alloc(SizeType size)
+    alloc(
+      SizeType size
+    )
     {
       auto p{static_cast<void*>(&mDummy[mNextPos])};
       mNextPos += size;

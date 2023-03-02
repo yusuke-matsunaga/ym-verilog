@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "parser/Parser.h"
 #include "scanner/Lex.h"
 #include "parser/PtiFactory.h"
@@ -37,12 +36,12 @@ const int check_memory_leak = 0;
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] ptmgr 読んだ結果のパース木を登録するマネージャ
-Parser::Parser(PtMgr& ptmgr) :
-  mAlloc{ptmgr.alloc()},
-  mPtMgr{ptmgr},
-  mFactory{PtiFactory::make_obj("cpt", mAlloc)},
-  mLex{new Lex}
+Parser::Parser(
+  PtMgr& ptmgr
+) : mAlloc{ptmgr.alloc()},
+    mPtMgr{ptmgr},
+    mFactory{PtiFactory::make_obj("cpt", mAlloc)},
+    mLex{new Lex}
 {
 }
 
@@ -53,15 +52,12 @@ Parser::~Parser()
 }
 
 // @brief ファイルを読み込む．
-// @param[in] filename 読み込むファイル名
-// @param[in] searchpath サーチパス
-// @param[in] watcher_list 行番号ウオッチャーのリスト
-// @retval true 正常に終了した．
-// @retval false エラーが起こった．
 bool
-Parser::read_file(const string& filename,
-		  const SearchPathList& searchpath,
-		  const vector<VlLineWatcher*>& watcher_list)
+Parser::read_file(
+  const string& filename,
+  const SearchPathList& searchpath,
+  const vector<VlLineWatcher*>& watcher_list
+)
 {
   // YACC の生成するパーズ関数
   extern int yyparse(Parser&);
@@ -89,12 +85,11 @@ Parser::read_file(const string& filename,
 }
 
 // @brief yylex とのインターフェイス
-// @param[out] lvalp 値を格納する変数
-// @param[out] llocp 位置情報を格納する変数
-// @return 読み込んだトークンの id を返す．
 int
-Parser::yylex(YYSTYPE& lval,
-	      FileRegion& lloc)
+Parser::yylex(
+  YYSTYPE& lval,
+  FileRegion& lloc
+)
 {
   int id = lex().get_token();
 
@@ -124,25 +119,30 @@ Parser::yylex(YYSTYPE& lval,
 }
 
 // @brief 使用されているモジュール名を登録する．
-// @param[in] name 登録する名前
 void
-Parser::reg_defname(const char* name)
+Parser::reg_defname(
+  const char* name
+)
 {
   mPtMgr.reg_defname(name);
 }
 
 // @brief attribute instance を登録する．
 void
-Parser::reg_attrinst(const PtBase* ptobj,
-		     PtrList<const PtAttrInst>* attr_list,
-		     bool def)
+Parser::reg_attrinst(
+  const PtBase* ptobj,
+  PtrList<const PtAttrInst>* attr_list,
+  bool def
+)
 {
   mPtMgr.reg_attrinst(ptobj, attr_list, def);
 }
 
 // 関数内で使えるステートメントかどうかのチェック
 bool
-Parser::check_function_statement(const PtStmt* stmt)
+Parser::check_function_statement(
+  const PtStmt* stmt
+)
 {
   switch ( stmt->type() ) {
   case PtStmtType::Disable:
@@ -218,7 +218,9 @@ Parser::check_function_statement(const PtStmt* stmt)
 
 // default ラベルが2つ以上含まれていないかどうかのチェック
 bool
-Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
+Parser::check_default_label(
+  const PtrList<const PtCaseItem>* ci_list
+)
 {
   SizeType n = 0;
   for ( auto ci: *ci_list ) {
@@ -238,71 +240,70 @@ Parser::check_default_label(const PtrList<const PtCaseItem>* ci_list)
 }
 
 // @brief 階層名の生成
-// @param[in] head_name 階層の上位部分
-// @param[in] name 階層の最下位部分
 PuHierName*
-Parser::new_HierName(const char* head_name,
-		     const char* name)
+Parser::new_HierName(
+  const char* head_name,
+  const char* name
+)
 {
-  auto nb{mFactory->new_NameBranch(head_name)};
-  auto hname{new_HierName(nb, name)};
+  auto nb = mFactory->new_NameBranch(head_name);
+  auto hname = new_HierName(nb, name);
   return hname;
 }
 
 // @brief 階層名の生成
-// @param[in] head_name 階層の上位部分
-// @param[in] index インデックス
-// @param[in] name 階層の最下位部分
 PuHierName*
-Parser::new_HierName(const char* head_name,
-		     int index,
-		     const char* name)
+Parser::new_HierName(
+  const char* head_name,
+  int index,
+  const char* name
+)
 {
-  auto nb{mFactory->new_NameBranch(head_name, index)};
-  auto hname{new_HierName(nb, name)};
+  auto nb = mFactory->new_NameBranch(head_name, index);
+  auto hname = new_HierName(nb, name);
   return hname;
 }
 
 // @brief 階層名の生成
-// @param[in] head_name 階層の上位部分
-// @param[in] index インデックス
-// @param[in] name 階層の最下位部分
 PuHierName*
-Parser::new_HierName(const PtNameBranch* nb,
-		     const char* name)
+Parser::new_HierName(
+  const PtNameBranch* nb,
+  const char* name
+)
 {
-  auto hname{mFactory->new_HierName(nb, name)};
+  auto hname = mFactory->new_HierName(nb, name);
   return hname;
 }
 
 // @brief 階層名の追加
-// @aram[in] hname 階層名の上位部分
-// @param[in] name 追加する名前
 void
-Parser::add_HierName(PuHierName* hname,
-		     const char* name)
+Parser::add_HierName(
+  PuHierName* hname,
+  const char* name
+)
 {
-  auto nb{mFactory->new_NameBranch(hname->tail_name())};
+  auto nb = mFactory->new_NameBranch(hname->tail_name());
   hname->add(nb, name);
 }
 
 // @brief 階層名の追加
-// @aram[in] hname 階層名の上位部分
-// @param[in] index インデックス
-// @param[in] name 追加する名前
 void
-Parser::add_HierName(PuHierName* hname,
-		     int index,
-		     const char* name)
+Parser::add_HierName(
+  PuHierName* hname,
+  int index,
+  const char* name
+)
 {
-  auto nb{mFactory->new_NameBranch(hname->tail_name(), index)};
+  auto nb = mFactory->new_NameBranch(hname->tail_name(), index);
   hname->add(nb, name);
 }
 
 // @brief parameter port 宣言ヘッダを追加する．
 void
-Parser::add_paramport_head(PtiDeclHead* head,
-			   PtrList<const PtAttrInst>* attr_list)
+Parser::add_paramport_head(
+  PtiDeclHead* head,
+  PtrList<const PtAttrInst>* attr_list
+)
 {
   if ( head ) {
     reg_attrinst(head, attr_list);
@@ -316,7 +317,7 @@ Parser::flush_paramport()
 {
   if ( !mDeclItemList.empty() ) {
     ASSERT_COND( !mParamPortHeadList.empty() );
-    auto last{mParamPortHeadList.back()};
+    auto last = mParamPortHeadList.back();
     last->set_elem(PtiDeclItemArray(mAlloc, mDeclItemList));
     mDeclItemList.clear();
   }
@@ -324,8 +325,10 @@ Parser::flush_paramport()
 
 // @brief IOポート宣言リストにIO宣言ヘッダを追加する．
 void
-Parser::add_ioport_head(PtiIOHead* head,
-			PtrList<const PtAttrInst>* attr_list)
+Parser::add_ioport_head(
+  PtiIOHead* head,
+  PtrList<const PtAttrInst>* attr_list
+)
 {
   if ( head ) {
     reg_attrinst(head, attr_list);
@@ -339,7 +342,7 @@ Parser::flush_io()
 {
   if ( !mIOItemList.empty() ) {
     ASSERT_COND( !mCurIOHeadList->empty() );
-    auto last{mCurIOHeadList->back()};
+    auto last = mCurIOHeadList->back();
     last->set_elem(PtiIOItemArray(mAlloc, mIOItemList));
     mIOItemList.clear();
   }
@@ -347,8 +350,10 @@ Parser::flush_io()
 
 // @brief IO宣言リストにIO宣言ヘッダを追加する．
 void
-Parser::add_io_head(PtiIOHead* head,
-		    PtrList<const PtAttrInst>* attr_list)
+Parser::add_io_head(
+  PtiIOHead* head,
+  PtrList<const PtAttrInst>* attr_list
+)
 {
   add_ioport_head(head, attr_list);
   flush_io();
@@ -356,15 +361,19 @@ Parser::add_io_head(PtiIOHead* head,
 
 // @brief IO宣言リストにIO宣言要素を追加する．
 void
-Parser::add_io_item(const PtIOItem* item)
+Parser::add_io_item(
+  const PtIOItem* item
+)
 {
   mIOItemList.push_back(item);
 }
 
 // @brief 宣言リストに宣言ヘッダを追加する．
 void
-Parser::add_decl_head(PtiDeclHead* head,
-		      PtrList<const PtAttrInst>* attr_list)
+Parser::add_decl_head(
+  PtiDeclHead* head,
+  PtrList<const PtAttrInst>* attr_list
+)
 {
   if ( head ) {
     reg_attrinst(head, attr_list);
@@ -378,15 +387,19 @@ Parser::add_decl_head(PtiDeclHead* head,
 
 // @brief 宣言リストに宣言要素を追加する．
 void
-Parser::add_decl_item(const PtDeclItem* item)
+Parser::add_decl_item(
+  const PtDeclItem* item
+)
 {
   mDeclItemList.push_back(item);
 }
 
 // @brief item リストに要素を追加する．
 void
-Parser::add_item(const PtItem* item,
-		 PtrList<const PtAttrInst>* attr_list)
+Parser::add_item(
+  const PtItem* item,
+  PtrList<const PtAttrInst>* attr_list
+)
 {
   if ( item ) {
     reg_attrinst(item, attr_list);

@@ -273,9 +273,10 @@ public:
   cond() const;
 
   /// @brief condition の書き換え
-  /// @param[in] flag 設定する値
   void
-  set_cond(bool flag);
+  set_cond(
+    bool flag ///< [in] 設定する値
+  );
 
   /// @brief condition の反転
   void
@@ -459,56 +460,6 @@ private:
   bool mDebug;
 
 };
-
-#if 0
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 最後に読んだトークンの位置を返す．
-// @return 最後に読んだトークンのファイル上の位置
-inline
-FileRegion
-RawLex::cur_token_loc() const
-{
-  return mCurPos;
-}
-
-// @brief 最後に読んだ文字列を返す．
-// @return 最後に読んだ文字列
-inline
-const char*
-RawLex::cur_string() const
-{
-  return mCurString;
-}
-
-// @brief 最後に読んだ文字列を unsigned integer に変換する．
-// @return 最後に読んだ文字列を unsigned integer に変換したもの
-inline
-ymuint
-RawLex::cur_uint() const
-{
-  return mCurUint;
-}
-
-// @brief 最後に読んだ文字列を real number に変換する．
-// @return 最後に読んだ文字列を real number に変換したもの
-inline
-double
-RawLex::cur_rnumber() const
-{
-  return strtod(mCurString, static_cast<char**>(nullptr));
-}
-
-// @brief コンテキストを返す．
-inline
-RawLex::Context
-RawLex::context()
-{
-  return mContext;
-}
-#endif
 
 END_NAMESPACE_YM_VERILOG
 
