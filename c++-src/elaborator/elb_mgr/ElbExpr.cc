@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbExpr.h"
 
 #include "ym/BitVector.h"
@@ -40,8 +39,10 @@ ElbExpr::bit_size() const
 
 // 二項演算のタイプとサイズを決める．
 VlValueType
-ElbExpr::calc_type(const VlValueType& type0,
-		   const VlValueType& type1)
+ElbExpr::calc_type(
+  const VlValueType& type0,
+  const VlValueType& type1
+)
 {
   // どちらか一方でも real なら答は real
   if ( type0.is_real_type() || type1.is_real_type() ) {
@@ -74,8 +75,10 @@ ElbExpr::calc_type(const VlValueType& type0,
 
 // 巾乗演算のタイプとサイズを決める．
 VlValueType
-ElbExpr::calc_type2(const VlValueType& type0,
-		    const VlValueType& type1)
+ElbExpr::calc_type2(
+  const VlValueType& type0,
+  const VlValueType& type1
+)
 {
   // 両方が unsigned でなければ結果は real
   // どちらかが signed なら結果は real
@@ -102,8 +105,10 @@ ElbExpr::calc_type2(const VlValueType& type0,
 
 // 出力に要求されているサイズから自分のサイズを決める．
 VlValueType
-ElbExpr::update_size(const VlValueType& type,
-		     const VlValueType& req_type)
+ElbExpr::update_size(
+  const VlValueType& type,
+  const VlValueType& req_type
+)
 {
   if ( req_type.is_real_type() ) {
     // real は伝播しない．

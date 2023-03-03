@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbPrimitive.h"
 
 
@@ -27,20 +26,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 入出力ポート数を計算する．
-// @param[in] type プリミティブの型
-// @param[in] port_size 全ポート数
-// @param[out] output_num 出力ポート数
-// @param[out] inout_num 入出力ポート数
-// @param[out] input_num 入力ポート数
-// @retval 1 port_size が多すぎる．
-// @retval 0 port_size が範囲内に収まっている．
-// @retval -1 port_size が少なすぎる．
 int
-ElbPrimitive::get_port_size(VpiPrimType type,
-			    SizeType port_size,
-			    SizeType& output_num,
-			    SizeType& inout_num,
-			    SizeType& input_num)
+ElbPrimitive::get_port_size(
+  VpiPrimType type,
+  SizeType port_size,
+  SizeType& output_num,
+  SizeType& inout_num,
+  SizeType& input_num
+)
 {
   SizeType min_size = 0;
   SizeType max_size = port_size;

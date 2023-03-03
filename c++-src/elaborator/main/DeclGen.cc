@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "DeclGen.h"
 #include "ElbEnv.h"
 #include "ElbError.h"
@@ -34,11 +33,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] elab 生成器
-// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-DeclGen::DeclGen(Elaborator& elab,
-		 ElbMgr& elb_mgr) :
-  ElbProxy(elab, elb_mgr)
+DeclGen::DeclGen(
+  Elaborator& elab,
+  ElbMgr& elb_mgr
+) : ElbProxy{elab, elb_mgr}
 {
 }
 
@@ -48,13 +46,12 @@ DeclGen::~DeclGen()
 }
 
 // @brief parameter と genvar を実体化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head_array 宣言ヘッダの配列
-// @param[in] force_to_local true なら parameter を localparam にする．
 void
-DeclGen::phase1_decl(const VlScope* scope,
-		     const vector<const PtDeclHead*>& pt_head_array,
-		     bool force_to_local)
+DeclGen::phase1_decl(
+  const VlScope* scope,
+  const vector<const PtDeclHead*>& pt_head_array,
+  bool force_to_local
+)
 {
   for ( auto pt_head: pt_head_array ) {
     try {
@@ -83,14 +80,12 @@ DeclGen::phase1_decl(const VlScope* scope,
 }
 
 // @brief IO宣言要素をインスタンス化する．
-// @param[in] module 親のモジュール
-// @param[in] taskfunc 親のタスク/関数
-// @param[in] pt_head IO宣言ヘッダ
-// @note module, taskfunc は1つのみが値を持つ．残りは nullptr
 void
-DeclGen::instantiate_iodecl(ElbModule* module,
-			    ElbTaskFunc* taskfunc,
-			    const vector<const PtIOHead*>& pt_head_array)
+DeclGen::instantiate_iodecl(
+  ElbModule* module,
+  ElbTaskFunc* taskfunc,
+  const vector<const PtIOHead*>& pt_head_array
+)
 {
   const VlScope* scope{nullptr};
   if ( module ) {
@@ -102,11 +97,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
   ASSERT_COND( scope != nullptr );
 
   for ( auto pt_head: pt_head_array ) {
-    auto def_aux_type{pt_head->aux_type()};
-    bool sign{pt_head->is_signed()};
-    auto pt_left{pt_head->left_range()};
-    auto pt_right{pt_head->right_range()};
-    bool has_range{(pt_left != nullptr) && (pt_right != nullptr)};
+    auto def_aux_type = pt_head->aux_type();
+    bool sign = pt_head->is_signed();
+    auto pt_left = pt_head->left_range();
+    auto pt_right = pt_head->right_range();
+    bool has_range = (pt_left != nullptr) && (pt_right != nullptr);
 
     // 範囲指定を持っている場合には範囲を計算する．
     int left_val{0};
@@ -128,7 +123,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 
     for ( auto pt_item: pt_head->item_list() ) {
       // IO定義と変数/ネット定義が一致しているか調べる．
-      auto handle{mgr().find_obj(scope, pt_item->name())};
+      auto handle = mgr().find_obj(scope, pt_item->name());
       ElbDecl* decl{nullptr};
       if ( handle ) {
 	// 同名の要素が見つかった．
@@ -206,11 +201,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
       }
       else {
 	// 同名の要素が見つからなかったので作る必要がある．
-	auto aux_type{def_aux_type};
+	auto aux_type = def_aux_type;
 	if ( aux_type == VpiAuxType::None ) {
 	  if ( module ) {
 	    // モジュール IO の場合は `default_net_type を参照する．
-	    auto net_type{module->def_net_type()};
+	    auto net_type = module->def_net_type();
 	    if ( net_type == VpiNetType::None ) {
 	      ErrorGen::no_impnet(__FILE__, __LINE__, pt_item);
 	    }
@@ -235,7 +230,7 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 	ASSERT_COND( head != nullptr );
 
 	// 初期値を生成する．
-	auto pt_init{pt_item->init_value()};
+	auto pt_init = pt_item->init_value();
 	ElbExpr* init{nullptr};
 	if ( module ) {
 	  if ( pt_init != nullptr ) {
@@ -289,11 +284,11 @@ DeclGen::instantiate_iodecl(ElbModule* module,
 }
 
 // 宣言要素をインスタンス化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head_array 宣言ヘッダの配列
 void
-DeclGen::instantiate_decl(const VlScope* scope,
-			  const vector<const PtDeclHead*>& pt_head_array)
+DeclGen::instantiate_decl(
+  const VlScope* scope,
+  const vector<const PtDeclHead*>& pt_head_array
+)
 {
   for ( auto pt_head: pt_head_array ) {
     try {
@@ -339,17 +334,16 @@ DeclGen::instantiate_decl(const VlScope* scope,
 }
 
 // @brief パラメータ用の instantiate 関数
-// @param[in] scope 親のスコープ
-// @param[in] pt_head_array 宣言ヘッダの配列
-// @param[in] is_local local_param にする時 true
 void
-DeclGen::instantiate_param_head(const VlScope* scope,
-				const PtDeclHead* pt_head,
-				bool is_local)
+DeclGen::instantiate_param_head(
+  const VlScope* scope,
+  const PtDeclHead* pt_head,
+  bool is_local
+)
 {
-  auto module{scope->parent_module()};
-  auto pt_left{pt_head->left_range()};
-  auto* pt_right{pt_head->right_range()};
+  auto module = scope->parent_module();
+  auto pt_left = pt_head->left_range();
+  auto* pt_right = pt_head->right_range();
   ElbParamHead* param_head{nullptr};
   if ( pt_left && pt_right ) {
     int left_val;
@@ -364,14 +358,14 @@ DeclGen::instantiate_param_head(const VlScope* scope,
   }
 
   for ( auto pt_item: pt_head->item_list() ) {
-    const auto& file_region{pt_item->file_region()};
-    auto param{mgr().new_Parameter(param_head,
-				   pt_item,
-				   is_local)};
+    const auto& file_region = pt_item->file_region();
+    auto param = mgr().new_Parameter(param_head,
+				     pt_item,
+				     is_local);
     ASSERT_COND( param );
 
     // attribute instance の生成
-    auto attr_list{attribute_list(pt_head)};
+    auto attr_list = attribute_list(pt_head);
     mgr().reg_attr(param, attr_list);
 
     {
@@ -384,28 +378,28 @@ DeclGen::instantiate_param_head(const VlScope* scope,
     }
 
     // 右辺の式は constant expression のはずなので今つくる．
-    auto pt_init_expr{pt_item->init_value()};
-    auto value{evaluate_expr(scope, pt_init_expr)};
+    auto pt_init_expr = pt_item->init_value();
+    auto value = evaluate_expr(scope, pt_init_expr);
     param->set_init_expr(pt_init_expr, value);
 
     // ダブっている感じがするけど同じことを表す parameter assign 文
     // をつくってモジュールに追加する．
-    auto pa{mgr().new_NamedParamAssign(module, pt_item, param,
-				       pt_init_expr, value)};
+    auto pa = mgr().new_NamedParamAssign(module, pt_item, param,
+					 pt_init_expr, value);
   }
 }
 
 // @brief net をインスタンス化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head 宣言のヘッダ
 void
-DeclGen::instantiate_net_head(const VlScope* scope,
-			      const PtDeclHead* pt_head)
+DeclGen::instantiate_net_head(
+  const VlScope* scope,
+  const PtDeclHead* pt_head
+)
 {
-  auto pt_left{pt_head->left_range()};
-  auto pt_right{pt_head->right_range()};
-  auto pt_delay{pt_head->delay()};
-  bool has_delay{(pt_delay != nullptr)};
+  auto pt_left = pt_head->left_range();
+  auto pt_right = pt_head->right_range();
+  auto pt_delay = pt_head->delay();
+  bool has_delay = (pt_delay != nullptr);
 
   ElbDeclHead* net_head{nullptr};
   if ( pt_left && pt_right ) {
@@ -429,7 +423,7 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 
   for ( auto pt_item: pt_head->item_list() ) {
     // init_value() が 0 でなければ初期割り当てを持つということ．
-    auto pt_init{pt_item->init_value()};
+    auto pt_init = pt_item->init_value();
 
     SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
@@ -444,10 +438,10 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 	continue;
       }
 
-      auto net_array{mgr().new_DeclArray(vpiNetArray, net_head, pt_item, range_src)};
+      auto net_array = mgr().new_DeclArray(vpiNetArray, net_head, pt_item, range_src);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(net_array, attr_list);
 
       {
@@ -461,7 +455,7 @@ DeclGen::instantiate_net_head(const VlScope* scope,
     }
     else {
       // 単一の要素
-      auto net{mgr().new_Decl(vpiNet, net_head, pt_item)};
+      auto net = mgr().new_Decl(vpiNet, net_head, pt_item);
 
       if ( pt_init ) {
 	// 初期割り当てつき
@@ -472,7 +466,7 @@ DeclGen::instantiate_net_head(const VlScope* scope,
       }
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(net, attr_list);
 
       {
@@ -488,29 +482,29 @@ DeclGen::instantiate_net_head(const VlScope* scope,
 }
 
 // @brief net の遅延値を生成する．
-// @param[in] net_head ネットのヘッダ
-// @param[in] pt_delay パース木の遅延式定義
 void
-DeclGen::link_net_delay(ElbDeclHead* net_head,
-			const PtDelay* pt_delay)
+DeclGen::link_net_delay(
+  ElbDeclHead* net_head,
+  const PtDelay* pt_delay
+)
 {
-  auto scope{net_head->parent_scope()};
-  auto delay{instantiate_delay(scope, pt_delay)};
+  auto scope = net_head->parent_scope();
+  auto delay = instantiate_delay(scope, pt_delay);
   net_head->set_delay(delay);
 }
 
 // @brief net の初期値を生成する．
-// @param[in] net ネット
-// @param[in] pt_item パース木のネット定義要素
 void
-DeclGen::link_net_assign(ElbDecl* net,
-			 const PtDeclItem* pt_item)
+DeclGen::link_net_assign(
+  ElbDecl* net,
+  const PtDeclItem* pt_item
+)
 {
   // 実体は左辺が net の代入文を作る．
-  auto lhs{mgr().new_Primary(pt_item, net)};
-  auto scope{net->parent_scope()};
-  auto pt_init{pt_item->init_value()};
-  auto rhs{instantiate_rhs(scope, ElbEnv(), pt_init, lhs)};
+  auto lhs = mgr().new_Primary(pt_item, net);
+  auto scope = net->parent_scope();
+  auto pt_init = pt_item->init_value();
+  auto rhs = instantiate_rhs(scope, ElbEnv(), pt_init, lhs);
   if ( !rhs ) {
     return;
   }
@@ -518,19 +512,19 @@ DeclGen::link_net_assign(ElbDecl* net,
   net->set_init(rhs);
 
   // 対応する continuous assign 文を作る．
-  auto module{scope->parent_module()};
-  auto ca{mgr().new_ContAssign(module, pt_item, lhs, rhs)};
+  auto module = scope->parent_module();
+  auto ca = mgr().new_ContAssign(module, pt_item, lhs, rhs);
 }
 
 // @brief reg をインスタンス化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head 宣言のヘッダ
 void
-DeclGen::instantiate_reg_head(const VlScope* scope,
-			      const PtDeclHead* pt_head)
+DeclGen::instantiate_reg_head(
+  const VlScope* scope,
+  const PtDeclHead* pt_head
+)
 {
-  auto pt_left{pt_head->left_range()};
-  auto pt_right{pt_head->right_range()};
+  auto pt_left = pt_head->left_range();
+  auto pt_right = pt_head->right_range();
 
   ElbDeclHead* reg_head{nullptr};
   if ( pt_left && pt_right ) {
@@ -547,8 +541,8 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
   ASSERT_COND( reg_head != nullptr );
 
   for ( auto pt_item: pt_head->item_list() ) {
-    auto pt_init{pt_item->init_value()};
-    SizeType dim_size{pt_item->range_num()};
+    auto pt_init = pt_item->init_value();
+    SizeType dim_size = pt_item->range_num();
     if ( dim_size > 0 ) {
       // 配列の場合
 
@@ -561,11 +555,11 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 	continue;
       }
 
-      auto reg_array{mgr().new_DeclArray(vpiRegArray, reg_head,
-					 pt_item, range_src)};
+      auto reg_array = mgr().new_DeclArray(vpiRegArray, reg_head,
+					   pt_item, range_src);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(reg_array, attr_list);
 
       {
@@ -586,10 +580,10 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 	init = instantiate_constant_expr(scope, pt_init);
       }
 
-      auto reg{mgr().new_Decl(vpiReg, reg_head, pt_item, init)};
+      auto reg = mgr().new_Decl(vpiReg, reg_head, pt_item, init);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(reg, attr_list);
 
       {
@@ -605,17 +599,17 @@ DeclGen::instantiate_reg_head(const VlScope* scope,
 }
 
 // @brief variable header をインスタンス化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head 宣言のヘッダ
 void
-DeclGen::instantiate_var_head(const VlScope* scope,
-			      const PtDeclHead* pt_head)
+DeclGen::instantiate_var_head(
+  const VlScope* scope,
+  const PtDeclHead* pt_head
+)
 {
   ASSERT_COND( pt_head->data_type() != VpiVarType::None );
 
-  auto var_head{mgr().new_DeclHead(scope, pt_head)};
+  auto var_head = mgr().new_DeclHead(scope, pt_head);
   for ( auto pt_item: pt_head->item_list() ) {
-    auto pt_init{pt_item->init_value()};
+    auto pt_init = pt_item->init_value();
     SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
       // 配列の場合
@@ -629,11 +623,11 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 	continue;
       }
 
-      auto var_array{mgr().new_DeclArray(vpiVariables, var_head,
-					 pt_item, range_src)};
+      auto var_array = mgr().new_DeclArray(vpiVariables, var_head,
+					   pt_item, range_src);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(var_array, attr_list);
 
       {
@@ -654,10 +648,10 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 	init = instantiate_constant_expr(scope, pt_init);
       }
 
-      auto var{mgr().new_Decl(vpiVariables, var_head, pt_item, init)};
+      auto var = mgr().new_Decl(vpiVariables, var_head, pt_item, init);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(var, attr_list);
 
       {
@@ -673,13 +667,13 @@ DeclGen::instantiate_var_head(const VlScope* scope,
 }
 
 // @brief named_event をインスタンス化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head 宣言のヘッダ
 void
-DeclGen::instantiate_event_head(const VlScope* scope,
-				const PtDeclHead* pt_head)
+DeclGen::instantiate_event_head(
+  const VlScope* scope,
+  const PtDeclHead* pt_head
+)
 {
-  auto event_head{mgr().new_DeclHead(scope, pt_head)};
+  auto event_head = mgr().new_DeclHead(scope, pt_head);
   for ( auto pt_item: pt_head->item_list() ) {
     SizeType dim_size{pt_item->range_num()};
     if ( dim_size > 0 ) {
@@ -691,11 +685,11 @@ DeclGen::instantiate_event_head(const VlScope* scope,
 	continue;
       }
 
-      auto ne_array{mgr().new_DeclArray(vpiNamedEventArray, event_head,
-					pt_item, range_src)};
+      auto ne_array = mgr().new_DeclArray(vpiNamedEventArray, event_head,
+					  pt_item, range_src);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(ne_array, attr_list);
 
       {
@@ -709,10 +703,10 @@ DeclGen::instantiate_event_head(const VlScope* scope,
     }
     else {
       // 単一の要素
-      auto named_event{mgr().new_Decl(vpiNamedEvent, event_head, pt_item)};
+      auto named_event = mgr().new_Decl(vpiNamedEvent, event_head, pt_item);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_head)};
+      auto attr_list = attribute_list(pt_head);
       mgr().reg_attr(named_event, attr_list);
 
       {
@@ -728,14 +722,14 @@ DeclGen::instantiate_event_head(const VlScope* scope,
 }
 
 // @brief genvar をインスタンス化する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_head 宣言のヘッダ
 void
-DeclGen::instantiate_genvar_head(const VlScope* scope,
-				 const PtDeclHead* pt_head)
+DeclGen::instantiate_genvar_head(
+  const VlScope* scope,
+  const PtDeclHead* pt_head
+)
 {
   for ( auto pt_item: pt_head->item_list() ) {
-    auto genvar{mgr().new_Genvar(scope, pt_item, 0)};
+    auto genvar = mgr().new_Genvar(scope, pt_item, 0);
 
     {
       ostringstream buf;
@@ -749,20 +743,19 @@ DeclGen::instantiate_genvar_head(const VlScope* scope,
 }
 
 // @brief 配列の次元リストを生成する．
-// @param[in] scope 親のスコープ
-// @param[in] pt_item 要素定義
-// @param[out] range_src 範囲の情報を設定する配列
 bool
-DeclGen::instantiate_dimension_list(const VlScope* scope,
-				    const PtDeclItem* pt_item,
-				    vector<ElbRangeSrc>& range_src)
+DeclGen::instantiate_dimension_list(
+  const VlScope* scope,
+  const PtDeclItem* pt_item,
+  vector<ElbRangeSrc>& range_src
+)
 {
   SizeType n{pt_item->range_num()};
   range_src.reserve(n);
 
   for ( auto pt_range: pt_item->range_list() ) {
-    auto pt_left{pt_range->left()};
-    auto pt_right{pt_range->right()};
+    auto pt_left = pt_range->left();
+    auto pt_right = pt_range->right();
     int left_val;
     int right_val;
     tie(left_val, right_val) = evaluate_range(scope, pt_left, pt_right);
@@ -776,10 +769,11 @@ DeclGen::instantiate_dimension_list(const VlScope* scope,
 
 #if 0
 // @brief IO 宣言に aux_type と宣言が重複している．
-// @param[in] pt_item パース木の要素
 void
-DeclGen::error_duplicate_type(const PtIOItem* pt_item,
-			      const ObjHandle* handle)
+DeclGen::error_duplicate_type(
+  const PtIOItem* pt_item,
+  const ObjHandle* handle
+)
 {
   ostringstream buf;
   buf << pt_item->name() << " : has an aux-type declaration"
@@ -793,11 +787,11 @@ DeclGen::error_duplicate_type(const PtIOItem* pt_item,
 }
 
 // @brief 配列要素が IO 宣言として現れていた．
-// @param[in] pt_item IO宣言のパース木の要素
-// @param[in] declarray 排列要素
 void
-DeclGen::error_array_io(const PtIOItem* pt_item,
-			const VlDeclArray* declarray)
+DeclGen::error_array_io(
+  const PtIOItem* pt_item,
+  const VlDeclArray* declarray
+)
 {
   ostringstream buf;
   buf << pt_item->name()
@@ -810,12 +804,12 @@ DeclGen::error_array_io(const PtIOItem* pt_item,
 }
 
 // @brief IO 宣言に不適切な宣言要素が使われていた．
-// @param[in] pt_item IO宣言のパース木の要素
-// @param[in] handle 宣言要素のハンドル
 void
-DeclGen::error_illegal_io(const PtIOItem* pt_item,
-			  const ObjHandle* handle,
-			  const VlModule* module)
+DeclGen::error_illegal_io(
+  const PtIOItem* pt_item,
+  const ObjHandle* handle,
+  const VlModule* module
+)
 {
   ostringstream buf;
   buf << handle->full_name()
@@ -833,7 +827,9 @@ DeclGen::error_illegal_io(const PtIOItem* pt_item,
 
 // @brief IO 宣言と宣言要素の範囲指定が異なる．
 void
-DeclGen::error_conflict_io_range(const PtIOItem* pt_item)
+DeclGen::error_conflict_io_range(
+  const PtIOItem* pt_item
+)
 {
   ostringstream buf;
   buf << "Conflictive range declaration of \""

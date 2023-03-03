@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/TagDict.h"
 #include "TagDictCell.h"
 #include "ym/vl/VlNamedObj.h"
@@ -48,24 +47,23 @@ TagDict::clear()
 }
 
 // @brief Cell を登録する．
-// @param[in] parent 親のスコープ
-// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-// @param[in] cell 対象の Cell
 void
-TagDict::put_cell(const VlScope* parent,
-		  int tag,
-		  TagDictCell* cell)
+TagDict::put_cell(
+  const VlScope* parent,
+  int tag,
+  TagDictCell* cell
+)
 {
   Key key{parent, tag};
   mHash.emplace(key, cell);
 }
 
 // @brief タグから該当する Cell を探す．
-// @param[in] parent 親のスコープ
-// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
 TagDictCell*
-TagDict::find_cell(const VlScope* parent,
-		   int tag) const
+TagDict::find_cell(
+  const VlScope* parent,
+  int tag
+) const
 {
   Key key{parent, tag};
   if ( mHash.count(key) > 0 ) {
@@ -81,7 +79,9 @@ TagDict::find_cell(const VlScope* parent,
 
 // 宣言要素を追加する．
 void
-TagDictCell::add_decl(const VlDecl* obj)
+TagDictCell::add_decl(
+  const VlDecl* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -96,7 +96,9 @@ TagDictCell::decl_list()
 
 // 宣言要素配列を追加する．
 void
-TagDictCell::add_declarray(const VlDeclArray* obj)
+TagDictCell::add_declarray(
+  const VlDeclArray* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -111,7 +113,9 @@ TagDictCell::declarray_list()
 
 // defparam を追加する．
 void
-TagDictCell::add_defparam(const VlDefParam* obj)
+TagDictCell::add_defparam(
+  const VlDefParam* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -126,7 +130,9 @@ TagDictCell::defparam_list()
 
 // param assign を追加する．
 void
-TagDictCell::add_paramassign(const VlParamAssign* obj)
+TagDictCell::add_paramassign(
+  const VlParamAssign* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -141,7 +147,9 @@ TagDictCell::paramassign_list()
 
 // module array を追加する．
 void
-TagDictCell::add_modulearray(const VlModuleArray* obj)
+TagDictCell::add_modulearray(
+  const VlModuleArray* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -156,7 +164,9 @@ TagDictCell::modulearray_list()
 
 // module を追加する．
 void
-TagDictCell::add_module(const VlModule* obj)
+TagDictCell::add_module(
+  const VlModule* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -171,7 +181,9 @@ TagDictCell::module_list()
 
 // primitive array を追加する．
 void
-TagDictCell::add_primarray(const VlPrimArray* obj)
+TagDictCell::add_primarray(
+  const VlPrimArray* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -186,7 +198,9 @@ TagDictCell::primarray_list()
 
 // primitive を追加する．
 void
-TagDictCell::add_primitive(const VlPrimitive* obj)
+TagDictCell::add_primitive(
+  const VlPrimitive* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -201,7 +215,9 @@ TagDictCell::primitive_list()
 
 // @brief タスク/関数を追加する．
 void
-TagDictCell::add_taskfunc(const VlTaskFunc* obj)
+TagDictCell::add_taskfunc(
+  const VlTaskFunc* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -216,7 +232,9 @@ TagDictCell::taskfunc_list()
 
 // continuous assignment を追加する．
 void
-TagDictCell::add_contassign(const VlContAssign* obj)
+TagDictCell::add_contassign(
+  const VlContAssign* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -231,7 +249,9 @@ TagDictCell::contassign_list()
 
 // process を追加する．
 void
-TagDictCell::add_process(const VlProcess* process)
+TagDictCell::add_process(
+  const VlProcess* process
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -246,7 +266,9 @@ TagDictCell::process_list()
 
 // internal scope を追加する．
 void
-TagDictCell::add_internalscope(const VlScope* obj)
+TagDictCell::add_internalscope(
+  const VlScope* obj
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -269,11 +291,15 @@ class CellScope :
 public:
 
   /// @brief コンストラクタ
-  CellScope(const VlScope* obj);
+  CellScope(
+    const VlScope* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_internalscope(const VlScope* obj) override;
+  add_internalscope(
+    const VlScope* obj
+  ) override;
 
   /// @brief 要素のリストを返す．
   vector<const VlScope*>
@@ -291,14 +317,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellScope::CellScope(const VlScope* obj) :
-  mList{obj}
+CellScope::CellScope(
+  const VlScope* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellScope::add_internalscope(const VlScope* obj)
+CellScope::add_internalscope(
+  const VlScope* obj
+)
 {
   mList.push_back(obj);
 }
@@ -313,7 +342,9 @@ CellScope::internalscope_list()
 // @brief internal scope を追加する．
 // @param[in] obj 登録する要素
 void
-TagDict::add_internalscope(const VlScope* obj)
+TagDict::add_internalscope(
+  const VlScope* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -329,12 +360,10 @@ TagDict::add_internalscope(const VlScope* obj)
 }
 
 // @brief internal scope のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @param[out] obj_list 結果を格納するリスト
-// @retval true 該当する要素が1つ以上あった．
-// @retval false 該当する要素がなかった．
 vector<const VlScope*>
-TagDict::find_internalscope_list(const VlScope* parent) const
+TagDict::find_internalscope_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiInternalScope);
@@ -356,11 +385,15 @@ class CellDecl :
 public:
 
   /// @brief コンストラクタ
-  CellDecl(const VlDecl* obj);
+  CellDecl(
+    const VlDecl* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_decl(const VlDecl* obj) override;
+  add_decl(
+    const VlDecl* obj
+  ) override;
 
   /// @brief 宣言要素のリストを得る．
   vector<const VlDecl*>
@@ -378,14 +411,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellDecl::CellDecl(const VlDecl* obj) :
-  mList{obj}
+CellDecl::CellDecl(
+  const VlDecl* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellDecl::add_decl(const VlDecl* obj)
+CellDecl::add_decl(
+  const VlDecl* obj
+)
 {
   mList.push_back(obj);
 }
@@ -398,11 +434,11 @@ CellDecl::decl_list()
 }
 
 // @brief 宣言要素を追加する．
-// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-// @param[in] obj 登録する要素
 void
-TagDict::add_decl(int tag,
-		  const VlDecl* obj)
+TagDict::add_decl(
+  int tag,
+  const VlDecl* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -418,12 +454,11 @@ TagDict::add_decl(int tag,
 }
 
 // @brief タグから該当する宣言要素のリストを返す．
-// @param[in] parent 親のスコープ
-// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-// @return 結果のリストを返す．
 vector<const VlDecl*>
-TagDict::find_decl_list(const VlScope* parent,
-			int tag) const
+TagDict::find_decl_list(
+  const VlScope* parent,
+  int tag
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, tag);
@@ -445,11 +480,15 @@ class CellDeclArray :
 public:
 
   /// @brief コンストラクタ
-  CellDeclArray(const VlDeclArray* obj);
+  CellDeclArray(
+    const VlDeclArray* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_declarray(const VlDeclArray* obj) override;
+  add_declarray(
+    const VlDeclArray* obj
+  ) override;
 
   /// @brief 宣言のリストを得る．
   vector<const VlDeclArray*>
@@ -467,14 +506,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellDeclArray::CellDeclArray(const VlDeclArray* obj) :
-  mList{obj}
+CellDeclArray::CellDeclArray(
+  const VlDeclArray* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellDeclArray::add_declarray(const VlDeclArray* obj)
+CellDeclArray::add_declarray(
+  const VlDeclArray* obj
+)
 {
   mList.push_back(obj);
 }
@@ -487,11 +529,11 @@ CellDeclArray::declarray_list()
 }
 
 // @brief 宣言要素を追加する．
-// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-// @param[in] obj 登録する要素
 void
-TagDict::add_declarray(int tag,
-		       const VlDeclArray* obj)
+TagDict::add_declarray(
+  int tag,
+  const VlDeclArray* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -507,12 +549,11 @@ TagDict::add_declarray(int tag,
 }
 
 // @brief タグから該当する宣言要素のリストを返す．
-// @param[in] parent 親のスコープ
-// @param[in] tag 要素の型を表すタグ (vpi_user.h 参照)
-// @retrun 結果のリストを返す．
 vector<const VlDeclArray*>
-TagDict::find_declarray_list(const VlScope* parent,
-			     int tag) const
+TagDict::find_declarray_list(
+  const VlScope* parent,
+  int tag
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, tag);
@@ -534,11 +575,15 @@ class CellDefParam :
 public:
 
   /// @brief コンストラクタ
-  CellDefParam(const VlDefParam* obj);
+  CellDefParam(
+    const VlDefParam* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_defparam(const VlDefParam* obj) override;
+  add_defparam(
+    const VlDefParam* obj
+  ) override;
 
   /// @brief defparam のを得る．
   vector<const VlDefParam*>
@@ -556,14 +601,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellDefParam::CellDefParam(const VlDefParam* obj) :
-  mList{obj}
+CellDefParam::CellDefParam(
+  const VlDefParam* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellDefParam::add_defparam(const VlDefParam* obj)
+CellDefParam::add_defparam(
+  const VlDefParam* obj
+)
 {
   mList.push_back(obj);
 }
@@ -576,9 +624,10 @@ CellDefParam::defparam_list()
 }
 
 // @brief defparam を追加する．
-// @param[in] dobj 登録する要素
 void
-TagDict::add_defparam(const VlDefParam* obj)
+TagDict::add_defparam(
+  const VlDefParam* obj
+)
 {
   auto parent = obj->parent_module();
 
@@ -594,10 +643,10 @@ TagDict::add_defparam(const VlDefParam* obj)
 }
 
 // @brief defparam のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlDefParam*>
-TagDict::find_defparam_list(const VlScope* parent) const
+TagDict::find_defparam_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiDefParam);
@@ -619,11 +668,15 @@ class CellParamAssign :
 public:
 
   /// @brief コンストラクタ
-  CellParamAssign(const VlParamAssign* obj);
+  CellParamAssign(
+    const VlParamAssign* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_paramassign(const VlParamAssign* obj) override;
+  add_paramassign(
+    const VlParamAssign* obj
+  ) override;
 
   /// @brief param assign のリストを得る．
   vector<const VlParamAssign*>
@@ -641,14 +694,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellParamAssign::CellParamAssign(const VlParamAssign* obj) :
-  mList{obj}
+CellParamAssign::CellParamAssign(
+  const VlParamAssign* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellParamAssign::add_paramassign(const VlParamAssign* obj)
+CellParamAssign::add_paramassign(
+  const VlParamAssign* obj
+)
 {
   mList.push_back(obj);
 }
@@ -661,9 +717,10 @@ CellParamAssign::paramassign_list()
 }
 
 // @brief param assign を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_paramassign(const VlParamAssign* obj)
+TagDict::add_paramassign(
+  const VlParamAssign* obj
+)
 {
   auto parent = obj->parent_module();
 
@@ -679,10 +736,10 @@ TagDict::add_paramassign(const VlParamAssign* obj)
 }
 
 // @brief param assign のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlParamAssign*>
-TagDict::find_paramassign_list(const VlScope* parent) const
+TagDict::find_paramassign_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiParamAssign);
@@ -704,11 +761,15 @@ class CellModuleArray :
 public:
 
   /// @brief コンストラクタ
-  CellModuleArray(const VlModuleArray* obj);
+  CellModuleArray(
+    const VlModuleArray* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_modulearray(const VlModuleArray* obj) override;
+  add_modulearray(
+    const VlModuleArray* obj
+  ) override;
 
   /// @brief module array のリストを得る．
   vector<const VlModuleArray*>
@@ -726,14 +787,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellModuleArray::CellModuleArray(const VlModuleArray* obj) :
-  mList{obj}
+CellModuleArray::CellModuleArray(
+  const VlModuleArray* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellModuleArray::add_modulearray(const VlModuleArray* obj)
+CellModuleArray::add_modulearray(
+  const VlModuleArray* obj
+)
 {
   mList.push_back(obj);
 }
@@ -746,9 +810,10 @@ CellModuleArray::modulearray_list()
 }
 
 // @brief module array を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_modulearray(const VlModuleArray* obj)
+TagDict::add_modulearray(
+  const VlModuleArray* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -764,10 +829,10 @@ TagDict::add_modulearray(const VlModuleArray* obj)
 }
 
 // @brief module array のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlModuleArray*>
-TagDict::find_modulearray_list(const VlScope* parent) const
+TagDict::find_modulearray_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiModuleArray);
@@ -789,11 +854,15 @@ class CellModule :
 public:
 
   /// @brief コンストラクタ
-  CellModule(const VlModule* obj);
+  CellModule(
+    const VlModule* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_module(const VlModule* obj) override;
+  add_module(
+    const VlModule* obj
+  ) override;
 
   /// @brief module のリストを得る．
   vector<const VlModule*>
@@ -811,14 +880,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellModule::CellModule(const VlModule* obj) :
-  mList{obj}
+CellModule::CellModule(
+  const VlModule* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellModule::add_module(const VlModule* obj)
+CellModule::add_module(
+  const VlModule* obj
+)
 {
   mList.push_back(obj);
 }
@@ -831,9 +903,10 @@ CellModule::module_list()
 }
 
 // @brief module を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_module(const VlModule* obj)
+TagDict::add_module(
+  const VlModule* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -849,10 +922,10 @@ TagDict::add_module(const VlModule* obj)
 }
 
 // @brief module のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlModule*>
-TagDict::find_module_list(const VlScope* parent) const
+TagDict::find_module_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiModule);
@@ -874,11 +947,15 @@ class CellPrimArray :
 public:
 
   /// @brief コンストラクタ
-  CellPrimArray(const VlPrimArray* obj);
+  CellPrimArray(
+    const VlPrimArray* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_primarray(const VlPrimArray* obj) override;
+  add_primarray(
+    const VlPrimArray* obj
+  ) override;
 
   /// @brief primitive array のリストを得る．
   vector<const VlPrimArray*>
@@ -896,14 +973,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellPrimArray::CellPrimArray(const VlPrimArray* obj) :
-  mList{obj}
+CellPrimArray::CellPrimArray(
+  const VlPrimArray* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellPrimArray::add_primarray(const VlPrimArray* obj)
+CellPrimArray::add_primarray(
+  const VlPrimArray* obj
+)
 {
   mList.push_back(obj);
 }
@@ -916,10 +996,10 @@ CellPrimArray::primarray_list()
 }
 
 // @brief primitive array を追加する．
-// @param[in] parent 親のスコープ
-// @param[in] obj 登録する要素
 void
-TagDict::add_primarray(const VlPrimArray* obj)
+TagDict::add_primarray(
+  const VlPrimArray* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -935,10 +1015,10 @@ TagDict::add_primarray(const VlPrimArray* obj)
 }
 
 // @brief primitive array のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlPrimArray*>
-TagDict::find_primarray_list(const VlScope* parent) const
+TagDict::find_primarray_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiPrimitiveArray);
@@ -960,11 +1040,15 @@ class CellPrimitive :
 public:
 
   /// @brief コンストラクタ
-  CellPrimitive(const VlPrimitive* obj);
+  CellPrimitive(
+    const VlPrimitive* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_primitive(const VlPrimitive* obj) override;
+  add_primitive(
+    const VlPrimitive* obj
+  ) override;
 
   /// @brief primitive のリストを得る．
   vector<const VlPrimitive*>
@@ -982,14 +1066,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellPrimitive::CellPrimitive(const VlPrimitive* obj) :
-  mList{obj}
+CellPrimitive::CellPrimitive(
+  const VlPrimitive* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellPrimitive::add_primitive(const VlPrimitive* obj)
+CellPrimitive::add_primitive(
+  const VlPrimitive* obj
+)
 {
   mList.push_back(obj);
 }
@@ -1002,9 +1089,10 @@ CellPrimitive::primitive_list()
 }
 
 // @brief primitive を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_primitive(const VlPrimitive* obj)
+TagDict::add_primitive(
+  const VlPrimitive* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -1020,10 +1108,10 @@ TagDict::add_primitive(const VlPrimitive* obj)
 }
 
 // @brief primitive のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlPrimitive*>
-TagDict::find_primitive_list(const VlScope* parent) const
+TagDict::find_primitive_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiPrimitive);
@@ -1045,11 +1133,15 @@ class CellTaskFunc :
 public:
 
   /// @brief コンストラクタ
-  CellTaskFunc(const VlTaskFunc* obj);
+  CellTaskFunc(
+    const VlTaskFunc* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_taskfunc(const VlTaskFunc* obj) override;
+  add_taskfunc(
+    const VlTaskFunc* obj
+  ) override;
 
   /// @brief 要素のリストを得る．
   vector<const VlTaskFunc*>
@@ -1067,14 +1159,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellTaskFunc::CellTaskFunc(const VlTaskFunc* obj) :
-  mList{obj}
+CellTaskFunc::CellTaskFunc(
+  const VlTaskFunc* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellTaskFunc::add_taskfunc(const VlTaskFunc* obj)
+CellTaskFunc::add_taskfunc(
+  const VlTaskFunc* obj
+)
 {
   mList.push_back(obj);
 }
@@ -1087,9 +1182,10 @@ CellTaskFunc::taskfunc_list()
 }
 
 // @brief タスクを追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_task(const VlTaskFunc* obj)
+TagDict::add_task(
+  const VlTaskFunc* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -1105,10 +1201,10 @@ TagDict::add_task(const VlTaskFunc* obj)
 }
 
 // @brief タスクのリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlTaskFunc*>
-TagDict::find_task_list(const VlScope* parent) const
+TagDict::find_task_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiTask);
@@ -1121,9 +1217,10 @@ TagDict::find_task_list(const VlScope* parent) const
 }
 
 // @brief function を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_function(const VlTaskFunc* obj)
+TagDict::add_function(
+  const VlTaskFunc* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -1139,10 +1236,10 @@ TagDict::add_function(const VlTaskFunc* obj)
 }
 
 // @brief function のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlTaskFunc*>
-TagDict::find_function_list(const VlScope* parent) const
+TagDict::find_function_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiFunction);
@@ -1164,11 +1261,15 @@ class CellContAssign :
 public:
 
   /// @brief コンストラクタ
-  CellContAssign(const VlContAssign* obj);
+  CellContAssign(
+    const VlContAssign* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_contassign(const VlContAssign* obj) override;
+  add_contassign(
+    const VlContAssign* obj
+  ) override;
 
   /// @brief 要素のリストを得る．
   vector<const VlContAssign*>
@@ -1186,14 +1287,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellContAssign::CellContAssign(const VlContAssign* obj) :
-  mList{obj}
+CellContAssign::CellContAssign(
+  const VlContAssign* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellContAssign::add_contassign(const VlContAssign* obj)
+CellContAssign::add_contassign(
+  const VlContAssign* obj
+)
 {
   mList.push_back(obj);
 }
@@ -1206,9 +1310,10 @@ CellContAssign::contassign_list()
 }
 
 // @brief continuous assignment を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_contassign(const VlContAssign* obj)
+TagDict::add_contassign(
+  const VlContAssign* obj
+)
 {
   auto parent = obj->module();
 
@@ -1224,10 +1329,10 @@ TagDict::add_contassign(const VlContAssign* obj)
 }
 
 // @brief continuous assignment のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlContAssign*>
-TagDict::find_contassign_list(const VlScope* parent) const
+TagDict::find_contassign_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiContAssign);
@@ -1249,11 +1354,15 @@ class CellProcess :
 public:
 
   /// @brief コンストラクタ
-  CellProcess(const VlProcess* obj);
+  CellProcess(
+    const VlProcess* obj
+  );
 
   /// @brief 要素の追加
   void
-  add_process(const VlProcess* obj) override;
+  add_process(
+    const VlProcess* obj
+  ) override;
 
   /// @brief 要素のリストを得る．
   vector<const VlProcess*>
@@ -1271,14 +1380,17 @@ private:
 };
 
 // @brief コンストラクタ
-CellProcess::CellProcess(const VlProcess* obj) :
-  mList{obj}
+CellProcess::CellProcess(
+  const VlProcess* obj
+) : mList{obj}
 {
 }
 
 // @brief 要素の追加
 void
-CellProcess::add_process(const VlProcess* obj)
+CellProcess::add_process(
+  const VlProcess* obj
+)
 {
   mList.push_back(obj);
 }
@@ -1291,9 +1403,10 @@ CellProcess::process_list()
 }
 
 // @brief process を追加する．
-// @param[in] obj 登録する要素
 void
-TagDict::add_process(const VlProcess* obj)
+TagDict::add_process(
+  const VlProcess* obj
+)
 {
   auto parent = obj->parent_scope();
 
@@ -1309,10 +1422,10 @@ TagDict::add_process(const VlProcess* obj)
 }
 
 // @brief process のリストを取り出す．
-// @param[in] parent 親のスコープ
-// @return 結果のリストを返す．
 vector<const VlProcess*>
-TagDict::find_process_list(const VlScope* parent) const
+TagDict::find_process_list(
+  const VlScope* parent
+) const
 {
   // 該当の Cell が存在するか調べる．
   auto cell = find_cell(parent, vpiProcess);

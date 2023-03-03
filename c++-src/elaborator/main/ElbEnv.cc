@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ElbEnv.h"
 #include "ym/vl/VlTaskFunc.h"
 
@@ -14,22 +13,25 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
-ElbEnv::ElbEnv() :
-  mFlags{0U},
-  mCf{nullptr}
+ElbEnv::ElbEnv(
+) : mFlags{0U},
+    mCf{nullptr}
 {
 }
 
 // @brief コピーコンストラクタ
-ElbEnv::ElbEnv(const ElbEnv& src) :
-  mFlags{src.mFlags},
-  mCf{src.mCf}
+ElbEnv::ElbEnv(
+  const ElbEnv& src
+) : mFlags{src.mFlags},
+    mCf{src.mCf}
 {
 }
 
 // @brief 代入演算子
 const ElbEnv&
-ElbEnv::operator=(const ElbEnv& src)
+ElbEnv::operator=(
+  const ElbEnv& src
+)
 {
   mFlags = src.mFlags;
   mCf = src.mCf;
@@ -51,9 +53,10 @@ ElbEnv::set_function()
 }
 
 // @brief 親の constant function を設定する．
-// @param[in] function 設定する function
 void
-ElbEnv::set_constant_function(const VlScope* function)
+ElbEnv::set_constant_function(
+  const VlScope* function
+)
 {
   mFlags[CONSTFUNC] = true;
   mFlags[FUNCTION] = true;
@@ -200,8 +203,9 @@ ElbConstantEnv::ElbConstantEnv()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] func 親の関数
-ElbConstantFunctionEnv::ElbConstantFunctionEnv(const VlScope* func)
+ElbConstantFunctionEnv::ElbConstantFunctionEnv(
+  const VlScope* func
+)
 {
   set_constant_function(func);
 }
@@ -212,8 +216,9 @@ ElbConstantFunctionEnv::ElbConstantFunctionEnv(const VlScope* func)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] taskfunc タスク/関数
-ElbTfEnv::ElbTfEnv(const VlTaskFunc* taskfunc)
+ElbTfEnv::ElbTfEnv(
+  const VlTaskFunc* taskfunc
+)
 {
   if ( taskfunc->type() == VpiObjType::Function ) {
     set_function();
@@ -226,9 +231,9 @@ ElbTfEnv::ElbTfEnv(const VlTaskFunc* taskfunc)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] env 親の環境
-ElbSystemTfArgEnv::ElbSystemTfArgEnv(const ElbEnv& env) :
-  ElbEnv(env)
+ElbSystemTfArgEnv::ElbSystemTfArgEnv(
+  const ElbEnv& env
+) : ElbEnv{env}
 {
   set_system_tf_arg();
 }
@@ -239,9 +244,9 @@ ElbSystemTfArgEnv::ElbSystemTfArgEnv(const ElbEnv& env) :
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] env 親の環境
-ElbEventExprEnv::ElbEventExprEnv(const ElbEnv& env) :
-  ElbEnv(env)
+ElbEventExprEnv::ElbEventExprEnv(
+  const ElbEnv& env
+) : ElbEnv{env}
 {
   set_event_expr();
 }
@@ -252,9 +257,9 @@ ElbEventExprEnv::ElbEventExprEnv(const ElbEnv& env) :
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] env 親の環境
-ElbNetLhsEnv::ElbNetLhsEnv(const ElbEnv& env) :
-  ElbEnv(env)
+ElbNetLhsEnv::ElbNetLhsEnv(
+  const ElbEnv& env
+) : ElbEnv{env}
 {
   set_net_lhs();
 }
@@ -265,9 +270,9 @@ ElbNetLhsEnv::ElbNetLhsEnv(const ElbEnv& env) :
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] env 親の環境
-ElbVarLhsEnv::ElbVarLhsEnv(const ElbEnv& env) :
-  ElbEnv(env)
+ElbVarLhsEnv::ElbVarLhsEnv(
+  const ElbEnv& env
+) : ElbEnv{env}
 {
   set_var_lhs();
 }
@@ -278,9 +283,9 @@ ElbVarLhsEnv::ElbVarLhsEnv(const ElbEnv& env) :
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] env 親の環境
-ElbPcaLhsEnv::ElbPcaLhsEnv(const ElbEnv& env) :
-  ElbEnv(env)
+ElbPcaLhsEnv::ElbPcaLhsEnv(
+  const ElbEnv& env
+) : ElbEnv{env}
 {
   set_pca_lhs();
 }
@@ -291,9 +296,9 @@ ElbPcaLhsEnv::ElbPcaLhsEnv(const ElbEnv& env) :
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] env 親の環境
-ElbForceLhsEnv::ElbForceLhsEnv(const ElbEnv& env) :
-  ElbEnv(env)
+ElbForceLhsEnv::ElbForceLhsEnv(
+  const ElbEnv& env
+) : ElbEnv{env}
 {
   set_force_lhs();
 }

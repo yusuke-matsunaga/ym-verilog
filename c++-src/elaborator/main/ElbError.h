@@ -23,16 +23,13 @@ class ElbError
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] file ファイル名
-  /// @param[in] line 行番号
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] label ラベル
-  /// @param[in] msg メッセージ
-  ElbError(const char* file,
-	   int line,
-	   const FileRegion& loc,
-	   const string& label,
-	   const string& msg);
+  ElbError(
+    const char* file,      ///< [in] ファイル名
+    int line,              ///< [in] 行番号
+    const FileRegion& loc, ///< [in] ファイル上の位置
+    const string& label,   ///< [in] ラベル
+    const string& msg      ///< [in] メッセージ
+  );
 
   /// @brief デストラクタ
   ~ElbError();
@@ -62,12 +59,6 @@ public:
   /// @brief エラーメッセージを返す．
   string
   message() const;
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
 
 
 private:
@@ -105,16 +96,13 @@ class ElbConstError :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] file ファイル名
-  /// @param[in] line 行番号
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] label ラベル
-  /// @param[in] msg メッセージ
-  ElbConstError(const char* file,
-		int line,
-		const FileRegion& loc,
-		const string& label,
-		const string& msg);
+  ElbConstError(
+    const char* file,      ///< [in] ファイル名
+    int line,              ///< [in] 行番号
+    const FileRegion& loc, ///< [in] ファイル上の位置
+    const string& label,   ///< [in] ラベル
+    const string& msg      ///< [in] メッセージ
+  );
 
   /// @brief デストラクタ
   ~ElbConstError();
@@ -132,12 +120,11 @@ class ElbIntError :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] file ファイル名
-  /// @param[in] line 行番号
-  /// @param[in] loc ファイル上の位置
-  ElbIntError(const char* file,
-	      int line,
-	      const FileRegion& loc);
+  ElbIntError(
+    const char* file,     ///< [in] ファイル名
+    int line,             ///< [in] 行番号
+    const FileRegion& loc ///< [in] ファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~ElbIntError();
@@ -155,12 +142,11 @@ class ElbBvError :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] file ファイル名
-  /// @param[in] line 行番号
-  /// @param[in] loc ファイル上の位置
-  ElbBvError(const char* file,
-	     int line,
-	     const FileRegion& loc);
+  ElbBvError(
+    const char* file,     ///< [in] ファイル名
+    int line,             ///< [in] 行番号
+    const FileRegion& loc ///< [in] ファイル上の位置
+  );
 
   /// @brief デストラクタ
   ~ElbBvError();
@@ -178,18 +164,14 @@ class ElbNameError :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] file ファイル名
-  /// @param[in] line 行番号
-  /// @param[in] loc ファイル上の位置
-  /// @param[in] label ラベル
-  /// @param[in] name 名前
-  /// @param[in] msg メッセージ
-  ElbNameError(const char* file,
-	       int line,
-	       const FileRegion& loc,
-	       const string& label,
-	       const string& name,
-	       const string& msg);
+  ElbNameError(
+    const char* file,      ///< [in] ファイル名
+    int line,              ///< [in] 行番号
+    const FileRegion& loc, ///< [in] ファイル上の位置
+    const string& label,   ///< [in] ラベル
+    const string& name,    ///< [in] 名前
+    const string& msg      ///< [in] メッセージ
+  );
 
   /// @brief デストラクタ
   ~ElbNameError();

@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
 #include "ym/vl/VlFwd.h"
 
@@ -40,11 +39,15 @@ public:
   ElbEnv();
 
   /// @brief コピーコンストラクタ
-  ElbEnv(const ElbEnv& src);
+  ElbEnv(
+    const ElbEnv& src
+  );
 
   /// @brief 代入演算子
   const ElbEnv&
-  operator=(const ElbEnv& src);
+  operator=(
+    const ElbEnv& src
+  );
 
   /// @brief デストラクタ
   ~ElbEnv() = default;
@@ -60,9 +63,10 @@ protected:
   set_constant();
 
   /// @brief 親の function を設定する．
-  /// @param[in] function 設定する function
   void
-  set_constant_function(const VlScope* function);
+  set_constant_function(
+    const VlScope* function ///< [in] 設定する function
+  );
 
   /// @brief 親の function を設定する．
   void
@@ -227,8 +231,9 @@ class ElbConstantFunctionEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] func 親の関数
-  ElbConstantFunctionEnv(const VlScope* func);
+  ElbConstantFunctionEnv(
+    const VlScope* func ///< [in] 親の関数
+  );
 
 };
 
@@ -243,8 +248,9 @@ class ElbTfEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] taskfunc タスク/関数
-  ElbTfEnv(const VlTaskFunc* taskfunc);
+  ElbTfEnv(
+    const VlTaskFunc* taskfunc ///< [in] タスク/関数
+  );
 
 };
 
@@ -259,8 +265,9 @@ class ElbSystemTfArgEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] env 親の環境
-  ElbSystemTfArgEnv(const ElbEnv& env);
+  ElbSystemTfArgEnv(
+    const ElbEnv& env ///< [in] 親の環境
+  );
 
 };
 
@@ -275,8 +282,9 @@ class ElbEventExprEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] env 親の環境
-  ElbEventExprEnv(const ElbEnv& env);
+  ElbEventExprEnv(
+    const ElbEnv& env ///< [in] 親の環境
+  );
 
 };
 
@@ -291,8 +299,9 @@ class ElbNetLhsEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] env 親の環境
-  ElbNetLhsEnv(const ElbEnv& env);
+  ElbNetLhsEnv(
+    const ElbEnv& env ///< [in] 親の環境
+  );
 
 };
 
@@ -307,8 +316,9 @@ class ElbVarLhsEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] env 親の環境
-  ElbVarLhsEnv(const ElbEnv& env);
+  ElbVarLhsEnv(
+    const ElbEnv& env ///< [in] 親の環境
+  );
 
 };
 
@@ -323,8 +333,9 @@ class ElbPcaLhsEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] env 親の環境
-  ElbPcaLhsEnv(const ElbEnv& env);
+  ElbPcaLhsEnv(
+    const ElbEnv& env ///< [in] 親の環境
+  );
 
 };
 
@@ -339,8 +350,9 @@ class ElbForceLhsEnv :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] env 親の環境
-  ElbForceLhsEnv(const ElbEnv& env);
+  ElbForceLhsEnv(
+    const ElbEnv& env ///< [in] 親の環境
+  );
 
 };
 

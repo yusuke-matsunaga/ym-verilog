@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlNamedObj.h"
 #include "ym/vl/VlModule.h"
 #include "ym/vl/VlScope.h"

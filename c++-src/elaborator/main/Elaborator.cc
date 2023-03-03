@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/Elaborator.h"
 
 #include "UdpGen.h"
@@ -60,8 +59,10 @@ BEGIN_NONAMESPACE
 // mFuncDict 用のキー生成関数
 inline
 string
-gen_funckey(const PtModule* module,
-	    const string& name)
+gen_funckey(
+  const PtModule* module,
+  const string& name
+)
 {
   return string(module->name()) + " " + string(name);
 }
@@ -69,22 +70,20 @@ gen_funckey(const PtModule* module,
 END_NONAMESPACE
 
 // @brief コンストラクタ
-// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-// @param[in] elb_factory Elbオブジェクトを生成するファクトリクラス
-// @param[in] cell_library セルライブラリ
-Elaborator::Elaborator(ElbMgr& elb_mgr,
-		       const ClibCellLibrary& cell_library) :
-  mDone{false},
-  mMgr{elb_mgr},
-  mCellLibrary{cell_library},
-  mUdpGen{new UdpGen(*this, elb_mgr)},
-  mModuleGen{new ModuleGen(*this, elb_mgr)},
-  mDeclGen{new DeclGen(*this, elb_mgr)},
-  mItemGen{new ItemGen(*this, elb_mgr)},
-  mStmtGen{new StmtGen(*this, elb_mgr)},
-  mExprGen{new ExprGen(*this, elb_mgr)},
-  mExprEval{new ExprEval(*this, elb_mgr)},
-  mAttrGen{new AttrGen(*this, elb_mgr)}
+Elaborator::Elaborator(
+  ElbMgr& elb_mgr,
+  const ClibCellLibrary& cell_library
+) : mDone{false},
+    mMgr{elb_mgr},
+    mCellLibrary{cell_library},
+    mUdpGen{new UdpGen(*this, elb_mgr)},
+    mModuleGen{new ModuleGen(*this, elb_mgr)},
+    mDeclGen{new DeclGen(*this, elb_mgr)},
+    mItemGen{new ItemGen(*this, elb_mgr)},
+    mStmtGen{new StmtGen(*this, elb_mgr)},
+    mExprGen{new ExprGen(*this, elb_mgr)},
+    mExprEval{new ExprEval(*this, elb_mgr)},
+    mAttrGen{new AttrGen(*this, elb_mgr)}
 {
   mAllowEmptyIORange = true;
 
@@ -112,15 +111,15 @@ Elaborator::~Elaborator()
 }
 
 // @brief エラボレーションを行う．
-// @param[in] pt_mgr パース木を管理するクラス
-// @return エラー数を返す．
 int
-Elaborator::operator()(const PtMgr& pt_mgr)
+Elaborator::operator()(
+  const PtMgr& pt_mgr
+)
 {
   ASSERT_COND( !mDone );
 
-  auto& pt_udp_list{pt_mgr.pt_udp_list()};
-  auto& pt_module_list{pt_mgr.pt_module_list()};
+  auto& pt_udp_list = pt_mgr.pt_udp_list();
+  auto& pt_module_list = pt_mgr.pt_module_list();
 
   // attribute instance の生成
   for ( const auto& attr_info: pt_mgr.all_attr_list() ) {
@@ -137,7 +136,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
   // と同時に関数定義の辞書を作る．
   int nerr{0};
   for ( auto pt_module: pt_module_list ) {
-    auto name{pt_module->name()};
+    auto name = pt_module->name();
     if ( mMgr.find_udp(name) != nullptr ) {
       ostringstream buf;
       buf << "\"" << name
@@ -166,7 +165,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     // 関数の辞書を作る．
     for ( auto item: pt_module->item_list() ) {
       if ( item->type() == PtItemType::Func ) {
-	auto key{gen_funckey(pt_module, item->name())};
+	auto key = gen_funckey(pt_module, item->name());
 	mFuncDict.emplace(key, item);
       }
     }
@@ -178,7 +177,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
   // トップレベル階層の生成
   /// toplevel は実体を持たない仮想的なスコープ
-  auto toplevel{mMgr.new_Toplevel()};
+  auto toplevel = mMgr.new_Toplevel();
 
   // トップモジュールの生成
   for ( auto pt_module: pt_module_list ) {
@@ -212,7 +211,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
     // が空にならない場合もある．
     for ( auto p = mDefParamStubList.begin(); p != mDefParamStubList.end(); ) {
       // リストの中で要素の削除を行うので反復子の扱いがちょっと複雑
-      auto q{p};
+      auto q = p;
       ++ p;
 
       if ( mItemGen->defparam_override(*q, nullptr) ) {
@@ -242,7 +241,7 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
   // 適用できなかった defparam 文のチェック
   for ( auto stub: mDefParamStubList ) {
-    auto pt_defparam{stub.mPtDefparam};
+    auto pt_defparam = stub.mPtDefparam;
     ostringstream buf;
     buf << pt_defparam->fullname() << " : not found.";
     MsgMgr::put_msg(__FILE__, __LINE__,
@@ -277,8 +276,10 @@ Elaborator::operator()(const PtMgr& pt_mgr)
 
 // 後で処理する defparam 文を登録する．
 void
-Elaborator::add_defparamstub(const VlModule* module,
-			     const PtItem* pt_header)
+Elaborator::add_defparamstub(
+  const VlModule* module,
+  const PtItem* pt_header
+)
 {
   for ( auto pt_defparam: pt_header->defparam_list() ) {
     mDefParamStubList.push_back(DefParamStub{module, pt_header, pt_defparam});
@@ -286,34 +287,37 @@ Elaborator::add_defparamstub(const VlModule* module,
 }
 
 // @brief phase1 で行う処理を登録する．
-// @param[in] stub phase1 で行う処理を表すスタブ
 void
-Elaborator::add_phase1stub(ElbStub* stub)
+Elaborator::add_phase1stub(
+  ElbStub* stub
+)
 {
   mPhase1StubList1.push_back(stub);
 }
 
 // @brief phase2 で行う処理を登録する．
-// @param[in] stub phase2 で行う処理を表すスタブ
 void
-Elaborator::add_phase2stub(ElbStub* stub)
+Elaborator::add_phase2stub(
+  ElbStub* stub
+)
 {
   mPhase2StubList.push_back(stub);
 }
 
 // phase3 で行う処理を登録する．
 void
-Elaborator::add_phase3stub(ElbStub* stub)
+Elaborator::add_phase3stub(
+  ElbStub* stub
+)
 {
   mPhase3StubList.push_back(stub);
 }
 
 // @brief 名前からモジュール定義を取り出す．
-// @param[in] name 名前
-// @return name という名のモジュール定義
-// @return なければ nullptr を返す．
 const PtModule*
-Elaborator::find_moduledef(const string& name) const
+Elaborator::find_moduledef(
+  const string& name
+) const
 {
   if ( mModuleDict.count(name) > 0 ) {
     return mModuleDict.at(name);
@@ -324,18 +328,18 @@ Elaborator::find_moduledef(const string& name) const
 }
 
 // @brief 関数定義を探す．
-// @param[in] module 親のモジュール
-// @param[in] name 関数名
 const PtItem*
-Elaborator::find_funcdef(const VlModule* module,
-			 const string& name) const
+Elaborator::find_funcdef(
+  const VlModule* module,
+  const string& name
+) const
 {
-  auto pt_module{find_moduledef(module->def_name())};
+  auto pt_module = find_moduledef(module->def_name());
   if ( pt_module == nullptr ) {
     return nullptr;
   }
 
-  auto key{gen_funckey(pt_module, name)};
+  auto key = gen_funckey(pt_module, name);
   if ( mFuncDict.count(key) > 0 ) {
     return mFuncDict.at(key);
   }
@@ -345,13 +349,13 @@ Elaborator::find_funcdef(const VlModule* module,
 }
 
 // @brief constant function を取り出す．
-// @param[in] parent 親のスコープ
-// @param[in] name 名前
 const VlTaskFunc*
-Elaborator::find_constant_function(const VlScope* parent,
-				   const string& name) const
+Elaborator::find_constant_function(
+  const VlScope* parent,
+  const string& name
+) const
 {
-  auto h{mCfDict.find(parent, name)};
+  auto h = mCfDict.find(parent, name);
   if ( h != nullptr ) {
     return h->taskfunc();
   }
@@ -361,9 +365,10 @@ Elaborator::find_constant_function(const VlScope* parent,
 }
 
 // @brief constant function を登録する．
-// @param[in] func 関数
 void
-Elaborator::reg_constant_function(const VlTaskFunc* func)
+Elaborator::reg_constant_function(
+  const VlTaskFunc* func
+)
 {
   mCfDict.add(func);
 }

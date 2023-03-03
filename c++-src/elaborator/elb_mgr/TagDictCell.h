@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
 #include "ym/vl/VlFwd.h"
 
@@ -29,7 +28,9 @@ public:
   /// @brief  宣言要素を追加する．
   virtual
   void
-  add_decl(const VlDecl* obj);
+  add_decl(
+    const VlDecl* obj
+  );
 
   /// @brief  宣言要素のリストを得る．
   virtual
@@ -39,7 +40,9 @@ public:
   /// @brief  配列型宣言要素を追加する．
   virtual
   void
-  add_declarray(const VlDeclArray* obj);
+  add_declarray(
+    const VlDeclArray* obj
+  );
 
   /// @brief  配列型宣言要素のリストを得る．
   virtual
@@ -49,7 +52,9 @@ public:
   /// @brief  defparam を追加する．
   virtual
   void
-  add_defparam(const VlDefParam* obj);
+  add_defparam(
+    const VlDefParam* obj
+  );
 
   /// @brief  defparam のリストを得る．
   virtual
@@ -59,7 +64,9 @@ public:
   /// @brief  param assign を追加する．
   virtual
   void
-  add_paramassign(const VlParamAssign* obj);
+  add_paramassign(
+    const VlParamAssign* obj
+  );
 
   /// @brief  param assign のリストを得る．
   virtual
@@ -69,7 +76,9 @@ public:
   /// @brief module array を追加する．
   virtual
   void
-  add_modulearray(const VlModuleArray* obj);
+  add_modulearray(
+    const VlModuleArray* obj
+  );
 
   /// @brief module array のリストを得る．
   virtual
@@ -79,7 +88,9 @@ public:
   /// @brief  module を追加する．
   virtual
   void
-  add_module(const VlModule* obj);
+  add_module(
+    const VlModule* obj
+  );
 
   /// @brief  module のリストを得る．
   virtual
@@ -89,7 +100,9 @@ public:
   /// @brief  primitive array を追加する．
   virtual
   void
-  add_primarray(const VlPrimArray* obj);
+  add_primarray(
+    const VlPrimArray* obj
+  );
 
   /// @brief  primitive array のリストを得る．
   virtual
@@ -99,7 +112,9 @@ public:
   /// @brief  primitive を追加する．
   virtual
   void
-  add_primitive(const VlPrimitive* obj);
+  add_primitive(
+    const VlPrimitive* obj
+  );
 
   /// @brief  primitive のリストを得る．
   virtual
@@ -109,7 +124,9 @@ public:
   /// @brief タスク/関数を追加する．
   virtual
   void
-  add_taskfunc(const VlTaskFunc* obj);
+  add_taskfunc(
+    const VlTaskFunc* obj
+  );
 
   /// @brief タスク/関数のリストを得る．
   virtual
@@ -119,7 +136,9 @@ public:
   /// @brief continuous assignment を追加する．
   virtual
   void
-  add_contassign(const VlContAssign* obj);
+  add_contassign(
+    const VlContAssign* obj
+  );
 
   /// @brief  continuous assignment のリストを得る．
   virtual
@@ -129,7 +148,9 @@ public:
   /// @brief  process を追加する．
   virtual
   void
-  add_process(const VlProcess* process);
+  add_process(
+    const VlProcess* process
+  );
 
   /// @brief  process のリストを得る．
   virtual
@@ -139,7 +160,9 @@ public:
   /// @brief internal scope を追加する．
   virtual
   void
-  add_internalscope(const VlScope* obj);
+  add_internalscope(
+    const VlScope* obj
+  );
 
   /// @brief internal scope のリストを得る．
   virtual

@@ -27,8 +27,9 @@ class PtDumper
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] s 出力先のストリーム
-  PtDumper(ostream& s);
+  PtDumper(
+    ostream& s ///< [in] 出力先のストリーム
+  );
 
   /// @brief デストラクタ
   ~PtDumper();
@@ -37,64 +38,66 @@ public:
 public:
 
   /// @brief UDP とモジュールの内部情報の表示
-  /// @param[in] udp_list UDP のリスト
-  /// @param[in] module_list モジュールのリスト
   void
-  put(const vector<const PtUdp*>& udp_list,
-      const vector<const PtModule*>& module_list);
+  put(
+    const vector<const PtUdp*>& udp_list,      ///< [in] UDP のリスト
+    const vector<const PtModule*>& module_list ///< [in] モジュールのリスト
+  );
 
 
   /// @brief UDP を表示する
-  /// @param[in] udp UDP
   void
-  put(const PtUdp* udp);
+  put(
+    const PtUdp* udp ///< [in] UDP
+  );
 
   /// @brief UDP テーブルの値を表示する
-  /// @param[in] label ラベル
-  /// @param[in] v UDP テーブルの値
   void
-  put(const char* label,
-      const PtUdpValue* v);
+  put(
+    const char* label,  ///< [in] ラベル
+    const PtUdpValue* v ///< [in] テーブルの値
+  );
 
   /// @brief module を表示する
-  /// @param[in] m モジュール
   void
-  put(const PtModule* m);
+  put(
+    const PtModule* m ///< [in] モジュール
+  );
 
   /// @brief IO のヘッダを出力する．
-  /// @param[in] label ラベル
-  /// @param[in] io IOヘッダ
   void
-  put(const char* label,
-      const PtIOHead* io);
+  put(
+    const char* label, ///< [in] ラベル
+    const PtIOHead* io ///< [in] IOヘッダ
+  );
 
   /// @brief 宣言のヘッダを出力する．
-  /// @param[in] label ラベル
-  /// @param[in] decl 宣言ヘッダ
   void
-  put(const char* label,
-      const PtDeclHead* decl);
+  put(
+    const char* label,     ///< [in] ラベル
+    const PtDeclHead* decl ///< [in] 宣言ヘッダ
+  );
 
   /// @brief 要素の出力
-  /// @param[in] label ラベル
-  /// @param[in] item 要素
   void
-  put(const char* label,
-      const PtItem* item);
+  put(
+    const char* label, ///< [in] ラベル
+    const PtItem* item ///< [in] 要素
+  );
 
   /// @brief ステートメントの出力
-  /// @param[in] label ラベル
-  /// @param[in] stmt ステートメント
   void
-  put(const char* label,
-      const PtStmt* stmt);
+  put(
+    const char* label, ///< [in] ラベル
+    const PtStmt* stmt ///< [in] ステートメント
+  );
 
   /// @brief 式の内容を出力する
-  /// @param[in] label ラベル
-  /// @param[in] expr 式
   void
-  put(const char* label,
-      const PtExpr* expr);
+  put(
+    const char* label, ///< [in] ラベル
+    const PtExpr* expr ///< [in] 式
+  );
 
 
 public:
@@ -116,216 +119,220 @@ public:
 private:
 
   /// @brief インクルード元のファイル情報の出力
-  /// @param[in] file_loc ファイルの位置情報
   void
-  put_parent_file(const FileLoc& file_loc);
+  put_parent_file(
+    const FileLoc& file_loc ///< [in] ファイルの位置情報
+  );
 
   /// @brief 宣言を出力する．
   void
-  put_decls(const vector<const PtIOHead*>& iohead_array,
-	    const vector<const PtDeclHead*>& declhead_array);
+  put_decls(
+    const vector<const PtIOHead*>& iohead_array,
+    const vector<const PtDeclHead*>& declhead_array
+  );
 
   /// @brief 宣言と要素を出力する．
-  /// @param[in] label ラベル
-  /// @param[in] decl_array 宣言の配列
-  /// @param[in] item_array 要素の配列
   void
-  put_decl_item(const char* label,
-		const vector<const PtDeclHead*>& decl_array,
-		const vector<const PtItem*>& item_array);
+  put_decl_item(
+    const char* label,                           ///< [in] ラベル
+    const vector<const PtDeclHead*>& decl_array, ///< [in] 宣言の配列
+    const vector<const PtItem*>& item_array      ///< [in] 要素の配列
+  );
 
   /// @brief 階層名の出力
   void
-  put(const vector<const PtNameBranch*>& nb_array);
+  put(
+    const vector<const PtNameBranch*>& nb_array
+  );
 
   /// @brief ブール型データの出力
-  /// @param[in] label ラベル
-  /// @param[in] b ブール値
   void
-  put(const char* label,
-      bool b);
+  put(
+    const char* label, ///< [in] ラベル
+    bool b             ///< [in] ブール値
+  );
 
   /// @brief 整数型データの出力
-  /// @param[in] label ラベル
-  /// @param[in] d 整数値
   void
-  put(const char* label,
-      int d);
+  put(
+    const char* label, ///< [in] ラベル
+    int d              ///< [in] 整数値
+  );
 
   /// @brief 実数型データの出力
-  /// @param[in] label ラベル
-  /// @param[in] r 実数値
   void
-  put(const char* label,
-      double r);
+  put(
+    const char* label, ///< [in] ラベル
+    double r           ///< [in] 実数値
+  );
 
   /// @brief 文字列型データの出力
-  /// @param[in] label ラベル
-  /// @param[in] str 文字列
   void
-  put(const char* label,
-      const char* str);
+  put(
+    const char* label, ///< [in] ラベル
+    const char* str    ///< [in] 文字列
+  );
 
   /// @brief 文字列型データの出力
-  /// @param[in] label ラベル
-  /// @param[in] str 文字列
   void
-  put(const char* label,
-      const string& str);
+  put(
+    const char* label, ///< [in] ラベル
+    const string& str  ///< [in] 文字列
+  );
 
   /// @brief 補助的なデータ型の出力
-  /// @param[in] label ラベル
-  /// @param[in] aux_type 補助的なデータ型
   void
-  put(const char* label,
-      VpiAuxType aux_type);
+  put(
+    const char* label,  ///< [in] ラベル
+    VpiAuxType aux_type ///< [in] 補助的なデータ型
+  );
 
   /// @brief ネット型の出力
-  /// @param[in] label ラベル
-  /// @param[in] net_type ネット型
   void
-  put(const char* label,
-      VpiNetType net_type);
+  put(
+    const char* label,  ///< [in] ラベル
+    VpiNetType net_type ///< [in] ネット型
+  );
 
   /// @brief 変数型の出力
-  /// @param[in] label ラベル
-  /// @param[in] var_type 変数型
   void
-  put(const char* label,
-      VpiVarType var_type);
+  put(
+    const char* label,  ///< [in] ラベル
+    VpiVarType var_type ///< [in] 変数型
+  );
 
   /// @brief 方向の出力
-  /// @param[in] label ラベル
-  /// @param[in] direction 方向
   void
-  put(const char* label,
-      VpiDir direction);
+  put(
+    const char* label, ///< [in] ラベル
+    VpiDir direction   ///< [in] 方向
+  );
 
   /// @brief unconnected drive の出力
-  /// @param[in] label ラベル
-  /// @param[in] ud unconnected drive
   void
-  put(const char* label,
-      VpiUnconnDrive ud);
+  put(
+    const char* label, ///< [in] ラベル
+    VpiUnconnDrive ud  ///< [in] unconnected drive
+  );
 
   /// @brief default delay mode の出力
-  /// @param[in] label ラベル
-  /// @param[in] delay_mode default delay mode
   void
-  put(const char* label,
-      VpiDefDelayMode delay_mode);
+  put(
+    const char* label,         ///< [in] ラベル
+    VpiDefDelayMode delay_mode ///< [in] default delay mode
+  );
 
   /// @brief primitive型の出力
-  /// @param[in] label ラベル
-  /// @param[in] prim_type primitive 型
   void
-  put(const char* label,
-      VpiPrimType prim_type);
+  put(
+    const char* label,    ///< [in] ラベル
+    VpiPrimType prim_type ///< [in] primitive 型
+  );
 
   /// @brief 演算子型の出力
-  /// @param[in] label ラベル
-  /// @param[in] op_type 演算子型
   void
-  put(const char* label,
-      VpiOpType op_type);
+  put(
+    const char* label, ///< [in] ラベル
+    VpiOpType op_type  ///< [in] 演算子型
+  );
 
   /// @brief 定数型の出力
-  /// @param[in] label ラベル
-  /// @param[in] const_type 定数型
   void
-  put(const char* label,
-      VpiConstType const_type);
+  put(
+    const char* label,      ///< [in] ラベル
+    VpiConstType const_type ///< [in] 定数型
+  );
 
   /// @brief strength の出力
-  /// @param[in] label ラベル
-  /// @param[in] strength strength
   void
-  put(const char* label,
-      VpiStrength strength);
+  put(
+    const char* label,   ///< [in] ラベル
+    VpiStrength strength ///< [in] strength
+  );
 
   /// @brief vectored/scalared 属性の出力
-  /// @param[in] label ラベル
-  /// @param[in] vs_type vectored/scalared 属性
   void
-  put(const char* label,
-      VpiVsType vs_type);
+  put(
+    const char* label, ///< [in] ラベル
+    VpiVsType vs_type  ///< [in] vectored/scalared 属性
+  );
 
   /// @brief 範囲指定モードの出力
-  /// @param[in] label ラベル
-  /// @param[in] range_mode
   void
-  put(const char* label,
-      VpiRangeMode range_mode);
+  put(
+    const char* label,      ///< [in] ラベル
+    VpiRangeMode range_mode ///< [in] 範囲指定モード
+  );
 
   /// @brief FileLoc の情報を出力する．
-  /// @param[in] label ラベル
-  /// @param[in] file_loc ファイルの位置情報
   void
-  put(const char* label,
-      const FileLoc& file_loc);
+  put(
+    const char* label,      ///< [in] ラベル
+    const FileLoc& file_loc ///< [in] ファイルの位置情報
+  );
 
   /// @brief FileRegion の情報を出力する．
-  /// @param[in] label ラベル
-  /// @param[in] file_region ファイル領域の情報
   void
-  put(const char* label,
-      const FileRegion& file_loc);
+  put(
+    const char* label,         ///< [in] ラベル
+    const FileRegion& file_loc ///< [in] ファイル領域の情報
+  );
 
   /// @brief 属性インスタンスを出力する．
-  /// @param[in] label ラベル
-  /// @param[in] attr_top 属性インスタンスの先頭
   void
-  put(const char* label,
-      const PtAttrInst* attr_top);
+  put(
+    const char* label,         ///< [in] ラベル
+    const PtAttrInst* attr_top ///< [in] 属性インスタンスの先頭
+  );
 
   /// @brief コントロールの内容を表示する．
-  /// @param[in] label ラベル
-  /// @param[in] ctrl コントロール
   void
-  put(const char* label,
-      const PtControl* ctrl);
+  put(
+    const char* label,    ///< [in] ラベル
+    const PtControl* ctrl ///< [in] コントロール
+  );
 
   /// @brief strength の内容を表示する．
-  /// @param[in] label ラベル
-  /// @param[in] str 信号強度
   void
-  put(const char* label,
-      const PtStrength* str);
+  put(
+    const char* label,    ///< [in] ラベル
+    const PtStrength* str ///< [in] 信号強度
+  );
 
   /// @brief 遅延情報を出力する．
-  /// @param[in] label ラベル
-  /// @param[in] delay 遅延
   void
-  put(const char* label,
-      const PtDelay* delay);
+  put(
+    const char* label,   ///< [in] ラベル
+    const PtDelay* delay ///< [in] 遅延
+  );
 
   /// @brief 接続情報を表示する．
-  /// @param[in] label ラベル
-  /// @param[in] con 接続情報
   void
-  put(const char* label,
-      const PtConnection* con);
+  put(
+    const char* label,      ///< [in] ラベル
+    const PtConnection* con ///< [in] 接続情報
+  );
 
   /// @brief 階層ブランチの情報を出力する
-  /// @param[in] label ラベル
-  /// @param[in] nm 階層ブランチ
   void
-  put(const char* label,
-      const PtNameBranch* nb);
+  put(
+    const char* label,     ///< [in] ラベル
+    const PtNameBranch* nb ///< [in] 階層ブランチ
+  );
 
   /// @brief 開始マーカを出力する．
-  /// @param[in] label マーカのラベル
-  /// @param[in] type タイプ
-  /// @param[in] need_cr true の時はマーカ出力後に改行する．
   void
-  put_begin(const char* label,
-	    const char* type,
-	    bool need_cr = true);
+  put_begin(
+    const char* label,   ///< [in] マーカのラベル
+    const char* type,    ///< [in] タイプ
+    bool need_cr = true  ///< [in] true の時はマーカ出力後に改行する．
+  );
 
   /// @brief 終了マーカを出力する．
-  /// @param[in] label マーカのラベル
   void
-  put_end(const char* label);
+  put_end(
+    const char* label ///< [in] マーカのラベル
+  );
 
 
 private:

@@ -6,7 +6,6 @@
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ElbError.h"
 
 
@@ -17,21 +16,17 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] file ファイル名
-// @param[in] line 行番号
-// @param[in] loc ファイル上の位置
-// @param[in] label ラベル
-// @param[in] msg メッセージ
-ElbError::ElbError(const char* file,
-		   int line,
-		   const FileRegion& loc,
-		   const string& label,
-		   const string& msg) :
-  mFile{file},
-  mLine{line},
-  mFileRegion{loc},
-  mLabel{label},
-  mMessage{msg}
+ElbError::ElbError(
+  const char* file,
+  int line,
+  const FileRegion& loc,
+  const string& label,
+  const string& msg
+) : mFile{file},
+    mLine{line},
+    mFileRegion{loc},
+    mLabel{label},
+    mMessage{msg}
 {
 }
 
@@ -81,17 +76,13 @@ ElbError::message() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] file ファイル名
-// @param[in] line 行番号
-// @param[in] loc ファイル上の位置
-// @param[in] label ラベル
-// @param[in] msg メッセージ
-ElbConstError::ElbConstError(const char* file,
-			     int line,
-			     const FileRegion& loc,
-			     const string& label,
-			     const string& msg) :
-  ElbError(file, line, loc, label, msg)
+ElbConstError::ElbConstError(
+  const char* file,
+  int line,
+  const FileRegion& loc,
+  const string& label,
+  const string& msg
+) : ElbError{file, line, loc, label, msg}
 {
 }
 
@@ -106,13 +97,11 @@ ElbConstError::~ElbConstError()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] file ファイル名
-// @param[in] line 行番号
-// @param[in] loc ファイル上の位置
-ElbIntError::ElbIntError(const char* file,
-			 int line,
-			 const FileRegion& loc) :
-  ElbError(file, line, loc, "ELABXXX", "Integer value required.")
+ElbIntError::ElbIntError(
+  const char* file,
+  int line,
+  const FileRegion& loc
+) : ElbError{file, line, loc, "ELABXXX", "Integer value required."}
 {
 }
 
@@ -127,13 +116,11 @@ ElbIntError::~ElbIntError()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] file ファイル名
-// @param[in] line 行番号
-// @param[in] loc ファイル上の位置
-ElbBvError::ElbBvError(const char* file,
-		       int line,
-		       const FileRegion& loc) :
-  ElbError(file, line, loc, "ELABXXX", "Bit-Vector value required.")
+ElbBvError::ElbBvError(
+  const char* file,
+  int line,
+  const FileRegion& loc
+) : ElbError{file, line, loc, "ELABXXX", "Bit-Vector value required."}
 {
 }
 
@@ -151,8 +138,10 @@ BEGIN_NONAMESPACE
 
 inline
 string
-make_message(const string& name,
-	     const string& msg)
+make_message(
+  const string& name,
+  const string& msg
+)
 {
   ostringstream buf;
   buf << name << " : " << msg;
@@ -163,19 +152,14 @@ END_NONAMESPACE
 
 
 // @brief コンストラクタ
-// @param[in] file ファイル名
-// @param[in] line 行番号
-// @param[in] loc ファイル上の位置
-// @param[in] label ラベル
-// @param[in] name 名前
-// @param[in] msg メッセージ
-ElbNameError::ElbNameError(const char* file,
-			   int line,
-			   const FileRegion& loc,
-			   const string& label,
-			   const string& name,
-			   const string& msg) :
-  ElbError(file, line, loc, label, make_message(name, msg))
+ElbNameError::ElbNameError(
+  const char* file,
+  int line,
+  const FileRegion& loc,
+  const string& label,
+  const string& name,
+  const string& msg
+) : ElbError{file, line, loc, label, make_message(name, msg)}
 {
 }
 
