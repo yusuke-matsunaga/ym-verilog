@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiStmt.h"
 #include "ym/pt/PtStmt.h"
 
@@ -18,15 +17,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] process 親のプロセス (or nullptr)
-EiStmt::EiStmt(const VlProcess* process) :
-  mProcess{process}
+EiStmt::EiStmt(
+  const VlProcess* process
+) : mProcess{process}
 {
 }
 
 // @brief 対象のスコープの取得
-// @note kDisable/kParBlock/kSeqBlock で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlScope*
 EiStmt::scope() const
 {
@@ -34,8 +31,6 @@ EiStmt::scope() const
 }
 
 // @brief task の実体を返す．
-// @note kEnable で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlTaskFunc*
 EiStmt::task() const
 {
@@ -43,8 +38,6 @@ EiStmt::task() const
 }
 
 // @brief user systf クラスへのポインタを返す．
-// @note kSysEnable で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlUserSystf*
 EiStmt::user_systf() const
 {
@@ -52,8 +45,6 @@ EiStmt::user_systf() const
 }
 
 // @brief 引数の数の取得
-// @note kEnable/kSysEnable で意味のある関数
-// @note このクラスでは 0 を返す．
 SizeType
 EiStmt::arg_num() const
 {
@@ -61,17 +52,15 @@ EiStmt::arg_num() const
 }
 
 // @brief 引数の取得
-// @param[in] pos 位置 (0 <= pos < arg_num())
-// @note kEnable/kSysEnable で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlExpr*
-EiStmt::arg(SizeType pos) const
+EiStmt::arg(
+  SizeType pos
+) const
 {
   return nullptr;
 }
 
 // @brief control の取得
-// @note このクラスでは nullptr を返す．
 const VlControl*
 EiStmt::control() const
 {
@@ -79,8 +68,6 @@ EiStmt::control() const
 }
 
 // @brief 本体のステートメントの取得
-// @note kDc/kEc/kWait/kForever/kRepeat/kWhile/kFor/kIf で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlStmt*
 EiStmt::body_stmt() const
 {
@@ -88,8 +75,6 @@ EiStmt::body_stmt() const
 }
 
 // @brief 式の取得
-// @note kWait/kRepeat/kWhile/kFor/kIf/kCase/kCaseX/kCaseZ で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiStmt::expr() const
 {
@@ -97,8 +82,6 @@ EiStmt::expr() const
 }
 
 // @brief 左辺式の取得
-// @note kAssign/kForce/kPcAssign/kRelease/kDeassign で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiStmt::lhs() const
 {
@@ -106,8 +89,6 @@ EiStmt::lhs() const
 }
 
 // @brief 右辺式の取得
-// @note kAssign/kForce/kPcAssign で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiStmt::rhs() const
 {
@@ -115,7 +96,6 @@ EiStmt::rhs() const
 }
 
 // @brief 代入のブロッキング/ノンブロッキングの区別の取得
-// @note このクラスでは false を返す．
 bool
 EiStmt::is_blocking() const
 {
@@ -123,8 +103,6 @@ EiStmt::is_blocking() const
 }
 
 // @brief イベントプライマリの取得
-// @note kEvent で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiStmt::named_event() const
 {
@@ -132,8 +110,6 @@ EiStmt::named_event() const
 }
 
 // @brief 条件が成り立たなかったとき実行されるステートメントの取得
-// @note kIf で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlStmt*
 EiStmt::else_stmt() const
 {
@@ -141,9 +117,6 @@ EiStmt::else_stmt() const
 }
 
 // @brief case type の取得
-// @return case type
-// @note kCase/kCaseX/kCaseZ で意味のある関数
-// @note このクラスでは kVpiCaseExact を返す．
 VpiCaseType
 EiStmt::case_type() const
 {
@@ -151,9 +124,6 @@ EiStmt::case_type() const
 }
 
 // @brief case item の要素数の取得
-// @return case item の要素数
-// @note kCase/kCaseX/kCaseZ で意味のある関数
-// @note このクラスでは 0 を返す．
 SizeType
 EiStmt::caseitem_num() const
 {
@@ -161,19 +131,16 @@ EiStmt::caseitem_num() const
 }
 
 // @brief case item の取得
-// @param[in] pos 位置番号 (0 <= pos < caseitem_num())
-// @note kCase/kCaseX/kCaseZ で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlCaseItem*
-EiStmt::caseitem(SizeType pos) const
+EiStmt::caseitem(
+  SizeType pos
+) const
 {
   ASSERT_NOT_REACHED;
   return nullptr;
 }
 
 // @brief 初期化代入文の取得
-// @note kFor で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlStmt*
 EiStmt::init_stmt() const
 {
@@ -181,8 +148,6 @@ EiStmt::init_stmt() const
 }
 
 // @brief 繰り返し代入文の取得
-// @note kFor で意味のある関数
-// @note このクラスでは nullptr を返す．
 const VlStmt*
 EiStmt::inc_stmt() const
 {
@@ -190,8 +155,6 @@ EiStmt::inc_stmt() const
 }
 
 // @brief 子供のステートメントの数の取得
-// @note kParBlock/kSeqBlock で意味のある関数
-// @note このクラスでは 0 を返す．
 SizeType
 EiStmt::child_stmt_num() const
 {
@@ -199,10 +162,10 @@ EiStmt::child_stmt_num() const
 }
 
 // @brief 子供のステートメントの取得
-// @param[in] pos 位置番号 (0 <= pos < stmt_num())
-// @note kParBlock/kSeqBlock で意味のある関数
 const VlStmt*
-EiStmt::child_stmt(SizeType pos) const
+EiStmt::child_stmt(
+  SizeType pos
+) const
 {
   return nullptr;
 }
@@ -220,15 +183,13 @@ EiStmt::target_scope() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-EiStmtBase::EiStmtBase(const VlScope* parent,
-		       const VlProcess* process,
-		       const PtStmt* pt_stmt) :
-  EiStmt(process),
-  mParent{parent},
-  mPtStmt{pt_stmt}
+EiStmtBase::EiStmtBase(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt
+) : EiStmt{process},
+    mParent{parent},
+    mPtStmt{pt_stmt}
 {
 }
 

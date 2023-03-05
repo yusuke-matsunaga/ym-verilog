@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/pt/PtMisc.h"
 #include "ym/FileRegion.h"
 #include "parser/PtiArray.h"
@@ -40,7 +39,6 @@ public:
   /// @brief 遅延式の取得
   /// @retval 遅延を表す式 delay control の場合
   /// @retval nullptr 上記以外
-  /// @note デフォルトでは nullptr を返す．
   const PtExpr*
   delay() const override;
 
@@ -51,16 +49,16 @@ public:
   event_num() const override;
 
   /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
   ///
   /// event control/repeat control の場合のみ意味を持つ
   const PtExpr*
-  event(SizeType pos) const override;
+  event(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < event_num() )
+  ) const override;
 
   /// @brief 繰り返し数の取得
   /// @retval 繰り返し数を表す式 repeat control の場合
   /// @retval nullptr 上記以外
-  /// @note デフォルトでは nullptr を返す．
   const PtExpr*
   rep_expr() const override;
 
@@ -73,13 +71,13 @@ public:
 class CptDelayControl :
   public CptControl
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptDelayControl(const FileRegion& file_region,
-		  const PtExpr* value);
+  CptDelayControl(
+    const FileRegion& file_region,
+    const PtExpr* value
+  );
 
   /// @brief デストラクタ
   ~CptDelayControl();
@@ -95,7 +93,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは PtCtrlType::Delay を返す．
   PtCtrlType
   type() const override;
 
@@ -124,13 +121,13 @@ private:
 class CptEventControl :
   public CptControl
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptEventControl(const FileRegion& file_region,
-		  PtiExprArray&& event_array);
+  CptEventControl(
+    const FileRegion& file_region,
+    PtiExprArray&& event_array
+  );
 
   /// @brief デストラクタ
   ~CptEventControl();
@@ -146,7 +143,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは PtCtrlType::Event を返す．
   PtCtrlType
   type() const override;
 
@@ -157,11 +153,12 @@ public:
   event_num() const override;
 
   /// @brief イベントリストの要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < event_num() )
   ///
   /// event control/repeat control の場合のみ意味を持つ
   const PtExpr*
-  event(SizeType pos) const override;
+  event(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < event_num() )
+  ) const override;
 
 
 private:
@@ -184,14 +181,14 @@ private:
 class CptRepeatControl :
   public CptEventControl
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptRepeatControl(const FileRegion& file_region,
-		   const PtExpr* expr,
-		   PtiExprArray&& event_array);
+  CptRepeatControl(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    PtiExprArray&& event_array
+  );
 
   /// @brief デストラクタ
   ~CptRepeatControl();
@@ -203,7 +200,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは PtCtrlType::Repeat を返す．
   PtCtrlType
   type() const override;
 
@@ -232,8 +228,10 @@ class CptConnection :
 protected:
 
   /// @brief コンストラクタ
-  CptConnection(const FileRegion& file_region,
-		const PtExpr* expr);
+  CptConnection(
+    const FileRegion& file_region,
+    const PtExpr* expr
+  );
 
   /// @brief デストラクタ
   ~CptConnection();
@@ -251,7 +249,6 @@ public:
   /// @brief 名前の取得
   /// @retval 名前 named connection の場合
   /// @retval "" ordered connection の場合
-  /// @note デフォルトでは nullptr を返す．
   const char*
   name() const override;
 
@@ -280,13 +277,13 @@ private:
 class CptOrderedCon :
   public CptConnection
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptOrderedCon(const FileRegion& file_region,
-		const PtExpr* expr);
+  CptOrderedCon(
+    const FileRegion& file_region,
+    const PtExpr* expr
+  );
 
   /// @brief デストラクタ
   ~CptOrderedCon();
@@ -300,14 +297,14 @@ protected:
 class CptNamedCon :
   public CptConnection
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptNamedCon(const FileRegion& file_region,
-	      const char* name,
-	      const PtExpr* expr);
+  CptNamedCon(
+    const FileRegion& file_region,
+    const char* name,
+    const PtExpr* expr
+  );
 
   /// @brief デストラクタ
   ~CptNamedCon();
@@ -340,18 +337,20 @@ private:
 class CptStrength :
   public PtStrength
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief drive strength を表すコンストラクタ
-  CptStrength(const FileRegion& file_region,
-	      VpiStrength value1,
-	      VpiStrength value2);
+  CptStrength(
+    const FileRegion& file_region,
+    VpiStrength value1,
+    VpiStrength value2
+  );
 
   /// @brief charge strength を表すコンストラクタ
-  CptStrength(const FileRegion& file_region,
-	      VpiStrength value1);
+  CptStrength(
+    const FileRegion& file_region,
+    VpiStrength value1
+  );
 
   /// @brief デストラクタ
   ~CptStrength();
@@ -399,24 +398,28 @@ private:
 class CptDelay :
   public PtDelay
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief 一つの値をとるコンストラクタ
-  CptDelay(const FileRegion& file_region,
-	   const PtExpr* value1);
+  CptDelay(
+    const FileRegion& file_region,
+    const PtExpr* value1
+  );
 
   /// @brief 二つの値をとるコンストラクタ
-  CptDelay(const FileRegion& file_region,
-	   const PtExpr* value1,
-	   const PtExpr* value2);
+  CptDelay(
+    const FileRegion& file_region,
+    const PtExpr* value1,
+    const PtExpr* value2
+  );
 
   /// @brief 三つの値をとるコンストラクタ
-  CptDelay(const FileRegion& file_region,
-	   const PtExpr* value1,
-	   const PtExpr* value2,
-	   const PtExpr* value3);
+  CptDelay(
+    const FileRegion& file_region,
+    const PtExpr* value1,
+    const PtExpr* value2,
+    const PtExpr* value3
+  );
 
   /// @brief デストラクタ
   ~CptDelay();
@@ -433,7 +436,9 @@ public:
 
   /// @brief 値を取り出す．
   const PtExpr*
-  value(SizeType pos) const override;
+  value(
+    SizeType pos
+  ) const override;
 
 
 private:
@@ -459,7 +464,9 @@ class CptNameBranch :
 public:
 
   /// @brief コンストラクタ
-  CptNameBranch(const char* name);
+  CptNameBranch(
+    const char* name
+  );
 
   /// @brief デストラクタ
   ~CptNameBranch();
@@ -477,13 +484,11 @@ public:
   /// @brief インデックスの有無のチェック
   /// @retval true インデックスを持っている時
   /// @retval false インデックスを持っていない時
-  /// @note デフォルトで false を返す．
   bool
   has_index() const override;
 
   /// @brief インデックスの取得
   /// @return インデックスの値
-  /// @note デフォルトで 0 を返す．
   int
   index() const override;
 
@@ -508,8 +513,10 @@ class CptNameBranchI :
 public:
 
   /// @brief コンストラクタ
-  CptNameBranchI(const char* name,
-		 int index);
+  CptNameBranchI(
+    const char* name,
+    int index
+  );
 
   /// @brief デストラクタ
   ~CptNameBranchI();
@@ -546,12 +553,12 @@ private:
 class CptAttrInst :
   public PtAttrInst
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptAttrInst(PtiAttrSpecArray&& as_array);
+  CptAttrInst(
+    PtiAttrSpecArray&& as_array
+  );
 
   /// @brief デストラクタ
   ~CptAttrInst();
@@ -571,9 +578,10 @@ public:
   attrspec_num() const override;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < attrspec_num() )
   const PtAttrSpec*
-  attrspec(SizeType pos) const override;
+  attrspec(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < attrspec_num() )
+  ) const override;
 
 
 private:
@@ -593,14 +601,14 @@ private:
 class CptAttrSpec :
   public PtAttrSpec
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptAttrSpec(const FileRegion& file_region,
-	      const char* name,
-	      const PtExpr* expr);
+  CptAttrSpec(
+    const FileRegion& file_region,
+    const char* name,
+    const PtExpr* expr
+  );
 
   /// @brief デストラクタ
   ~CptAttrSpec();

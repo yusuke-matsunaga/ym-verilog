@@ -6,7 +6,6 @@
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbStubList.h"
 #include "ElbStub.h"
 
@@ -21,7 +20,9 @@ ElbStubList::~ElbStubList()
 
 // @brief 末尾に要素を追加する．
 void
-ElbStubList::push_back(ElbStub* elem)
+ElbStubList::push_back(
+  ElbStub* elem
+)
 {
   mList.push_back(elem);
 }

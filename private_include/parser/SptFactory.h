@@ -1044,7 +1044,7 @@ public:
   const PtExpr*
   new_IntConst(
     const FileRegion& file_region,
-    unsigned int value
+    ymuint32 value
   ) override;
 
   /// @brief 整数型の定数の生成
@@ -1066,7 +1066,7 @@ public:
   const PtExpr*
   new_IntConst(
     const FileRegion& file_region,
-    int size,
+    SizeType size,
     VpiConstType const_type,
     const char* value
   ) override;

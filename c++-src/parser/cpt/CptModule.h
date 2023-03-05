@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/pt/PtModule.h"
 #include "ym/pt/PtP.h"
 #include "ym/FileRegion.h"
@@ -25,33 +24,33 @@ BEGIN_NAMESPACE_YM_VERILOG
 class CptModule :
   public PtModule
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptModule(const FileRegion& file_region,
-	    const char* name,
-	    bool macro,
-	    bool is_cell,
-	    bool is_protected,
-	    int time_unit,
-	    int time_precision,
-	    VpiNetType net_type,
-	    VpiUnconnDrive unconn,
-	    VpiDefDelayMode delay,
-	    int decay,
-	    bool explicit_name,
-	    bool portfaults,
-	    bool suppress_faults,
-	    const string& config,
-	    const string& library,
-	    const string& cell,
-	    PtiDeclHeadArray&& paramport_array,
-	    PtiPortArray&& port_array,
-	    PtiIOHeadArray&& iohead_array,
-	    PtiDeclHeadArray&& declhead_array,
-	    PtiItemArray&& item_array);
+  CptModule(
+    const FileRegion& file_region,
+    const char* name,
+    bool macro,
+    bool is_cell,
+    bool is_protected,
+    int time_unit,
+    int time_precision,
+    VpiNetType net_type,
+    VpiUnconnDrive unconn,
+    VpiDefDelayMode delay,
+    int decay,
+    bool explicit_name,
+    bool portfaults,
+    bool suppress_faults,
+    const string& config,
+    const string& library,
+    const string& cell,
+    PtiDeclHeadArray&& paramport_array,
+    PtiPortArray&& port_array,
+    PtiIOHeadArray&& iohead_array,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptModule();
@@ -131,30 +130,32 @@ public:
   paramport_num() const override;
 
   /// @brief パラメータポート宣言の取得
-  /// @param[in] pos 位置 ( 0 <= pos < paramport_num() )
   const PtDeclHead*
-  paramport(SizeType pos) const override;
+  paramport(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < paramport_num() )
+  ) const override;
 
   /// @brief ポート数を取り出す．
   SizeType
   port_num() const override;
 
   /// @brief ポートを取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   const PtPort*
-  port(SizeType pos) const override;
+  port(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
+  ) const override;
 
   /// @brief 入出力宣言ヘッダ配列の要素数の取得
   SizeType
   iohead_num() const override;
 
   /// @brief 入出力宣言の取得
-  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
   const PtIOHead*
-  iohead(SizeType pos) const override;
+  iohead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < iohead_num() )
+  ) const override;
 
   /// @brief 入出力宣言の要素数の取得
-  /// @note 個々のヘッダが持つ要素数の総和を計算する．
   SizeType
   iodecl_num() const override;
 
@@ -163,18 +164,20 @@ public:
   declhead_num() const override;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  declhead(SizeType pos) const override;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief item 配列の要素数の取得
   SizeType
   item_num() const override;
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
   /// @brief top_module フラグを下ろす．
   void
@@ -264,13 +267,13 @@ private:
 class CptPort :
   public PtiPort
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptPort(const FileRegion& file_region,
-	  const char* ext_name);
+  CptPort(
+    const FileRegion& file_region,
+    const char* ext_name
+  );
 
   /// @brief デストラクタ
   ~CptPort();
@@ -301,14 +304,16 @@ public:
   portref_size() const override;
 
   /// @brief 内部のポート結線リストの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   const PtExpr*
-  portref_elem(int pos) const override;
+  portref_elem(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const override;
 
   /// @brief 内部ポート結線の方向の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   VpiDir
-  portref_dir(int pos) const override;
+  portref_dir(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const override;
 
 
 public:
@@ -317,11 +322,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief portref の方向を設定する．
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  /// @param[in] dir 方向
   void
-  _set_portref_dir(int pos,
-		   VpiDir dir) override;
+  _set_portref_dir(
+    int pos,   ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+    VpiDir dir ///< [in] 方向
+  ) override;
 
 
 private:
@@ -344,14 +349,14 @@ private:
 class CptPort1 :
   public CptPort
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptPort1(const FileRegion& file_region,
-	   const PtExpr* portref,
-	   const char* ext_name);
+  CptPort1(
+    const FileRegion& file_region,
+    const PtExpr* portref,
+    const char* ext_name
+  );
 
   /// @brief デストラクタ
   ~CptPort1();
@@ -371,14 +376,16 @@ public:
   portref_size() const override;
 
   /// @brief 内部のポート結線リストの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   const PtExpr*
-  portref_elem(int pos) const override;
+  portref_elem(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const override;
 
   ///@brief 内部ポート結線の方向の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   VpiDir
-  portref_dir(int pos) const override;
+  portref_dir(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const override;
 
 
 public:
@@ -387,11 +394,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief portref の方向を設定する．
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  /// @param[in] dir 方向
   void
-  _set_portref_dir(int pos,
-		   VpiDir dir) override;
+  _set_portref_dir(
+    int pos,   ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+    VpiDir dir ///< [in] 方向
+  ) override;
 
 
 private:
@@ -414,16 +421,16 @@ private:
 class CptPort2 :
   public CptPort1
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptPort2(const FileRegion& file_region,
-	   const PtExpr* portref,
-	   PtiExprArray&& portref_array,
-	   const char* ext_name,
-	   void* q);
+  CptPort2(
+    const FileRegion& file_region,
+    const PtExpr* portref,
+    PtiExprArray&& portref_array,
+    const char* ext_name,
+    void* q
+  );
 
   /// @brief デストラクタ
   ~CptPort2();
@@ -439,14 +446,16 @@ public:
   portref_size() const override;
 
   /// @brief 内部のポート結線リストの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   const PtExpr*
-  portref_elem(int pos) const override;
+  portref_elem(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const override;
 
   ///@brief 内部ポート結線の方向の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
   VpiDir
-  portref_dir(int pos) const override;
+  portref_dir(
+    int pos ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+  ) const override;
 
 
 public:
@@ -455,11 +464,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief portref の方向を設定する．
-  /// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-  /// @param[in] dir 方向
   void
-  _set_portref_dir(int pos,
-		   VpiDir dir) override;
+  _set_portref_dir(
+    int pos,   ///< [in] 位置番号 ( 0 <= pos < portref_num() )
+    VpiDir dir ///< [in] 方向
+  ) override;
 
 
 private:

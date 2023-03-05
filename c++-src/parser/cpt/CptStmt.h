@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/pt/PtStmt.h"
 #include "ym/FileRegion.h"
 #include "parser/PtiArray.h"
@@ -26,7 +25,9 @@ class CptStmt :
 public:
 
   /// @brief コンストラクタ
-  CptStmt(const FileRegion& file_region);
+  CptStmt(
+    const FileRegion& file_region
+  );
 
   /// @brief デストラクタ
   ~CptStmt();
@@ -47,14 +48,13 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
   /// @brief 名前の取得
   /// @return 名前
-  /// @note kDisable/kEnable/kSysEnable/kParBlock/kSeqBlock で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const char*
   name() const override;
 
@@ -68,56 +68,43 @@ public:
   arg_num() const override;
 
   /// @brief 引数の取得
-  /// @param[in] pos 位置 ( 0 <= pos < arg_num() )
   const PtExpr*
-  arg(SizeType pos) const override;
+  arg(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < arg_num() )
+  ) const override;
 
   /// @brief コントロールの取得
   /// @return ディレイ/イベントコントロール
-  /// @note kDc/kEc で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtControl*
   control() const override;
 
   /// @brief 本体のステートメントの取得
   /// @return 本体のステートメント
-  /// @note kDc/kEc/kWait/kForever/kRepeat/kWhile/kFor/kIf で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtStmt*
   body() const override;
 
   /// @brief 式の取得
   /// @return 式
-  /// @note kWait/kRepeat/kWhile/kFor/kIf/kCase/kCaseX/kCaseZ で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   expr() const override;
 
   /// @brief 左辺式の取得
   /// @return 左辺式
-  /// @note kAssign/kForce/kPcAssign/kRelease/kDeassign で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   lhs() const override;
 
   /// @brief 右辺式の取得
   /// @return 右辺式
-  /// @note kAssign/kForce/kPcAssign で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   rhs() const override;
 
   /// @brief イベントプライマリの取得
   /// @return イベントプライマリ
-  /// @note kEvent で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   primary() const override;
 
   /// @brief 条件が成り立たなかったとき実行されるステートメントの取得
   /// @return 条件が成り立たなかったとき実行されるステートメント
-  /// @note kIf で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtStmt*
   else_body() const override;
 
@@ -126,45 +113,40 @@ public:
   caseitem_num() const override;
 
   /// @brief case item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
   const PtCaseItem*
-  caseitem(SizeType pos) const override;
+  caseitem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < caseitem_num() )
+  ) const override;
 
   /// @brief 初期化代入文の取得
   /// @return 初期化代入文
-  /// @note kFor で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtStmt*
   init_stmt() const override;
 
   /// @brief 繰り返し代入文の取得
   /// @return 繰り返し代入文
-  /// @note kFor で意味のある関数
-  /// @note このクラスでは nullptr を返す．
   const PtStmt*
   next_stmt() const override;
 
   /// @brief 宣言ヘッダ配列の要素数の取得
-  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   SizeType
   declhead_num() const override;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
-  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   const PtDeclHead*
-  declhead(SizeType pos) const override;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief 子供のステートメント配列の要素数の取得
-  /// @note kParBlock/kSeqBlock で意味のある関数
   SizeType
   stmt_num() const override;
 
   /// @brief 子供のステートメントの取得
-  /// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
-  /// @note kParBlock/kSeqBlock で意味のある関数
   const PtStmt*
-  stmt(SizeType pos) const override;
+  stmt(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < stmt_num() )
+  ) const override;
 
 
 private:
@@ -184,13 +166,13 @@ private:
 class CptDisable :
   public CptStmt
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptDisable(const FileRegion& file_region,
-	     const char* name);
+  CptDisable(
+    const FileRegion& file_region,
+    const char* name
+  );
 
   /// @brief デストラクタ
   ~CptDisable();
@@ -202,7 +184,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Disable を返す．
   PtStmtType
   type() const override;
 
@@ -234,14 +215,14 @@ private:
 class CptDisableH :
   public CptDisable
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptDisableH(const FileRegion& file_region,
-	      PtiNameBranchArray&& nb_array,
-	      const char* tail_name);
+  CptDisableH(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name
+  );
 
   /// @brief デストラクタ
   ~CptDisableH();
@@ -257,9 +238,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -282,9 +264,11 @@ class CptEnableBase :
 protected:
 
   /// @brief コンストラクタ
-  CptEnableBase(const FileRegion& file_region,
-		const char* name,
-		PtiExprArray&& arg_array);
+  CptEnableBase(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& arg_array
+  );
 
   /// @brief デストラクタ
   ~CptEnableBase();
@@ -304,9 +288,10 @@ public:
   arg_num() const override;
 
   /// @brief 引数の取得
-  /// @param[in] pos 位置 ( 0 <= pos < arg_num() )
   const PtExpr*
-  arg(SizeType pos) const override;
+  arg(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < arg_num() )
+  ) const override;
 
 
 private:
@@ -329,14 +314,14 @@ private:
 class CptEnable :
   public CptEnableBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptEnable(const FileRegion& file_region,
-	    const char* name,
-	    PtiExprArray&& arg_array);
+  CptEnable(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& arg_array
+  );
 
   /// @brief デストラクタ
   ~CptEnable();
@@ -348,7 +333,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Enable を返す．
   PtStmtType
   type() const override;
 
@@ -361,15 +345,15 @@ public:
 class CptEnableH :
   public CptEnable
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptEnableH(const FileRegion& file_region,
-	     PtiNameBranchArray&& nb_array,
-	     const char* tail_name,
-	     PtiExprArray&& arg_array);
+  CptEnableH(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name,
+    PtiExprArray&& arg_array
+  );
 
   /// @brief デストラクタ
   ~CptEnableH();
@@ -385,9 +369,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -407,14 +392,14 @@ private:
 class CptSysEnable :
   public CptEnableBase
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptSysEnable(const FileRegion& file_region,
-	       const char* task_name,
-	       PtiExprArray&& arg_array);
+  CptSysEnable(
+    const FileRegion& file_region,
+    const char* task_name,
+    PtiExprArray&& arg_array
+  );
 
   /// @brief デストラクタ
   ~CptSysEnable();
@@ -426,7 +411,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::SysEnable を返す．
   PtStmtType
   type() const override;
 
@@ -442,9 +426,11 @@ class CptCtrlStmt :
 protected:
 
   /// @brief コンストラクタ
-  CptCtrlStmt(const FileRegion& file_region,
-	      const PtControl* delay,
-	      const PtStmt* body);
+  CptCtrlStmt(
+    const FileRegion& file_region,
+    const PtControl* delay,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptCtrlStmt();
@@ -484,14 +470,14 @@ private:
 class CptDcStmt :
   public CptCtrlStmt
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptDcStmt(const FileRegion& file_region,
-	    const PtControl* delay,
-	    const PtStmt* body);
+  CptDcStmt(
+    const FileRegion& file_region,
+    const PtControl* delay,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptDcStmt();
@@ -503,7 +489,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::DelayControl を返す．
   PtStmtType
   type() const override;
 
@@ -516,14 +501,14 @@ public:
 class CptEcStmt :
   public CptCtrlStmt
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptEcStmt(const FileRegion& file_region,
-	    const PtControl* event,
-	    const PtStmt* body);
+  CptEcStmt(
+    const FileRegion& file_region,
+    const PtControl* event,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptEcStmt();
@@ -535,7 +520,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::EventControl を返す．
   PtStmtType
   type() const override;
 
@@ -548,14 +532,14 @@ public:
 class CptWait :
   public CptStmt
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptWait(const FileRegion& file_region,
-	  const PtExpr* expr,
-	  const PtStmt* body);
+  CptWait(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptWait() override;
@@ -567,7 +551,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Wait を返す．
   PtStmtType
   type() const override;
 
@@ -603,8 +586,10 @@ class CptAssignBase :
 protected:
 
   /// @brief コンストラクタ
-  CptAssignBase(const FileRegion& file_region,
-		const PtExpr* lhs);
+  CptAssignBase(
+    const FileRegion& file_region,
+    const PtExpr* lhs
+  );
 
   /// @brief デストラクタ
   ~CptAssignBase();
@@ -637,14 +622,14 @@ private:
 class CptAssign :
   public CptAssignBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptAssign(const FileRegion& file_region,
-	    const PtExpr* lhs,
-	    const PtExpr* rhs);
+  CptAssign(
+    const FileRegion& file_region,
+    const PtExpr* lhs,
+    const PtExpr* rhs
+  );
 
   /// @brief デストラクタ
   ~CptAssign();
@@ -656,7 +641,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Assign を返す．
   PtStmtType
   type() const override;
 
@@ -682,15 +666,15 @@ private:
 class CptAssignC :
   public CptAssign
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptAssignC(const FileRegion& file_region,
-	     const PtExpr* lhs,
-	     const PtExpr* rhs,
-	     const PtControl* control);
+  CptAssignC(
+    const FileRegion& file_region,
+    const PtExpr* lhs,
+    const PtExpr* rhs,
+    const PtControl* control
+  );
 
   /// @brief デストラクタ
   ~CptAssignC();
@@ -723,14 +707,14 @@ private:
 class CptNbAssign :
   public CptAssign
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptNbAssign(const FileRegion& file_region,
-	      const PtExpr* lhs,
-	      const PtExpr* rhs);
+  CptNbAssign(
+    const FileRegion& file_region,
+    const PtExpr* lhs,
+    const PtExpr* rhs
+  );
 
   /// @brief デストラクタ
   ~CptNbAssign();
@@ -742,7 +726,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::NbAssign を返す．
   PtStmtType
   type() const override;
 
@@ -755,15 +738,15 @@ public:
 class CptNbAssignC :
   public CptAssignC
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptNbAssignC(const FileRegion& file_region,
-	       const PtExpr* lhs,
-	       const PtExpr* rhs,
-	       const PtControl* control);
+  CptNbAssignC(
+    const FileRegion& file_region,
+    const PtExpr* lhs,
+    const PtExpr* rhs,
+    const PtControl* control
+  );
 
   /// @brief デストラクタ
   ~CptNbAssignC();
@@ -775,7 +758,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::NbAssign を返す．
   PtStmtType
   type() const override;
 
@@ -788,14 +770,14 @@ public:
 class CptPcAssign :
   public CptAssignBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptPcAssign(const FileRegion& file_region,
-	      const PtExpr* lhs,
-	      const PtExpr* rhs);
+  CptPcAssign(
+    const FileRegion& file_region,
+    const PtExpr* lhs,
+    const PtExpr* rhs
+  );
 
   /// @brief デストラクタ
   ~CptPcAssign();
@@ -807,7 +789,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは kPtPcaAssignStmt を返す．
   PtStmtType
   type() const override;
 
@@ -833,13 +814,13 @@ private:
 class CptDeassign :
   public CptAssignBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptDeassign(const FileRegion& file_region,
-	      const PtExpr* lhs);
+  CptDeassign(
+    const FileRegion& file_region,
+    const PtExpr* lhs
+  );
 
   /// @brief デストラクタ
   ~CptDeassign();
@@ -851,7 +832,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Deassign を返す．
   PtStmtType
   type() const override;
 
@@ -864,14 +844,14 @@ public:
 class CptForce :
   public CptPcAssign
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptForce(const FileRegion& file_region,
-	   const PtExpr* lhs,
-	   const PtExpr* rhs);
+  CptForce(
+    const FileRegion& file_region,
+    const PtExpr* lhs,
+    const PtExpr* rhs
+  );
 
   /// @brief デストラクタ
   ~CptForce();
@@ -883,7 +863,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Force を返す．
   PtStmtType
   type() const override;
 
@@ -896,13 +875,13 @@ public:
 class CptRelease :
   public CptDeassign
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptRelease(const FileRegion& file_region,
-	     const PtExpr* lhs);
+  CptRelease(
+    const FileRegion& file_region,
+    const PtExpr* lhs
+  );
 
   /// @brief デストラクタ
   ~CptRelease();
@@ -914,7 +893,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Release を返す．
   PtStmtType
   type() const override;
 
@@ -927,13 +905,13 @@ public:
 class CptEventStmt :
   public CptStmt
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptEventStmt(const FileRegion& file_region,
-	       const PtExpr* event);
+  CptEventStmt(
+    const FileRegion& file_region,
+    const PtExpr* event
+  );
 
   /// @brief デストラクタ
   ~CptEventStmt();
@@ -945,7 +923,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Event を返す．
   PtStmtType
   type() const override;
 
@@ -971,12 +948,12 @@ private:
 class CptNullStmt :
   public CptStmt
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptNullStmt(const FileRegion& file_region);
+  CptNullStmt(
+    const FileRegion& file_region
+  );
 
   /// @brief デストラクタ
   ~CptNullStmt();
@@ -988,7 +965,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Null を返す．
   PtStmtType
   type() const override;
 
@@ -1001,14 +977,14 @@ public:
 class CptIf :
   public CptStmt
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptIf(const FileRegion& file_region,
-	const PtExpr* expr,
-	const PtStmt* then_body);
+  CptIf(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    const PtStmt* then_body
+  );
 
   /// @brief デストラクタ
   ~CptIf();
@@ -1020,7 +996,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::If を返す．
   PtStmtType
   type() const override;
 
@@ -1053,15 +1028,15 @@ private:
 class CptIfElse :
   public CptIf
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptIfElse(const FileRegion& file_region,
-	    const PtExpr* expr,
-	    const PtStmt* then_body,
-	    const PtStmt* else_body);
+  CptIfElse(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    const PtStmt* then_body,
+    const PtStmt* else_body
+  );
 
   /// @brief デストラクタ
   ~CptIfElse();
@@ -1094,14 +1069,14 @@ private:
 class CptCaseItem :
   public PtCaseItem
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptCaseItem(const FileRegion& file_region,
-	      PtiExprArray&& label_array,
-	      const PtStmt* body);
+  CptCaseItem(
+    const FileRegion& file_region,
+    PtiExprArray&& label_array,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptCaseItem();
@@ -1121,9 +1096,10 @@ public:
   label_num() const override;
 
   /// @brief ラベルの取得
-  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
   const PtExpr*
-  label(SizeType pos) const override;
+  label(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < label_num() )
+  ) const override;
 
   /// @brief 本体のステートメント得る．
   const PtStmt*
@@ -1153,14 +1129,14 @@ private:
 class CptCase :
   public CptStmt
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptCase(const FileRegion& file_region,
-	  const PtExpr* expr,
-	  PtiCaseItemArray&& caseitem_array);
+  CptCase(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    PtiCaseItemArray&& caseitem_array
+  );
 
   /// @brief デストラクタ
   ~CptCase();
@@ -1172,7 +1148,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Case を返す．
   PtStmtType
   type() const override;
 
@@ -1185,9 +1160,10 @@ public:
   caseitem_num() const override;
 
   /// @brief case item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
   const PtCaseItem*
-  caseitem(SizeType pos) const override;
+  caseitem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < caseitem_num() )
+  ) const override;
 
 
 private:
@@ -1210,14 +1186,14 @@ private:
 class CptCaseX :
   public CptCase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptCaseX(const FileRegion& file_region,
-	   const PtExpr* expr,
-	   PtiCaseItemArray&& caseitem_array);
+  CptCaseX(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    PtiCaseItemArray&& caseitem_array
+  );
 
   /// @brief デストラクタ
   ~CptCaseX();
@@ -1229,7 +1205,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note ここでは PtStmtType::CaseX を返す．
   PtStmtType
   type() const override;
 
@@ -1242,14 +1217,14 @@ public:
 class CptCaseZ :
   public CptCase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptCaseZ(const FileRegion& file_region,
-	   const PtExpr* expr,
-	   PtiCaseItemArray&& caseitem_array);
+  CptCaseZ(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    PtiCaseItemArray&& caseitem_array
+  );
 
   /// @brief デストラクタ
   ~CptCaseZ();
@@ -1261,7 +1236,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note ここでは PtStmtType::CaseZ を返す．
   PtStmtType
   type() const override;
 
@@ -1277,8 +1251,10 @@ class CptLoopStmt :
 protected:
 
   /// @brief コンストラクタ
-  CptLoopStmt(const FileRegion& file_region,
-	      const PtStmt* body);
+  CptLoopStmt(
+    const FileRegion& file_region,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptLoopStmt();
@@ -1311,13 +1287,13 @@ private:
 class CptForever :
   public CptLoopStmt
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptForever(const FileRegion& file_region,
-	     const PtStmt* body);
+  CptForever(
+    const FileRegion& file_region,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptForever();
@@ -1329,7 +1305,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Forever を返す．
   PtStmtType
   type() const override;
 
@@ -1342,14 +1317,14 @@ public:
 class CptRepeat :
   public CptLoopStmt
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptRepeat(const FileRegion& file_region,
-	    const PtExpr* expr,
-	    const PtStmt* body);
+  CptRepeat(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptRepeat();
@@ -1361,7 +1336,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::Repeat を返す．
   PtStmtType
   type() const override;
 
@@ -1387,14 +1361,14 @@ private:
 class CptWhile :
   public CptRepeat // ちょっと汚い継承
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptWhile(const FileRegion& file_region,
-	   const PtExpr* expr,
-	   const PtStmt* body);
+  CptWhile(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptWhile();
@@ -1406,7 +1380,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::White を返す．
   PtStmtType
   type() const override;
 
@@ -1419,16 +1392,16 @@ public:
 class CptFor :
   public CptRepeat
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptFor(const FileRegion& file_region,
-	 const PtStmt* init,
-	 const PtExpr* cond,
-	 const PtStmt* next,
-	 const PtStmt* body);
+  CptFor(
+    const FileRegion& file_region,
+    const PtStmt* init,
+    const PtExpr* cond,
+    const PtStmt* next,
+    const PtStmt* body
+  );
 
   /// @brief デストラクタ
   ~CptFor();
@@ -1440,7 +1413,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::For を返す．
   PtStmtType
   type() const override;
 
@@ -1476,8 +1448,10 @@ class CptStmtBlock :
 protected:
 
   /// @brief コンストラクタ
-  CptStmtBlock(const FileRegion& file_region,
-	       PtiStmtArray&& stmt_array);
+  CptStmtBlock(
+    const FileRegion& file_region,
+    PtiStmtArray&& stmt_array
+  );
 
   /// @brief デストラクタ
   ~CptStmtBlock();
@@ -1489,15 +1463,14 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 子供のステートメント配列の要素数の取得
-  /// @note kParBlock/kSeqBlock で意味のある関数
   SizeType
   stmt_num() const override;
 
   /// @brief 子供のステートメントの取得
-  /// @param[in] pos 位置 ( 0 <= pos < stmt_num() )
-  /// @note kParBlock/kSeqBlock で意味のある関数
   const PtStmt*
-  stmt(SizeType pos) const override;
+  stmt(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < stmt_num() )
+  ) const override;
 
 
 private:
@@ -1517,15 +1490,15 @@ private:
 class CptStmtBlockN :
   public CptStmtBlock
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptStmtBlockN(const FileRegion& file_region,
-		const char* name,
-		PtiDeclHeadArray&& declhead_array,
-		PtiStmtArray&& stmt_array);
+  CptStmtBlockN(
+    const FileRegion& file_region,
+    const char* name,
+    PtiDeclHeadArray&& declhead_array,
+    PtiStmtArray&& stmt_array
+  );
 
   /// @brief デストラクタ
   ~CptStmtBlockN();
@@ -1541,15 +1514,14 @@ public:
   name() const override;
 
   /// @brief 宣言ヘッダ配列の要素数の取得
-  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   SizeType
   declhead_num() const override;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
-  /// @note kNamedParBlock/kNamedSeqBlock で意味のある関数
   const PtDeclHead*
-  declhead(SizeType pos) const override;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
 
 private:
@@ -1572,13 +1544,13 @@ private:
 class CptParBlock :
   public CptStmtBlock
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptParBlock(const FileRegion& file_region,
-	      PtiStmtArray&& stmt_array);
+  CptParBlock(
+    const FileRegion& file_region,
+    PtiStmtArray&& stmt_array
+  );
 
   /// @brief デストラクタ
   ~CptParBlock();
@@ -1590,7 +1562,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::ParBlock を返す．
   PtStmtType
   type() const override;
 
@@ -1603,15 +1574,15 @@ public:
 class CptParBlockN :
   public CptStmtBlockN
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptParBlockN(const FileRegion& file_region,
-	       const char* name,
-	       PtiDeclHeadArray&& declhead_array,
-	       PtiStmtArray&& stmt_array);
+  CptParBlockN(
+    const FileRegion& file_region,
+    const char* name,
+    PtiDeclHeadArray&& declhead_array,
+    PtiStmtArray&& stmt_array
+  );
 
   /// @brief デストラクタ
   ~CptParBlockN();
@@ -1623,7 +1594,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::NamedParBlock を返す．
   PtStmtType
   type() const override;
 
@@ -1636,13 +1606,13 @@ public:
 class CptSeqBlock :
   public CptStmtBlock
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptSeqBlock(const FileRegion& file_region,
-	      PtiStmtArray&& stmt_array);
+  CptSeqBlock(
+    const FileRegion& file_region,
+    PtiStmtArray&& stmt_array
+  );
 
   /// @brief デストラクタ
   ~CptSeqBlock();
@@ -1654,7 +1624,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::SeqBlock を返す．
   PtStmtType
   type() const override;
 
@@ -1667,15 +1636,15 @@ public:
 class CptSeqBlockN :
   public CptStmtBlockN
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptSeqBlockN(const FileRegion& file_region,
-	       const char* name,
-	       PtiDeclHeadArray&& declhead_array,
-	       PtiStmtArray&& stmt_array);
+  CptSeqBlockN(
+    const FileRegion& file_region,
+    const char* name,
+    PtiDeclHeadArray&& declhead_array,
+    PtiStmtArray&& stmt_array
+  );
 
   /// @brief デストラクタ
   ~CptSeqBlockN();
@@ -1687,7 +1656,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief クラスの型を返す仮想関数
-  /// @note このクラスは PtStmtType::NamedSeqBlock を返す．
   PtStmtType
   type() const override;
 

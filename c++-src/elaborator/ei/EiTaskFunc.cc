@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiTaskFunc.h"
 #include "ei/EiIODecl.h"
@@ -22,7 +21,6 @@
 #include "ym/pt/PtItem.h"
 
 
-
 BEGIN_NAMESPACE_YM_VERILOG
 
 //////////////////////////////////////////////////////////////////////
@@ -30,58 +28,51 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief function を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の定義
-// @param[in] left 範囲の MSB の式
-// @param[in] right 範囲の LSB の式
-// @param[in] left_val 範囲の MSB の値
-// @param[in] right_val 範囲の LSB の値
 ElbTaskFunc*
-EiFactory::new_Function(const VlScope* parent,
-			const PtItem* pt_item,
-			const PtExpr* left,
-			const PtExpr* right,
-			int left_val,
-			int right_val,
-			bool const_func)
+EiFactory::new_Function(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val,
+  bool const_func
+)
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  auto func{new EiFunctionV(parent, pt_item, io_num,
-			    left, right, left_val, right_val,
-			    const_func)};
-
+  auto func = new EiFunctionV{parent, pt_item, io_num,
+			      left, right, left_val, right_val,
+			      const_func};
   return func;
 }
 
 // @brief function を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の定義
 ElbTaskFunc*
-EiFactory::new_Function(const VlScope* parent,
-			const PtItem* pt_item,
-			bool const_func)
+EiFactory::new_Function(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  bool const_func
+)
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  auto func{new EiFunction(parent, pt_item, io_num, const_func)};
-
+  auto func = new EiFunction{parent, pt_item, io_num, const_func};
   return func;
 }
 
 // @brief task を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の定義
 ElbTaskFunc*
-EiFactory::new_Task(const VlScope* parent,
-		    const PtItem* pt_item)
+EiFactory::new_Task(
+  const VlScope* parent,
+  const PtItem* pt_item
+)
 {
   // IO数を数え配列を初期化する．
   SizeType io_num = pt_item->ioitem_num();
-  auto task{new EiTask(parent, pt_item, io_num)};
-
+  auto task = new EiTask{parent, pt_item, io_num};
   return task;
 }
 
@@ -91,15 +82,12 @@ EiFactory::new_Task(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item パース木の定義
-// @param[in] io_num IOの数
-// @param[in] io_array IO の配列
-EiTaskFunc::EiTaskFunc(const VlScope* parent,
-		       const PtItem* pt_item,
-		       SizeType io_num) :
-  mParent{parent},
-  mPtItem{pt_item}
+EiTaskFunc::EiTaskFunc(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  SizeType io_num
+) : mParent{parent},
+    mPtItem{pt_item}
 {
   mIODeclList.reserve(io_num);
 }
@@ -145,9 +133,10 @@ EiTaskFunc::io_num() const
 }
 
 // @brief 入出力を得る．
-// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
 const VlIODecl*
-EiTaskFunc::io(SizeType pos) const
+EiTaskFunc::io(
+  SizeType pos
+) const
 {
   return &mIODeclList[pos];
 }
@@ -160,20 +149,21 @@ EiTaskFunc::stmt() const
 }
 
 // @brief 入出力の初期設定を行う．
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木のIO宣言要素
-// @param[in] decl 対応する宣言要素
 void
-EiTaskFunc::add_iodecl(ElbIOHead* head,
-		       const PtIOItem* pt_item,
-		       const VlDecl* decl)
+EiTaskFunc::add_iodecl(
+  ElbIOHead* head,
+  const PtIOItem* pt_item,
+  const VlDecl* decl
+)
 {
   mIODeclList.push_back({head, pt_item, decl});
 }
 
 // @brief 本体のステートメントをセットする．
 void
-EiTaskFunc::set_stmt(const VlStmt* stmt)
+EiTaskFunc::set_stmt(
+  const VlStmt* stmt
+)
 {
   mStmt = stmt;
 }
@@ -184,13 +174,11 @@ EiTaskFunc::set_stmt(const VlStmt* stmt)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item パース木の定義
-// @param[in] io_num IOの数
-EiTask::EiTask(const VlScope* parent,
-	       const PtItem* pt_item,
-	       SizeType io_num) :
-  EiTaskFunc(parent, pt_item, io_num)
+EiTask::EiTask(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  SizeType io_num
+) : EiTaskFunc{parent, pt_item, io_num}
 {
 }
 
@@ -228,7 +216,6 @@ EiTask::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiTask::left_range_val() const
 {
@@ -236,7 +223,6 @@ EiTask::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiTask::right_range_val() const
 {
@@ -244,7 +230,6 @@ EiTask::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiTask::left_range_string() const
 {
@@ -252,7 +237,6 @@ EiTask::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiTask::right_range_string() const
 {
@@ -267,9 +251,10 @@ EiTask::bit_size() const
 }
 
 // @brief 出力変数をセットする．
-// @param[in] ovar 出力変数
 void
-EiTask::set_ovar(ElbDecl* ovar)
+EiTask::set_ovar(
+  ElbDecl* ovar
+)
 {
   ASSERT_NOT_REACHED;
 }
@@ -297,15 +282,13 @@ EiTask::ovar() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item パース木の定義
-// @param[in] io_num IOの数
-EiFunction::EiFunction(const VlScope* parent,
-		       const PtItem* pt_item,
-		       SizeType io_num,
-		       bool const_func) :
-  EiTaskFunc(parent, pt_item, io_num),
-  mConstFunc{const_func}
+EiFunction::EiFunction(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  SizeType io_num,
+  bool const_func
+) : EiTaskFunc{parent, pt_item, io_num},
+    mConstFunc{const_func}
 {
 }
 
@@ -363,7 +346,6 @@ EiFunction::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiFunction::left_range_val() const
 {
@@ -371,7 +353,6 @@ EiFunction::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiFunction::right_range_val() const
 {
@@ -379,7 +360,6 @@ EiFunction::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiFunction::left_range_string() const
 {
@@ -387,7 +367,6 @@ EiFunction::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiFunction::right_range_string() const
 {
@@ -420,10 +399,10 @@ EiFunction::bit_size() const
 }
 
 // @brief 出力変数をセットする．
-// @param[in] ovar 出力変数
-// @note 関数の場合のみ意味を持つ．
 void
-EiFunction::set_ovar(ElbDecl* ovar)
+EiFunction::set_ovar(
+  ElbDecl* ovar
+)
 {
   mOvar = ovar;
 }
@@ -450,24 +429,16 @@ EiFunction::ovar() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item パース木の定義
-// @param[in] io_num IOの数
-// @param[in] io_array IO の配列
-// @param[in] left 範囲の MSB の式
-// @param[in] right 範囲の LSB の式
-// @param[in] left_val 範囲の MSB の値
-// @param[in] right_val 範囲の LSB の値
-// @param[in] const_func 定数関数フラグ
-EiFunctionV::EiFunctionV(const VlScope* parent,
-			 const PtItem* pt_item,
-			 SizeType io_num,
-			 const PtExpr* left,
-			 const PtExpr* right,
-			 int left_val,
-			 int right_val,
-			 bool const_func) :
-  EiFunction(parent, pt_item, io_num, const_func)
+EiFunctionV::EiFunctionV(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  SizeType io_num,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val,
+  bool const_func
+) : EiFunction{parent, pt_item, io_num, const_func}
 {
   mRange.set(left, right, left_val, right_val);
 }
@@ -485,7 +456,6 @@ EiFunctionV::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiFunctionV::left_range_val() const
 {
@@ -493,7 +463,6 @@ EiFunctionV::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiFunctionV::right_range_val() const
 {
@@ -501,7 +470,6 @@ EiFunctionV::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiFunctionV::left_range_string() const
 {
@@ -509,7 +477,6 @@ EiFunctionV::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiFunctionV::right_range_string() const
 {

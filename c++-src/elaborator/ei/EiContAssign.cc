@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiContAssign.h"
 #include "elaborator/ElbExpr.h"
@@ -23,54 +22,46 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief continuous assignment のヘッダを生成する．
-// @param[in] module 親のモジュール
-// @param[in] pt_head パース木のヘッダ定義
-// @param[in] delay 遅延値
-// @note 遅延を持たないときは nullptr を与える．
 ElbCaHead*
-EiFactory::new_CaHead(const VlModule* module,
-		      const PtItem* pt_head,
-		      const VlDelay* delay)
+EiFactory::new_CaHead(
+  const VlModule* module,
+  const PtItem* pt_head,
+  const VlDelay* delay
+)
 {
   EiCaHead* head = nullptr;
   if ( delay ) {
-    head = new EiCaHeadD(module, pt_head, delay);
+    head = new EiCaHeadD{module, pt_head, delay};
   }
   else {
-    head = new EiCaHead(module, pt_head);
+    head = new EiCaHead{module, pt_head};
   }
   return head;
 }
 
 // @brief continuous assignment を生成する．
-// @param[in] head ヘッダ
-// @param[in] pt_obj 対応するパース木中の定義要素
-// @param[in] lhs 左辺式
-// @param[in] rhs 右辺式
 const VlContAssign*
-EiFactory::new_ContAssign(ElbCaHead* head,
-			  const PtBase* pt_obj,
-			  const VlExpr* lhs,
-			  const VlExpr* rhs)
+EiFactory::new_ContAssign(
+  ElbCaHead* head,
+  const PtBase* pt_obj,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+)
 {
-  auto cont_assign = new EiContAssign1(head, pt_obj, lhs, rhs);
-
+  auto cont_assign = new EiContAssign1{head, pt_obj, lhs, rhs};
   return cont_assign;
 }
 
 // @brief net 宣言中の continuous assignment を生成する．
-// @param[in] module 親のモジュール
-// @param[in] pt_obj パース木の定義要素
-// @param[in] lhs 左辺式
-// @param[in] rhs 右辺式
 const VlContAssign*
-EiFactory::new_ContAssign(const VlModule* module,
-			  const PtBase* pt_obj,
-			  const VlExpr* lhs,
-			  const VlExpr* rhs)
+EiFactory::new_ContAssign(
+  const VlModule* module,
+  const PtBase* pt_obj,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+)
 {
-  auto cont_assign = new EiContAssign2(module, pt_obj, lhs, rhs);
-
+  auto cont_assign = new EiContAssign2{module, pt_obj, lhs, rhs};
   return cont_assign;
 }
 
@@ -80,12 +71,11 @@ EiFactory::new_ContAssign(const VlModule* module,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] module 親のモジュール
-// @param[in] pt_obj パース木のヘッダ定義
-EiCaHead::EiCaHead(const VlModule* module,
-		   const PtItem* pt_head) :
-  mModule{module},
-  mPtHead{pt_head}
+EiCaHead::EiCaHead(
+  const VlModule* module,
+  const PtItem* pt_head
+) : mModule{module},
+    mPtHead{pt_head}
 {
 }
 
@@ -135,14 +125,12 @@ EiCaHead::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] module 親のモジュール
-// @param[in] pt_head パース木のヘッダ定義
-// @param[in] delay 遅延値
-EiCaHeadD::EiCaHeadD(const VlModule* module,
-		     const PtItem* pt_head,
-		     const VlDelay* delay) :
-  EiCaHead(module, pt_head),
-  mDelay{delay}
+EiCaHeadD::EiCaHeadD(
+  const VlModule* module,
+  const PtItem* pt_head,
+  const VlDelay* delay
+) : EiCaHead{module, pt_head},
+    mDelay{delay}
 {
 }
 
@@ -164,15 +152,13 @@ EiCaHeadD::delay() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_obj 対応するパース木中の定義要素
-// @param[in] lhs 左辺式
-// @param[in] rhs 右辺式
-EiContAssign::EiContAssign(const PtBase* pt_obj,
-			   const VlExpr* lhs,
-			   const VlExpr* rhs) :
-  mPtObj(pt_obj),
-  mLhs{lhs},
-  mRhs{rhs}
+EiContAssign::EiContAssign(
+  const PtBase* pt_obj,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+) : mPtObj{pt_obj},
+    mLhs{lhs},
+    mRhs{rhs}
 {
 }
 
@@ -222,16 +208,13 @@ EiContAssign::rhs() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_obj 対応するパース木中の定義要素
-// @param[in] lhs 左辺式
-// @param[in] rhs 右辺式
-EiContAssign1::EiContAssign1(ElbCaHead* head,
-			     const PtBase* pt_obj,
-			     const VlExpr* lhs,
-			     const VlExpr* rhs) :
-  EiContAssign(pt_obj, lhs, rhs),
-  mHead{head}
+EiContAssign1::EiContAssign1(
+  ElbCaHead* head,
+  const PtBase* pt_obj,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+) : EiContAssign{pt_obj, lhs, rhs},
+    mHead{head}
 {
 }
 
@@ -281,16 +264,13 @@ EiContAssign1::has_net_decl_assign() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] module 親のモジュール
-// @param[in] pt_obj パース木の定義要素
-// @param[in] lhs 左辺式
-// @param[in] rhs 右辺式
-EiContAssign2::EiContAssign2(const VlModule* module,
-			     const PtBase* pt_obj,
-			     const VlExpr* lhs,
-			     const VlExpr* rhs) :
-  EiContAssign(pt_obj, lhs, rhs),
-  mModule{module}
+EiContAssign2::EiContAssign2(
+  const VlModule* module,
+  const PtBase* pt_obj,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+) : EiContAssign{pt_obj, lhs, rhs},
+    mModule{module}
 {
 }
 
@@ -333,6 +313,5 @@ EiContAssign2::has_net_decl_assign() const
 {
   return true;
 }
-
 
 END_NAMESPACE_YM_VERILOG

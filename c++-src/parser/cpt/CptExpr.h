@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "parser/PtiExpr.h"
 #include "parser/PtiArray.h"
 #include "parser/PtiFwd.h"
@@ -33,9 +32,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
   // 末尾の名前を返す．
   const char*
@@ -43,7 +43,6 @@ public:
 
   /// @brief 演算子の種類の取得
   /// @return 演算子の種類
-  /// @note このクラスでは vpiNullOp を返す．
   VpiOpType
   op_type() const override;
 
@@ -65,15 +64,15 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
   /// @brief 定数インデックスのチェック
   /// @retval true インデックスもしくは範囲が定数にならなければならないとき
   /// @retval false 上記以外
-  /// @note このクラスでは false を返す．
   bool
   is_const_index() const override;
 
@@ -83,77 +82,68 @@ public:
   index_num() const override;
 
   /// @brief インデックスの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   const PtExpr*
-  index(SizeType pos) const override;
+  index(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < index_num() )
+  ) const override;
 
   /// @brief 範囲指定モードの取得
   /// @return 範囲指定モード
-  /// @note このクラスでは kVpiNoRange を返す．
   VpiRangeMode
   range_mode() const override;
 
   /// @brief 範囲の左側の式の取得
   /// @return 範囲の左側の式
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   left_range() const override;
 
   /// @brief 範囲の右側の式の取得
   /// @return 範囲の右側の式
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   right_range() const override;
 
   /// @brief 定数の種類の取得
   /// @return 定数の種類
-  /// @note このクラスでは kVpiIntConst を返す．
   VpiConstType
   const_type() const override;
 
   /// @brief 整数型の定数のサイズの取得
   /// @return サイズ\n
   /// サイズ指定の無い場合と整数型の定数でない場合には 0 を返す．
-  /// @note このクラスでは 0 を返す．
   SizeType
   const_size() const override;
 
   /// @brief 整数型の値の取得
   /// @return 値
-  /// @note このクラスでは 0 を返す．
-  unsigned int
-  const_uint() const override;
+  ymuint32
+  const_uint32() const override;
 
   /// @brief 整数型および文字列型の定数の文字列表現の取得
-  /// @return 値の文字列表現\n
+  /// @return 値の文字列表現
+  ///
   /// 整数型時のサイズと基数は含まない．
-  /// @note このクラスでは nullptr を返す．
   const char*
   const_str() const override;
 
   /// @brief 実数型の値の取得
   /// @return 値
-  /// @note このクラスでは 0.0 を返す．
   double
   const_real() const override;
 
   /// @brief インデックスとして使える式のチェック
   /// @retval true 階層名の添字として使える式
   /// @retval false 使えない式
-  /// @note このクラスでは false を返す．
   bool
   is_index_expr() const override;
 
   /// @brief インデックスの値の取得
   /// @return 階層名の添字として使える式の時にその値を返す．
-  /// @note このクラスでは const_uint() をキャストして返す．
   int
   index_value() const override;
 
   /// @brief simple primary のチェック
   /// @retval true index_list も range も持たないとき
   /// @retval false 上記以外
-  /// @note このクラスでは false を返す．
   bool
   is_simple() const override;
 
@@ -169,7 +159,9 @@ class CptOpr :
 protected:
 
   // コンストラクタ
-  CptOpr(VpiOpType op_type);
+  CptOpr(
+    VpiOpType op_type ///< [in] 演算子の型
+  );
 
   // デストラクタ
   ~CptOpr();
@@ -207,14 +199,14 @@ private:
 class CptOpr1 :
   public CptOpr
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptOpr1(const FileRegion& file_region,
-	  VpiOpType op_type,
-	  const PtExpr* opr);
+  CptOpr1(
+    const FileRegion& file_region,
+    VpiOpType op_type,
+    const PtExpr* opr
+  );
 
   // デストラクタ
   ~CptOpr1();
@@ -255,10 +247,11 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
 
 private:
@@ -281,14 +274,14 @@ private:
 class CptOpr2 :
   public CptOpr
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptOpr2(VpiOpType op_type,
-	  const PtExpr* opr1,
-	  const PtExpr* opr2);
+  CptOpr2(
+    VpiOpType op_type,
+    const PtExpr* opr1,
+    const PtExpr* opr2
+  );
 
   // デストラクタ
   ~CptOpr2();
@@ -321,10 +314,11 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
 
 private:
@@ -344,15 +338,15 @@ private:
 class CptOpr3 :
   public CptOpr
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptOpr3(VpiOpType op_type,
-	  const PtExpr* opr1,
-	  const PtExpr* opr2,
-	  const PtExpr* opr3);
+  CptOpr3(
+    VpiOpType op_type,
+    const PtExpr* opr1,
+    const PtExpr* opr2,
+    const PtExpr* opr3
+  );
 
   // デストラクタ
   ~CptOpr3();
@@ -385,10 +379,11 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
 
 private:
@@ -408,13 +403,13 @@ private:
 class CptConcat :
   public CptExpr
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptConcat(const FileRegion& file_region,
-	    PtiExprArray&& expr_array);
+  CptConcat(
+    const FileRegion& file_region,
+    PtiExprArray&& expr_array
+  );
 
   // デストラクタ
   ~CptConcat();
@@ -455,10 +450,11 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
 
 private:
@@ -481,13 +477,13 @@ private:
 class CptMultiConcat :
   public CptConcat
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptMultiConcat(const FileRegion& file_region,
-		 PtiExprArray&& expr_array);
+  CptMultiConcat(
+    const FileRegion& file_region,
+    PtiExprArray&& expr_array
+  );
 
   // デストラクタ
   ~CptMultiConcat();
@@ -511,14 +507,14 @@ public:
 class CptMinTypMax :
   public CptExpr
 {
-  friend class CptFactory;
-
-private:
+public:
 
   // コンストラクタ
-  CptMinTypMax(const PtExpr* val0,
-	       const PtExpr* val1,
-	       const PtExpr* val2);
+  CptMinTypMax(
+    const PtExpr* val0,
+    const PtExpr* val1,
+    const PtExpr* val2
+  );
 
   // デストラクタ
   ~CptMinTypMax();
@@ -559,10 +555,11 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
 
 private:
@@ -582,14 +579,14 @@ private:
 class CptFuncCallBase :
   public CptExpr
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptFuncCallBase(const FileRegion& file_region,
-		  const char* name,
-		  PtiExprArray&& arg_array);
+  CptFuncCallBase(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& arg_array
+  );
 
   // デストラクタ
   ~CptFuncCallBase();
@@ -626,10 +623,11 @@ public:
   operand2() const override;
 
   /// @brief オペランドの取得
-  /// @param[in] pos 取り出すオペランンドの位置(最初の位置は 0)
   /// @return pos 番目のオペランド
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 取り出すオペランンドの位置(最初の位置は 0)
+  ) const override;
 
 
 private:
@@ -655,14 +653,14 @@ private:
 class CptFuncCall :
   public CptFuncCallBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptFuncCall(const FileRegion& file_region,
-	      const char* name,
-	      PtiExprArray&& arg_array);
+  CptFuncCall(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& arg_array
+  );
 
   // デストラクタ
   ~CptFuncCall();
@@ -687,15 +685,15 @@ public:
 class CptFuncCallH :
   public CptFuncCall
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptFuncCallH(const FileRegion& file_region,
-	       PtiNameBranchArray&& nb_array,
-	       const char* tail_name,
-	       PtiExprArray&& arg_array);
+  CptFuncCallH(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name,
+    PtiExprArray&& arg_array
+  );
 
   // デストラクタ
   ~CptFuncCallH();
@@ -711,9 +709,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -733,14 +732,14 @@ private:
 class CptSysFuncCall :
   public CptFuncCallBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptSysFuncCall(const FileRegion& file_region,
-		 const char* name,
-		 PtiExprArray&& arg_array);
+  CptSysFuncCall(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& arg_array
+  );
 
   // デストラクタ
   ~CptSysFuncCall();
@@ -752,7 +751,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // クラスの型を返す．
-  // このクラスの場合は kPtSysFunCallExpr を返す．
   PtExprType
   type() const override;
 
@@ -788,12 +786,12 @@ public:
 class CptPrimaryBase :
   public CptExpr
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryBase(const char* name);
+  CptPrimaryBase(
+    const char* name
+  );
 
   // デストラクタ
   ~CptPrimaryBase();
@@ -805,7 +803,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // クラスの型を返す．
-  // このクラスの場合は PtExprType::Primary を返す．
   PtExprType
   type() const override;
 
@@ -837,13 +834,13 @@ private:
 class CptPrimary :
   public CptPrimaryBase
 {
-  friend class CptFactory;
-
-private:
+public:
 
   // コンストラクタ
-  CptPrimary(const FileRegion& file_region,
-	     const char* name);
+  CptPrimary(
+    const FileRegion& file_region,
+    const char* name
+  );
 
   // デストラクタ
   ~CptPrimary();
@@ -886,14 +883,14 @@ private:
 class CptPrimaryI :
   public CptPrimaryBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryI(const FileRegion& file_region,
-	      const char* name,
-	      PtiExprArray&& index_array);
+  CptPrimaryI(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& index_array
+  );
 
   // デストラクタ
   ~CptPrimaryI();
@@ -914,9 +911,10 @@ public:
   index_num() const override;
 
   /// @brief インデックスの取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < index_num() )
   const PtExpr*
-  index(SizeType pos) const override;
+  index(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < index_num() )
+  ) const override;
 
   // index_list も range も持たないとき true を返す．
   bool
@@ -943,14 +941,14 @@ private:
 class CptPrimaryCI :
   public CptPrimaryI
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryCI(const FileRegion& file_region,
-	       const char* name,
-	       PtiExprArray&& index_array);
+  CptPrimaryCI(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& index_array
+  );
 
   // デストラクタ
   ~CptPrimaryCI();
@@ -974,16 +972,16 @@ public:
 class CptPrimaryR :
   public CptPrimaryBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryR(const FileRegion& file_region,
-	      const char* name,
-	      VpiRangeMode mode,
-	      const PtExpr* left,
-	      const PtExpr* right);
+  CptPrimaryR(
+    const FileRegion& file_region,
+    const char* name,
+    VpiRangeMode mode,
+    const PtExpr* left,
+    const PtExpr* right
+  );
 
   // デストラクタ
   ~CptPrimaryR();
@@ -1041,16 +1039,16 @@ private:
 class CptPrimaryCR :
   public CptPrimaryR
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryCR(const FileRegion& file_region,
-	       const char* name,
-	       VpiRangeMode mode,
-	       const PtExpr* left,
-	       const PtExpr* right);
+  CptPrimaryCR(
+    const FileRegion& file_region,
+    const char* name,
+    VpiRangeMode mode,
+    const PtExpr* left,
+    const PtExpr* right
+  );
 
   // デストラクタ
   ~CptPrimaryCR();
@@ -1074,17 +1072,17 @@ public:
 class CptPrimaryIR :
   public CptPrimaryI
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryIR(const FileRegion& file_region,
-	       const char* name,
-	       PtiExprArray&& index_array,
-	       VpiRangeMode mode,
-	       const PtExpr* left,
-	       const PtExpr* right);
+  CptPrimaryIR(
+    const FileRegion& file_region,
+    const char* name,
+    PtiExprArray&& index_array,
+    VpiRangeMode mode,
+    const PtExpr* left,
+    const PtExpr* right
+  );
 
   // デストラクタ
   ~CptPrimaryIR();
@@ -1131,14 +1129,14 @@ private:
 class CptPrimaryH :
   public CptPrimaryBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryH(const FileRegion& file_region,
-	      PtiNameBranchArray&& nb_array,
-	      const char* tail_name);
+  CptPrimaryH(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name
+  );
 
   // デストラクタ
   ~CptPrimaryH();
@@ -1158,9 +1156,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -1183,15 +1182,15 @@ private:
 class CptPrimaryHI :
   public CptPrimaryI
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryHI(const FileRegion& file_region,
-	       PtiNameBranchArray&& nb_array,
-	       const char* tail_name,
-	       PtiExprArray&& index_array);
+  CptPrimaryHI(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name,
+    PtiExprArray&& index_array
+  );
 
   // デストラクタ
   ~CptPrimaryHI();
@@ -1207,9 +1206,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -1229,15 +1229,15 @@ private:
 class CptPrimaryHCI :
   public CptPrimaryHI
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryHCI(const FileRegion& file_region,
-		PtiNameBranchArray&& nb_array,
-		const char* tail_name,
-		PtiExprArray&& index_array);
+  CptPrimaryHCI(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name,
+    PtiExprArray&& index_array
+  );
 
   // デストラクタ
   ~CptPrimaryHCI();
@@ -1261,17 +1261,17 @@ public:
 class CptPrimaryHR :
   public CptPrimaryR
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryHR(const FileRegion& file_region,
-	       PtiNameBranchArray&& nb_array,
-	       const char* tail_name,
-	       VpiRangeMode mode,
-	       const PtExpr* left,
-	       const PtExpr* right);
+  CptPrimaryHR(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name,
+    VpiRangeMode mode,
+    const PtExpr* left,
+    const PtExpr* right
+  );
 
   // デストラクタ
   ~CptPrimaryHR();
@@ -1287,9 +1287,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -1309,18 +1310,18 @@ private:
 class CptPrimaryHIR :
   public CptPrimaryIR
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptPrimaryHIR(const FileRegion& file_region,
-		PtiNameBranchArray&& nb_array,
-		const char* tail_name,
-		PtiExprArray&& index_array,
-		VpiRangeMode mode,
-		const PtExpr* left,
-		const PtExpr* right);
+  CptPrimaryHIR(
+    const FileRegion& file_region,
+    PtiNameBranchArray&& nb_array,
+    const char* tail_name,
+    PtiExprArray&& index_array,
+    VpiRangeMode mode,
+    const PtExpr* left,
+    const PtExpr* right
+  );
 
   // デストラクタ
   ~CptPrimaryHIR();
@@ -1336,9 +1337,10 @@ public:
   namebranch_num() const override;
 
   /// @brief 階層ブランチの取得
-  /// @param[in] pos 位置 ( 0 <= pos < namebranch_num() )
   const PtNameBranch*
-  namebranch(SizeType pos) const override;
+  namebranch(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
+  ) const override;
 
 
 private:
@@ -1361,7 +1363,9 @@ class CptConstant :
 protected:
 
   // コンストラクタ
-  CptConstant(const FileRegion& file_region);
+  CptConstant(
+    const FileRegion& file_region
+  );
 
   // デストラクタ
   ~CptConstant();
@@ -1399,13 +1403,13 @@ private:
 class CptIntConstant1 :
   public CptConstant
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptIntConstant1(const FileRegion& file_region,
-		  unsigned int value);
+  CptIntConstant1(
+    const FileRegion& file_region,
+    ymuint32 value
+  );
 
   // デストラクタ
   ~CptIntConstant1();
@@ -1417,7 +1421,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 階層名の添字として使える式の時に true を返す．
-  // ここでは true を返す．
   bool
   is_index_expr() const override;
 
@@ -1428,13 +1431,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   // 定数の種類を表す型(vpiIntConst, vpiBinaryConst など) を返す．
-  // ここでは vpiIntConst を返す．
   VpiConstType
   const_type() const override;
 
   // 整数型の値の取得
-  unsigned int
-  const_uint() const override;
+  ymuint32
+  const_uint32() const override;
+
+  /// @brief インデックスの値の取得
+  /// @return 階層名の添字として使える式の時にその値を返す．
+  int
+  index_value() const override;
 
 
 private:
@@ -1443,7 +1450,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  unsigned int mValue;
+  ymuint32 mValue;
 
 };
 
@@ -1454,14 +1461,14 @@ private:
 class CptIntConstant2 :
   public CptConstant
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptIntConstant2(const FileRegion& file_region,
-		  VpiConstType const_type,
-		  const char* value);
+  CptIntConstant2(
+    const FileRegion& file_region,
+    VpiConstType const_type,
+    const char* value
+  );
 
   // デストラクタ
   ~CptIntConstant2();
@@ -1501,15 +1508,15 @@ private:
 class CptIntConstant3 :
   public CptConstant
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptIntConstant3(const FileRegion& file_region,
-		  SizeType size,
-		  VpiConstType const_type,
-		  const char* value);
+  CptIntConstant3(
+    const FileRegion& file_region,
+    SizeType size,
+    VpiConstType const_type,
+    const char* value
+  );
 
   // デストラクタ
   ~CptIntConstant3();
@@ -1556,13 +1563,13 @@ private:
 class CptRealConstant :
   public CptConstant
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // コンストラクタ
-  CptRealConstant(const FileRegion& file_region,
-		  double value);
+  CptRealConstant(
+    const FileRegion& file_region,
+    double value
+  );
 
   // デストラクタ
   ~CptRealConstant();
@@ -1599,13 +1606,13 @@ private:
 class CptStringConstant :
   public CptConstant
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   // 値を表す文字列を引数にとるコンストラクタ
-  CptStringConstant(const FileRegion& file_region,
-		    const char* value);
+  CptStringConstant(
+    const FileRegion& file_region,
+    const char* value
+  );
 
   // デストラクタ
   ~CptStringConstant();

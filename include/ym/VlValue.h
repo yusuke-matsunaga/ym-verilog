@@ -171,10 +171,10 @@ public:
     int val ///< [in] 値
   );
 
-  /// @brief ymuint からのコンストラクタ
+  /// @brief unsined int からのコンストラクタ
   explicit
   VlValue(
-    unsigned int val ///< [in] 値
+    ymuint32 val ///< [in] 値
   );
 
   /// @brief スカラー値からのコンストラクタ
@@ -214,13 +214,13 @@ public:
   );
 
   /// @brief コピー代入演算子
-  const VlValue&
+  VlValue&
   operator=(
     const VlValue& src ///< [in] コピー元のオブジェクト
   );
 
   /// @brief ムーブ代入演算子
-  const VlValue&
+  VlValue&
   operator=(
     VlValue&& src ///< [in] ムーブ元のオブジェクト
   );
@@ -440,8 +440,7 @@ public:
   /// @brief ビットベクタ型の値を返す．
   BitVector
   bitvector_value(
-    const VlValueType& req_type ///< [in] 要求されるデータの型
-    = VlValueType()
+    const VlValueType& req_type = {} ///< [in] 要求されるデータの型
   ) const
   {
     return mRep->bitvector_value(req_type);

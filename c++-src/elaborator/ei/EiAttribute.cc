@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiAttribute.h"
 #include "elaborator/ElbExpr.h"
@@ -21,15 +20,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief attribute instance のリストを生成する．
-// @param[in] pt_attr パース木の定義要素
-// @param[in] expr 値
-// @param[in] def 定義側の属性の時 true
 const VlAttribute*
-EiFactory::new_Attribute(const PtAttrSpec* pt_attr,
-			 const VlExpr* expr,
-			 bool def)
+EiFactory::new_Attribute(
+  const PtAttrSpec* pt_attr,
+  const VlExpr* expr,
+  bool def
+)
 {
-  auto attr{new EiAttribute(pt_attr, expr, def)};
+  auto attr = new EiAttribute(pt_attr, expr, def);
   return attr;
 }
 
@@ -39,15 +37,13 @@ EiFactory::new_Attribute(const PtAttrSpec* pt_attr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_attr パース木の定義要素
-// @param[in] expr 値
-// @param[in] def 定義側の属性の時 true
-EiAttribute::EiAttribute(const PtAttrSpec* pt_attr,
-			 const VlExpr* expr,
-			 bool def) :
-  mPtAttrSpec{pt_attr},
-  mExpr{expr},
-  mDef{def}
+EiAttribute::EiAttribute(
+  const PtAttrSpec* pt_attr,
+  const VlExpr* expr,
+  bool def
+) : mPtAttrSpec{pt_attr},
+    mExpr{expr},
+    mDef{def}
 {
 }
 

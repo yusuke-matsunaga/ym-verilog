@@ -159,6 +159,13 @@ private:
     int d              ///< [in] 整数値
   );
 
+  /// @brief 符号なし整数型データの出力
+  void
+  put(
+    const char* label, ///< [in] ラベル
+    ymuint32 d         ///< [in] 整数値
+  );
+
   /// @brief 実数型データの出力
   void
   put(

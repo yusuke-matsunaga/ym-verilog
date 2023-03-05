@@ -52,11 +52,9 @@ public:
   /// @retval false エラーが起こった．
   bool
   read_file(
-    const string& filename,                   ///< [in] 読み込むファイル名
-    const SearchPathList& searchpath          ///< [in] サーチパス
-    = SearchPathList(),
-    const vector<VlLineWatcher*> watcher_list ///< [in] 行番号ウォッチャーのリスト
-    = vector<VlLineWatcher*>()
+    const string& filename,                        ///< [in] 読み込むファイル名
+    const SearchPathList& searchpath = {},         ///< [in] サーチパス
+    const vector<VlLineWatcher*> watcher_list = {} ///< [in] 行番号ウォッチャーのリスト
   );
 
   /// @brief 登録されているモジュールのリストを返す．

@@ -18,28 +18,25 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief generate block を生成する．
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item 対応するパース木の要素
 const VlScope*
-EiFactory::new_GenBlock(const VlScope* parent,
-			const PtItem* pt_item)
+EiFactory::new_GenBlock(
+  const VlScope* parent,
+  const PtItem* pt_item
+)
 {
-  auto scope = new EiGenBlockScope(parent, pt_item);
-
+  auto scope = new EiGenBlockScope{parent, pt_item};
   return scope;
 }
 
 // @brief generate for block を生成する．
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item 対応するパース木の要素
-// @param[in] int gvi 対応する genvar の値
 const VlScope*
-EiFactory::new_GfBlock(const VlScope* parent,
-		       const PtItem* pt_item,
-		       int gvi)
+EiFactory::new_GfBlock(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  int gvi
+)
 {
-  auto scope = new EiGfBlockScope(parent, pt_item, gvi);
-
+  auto scope = new EiGfBlockScope{parent, pt_item, gvi};
   return scope;
 }
 
@@ -49,12 +46,11 @@ EiFactory::new_GfBlock(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item 対応するパース木の要素
-EiGenBlockScope::EiGenBlockScope(const VlScope* parent,
-				 const PtItem* pt_item) :
-  EiScope(parent),
-  mPtItem{pt_item}
+EiGenBlockScope::EiGenBlockScope(
+  const VlScope* parent,
+  const PtItem* pt_item
+) : EiScope{parent},
+    mPtItem{pt_item}
 {
 }
 
@@ -83,14 +79,12 @@ EiGenBlockScope::name() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item 対応するパース木の要素
-// @param[in] index インデックス
-EiGfBlockScope::EiGfBlockScope(const VlScope* parent,
-			       const PtItem* pt_item,
-			       int index) :
-  EiGenBlockScope(parent, pt_item),
-  mIndex{index}
+EiGfBlockScope::EiGfBlockScope(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  int index
+) : EiGenBlockScope{parent, pt_item},
+    mIndex{index}
 {
 }
 

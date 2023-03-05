@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ExprGen.h"
 #include "ElbEnv.h"
 #include "ErrorGen.h"
@@ -27,11 +26,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] elab 生成器
-// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-ExprGen::ExprGen(Elaborator& elab,
-		 ElbMgr& elb_mgr) :
-  ElbProxy(elab, elb_mgr)
+ExprGen::ExprGen(
+  Elaborator& elab,
+  ElbMgr& elb_mgr
+) : ElbProxy{elab, elb_mgr}
 {
 }
 
@@ -41,14 +39,12 @@ ExprGen::~ExprGen()
 }
 
 // @brief PtExpr から ElbiExpr を生成する
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
-// @return 生成された ElbExpr のポインタを返す．
 ElbExpr*
-ExprGen::instantiate_expr(const VlScope* parent,
-			  const ElbEnv& env,
-			  const PtExpr* pt_expr)
+ExprGen::instantiate_expr(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == PtExprType::Opr &&
@@ -90,12 +86,11 @@ ExprGen::instantiate_expr(const VlScope* parent,
 }
 
 // @brief PtExpr から定数式の ElbExpr を生成する
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @return 生成された ElbExpr のポインタを返す．
 ElbExpr*
-ExprGen::instantiate_constant_expr(const VlScope* parent,
-				   const PtExpr* pt_expr)
+ExprGen::instantiate_constant_expr(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   ASSERT_COND( pt_expr != nullptr );
 
@@ -104,14 +99,12 @@ ExprGen::instantiate_constant_expr(const VlScope* parent,
 }
 
 // @brief PtExpr からイベント式を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
-// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_event_expr(const VlScope* parent,
-				const ElbEnv& env,
-				const PtExpr* pt_expr)
+ExprGen::instantiate_event_expr(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == PtExprType::Opr &&
@@ -130,7 +123,7 @@ ExprGen::instantiate_event_expr(const VlScope* parent,
 	auto expr = mgr().new_UnaryOp(pt_expr, pt_expr->op_type(), opr0);
 
 	// attribute instance の生成
-	auto attr_list{attribute_list(pt_expr)};
+	auto attr_list = attribute_list(pt_expr);
 	mgr().reg_attr(expr, attr_list);
 
 	return expr;
@@ -174,14 +167,12 @@ ExprGen::instantiate_event_expr(const VlScope* parent,
 }
 
 // @brief PtExpr からシステム関数の引数を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
-// @return 生成された ElbExpr のポインタを返す．
 ElbExpr*
-ExprGen::instantiate_arg(const VlScope* parent,
-			 const ElbEnv& env,
-			 const PtExpr* pt_expr)
+ExprGen::instantiate_arg(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == PtExprType::Opr &&
@@ -198,14 +189,12 @@ ExprGen::instantiate_arg(const VlScope* parent,
 }
 
 // @brief PtExpr から左辺式を生成する
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
-// @return 生成された ElbExpr のポインタを返す．
 ElbExpr*
-ExprGen::instantiate_lhs(const VlScope* parent,
-			 const ElbEnv& env,
-			 const PtExpr* pt_expr)
+ExprGen::instantiate_lhs(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
   switch ( pt_expr->type() ) {
   case PtExprType::Opr:
@@ -217,14 +206,14 @@ ExprGen::instantiate_lhs(const VlScope* parent,
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	// 現れた順は上位ビットからなので位置が逆になる．
 	SizeType pos{opr_size - i - 1};
-	auto pt_expr1{pt_expr->operand(pos)};
-	auto expr1{instantiate_lhs_sub(parent, env, pt_expr1, elem_array)};
+	auto pt_expr1 = pt_expr->operand(pos);
+	auto expr1 = instantiate_lhs_sub(parent, env, pt_expr1, elem_array);
 	opr_list[pos] = expr1;
       }
-      auto expr{mgr().new_Lhs(pt_expr, opr_list, elem_array)};
+      auto expr = mgr().new_Lhs(pt_expr, opr_list, elem_array);
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_expr)};
+      auto attr_list = attribute_list(pt_expr);
       mgr().reg_attr(expr, attr_list);
 
       return expr;
@@ -260,17 +249,13 @@ ExprGen::instantiate_lhs(const VlScope* parent,
 }
 
 // @brief PtExpr から左辺式を生成する
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
-// @param[out] elem_array 生成した左辺式の要素を格納するベクタ
-// @return 生成した式を返す．
-// @note 不適切な式ならばエラーメッセージを出力し nullptr を返す．
 ElbExpr*
-ExprGen::instantiate_lhs_sub(const VlScope* parent,
-			     const ElbEnv& env,
-			     const PtExpr* pt_expr,
-			     vector<ElbExpr*>& elem_array)
+ExprGen::instantiate_lhs_sub(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr,
+  vector<ElbExpr*>& elem_array
+)
 {
   switch ( pt_expr->type() ) {
   case PtExprType::Opr:
@@ -280,14 +265,14 @@ ExprGen::instantiate_lhs_sub(const VlScope* parent,
       vector<ElbExpr*> opr_list(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
 	SizeType pos{opr_size - i - 1};
-	auto pt_expr1{pt_expr->operand(pos)};
-	opr_list[pos] = instantiate_lhs_sub(parent, env, pt_expr1, elem_array);
+	auto pt_expr1 = pt_expr->operand(pos);
+	  opr_list[pos] = instantiate_lhs_sub(parent, env, pt_expr1, elem_array);
       }
-      auto expr{mgr().new_ConcatOp(pt_expr, opr_list)};
+      auto expr = mgr().new_ConcatOp(pt_expr, opr_list);
       expr->set_selfsize();
 
       // attribute instance の生成
-      auto attr_list{attribute_list(pt_expr)};
+      auto attr_list = attribute_list(pt_expr);
       mgr().reg_attr(expr, attr_list);
 
       return expr;
@@ -301,7 +286,7 @@ ExprGen::instantiate_lhs_sub(const VlScope* parent,
 
   case PtExprType::Primary:
     {
-      auto expr{instantiate_primary(parent, env, pt_expr)};
+      auto expr = instantiate_primary(parent, env, pt_expr);
       elem_array.push_back(expr);
       return expr;
     }
@@ -327,11 +312,10 @@ ExprGen::instantiate_lhs_sub(const VlScope* parent,
 }
 
 // @brief PtDelay から ElbExpr を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_delay 遅延を表すパース木
 const VlDelay*
-ExprGen::instantiate_delay(const VlScope* parent,
-			   const PtDelay* pt_delay)
+ExprGen::instantiate_delay(
+  const VlScope* parent,
+  const PtDelay* pt_delay)
 {
   if ( pt_delay == nullptr ) {
     // もともと遅延式を持たない場合は nullptr を返す．
@@ -343,7 +327,7 @@ ExprGen::instantiate_delay(const VlScope* parent,
   vector<const PtExpr*> expr_array;
   expr_array.reserve(3);
   for ( SizeType n = 0; n < 3; ++ n) {
-    auto expr{pt_delay->value(n)};
+    auto expr = pt_delay->value(n);
     if ( expr == nullptr ) break;
     expr_array.push_back(expr);
   }
@@ -353,13 +337,11 @@ ExprGen::instantiate_delay(const VlScope* parent,
 }
 
 // @brief PtOrderedCon から ElbExpr を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_head 順序付き割り当て式
-// これは PtInst の前にある # つきの式がパラメータ割り当てなのか
-// 遅延なのかわからないので PtOrderedCon で表していることによる．
 const VlDelay*
-ExprGen::instantiate_delay(const VlScope* parent,
-			   const PtItem* pt_header)
+ExprGen::instantiate_delay(
+  const VlScope* parent,
+  const PtItem* pt_header
+)
 {
   if ( pt_header == nullptr ) {
     // もともと遅延式を持たない場合は nullptr を返す．
@@ -370,23 +352,19 @@ ExprGen::instantiate_delay(const VlScope* parent,
   SizeType n{pt_header->paramassign_num()};
   ASSERT_COND( n == 1 );
 
-  auto pt_con{pt_header->paramassign(0)};
+  auto pt_con = pt_header->paramassign(0);
   vector<const PtExpr*> expr_array{pt_con->expr()};
 
   return instantiate_delay_sub(parent, pt_header, expr_array);
 }
 
 // @brief instantiate_delay の下請け関数
-// @param[in] parent 親のスコープ
-// @param[in] pt_obj 遅延式を表すパース木
-// @param[in] n 要素数
-// @param[in] expr_array 遅延式の配列
-// @note pt_obj は PtDelay か PtItem のどちらか
-// @note n は最大で 3
 const VlDelay*
-ExprGen::instantiate_delay_sub(const VlScope* parent,
-			       const PtBase* pt_obj,
-			       const vector<const PtExpr*>& pt_expr_array)
+ExprGen::instantiate_delay_sub(
+  const VlScope* parent,
+  const PtBase* pt_obj,
+  const vector<const PtExpr*>& pt_expr_array
+)
 {
   ASSERT_COND( pt_expr_array.size() <= 3 );
 
@@ -399,7 +377,7 @@ ExprGen::instantiate_delay_sub(const VlScope* parent,
       expr_list.push_back(instantiate_expr(parent, env, pt_expr));
     }
 
-    auto delay{mgr().new_Delay(pt_obj, expr_list)};
+    auto delay = mgr().new_Delay(pt_obj, expr_list);
 
     return delay;
   }

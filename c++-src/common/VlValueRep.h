@@ -109,7 +109,9 @@ class VlValueInt :
 public:
 
   /// @brief コンストラクタ
-  VlValueInt(int val);
+  VlValueInt(
+    int val ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~VlValueInt() = default;
@@ -203,7 +205,9 @@ class VlValueUint :
 public:
 
   /// @brief コンストラクタ
-  VlValueUint(ymuint val);
+  VlValueUint(
+    ymuint val ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~VlValueUint() = default;
@@ -215,7 +219,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-   VlValue::Type
+  VlValue::Type
   type() const override;
 
   /// @brief 整数型に変換可能な時に true を返す．
@@ -297,7 +301,9 @@ class VlValueScalar :
 public:
 
   /// @brief コンストラクタ
-  VlValueScalar(const VlScalarVal& val);
+  VlValueScalar(
+    const VlScalarVal& val ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~VlValueScalar() = default;
@@ -391,7 +397,9 @@ class VlValueReal :
 public:
 
   /// @brief コンストラクタ
-  VlValueReal(double val);
+  VlValueReal(
+    double val ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~VlValueReal() = default;
@@ -485,7 +493,9 @@ class VlValueTime :
 public:
 
   /// @brief コンストラクタ
-  VlValueTime(VlTime val);
+  VlValueTime(
+    VlTime val ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~VlValueTime() = default;
@@ -579,7 +589,9 @@ class VlValueBitVector :
 public:
 
   /// @brief コンストラクタ
-  VlValueBitVector(const BitVector& val);
+  VlValueBitVector(
+    const BitVector& val ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~VlValueBitVector() = default;

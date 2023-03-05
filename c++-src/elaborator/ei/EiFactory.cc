@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 
 
@@ -16,7 +15,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 ElbFactory*
 ElbFactory::new_obj()
 {
-  return new EiFactory();
+  return new EiFactory{};
 }
 
 
@@ -36,7 +35,9 @@ EiFactory::~EiFactory()
 
 // @brief 内訳を表示する．
 void
-EiFactory::dump_prof(ostream& s)
+EiFactory::dump_prof(
+  ostream& s
+)
 {
 }
 

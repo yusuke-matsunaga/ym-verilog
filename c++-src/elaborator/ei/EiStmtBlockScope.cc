@@ -6,7 +6,6 @@
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiStmtBlockScope.h"
 #include "ym/pt/PtStmt.h"
@@ -19,14 +18,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @breif statement block を生成する．
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_stmt 対応するパース木の要素
 const VlScope*
-EiFactory::new_StmtBlockScope(const VlScope* parent,
-			      const PtStmt* pt_stmt)
+EiFactory::new_StmtBlockScope(
+  const VlScope* parent,
+  const PtStmt* pt_stmt
+)
 {
-  auto scope{new EiStmtBlockScope(parent, pt_stmt)};
-
+  auto scope = new EiStmtBlockScope(parent, pt_stmt);
   return scope;
 }
 
@@ -35,12 +33,11 @@ EiFactory::new_StmtBlockScope(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_stmt 対応するパース木の要素
-EiStmtBlockScope::EiStmtBlockScope(const VlScope* parent,
-				   const PtStmt* pt_stmt) :
-  EiScope(parent),
-  mPtStmt{pt_stmt}
+EiStmtBlockScope::EiStmtBlockScope(
+  const VlScope* parent,
+  const PtStmt* pt_stmt
+) : EiScope{parent},
+    mPtStmt{pt_stmt}
 {
 }
 

@@ -1285,7 +1285,7 @@ public:
   const PtExpr*
   new_IntConst(
     const FileRegion& fr, ///< [in] ファイル位置の情報
-    unsigned int value    ///< [in] 定数を表す整数値
+    ymuint32 value        ///< [in] 定数を表す整数値
   ) = 0;
 
   /// @brief 整数型の定数の生成
@@ -1313,7 +1313,7 @@ public:
   const PtExpr*
   new_IntConst(
     const FileRegion& fr,    ///< [in] ファイル位置の情報
-    int size,                ///< [in] サイズ
+    SizeType size,           ///< [in] サイズ
     VpiConstType const_type, ///< [in] 定数の種類
     const char* value        ///< [in] 定数の文字列表現
   ) = 0;

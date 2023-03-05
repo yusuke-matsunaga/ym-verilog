@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiGenvar.h"
 
@@ -20,16 +19,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief genvar を生成する．
-// @param[in] parent 親のスコープ環境
-// @param[in] pt_item 対応するパース木の要素
-// @param[in] val 初期値
 ElbGenvar*
-EiFactory::new_Genvar(const VlScope* parent,
-		      const PtDeclItem* pt_item,
-		      int val)
+EiFactory::new_Genvar(
+  const VlScope* parent,
+  const PtDeclItem* pt_item,
+  int val
+)
 {
-  auto genvar{new EiGenvar(parent, pt_item, val)};
-
+  auto genvar = new EiGenvar{parent, pt_item, val};
   return genvar;
 }
 
@@ -39,17 +36,14 @@ EiFactory::new_Genvar(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の定義要素
-// @param[in] name 名前
-// @param[in] val 初期値
-EiGenvar::EiGenvar(const VlScope* parent,
-		   const PtDeclItem* pt_item,
-		   int val) :
-  mParent{parent},
-  mPtItem{pt_item},
-  mInUse{false},
-  mValue{val}
+EiGenvar::EiGenvar(
+  const VlScope* parent,
+  const PtDeclItem* pt_item,
+  int val
+) : mParent{parent},
+    mPtItem{pt_item},
+    mInUse{false},
+    mValue{val}
 {
 }
 
@@ -116,7 +110,9 @@ EiGenvar::value() const
 
 // 値を設定する．
 void
-EiGenvar::set_value(int value)
+EiGenvar::set_value(
+  int value
+)
 {
   mValue = value;
 }

@@ -330,7 +330,9 @@ BitVector::to_string() const
 // Verilog-HDL の形式で出力する．
 // 内容を Verilog-HDL (IEEE1364-2001) の形式の文字列に変換する．
 string
-BitVector::verilog_string(int opt_base) const
+BitVector::verilog_string(
+  SizeType opt_base
+) const
 {
   // まず最初に符号付きでマイナスの場合には補数を取る．
   if ( is_negative() ) {
@@ -589,12 +591,14 @@ BitVector::hex_str(bool skip_zeros) const
 // 値をセットする関数
 // これは1語に収まる時に用いる．
 void
-BitVector::set(uword val0,
-	       uword val1,
-	       SizeType size,
-	       bool has_size,
-	       bool has_sign,
-	       int base)
+BitVector::set(
+  uword val0,
+  uword val1,
+  SizeType size,
+  bool has_size,
+  bool has_sign,
+  SizeType base
+)
 {
   ASSERT_COND( size <= BLOCK_SIZE );
 
@@ -607,13 +611,15 @@ BitVector::set(uword val0,
 
 // 値をセットする関数
 void
-BitVector::set(const uword* val0,
-	       const uword* val1,
-	       SizeType src_size,
-	       SizeType size,
-	       bool has_size,
-	       bool has_sign,
-	       int base)
+BitVector::set(
+  const uword* val0,
+  const uword* val1,
+  SizeType src_size,
+  SizeType size,
+  bool has_size,
+  bool has_sign,
+  SizeType base
+)
 {
   resize(size);
   set_type(has_size, has_sign, base);
@@ -666,13 +672,15 @@ BitVector::set(const uword* val0,
 
 // 値をセットする関数
 void
-BitVector::set(const vector<uword>& val0,
-	       const vector<uword>& val1,
-	       SizeType src_size,
-	       SizeType size,
-	       bool has_size,
-	       bool has_sign,
-	       int base)
+BitVector::set(
+  const vector<uword>& val0,
+  const vector<uword>& val1,
+  SizeType src_size,
+  SizeType size,
+  bool has_size,
+  bool has_sign,
+  SizeType base
+)
 {
   resize(size);
   set_type(has_size, has_sign, base);

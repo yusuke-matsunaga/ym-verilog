@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
 #include "ElbProxy.h"
@@ -26,10 +25,10 @@ class UdpGen :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] elab 生成器
-  /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-  UdpGen(Elaborator& elab,
-	 ElbMgr& elb_mgr);
+  UdpGen(
+    Elaborator& elab, ///< [in] 生成器
+    ElbMgr& elb_mgr   ///< [in] Elbオブジェクトを管理するクラス
+  );
 
   /// @brief デストラクタ
   ~UdpGen();
@@ -40,15 +39,10 @@ public:
   // UdpGen の関数
   //////////////////////////////////////////////////////////////////////
   /// @brief UDP定義を生成する．
-  /// @param[in] pt_udp パース木の UDP 定義
   void
-  instantiate_udp(const PtUdp* pt_udp);
-
-
-private:
-  //////////////////////////////////////////////////////////////////////
-  // 内部で用いられる関数
-  //////////////////////////////////////////////////////////////////////
+  instantiate_udp(
+    const PtUdp* pt_udp ///< [in] パース木の UDP 定義
+  );
 
 };
 

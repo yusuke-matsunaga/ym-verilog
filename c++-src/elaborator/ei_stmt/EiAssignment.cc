@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiAssignment.h"
 
@@ -23,103 +22,85 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 代入文を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
-// @param[in] block ブロッキング代入の時 true
-// @param[in] control コントロール
 const VlStmt*
-EiFactory::new_Assignment(const VlScope* parent,
-			  const VlProcess* process,
-			  const PtStmt* pt_stmt,
-			  const VlExpr* lhs,
-			  const VlExpr* rhs,
-			  bool block,
-			  const VlControl* control)
+EiFactory::new_Assignment(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs,
+  bool block,
+  const VlControl* control
+)
 {
   const VlStmt* stmt = nullptr;
   if ( block ) {
-    stmt = new EiAssignment(parent, process, pt_stmt,
-			    lhs, rhs, control);
+    stmt = new EiAssignment{parent, process, pt_stmt,
+			    lhs, rhs, control};
   }
   else {
-    stmt = new EiNbAssignment(parent, process, pt_stmt,
-			      lhs, rhs, control);
+    stmt = new EiNbAssignment{parent, process, pt_stmt,
+			      lhs, rhs, control};
   }
   return stmt;
 }
 
 // @brief assign ステートメントを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
 const VlStmt*
-EiFactory::new_AssignStmt(const VlScope* parent,
-			  const VlProcess* process,
-			  const PtStmt* pt_stmt,
-			  const VlExpr* lhs,
-			  const VlExpr* rhs)
+EiFactory::new_AssignStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+)
 {
-  auto stmt = new EiAssignStmt(parent, process, pt_stmt,
-			       lhs, rhs);
-
+  auto stmt = new EiAssignStmt{parent, process, pt_stmt,
+			       lhs, rhs};
   return stmt;
 }
 
 // @brief deassign ステートメントを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
 const VlStmt*
-EiFactory::new_DeassignStmt(const VlScope* parent,
-			    const VlProcess* process,
-			    const PtStmt* pt_stmt,
-			    const VlExpr* lhs)
+EiFactory::new_DeassignStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs
+)
 {
-  auto stmt = new EiDeassignStmt(parent, process, pt_stmt,
-				 lhs);
+  auto stmt = new EiDeassignStmt{parent, process, pt_stmt,
+				 lhs};
 
   return stmt;
 }
 
 // @brief force ステートメントを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
 const VlStmt*
-EiFactory::new_ForceStmt(const VlScope* parent,
-			 const VlProcess* process,
-			 const PtStmt* pt_stmt,
-			 const VlExpr* lhs,
-			 const VlExpr* rhs)
+EiFactory::new_ForceStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+)
 {
-  auto stmt = new EiForceStmt(parent, process, pt_stmt,
-			      lhs, rhs);
-
+  auto stmt = new EiForceStmt{parent, process, pt_stmt,
+			      lhs, rhs};
   return stmt;
 }
 
 // @brief release ステートメントを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
 const VlStmt*
-EiFactory::new_ReleaseStmt(const VlScope* parent,
-			   const VlProcess* process,
-			   const PtStmt* pt_stmt,
-			   const VlExpr* lhs)
+EiFactory::new_ReleaseStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs
+)
 {
-  auto stmt = new EiReleaseStmt(parent, process, pt_stmt,
-				lhs);
-
+  auto stmt = new EiReleaseStmt{parent, process, pt_stmt,
+				lhs};
   return stmt;
 }
 
@@ -129,19 +110,15 @@ EiFactory::new_ReleaseStmt(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
-EiAssignBase::EiAssignBase(const VlScope* parent,
-			   const VlProcess* process,
-			   const PtStmt* pt_stmt,
-			   const VlExpr* lhs,
-			   const VlExpr* rhs) :
-  EiStmtBase(parent, process, pt_stmt),
-  mLhs{lhs},
-  mRhs{rhs}
+EiAssignBase::EiAssignBase(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+) : EiStmtBase{parent, process, pt_stmt},
+    mLhs{lhs},
+    mRhs{rhs}
 {
 }
 
@@ -170,20 +147,15 @@ EiAssignBase::rhs() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
-// @param[in] control コントロール
-EiNbAssignment::EiNbAssignment(const VlScope* parent,
-			       const VlProcess* process,
-			       const PtStmt* pt_stmt,
-			       const VlExpr* lhs,
-			       const VlExpr* rhs,
-			       const VlControl* control) :
-  EiAssignBase(parent, process, pt_stmt, lhs, rhs),
-  mControl{control}
+EiNbAssignment::EiNbAssignment(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs,
+  const VlControl* control
+) : EiAssignBase{parent, process, pt_stmt, lhs, rhs},
+    mControl{control}
 {
 }
 
@@ -212,19 +184,14 @@ EiNbAssignment::control() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
-// @param[in] control コントロール
-EiAssignment::EiAssignment(const VlScope* parent,
-			   const VlProcess* process,
-			   const PtStmt* pt_stmt,
-			   const VlExpr* lhs,
-			   const VlExpr* rhs,
-			   const VlControl* control) :
-  EiNbAssignment(parent, process, pt_stmt, lhs, rhs, control)
+EiAssignment::EiAssignment(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs,
+  const VlControl* control
+) : EiNbAssignment{parent, process, pt_stmt, lhs, rhs, control}
 {
 }
 
@@ -234,7 +201,6 @@ EiAssignment::~EiAssignment()
 }
 
 // @brief 代入のブロッキング/ノンブロッキングの区別の取得
-// @note このクラスでは true を返す．
 bool
 EiAssignment::is_blocking() const
 {
@@ -247,17 +213,13 @@ EiAssignment::is_blocking() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
-EiAssignStmt::EiAssignStmt(const VlScope* parent,
-			   const VlProcess* process,
-			   const PtStmt* pt_stmt,
-			   const VlExpr* lhs,
-			   const VlExpr* rhs) :
-  EiAssignBase(parent, process, pt_stmt, lhs, rhs)
+EiAssignStmt::EiAssignStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+) : EiAssignBase{parent, process, pt_stmt, lhs, rhs}
 {
 }
 
@@ -279,17 +241,13 @@ EiAssignStmt::type() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-// @param[in] rhs 右辺の式
-EiForceStmt::EiForceStmt(const VlScope* parent,
-			 const VlProcess* process,
-			 const PtStmt* pt_stmt,
-			 const VlExpr* lhs,
-			 const VlExpr* rhs) :
-  EiAssignBase(parent, process, pt_stmt, lhs, rhs)
+EiForceStmt::EiForceStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs,
+  const VlExpr* rhs
+) : EiAssignBase{parent, process, pt_stmt, lhs, rhs}
 {
 }
 
@@ -311,16 +269,13 @@ EiForceStmt::type() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-EiDeassignBase::EiDeassignBase(const VlScope* parent,
-			       const VlProcess* process,
-			       const PtStmt* pt_stmt,
-			       const VlExpr* lhs) :
-  EiStmtBase(parent, process, pt_stmt),
-  mLhs{lhs}
+EiDeassignBase::EiDeassignBase(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs
+) : EiStmtBase{parent, process, pt_stmt},
+    mLhs{lhs}
 {
 }
 
@@ -342,15 +297,12 @@ EiDeassignBase::lhs() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-EiDeassignStmt::EiDeassignStmt(const VlScope* parent,
-			       const VlProcess* process,
-			       const PtStmt* pt_stmt,
-			       const VlExpr* lhs) :
-  EiDeassignBase(parent, process, pt_stmt, lhs)
+EiDeassignStmt::EiDeassignStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs
+) : EiDeassignBase{parent, process, pt_stmt, lhs}
 {
 }
 
@@ -372,15 +324,12 @@ EiDeassignStmt::type() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt パース木のステートメント定義
-// @param[in] lhs 左辺の式
-EiReleaseStmt::EiReleaseStmt(const VlScope* parent,
-			     const VlProcess* process,
-			     const PtStmt* pt_stmt,
-			     const VlExpr* lhs) :
-  EiDeassignBase(parent, process, pt_stmt, lhs)
+EiReleaseStmt::EiReleaseStmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt,
+  const VlExpr* lhs
+) : EiDeassignBase{parent, process, pt_stmt, lhs}
 {
 }
 

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "StmtGen.h"
 #include "ElbEnv.h"
 #include "ElbStub.h"
@@ -29,11 +28,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] elab 生成器
-// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-StmtGen::StmtGen(Elaborator& elab,
-		 ElbMgr& elb_mgr) :
-  ElbProxy(elab, elb_mgr)
+StmtGen::StmtGen(
+  Elaborator& elab,
+  ElbMgr& elb_mgr
+) : ElbProxy{elab, elb_mgr}
 {
 }
 
@@ -43,18 +41,18 @@ StmtGen::~StmtGen()
 }
 
 // @brief スコープに関係するステートメントの実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] pt_stmt 対象のステートメント
-// 具体的には以下の処理を行う．
-//
-// 1. 内部にステートメントを持つステートメントは再帰する．
-// 2. 自身がスコープとなるもの (named-begin, named-fork) はスコープ
-//    を生成し，phase2 用のキューに登録す．
 void
-StmtGen::phase1_stmt(const VlScope* parent,
-		     const PtStmt* pt_stmt,
-		     bool cf)
+StmtGen::phase1_stmt(
+  const VlScope* parent,
+  const PtStmt* pt_stmt,
+  bool cf
+)
 {
+  // 具体的には以下の処理を行う．
+  //
+  // 1. 内部にステートメントを持つステートメントは再帰する．
+  // 2. 自身がスコープとなるもの (named-begin, named-fork) はスコープ
+  //    を生成し，phase2 用のキューに登録す．
   ASSERT_COND( pt_stmt != nullptr );
 
   switch ( pt_stmt->type() ) {
@@ -116,12 +114,12 @@ StmtGen::phase1_stmt(const VlScope* parent,
 	phase2_namedblock(block_scope, pt_stmt->declhead_list());
       }
       else {
-	auto stub{make_stub<StmtGen,
-		  const VlScope*,
-		  const vector<const PtDeclHead*>&>(this,
-						    &StmtGen::phase2_namedblock,
-						    block_scope,
-						    pt_stmt->declhead_list())};
+	auto stub = make_stub<StmtGen,
+			      const VlScope*,
+			      const vector<const PtDeclHead*>&>(this,
+								&StmtGen::phase2_namedblock,
+								block_scope,
+								pt_stmt->declhead_list());
 	add_phase2stub(stub);
       }
     }
@@ -133,15 +131,13 @@ StmtGen::phase1_stmt(const VlScope* parent,
 }
 
 // @brief ステートメントの実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] env 生成時の環境
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_stmt(const VlScope* parent,
-			  const VlProcess* process,
-			  const ElbEnv& env,
-			  const PtStmt* pt_stmt)
+StmtGen::instantiate_stmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const ElbEnv& env,
+  const PtStmt* pt_stmt
+)
 {
   if ( pt_stmt == nullptr ) {
     return nullptr;
@@ -287,7 +283,7 @@ StmtGen::instantiate_stmt(const VlScope* parent,
   }
   if ( stmt ) {
     // attribute instance の生成
-    auto attr_list{attribute_list(pt_stmt)};
+    auto attr_list = attribute_list(pt_stmt);
     mgr().reg_attr(stmt, attr_list);
   }
 
@@ -314,19 +310,18 @@ StmtGen::instantiate_stmt(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief disable statement の実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_disable(const VlScope* parent,
-			     const VlProcess* process,
-			     const PtStmt* pt_stmt)
+StmtGen::instantiate_disable(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt
+)
 {
-  const auto& fr{pt_stmt->file_region()};
+  const auto& fr = pt_stmt->file_region();
 
   // disable はモジュール境界を越えない？
   // 仕様書には何も書いていないのでたぶん越えられる．
-  auto handle{mgr().find_obj_up(parent, pt_stmt, nullptr)};
+  auto handle = mgr().find_obj_up(parent, pt_stmt, nullptr);
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -338,7 +333,7 @@ StmtGen::instantiate_disable(const VlScope* parent,
     return nullptr;
   }
 
-  auto type{handle->type()};
+  auto type = handle->type();
   if ( type != VpiObjType::NamedBegin &&
        type != VpiObjType::NamedFork &&
        type != VpiObjType::Task ) {
@@ -353,28 +348,25 @@ StmtGen::instantiate_disable(const VlScope* parent,
     return nullptr;
   }
 
-  auto scope{handle->scope()};
-  auto stmt{mgr().new_DisableStmt(parent, process, pt_stmt, scope)};
-
+  auto scope = handle->scope();
+  auto stmt = mgr().new_DisableStmt(parent, process, pt_stmt, scope);
   return stmt;
 }
 
 // @brief enable の実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] env 生成時の環境
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_enable(const VlScope* parent,
-			    const VlProcess* process,
-			    const ElbEnv& env,
-			    const PtStmt* pt_stmt)
+StmtGen::instantiate_enable(
+  const VlScope* parent,
+  const VlProcess* process,
+  const ElbEnv& env,
+  const PtStmt* pt_stmt
+)
 {
-  const auto& fr{pt_stmt->file_region()};
+  const auto& fr = pt_stmt->file_region();
 
   // タスクを探し出して設定する．
   // タスク名の探索はモジュール境界を越える．
-  auto handle{mgr().find_obj_up(parent, pt_stmt, nullptr)};
+  auto handle = mgr().find_obj_up(parent, pt_stmt, nullptr);
   if ( !handle ) {
     ostringstream buf;
     buf << pt_stmt->fullname() << " : Not found.";
@@ -396,14 +388,14 @@ StmtGen::instantiate_enable(const VlScope* parent,
     return nullptr;
   }
 
-  auto task{handle->taskfunc()};
+  auto task = handle->taskfunc();
   ASSERT_COND( task != nullptr );
 
   // 引数を生成する．
   vector<ElbExpr*> arg_list;
   arg_list.reserve(pt_stmt->arg_num());
   for ( auto pt_expr: pt_stmt->arg_list() ) {
-    auto expr{instantiate_expr(parent, env, pt_expr)};
+    auto expr = instantiate_expr(parent, env, pt_expr);
     if ( !expr ) {
       // エラーが起った．
       return nullptr;
@@ -412,28 +404,24 @@ StmtGen::instantiate_enable(const VlScope* parent,
   }
 
   // task call ステートメントの生成
-  auto stmt{mgr().new_TaskCall(parent, process, pt_stmt, task, arg_list)};
-
+  auto stmt = mgr().new_TaskCall(parent, process, pt_stmt, task, arg_list);
   return stmt;
 }
 
 // @brief system enable 文の実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] env 生成時の環境
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_sysenable(const VlScope* parent,
-			       const VlProcess* process,
-			       const ElbEnv& env,
-			       const PtStmt* pt_stmt)
+StmtGen::instantiate_sysenable(
+  const VlScope* parent,
+  const VlProcess* process,
+  const ElbEnv& env,
+  const PtStmt* pt_stmt
+)
 {
-  const auto& fr{pt_stmt->file_region()};
-
-  auto name{pt_stmt->name()};
+  const auto& fr = pt_stmt->file_region();
+  auto name = pt_stmt->name();
 
   // UserSystf を取り出す．
-  auto user_systf{mgr().find_user_systf(name)};
+  auto user_systf = mgr().find_user_systf(name);
   if ( user_systf == nullptr ) {
     ostringstream buf;
     buf << name << " : No such system task.";
@@ -451,7 +439,7 @@ StmtGen::instantiate_sysenable(const VlScope* parent,
   for ( auto pt_expr: pt_stmt->arg_list() ) {
     // 空の引数があるのでエラーと区別する．
     if ( pt_expr ) {
-      auto arg{instantiate_arg(parent, env, pt_expr)};
+      auto arg = instantiate_arg(parent, env, pt_expr);
       if ( !arg ) {
 	// エラーが起こった
 	return nullptr;
@@ -464,53 +452,48 @@ StmtGen::instantiate_sysenable(const VlScope* parent,
   }
 
   // system task call ステートメントの生成
-  auto stmt{mgr().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list)};
-
+  auto stmt = mgr().new_SysTaskCall(parent, process, pt_stmt, user_systf, arg_list);
   return stmt;
 }
 
 // @brief delay / event control statement の実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] env 生成時の環境
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_ctrlstmt(const VlScope* parent,
-			      const VlProcess* process,
-			      const ElbEnv& env,
-			      const PtStmt* pt_stmt)
+StmtGen::instantiate_ctrlstmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const ElbEnv& env,
+  const PtStmt* pt_stmt
+)
 {
-  auto pt_body{pt_stmt->body()};
-  auto body{instantiate_stmt(parent, process, env, pt_body)};
-
-  auto pt_control{pt_stmt->control()};
-  auto control{instantiate_control(parent, env, pt_control)};
+  auto pt_body = pt_stmt->body();
+  auto body = instantiate_stmt(parent, process, env, pt_body);
+  auto pt_control = pt_stmt->control();
+  auto control = instantiate_control(parent, env, pt_control);
 
   if ( !body || !control ) {
     return nullptr;
   }
 
   // delay / event control ステートメントの生成
-  auto stmt{mgr().new_CtrlStmt(parent, process, pt_stmt, control, body)};
+  auto stmt = mgr().new_CtrlStmt(parent, process, pt_stmt, control, body);
 
   return stmt;
 }
 
 // @brief コントロールを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_control パース木のコントロール定義
 const VlControl*
-StmtGen::instantiate_control(const VlScope* parent,
-			     const ElbEnv& env,
-			     const PtControl* pt_control)
+StmtGen::instantiate_control(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtControl* pt_control
+)
 {
   if ( pt_control == nullptr ) {
     return nullptr;
   }
 
   if ( pt_control->type() == PtCtrlType::Delay ) {
-    auto delay{instantiate_expr(parent, env, pt_control->delay())};
+    auto delay = instantiate_expr(parent, env, pt_control->delay());
     if ( delay ) {
       return mgr().new_DelayControl(pt_control, delay);
     }
@@ -518,11 +501,11 @@ StmtGen::instantiate_control(const VlScope* parent,
   }
 
   // イベントリストの生成を行う．
-  SizeType event_num{pt_control->event_num()};
+  SizeType event_num = pt_control->event_num();
   vector<ElbExpr*> event_list;
   event_list.reserve(event_num);
   for ( auto pt_expr: pt_control->event_list() ) {
-    auto expr{instantiate_event_expr(parent, env, pt_expr)};
+    auto expr = instantiate_event_expr(parent, env, pt_expr);
     if ( !expr ) {
       return nullptr;
     }
@@ -533,7 +516,7 @@ StmtGen::instantiate_control(const VlScope* parent,
     return mgr().new_EventControl(pt_control, event_list);
   }
 
-  auto rep{instantiate_expr(parent, env, pt_control->rep_expr())};
+  auto rep = instantiate_expr(parent, env, pt_control->rep_expr());
   if ( !rep ) {
     return nullptr;
   }
@@ -541,36 +524,32 @@ StmtGen::instantiate_control(const VlScope* parent,
 }
 
 // @brief event statement の実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_eventstmt(const VlScope* parent,
-			       const VlProcess* process,
-			       const PtStmt* pt_stmt)
+StmtGen::instantiate_eventstmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt
+)
 {
-  auto pt_expr{pt_stmt->primary()};
-  auto named_event{instantiate_namedevent(parent, pt_expr)};
+  auto pt_expr = pt_stmt->primary();
+  auto named_event = instantiate_namedevent(parent, pt_expr);
   if ( !named_event ) {
     return nullptr;
   }
 
-  auto stmt{mgr().new_EventStmt(parent, process, pt_stmt, named_event)};
-
+  auto stmt = mgr().new_EventStmt(parent, process, pt_stmt, named_event);
   return stmt;
 }
 
 // @brief null statement の実体化を行う．
-// @param[in] parent 親のスコープ
-// @param[in] process 親のプロセス (or nullptr)
-// @param[in] pt_stmt 対象のステートメント
 const VlStmt*
-StmtGen::instantiate_nullstmt(const VlScope* parent,
-			      const VlProcess* process,
-			      const PtStmt* pt_stmt)
+StmtGen::instantiate_nullstmt(
+  const VlScope* parent,
+  const VlProcess* process,
+  const PtStmt* pt_stmt
+)
 {
-  auto stmt{mgr().new_NullStmt(parent, process, pt_stmt)};
-
+  auto stmt = mgr().new_NullStmt(parent, process, pt_stmt);
   return stmt;
 }
 

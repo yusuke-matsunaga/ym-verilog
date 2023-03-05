@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "EiExpr.h"
 
 #include "ym/BitVector.h"
@@ -26,8 +25,9 @@ class EiConstant :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  EiConstant(const PtExpr* pt_expr);
+  EiConstant(
+    const PtExpr* pt_expr ///< [in] パース木の定義要素
+  );
 
   /// @brief デストラクタ
   ~EiConstant();
@@ -49,7 +49,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数の時 true を返す．
-  /// @note このクラスは常に true を返す．
   bool
   is_const() const override;
 
@@ -60,10 +59,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 };
 
@@ -78,10 +77,10 @@ class EiIntConst :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] value 値
-  EiIntConst(const PtExpr* pt_expr,
-	     int value);
+  EiIntConst(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ymint32 value          ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~EiIntConst();
@@ -97,13 +96,10 @@ public:
   value_type() const override;
 
   /// @brief 定数の型を返す．
-  /// @note 定数の時，意味を持つ．
   VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
   VlValue
   constant_value() const override;
 
@@ -114,7 +110,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  int mValue;
+  ymint32 mValue;
 
 };
 
@@ -129,12 +125,11 @@ class EiBitVectorConst :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] const_type 定数型
-  /// @param[in] value 値
-  EiBitVectorConst(const PtExpr* pt_expr,
-		   VpiConstType const_type,
-		   const BitVector& value);
+  EiBitVectorConst(
+    const PtExpr* pt_expr,   ///< [in] パース木の定義要素
+    VpiConstType const_type, ///< [in] 定数型
+    const BitVector& value   ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~EiBitVectorConst();
@@ -150,13 +145,10 @@ public:
   value_type() const override;
 
   /// @brief 定数の型を返す．
-  /// @note 定数の時，意味を持つ．
   VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
   VlValue
   constant_value() const override;
 
@@ -185,10 +177,10 @@ class EiRealConst :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] value 値
-  EiRealConst(const PtExpr* pt_expr,
-	      double value);
+  EiRealConst(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    double value           ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~EiRealConst();
@@ -204,13 +196,10 @@ public:
   value_type() const override;
 
   /// @brief 定数の型を返す．
-  /// @note 定数の時，意味を持つ．
   VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
   VlValue
   constant_value() const override;
 
@@ -236,10 +225,10 @@ class EiStringConst :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] value 値
-  EiStringConst(const PtExpr* pt_expr,
-		const string& value);
+  EiStringConst(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    const string& value    ///< [in] 値
+  );
 
   /// @brief デストラクタ
   ~EiStringConst();
@@ -255,13 +244,10 @@ public:
   value_type() const override;
 
   /// @brief 定数の型を返す．
-  /// @note 定数の時，意味を持つ．
   VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
   VlValue
   constant_value() const override;
 

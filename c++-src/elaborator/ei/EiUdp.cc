@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiUdp.h"
 
@@ -24,17 +23,16 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief UDP定義を生成する．
-// @param[in] pt_udp パース木の UDP 定義
-// @param[in] is_protected プロテクト属性
 ElbUdpDefn*
-EiFactory::new_UdpDefn(const PtUdp* pt_udp,
-		       bool is_protected)
+EiFactory::new_UdpDefn(
+  const PtUdp* pt_udp,
+  bool is_protected
+)
 {
   SizeType port_num = pt_udp->port_num();
   SizeType table_size = pt_udp->table_num();
-  auto udp = new EiUdpDefn(pt_udp, is_protected,
-			   port_num, table_size);
-
+  auto udp = new EiUdpDefn{pt_udp, is_protected,
+			   port_num, table_size};
   return udp;
 }
 
@@ -44,22 +42,17 @@ EiFactory::new_UdpDefn(const PtUdp* pt_udp,
 //////////////////////////////////////////////////////////////////////
 
 // @param[in] pt_udp パース木の UDP 定義
-// @param[in] is_protected プロテクト属性
-// @param[in] io_num ポート数
-// @param[in] io_array IOの配列
-// @param[in] table_num テーブルの行数
-// @param[in] table テーブル
-// @param[in] val_array テーブル中の値を納める配列
-EiUdpDefn::EiUdpDefn(const PtUdp* pt_udp,
-		     bool is_protected,
-		     SizeType io_num,
-		     SizeType table_num) :
-  mPtUdp{pt_udp},
-  mProtected{is_protected},
-  mIODeclList(io_num),
-  mInitExpr{nullptr},
-  mInitVal{VlScalarVal::x()},
-  mTableEntryList(table_num)
+EiUdpDefn::EiUdpDefn(
+  const PtUdp* pt_udp,
+  bool is_protected,
+  SizeType io_num,
+  SizeType table_num
+) : mPtUdp{pt_udp},
+    mProtected{is_protected},
+    mIODeclList(io_num),
+    mInitExpr{nullptr},
+    mInitVal{VlScalarVal::x()},
+    mTableEntryList(table_num)
 {
 }
 
@@ -104,9 +97,10 @@ EiUdpDefn::port_num() const
 }
 
 // @brief 入力の宣言要素を返す．
-// @param[in] pos 入力番号
 const VlIODecl*
-EiUdpDefn::input(SizeType pos) const
+EiUdpDefn::input(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < port_num() - 1 );
   return &mIODeclList[pos];
@@ -127,7 +121,6 @@ EiUdpDefn::is_protected() const
 }
 
 // @brief 初期値を返す．
-// @return 0/1/X を返す．
 VlScalarVal
 EiUdpDefn::init_val() const
 {
@@ -154,47 +147,45 @@ EiUdpDefn::table_size() const
 }
 
 // @brief table entry を返す．
-// @param[in] pos 行番号
 const VlTableEntry*
-EiUdpDefn::table_entry(SizeType pos) const
+EiUdpDefn::table_entry(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < table_size() );
   return &mTableEntryList[pos];
 }
 
 // @brief 入出力オブジェクトの内容を設定する．
-// @param[in] pos ポート中の位置
-// @param[in] file_region ソースファイル上の位置
-// @param[in] name 名前
-// @param[in] dir 向き
 void
-EiUdpDefn::set_io(SizeType pos,
-		  const PtIOHead* pt_header,
-		  const PtIOItem* pt_item)
+EiUdpDefn::set_io(
+  SizeType pos,
+  const PtIOHead* pt_header,
+  const PtIOItem* pt_item
+)
 {
   ASSERT_COND( 0 <= pos && pos < table_size() );
   mIODeclList[pos].set(pt_header, pt_item);
 }
 
 // @brief 初期値を設定する．
-// @param[in] init_expr 初期値を表す式
-// @param[in] init_val 初期値
 void
-EiUdpDefn::set_initial(const PtExpr* init_expr,
-		       const VlScalarVal& init_val)
+EiUdpDefn::set_initial(
+  const PtExpr* init_expr,
+  const VlScalarVal& init_val
+)
 {
   mInitExpr = init_expr;
   mInitVal = init_val;
 }
 
 // @brief table entry の内容を設定する．
-// @param[in] pos 行番号
-// @param[in] pt_udp_entry パース木の一行分の定義
-// @param[in] vals シンボル値の配列
 void
-EiUdpDefn::set_tableentry(SizeType pos,
-			  const PtUdpEntry* pt_udp_entry,
-			  const vector<VlUdpVal>& vals)
+EiUdpDefn::set_tableentry(
+  SizeType pos,
+  const PtUdpEntry* pt_udp_entry,
+  const vector<VlUdpVal>& vals
+)
 {
   mTableEntryList[pos].set(pt_udp_entry, vals);
 }
@@ -244,8 +235,6 @@ EiUdpIO::direction() const
 }
 
 // @brief 符号の属性の取得
-// @return 符号付きのとき true を返す．
-// @note このクラスは false を返す．
 bool
 EiUdpIO::is_signed() const
 {
@@ -260,7 +249,6 @@ EiUdpIO::has_range() const
 }
 
 // @brief MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiUdpIO::left_range_val() const
 {
@@ -268,7 +256,6 @@ EiUdpIO::left_range_val() const
 }
 
 // @brief LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiUdpIO::right_range_val() const
 {
@@ -276,7 +263,6 @@ EiUdpIO::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiUdpIO::left_range_string() const
 {
@@ -284,7 +270,6 @@ EiUdpIO::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiUdpIO::right_range_string() const
 {
@@ -292,7 +277,6 @@ EiUdpIO::right_range_string() const
 }
 
 // @brief サイズを返す．
-// このクラスは 1 を返す．
 SizeType
 EiUdpIO::bit_size() const
 {
@@ -300,7 +284,6 @@ EiUdpIO::bit_size() const
 }
 
 // @brief 対応する宣言要素を返す．
-// @note このクラスでは nullptr を返す．
 const VlDecl*
 EiUdpIO::decl() const
 {
@@ -308,7 +291,6 @@ EiUdpIO::decl() const
 }
 
 // @brief 親のモジュールの取得
-// @return このクラスは nullptr を返す．
 const VlModule*
 EiUdpIO::module() const
 {
@@ -323,7 +305,6 @@ EiUdpIO::udp_defn() const
 }
 
 // @brief 親のタスク/の取得
-// @return このクラスは nullptr を返す．
 const VlTaskFunc*
 EiUdpIO::task() const
 {
@@ -331,7 +312,6 @@ EiUdpIO::task() const
 }
 
 // @brief 親の関数の取得
-// @return このクラスは nullptr を返す．
 const VlTaskFunc*
 EiUdpIO::function() const
 {
@@ -340,17 +320,19 @@ EiUdpIO::function() const
 
 // @brief 親のUDPを設定する．
 void
-EiUdpIO::set_udp(ElbUdpDefn* udp)
+EiUdpIO::set_udp(
+  ElbUdpDefn* udp
+)
 {
   mUdp = udp;
 }
 
 // @brief 内容を設定する．
-// @param[in] pt_header パース木のIO宣言ヘッダ
-// @param[in] pt_item パース木のIO宣言定義
 void
-EiUdpIO::set(const PtIOHead* pt_header,
-	     const PtIOItem* pt_item)
+EiUdpIO::set(
+  const PtIOHead* pt_header,
+  const PtIOItem* pt_item
+)
 {
   mPtHeader = pt_header;
   mPtItem = pt_item;
@@ -398,7 +380,9 @@ EiTableEntry::size() const
 
 // @brief pos 番目の位置の値を返す．
 VlUdpVal
-EiTableEntry::val(SizeType pos) const
+EiTableEntry::val(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < size() );
   return mValArray[pos];
@@ -430,15 +414,19 @@ EiTableEntry::str() const
 
 // @brief 初期化する．
 void
-EiTableEntry::init(ElbUdpDefn* udp)
+EiTableEntry::init(
+  ElbUdpDefn* udp
+)
 {
   mUdp = udp;
 }
 
 // @brief 設定する．
 void
-EiTableEntry::set(const PtUdpEntry* pt_entry,
-		  const vector<VlUdpVal>& vals)
+EiTableEntry::set(
+  const PtUdpEntry* pt_entry,
+  const vector<VlUdpVal>& vals
+)
 {
   mPtUdpEntry = pt_entry;
   mValArray = vals;

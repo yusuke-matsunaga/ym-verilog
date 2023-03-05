@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiExpr.h"
 #include "ei/EiOperation.h"
 
@@ -40,7 +39,6 @@ EiExpr::file_region() const
 }
 
 // @brief 定数の時 true を返す．
-// @note このクラスは false を返す．
 bool
 EiExpr::is_const() const
 {
@@ -48,8 +46,6 @@ EiExpr::is_const() const
 }
 
 // @brief 固定選択子の時 true を返す．
-// @note ビット選択，部分選択の時，意味を持つ．
-// @note このクラスでは false を返す．
 bool
 EiExpr::is_constant_select() const
 {
@@ -99,7 +95,6 @@ EiExpr::is_sysfunccall() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiExpr::decl_base() const
 {
@@ -107,8 +102,6 @@ EiExpr::decl_base() const
 }
 
 // @brief 対象のオブジェクトを返す．
-// @note プライマリ，ビット選択，部分選択の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlDecl*
 EiExpr::decl_obj() const
 {
@@ -116,7 +109,6 @@ EiExpr::decl_obj() const
 }
 
 // @brief 宣言要素の配列への参照の場合，対象のオブジェクトを返す．
-// @note それ以外では nullptr を返す．
 const VlDeclArray*
 EiExpr::declarray_obj() const
 {
@@ -124,7 +116,6 @@ EiExpr::declarray_obj() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
-// @note このクラスでは 0 を返す．
 SizeType
 EiExpr::declarray_dimension() const
 {
@@ -132,16 +123,15 @@ EiExpr::declarray_dimension() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
-// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
-// @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::declarray_index(SizeType pos) const
+EiExpr::declarray_index(
+  SizeType pos
+) const
 {
   return nullptr;
 }
 
 // @brief 配列型宣言要素への参照のオフセットを返す．
-// @note 固定インデックスの場合のみ意味を持つ．
 SizeType
 EiExpr::declarray_offset() const
 {
@@ -149,8 +139,6 @@ EiExpr::declarray_offset() const
 }
 
 // @brief 対象のオブジェクトを返す．
-// @note 対象がスコープの時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlScope*
 EiExpr::scope_obj() const
 {
@@ -158,8 +146,6 @@ EiExpr::scope_obj() const
 }
 
 // @brief 対象のオブジェクトを返す．
-// @note 対象が ElbPrimitive の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlPrimitive*
 EiExpr::primitive_obj() const
 {
@@ -167,8 +153,6 @@ EiExpr::primitive_obj() const
 }
 
 // @brief インデックス式を返す．
-// @note ビット選択の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiExpr::index() const
 {
@@ -176,8 +160,6 @@ EiExpr::index() const
 }
 
 // @brief インデックス値を返す．
-// @note 式に対するビット選択の時，意味を持つ．
-// @note このクラスでは 0 を返す．
 int
 EiExpr::index_val() const
 {
@@ -192,8 +174,6 @@ EiExpr::range_mode() const
 }
 
 // @brief 範囲の MSB を返す．
-// @note 部分選択の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiExpr::left_range() const
 {
@@ -201,8 +181,6 @@ EiExpr::left_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 式に対する範囲選択の時，意味を持つ．
-// @note このクラスでは 0 を返す．
 int
 EiExpr::left_range_val() const
 {
@@ -210,8 +188,6 @@ EiExpr::left_range_val() const
 }
 
 // @brief 範囲の LSB を返す．
-// @note 部分選択の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiExpr::right_range() const
 {
@@ -219,8 +195,6 @@ EiExpr::right_range() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 式に対する範囲選択の時，意味を持つ．
-// @note このクラスでは 0 を返す．
 int
 EiExpr::right_range_val() const
 {
@@ -228,8 +202,6 @@ EiExpr::right_range_val() const
 }
 
 // @brief 範囲のベースを表す式を返す．
-// @note 可変範囲選択の時，意味を持つ．
-// @note それ以外では nullptr を返す．
 const VlExpr*
 EiExpr::base() const
 {
@@ -237,8 +209,6 @@ EiExpr::base() const
 }
 
 // @brief 範囲のビット幅を返す．
-// @note 可変範囲選択の時，意味を持つ．
-// @note それ以外では 0 を返す．
 SizeType
 EiExpr::range_width() const
 {
@@ -246,8 +216,6 @@ EiExpr::range_width() const
 }
 
 // @brief 親の式を返す．
-// @note 式に対するビット選択/範囲選択の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlExpr*
 EiExpr::parent_expr() const
 {
@@ -255,8 +223,6 @@ EiExpr::parent_expr() const
 }
 
 // @brief 演算子のタイプを返す．
-// @note 演算子の時，意味を持つ．
-// @note このクラスでは kVlNullOp を返す．
 VpiOpType
 EiExpr::op_type() const
 {
@@ -264,8 +230,6 @@ EiExpr::op_type() const
 }
 
 // @brief オペランド数を返す．
-// @note 演算子の時，意味を持つ．
-// @note このクラスでは 0 を返す．
 SizeType
 EiExpr::operand_num() const
 {
@@ -273,16 +237,15 @@ EiExpr::operand_num() const
 }
 
 // @brief オペランドを返す．
-// @param[in] pos 位置番号
-// @note 演算子の時，意味を持つ．
 const VlExpr*
-EiExpr::operand(SizeType pos) const
+EiExpr::operand(
+  SizeType pos
+) const
 {
   return nullptr;
 }
 
 // @brief 繰り返し数を返す．
-// @note multiple concatenation の時のみ意味を持つ．
 SizeType
 EiExpr::rep_num() const
 {
@@ -290,8 +253,6 @@ EiExpr::rep_num() const
 }
 
 // @brief 定数の型を返す．
-// @note 定数の時，意味を持つ．
-// @note このクラスでは動作は不定
 VpiConstType
 EiExpr::constant_type() const
 {
@@ -300,8 +261,6 @@ EiExpr::constant_type() const
 }
 
 // @brief 定数値を返す．
-// @note kVpiConstant の時，意味を持つ．
-// @note それ以外では動作は不定
 VlValue
 EiExpr::constant_value() const
 {
@@ -309,8 +268,6 @@ EiExpr::constant_value() const
 }
 
 // @brief 対象の関数を返す．
-// @note function call の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlTaskFunc*
 EiExpr::function() const
 {
@@ -318,8 +275,6 @@ EiExpr::function() const
 }
 
 // @brief 対象のシステム関数を返す．
-// @note system function call の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlUserSystf*
 EiExpr::user_systf() const
 {
@@ -327,8 +282,6 @@ EiExpr::user_systf() const
 }
 
 // @brief 引数の数を返す．
-// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
-// @note このクラスでは 0 を返す．
 SizeType
 EiExpr::argument_num() const
 {
@@ -336,19 +289,15 @@ EiExpr::argument_num() const
 }
 
 // @brief 引数を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
-// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
-// @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::argument(SizeType pos) const
+EiExpr::argument(
+  SizeType pos
+) const
 {
   return nullptr;
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 0 を返す．
 SizeType
 EiExpr::lhs_elem_num() const
 {
@@ -356,11 +305,10 @@ EiExpr::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは nullptr を返す．
 const VlExpr*
-EiExpr::lhs_elem(SizeType pos) const
+EiExpr::lhs_elem(
+  SizeType pos
+) const
 {
   return nullptr;
 }
@@ -371,9 +319,9 @@ EiExpr::lhs_elem(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-EiExprBase::EiExprBase(const PtExpr* pt_expr) :
-  mPtExpr{pt_expr}
+EiExprBase::EiExprBase(
+  const PtExpr* pt_expr
+) : mPtExpr{pt_expr}
 {
 }
 
@@ -402,9 +350,9 @@ EiExprBase::pt_obj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-EiOperation::EiOperation(const PtExpr* pt_expr) :
-  EiExprBase(pt_expr)
+EiOperation::EiOperation(
+  const PtExpr* pt_expr
+) : EiExprBase{pt_expr}
 {
 }
 

@@ -37,8 +37,9 @@ class FuncEval
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] function 関数
-  FuncEval(const VlTaskFunc* function);
+  FuncEval(
+    const VlTaskFunc* function ///< [in] 関数
+  );
 
   /// @brief デストラクタ
   ~FuncEval();
@@ -50,9 +51,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 関数を評価する．
-  /// @param[in] arg_list 引数のリスト
   VlValue
-  operator()(const vector<VlValue>& arg_list);
+  operator()(
+    const vector<VlValue>& arg_list ///< [in] 引数のリスト
+  );
 
 
 private:
@@ -61,94 +63,105 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ステートメントの実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return disable が実行された場合はスコープを返す．
   const VlScope*
-  evaluate_stmt(const VlStmt* stmt);
+  evaluate_stmt(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief begin-end ブロックの実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_seqblock(const VlStmt* stmt);
+  evaluate_seqblock(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief 名前付き begin-end ブロックの実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_namedseqblock(const VlStmt* stmt);
+  evaluate_namedseqblock(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief 代入文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_assign(const VlStmt* stmt);
+  evaluate_assign(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief while 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_while(const VlStmt* stmt);
+  evaluate_while(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief repeat 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_repeat(const VlStmt* stmt);
+  evaluate_repeat(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief for 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_for(const VlStmt* stmt);
+  evaluate_for(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief forever 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_forever(const VlStmt* stmt);
+  evaluate_forever(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief if 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_if(const VlStmt* stmt);
+  evaluate_if(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief if-else 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_ifelse(const VlStmt* stmt);
+  evaluate_ifelse(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief case 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_case(const VlStmt* stmt);
+  evaluate_case(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief disable 文の実行を行う．
-  /// @param[in] stmt 対象のステートメント
   /// @return break 対象のスコープを返す．
   const VlScope*
-  evaluate_disable(const VlStmt* stmt);
+  evaluate_disable(
+    const VlStmt* stmt ///< [in] 対象のステートメント
+  );
 
   /// @brief caseitem のラベルと一致するか調べる．
-  /// @param[in] case_type case 文の種類
-  /// @param[in] val case 文の値
-  /// @param[in] caseitem 対象の caseitem
   bool
-  match(VpiCaseType case_type,
-	const VlValue& val,
-	const VlCaseItem* caseitem);
+  match(
+    VpiCaseType case_type,     ///< [in] case 文の種類
+    const VlValue& val,        ///< [in] case 文の値
+    const VlCaseItem* caseitem ///< [in] 対象の caseitem
+  );
 
   /// @brief 左辺の要素を値を代入する．
-  /// @param[in] expr 左辺式
-  /// @param[in] val 値
   ///
   /// expr は primary か bit-select, part-select
   void
-  assign_value(const VlExpr* expr,
-	       const VlValue& val);
+  assign_value(
+    const VlExpr* expr, ///< [in] 左辺式
+    const VlValue& val  ///< [in] 値
+  );
 
 
 private:
@@ -157,131 +170,132 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 式の評価を行う．
-  /// @param[in] expr 対象の式を表す構文木要素
   VlValue
-  evaluate_expr(const VlExpr* expr);
+  evaluate_expr(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
   /// @brief 演算子に対して式の値を評価する．
-  /// @param[in] expr 対象の式
   VlValue
-  evaluate_opr(const VlExpr* expr);
+  evaluate_opr(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
   /// @brief 定数に対して式の値を評価する．
-  /// @param[in] expr 対象の式
   VlValue
-  evaluate_const(const VlExpr* expr);
+  evaluate_const(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
   /// @brief 関数呼び出しに対して式の値を評価する．
-  /// @param[in] expr 対象の式
   VlValue
-  evaluate_funccall(const VlExpr* expr);
+  evaluate_funccall(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
   /// @brief プライマリに対して式の値を評価する．
-  /// @param[in] expr 対象の式
   VlValue
-  evaluate_primary(const VlExpr* expr);
+  evaluate_primary(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
   /// @brief 式を評価して整数値を返す．
-  /// @param[in] expr 対象の式
   int
-  evaluate_int(const VlExpr* expr);
+  evaluate_int(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
   /// @brief 式を評価して整数値を返す．
-  /// @param[in] expr 対象の式
   bool
-  evaluate_bool(const VlExpr* expr);
+  evaluate_bool(
+    const VlExpr* expr ///< [in] 対象の式
+  );
 
 
 private:
   //////////////////////////////////////////////////////////////////////
-  // 値の管理する関数
+  // 値を管理する関数
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] val 値
   ///
   /// 単独のオブジェクト用
   void
-  reg_val(const VlDeclBase* obj,
-	  const VlValue& val);
+  reg_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    const VlValue& val     ///< [in] 値
+  );
 
   /// @brief 値を登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] offset オフセット
-  /// @param[in] val 値
   ///
   /// 配列要素用
   void
-  reg_val(const VlDeclBase* obj,
-	  SizeType offset,
-	  const VlValue& val);
+  reg_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    SizeType offset,       ///< [in] オフセット
+    const VlValue& val     ///< [in] 値
+  );
 
   /// @brief 値を登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] val 値
-  /// @param[in] index ビット選択インデックス
   ///
   /// 単独のオブジェクト用
   void
-  reg_val(const VlDeclBase* obj,
-	  const VlValue& val,
-	  int index);
+  reg_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    const VlValue& val,    ///< [in] 値
+    int index              ///< [in] ビット選択インデックス
+  );
 
   /// @brief 値を登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] offset オフセット
-  /// @param[in] val 値
-  /// @param[in] index ビット選択インデックス
   ///
   /// 配列要素用
   void
-  reg_val(const VlDeclBase* obj,
-	  SizeType offset,
-	  const VlValue& val,
-	  int intdex);
+  reg_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    SizeType offset,	   ///< [in] オフセット
+    const VlValue& val,	   ///< [in] 値
+    int intdex             ///< [in] ビット選択インデックス
+  );
 
   /// @brief 値を登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] val 値
-  /// @param[in] left, right 範囲選択のインデックス
   ///
   /// 単独のオブジェクト用
   void
-  reg_val(const VlDeclBase* obj,
-	  const VlValue& val,
-	  int left,
-	  int right);
+  reg_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    const VlValue& val,	   ///< [in] 値
+    int left,              ///< [in] 範囲選択の左のインデックス
+    int right              ///< [in] 範囲選択の右のインデックス
+  );
 
   /// @brief 値を登録する．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] offset オフセット
-  /// @param[in] val 値
-  /// @param[in] left, right 範囲選択のインデックス
   ///
   /// 配列要素用
   void
-  reg_val(const VlDeclBase* obj,
-	  SizeType offset,
-	  const VlValue& val,
-	  int left,
-	  int right);
+  reg_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    SizeType offset,	   ///< [in] オフセット
+    const VlValue& val,	   ///< [in] 値
+    int left,              ///< [in] 範囲選択の左のインデックス
+    int right		   ///< [in] 範囲選択の右のインデックス
+  );
 
   /// @brief 値を取り出す．
-  /// @param[in] obj 対象のオブジェクト
   ///
   /// 単独のオブジェクト用
   VlValue
-  get_val(const VlDeclBase* obj);
+  get_val(
+    const VlDeclBase* obj ///< [in] 対象のオブジェクト
+  );
 
   /// @brief 値を取り出す．
-  /// @param[in] obj 対象のオブジェクト
-  /// @param[in] offset オフセット
   ///
   /// 配列要素用
   VlValue
-  get_val(const VlDeclBase* obj,
-	  SizeType offset);
+  get_val(
+    const VlDeclBase* obj, ///< [in] 対象のオブジェクト
+    SizeType offset        ///< [in] オフセット
+  );
 
 
 private:
@@ -301,7 +315,9 @@ private:
   struct Hash
   {
     SizeType
-    operator()(const Key& key) const
+    operator()(
+      const Key& key
+    ) const
     {
       auto tmp = reinterpret_cast<SizeType>(key.mObj);
       return ((tmp * tmp) >> 18) ^ key.mOffset;
@@ -312,8 +328,10 @@ private:
   struct Eq
   {
     bool
-    operator()(const Key& key1,
-	       const Key& key2) const
+    operator()(
+      const Key& key1,
+      const Key& key2
+    ) const
     {
       return key1.mObj == key2.mObj && key1.mOffset == key2.mOffset;
     }

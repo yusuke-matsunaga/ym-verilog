@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ItemGen.h"
 #include "ElbEnv.h"
 #include "ElbStub.h"
@@ -33,11 +32,11 @@ END_NONAMESPACE
 //////////////////////////////////////////////////////////////////////
 
 // @brief task/function の生成を行う．
-// @param[in] parent 親のヘッダ
-// @param[in] pt_item タスク/関数定義
 void
-ItemGen::phase1_tf(const VlScope* parent,
-		   const PtItem* pt_item)
+ItemGen::phase1_tf(
+  const VlScope* parent,
+  const PtItem* pt_item
+)
 {
   if ( debug ) {
     dout << endl
@@ -57,8 +56,8 @@ ItemGen::phase1_tf(const VlScope* parent,
   else {
     ASSERT_COND( pt_item->type() == PtItemType::Func );
 
-    auto pt_left{pt_item->left_range()};
-    auto pt_right{pt_item->right_range()};
+    auto pt_left = pt_item->left_range();
+    auto pt_right = pt_item->right_range();
     if ( pt_left && pt_right ) {
       int left_val;
       int right_val;
@@ -78,7 +77,7 @@ ItemGen::phase1_tf(const VlScope* parent,
   phase1_decl(taskfunc, pt_item->declhead_list(), false);
 
   // attribute instance の生成
-  auto attr_list{attribute_list(pt_item)};
+  auto attr_list = attribute_list(pt_item);
   mgr().reg_attr(taskfunc, attr_list);
 
   {
@@ -92,7 +91,7 @@ ItemGen::phase1_tf(const VlScope* parent,
   }
 
   // 本体のステートメント内部のスコープの生成
-  auto pt_body{pt_item->body()};
+  auto pt_body = pt_item->body();
   phase1_stmt(taskfunc, pt_body);
 
   // 残りの仕事は phase2, phase3 で行う．
@@ -106,11 +105,11 @@ ItemGen::phase1_tf(const VlScope* parent,
 }
 
 // @param[in] task/function 内の宣言要素の生成を行う．
-// @param[in] taskfunc タスク/関数本体
-// @param[in] pt_item パース木のタスク/関数定義
 void
-ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
-		   const PtItem* pt_item)
+ItemGen::phase2_tf(
+  ElbTaskFunc* taskfunc,
+  const PtItem* pt_item
+)
 {
   if ( debug ) {
     dout << endl
@@ -130,8 +129,8 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
 
   if ( taskfunc->type() == VpiObjType::Function ) {
     // 関数名と同名の変数の生成
-    int left_val{taskfunc->left_range_val()};
-    int right_val{taskfunc->right_range_val()};
+    int left_val = taskfunc->left_range_val();
+    int right_val = taskfunc->right_range_val();
     ElbDeclHead* head{nullptr};
     if ( taskfunc->has_range() ) {
       head = mgr().new_DeclHead(taskfunc, pt_item,
@@ -144,7 +143,7 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
     ASSERT_COND( head );
 
     int tag{ (pt_item->data_type() == VpiVarType::None) ? vpiReg : vpiVariables };
-    auto decl{mgr().new_Decl(tag, head, pt_item)};
+    auto decl = mgr().new_Decl(tag, head, pt_item);
 
     taskfunc->set_ovar(decl);
   }
@@ -156,11 +155,11 @@ ItemGen::phase2_tf(ElbTaskFunc* taskfunc,
 }
 
 // @param[in] task/function 内のステートメントの生成を行う．
-// @param[in] taskfunc task/関数本体
-// @param[in] pt_item パース木のタスク/関数定義
 void
-ItemGen::phase3_tf(ElbTaskFunc* taskfunc,
-		   const PtItem* pt_item)
+ItemGen::phase3_tf(
+  ElbTaskFunc* taskfunc,
+  const PtItem* pt_item
+)
 {
   if ( debug ) {
     dout << endl
@@ -174,8 +173,8 @@ ItemGen::phase3_tf(ElbTaskFunc* taskfunc,
 
   // 本体のステートメントの生成
   ElbTfEnv env(taskfunc);
-  auto pt_body{pt_item->body()};
-  auto body{instantiate_stmt(taskfunc, nullptr, env, pt_body)};
+  auto pt_body = pt_item->body();
+  auto body = instantiate_stmt(taskfunc, nullptr, env, pt_body);
   if ( body ) {
     taskfunc->set_stmt(body);
   }
@@ -187,11 +186,11 @@ ItemGen::phase3_tf(ElbTaskFunc* taskfunc,
 }
 
 // @brief constant function の生成を行う．
-// @param[in] parent 親のスコープ
-// @param[in] pt_function 関数定義
 const VlTaskFunc*
-ItemGen::instantiate_constant_function(const VlScope* parent,
-				       const PtItem* pt_function)
+ItemGen::instantiate_constant_function(
+  const VlScope* parent,
+  const PtItem* pt_function
+)
 {
   // 基本的には phase1_tf(), phase2_tf(), phase3_tf() と同じことを
   // やっているが，ElbConstantFunctionEnv を用いているところが異なる．
@@ -206,8 +205,8 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
 	 << endl;
   }
 
-  auto pt_left{pt_function->left_range()};
-  auto pt_right{pt_function->right_range()};
+  auto pt_left = pt_function->left_range();
+  auto pt_right = pt_function->right_range();
 
   ElbTaskFunc* func{nullptr};
   const VlScope* scope{nullptr};
@@ -242,7 +241,7 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
 
   // 関数名と同名の変数の生成
   int tag{ (pt_function->data_type() == VpiVarType::None) ? vpiReg : vpiVariables };
-  auto decl{mgr().new_Decl(tag, head, pt_function)};
+  auto decl = mgr().new_Decl(tag, head, pt_function);
 
   func->set_ovar(decl);
 
@@ -250,12 +249,12 @@ ItemGen::instantiate_constant_function(const VlScope* parent,
   instantiate_iodecl(func, pt_function->iohead_list());
 
   // 本体のステートメント内部のスコープの生成
-  auto pt_body{pt_function->body()};
+  auto pt_body = pt_function->body();
   phase1_stmt(func, pt_body, true);
 
   // 本体のステートメントの生成
   ElbConstantFunctionEnv env(scope);
-  auto body{instantiate_stmt(scope, nullptr, env, pt_body)};
+  auto body = instantiate_stmt(scope, nullptr, env, pt_body);
   if ( body ) {
     func->set_stmt(body);
   }

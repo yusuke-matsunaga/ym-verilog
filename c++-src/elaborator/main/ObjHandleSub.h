@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ObjHandle.h"
 
 
@@ -24,10 +23,10 @@ class KeyObjHandle :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] name 名前
-  KeyObjHandle(const VlScope* parent,
-	       const string& name);
+  KeyObjHandle(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const string& name     ///< [in] 名前
+  );
 
   /// @brief デストラクタ
   ~KeyObjHandle() = default;
@@ -82,7 +81,9 @@ class ElbScopeHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbScopeHandle(const VlScope* obj);
+  ElbScopeHandle(
+    const VlScope* obj
+  );
 
   /// @brief デストラクタ
   ~ElbScopeHandle() = default;
@@ -184,7 +185,9 @@ class ElbTaskFuncHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbTaskFuncHandle(const VlTaskFunc* obj);
+  ElbTaskFuncHandle(
+    const VlTaskFunc* obj
+  );
 
   /// @brief デストラクタ
   ~ElbTaskFuncHandle() = default;
@@ -227,7 +230,9 @@ class ElbDeclHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbDeclHandle(ElbDecl* obj);
+  ElbDeclHandle(
+    ElbDecl* obj
+  );
 
   /// @brief デストラクタ
   ~ElbDeclHandle() = default;
@@ -271,7 +276,9 @@ class ElbDeclArrayHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbDeclArrayHandle(const VlDeclArray* obj);
+  ElbDeclArrayHandle(
+    const VlDeclArray* obj
+  );
 
   /// @brief デストラクタ
   ~ElbDeclArrayHandle() = default;
@@ -314,7 +321,9 @@ class ElbParamHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbParamHandle(ElbParameter* obj);
+  ElbParamHandle(
+    ElbParameter* obj
+  );
 
   /// @brief デストラクタ
   ~ElbParamHandle() = default;
@@ -357,7 +366,9 @@ class ElbModuleHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbModuleHandle(const VlModule* obj);
+  ElbModuleHandle(
+    const VlModule* obj
+  );
 
   /// @brief デストラクタ
   ~ElbModuleHandle() = default;
@@ -400,7 +411,9 @@ class ElbModuleArrayHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbModuleArrayHandle(const VlModuleArray* obj);
+  ElbModuleArrayHandle(
+    const VlModuleArray* obj
+  );
 
   /// @brief デストラクタ
   ~ElbModuleArrayHandle() = default;
@@ -410,7 +423,9 @@ public:
 
   /// @brief 配列要素を返す．
   const VlScope*
-  array_elem(int index) const override;
+  array_elem(
+    int index
+  ) const override;
 
   /// @brief ElbModuleArray を返す．
   const VlModuleArray*
@@ -447,7 +462,9 @@ class ElbPrimArrayHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbPrimArrayHandle(const VlPrimArray* obj);
+  ElbPrimArrayHandle(
+    const VlPrimArray* obj
+  );
 
   /// @brief デストラクタ
   ~ElbPrimArrayHandle() = default;
@@ -490,7 +507,9 @@ class ElbPrimitiveHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbPrimitiveHandle(const VlPrimitive* obj);
+  ElbPrimitiveHandle(
+    const VlPrimitive* obj
+  );
 
   /// @brief デストラクタ
   ~ElbPrimitiveHandle() = default;
@@ -533,7 +552,9 @@ class ElbGfRootHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbGfRootHandle(ElbGfRoot* obj);
+  ElbGfRootHandle(
+    ElbGfRoot* obj
+  );
 
   /// @brief デストラクタ
   ~ElbGfRootHandle() = default;
@@ -543,7 +564,9 @@ public:
 
   /// @brief 配列要素を返す．
   const VlScope*
-  array_elem(int index) const override;
+  array_elem(
+    int index
+  ) const override;
 
   /// @brief ElbGfRoot を返す．
   ElbGfRoot*
@@ -580,7 +603,9 @@ class ElbGenvarHandle :
 public:
 
   /// @brief コンストラクタ
-  ElbGenvarHandle(ElbGenvar* obj);
+  ElbGenvarHandle(
+    ElbGenvar* obj
+  );
 
   /// @brief デストラクタ
   ~ElbGenvarHandle() = default;

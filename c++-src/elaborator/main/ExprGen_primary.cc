@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ExprGen.h"
 #include "ElbEnv.h"
 #include "ErrorGen.h"
@@ -29,13 +28,12 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief PtPrimary から ElbExpr を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_primary(const VlScope* parent,
-			     const ElbEnv& env,
-			     const PtExpr* pt_expr)
+ExprGen::instantiate_primary(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
   // 識別子の階層
   bool has_hname{(pt_expr->namebranch_num() > 0)};
@@ -51,7 +49,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
   }
 
   // 識別子の名前
-  auto name{pt_expr->name()};
+  auto name = pt_expr->name();
 
   // 識別子の添字の次元
   SizeType isize{pt_expr->index_num()};
@@ -77,13 +75,13 @@ ExprGen::instantiate_primary(const VlScope* parent,
       // 見つからなくてもデフォルトネットタイプが kVpiNone でないかぎり
       // 暗黙の1ビットネット宣言を行う．
       // ただし識別子に添字がついていたらだめ
-      auto parent_module{parent->parent_module()};
-      auto def_nettype{parent_module->def_net_type()};
+      auto parent_module = parent->parent_module();
+      auto def_nettype = parent_module->def_net_type();
       if ( pt_expr->is_simple() &&
 	   !has_hname &&
 	   isize == 0 &&
 	   def_nettype != VpiNetType::None ) {
-	auto decl{mgr().new_ImpNet(parent, pt_expr, def_nettype)};
+	auto decl = mgr().new_ImpNet(parent, pt_expr, def_nettype);
 
 	handle = mgr().find_obj(parent, name);
 	// 今作ったはずなので絶対見つかるはず．
@@ -99,37 +97,37 @@ ExprGen::instantiate_primary(const VlScope* parent,
   if ( env.is_system_tf_arg() ) {
     // システム関数/タスクの引数の場合
     if ( isize == 0 ) {
-      auto scope{handle->scope()};
+      auto scope = handle->scope();
       if ( scope ) {
 	return mgr().new_ArgHandle(pt_expr, scope);
       }
 
-      auto primitive{handle->primitive()};
+      auto primitive = handle->primitive();
       if ( primitive ) {
 	return mgr().new_ArgHandle(pt_expr, primitive);
       }
 
-      auto decl{handle->decl()};
+      auto decl = handle->decl();
       if ( decl ) {
 	return mgr().new_Primary(pt_expr, decl);
       }
 
-      auto declarray{handle->declarray()};
+      auto declarray = handle->declarray();
       if ( declarray ) {
 	return mgr().new_ArgHandle(pt_expr, declarray);
       }
     }
     else if ( isize == 1 ) {
-      auto pt_expr1{pt_expr->index(0)};
+      auto pt_expr1 = pt_expr->index(0);
       int index{evaluate_int(parent, pt_expr1)};
-      auto scope{handle->array_elem(index)};
+      auto scope = handle->array_elem(index);
       if ( scope ) {
 	return mgr().new_ArgHandle(pt_expr, scope);
       }
 
-      auto prim_array{handle->prim_array()};
+      auto prim_array = handle->prim_array();
       if ( prim_array ) {
-	auto primitive{prim_array->elem_by_index(index)};
+	auto primitive = prim_array->elem_by_index(index);
 	if ( primitive ) {
 	  return mgr().new_ArgHandle(pt_expr, primitive);
 	}
@@ -140,7 +138,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 
   if ( !env.is_lhs() ) {
     // 対象のオブジェクトが genvar の場合
-    auto genvar{handle->genvar()};
+    auto genvar = handle->genvar();
     if ( genvar ) {
       return instantiate_genvar(parent, pt_expr, genvar->value());
     }
@@ -165,9 +163,9 @@ ExprGen::instantiate_primary(const VlScope* parent,
 					 has_range_select,
 					 has_bit_select);
 
-  auto decl_base{primary->decl_base()};
+  auto decl_base = primary->decl_base();
   ASSERT_COND( decl_base != nullptr );
-  auto decl_type{decl_base->type()};
+  auto decl_type = decl_base->type();
 
   // 式をチェックする．
   // 不適切な場合は例外が送出される．
@@ -209,9 +207,9 @@ ExprGen::instantiate_primary(const VlScope* parent,
     switch ( pt_expr->range_mode() ) {
     case VpiRangeMode::Const:
       {
-	auto pt_left{pt_expr->left_range()};
+	auto pt_left = pt_expr->left_range();
 	int index1_val{evaluate_int(parent, pt_left)};
-	auto pt_right{pt_expr->right_range()};
+	auto pt_right = pt_expr->right_range();
 	int index2_val{evaluate_int(parent, pt_right)};
 	bool big{(index1_val >= index2_val)};
 	if ( big ^ decl_base->is_big_endian() ) {
@@ -257,9 +255,9 @@ ExprGen::instantiate_primary(const VlScope* parent,
 
     case VpiRangeMode::Plus:
       {
-	auto pt_range{pt_expr->right_range()};
+	auto pt_range = pt_expr->right_range();
 	int range_val{evaluate_int(parent, pt_range)};
-	auto pt_base{pt_expr->left_range()};
+	auto pt_base = pt_expr->left_range();
 	bool is_const;
 	int base_val{evaluate_int_if_const(parent, pt_base, is_const)};
 	if ( is_const ) {
@@ -297,7 +295,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	}
 	else {
 	  // 可変インデックスだった．
-	  auto base{instantiate_expr(parent, index_env, pt_base)};
+	  auto base = instantiate_expr(parent, index_env, pt_base);
 	  return mgr().new_PlusPartSelect(pt_expr, primary,
 					  base, pt_range, range_val);
 	}
@@ -305,9 +303,9 @@ ExprGen::instantiate_primary(const VlScope* parent,
 
     case VpiRangeMode::Minus:
       {
-	auto pt_range{pt_expr->right_range()};
+	auto pt_range = pt_expr->right_range();
 	int range_val{evaluate_int(parent, pt_range)};
-	auto pt_base{pt_expr->left_range()};
+	auto pt_base = pt_expr->left_range();
 	bool is_const;
 	int base_val{evaluate_int_if_const(parent, pt_base, is_const)};
 	if ( is_const ) {
@@ -345,7 +343,7 @@ ExprGen::instantiate_primary(const VlScope* parent,
 	}
 	else {
 	  // 可変インデックスだった．
-	  auto base{instantiate_expr(parent, index_env, pt_base)};
+	  auto base = instantiate_expr(parent, index_env, pt_base);
 	  return mgr().new_MinusPartSelect(pt_expr, primary,
 					   base, pt_range, range_val);
 	}
@@ -360,18 +358,18 @@ ExprGen::instantiate_primary(const VlScope* parent,
 }
 
 // @brief PtExpr(primary) から named_event を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_namedevent(const VlScope* parent,
-				const PtExpr* pt_expr)
+ExprGen::instantiate_namedevent(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   ASSERT_COND( pt_expr->type()        == PtExprType::Primary );
   ASSERT_COND( pt_expr->left_range()  == nullptr );
   ASSERT_COND( pt_expr->right_range() == nullptr );
 
   // 名前に対応したオブジェクトのハンドルを求める．
-  auto handle{mgr().find_obj_up(parent, pt_expr, nullptr)};
+  auto handle = mgr().find_obj_up(parent, pt_expr, nullptr);
   if ( handle == nullptr ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
@@ -391,9 +389,9 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
 					 has_range_select,
 					 has_bit_select);
 
-  auto decl_base{primary->decl_base()};
+  auto decl_base = primary->decl_base();
   ASSERT_COND( decl_base != nullptr );
-  auto decl_type{decl_base->type()};
+  auto decl_type = decl_base->type();
   if ( decl_type != VpiObjType::NamedEvent ) {
     // 型が違う
     ErrorGen::not_a_namedevent(__FILE__, __LINE__, pt_expr);
@@ -407,14 +405,14 @@ ExprGen::instantiate_namedevent(const VlScope* parent,
 }
 
 // @brief 定数識別子を探す．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
 ObjHandle*
-ExprGen::find_const_handle(const VlScope* parent,
-			   const PtExpr* pt_expr)
+ExprGen::find_const_handle(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   // モジュール内の識別子を探索する．
-  auto handle{mgr().find_obj_up(parent, pt_expr, parent->parent_module())};
+  auto handle = mgr().find_obj_up(parent, pt_expr, parent->parent_module());
   if ( handle == nullptr ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
@@ -429,13 +427,12 @@ ExprGen::find_const_handle(const VlScope* parent,
 }
 
 // @brief genvar に対応した定数を生成する．
-// @param[in] pt_expr 式を表すパース木
-// @param[in] val 値
-// @note pt_expr に添字が付いていたらエラーとなる．
 ElbExpr*
-ExprGen::instantiate_genvar(const VlScope* parent,
-			    const PtExpr* pt_expr,
-			    int val)
+ExprGen::instantiate_genvar(
+  const VlScope* parent,
+  const PtExpr* pt_expr,
+  int val
+)
 {
   bool has_range_select{(pt_expr->left_range() && pt_expr->right_range())};
   SizeType isize{pt_expr->index_num()};
@@ -462,20 +459,16 @@ ExprGen::instantiate_genvar(const VlScope* parent,
 }
 
 // @brief 宣言要素のインスタンス化を行う．
-// @param[in] handle オブジェクトハンドル
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @param[out] is_array 対象が配列の時 true を返す．
-// @param[out] has_range_select 範囲指定を持っていたら true を返す．
-// @param[out] has_bit_select ビット指定を持っていたら true を返す．
 ElbExpr*
-ExprGen::instantiate_primary_sub(ObjHandle* handle,
-				 const VlScope* parent,
-				 const ElbEnv& env,
-				 const PtExpr* pt_expr,
-				 bool& is_array,
-				 bool& has_range_select,
-				 bool& has_bit_select)
+ExprGen::instantiate_primary_sub(
+  ObjHandle* handle,
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr,
+  bool& is_array,
+  bool& has_range_select,
+  bool& has_bit_select
+)
 {
   // 配列の次元
   SizeType dsize{0};
@@ -490,15 +483,15 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
   VlValueType value_type;
   if ( handle->type() == VpiObjType::Parameter ) {
     // パラメータの場合
-    auto param{handle->parameter()};
+    auto param = handle->parameter();
     primary = mgr().new_Primary(pt_expr, param);
     is_array = false;
     value_type = param->value_type();
   }
   else {
     // それ以外の宣言要素の場合
-    auto decl{handle->decl()};
-    auto declarray{handle->declarray()};
+    auto decl = handle->decl();
+    auto declarray = handle->declarray();
     if ( decl != nullptr ) {
       primary = mgr().new_Primary(pt_expr, decl);
       is_array = false;
@@ -521,7 +514,7 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
       bool const_index{true};
       for ( SizeType i = 0; i < dsize; ++ i ) {
 	SizeType j{dsize - i - 1};
-	auto pt_expr1{pt_expr->index(j)};
+	auto pt_expr1 = pt_expr->index(j);
 	bool is_const;
 	int index_val{evaluate_int_if_const(parent, pt_expr1, is_const)};
 	if ( is_const ) {
@@ -540,8 +533,8 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 	vector<ElbExpr*> index_list;
 	index_list.reserve(dsize);
 	for ( SizeType i = 0; i < dsize; ++ i ) {
-	  auto pt_expr1{pt_expr->index(i)};
-	  auto expr1{instantiate_expr(parent, env, pt_expr1)};
+	  auto pt_expr1 = pt_expr->index(i);
+	  auto expr1 = instantiate_expr(parent, env, pt_expr1);
 	  index_list.push_back(expr1);
 	}
 
@@ -580,11 +573,13 @@ ExprGen::instantiate_primary_sub(ObjHandle* handle,
 
 // @brief decl の型が適切がチェックする．
 void
-ExprGen::check_decl(const ElbEnv& env,
-		    const PtExpr* pt_expr,
-		    VpiObjType decl_type,
-		    bool is_array,
-		    bool has_select)
+ExprGen::check_decl(
+  const ElbEnv& env,
+  const PtExpr* pt_expr,
+  VpiObjType decl_type,
+  bool is_array,
+  bool has_select
+)
 {
   if ( env.is_pca_lhs() ) {
     // procedural continuous assignment 文の左辺式

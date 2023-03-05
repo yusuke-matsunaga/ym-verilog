@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiFuncCall.h"
 
@@ -21,30 +20,26 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 関数呼び出し式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] func 関数
-// @param[in] arg_list 引数のリスト
 ElbExpr*
-EiFactory::new_FuncCall(const PtExpr* pt_expr,
-			const VlTaskFunc* func,
-			const vector<ElbExpr*>& arg_list)
+EiFactory::new_FuncCall(
+  const PtExpr* pt_expr,
+  const VlTaskFunc* func,
+  const vector<ElbExpr*>& arg_list
+)
 {
-  auto expr{new EiFuncCall(pt_expr, func, arg_list)};
-
+  auto expr = new EiFuncCall{pt_expr, func, arg_list};
   return expr;
 }
 
 // @brief システム関数呼び出し式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] user_systf システム関数
-// @param[in] arg_list 引数のリスト
 ElbExpr*
-EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
-			   const VlUserSystf* user_systf,
-			   const vector<ElbExpr*>& arg_list)
+EiFactory::new_SysFuncCall(
+  const PtExpr* pt_expr,
+  const VlUserSystf* user_systf,
+  const vector<ElbExpr*>& arg_list
+)
 {
-  auto expr{new EiSysFuncCall(pt_expr, user_systf, arg_list)};
-
+  auto expr = new EiSysFuncCall{pt_expr, user_systf, arg_list};
   return expr;
 }
 
@@ -54,12 +49,11 @@ EiFactory::new_SysFuncCall(const PtExpr* pt_expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] arg_list 引数のリスト
-EiFcBase::EiFcBase(const PtExpr* pt_expr,
-		   const vector<ElbExpr*>& arg_list) :
-  EiExprBase(pt_expr),
-  mArgList{arg_list}
+EiFcBase::EiFcBase(
+  const PtExpr* pt_expr,
+  const vector<ElbExpr*>& arg_list
+) : EiExprBase{pt_expr},
+    mArgList{arg_list}
 {
 }
 
@@ -76,9 +70,10 @@ EiFcBase::argument_num() const
 }
 
 // @brief 引数の取得
-// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
 const VlExpr*
-EiFcBase::argument(SizeType pos) const
+EiFcBase::argument(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < argument_num() );
 
@@ -86,10 +81,10 @@ EiFcBase::argument(SizeType pos) const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiFcBase::_set_reqsize(const VlValueType& type)
+EiFcBase::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -100,15 +95,12 @@ EiFcBase::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] func 関数
-// @param[in] arg_size 引数の数
-// @param[in] arg_list 引数のリスト
-EiFuncCall::EiFuncCall(const PtExpr* pt_expr,
-		       const VlTaskFunc* func,
-		       const vector<ElbExpr*>& arg_list) :
-  EiFcBase(pt_expr, arg_list),
-  mFunc{func}
+EiFuncCall::EiFuncCall(
+  const PtExpr* pt_expr,
+  const VlTaskFunc* func,
+  const vector<ElbExpr*>& arg_list
+) : EiFcBase{pt_expr, arg_list},
+    mFunc{func}
 {
 }
 
@@ -173,7 +165,6 @@ EiFuncCall::is_funccall() const
 }
 
 // @brief 対象の関数を返す．
-// @note VpiFuncType::Call の時，意味を持つ．
 const VlTaskFunc*
 EiFuncCall::function() const
 {
@@ -186,14 +177,12 @@ EiFuncCall::function() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] user_systf システム関数
-// @param[in] arg_list 引数のリスト
-EiSysFuncCall::EiSysFuncCall(const PtExpr* pt_expr,
-			     const VlUserSystf* user_systf,
-			     const vector<ElbExpr*>& arg_list) :
-  EiFcBase(pt_expr, arg_list),
-  mUserSystf{user_systf}
+EiSysFuncCall::EiSysFuncCall(
+  const PtExpr* pt_expr,
+  const VlUserSystf* user_systf,
+  const vector<ElbExpr*>& arg_list
+) : EiFcBase{pt_expr, arg_list},
+    mUserSystf{user_systf}
 {
 }
 
@@ -238,7 +227,6 @@ EiSysFuncCall::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note このクラスは false を返す．
 bool
 EiSysFuncCall::is_const() const
 {
@@ -253,7 +241,6 @@ EiSysFuncCall::is_sysfunccall() const
 }
 
 // @brief 対象のシステム関数を返す．
-// @note VpiFuncType::SysCall の時，意味を持つ．
 const VlUserSystf*
 EiSysFuncCall::user_systf() const
 {

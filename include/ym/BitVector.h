@@ -49,6 +49,17 @@ public:
     unsigned int val = 0 ///< [in] 値
   );
 
+  /// @brief SizeType からのコンストラクタ
+  ///
+  /// 結果の型は
+  /// - サイズは無し
+  /// - 符号なし
+  /// - 基数は10
+  explicit
+  BitVector(
+    SizeType val ///< [in] 値
+  );
+
   /// @brief int からのキャスト用コンストラクタ
   ///
   /// 結果の型は
@@ -133,7 +144,7 @@ public:
   BitVector(
     SizeType size,    ///< [in] サイズ
     bool is_signed,   ///< [in] 符号の有無を表すフラグ
-    int base,         ///< [in] 基数を表す数字 (2, 8, 10, 16 のみが妥当な値)
+    SizeType base,    ///< [in] 基数を表す数字 (2, 8, 10, 16 のみが妥当な値)
     const string& str ///< [in] 値の内容を表すVerilog-HDL形式の文字列
   );
 
@@ -172,7 +183,7 @@ public:
     SizeType size,        ///< [in] 指定サイズ
     bool is_sized,        ///< [in] サイズの有無
     bool is_signed,       ///< [in] 符号の有無
-    int base              ///< [in] 基数
+    SizeType base         ///< [in] 基数
   );
 
   /// @brief コピー代入演算子
@@ -289,7 +300,7 @@ public:
     SizeType size,        ///< [in] 指定サイズ
     bool is_sized,        ///< [in] サイズの有無
     bool is_signed,       ///< [in] 符号の有無
-    int base              ///< [in] 基数
+    SizeType base         ///< [in] 基数
   );
 
   /// @brief Verilog-HDL (IEEE1364-2001) 形式の文字列から値をセットする関数．
@@ -718,7 +729,7 @@ public:
   /// @brief 表示用の基数を得る．
   ///
   /// 返り値は 2, 8, 10, 16 のいずれか．
-  int
+  SizeType
   base() const
   {
     int v = static_cast<int>(mFlags[2]) * 2 + static_cast<int>(mFlags[3]);
@@ -852,7 +863,7 @@ public:
   /// opt_base を基数と見なす．
   string
   verilog_string(
-    int opt_base = 0 ///< [in] 基数
+    SizeType opt_base = 0 ///< [in] 基数
   ) const;
 
   /// @brief 内容を10進数で表した文字列を返す．
@@ -934,13 +945,17 @@ private:
 
   // mVal0, mVal1 のリサイズをする．
   void
-  resize(SizeType size);
+  resize(
+    SizeType size
+  );
 
   // 属性(サイズの有無, 符号の有無, 基数)をセットする．
   void
-  set_type(bool has_size,
-	   bool has_sign,
-	   int base)
+  set_type(
+    bool has_size,
+    bool has_sign,
+    SizeType base
+  )
   {
     mFlags[0] = has_size;
     mFlags[1] = has_sign;
@@ -950,83 +965,103 @@ private:
 
   // 値をセットする．(1ワードバージョン)
   void
-  set(uword val0,
-      uword val1,
-      SizeType size,
-      bool is_sized,
-      bool is_signed,
-      int base);
+  set(
+    uword val0,
+    uword val1,
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    SizeType base
+  );
 
   // 値をセットする．(ベクタバージョン)
   void
-  set(const uword* val0,
-      const uword* val1,
-      SizeType src_size,
-      SizeType size,
-      bool is_sized,
-      bool is_signed,
-      int base);
+  set(
+    const uword* val0,
+    const uword* val1,
+    SizeType src_size,
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    SizeType base
+  );
 
   // 値をセットする．(ベクタバージョン)
   void
-  set(const vector<uword>& val0,
-      const vector<uword>& val1,
-      SizeType src_size,
-      SizeType size,
-      bool is_sized,
-      bool is_signed,
-      int base);
+  set(
+    const vector<uword>& val0,
+    const vector<uword>& val1,
+    SizeType src_size,
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    SizeType base
+  );
 
   // Verilog 形式の2進数から変換するための共通ルーティン
   void
-  set_from_binstring(SizeType size,
-		     bool is_sized,
-		     bool is_signed,
-		     const string& str,
-		     int pos);
+  set_from_binstring(
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    const string& str,
+    int pos
+  );
 
   // Verilog 形式の8進数から変換するための共通ルーティン
   void
-  set_from_octstring(SizeType size,
-		     bool is_sized,
-		     bool is_signed,
-		     const string& str,
-		     int pos);
+  set_from_octstring(
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    const string& str,
+    int pos
+  );
 
   // Verilog 形式の10進数から変換するための共通ルーティン
   void
-  set_from_decstring(SizeType size,
-		     bool is_sized,
-		     bool is_signed,
-		     const string& str,
-		     int pos);
+  set_from_decstring(
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    const string& str,
+    int pos
+  );
 
   // Verilog 形式の16進数から変換するための共通ルーティン
   void
-  set_from_hexstring(SizeType size,
-		     bool is_sized,
-		     bool is_signed,
-		     const string& str,
-		     int pos);
+  set_from_hexstring(
+    SizeType size,
+    bool is_sized,
+    bool is_signed,
+    const string& str,
+    int pos
+  );
 
   // 文字列からの変換用コンストラクタの共通ルーティン
   void
-  set_from_string(SizeType strsize,
-		  const char* str);
+  set_from_string(
+    SizeType strsize,
+    const char* str
+  );
 
   /// @brief src を 10 で割る．
   /// @return 余りを返す．
   static
   int
-  div10(const uword* src, ///< [in] 元の値
-	int n,            ///< [in]
-	uword* q);        ///< [out] 求まった商を格納する変数
+  div10(
+    const uword* src, ///< [in] 元の値
+    int n,            ///< [in]
+    uword* q          ///< [out] 求まった商を格納する変数
+  );
 
   /// @brief val を10進数で表した文字列を返す．
   static
   string
-  dec_str_sub(const uword* val,
-	      int n);
+  dec_str_sub(
+    const uword* val,
+    int n
+  );
 
 
 private:

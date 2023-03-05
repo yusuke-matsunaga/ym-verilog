@@ -804,7 +804,7 @@ public:
   new_Primary(
     const PtExpr* pt_expr,  ///< [in] パース木の定義要素
     const VlDeclArray* obj, ///< [in] 本体のオブジェクト
-    int offset              ///< [in] オフセット
+    SizeType offset         ///< [in] オフセット
   ) = 0;
 
   /// @brief 固定ビット選択式を生成する．
@@ -865,7 +865,7 @@ public:
     ElbExpr* obj,             ///< [in] 本体のオブジェクト
     ElbExpr* base,            ///< [in] 範囲のベースアドレスを表す式
     const PtExpr* range_expr, ///< [in] 範囲を表す式
-    int range_val             ///< [in] 範囲の値
+    SizeType range_val        ///< [in] 範囲の値
   ) = 0;
 
   /// @brief 可変部分選択式を生成する．
@@ -876,7 +876,7 @@ public:
     ElbExpr* obj,             ///< [in] 本体のオブジェクト
     ElbExpr* base,            ///< [in] 範囲のベースアドレスを表す式
     const PtExpr* range_expr, ///< [in] 範囲を表す式
-    int range_val             ///< [in] 範囲の値
+    SizeType range_val        ///< [in] 範囲の値
   ) = 0;
 
   /// @brief 定数式を生成する．

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiIODecl.h"
 #include "ei/EiFactory.h"
 
@@ -21,29 +20,29 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief module IO ヘッダを生成する．
-// @param[in] module 親のモジュール
-// @param[in] pt_header パース木のIO宣言ヘッダ
 ElbIOHead*
-EiFactory::new_IOHead(const VlModule* module,
-		      const PtIOHead* pt_header)
+EiFactory::new_IOHead(
+  const VlModule* module,
+  const PtIOHead* pt_header
+)
 {
-  auto head{new EiModIOHead(module, pt_header)};
+  auto head = new EiModIOHead{module, pt_header};
   return head;
 }
 
 // @brief タスク/関数 IO ヘッダを生成する．
-// @param[in] taskfunc 親のタスク/関数
-// @param[in] pt_header パース木のIO宣言ヘッダ
 ElbIOHead*
-EiFactory::new_IOHead(const VlTaskFunc* taskfunc,
-		      const PtIOHead* pt_header)
+EiFactory::new_IOHead(
+  const VlTaskFunc* taskfunc,
+  const PtIOHead* pt_header
+)
 {
   if ( taskfunc->type() == VpiObjType::Task ) {
-    auto head{new EiTaskIOHead(taskfunc, pt_header)};
+    auto head = new EiTaskIOHead{taskfunc, pt_header};
     return head;
   }
   else { // VpiObjType::Function
-    auto head{new EiFunctionIOHead(taskfunc, pt_header)};
+    auto head = new EiFunctionIOHead{taskfunc, pt_header};
     return head;
   }
 }
@@ -54,9 +53,9 @@ EiFactory::new_IOHead(const VlTaskFunc* taskfunc,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_header パース木のIO宣言ヘッダ
-EiIOHead::EiIOHead(const PtIOHead* pt_header) :
-  mPtHead{pt_header}
+EiIOHead::EiIOHead(
+  const PtIOHead* pt_header
+) : mPtHead{pt_header}
 {
 }
 
@@ -99,12 +98,11 @@ EiIOHead::function() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] module 親のモジュール
-// @param[in] pt_header パース木のIO宣言ヘッダ
-EiModIOHead::EiModIOHead(const VlModule* module,
-			 const PtIOHead* pt_header) :
-  EiIOHead(pt_header),
-  mModule{module}
+EiModIOHead::EiModIOHead(
+  const VlModule* module,
+  const PtIOHead* pt_header
+) : EiIOHead{pt_header},
+    mModule{module}
 {
 }
 
@@ -126,12 +124,11 @@ EiModIOHead::module() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] task 親のタスク/関数
-// @param[in] pt_header パース木のIO宣言ヘッダ
-EiTaskIOHead::EiTaskIOHead(const VlTaskFunc* task,
-			   const PtIOHead* pt_header) :
-  EiIOHead(pt_header),
-  mTask{task}
+EiTaskIOHead::EiTaskIOHead(
+  const VlTaskFunc* task,
+  const PtIOHead* pt_header
+) : EiIOHead{pt_header},
+    mTask{task}
 {
 }
 
@@ -153,12 +150,11 @@ EiTaskIOHead::task() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] func 親の関数
-// @param[in] pt_header パース木のIO宣言ヘッダ
-EiFunctionIOHead::EiFunctionIOHead(const VlTaskFunc* func,
-				   const PtIOHead* pt_header) :
-  EiIOHead(pt_header),
-  mFunction{func}
+EiFunctionIOHead::EiFunctionIOHead(
+  const VlTaskFunc* func,
+  const PtIOHead* pt_header
+) : EiIOHead{pt_header},
+    mFunction{func}
 {
 }
 
@@ -180,15 +176,13 @@ EiFunctionIOHead::function() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木のIO宣言要素
-// @param[in] decl 対応する宣言要素
-EiIODecl::EiIODecl(ElbIOHead* head,
-		   const PtIOItem* pt_item,
-		   const VlDecl* decl) :
-  mHead{head},
-  mPtItem{pt_item},
-  mDecl{decl}
+EiIODecl::EiIODecl(
+  ElbIOHead* head,
+  const PtIOItem* pt_item,
+  const VlDecl* decl
+) : mHead{head},
+    mPtItem{pt_item},
+    mDecl{decl}
 {
 }
 
@@ -226,8 +220,6 @@ EiIODecl::direction() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiIODecl::is_signed() const
 {
@@ -242,7 +234,6 @@ EiIODecl::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiIODecl::left_range_val() const
 {
@@ -250,7 +241,6 @@ EiIODecl::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiIODecl::right_range_val() const
 {
@@ -258,7 +248,6 @@ EiIODecl::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiIODecl::left_range_string() const
 {
@@ -266,7 +255,6 @@ EiIODecl::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiIODecl::right_range_string() const
 {
@@ -295,7 +283,6 @@ EiIODecl::module() const
 }
 
 // @brief 親の UDP の取得
-// @note このクラスでは nullptr を返す．
 const VlUdpDefn*
 EiIODecl::udp_defn() const
 {

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiPartSelect.h"
 
@@ -21,77 +20,65 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 固定部分選択式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] index1, index2 パート選択式
-// @param[in] index1_val, index2_val パート選択式の値
 ElbExpr*
-EiFactory::new_PartSelect(const PtExpr* pt_expr,
-			  ElbExpr* parent_expr,
-			  const PtExpr* index1,
-			  const PtExpr* index2,
-			  int index1_val,
-			  int index2_val)
+EiFactory::new_PartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  const PtExpr* index1,
+  const PtExpr* index2,
+  int index1_val,
+  int index2_val
+)
 {
-  auto expr{new EiConstPartSelect(pt_expr, parent_expr,
-				  index1, index2,
-				  index1_val, index2_val)};
-
+  auto expr = new EiConstPartSelect{pt_expr, parent_expr,
+				    index1, index2,
+				    index1_val, index2_val};
   return expr;
 }
 
 // @brief 固定部分選択式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] index1, inde2 パート選択式
 ElbExpr*
-EiFactory::new_PartSelect(const PtExpr* pt_expr,
-			  ElbExpr* parent_expr,
-			  int index1,
-			  int index2)
+EiFactory::new_PartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  int index1,
+  int index2
+)
 {
-  auto expr{new EiConstPartSelect(pt_expr, parent_expr,
-				  nullptr, nullptr,
-				  index1, index2)};
+  auto expr = new EiConstPartSelect{pt_expr, parent_expr,
+				    nullptr, nullptr,
+				    index1, index2};
+  return expr;
+}
+
+// @brief 可変部分選択式を生成する．
+ElbExpr*
+EiFactory::new_PlusPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  ElbExpr* base,
+  const PtExpr* range,
+  SizeType range_val
+)
+{
+  auto expr = new EiPlusPartSelect{pt_expr, parent_expr,
+				   base, range, range_val};
 
   return expr;
 }
 
 // @brief 可変部分選択式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] base 範囲のベースアドレスを表す式
-// @param[in] range 範囲を表す式
-// @param[in] range_val 範囲の値
 ElbExpr*
-EiFactory::new_PlusPartSelect(const PtExpr* pt_expr,
-			      ElbExpr* parent_expr,
-			      ElbExpr* base,
-			      const PtExpr* range,
-			      int range_val)
+EiFactory::new_MinusPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  ElbExpr* base,
+  const PtExpr* range,
+  SizeType range_val
+)
 {
-  auto expr{new EiPlusPartSelect(pt_expr, parent_expr,
-				 base, range, range_val)};
-
-  return expr;
-}
-
-// @brief 可変部分選択式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] base 範囲のベースアドレスを表す式
-// @param[in] range 範囲を表す式
-// @param[in] range_val 範囲の値
-ElbExpr*
-EiFactory::new_MinusPartSelect(const PtExpr* pt_expr,
-			       ElbExpr* parent_expr,
-			       ElbExpr* base,
-			       const PtExpr* range,
-			       int range_val)
-{
-  auto expr{new EiMinusPartSelect(pt_expr, parent_expr,
-				  base, range, range_val)};
-
+  auto expr = new EiMinusPartSelect{pt_expr, parent_expr,
+				    base, range, range_val};
   return expr;
 }
 
@@ -101,12 +88,11 @@ EiFactory::new_MinusPartSelect(const PtExpr* pt_expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 対象の式
-EiPartSelect::EiPartSelect(const PtExpr* pt_expr,
-			   ElbExpr* parent_expr) :
-  EiExprBase(pt_expr),
-  mParentExpr{parent_expr}
+EiPartSelect::EiPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr
+) : EiExprBase{pt_expr},
+    mParentExpr{parent_expr}
 {
 }
 
@@ -123,7 +109,6 @@ EiPartSelect::type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiPartSelect::is_const() const
 {
@@ -138,7 +123,6 @@ EiPartSelect::is_partselect() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiPartSelect::decl_base() const
 {
@@ -146,7 +130,6 @@ EiPartSelect::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDecl*
 EiPartSelect::decl_obj() const
 {
@@ -154,7 +137,6 @@ EiPartSelect::decl_obj() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDeclArray*
 EiPartSelect::declarray_obj() const
 {
@@ -162,7 +144,6 @@ EiPartSelect::declarray_obj() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
-// @note それ以外では 0 を返す．
 SizeType
 EiPartSelect::declarray_dimension() const
 {
@@ -170,16 +151,15 @@ EiPartSelect::declarray_dimension() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
-// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
-// @note それ以外では nullptr を返す．
 const VlExpr*
-EiPartSelect::declarray_index(SizeType pos) const
+EiPartSelect::declarray_index(
+  SizeType pos
+) const
 {
   return parent_expr()->declarray_index(pos);
 }
 
 // @brief 親の式を返す．
-// @note 式に対するビット選択/範囲選択の時，意味を持つ．
 const VlExpr*
 EiPartSelect::parent_expr() const
 {
@@ -187,9 +167,6 @@ EiPartSelect::parent_expr() const
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 1 を返す．
 SizeType
 EiPartSelect::lhs_elem_num() const
 {
@@ -197,21 +174,20 @@ EiPartSelect::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiPartSelect::lhs_elem(SizeType pos) const
+EiPartSelect::lhs_elem(
+  SizeType pos
+) const
 {
   ASSERT_COND( pos == 0 );
   return this;
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiPartSelect::_set_reqsize(const VlValueType& type)
+EiPartSelect::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -222,21 +198,18 @@ EiPartSelect::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 対象の式
-// @param[in] index1, index2 パート選択式
-// @param[in] index1_val, index2_val パート選択式の値
-EiConstPartSelect::EiConstPartSelect(const PtExpr* pt_expr,
-				     ElbExpr* parent_expr,
-				     const PtExpr* index1,
-				     const PtExpr* index2,
-				     int index1_val,
-				     int index2_val) :
-  EiPartSelect(pt_expr, parent_expr),
-  mLeftRange{index1},
-  mRightRange{index2},
-  mLeftVal{index1_val},
-  mRightVal{index2_val}
+EiConstPartSelect::EiConstPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  const PtExpr* index1,
+  const PtExpr* index2,
+  int index1_val,
+  int index2_val
+) : EiPartSelect{pt_expr, parent_expr},
+    mLeftRange{index1},
+    mRightRange{index2},
+    mLeftVal{index1_val},
+    mRightVal{index2_val}
 {
 }
 
@@ -260,7 +233,6 @@ EiConstPartSelect::value_type() const
 }
 
 // @brief 固定選択子の時 true を返す．
-// @note ビット選択，部分選択の時，意味を持つ．
 bool
 EiConstPartSelect::is_constant_select() const
 {
@@ -275,7 +247,6 @@ EiConstPartSelect::range_mode() const
 }
 
 // @brief 範囲の MSB の式を返す．
-// @note 通常の範囲選択の時，意味を持つ．
 const VlExpr*
 EiConstPartSelect::left_range() const
 {
@@ -283,7 +254,6 @@ EiConstPartSelect::left_range() const
 }
 
 // @brief 範囲の LSB の式を返す．
-// @note 通常の範囲選択の時，意味を持つ．
 const VlExpr*
 EiConstPartSelect::right_range() const
 {
@@ -291,7 +261,6 @@ EiConstPartSelect::right_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 式に対する範囲選択の時，意味を持つ．
 int
 EiConstPartSelect::left_range_val() const
 {
@@ -299,7 +268,6 @@ EiConstPartSelect::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 式に対する範囲選択の時，意味を持つ．
 int
 EiConstPartSelect::right_range_val() const
 {
@@ -312,20 +280,16 @@ EiConstPartSelect::right_range_val() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] base 範囲のベースアドレスを表す式
-// @param[in] range 範囲を表す式
-// @param[in] range_width 範囲の値
-EiVarPartSelect::EiVarPartSelect(const PtExpr* pt_expr,
-				 ElbExpr* parent_expr,
-				 ElbExpr* base,
-				 const PtExpr* range,
-				 SizeType range_width) :
-  EiPartSelect(pt_expr, parent_expr),
-  mBaseExpr{base},
-  mRangeExpr{range},
-  mRangeWidth{range_width}
+EiVarPartSelect::EiVarPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  ElbExpr* base,
+  const PtExpr* range,
+  SizeType range_width
+) : EiPartSelect{pt_expr, parent_expr},
+    mBaseExpr{base},
+    mRangeExpr{range},
+    mRangeWidth{range_width}
 {
 }
 
@@ -338,11 +302,10 @@ EiVarPartSelect::~EiVarPartSelect()
 VlValueType
 EiVarPartSelect::value_type() const
 {
-  return VlValueType(false, true, mRangeWidth);
+  return VlValueType{false, true, mRangeWidth};
 }
 
 // @brief 固定選択子の時 true を返す．
-// @note ビット選択，部分選択の時，意味を持つ．
 bool
 EiVarPartSelect::is_constant_select() const
 {
@@ -350,8 +313,6 @@ EiVarPartSelect::is_constant_select() const
 }
 
 // @brief 範囲のベースを表す式を返す．
-// @note 可変範囲選択の時，意味を持つ．
-// @note それ以外では nullptr を返す．
 const VlExpr*
 EiVarPartSelect::base() const
 {
@@ -359,8 +320,6 @@ EiVarPartSelect::base() const
 }
 
 // @brief 範囲のビット幅を返す．
-// @note 可変範囲選択の時，意味を持つ．
-// @note それ以外では 0 を返す．
 SizeType
 EiVarPartSelect::range_width() const
 {
@@ -373,17 +332,13 @@ EiVarPartSelect::range_width() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] base 範囲のベースアドレスを表す式
-// @param[in] range 範囲を表す式
-// @param[in] range_val 範囲の値
-EiPlusPartSelect::EiPlusPartSelect(const PtExpr* pt_expr,
-				   ElbExpr* parent_expr,
-				   ElbExpr* base,
-				   const PtExpr* range,
-				   int range_val) :
-  EiVarPartSelect(pt_expr, parent_expr, base, range, range_val)
+EiPlusPartSelect::EiPlusPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  ElbExpr* base,
+  const PtExpr* range,
+  SizeType range_val
+) : EiVarPartSelect{pt_expr, parent_expr, base, range, range_val}
 {
 }
 
@@ -405,17 +360,13 @@ EiPlusPartSelect::range_mode() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] parent_expr 本体の式
-// @param[in] base 範囲のベースアドレスを表す式
-// @param[in] range 範囲を表す式
-// @param[in] range_val 範囲の値
-EiMinusPartSelect::EiMinusPartSelect(const PtExpr* pt_expr,
-				     ElbExpr* parent_expr,
-				     ElbExpr* base,
-				     const PtExpr* range,
-				     int range_val) :
-  EiVarPartSelect(pt_expr, parent_expr, base, range, range_val)
+EiMinusPartSelect::EiMinusPartSelect(
+  const PtExpr* pt_expr,
+  ElbExpr* parent_expr,
+  ElbExpr* base,
+  const PtExpr* range,
+  SizeType range_val
+) : EiVarPartSelect{pt_expr, parent_expr, base, range, range_val}
 {
 }
 

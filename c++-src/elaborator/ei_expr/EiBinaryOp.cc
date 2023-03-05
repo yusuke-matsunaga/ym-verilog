@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiBinaryOp.h"
 
@@ -20,15 +19,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 2項演算子を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] op_type 演算子のタイプ
-// @param[in] opr0 オペランド
-// @param[in] opr1 オペランド
 ElbExpr*
-EiFactory::new_BinaryOp(const PtExpr* pt_expr,
-			VpiOpType op_type,
-			ElbExpr* opr0,
-			ElbExpr* opr1)
+EiFactory::new_BinaryOp(
+  const PtExpr* pt_expr,
+  VpiOpType op_type,
+  ElbExpr* opr0,
+  ElbExpr* opr1
+)
 {
   ElbExpr* expr = nullptr;
   switch( op_type ) {
@@ -36,7 +33,7 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
   case VpiOpType::BitOr:
   case VpiOpType::BitXNor:
   case VpiOpType::BitXor:
-    expr = new EiBinaryBitOp(pt_expr, opr0, opr1);
+    expr = new EiBinaryBitOp{pt_expr, opr0, opr1};
     break;
 
   case VpiOpType::Add:
@@ -44,23 +41,23 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
   case VpiOpType::Mult:
   case VpiOpType::Div:
   case VpiOpType::Mod:
-    expr = new EiBinaryArithOp(pt_expr, opr0, opr1);
+    expr = new EiBinaryArithOp{pt_expr, opr0, opr1};
     break;
 
   case VpiOpType::Power:
-    expr = new EiPowerOp(pt_expr, opr0, opr1);
+    expr = new EiPowerOp{pt_expr, opr0, opr1};
     break;
 
   case VpiOpType::LShift:
   case VpiOpType::RShift:
   case VpiOpType::ArithLShift:
   case VpiOpType::ArithRShift:
-    expr = new EiShiftOp(pt_expr, opr0, opr1);
+    expr = new EiShiftOp{pt_expr, opr0, opr1};
     break;
 
   case VpiOpType::LogAnd:
   case VpiOpType::LogOr:
-    expr = new EiBinaryLogOp(pt_expr, opr0, opr1);
+    expr = new EiBinaryLogOp{pt_expr, opr0, opr1};
     break;
 
   case VpiOpType::CaseEq:
@@ -71,7 +68,7 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
   case VpiOpType::Gt:
   case VpiOpType::Le:
   case VpiOpType::Lt:
-    expr = new EiCompareOp(pt_expr, opr0, opr1);
+    expr = new EiCompareOp{pt_expr, opr0, opr1};
     break;
 
   default:
@@ -87,14 +84,12 @@ EiFactory::new_BinaryOp(const PtExpr* pt_expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiBinaryOp::EiBinaryOp(const PtExpr* pt_expr,
-		       ElbExpr* opr1,
-		       ElbExpr* opr2) :
-  EiOperation(pt_expr),
-  mOpr{opr1, opr2}
+EiBinaryOp::EiBinaryOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiOperation{pt_expr},
+    mOpr{opr1, opr2}
 {
 }
 
@@ -104,7 +99,6 @@ EiBinaryOp::~EiBinaryOp()
 }
 
 // @brief 定数の時 true を返す．
-// @note オペランドが定数ならこの式も定数となる．
 bool
 EiBinaryOp::is_const() const
 {
@@ -119,9 +113,10 @@ EiBinaryOp::operand_num() const
 }
 
 // @brief オペランドを返す．
-// @param[in] pos 位置番号
 const VlExpr*
-EiBinaryOp::operand(SizeType pos) const
+EiBinaryOp::operand(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < 2 );
 
@@ -134,13 +129,11 @@ EiBinaryOp::operand(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiCompareOp::EiCompareOp(const PtExpr* pt_expr,
-			 ElbExpr* opr1,
-			 ElbExpr* opr2) :
-  EiBinaryOp(pt_expr, opr1, opr2)
+EiCompareOp::EiCompareOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiBinaryOp{pt_expr, opr1, opr2}
 {
   // 比較演算は大きい方の型を用いる．
   auto type1 = opr1->value_type();
@@ -166,10 +159,10 @@ EiCompareOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiCompareOp::_set_reqsize(const VlValueType& type)
+EiCompareOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -180,13 +173,11 @@ EiCompareOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiBinaryLogOp::EiBinaryLogOp(const PtExpr* pt_expr,
-			     ElbExpr* opr1,
-			     ElbExpr* opr2) :
-  EiBinaryOp(pt_expr, opr1, opr2)
+EiBinaryLogOp::EiBinaryLogOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiBinaryOp{pt_expr, opr1, opr2}
 {
   // 論理演算の場合はオペランドも1ビットスカラーのはずだが
   // 仕様書には max(L(i), L(j)) なんて書いてある．
@@ -207,14 +198,14 @@ VlValueType
 EiBinaryLogOp::value_type() const
 {
   // 常に1ビット符号なし
-  return VlValueType(false, true, 1);
+  return VlValueType{false, true, 1};
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiBinaryLogOp::_set_reqsize(const VlValueType& type)
+EiBinaryLogOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -225,13 +216,11 @@ EiBinaryLogOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiBinaryBitOp::EiBinaryBitOp(const PtExpr* pt_expr,
-			     ElbExpr* opr1,
-			     ElbExpr* opr2) :
-  EiBinaryOp(pt_expr, opr1, opr2)
+EiBinaryBitOp::EiBinaryBitOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiBinaryOp{pt_expr, opr1, opr2}
 {
   // オペランドのサイズの大きい方で決まる．
   auto type1 = opr1->value_type();
@@ -255,10 +244,10 @@ EiBinaryBitOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiBinaryBitOp::_set_reqsize(const VlValueType& type)
+EiBinaryBitOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
   mOpr[0]->set_reqsize(mType);
@@ -271,13 +260,11 @@ EiBinaryBitOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiBinaryArithOp::EiBinaryArithOp(const PtExpr* pt_expr,
-				 ElbExpr* opr1,
-				 ElbExpr* opr2) :
-  EiBinaryOp(pt_expr, opr1, opr2)
+EiBinaryArithOp::EiBinaryArithOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiBinaryOp{pt_expr, opr1, opr2}
 {
   // オペランドのサイズの大きい方で決まる．
   auto type1 = opr1->value_type();
@@ -299,10 +286,10 @@ EiBinaryArithOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiBinaryArithOp::_set_reqsize(const VlValueType& type)
+EiBinaryArithOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
   mOpr[0]->set_reqsize(mType);
@@ -315,13 +302,11 @@ EiBinaryArithOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiPowerOp::EiPowerOp(const PtExpr* pt_expr,
-		     ElbExpr* opr1,
-		     ElbExpr* opr2) :
-  EiBinaryOp(pt_expr, opr1, opr2)
+EiPowerOp::EiPowerOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiBinaryOp{pt_expr, opr1, opr2}
 {
   // 巾乗演算の場合, どちらかのオペランドが real, integer, signed
   // なら結果は real, どちらも unsigned の時のみ unsigned となる．
@@ -346,10 +331,10 @@ EiPowerOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiPowerOp::_set_reqsize(const VlValueType& type)
+EiPowerOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
 
@@ -365,13 +350,11 @@ EiPowerOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-EiShiftOp::EiShiftOp(const PtExpr* pt_expr,
-		     ElbExpr* opr1,
-		     ElbExpr* opr2) :
-  EiBinaryOp(pt_expr, opr1, opr2)
+EiShiftOp::EiShiftOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+) : EiBinaryOp{pt_expr, opr1, opr2}
 {
   // シフト演算子は第1オペランドの型とサイズをそのまま引き継ぐ
   mType = opr1->value_type();
@@ -396,10 +379,10 @@ EiShiftOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiShiftOp::_set_reqsize(const VlValueType& type)
+EiShiftOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
 

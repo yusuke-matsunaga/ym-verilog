@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiPort.h"
 
 #include "elaborator/ElbModule.h"
@@ -28,17 +27,14 @@ EiPort::EiPort()
 }
 
 // @brief 初期設定を行う．
-// @param[in] module 親のモジュール
-// @param[in] pt_port パース木のポート定義
-// @param[in] index ポート番号
-// @param[in] low_conn 下位の接続
-// @param[in] dir 向き
 void
-EiPort::init(const VlModule* module,
-	     const PtPort* pt_port,
-	     SizeType index,
-	     ElbExpr* low_conn,
-	     VpiDir dir)
+EiPort::init(
+  const VlModule* module,
+  const PtPort* pt_port,
+  SizeType index,
+  ElbExpr* low_conn,
+  VpiDir dir
+)
 {
   mModule = module;
   mPtPort = pt_port;
@@ -51,8 +47,10 @@ EiPort::init(const VlModule* module,
 
 // @brief high_conn を接続する．
 void
-EiPort::set_high_conn(ElbExpr* high_conn,
-		      bool conn_by_name)
+EiPort::set_high_conn(
+  ElbExpr* high_conn,
+  bool conn_by_name
+)
 {
   mHighConn = high_conn;
   mConnByName = conn_by_name;

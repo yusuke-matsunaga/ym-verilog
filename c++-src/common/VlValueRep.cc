@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "VlValueRep.h"
 
 
@@ -59,7 +58,6 @@ VlValueError::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueError::int_value() const
 {
@@ -67,7 +65,6 @@ VlValueError::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueError::uint_value() const
 {
@@ -89,7 +86,6 @@ VlValueError::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 double
 VlValueError::real_value() const
 {
@@ -104,9 +100,10 @@ VlValueError::time_value() const
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueError::bitvector_value(const VlValueType& req) const
+VlValueError::bitvector_value(
+  const VlValueType& req
+) const
 {
   return BitVector();
 }
@@ -115,8 +112,7 @@ VlValueError::bitvector_value(const VlValueType& req) const
 VlValueRep*
 VlValueError::duplicate() const
 {
-  cout << "VlValueError::duplicate()" << endl;
-  return new VlValueError();
+  return new VlValueError{};
 }
 
 
@@ -125,8 +121,9 @@ VlValueError::duplicate() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VlValueInt::VlValueInt(int val) :
-  mVal{val}
+VlValueInt::VlValueInt(
+  int val
+) : mVal{val}
 {
 }
 
@@ -173,7 +170,6 @@ VlValueInt::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueInt::int_value() const
 {
@@ -181,7 +177,6 @@ VlValueInt::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueInt::uint_value() const
 {
@@ -206,7 +201,6 @@ VlValueInt::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 double
 VlValueInt::real_value() const
 {
@@ -221,9 +215,10 @@ VlValueInt::time_value() const
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueInt::bitvector_value(const VlValueType& req) const
+VlValueInt::bitvector_value(
+  const VlValueType& req
+) const
 {
   return BitVector(mVal).coerce(req);
 }
@@ -232,8 +227,7 @@ VlValueInt::bitvector_value(const VlValueType& req) const
 VlValueRep*
 VlValueInt::duplicate() const
 {
-  cout << "VlValueInt::duplicate()" << endl;
-  return new VlValueInt(mVal);
+  return new VlValueInt{mVal};
 }
 
 
@@ -242,8 +236,9 @@ VlValueInt::duplicate() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VlValueUint::VlValueUint(ymuint val) :
-  mVal{val}
+VlValueUint::VlValueUint(
+  ymuint val
+) : mVal{val}
 {
 }
 
@@ -290,7 +285,6 @@ VlValueUint::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueUint::int_value() const
 {
@@ -298,7 +292,6 @@ VlValueUint::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueUint::uint_value() const
 {
@@ -323,7 +316,6 @@ VlValueUint::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 double
 VlValueUint::real_value() const
 {
@@ -334,23 +326,23 @@ VlValueUint::real_value() const
 VlTime
 VlValueUint::time_value() const
 {
-  return VlTime(mVal);
+  return VlTime{mVal};
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueUint::bitvector_value(const VlValueType& req) const
+VlValueUint::bitvector_value(
+  const VlValueType& req
+) const
 {
-  return BitVector(mVal).coerce(req);
+  return BitVector{mVal}.coerce(req);
 }
 
 // @brief 自身の複製を返す．
 VlValueRep*
 VlValueUint::duplicate() const
 {
-  cout << "VlValueUint::duplicate()" << endl;
-  return new VlValueInt(mVal);
+  return new VlValueUint{mVal};
 }
 
 
@@ -359,8 +351,9 @@ VlValueUint::duplicate() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VlValueScalar::VlValueScalar(const VlScalarVal& val) :
-  mVal{val}
+VlValueScalar::VlValueScalar(
+  const VlScalarVal& val
+) : mVal{val}
 {
 }
 
@@ -407,7 +400,6 @@ VlValueScalar::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueScalar::int_value() const
 {
@@ -415,7 +407,6 @@ VlValueScalar::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueScalar::uint_value() const
 {
@@ -440,7 +431,6 @@ VlValueScalar::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 double
 VlValueScalar::real_value() const
 {
@@ -455,19 +445,19 @@ VlValueScalar::time_value() const
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueScalar::bitvector_value(const VlValueType& req) const
+VlValueScalar::bitvector_value(
+  const VlValueType& req
+) const
 {
-  return BitVector(mVal).coerce(req);
+  return BitVector{mVal}.coerce(req);
 }
 
 // @brief 自身の複製を返す．
 VlValueRep*
 VlValueScalar::duplicate() const
 {
-  cout << "VlValueScalar::duplicate()" << endl;
-  return new VlValueScalar(mVal);
+  return new VlValueScalar{mVal};
 }
 
 
@@ -476,8 +466,9 @@ VlValueScalar::duplicate() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VlValueReal::VlValueReal(double val) :
-  mVal{val}
+VlValueReal::VlValueReal(
+  double val
+) : mVal{val}
 {
 }
 
@@ -524,7 +515,6 @@ VlValueReal::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueReal::int_value() const
 {
@@ -532,7 +522,6 @@ VlValueReal::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueReal::uint_value() const
 {
@@ -557,7 +546,6 @@ VlValueReal::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 double
 VlValueReal::real_value() const
 {
@@ -572,19 +560,19 @@ VlValueReal::time_value() const
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueReal::bitvector_value(const VlValueType& req) const
+VlValueReal::bitvector_value(
+  const VlValueType& req
+) const
 {
-  return BitVector();
+  return BitVector{};
 }
 
 // @brief 自身の複製を返す．
 VlValueRep*
 VlValueReal::duplicate() const
 {
-  cout << "VlValueReal::duplicate()" << endl;
-  return new VlValueReal(mVal);
+  return new VlValueReal{mVal};
 }
 
 
@@ -593,8 +581,9 @@ VlValueReal::duplicate() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VlValueTime::VlValueTime(VlTime val) :
-  mVal{val}
+VlValueTime::VlValueTime(
+  VlTime val
+) : mVal{val}
 {
 }
 
@@ -641,7 +630,6 @@ VlValueTime::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueTime::int_value() const
 {
@@ -649,7 +637,6 @@ VlValueTime::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueTime::uint_value() const
 {
@@ -674,7 +661,6 @@ VlValueTime::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 double
 VlValueTime::real_value() const
 {
@@ -689,19 +675,19 @@ VlValueTime::time_value() const
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueTime::bitvector_value(const VlValueType& req) const
+VlValueTime::bitvector_value(
+  const VlValueType& req
+) const
 {
-  return BitVector(mVal).coerce(req);
+  return BitVector{mVal}.coerce(req);
 }
 
 // @brief 自身の複製を返す．
 VlValueRep*
 VlValueTime::duplicate() const
 {
-  cout << "VlValueTime::duplicate()" << endl;
-  return new VlValueTime(mVal);
+  return new VlValueTime{mVal};
 }
 
 
@@ -710,8 +696,9 @@ VlValueTime::duplicate() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-VlValueBitVector::VlValueBitVector(const BitVector& val) :
-  mVal{val}
+VlValueBitVector::VlValueBitVector(
+  const BitVector& val
+) : mVal{val}
 {
 }
 
@@ -758,7 +745,6 @@ VlValueBitVector::is_bitvector_compat() const
 }
 
 // @brief 整数型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 int
 VlValueBitVector::int_value() const
 {
@@ -766,7 +752,6 @@ VlValueBitVector::int_value() const
 }
 
 // @brief ymuint 型の値を返す．
-// @note 値が整数型に変換できない時の値は不定
 ymuint
 VlValueBitVector::uint_value() const
 {
@@ -788,7 +773,6 @@ VlValueBitVector::logic_value() const
 }
 
 // @brief 実数型の値を返す．
-// @note 値が実数型に変換できない時の値は不定
 double
 VlValueBitVector::real_value() const
 {
@@ -803,19 +787,19 @@ VlValueBitVector::time_value() const
 }
 
 // @brief ビットベクタ型の値を返す．
-// @param[in] req 要求されるデータの型
 BitVector
-VlValueBitVector::bitvector_value(const VlValueType& req) const
+VlValueBitVector::bitvector_value(
+  const VlValueType& req
+) const
 {
-  return BitVector(mVal).coerce(req);
+  return BitVector{mVal}.coerce(req);
 }
 
 // @brief 自身の複製を返す．
 VlValueRep*
 VlValueBitVector::duplicate() const
 {
-  cout << "VlValueBitVector::duplicate()" << endl;
-  return new VlValueBitVector(mVal);
+  return new VlValueBitVector{mVal};
 }
 
 END_NAMESPACE_YM_VERILOG

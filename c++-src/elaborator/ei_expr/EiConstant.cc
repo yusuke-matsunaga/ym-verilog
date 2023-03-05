@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiConstant.h"
 
@@ -21,9 +20,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 定数式を生成する．
-// @param[in] pt_expr パース木の定義要素
 ElbExpr*
-EiFactory::new_Constant(const PtExpr* pt_expr)
+EiFactory::new_Constant(
+  const PtExpr* pt_expr
+)
 {
   auto const_type = pt_expr->const_type();
   SizeType size = pt_expr->const_size();
@@ -33,7 +33,8 @@ EiFactory::new_Constant(const PtExpr* pt_expr)
   switch ( const_type ) {
   case VpiConstType::Int:
     if ( pt_expr->const_str() == nullptr ) {
-      expr = new EiIntConst(pt_expr, pt_expr->const_uint());
+      auto val = static_cast<int>(pt_expr->const_uint32());
+      expr = new EiIntConst{pt_expr, val};
     }
     break;
 
@@ -62,11 +63,11 @@ EiFactory::new_Constant(const PtExpr* pt_expr)
     break;
 
   case VpiConstType::Real:
-    expr = new EiRealConst(pt_expr, pt_expr->const_real());
+    expr = new EiRealConst{pt_expr, pt_expr->const_real()};
     break;
 
   case VpiConstType::String:
-    expr = new EiStringConst(pt_expr, pt_expr->const_str());
+    expr = new EiStringConst{pt_expr, pt_expr->const_str()};
     break;
 
   default:
@@ -76,20 +77,20 @@ EiFactory::new_Constant(const PtExpr* pt_expr)
 
   if ( !expr ) {
     // ここに来たということはビットベクタ型
-    expr = new EiBitVectorConst(pt_expr, const_type,
-				BitVector(size, is_signed, base, pt_expr->const_str()));
+    expr = new EiBitVectorConst{pt_expr, const_type,
+				BitVector(size, is_signed, base, pt_expr->const_str())};
   }
   return expr;
 }
 
 // @brief genvar 起因の定数式を生成する．
-// @param[in] pt_item パース木の定義要素
-// @param[in] val 値
 ElbExpr*
-EiFactory::new_GenvarConstant(const PtExpr* pt_primary,
-			      int val)
+EiFactory::new_GenvarConstant(
+  const PtExpr* pt_primary,
+  int val
+)
 {
-  return new EiIntConst(pt_primary, val);
+  return new EiIntConst{pt_primary, val};
 }
 
 
@@ -98,9 +99,9 @@ EiFactory::new_GenvarConstant(const PtExpr* pt_primary,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-EiConstant::EiConstant(const PtExpr* pt_expr) :
-  EiExprBase(pt_expr)
+EiConstant::EiConstant(
+  const PtExpr* pt_expr
+) : EiExprBase{pt_expr}
 {
 }
 
@@ -125,10 +126,10 @@ EiConstant::is_const() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiConstant::_set_reqsize(const VlValueType& type)
+EiConstant::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -139,12 +140,11 @@ EiConstant::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] value 値
-EiIntConst::EiIntConst(const PtExpr* pt_expr,
-		       int value) :
-  EiConstant(pt_expr),
-  mValue{value}
+EiIntConst::EiIntConst(
+  const PtExpr* pt_expr,
+  ymint32 value
+) : EiConstant{pt_expr},
+    mValue{value}
 {
 }
 
@@ -161,7 +161,6 @@ EiIntConst::value_type() const
 }
 
 // @brief 定数の型を返す．
-// @note 定数の時，意味を持つ．
 VpiConstType
 EiIntConst::constant_type() const
 {
@@ -169,12 +168,10 @@ EiIntConst::constant_type() const
 }
 
 // @brief 定数値を返す．
-// @note kVpiConstant の時，意味を持つ．
-// @note それ以外では動作は不定
 VlValue
 EiIntConst::constant_value() const
 {
-  return VlValue(mValue);
+  return VlValue{mValue};
 }
 
 
@@ -183,15 +180,13 @@ EiIntConst::constant_value() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] const_type 定数型
-// @param[in] value 値
-EiBitVectorConst::EiBitVectorConst(const PtExpr* pt_expr,
-				   VpiConstType const_type,
-				   const BitVector& value) :
-  EiConstant(pt_expr),
-  mConstType{const_type},
-  mValue{value}
+EiBitVectorConst::EiBitVectorConst(
+  const PtExpr* pt_expr,
+  VpiConstType const_type,
+  const BitVector& value
+) : EiConstant{pt_expr},
+    mConstType{const_type},
+    mValue{value}
 {
 }
 
@@ -206,11 +201,10 @@ EiBitVectorConst::value_type() const
 {
   SizeType size = mValue.size();
   bool sign = ( static_cast<int>(mConstType) & 8 ) == 8;
-  return VlValueType(sign, true, size);
+  return VlValueType{sign, true, size};
 }
 
 // @brief 定数の型を返す．
-// @note 定数の時，意味を持つ．
 VpiConstType
 EiBitVectorConst::constant_type() const
 {
@@ -218,8 +212,6 @@ EiBitVectorConst::constant_type() const
 }
 
 // @brief 定数値を返す．
-// @note kVpiConstant の時，意味を持つ．
-// @note それ以外では動作は不定
 VlValue
 EiBitVectorConst::constant_value() const
 {
@@ -232,12 +224,11 @@ EiBitVectorConst::constant_value() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] value 値
-EiRealConst::EiRealConst(const PtExpr* pt_expr,
-			 double value) :
-  EiConstant(pt_expr),
-  mValue{value}
+EiRealConst::EiRealConst(
+  const PtExpr* pt_expr,
+  double value
+) : EiConstant{pt_expr},
+    mValue{value}
 {
 }
 
@@ -254,7 +245,6 @@ EiRealConst::value_type() const
 }
 
 // @brief 定数の型を返す．
-// @note 定数の時，意味を持つ．
 VpiConstType
 EiRealConst::constant_type() const
 {
@@ -262,12 +252,10 @@ EiRealConst::constant_type() const
 }
 
 // @brief 定数値を返す．
-// @note kVpiConstant の時，意味を持つ．
-// @note それ以外では動作は不定
 VlValue
 EiRealConst::constant_value() const
 {
-  return VlValue(mValue);
+  return VlValue{mValue};
 }
 
 
@@ -276,12 +264,11 @@ EiRealConst::constant_value() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] value 値
-EiStringConst::EiStringConst(const PtExpr* pt_expr,
-			     const string& value) :
-  EiConstant(pt_expr),
-  mValue{value}
+EiStringConst::EiStringConst(
+  const PtExpr* pt_expr,
+  const string& value
+) : EiConstant{pt_expr},
+    mValue{value}
 {
 }
 
@@ -295,11 +282,10 @@ VlValueType
 EiStringConst::value_type() const
 {
   SizeType size = mValue.size();
-  return VlValueType(false, true, size);
+  return VlValueType{false, true, size};
 }
 
 // @brief 定数の型を返す．
-// @note 定数の時，意味を持つ．
 VpiConstType
 EiStringConst::constant_type() const
 {
@@ -307,12 +293,10 @@ EiStringConst::constant_type() const
 }
 
 // @brief 定数値を返す．
-// @note kVpiConstant の時，意味を持つ．
-// @note それ以外では動作は不定
 VlValue
 EiStringConst::constant_value() const
 {
-  return VlValue(mValue);
+  return VlValue{mValue};
 }
 
 END_NAMESPACE_YM_VERILOG

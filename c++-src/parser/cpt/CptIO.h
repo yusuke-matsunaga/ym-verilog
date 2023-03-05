@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/pt/PtDecl.h"
 #include "ym/FileRegion.h"
 #include "parser/PtiArray.h"
@@ -26,18 +25,14 @@ class CptIOHBase :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] type IOの種類
-  /// @param[in] aux_type 補助的な型
-  /// @param[in] net_type 補助的なネット型
-  /// @param[in] var_type 補助的な変数型
-  /// @param[in] sign 符号つきの時 true にするフラグ
-  CptIOHBase(const FileRegion& file_region,
-	     VpiDir dir,
-	     VpiAuxType aux_type,
-	     VpiNetType net_type,
-	     VpiVarType var_type,
-	     bool sign);
+  CptIOHBase(
+    const FileRegion& file_region, ///< [in] ファイル位置の情報
+    VpiDir dir,                    ///< [in] IOの種類
+    VpiAuxType aux_type,           ///< [in] 補助的な型
+    VpiNetType net_type,           ///< [in] 補助的なネット型
+    VpiVarType var_type,           ///< [in] 補助的な変数型
+    bool sign                      ///< [in] 符号つきの時 true にするフラグ
+  );
 
   /// @brief デストラクタ
   ~CptIOHBase();
@@ -77,14 +72,12 @@ public:
   /// @brief 範囲のMSBの取得
   /// @retval 範囲のMSB
   /// @retval nullptr 範囲を持たないとき
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   left_range() const override;
 
   /// @brief 範囲のLSBの取得
   /// @retval 範囲のLSB
   /// @retval nullptr 範囲を持たないとき
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   right_range() const override;
 
@@ -93,9 +86,10 @@ public:
   item_num() const override;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtIOItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
 
 private:
@@ -104,9 +98,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素の配列
   void
-  set_elem(PtiIOItemArray&& elem_array) override;
+  set_elem(
+    PtiIOItemArray&& elem_array ///< [in] 要素の配列
+  ) override;
 
 
 private:
@@ -132,23 +127,17 @@ private:
 class CptIOH :
   public CptIOHBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] type IOの種類
-  /// @param[in] aux_type 補助的な型
-  /// @param[in] net_type 補助的なネット型
-  /// @param[in] var_type 補助的な変数型
-  /// @param[in] sign 符号の有無
-  CptIOH(const FileRegion& file_region,
-	 VpiDir dir,
-	 VpiAuxType aux_type,
-	 VpiNetType net_type,
-	 VpiVarType var_type,
-	 bool sign);
+  CptIOH(
+    const FileRegion& file_region, ///< [in] ファイル位置の情報
+    VpiDir dir,			   ///< [in] IOの種類
+    VpiAuxType aux_type,	   ///< [in] 補助的な型
+    VpiNetType net_type,	   ///< [in] 補助的なネット型
+    VpiVarType var_type,	   ///< [in] 補助的な変数型
+    bool sign			   ///< [in] 符号つきの時 true にするフラグ
+  );
 
   /// @brief デストラクタ
   ~CptIOH();
@@ -162,25 +151,18 @@ protected:
 class CptIOHV :
   public CptIOHBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] type IOの種類
-  /// @param[in] aux_type 補助的な型
-  /// @param[in] net_type 補助的なネット型
-  /// @param[in] sign 符号つきの時に true とするフラグ
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  CptIOHV(const FileRegion& file_region,
-	  VpiDir dir,
-	  VpiAuxType aux_type,
-	  VpiNetType net_type,
-	  bool sign,
-	  const PtExpr* left,
-	  const PtExpr* right);
+  CptIOHV(
+    const FileRegion& file_region, ///< [in] ファイル位置の情報
+    VpiDir dir,			   ///< [in] IOの種類
+    VpiAuxType aux_type,	   ///< [in] 補助的な型
+    VpiNetType net_type,	   ///< [in] 補助的なネット型
+    bool sign,                     ///< [in] 符号つきの時 true にするフラグ
+    const PtExpr* left,            ///< [in] 範囲の左側の式
+    const PtExpr* right            ///< [in] 範囲の右側の式
+  );
 
   /// @brief デストラクタ
   ~CptIOHV();
@@ -220,15 +202,13 @@ private:
 class CptIOItem :
   public PtIOItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] name 名前
-  CptIOItem(const FileRegion& file_region,
-	    const char* name);
+  CptIOItem(
+    const FileRegion& file_region, ///< [in] ファイル位置の情報
+    const char* name               ///< [in] 名前
+  );
 
   /// @brief デストラクタ
   ~CptIOItem();
@@ -250,7 +230,6 @@ public:
   /// @brief 初期値の取得
   /// @retval 初期値
   /// @retval nullptr 初期値を持たないとき
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   init_value() const override;
 
@@ -275,17 +254,14 @@ private:
 class CptIOItemI :
   public CptIOItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  /// @param[in] file_region ファイル位置の情報
-  /// @param[in] name 名前
-  /// @param[in] init_value 初期値
-  CptIOItemI(const FileRegion& file_region,
-	     const char* name,
-	     const PtExpr* init_value);
+  CptIOItemI(
+    const FileRegion& file_region, ///< [in] ファイル位置の情報
+    const char* name,              ///< [in] 名前
+    const PtExpr* init_value       ///< [in] 初期値
+  );
 
   /// @brief デストラクタ
   ~CptIOItemI();

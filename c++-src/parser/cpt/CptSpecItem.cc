@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "CptSpecItem.h"
 #include "parser/CptFactory.h"
 
@@ -18,12 +17,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptSpecItem::CptSpecItem(const FileRegion& file_region,
-			 VpiSpecItemType id,
-			 PtiExprArray&& terminal_array) :
-  mFileRegion(file_region),
-  mId(id),
-  mTerminalArray{move(terminal_array)}
+CptSpecItem::CptSpecItem(
+  const FileRegion& file_region,
+  VpiSpecItemType id,
+  PtiExprArray&& terminal_array
+) : mFileRegion{file_region},
+    mId{id},
+    mTerminalArray{move(terminal_array)}
 {
 }
 
@@ -61,9 +61,10 @@ CptSpecItem::terminal_num() const
 }
 
 // @brief ターミナルの取得
-// @param[in] pos 位置 ( 0 <= pos < terminal_num() )
 const PtExpr*
-CptSpecItem::terminal(SizeType pos) const
+CptSpecItem::terminal(
+  SizeType pos
+) const
 {
   return mTerminalArray[pos];
 }
@@ -74,14 +75,15 @@ CptSpecItem::terminal(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptSpecPath::CptSpecPath(const FileRegion& file_region,
-			 VpiSpecPathType id,
-			 const PtExpr* expr,
-			 const PtPathDecl* path_decl) :
-  mFileRegion{file_region},
-  mId{id},
-  mExpr{expr},
-  mPathDecl{path_decl}
+CptSpecPath::CptSpecPath(
+  const FileRegion& file_region,
+  VpiSpecPathType id,
+  const PtExpr* expr,
+  const PtPathDecl* path_decl
+) : mFileRegion{file_region},
+    mId{id},
+    mExpr{expr},
+    mPathDecl{path_decl}
 {
 }
 
@@ -131,24 +133,25 @@ CptSpecPath::path_decl() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptPathDecl::CptPathDecl(const FileRegion& file_region,
-			 int edge,
-			 PtiExprArray&& input_array,
-			 int input_pol,
-			 VpiPathType op,
-			 PtiExprArray&& output_array,
-			 int output_pol,
-			 const PtExpr* expr,
-			 const PtPathDelay* path_delay) :
-  mFileRegion{file_region},
-  mEdge{edge},
-  mInputArray{move(input_array)},
-  mInputPol{input_pol},
-  mOp{op},
-  mOutputArray{move(output_array)},
-  mOutputPol{output_pol},
-  mExpr{expr},
-  mPathDelay{path_delay}
+CptPathDecl::CptPathDecl(
+  const FileRegion& file_region,
+  int edge,
+  PtiExprArray&& input_array,
+  int input_pol,
+  VpiPathType op,
+  PtiExprArray&& output_array,
+  int output_pol,
+  const PtExpr* expr,
+  const PtPathDelay* path_delay
+) : mFileRegion{file_region},
+    mEdge{edge},
+    mInputArray{move(input_array)},
+    mInputPol{input_pol},
+    mOp{op},
+    mOutputArray{move(output_array)},
+    mOutputPol{output_pol},
+    mExpr{expr},
+    mPathDelay{path_delay}
 {
 }
 
@@ -165,7 +168,6 @@ CptPathDecl::file_region() const
 }
 
 // edge_descriptor を取り出す．
-// 0の場合もある．
 int
 CptPathDecl::edge() const
 {
@@ -180,15 +182,15 @@ CptPathDecl::input_num() const
 }
 
 // @brief 入力の取得
-// @param[in] pos 位置 ( 0 <= pos < input_num() )
 const PtExpr*
-CptPathDecl::input(SizeType pos) const
+CptPathDecl::input(
+  SizeType pos
+) const
 {
   return mInputArray[pos];
 }
 
 // 入力の極性を取り出す．
-// 0の場合もありうる．
 int
 CptPathDecl::input_pol() const
 {
@@ -210,15 +212,15 @@ CptPathDecl::output_num() const
 }
 
 // @brief 出力の取得
-// @param[in] pos 位置 ( 0 <= pos < output_num() )
 const PtExpr*
-CptPathDecl::output(SizeType pos) const
+CptPathDecl::output(
+  SizeType pos
+) const
 {
   return mOutputArray[pos];
 }
 
 // 出力の極性を取り出す．
-// 0の場合もありうる．
 int
 CptPathDecl::output_pol() const
 {
@@ -226,7 +228,6 @@ CptPathDecl::output_pol() const
 }
 
 // 式を取り出す．
-// nullptr の場合もありうる．
 const PtExpr*
 CptPathDecl::expr() const
 {
@@ -246,72 +247,77 @@ CptPathDecl::path_delay() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-CptPathDelay::CptPathDelay(const FileRegion& file_region,
-			   const PtExpr* value) :
-  mFileRegion{file_region},
-  mValues{value,   nullptr, nullptr,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr}
+CptPathDelay::CptPathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value
+) : mFileRegion{file_region},
+    mValues{value,   nullptr, nullptr,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr}
 {
 }
 
-CptPathDelay::CptPathDelay(const FileRegion& file_region,
-			   const PtExpr* value1,
-			   const PtExpr* value2) :
-  mFileRegion{file_region},
-  mValues{value1,  value2,  nullptr,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr}
+CptPathDelay::CptPathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2
+) : mFileRegion{file_region},
+    mValues{value1,  value2,  nullptr,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr}
 
 {
 }
-CptPathDelay::CptPathDelay(const FileRegion& file_region,
-			   const PtExpr* value1,
-			   const PtExpr* value2,
-			   const PtExpr* value3) :
-  mFileRegion{file_region},
-  mValues{value1,  value2,  value3,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr}
+CptPathDelay::CptPathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2,
+  const PtExpr* value3
+) : mFileRegion{file_region},
+    mValues{value1,  value2,  value3,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr}
 {
 }
 
-CptPathDelay::CptPathDelay(const FileRegion& file_region,
-			   const PtExpr* value1,
-			   const PtExpr* value2,
-			   const PtExpr* value3,
-			   const PtExpr* value4,
-			   const PtExpr* value5,
-			   const PtExpr* value6) :
-  mFileRegion{file_region},
-  mValues{value1, value2, value3,
-	  value4, value5, value6,
-	  nullptr, nullptr, nullptr,
-	  nullptr, nullptr, nullptr}
+CptPathDelay::CptPathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2,
+  const PtExpr* value3,
+  const PtExpr* value4,
+  const PtExpr* value5,
+  const PtExpr* value6
+) : mFileRegion{file_region},
+    mValues{value1, value2, value3,
+	    value4, value5, value6,
+	    nullptr, nullptr, nullptr,
+	    nullptr, nullptr, nullptr}
 {
 }
 
-CptPathDelay::CptPathDelay(const FileRegion& file_region,
-			   const PtExpr* value1,
-			   const PtExpr* value2,
-			   const PtExpr* value3,
-			   const PtExpr* value4,
-			   const PtExpr* value5,
-			   const PtExpr* value6,
-			   const PtExpr* value7,
-			   const PtExpr* value8,
-			   const PtExpr* value9,
-			   const PtExpr* value10,
-			   const PtExpr* value11,
-			   const PtExpr* value12) :
-  mFileRegion{file_region},
-  mValues{value1,  value2,  value3,
-	  value4,  value5,  value6,
-	  value7,  value8,  value9,
-	  value10, value11, value12}
+CptPathDelay::CptPathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2,
+  const PtExpr* value3,
+  const PtExpr* value4,
+  const PtExpr* value5,
+  const PtExpr* value6,
+  const PtExpr* value7,
+  const PtExpr* value8,
+  const PtExpr* value9,
+  const PtExpr* value10,
+  const PtExpr* value11,
+  const PtExpr* value12
+) : mFileRegion{file_region},
+    mValues{value1,  value2,  value3,
+	    value4,  value5,  value6,
+	    value7,  value8,  value9,
+	    value10, value11, value12}
 {
 }
 
@@ -328,9 +334,10 @@ CptPathDelay::file_region() const
 }
 
 // 値を取り出す．
-// 0の場合もある．
 const PtExpr*
-CptPathDelay::value(SizeType pos) const
+CptPathDelay::value(
+  SizeType pos
+) const
 {
   if ( 0 <= pos && pos < 12 ) {
     return mValues[pos];
@@ -347,131 +354,147 @@ CptPathDelay::value(SizeType pos) const
 
 // specify block item を生成する．
 const PtItem*
-CptFactory::new_SpecItem(const FileRegion& file_region,
-			 VpiSpecItemType id,
-			 const vector<const PtExpr*>& terminal_array)
+CptFactory::new_SpecItem(
+  const FileRegion& file_region,
+  VpiSpecItemType id,
+  const vector<const PtExpr*>& terminal_array
+)
 {
   ++ mNumSpecItem;
-  void* p{mAlloc.get_memory(sizeof(CptSpecItem))};
-  auto obj{new (p) CptSpecItem(file_region, id,
-			       PtiArray<const PtExpr>(mAlloc, terminal_array))};
+  void* p = mAlloc.get_memory(sizeof(CptSpecItem));
+  auto obj = new (p) CptSpecItem{file_region, id,
+				 PtiArray<const PtExpr>{mAlloc, terminal_array}};
   return obj;
 }
 
 // path 仕様を生成する．
 const PtItem*
-CptFactory::new_SpecPath(const FileRegion& file_region,
-			 VpiSpecPathType id,
-			 const PtExpr* expr,
-			 const PtPathDecl* path_decl)
+CptFactory::new_SpecPath(
+  const FileRegion& file_region,
+  VpiSpecPathType id,
+  const PtExpr* expr,
+  const PtPathDecl* path_decl
+)
 {
   ++ mNumSpecPath;
-  void* p{mAlloc.get_memory(sizeof(CptSpecPath))};
-  auto obj{new (p) CptSpecPath(file_region, id, expr, path_decl)};
+  void* p = mAlloc.get_memory(sizeof(CptSpecPath));
+  auto obj = new (p) CptSpecPath{file_region, id, expr, path_decl};
   return obj;
 }
 
 // path 記述を生成する．
 const PtPathDecl*
-CptFactory::new_PathDecl(const FileRegion& file_region,
-			 int edge,
-			 const vector<const PtExpr*>& input_array,
-			 int input_pol,
-			 VpiPathType op,
-			 const vector<const PtExpr*>& output_array,
-			 int output_pol,
-			 const PtExpr* expr,
-			 const PtPathDelay* path_delay)
+CptFactory::new_PathDecl(
+  const FileRegion& file_region,
+  int edge,
+  const vector<const PtExpr*>& input_array,
+  int input_pol,
+  VpiPathType op,
+  const vector<const PtExpr*>& output_array,
+  int output_pol,
+  const PtExpr* expr,
+  const PtPathDelay* path_delay
+)
 {
   ++ mNumPathDecl;
-  void* p{mAlloc.get_memory(sizeof(CptPathDecl))};
-  auto obj{new (p) CptPathDecl(file_region, edge,
-			       PtiArray<const PtExpr>(mAlloc, input_array),
-			       input_pol,
-			       op,
-			       PtiArray<const PtExpr>(mAlloc, output_array),
-			       output_pol,
-			       expr, path_delay)};
+  void* p = mAlloc.get_memory(sizeof(CptPathDecl));
+  auto obj = new (p) CptPathDecl{file_region, edge,
+				 PtiArray<const PtExpr>{mAlloc, input_array},
+				 input_pol,
+				 op,
+				 PtiArray<const PtExpr>{mAlloc, output_array},
+				 output_pol,
+				 expr, path_delay};
   return obj;
 }
 
 // path delay value を生成する．
 const PtPathDelay*
-CptFactory::new_PathDelay(const FileRegion& file_region,
-			  const PtExpr* value)
+CptFactory::new_PathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value
+)
 {
   ++ mNumPathDelay;
-  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
-  auto obj{new (p) CptPathDelay(file_region, value)};
+  void* p = mAlloc.get_memory(sizeof(CptPathDelay));
+  auto obj = new (p) CptPathDelay{file_region, value};
   return obj;
 }
 
 // path delay value を生成する．
 const PtPathDelay*
-CptFactory::new_PathDelay(const FileRegion& file_region,
-			  const PtExpr* value1,
-			  const PtExpr* value2)
+CptFactory::new_PathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2
+)
 {
   ++ mNumPathDelay;
-  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
-  auto obj{new (p) CptPathDelay(file_region, value1, value2)};
+  void* p = mAlloc.get_memory(sizeof(CptPathDelay));
+  auto obj = new (p) CptPathDelay{file_region, value1, value2};
   return obj;
 }
 
 // path delay value を生成する．
 const PtPathDelay*
-CptFactory::new_PathDelay(const FileRegion& file_region,
-			  const PtExpr* value1,
-			  const PtExpr* value2,
-			  const PtExpr* value3)
+CptFactory::new_PathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2,
+  const PtExpr* value3
+)
 {
   ++ mNumPathDelay;
-  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
-  auto obj{new (p) CptPathDelay(file_region, value1, value2, value3)};
+  void* p = mAlloc.get_memory(sizeof(CptPathDelay));
+  auto obj = new (p) CptPathDelay{file_region, value1, value2, value3};
   return obj;
 }
 
 // path delay value を生成する．
 const PtPathDelay*
-CptFactory::new_PathDelay(const FileRegion& file_region,
-			  const PtExpr* value1,
-			  const PtExpr* value2,
-			  const PtExpr* value3,
-			  const PtExpr* value4,
-			  const PtExpr* value5,
-			  const PtExpr* value6)
+CptFactory::new_PathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2,
+  const PtExpr* value3,
+  const PtExpr* value4,
+  const PtExpr* value5,
+  const PtExpr* value6
+)
 {
   ++ mNumPathDelay;
-  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
-  auto obj{new (p) CptPathDelay(file_region,
-				value1, value2, value3,
-				value4, value5, value6)};
+  void* p = mAlloc.get_memory(sizeof(CptPathDelay));
+  auto obj = new (p) CptPathDelay{file_region,
+				  value1, value2, value3,
+				  value4, value5, value6};
   return obj;
 }
 
 // path delay value を生成する．
 const PtPathDelay*
-CptFactory::new_PathDelay(const FileRegion& file_region,
-			  const PtExpr* value1,
-			  const PtExpr* value2,
-			  const PtExpr* value3,
-			  const PtExpr* value4,
-			  const PtExpr* value5,
-			  const PtExpr* value6,
-			  const PtExpr* value7,
-			  const PtExpr* value8,
-			  const PtExpr* value9,
-			  const PtExpr* value10,
-			  const PtExpr* value11,
-			  const PtExpr* value12)
+CptFactory::new_PathDelay(
+  const FileRegion& file_region,
+  const PtExpr* value1,
+  const PtExpr* value2,
+  const PtExpr* value3,
+  const PtExpr* value4,
+  const PtExpr* value5,
+  const PtExpr* value6,
+  const PtExpr* value7,
+  const PtExpr* value8,
+  const PtExpr* value9,
+  const PtExpr* value10,
+  const PtExpr* value11,
+  const PtExpr* value12
+)
 {
   ++ mNumPathDelay;
-  void* p{mAlloc.get_memory(sizeof(CptPathDelay))};
-  auto obj{new (p) CptPathDelay(file_region,
-				value1, value2, value3,
-				value4, value5, value6,
-				value7, value8, value9,
-				value10, value11, value12)};
+  void* p = mAlloc.get_memory(sizeof(CptPathDelay));
+  auto obj = new (p) CptPathDelay{file_region,
+				  value1, value2, value3,
+				  value4, value5, value6,
+				  value7, value8, value9,
+				  value10, value11, value12};
   return obj;
 }
 

@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiParameter.h"
 
@@ -26,46 +25,43 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief parameter 宣言のヘッダを生成する(範囲指定なし)．
-// @param[in] parent 親のスコープ
 ElbParamHead*
-EiFactory::new_ParamHead(const VlScope* parent,
-			 const PtDeclHead* pt_head)
+EiFactory::new_ParamHead(
+  const VlScope* parent,
+  const PtDeclHead* pt_head
+)
 {
-  auto head{new EiParamHead(parent, pt_head)};
+  auto head = new EiParamHead{parent, pt_head};
   return head;
 }
 
 // @brief parameter 宣言のヘッダを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木の宣言ヘッダ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
 ElbParamHead*
-EiFactory::new_ParamHead(const VlScope* parent,
-			 const PtDeclHead* pt_head,
-			 const PtExpr* left,
-			 const PtExpr* right,
-			 int left_val,
-			 int right_val)
+EiFactory::new_ParamHead(
+  const VlScope* parent,
+  const PtDeclHead* pt_head,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+)
 {
   ASSERT_COND( left != nullptr );
   ASSERT_COND( right != nullptr );
 
-  auto head = new EiParamHeadV(parent, pt_head,
+  auto head = new EiParamHeadV{parent, pt_head,
 			       left, right,
-			       left_val, right_val);
+			       left_val, right_val};
   return head;
 }
 
 // @brief parameter 宣言を生成する．
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] init 初期割り当て式
-// @param[in] is_local localparam の時 true
 ElbParameter*
-EiFactory::new_Parameter(ElbParamHead* head,
-			 const PtNamedBase* pt_item,
-			 bool is_local)
+EiFactory::new_Parameter(
+  ElbParamHead* head,
+  const PtNamedBase* pt_item,
+  bool is_local
+)
 {
   EiParameter* param = nullptr;
 
@@ -73,10 +69,10 @@ EiFactory::new_Parameter(ElbParamHead* head,
   case VpiObjType::Parameter:
   case VpiObjType::SpecParam:
     if ( is_local ) {
-      param = new EiLocalParam(head, pt_item);
+      param = new EiLocalParam{head, pt_item};
     }
     else {
-      param = new EiParameter(head, pt_item);
+      param = new EiParameter{head, pt_item};
     }
     break;
 
@@ -94,12 +90,11 @@ EiFactory::new_Parameter(ElbParamHead* head,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木の宣言ヘッダ
-EiParamHead::EiParamHead(const VlScope* parent,
-			 const PtDeclHead* pt_head) :
-  mParent{parent},
-  mPtHead{pt_head}
+EiParamHead::EiParamHead(
+  const VlScope* parent,
+  const PtDeclHead* pt_head
+) : mParent{parent},
+    mPtHead{pt_head}
 {
 }
 
@@ -135,12 +130,10 @@ EiParamHead::parent_scope() const
 }
 
 // @brief 符号の取得
-// @param[in] val 値
-// @retval true 符号つき
-// @retval false 符号なし
-// @note ヘッダに型指定がない時は値から情報を得る．
 bool
-EiParamHead::is_signed(const VlValue& val) const
+EiParamHead::is_signed(
+  const VlValue& val
+) const
 {
   if ( mPtHead->data_type() == VpiVarType::None ) {
     return val.is_signed();
@@ -158,7 +151,6 @@ EiParamHead::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiParamHead::left_range_val() const
 {
@@ -181,7 +173,6 @@ EiParamHead::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiParamHead::right_range_val() const
 {
@@ -189,7 +180,6 @@ EiParamHead::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiParamHead::left_range_string() const
 {
@@ -197,7 +187,6 @@ EiParamHead::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiParamHead::right_range_string() const
 {
@@ -219,10 +208,10 @@ EiParamHead::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-// @param[in] val 値
-// @note ヘッダに型指定がない時は値から情報を得る．
 SizeType
-EiParamHead::bit_size(const VlValue& val) const
+EiParamHead::bit_size(
+  const VlValue& val
+) const
 {
   switch ( mPtHead->data_type() ) {
   case VpiVarType::Integer:
@@ -246,16 +235,12 @@ EiParamHead::bit_size(const VlValue& val) const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @param[in] val 値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
-// @note ヘッダに型指定がない時は値から情報を得る．
 bool
-EiParamHead::calc_bit_offset(int index,
-			     SizeType& offset,
-			     const VlValue& val) const
+EiParamHead::calc_bit_offset(
+  int index,
+  SizeType& offset,
+  const VlValue& val
+) const
 {
   switch ( mPtHead->data_type() ) {
   case VpiVarType::Real:
@@ -291,10 +276,10 @@ EiParamHead::calc_bit_offset(int index,
 }
 
 // @breif 値の型を返す．
-// @param[in] val 値
-// @note ヘッダに型指定がない時は値から情報を得る．
 VlValueType
-EiParamHead::value_type(const VlValue& val) const
+EiParamHead::value_type(
+  const VlValue& val
+) const
 {
   switch ( mPtHead->data_type() ) {
   case VpiVarType::Real:
@@ -337,19 +322,14 @@ EiParamHead::pt_head() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木の宣言ヘッダ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
-EiParamHeadV::EiParamHeadV(const VlScope* parent,
-			   const PtDeclHead* pt_head,
-			   const PtExpr* left,
-			   const PtExpr* right,
-			   int left_val,
-			   int right_val) :
-  EiParamHead(parent, pt_head)
+EiParamHeadV::EiParamHeadV(
+  const VlScope* parent,
+  const PtDeclHead* pt_head,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+) : EiParamHead{parent, pt_head}
 {
   mRange.set(left, right, left_val, right_val);
 }
@@ -360,12 +340,10 @@ EiParamHeadV::~EiParamHeadV()
 }
 
 // @brief 符号の取得
-// @param[in] val 値
-// @retval true 符号つき
-// @retval false 符号なし
-// @note ヘッダに型指定がない時は値から情報を得る．
 bool
-EiParamHeadV::is_signed(const VlValue& val) const
+EiParamHeadV::is_signed(
+  const VlValue& val
+) const
 {
   return pt_head()->is_signed();
 }
@@ -378,7 +356,6 @@ EiParamHeadV::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiParamHeadV::left_range_val() const
 {
@@ -386,7 +363,6 @@ EiParamHeadV::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiParamHeadV::right_range_val() const
 {
@@ -394,7 +370,6 @@ EiParamHeadV::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiParamHeadV::left_range_string() const
 {
@@ -402,7 +377,6 @@ EiParamHeadV::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiParamHeadV::right_range_string() const
 {
@@ -424,36 +398,32 @@ EiParamHeadV::is_little_endian() const
 }
 
 // @brief ビット幅を返す．
-// @param[in] val 値
-// @note ヘッダに型指定がない時は値から情報を得る．
 SizeType
-EiParamHeadV::bit_size(const VlValue& val) const
+EiParamHeadV::bit_size(
+  const VlValue& val
+) const
 {
   return mRange.size();
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @param[in] val 値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
-// @note ヘッダに型指定がない時は値から情報を得る．
 bool
-EiParamHeadV::calc_bit_offset(int index,
-			      SizeType& offset,
-			      const VlValue& val) const
+EiParamHeadV::calc_bit_offset(
+  int index,
+  SizeType& offset,
+  const VlValue& val
+) const
 {
   return mRange.calc_offset(index, offset);
 }
 
 // @breif 値の型を返す．
-// @param[in] val 値
-// @note ヘッダに型指定がない時は値から情報を得る．
 VlValueType
-EiParamHeadV::value_type(const VlValue& val) const
+EiParamHeadV::value_type(
+  const VlValue& val
+) const
 {
-  return VlValueType(pt_head()->is_signed(), true, mRange.size());
+  return VlValueType{pt_head()->is_signed(), true, mRange.size()};
 }
 
 
@@ -462,13 +432,12 @@ EiParamHeadV::value_type(const VlValue& val) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-EiParameter::EiParameter(ElbParamHead* head,
-			 const PtNamedBase* pt_item) :
-  mHead{head},
-  mPtItem{pt_item},
-  mExpr{nullptr}
+EiParameter::EiParameter(
+  ElbParamHead* head,
+  const PtNamedBase* pt_item
+) : mHead{head},
+    mPtItem{pt_item},
+    mExpr{nullptr}
 {
 }
 
@@ -478,7 +447,6 @@ EiParameter::~EiParameter()
 }
 
 // @brief 型の取得
-// @return vpi_user.h で定義された型 (vpiModule など)
 VpiObjType
 EiParameter::type() const
 {
@@ -507,7 +475,6 @@ EiParameter::name() const
 }
 
 // @breif 値の型を返す．
-// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
 VlValueType
 EiParameter::value_type() const
 {
@@ -532,13 +499,10 @@ EiParameter::value_type() const
   //     という implied range を持つ．
   //     ただし，最終的な値も unsized の場合，lsb = 0, msb は最低31以上の
   //     実装依存の値をとる．
-
   return mHead->value_type(mValue);
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiParameter::is_signed() const
 {
@@ -553,7 +517,6 @@ EiParameter::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiParameter::left_range_val() const
 {
@@ -561,7 +524,6 @@ EiParameter::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiParameter::right_range_val() const
 {
@@ -569,7 +531,6 @@ EiParameter::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiParameter::left_range_string() const
 {
@@ -577,7 +538,6 @@ EiParameter::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiParameter::right_range_string() const
 {
@@ -606,20 +566,16 @@ EiParameter::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiParameter::calc_bit_offset(int index,
-			     SizeType& offset) const
+EiParameter::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return mHead->calc_bit_offset(index, offset, mValue);
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 EiParameter::data_type() const
 {
@@ -627,9 +583,6 @@ EiParameter::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
-// @note このクラスでは kVpiNone を返す．
 VpiNetType
 EiParameter::net_type() const
 {
@@ -637,10 +590,6 @@ EiParameter::net_type() const
 }
 
 // @brief vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
-// @note このクラスでは kVpiVsNone を返す．
 VpiVsType
 EiParameter::vs_type() const
 {
@@ -648,9 +597,6 @@ EiParameter::vs_type() const
 }
 
 // @brief drive0 strength の取得
-// @retval 0 の強度
-// @retval kVpiNoStrength strength の指定なし
-// @note このクラスでは kVpiNoStrength を返す．
 VpiStrength
 EiParameter::drive0() const
 {
@@ -658,9 +604,6 @@ EiParameter::drive0() const
 }
 
 // @brief drive1 strength の取得
-// @retval 1 の強度
-// @retval kVpiNoStrength strength の指定なし
-// @note kVpiNoStrength を返す．
 VpiStrength
 EiParameter::drive1() const
 {
@@ -668,9 +611,6 @@ EiParameter::drive1() const
 }
 
 // @brief charge strength の取得
-// @retval 電荷の強度
-// @retval kVpiNoStrength strength の指定なし
-// @note このクラスでは kVpiNoStrength を返す．
 VpiStrength
 EiParameter::charge() const
 {
@@ -678,9 +618,6 @@ EiParameter::charge() const
 }
 
 // @brief delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
-// @note このクラスでは nullptr を返す．
 const VlDelay*
 EiParameter::delay() const
 {
@@ -688,7 +625,6 @@ EiParameter::delay() const
 }
 
 // @brief 定数値を持つ型のときに true を返す．
-// @note このクラスは true を返す．
 bool
 EiParameter::is_consttype() const
 {
@@ -696,8 +632,6 @@ EiParameter::is_consttype() const
 }
 
 // @brief 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
 const VlExpr*
 EiParameter::init_value() const
 {
@@ -705,7 +639,6 @@ EiParameter::init_value() const
 }
 
 // @brief localparam のときに true 返す．
-// @note このクラスでは false を返す．
 bool
 EiParameter::is_local_param() const
 {
@@ -727,11 +660,11 @@ EiParameter::value() const
 }
 
 // @brief 値の設定
-// @param[in] expr 値を表す式
-// @param[in] value 値
 void
-EiParameter::set_init_expr(const PtExpr* expr,
-			   const VlValue& value)
+EiParameter::set_init_expr(
+  const PtExpr* expr,
+  const VlValue& value
+)
 {
   mExpr = expr;
   mValue = value;
@@ -743,11 +676,10 @@ EiParameter::set_init_expr(const PtExpr* expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-EiLocalParam::EiLocalParam(ElbParamHead* head,
-			   const PtNamedBase* pt_item) :
-  EiParameter(head, pt_item)
+EiLocalParam::EiLocalParam(
+  ElbParamHead* head,
+  const PtNamedBase* pt_item
+) : EiParameter{head, pt_item}
 {
 }
 
@@ -757,7 +689,6 @@ EiLocalParam::~EiLocalParam()
 }
 
 // @brief localparam のときに true 返す．
-// @note このクラスでは true を返す．
 bool
 EiLocalParam::is_local_param() const
 {

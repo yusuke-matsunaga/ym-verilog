@@ -6,7 +6,6 @@
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiScope.h"
 
 
@@ -17,9 +16,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ環境
-EiScope::EiScope(const VlScope* parent) :
-  mParent{parent}
+EiScope::EiScope(
+  const VlScope* parent
+) : mParent{parent}
 {
 }
 

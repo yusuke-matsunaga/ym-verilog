@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ExprGen.h"
 #include "ElbEnv.h"
 #include "ErrorGen.h"
@@ -21,15 +20,14 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief PtOpr から ElbExpr を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @param[in] env 生成時の環境
 ElbExpr*
-ExprGen::instantiate_opr(const VlScope* parent,
-			 const ElbEnv& env,
-			 const PtExpr* pt_expr)
+ExprGen::instantiate_opr(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
-  auto op_type{pt_expr->op_type()};
+  auto op_type = pt_expr->op_type();
   SizeType opr_size{pt_expr->operand_num()};
 
   ElbExpr* opr0{nullptr};
@@ -116,9 +114,9 @@ ExprGen::instantiate_opr(const VlScope* parent,
     {
       vector<ElbExpr*> opr_list(opr_size);
       for ( SizeType i = 0; i < opr_size; ++ i ) {
-	auto pt_expr1{pt_expr->operand(i)};
-	auto expr1{instantiate_expr(parent, env, pt_expr1)};
-	auto type1{expr1->value_type()};
+	auto pt_expr1 = pt_expr->operand(i);
+	auto expr1 = instantiate_expr(parent, env, pt_expr1);
+	auto type1 = expr1->value_type();
 	if ( type1.is_real_type() ) {
 	  ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr1);
 	}
@@ -134,12 +132,12 @@ ExprGen::instantiate_opr(const VlScope* parent,
       auto pt_expr0{pt_expr->operand(0)};
 
       int rep_num{evaluate_int(parent, pt_expr0)};
-      auto rep_expr{instantiate_expr(parent, env, pt_expr0)};
+      auto rep_expr = instantiate_expr(parent, env, pt_expr0);
       vector<ElbExpr*> opr_list(opr_size - 1);
       for ( SizeType i = 1; i < opr_size; ++ i ) {
-	auto pt_expr1{pt_expr->operand(i)};
-	auto expr1{instantiate_expr(parent, env, pt_expr1)};
-	auto type1{expr1->value_type()};
+	auto pt_expr1 = pt_expr->operand(i);
+	auto expr1 = instantiate_expr(parent, env, pt_expr1);
+	auto type1 = expr1->value_type();
 	if ( type1.is_real_type() ) {
 	  ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr1);
 	}
@@ -155,7 +153,7 @@ ExprGen::instantiate_opr(const VlScope* parent,
   }
 
   // attribute instance の生成
-  auto attr_list{attribute_list(pt_expr)};
+  auto attr_list = attribute_list(pt_expr);
   mgr().reg_attr(expr, attr_list);
 
   return expr;

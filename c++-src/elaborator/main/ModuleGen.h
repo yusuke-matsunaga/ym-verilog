@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
 #include "ym/pt/PtP.h"
 #include "ElbProxy.h"
@@ -26,10 +25,10 @@ class ModuleGen :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] elab 生成器
-  /// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-  ModuleGen(Elaborator& elab,
-	    ElbMgr& elb_mgr);
+  ModuleGen(
+    Elaborator& elab, ///< [in] 生成器
+    ElbMgr& elb_mgr   ///< [in] Elbオブジェクトを管理するクラス
+  );
 
   /// @brief デストラクタ
   ~ModuleGen();
@@ -41,20 +40,19 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief top module のインスタンス化を行う．
-  /// @param[in] toplevel トップレベルのスコープ
-  /// @param[in] pt_module モジュール定義
   void
-  phase1_topmodule(const VlScope* toplevel,
-		   const PtModule* pt_module);
+  phase1_topmodule(
+    const VlScope* toplevel,  ///< [in] トップレベルのスコープ
+    const PtModule* pt_module ///< [in] モジュール定義
+  );
 
   /// @brief module の中身のうちスコープに関係するインスタンス化を行う．
-  /// @param[in] modle モジュール
-  /// @param[in] pt_module モジュール定義
-  /// @param[in] param_con パラメータ割り当ての情報
   void
-  phase1_module_item(ElbModule* module,
-		     const PtModule* pt_module,
-		     const vector<ElbParamCon>& param_con_list);
+  phase1_module_item(
+    ElbModule* module,                        ///< [in] モジュール
+    const PtModule* pt_module,                ///< [in] モジュール定義
+    const vector<ElbParamCon>& param_con_list ///< [in] パラメータ割り当ての情報
+  );
 
 
 private:
@@ -63,32 +61,37 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief phase2 で処理する内容をキューに積む．
-  /// @param[in] modle モジュール
-  /// @param[in] pt_module モジュール定義
   void
-  add_phase2stub(ElbModule* module,
-		 const PtModule* pt_module);
+  add_phase2stub(
+    ElbModule* module,        ///< [in] モジュール
+    const PtModule* pt_module ///< [in] モジュール定義
+  )
+  {
+    auto stub = make_stub(this, &ModuleGen::phase2_module_item,
+			  module, pt_module);
+    ElbProxy::add_phase2stub(stub);
+  }
 
   /// @brief module の中身のインスタンス化を行う．
-  /// @param[in] modle モジュール
-  /// @param[in] pt_module モジュール定義
   void
-  phase2_module_item(ElbModule* module,
-		     const PtModule* pt_module);
+  phase2_module_item(
+    ElbModule* module,        ///< [in] モジュール
+    const PtModule* pt_module ///< [in] モジュール定義
+  );
 
   /// @brief port の生成を行う．
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_module モジュール定義
   void
-  instantiate_port(ElbModule* module,
-		   const PtModule* pt_module);
+  instantiate_port(
+    ElbModule* module,        ///< [in] 親のモジュール
+    const PtModule* pt_module ///< [in] モジュール定義
+  );
 
   /// @brief PtPortRef から expression を生成する．
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_portref パース木の portref 定義
   ElbExpr*
-  instantiate_portref(ElbModule* module,
-		      const PtExpr* pt_portref);
+  instantiate_portref(
+    ElbModule* module,       ///< [in] 親のモジュール
+    const PtExpr* pt_portref ///< [in] パース木の portref 定義
+  );
 
 
 private:
@@ -97,72 +100,58 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief パラメータポートの割り当て数が多すぎる．
-  /// @param[in] param_con_list パラメータポートの割り当てリスト
   void
-  error_too_many_param(const vector<ElbParamCon>& param_con_list);
+  error_too_many_param(
+    const vector<ElbParamCon>& param_con_list ///< [in] パラメータポートの割り当てリスト
+  );
 
   /// @brief パラメータポートに現れるパラメータが存在しない．
-  /// @param[in] pt_con パラメータポート割り当てのパース木
-  /// @param[in] name パラメータ名
   void
-  error_no_param(const PtConnection* pt_con,
-		 const char* name);
+  error_no_param(
+    const PtConnection* pt_con, ///< [in] パラメータポート割り当てのパース木
+    const char* name            ///< [in] パラメータ名
+  );
 
   /// @brief 対象の要素が見つからない．
-  /// @param[in] file_region ファイル位置
-  /// @param[in] name 名前
   void
-  error_not_found(const FileRegion& file_region,
-		  const char* name);
+  error_not_found(
+    const FileRegion& file_region, ///< [in] ファイル位置
+    const char* name               ///< [in] 名前
+  );
 
   /// @brief ポートに配列が使われている．
-  /// @param[in] file_region ファイル位置
-  /// @param[in] array 配列
   void
-  error_port_array(const FileRegion& file_region,
-		   const VlDeclArray* array);
+  error_port_array(
+    const FileRegion& file_region, ///< [in] ファイル位置
+    const VlDeclArray* array       ///< [in] 配列
+  );
 
   /// @brief ポートに使われている要素が宣言要素でなかった．
-  /// @param[in] file_region ファイル位置
-  /// @param[in] name 名前
   void
-  error_illegal_port(const FileRegion& file_region,
-		     const char* name);
+  error_illegal_port(
+    const FileRegion& file_region, ///< [in] ファイル位置
+    const char* name               ///< [in] 名前
+  );
 
   /// @brief 添字が範囲外
-  /// @param[in] file_region ファイル位置
   void
-  warning_index_out_of_range(const FileRegion& file_region);
+  warning_index_out_of_range(
+    const FileRegion& file_region ///< [in] ファイル位置
+  );
 
   /// @brief 左の範囲が範囲外
-  /// @param[in] file_region ファイル位置
   void
-  warning_left_index_out_of_range(const FileRegion& file_region);
+  warning_left_index_out_of_range(
+    const FileRegion& file_region ///< [in] ファイル位置
+  );
 
   /// @brief 右の範囲が範囲外
-  /// @param[in] file_region ファイル位置
   void
-  warning_right_index_out_of_range(const FileRegion& file_region);
+  warning_right_index_out_of_range(
+    const FileRegion& file_region ///< [in] ファイル位置
+  );
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief phase2 で処理する内容をキューに積む．
-// @param[in] modle モジュール
-// @param[in] pt_module モジュール定義
-inline
-void
-ModuleGen::add_phase2stub(ElbModule* module,
-			  const PtModule* pt_module)
-{
-  ElbStub* stub = make_stub(this, &ModuleGen::phase2_module_item,
-			    module, pt_module);
-  ElbProxy::add_phase2stub(stub);
-}
 
 END_NAMESPACE_YM_VERILOG
 

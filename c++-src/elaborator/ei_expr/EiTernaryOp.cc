@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiTernaryOp.h"
 
@@ -20,26 +19,23 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 3項演算子を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] op_type 演算子のタイプ
-// @param[in] opr0 オペランド
-// @param[in] opr1 オペランド
-// @param[in] opr2 オペランド
 ElbExpr*
-EiFactory::new_TernaryOp(const PtExpr* pt_expr,
-			 VpiOpType op_type,
-			 ElbExpr* opr0,
-			 ElbExpr* opr1,
-			 ElbExpr* opr2)
+EiFactory::new_TernaryOp(
+  const PtExpr* pt_expr,
+  VpiOpType op_type,
+  ElbExpr* opr0,
+  ElbExpr* opr1,
+  ElbExpr* opr2
+)
 {
   ElbExpr* expr = nullptr;
   switch ( op_type ) {
   case VpiOpType::Condition:
-    expr = new EiConditionOp(pt_expr, opr0, opr1, opr2);
+    expr = new EiConditionOp{pt_expr, opr0, opr1, opr2};
     break;
 
   case VpiOpType::MinTypMax:
-    expr = new EiMinTypMaxOp(pt_expr, opr0, opr1, opr2);
+    expr = new EiMinTypMaxOp{pt_expr, opr0, opr1, opr2};
     break;
 
   default:
@@ -55,16 +51,13 @@ EiFactory::new_TernaryOp(const PtExpr* pt_expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-// @param[in] opr3 オペランド3
-EiTernaryOp::EiTernaryOp(const PtExpr* pt_expr,
-			 ElbExpr* opr1,
-			 ElbExpr* opr2,
-			 ElbExpr* opr3) :
-  EiOperation(pt_expr),
-  mOpr{opr1, opr2, opr3}
+EiTernaryOp::EiTernaryOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2,
+  ElbExpr* opr3
+) : EiOperation{pt_expr},
+    mOpr{opr1, opr2, opr3}
 {
 }
 
@@ -74,7 +67,6 @@ EiTernaryOp::~EiTernaryOp()
 }
 
 // @brief 定数の時 true を返す．
-// @note オペランドが定数ならこの式も定数となる．
 bool
 EiTernaryOp::is_const() const
 {
@@ -92,9 +84,10 @@ EiTernaryOp::operand_num() const
 }
 
 // @brief オペランドを返す．
-// @param[in] pos 位置番号
 const VlExpr*
-EiTernaryOp::operand(SizeType pos) const
+EiTernaryOp::operand(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < 3 );
 
@@ -107,15 +100,12 @@ EiTernaryOp::operand(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-// @param[in] opr3 オペランド3
-EiConditionOp::EiConditionOp(const PtExpr* pt_expr,
-			     ElbExpr* opr1,
-			     ElbExpr* opr2,
-			     ElbExpr* opr3) :
-  EiTernaryOp(pt_expr, opr1, opr2, opr3)
+EiConditionOp::EiConditionOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2,
+  ElbExpr* opr3
+) : EiTernaryOp{pt_expr, opr1, opr2, opr3}
 {
   // 三項演算子の場合は第1オペランドが self determined で
   // 結果は第2オペランドと第3オペランドから決まる．
@@ -140,10 +130,10 @@ EiConditionOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiConditionOp::_set_reqsize(const VlValueType& type)
+EiConditionOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
 
@@ -160,15 +150,12 @@ EiConditionOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド1
-// @param[in] opr2 オペランド2
-// @param[in] opr3 オペランド3
-EiMinTypMaxOp::EiMinTypMaxOp(const PtExpr* pt_expr,
-			     ElbExpr* opr1,
-			     ElbExpr* opr2,
-			     ElbExpr* opr3) :
-  EiTernaryOp(pt_expr, opr1, opr2, opr3)
+EiMinTypMaxOp::EiMinTypMaxOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1,
+  ElbExpr* opr2,
+  ElbExpr* opr3
+) : EiTernaryOp{pt_expr, opr1, opr2, opr3}
 {
   // とりあえず真ん中の式を使う．
   mType = opr2->value_type();
@@ -187,10 +174,10 @@ EiMinTypMaxOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiMinTypMaxOp::_set_reqsize(const VlValueType& type)
+EiMinTypMaxOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
 

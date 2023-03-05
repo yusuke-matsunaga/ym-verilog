@@ -1544,7 +1544,7 @@ public:
   const PtExpr*
   new_IntConst(
     const FileRegion& fr, ///< [in] ファイル位置の情報
-    ymuint value          ///< [in] 定数を表す整数値
+    ymuint32 value        ///< [in] 定数を表す整数値
   );
 
   /// @brief 整数型の定数の生成

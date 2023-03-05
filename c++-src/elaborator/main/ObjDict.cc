@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ObjDict.h"
 #include "ObjHandleSub.h"
 
@@ -70,7 +69,9 @@ ObjHandle::taskfunc() const
 
 // @brief 配列要素の VlScope を返す．
 const VlScope*
-ObjHandle::array_elem(int index) const
+ObjHandle::array_elem(
+  int index
+) const
 {
   return nullptr;
 }
@@ -141,8 +142,9 @@ ObjHandle::hash() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbScopeHandle::ElbScopeHandle(const VlScope* obj) :
-  mObj{obj}
+ElbScopeHandle::ElbScopeHandle(
+  const VlScope* obj
+) : mObj{obj}
 {
 }
 
@@ -194,12 +196,11 @@ ElbScopeHandle::scope() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] name 名前
-KeyObjHandle::KeyObjHandle(const VlScope* parent,
-			   const string& name) :
-  mParent{parent},
-  mName{name}
+KeyObjHandle::KeyObjHandle(
+  const VlScope* parent,
+  const string& name
+) : mParent{parent},
+    mName{name}
 {
 }
 
@@ -284,8 +285,9 @@ NamedObjHandle::full_name() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbTaskFuncHandle::ElbTaskFuncHandle(const VlTaskFunc* obj) :
-  mObj{obj}
+ElbTaskFuncHandle::ElbTaskFuncHandle(
+  const VlTaskFunc* obj
+) : mObj{obj}
 {
 }
 
@@ -309,8 +311,9 @@ ElbTaskFuncHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbDeclHandle::ElbDeclHandle(ElbDecl* obj) :
-  mObj{obj}
+ElbDeclHandle::ElbDeclHandle(
+  ElbDecl* obj
+) : mObj{obj}
 {
 }
 
@@ -334,8 +337,9 @@ ElbDeclHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbDeclArrayHandle::ElbDeclArrayHandle(const VlDeclArray* obj) :
-  mObj{obj}
+ElbDeclArrayHandle::ElbDeclArrayHandle(
+  const VlDeclArray* obj
+) : mObj{obj}
 {
 }
 
@@ -359,8 +363,9 @@ ElbDeclArrayHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbParamHandle::ElbParamHandle(ElbParameter* obj) :
-  mObj{obj}
+ElbParamHandle::ElbParamHandle(
+  ElbParameter* obj
+) : mObj{obj}
 {
 }
 
@@ -384,8 +389,9 @@ ElbParamHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbModuleHandle::ElbModuleHandle(const VlModule* obj) :
-  mObj{obj}
+ElbModuleHandle::ElbModuleHandle(
+  const VlModule* obj
+) : mObj{obj}
 {
 }
 
@@ -409,14 +415,17 @@ ElbModuleHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbModuleArrayHandle::ElbModuleArrayHandle(const VlModuleArray* obj) :
-  mObj{obj}
+ElbModuleArrayHandle::ElbModuleArrayHandle(
+  const VlModuleArray* obj
+) : mObj{obj}
 {
 }
 
 // @brief 配列要素の VlScope を返す．
 const VlScope*
-ElbModuleArrayHandle::array_elem(int index) const
+ElbModuleArrayHandle::array_elem(
+  int index
+) const
 {
   return mObj->elem_by_index(index);
 }
@@ -441,8 +450,9 @@ ElbModuleArrayHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbPrimArrayHandle::ElbPrimArrayHandle(const VlPrimArray* obj) :
-  mObj{obj}
+ElbPrimArrayHandle::ElbPrimArrayHandle(
+  const VlPrimArray* obj
+) : mObj{obj}
 {
 }
 
@@ -466,8 +476,9 @@ ElbPrimArrayHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbPrimitiveHandle::ElbPrimitiveHandle(const VlPrimitive* obj) :
-  mObj{obj}
+ElbPrimitiveHandle::ElbPrimitiveHandle(
+  const VlPrimitive* obj
+) : mObj{obj}
 {
 }
 
@@ -491,14 +502,17 @@ ElbPrimitiveHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbGfRootHandle::ElbGfRootHandle(ElbGfRoot* obj) :
-  mObj{obj}
+ElbGfRootHandle::ElbGfRootHandle(
+  ElbGfRoot* obj
+) : mObj{obj}
 {
 }
 
 // @brief 配列要素の VlNamedObj を返す．
 const VlScope*
-ElbGfRootHandle::array_elem(int index) const
+ElbGfRootHandle::array_elem(
+  int index
+) const
 {
   return mObj->elem_by_index(index);
 }
@@ -523,7 +537,9 @@ ElbGfRootHandle::_namedobj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-ElbGenvarHandle::ElbGenvarHandle(ElbGenvar* obj) :
+ElbGenvarHandle::ElbGenvarHandle(
+  ElbGenvar* obj
+) :
   mObj{obj}
 {
 }
@@ -570,18 +586,22 @@ ObjDict::clear()
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlScope* obj)
+ObjDict::add(
+  const VlScope* obj
+)
 {
-  auto handle{new ElbScopeHandle(obj)};
+  auto handle = new ElbScopeHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlTaskFunc* obj)
+ObjDict::add(
+  const VlTaskFunc* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_taskfunc( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -589,16 +609,18 @@ ObjDict::add(const VlTaskFunc* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbTaskFuncHandle(obj)};
+  auto handle = new ElbTaskFuncHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbDecl* obj)
+ObjDict::add(
+  ElbDecl* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_decl( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -606,16 +628,18 @@ ObjDict::add(ElbDecl* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbDeclHandle(obj)};
+  auto handle = new ElbDeclHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlDeclArray* obj)
+ObjDict::add(
+  const VlDeclArray* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_declarray( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -623,24 +647,28 @@ ObjDict::add(const VlDeclArray* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbDeclArrayHandle(obj)};
+  auto handle = new ElbDeclArrayHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbParameter* obj)
+ObjDict::add(
+  ElbParameter* obj
+)
 {
-  auto handle{new ElbParamHandle(obj)};
+  auto handle = new ElbParamHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlModule* obj)
+ObjDict::add(
+  const VlModule* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_module( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -648,16 +676,18 @@ ObjDict::add(const VlModule* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbModuleHandle(obj)};
+  auto handle = new ElbModuleHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlModuleArray* obj)
+ObjDict::add(
+  const VlModuleArray* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_modulearray( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -665,52 +695,58 @@ ObjDict::add(const VlModuleArray* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbModuleArrayHandle(obj)};
+  auto handle = new ElbModuleArrayHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlPrimArray* obj)
+ObjDict::add(
+  const VlPrimArray* obj
+)
 {
   if ( obj->name() != string() ) {
     if ( debug & debug_objdict ) {
-      auto parent{obj->parent_scope()};
+      auto parent = obj->parent_scope();
       DOUT << "reg_primarray( " << obj->name() << " @ "
 	   << parent->full_name()
 	 << " ["
 	 << hex << reinterpret_cast<ympuint>(parent) << dec
 	 << "] )" << endl << endl;
     }
-    auto handle{new ElbPrimArrayHandle(obj)};
+    auto handle = new ElbPrimArrayHandle(obj);
     add_handle(handle);
   }
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(const VlPrimitive* obj)
+ObjDict::add(
+  const VlPrimitive* obj
+)
 {
   if ( obj->name() != string() ) {
     if ( debug & debug_objdict ) {
-      auto parent{obj->parent_scope()};
+      auto parent = obj->parent_scope();
       DOUT << "reg_primitive( " << obj->name() << " @ "
 	   << parent->full_name()
 	   << " ["
 	   << hex << reinterpret_cast<ympuint>(parent) << dec
 	   << "] )" << endl << endl;
     }
-    auto handle{new ElbPrimitiveHandle(obj)};
+    auto handle = new ElbPrimitiveHandle(obj);
     add_handle(handle);
   }
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbGfRoot* obj)
+ObjDict::add(
+  ElbGfRoot* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_gfroot( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -718,16 +754,18 @@ ObjDict::add(ElbGfRoot* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbGfRootHandle(obj)};
+  auto handle = new ElbGfRootHandle(obj);
   add_handle(handle);
 }
 
 // @brief 要素を追加する．
 void
-ObjDict::add(ElbGenvar* obj)
+ObjDict::add(
+  ElbGenvar* obj
+)
 {
   if ( debug & debug_objdict ) {
-    auto parent{obj->parent_scope()};
+    auto parent = obj->parent_scope();
     DOUT << "reg_genvar( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
@@ -735,21 +773,25 @@ ObjDict::add(ElbGenvar* obj)
 	 << "] )" << endl << endl;
   }
 
-  auto handle{new ElbGenvarHandle(obj)};
+  auto handle = new ElbGenvarHandle(obj);
   add_handle(handle);
 }
 
 // @brief セルを追加する．
 void
-ObjDict::add_handle(ObjHandle* handle)
+ObjDict::add_handle(
+  ObjHandle* handle
+)
 {
   mHash.emplace(handle);
 }
 
 // @brief 名前から該当する要素を検索する．
 ObjHandle*
-ObjDict::find(const VlScope* parent,
-	      const string& name) const
+ObjDict::find(
+  const VlScope* parent,
+  const string& name
+) const
 {
   if ( debug & debug_find_scope ) {
     DOUT << "find_obj( " << name << ", @ "
@@ -760,7 +802,7 @@ ObjDict::find(const VlScope* parent,
   }
 
   KeyObjHandle key{parent, name};
-  auto p{mHash.find(&key)};
+  auto p = mHash.find(&key);
   if ( p != mHash.end() ) {
     if ( debug & debug_find_scope ) {
       DOUT << "--> Found"

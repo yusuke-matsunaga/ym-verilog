@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiRange.h"
 
@@ -30,9 +29,10 @@ EiRange::~EiRange()
 }
 
 // @brief 値を設定する．
-// @param[in] src 元となる情報
 void
-EiRange::set(const ElbRangeSrc& src)
+EiRange::set(
+  const ElbRangeSrc& src
+)
 {
   mPtRange = src.pt_range();
   mLeftRange = src.left_range();
@@ -63,8 +63,6 @@ EiRange::size() const
 }
 
 // @brief MSB の値を返す．
-// @retval MSB の値 値が確定しているとき
-// @retval -1 値が確定していない
 int
 EiRange::left_range_val() const
 {
@@ -72,8 +70,6 @@ EiRange::left_range_val() const
 }
 
 // @brief LSB の値を返す．
-// @retval LSB の値 値が確定しているとき
-// @retval -1 値が確定していない
 int
 EiRange::right_range_val() const
 {
@@ -95,53 +91,48 @@ EiRange::right_range_string() const
 }
 
 // @brief 範囲のチェック
-// @param[in] index インデックス
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
 bool
-EiRange::is_in(int index) const
+EiRange::is_in(
+  int index
+) const
 {
   return is_in(mLeftVal, mRightVal, index);
 }
 
 // @brief LSB からのオフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset index の LSB からのオフセット
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
 bool
-EiRange::calc_offset(int index,
-		     SizeType& offset) const
+EiRange::calc_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return calc_offset(mLeftVal, mRightVal, index, offset);
 }
 
 // @brief MSB からのオフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset index の MSB からのオフセット
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
 bool
-EiRange::calc_roffset(int index,
-		      SizeType& offset) const
+EiRange::calc_roffset(
+  int index,
+  SizeType& offset
+) const
 {
   return calc_roffset(mLeftVal, mRightVal, index, offset);
 }
 
 // @brief offset の逆関数
-// @param[in] offset LSB からのオフセット値
-// @return offset に対応したインデックスを返す．
 int
-EiRange::index(SizeType offset) const
+EiRange::index(
+  SizeType offset
+) const
 {
   return index(mLeftVal, mRightVal, offset);
 }
 
 // @brief roffset の逆関数
-// @param[in] roffset MSB からのオフセット値
-// @return roffset に対応したインデックスを返す．
 int
-EiRange::rindex(SizeType roffset) const
+EiRange::rindex(
+  SizeType roffset
+) const
 {
   return rindex(mLeftVal, mRightVal, roffset);
 }
@@ -152,9 +143,9 @@ EiRange::rindex(SizeType roffset) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-EiRangeImpl::EiRangeImpl() :
-  mLeftRange{nullptr},
-  mRightRange{nullptr}
+EiRangeImpl::EiRangeImpl(
+) : mLeftRange{nullptr},
+    mRightRange{nullptr}
 {
 }
 
@@ -164,13 +155,13 @@ EiRangeImpl::~EiRangeImpl()
 }
 
 // @brief 値を設定する．
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
 void
-EiRangeImpl::set(const PtExpr* left,
-		 const PtExpr* right,
-		 int left_val,
-		 int right_val)
+EiRangeImpl::set(
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+)
 {
   mLeftRange = left;
   mRightRange = right;
@@ -214,47 +205,48 @@ EiRangeImpl::right_range_string() const
 }
 
 // index が範囲内に入っていたら true を返す．
-// 範囲外の時には false を返す．
 bool
-EiRangeImpl::is_in(int index) const
+EiRangeImpl::is_in(
+  int index
+) const
 {
   return EiRange::is_in(mLeftVal, mRightVal, index);
 }
 
 // @brief LSB からのオフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset index の LSB からのオフセット
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
 bool
-EiRangeImpl::calc_offset(int index,
-			 SizeType& offset) const
+EiRangeImpl::calc_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return EiRange::calc_offset(mLeftVal, mRightVal, index, offset);
 }
 
 // @brief MSB からのオフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset index の MSB からのオフセット
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
 bool
-EiRangeImpl::calc_roffset(int index,
-			  SizeType& offset) const
+EiRangeImpl::calc_roffset(
+  int index,
+  SizeType& offset
+) const
 {
   return EiRange::calc_roffset(mLeftVal, mRightVal, index, offset);
 }
 
 // offset の逆関数
 int
-EiRangeImpl::index(SizeType offset) const
+EiRangeImpl::index(
+  SizeType offset
+) const
 {
   return EiRange::index(mLeftVal, mRightVal, offset);
 }
 
 // roffset の逆関数
 int
-EiRangeImpl::rindex(SizeType roffset) const
+EiRangeImpl::rindex(
+  SizeType roffset
+) const
 {
   return EiRange::rindex(mLeftVal, mRightVal, roffset);
 }
@@ -265,9 +257,9 @@ EiRangeImpl::rindex(SizeType roffset) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @brief array 範囲の配列
-EiRangeArray::EiRangeArray(const vector<EiRange>& array) :
-  mArray{array}
+EiRangeArray::EiRangeArray(
+  const vector<EiRange>& array
+) : mArray{array}
 {
   // 要素数を計算する．
   mElemSize = 1;
@@ -282,11 +274,11 @@ EiRangeArray::~EiRangeArray()
 }
 
 // @brief アドレス(オフセット)からインデックスの配列を作る．
-// @param[in] offset オフセット
-// @param[out] index_list
 void
-EiRangeArray::index(SizeType offset,
-		    vector<int>& index_list) const
+EiRangeArray::index(
+  SizeType offset,
+  vector<int>& index_list
+) const
 {
   SizeType n = size();
   index_list.resize(n);
@@ -300,13 +292,11 @@ EiRangeArray::index(SizeType offset,
 }
 
 // @brief インデックスのリストからオフセットを得る．
-// @param[in] index_list インデックスのリスト
-// @param[out] offset index_list の値に対応したオフセット値
-// @retval true オフセットの計算が正しく行えた．
-// @retval false index_list のいずれかの値が範囲外だった．
 bool
-EiRangeArray::calc_offset(const vector<int>& index_list,
-			  SizeType& offset) const
+EiRangeArray::calc_offset(
+  const vector<int>& index_list,
+  SizeType& offset
+) const
 {
   SizeType n = size();
   if ( index_list.size() != n ) {

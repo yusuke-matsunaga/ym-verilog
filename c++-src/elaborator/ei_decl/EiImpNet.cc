@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiImpNet.h"
 
@@ -21,14 +20,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 暗黙のネットを生成する．
-// @param[in] pt_expr パース木のプライマリ式
 ElbDecl*
-EiFactory::new_ImpNet(const VlScope* parent,
-		      const PtExpr* pt_expr,
-		      VpiNetType net_type)
+EiFactory::new_ImpNet(
+  const VlScope* parent,
+  const PtExpr* pt_expr,
+  VpiNetType net_type
+)
 {
-  auto decl{new EiImpNet(parent, pt_expr, net_type)};
-
+  auto decl = new EiImpNet{parent, pt_expr, net_type};
   return decl;
 }
 
@@ -38,13 +37,13 @@ EiFactory::new_ImpNet(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木のプライマリ式
-EiImpNet::EiImpNet(const VlScope* parent,
-		   const PtExpr* pt_expr,
-		   VpiNetType net_type) :
-  mParent{parent},
-  mPtExpr{pt_expr},
-  mNetType{net_type}
+EiImpNet::EiImpNet(
+  const VlScope* parent,
+  const PtExpr* pt_expr,
+  VpiNetType net_type
+) : mParent{parent},
+    mPtExpr{pt_expr},
+    mNetType{net_type}
 {
 }
 
@@ -82,7 +81,6 @@ EiImpNet::name() const
 }
 
 // @breif 値の型を返す．
-// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
 VlValueType
 EiImpNet::value_type() const
 {
@@ -90,9 +88,6 @@ EiImpNet::value_type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
-// @note このクラスでは false を返す．
 bool
 EiImpNet::is_signed() const
 {
@@ -107,7 +102,6 @@ EiImpNet::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiImpNet::left_range_val() const
 {
@@ -115,7 +109,6 @@ EiImpNet::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiImpNet::right_range_val() const
 {
@@ -123,7 +116,6 @@ EiImpNet::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiImpNet::left_range_string() const
 {
@@ -131,7 +123,6 @@ EiImpNet::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiImpNet::right_range_string() const
 {
@@ -160,13 +151,11 @@ EiImpNet::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiImpNet::calc_bit_offset(int index,
-			  SizeType& offset) const
+EiImpNet::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   if ( index == 0 ) {
     offset = 0;
@@ -178,8 +167,6 @@ EiImpNet::calc_bit_offset(int index,
 }
 
 // @brief データ型の取得
-// @retval データ型 パラメータや変数の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 EiImpNet::data_type() const
 {
@@ -187,8 +174,6 @@ EiImpNet::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
 VpiNetType
 EiImpNet::net_type() const
 {
@@ -196,9 +181,6 @@ EiImpNet::net_type() const
 }
 
 // @brief vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
 VpiVsType
 EiImpNet::vs_type() const
 {
@@ -206,8 +188,6 @@ EiImpNet::vs_type() const
 }
 
 // @brief drive0 strength の取得
-// @retval 0 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiImpNet::drive0() const
 {
@@ -215,8 +195,6 @@ EiImpNet::drive0() const
 }
 
 // @brief drive1 strength の取得
-// @retval 1 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiImpNet::drive1() const
 {
@@ -224,8 +202,6 @@ EiImpNet::drive1() const
 }
 
 // @brief charge strength の取得
-// @retval 電荷の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiImpNet::charge() const
 {
@@ -233,8 +209,6 @@ EiImpNet::charge() const
 }
 
 // @brief delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
 const VlDelay*
 EiImpNet::delay() const
 {
@@ -242,7 +216,6 @@ EiImpNet::delay() const
 }
 
 // @brief 定数値を持つ型のときに true を返す．
-// @note このクラスは false を返す．
 bool
 EiImpNet::is_consttype() const
 {
@@ -250,8 +223,6 @@ EiImpNet::is_consttype() const
 }
 
 // @brief 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
 const VlExpr*
 EiImpNet::init_value() const
 {
@@ -259,7 +230,6 @@ EiImpNet::init_value() const
 }
 
 // @brief localparam のときに true 返す．
-// @note このクラスは false を返す．
 bool
 EiImpNet::is_local_param() const
 {

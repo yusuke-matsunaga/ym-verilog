@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "CptItem.h"
 
 
@@ -20,14 +19,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 class CptGateH :
   public CptItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGateH(const FileRegion& file_region,
-	   VpiPrimType prim_type,
-	   PtiInstArray&& inst_array);
+  CptGateH(
+    const FileRegion& file_region,
+    VpiPrimType prim_type,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptGateH();
@@ -43,7 +42,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは kGateInst を返す．
   PtItemType
   type() const override;
 
@@ -56,9 +54,10 @@ public:
   inst_num() const override;
 
   /// @brief module/UDP/gate instance の取得
-  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
   const PtInst*
-  inst(SizeType pos) const override;
+  inst(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < inst_num() )
+  ) const override;
 
 
 private:
@@ -84,15 +83,15 @@ private:
 class CptGateHS :
   public CptGateH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGateHS(const FileRegion& file_region,
-	    VpiPrimType prim_type,
-	    const PtStrength* strength,
-	    PtiInstArray&& inst_array);
+  CptGateHS(
+    const FileRegion& file_region,
+    VpiPrimType prim_type,
+    const PtStrength* strength,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptGateHS();
@@ -125,15 +124,15 @@ private:
 class CptGateHD :
   public CptGateH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGateHD(const FileRegion& file_region,
-	    VpiPrimType prim_type,
-	    const PtDelay* delay,
-	    PtiInstArray&& inst_array);
+  CptGateHD(
+    const FileRegion& file_region,
+    VpiPrimType prim_type,
+    const PtDelay* delay,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptGateHD();
@@ -166,16 +165,16 @@ private:
 class CptGateHSD :
   public CptGateH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGateHSD(const FileRegion& file_region,
-	     VpiPrimType prim_type,
-	     const PtStrength* strength,
-	     const PtDelay* delay,
-	     PtiInstArray&& inst_array);
+  CptGateHSD(
+    const FileRegion& file_region,
+    VpiPrimType prim_type,
+    const PtStrength* strength,
+    const PtDelay* delay,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptGateHSD();
@@ -215,14 +214,14 @@ private:
 class CptMuH :
   public CptItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptMuH(const FileRegion& file_region,
-	 const char* def_name,
-	 PtiInstArray&& inst_array);
+  CptMuH(
+    const FileRegion& file_region,
+    const char* def_name,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptMuH() override;
@@ -238,7 +237,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは PtItemType::MuInst を返す
   PtItemType
   type() const override;
 
@@ -251,9 +249,10 @@ public:
   inst_num() const override;
 
   /// @brief module/UDP/gate instance の取得
-  /// @param[in] pos 位置 ( 0 <= pos < inst_num() )
   const PtInst*
-  inst(SizeType pos) const override;
+  inst(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < inst_num() )
+  ) const override;
 
 
 private:
@@ -279,15 +278,15 @@ private:
 class CptMuHP :
   public CptMuH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptMuHP(const FileRegion& file_region,
-	  const char* def_name,
-	  PtiConnectionArray&& con_array,
-	  PtiInstArray&& inst_array);
+  CptMuHP(
+    const FileRegion& file_region,
+    const char* def_name,
+    PtiConnectionArray&& con_array,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptMuHP();
@@ -303,9 +302,10 @@ public:
   paramassign_num() const override;
 
   /// @brief パラメータ割り当ての取得
-  /// @param[in] pos 位置 ( 0 <= pos < paramassign_num() )
   const PtConnection*
-  paramassign(SizeType pos) const override;
+  paramassign(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < paramassign_num() )
+  ) const override;
 
 
 private:
@@ -325,15 +325,15 @@ private:
 class CptMuHS :
   public CptMuH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptMuHS(const FileRegion& file_region,
-	  const char* def_name,
-	  const PtStrength* strength,
-	  PtiInstArray&& inst_array);
+  CptMuHS(
+    const FileRegion& file_region,
+    const char* def_name,
+    const PtStrength* strength,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptMuHS();
@@ -366,15 +366,15 @@ private:
 class CptMuHD :
   public CptMuH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptMuHD(const FileRegion& file_region,
-	  const char* def_name,
-	  const PtDelay* delay,
-	  PtiInstArray&& inst_array);
+  CptMuHD(
+    const FileRegion& file_region,
+    const char* def_name,
+    const PtDelay* delay,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptMuHD();
@@ -407,16 +407,16 @@ private:
 class CptMuHSD :
   public CptMuH
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptMuHSD(const FileRegion& file_region,
-	   const char* def_name,
-	   const PtStrength* strength,
-	   const PtDelay* delay,
-	   PtiInstArray&& inst_array);
+  CptMuHSD(
+    const FileRegion& file_region,
+    const char* def_name,
+    const PtStrength* strength,
+    const PtDelay* delay,
+    PtiInstArray&& inst_array
+  );
 
   /// @brief デストラクタ
   ~CptMuHSD();
@@ -456,13 +456,13 @@ private:
 class CptInst :
   public PtInst
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptInst(const FileRegion& file_region,
-	  PtiConnectionArray&& con_array);
+  CptInst(
+    const FileRegion& file_region,
+    PtiConnectionArray&& con_array
+  );
 
   /// @brief デストラクタ
   ~CptInst();
@@ -479,19 +479,16 @@ public:
 
   /// @brief 名前の取得
   /// @return 名前
-  /// @note このクラスでは nullptr を返す．
   const char*
   name() const override;
 
   /// @brief 範囲の左側の式の取得
   /// @return 範囲の左側の式
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   left_range() const override;
 
   /// @brief 範囲の右側の式の取得
   /// @return 範囲の右側の式
-  /// @note このクラスでは nullptr を返す．
   const PtExpr*
   right_range() const override;
 
@@ -500,9 +497,10 @@ public:
   port_num() const override;
 
   /// @brief ポートの取得
-  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   const PtConnection*
-  port(SizeType pos) const override;
+  port(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
+  ) const override;
 
 
 private:
@@ -525,14 +523,14 @@ private:
 class CptInstN :
   public CptInst
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptInstN(const FileRegion& file_region,
-	   const char* name,
-	   PtiConnectionArray&& con_array);
+  CptInstN(
+    const FileRegion& file_region,
+    const char* name,
+    PtiConnectionArray&& con_array
+  );
 
   /// @brief デストラクタ
   ~CptInstN();
@@ -565,16 +563,16 @@ private:
 class CptInstR :
   public CptInstN
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptInstR(const FileRegion& file_region,
-	   const char* name,
-	   const PtExpr* left,
-	   const PtExpr* right,
-	   PtiConnectionArray&& con_array);
+  CptInstR(
+    const FileRegion& file_region,
+    const char* name,
+    const PtExpr* left,
+    const PtExpr* right,
+    PtiConnectionArray&& con_array
+  );
 
   /// @brief デストラクタ
   ~CptInstR();

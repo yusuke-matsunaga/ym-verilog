@@ -133,7 +133,7 @@ public:
 
   /// @brief 最後に読んだ文字列を unsigned integer に変換する．
   /// @return 最後に読んだ文字列を unsigned integer に変換したもの
-  ymuint
+  ymuint32
   cur_uint() const
   {
     return mCurUint;

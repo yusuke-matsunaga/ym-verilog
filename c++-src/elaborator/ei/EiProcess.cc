@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiProcess.h"
 
@@ -22,14 +21,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief プロセス文を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の要素定義
 ElbProcess*
-EiFactory::new_Process(const VlScope* parent,
-		       const PtItem* pt_item)
+EiFactory::new_Process(
+  const VlScope* parent,
+  const PtItem* pt_item
+)
 {
-  auto process = new EiProcess(parent, pt_item);
-
+  auto process = new EiProcess{parent, pt_item};
   return process;
 }
 
@@ -39,12 +37,11 @@ EiFactory::new_Process(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の要素定義
-EiProcess::EiProcess(const VlScope* parent,
-		     const PtItem* pt_item) :
-  mParent{parent},
-  mPtItem{pt_item}
+EiProcess::EiProcess(
+  const VlScope* parent,
+  const PtItem* pt_item
+) : mParent{parent},
+    mPtItem{pt_item}
 {
 }
 
@@ -90,7 +87,9 @@ EiProcess::stmt() const
 // @brief 本体のステートメントをセットする．
 // @param[in] stmt 本体のステートメント
 void
-EiProcess::set_stmt(const VlStmt* stmt)
+EiProcess::set_stmt(
+  const VlStmt* stmt
+)
 {
   mStmt = stmt;
 }

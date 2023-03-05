@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/pt/PtUdp.h"
 #include "ym/pt/PtP.h"
 #include "ym/VlUdpVal.h"
@@ -25,18 +24,18 @@ BEGIN_NAMESPACE_YM_VERILOG
 class CptUdp :
   public PtUdp
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptUdp(const FileRegion& file_region,
-	 const char* name,
-	 PtiPortArray&& port_array,
-	 PtiIOHeadArray&& iohead_array,
-	 bool is_seq,
-	 const PtExpr* init_value,
-	 PtiUdpEntryArray&& entry_array);
+  CptUdp(
+    const FileRegion& file_region,
+    const char* name,
+    PtiPortArray&& port_array,
+    PtiIOHeadArray&& iohead_array,
+    bool is_seq,
+    const PtExpr* init_value,
+    PtiUdpEntryArray&& entry_array
+  );
 
   /// @brief デストラクタ
   ~CptUdp();
@@ -64,18 +63,20 @@ public:
   port_num() const override;
 
   /// @brief ポートを取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < port_num() )
   const PtPort*
-  port(SizeType pos) const override;
+  port(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < port_num() )
+  ) const override;
 
   /// @brief 入出力宣言ヘッダ配列の要素数の取得
   SizeType
   iohead_num() const override;
 
   /// @brief 入出力宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
   const PtIOHead*
-  iohead(SizeType pos) const override;
+  iohead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < iohead_num() )
+  ) const override;
 
   /// @brief 初期値を取出す．
   const PtExpr*
@@ -86,9 +87,10 @@ public:
   table_num() const override;
 
   /// @brief テーブルの要素を取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < table_num() )
   const PtUdpEntry*
-  table(SizeType pos) const override;
+  table(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < table_num() )
+  ) const override;
 
 
 private:
@@ -126,14 +128,14 @@ private:
 class CptUdpEntry :
   public PtUdpEntry
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptUdpEntry(const FileRegion& file_region,
-	      PtiUdpValueArray&& input_array,
-	      const PtUdpValue* output);
+  CptUdpEntry(
+    const FileRegion& file_region,
+    PtiUdpValueArray&& input_array,
+    const PtUdpValue* output
+  );
 
   /// @brief デストラクタ
   ~CptUdpEntry();
@@ -153,12 +155,12 @@ public:
   input_num() const override;
 
   /// @brief 入力値を取り出す．
-  /// @param[in] pos 位置 ( 0 <= pos < input_num() )
   const PtUdpValue*
-  input(SizeType pos) const override;
+  input(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < input_num() )
+  ) const override;
 
   /// @brief 現状態の値を取り出す．
-  /// @note このクラスでは nullptr を返す．
   const PtUdpValue*
   current() const override;
 
@@ -190,15 +192,15 @@ private:
 class CptUdpEntryS :
   public CptUdpEntry
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptUdpEntryS(const FileRegion& file_region,
-	       PtiUdpValueArray&& input_array,
-	       const PtUdpValue* current,
-	       const PtUdpValue* output);
+  CptUdpEntryS(
+    const FileRegion& file_region,
+    PtiUdpValueArray&& input_array,
+    const PtUdpValue* current,
+    const PtUdpValue* output
+  );
 
   /// @brief デストラクタ
   ~CptUdpEntryS();
@@ -231,18 +233,20 @@ private:
 class CptUdpValue :
   public PtUdpValue
 {
-  friend class CptFactory;
-
-private:
+public:
 
   /// @brief コンストラクタ
-  CptUdpValue(const FileRegion& file_region,
-	      char symbol);
+  CptUdpValue(
+    const FileRegion& file_region,
+    char symbol
+  );
 
   /// @brief コンストラクタ
-  CptUdpValue(const FileRegion& file_region,
-	      char symbol1,
-	      char symbol2);
+  CptUdpValue(
+    const FileRegion& file_region,
+    char symbol1,
+    char symbol2
+  );
 
   /// @brief デストラクタ
   ~CptUdpValue();

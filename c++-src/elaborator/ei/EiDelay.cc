@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiDelay.h"
 
@@ -23,15 +22,13 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 遅延値を生成する．
-// @param[in] pt_obj パース木の定義要素
-// @param[in] elem_num 要素数
-// @param[in] expr_list 式の配列
 const VlDelay*
-EiFactory::new_Delay(const PtBase* pt_obj,
-		     const vector<ElbExpr*>& expr_list)
+EiFactory::new_Delay(
+  const PtBase* pt_obj,
+  const vector<ElbExpr*>& expr_list
+)
 {
-  auto delay{new EiDelay(pt_obj, expr_list)};
-
+  auto delay = new EiDelay{pt_obj, expr_list};
   return delay;
 }
 
@@ -41,13 +38,11 @@ EiFactory::new_Delay(const PtBase* pt_obj,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_obj パース木の定義要素
-// @param[in] elem_num 要素数
-// @param[in] expr_list 式の配列
-EiDelay::EiDelay(const PtBase* pt_obj,
-		 const vector<ElbExpr*>& expr_list) :
-  mPtObj{pt_obj},
-  mElemList{expr_list}
+EiDelay::EiDelay(
+  const PtBase* pt_obj,
+  const vector<ElbExpr*>& expr_list
+) : mPtObj{pt_obj},
+    mElemList{expr_list}
 {
 }
 
@@ -79,9 +74,10 @@ EiDelay::elem_num() const
 }
 
 // @brief 値を返す．
-// @param[in] pos 位置番号 ( 0 <= pos < elem_num() )
 const VlExpr*
-EiDelay::expr(SizeType pos) const
+EiDelay::expr(
+  SizeType pos
+) const
 {
   ASSERT_COND( 0 <= pos && pos < elem_num() );
 

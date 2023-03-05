@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiUnaryOp.h"
 
@@ -20,28 +19,27 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 単項演算子を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] op_type 演算子のタイプ
-// @param[in] opr1 オペランド
 ElbExpr*
-EiFactory::new_UnaryOp(const PtExpr* pt_expr,
-		       VpiOpType op_type,
-		       ElbExpr* opr1)
+EiFactory::new_UnaryOp(
+  const PtExpr* pt_expr,
+  VpiOpType op_type,
+  ElbExpr* opr1
+)
 {
   ElbExpr* expr = nullptr;
   switch ( op_type ) {
   case VpiOpType::Posedge:
   case VpiOpType::Negedge:
-    expr = new EiEventEdgeOp(pt_expr, opr1);
+    expr = new EiEventEdgeOp{pt_expr, opr1};
     break;
 
   case VpiOpType::BitNeg:
-    expr = new EiBitNegOp(pt_expr, opr1);
+    expr = new EiBitNegOp{pt_expr, opr1};
     break;
 
   case VpiOpType::Plus:
   case VpiOpType::Minus:
-    expr = new EiUnaryArithOp(pt_expr, opr1);
+    expr = new EiUnaryArithOp{pt_expr, opr1};
     break;
 
   case VpiOpType::UnaryAnd:
@@ -50,11 +48,11 @@ EiFactory::new_UnaryOp(const PtExpr* pt_expr,
   case VpiOpType::UnaryNor:
   case VpiOpType::UnaryXor:
   case VpiOpType::UnaryXNor:
-    expr = new EiReductionOp(pt_expr, opr1);
+    expr = new EiReductionOp{pt_expr, opr1};
     break;
 
   case VpiOpType::Not:
-    expr = new EiNotOp(pt_expr, opr1);
+    expr = new EiNotOp{pt_expr, opr1};
     break;
 
   default:
@@ -70,12 +68,11 @@ EiFactory::new_UnaryOp(const PtExpr* pt_expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド
-EiUnaryOp::EiUnaryOp(const PtExpr* pt_expr,
-		     ElbExpr* opr1) :
-  EiOperation(pt_expr),
-  mOpr1{opr1}
+EiUnaryOp::EiUnaryOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1
+) : EiOperation{pt_expr},
+    mOpr1{opr1}
 {
 }
 
@@ -85,7 +82,6 @@ EiUnaryOp::~EiUnaryOp()
 }
 
 // @brief 定数の時 true を返す．
-// @note オペランドが定数ならこの式も定数となる．
 bool
 EiUnaryOp::is_const() const
 {
@@ -100,9 +96,10 @@ EiUnaryOp::operand_num() const
 }
 
 // @brief オペランドを返す．
-// @param[in] pos 位置番号
 const VlExpr*
-EiUnaryOp::operand(SizeType pos) const
+EiUnaryOp::operand(
+  SizeType pos
+) const
 {
   return mOpr1;
 }
@@ -113,11 +110,10 @@ EiUnaryOp::operand(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド
-EiNotOp::EiNotOp(const PtExpr* pt_expr,
-		 ElbExpr* opr1) :
-  EiUnaryOp(pt_expr, opr1)
+EiNotOp::EiNotOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1
+) : EiUnaryOp{pt_expr, opr1}
 {
   // オペランドのサイズは self determined
   opr1->set_selfsize();
@@ -137,10 +133,10 @@ EiNotOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiNotOp::_set_reqsize(const VlValueType& type)
+EiNotOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   // この演算子は型が固定なので何もしない．
 }
@@ -151,11 +147,10 @@ EiNotOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド
-EiBitNegOp::EiBitNegOp(const PtExpr* pt_expr,
-		       ElbExpr* opr1) :
-  EiUnaryOp(pt_expr, opr1)
+EiBitNegOp::EiBitNegOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1
+) : EiUnaryOp{pt_expr, opr1}
 {
   // オペランドの型とサイズをそのまま使う．
   mType = opr1->value_type();
@@ -176,10 +171,10 @@ EiBitNegOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiBitNegOp::_set_reqsize(const VlValueType& type)
+EiBitNegOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mType = update_size(mType, type);
   mOpr1->set_reqsize(mType);
@@ -191,11 +186,10 @@ EiBitNegOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド
-EiReductionOp::EiReductionOp(const PtExpr* pt_expr,
-			     ElbExpr* opr1) :
-  EiUnaryOp(pt_expr, opr1)
+EiReductionOp::EiReductionOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1
+) : EiUnaryOp{pt_expr, opr1}
 {
   ASSERT_COND( !opr1->value_type().is_real_type() );
 
@@ -213,14 +207,14 @@ VlValueType
 EiReductionOp::value_type() const
 {
   // 結果は常に符号無し1ビット
-  return VlValueType(false, true, 1);
+  return VlValueType{false, true, 1};
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiReductionOp::_set_reqsize(const VlValueType& type)
+EiReductionOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   // この演算子は型が固定なので何もしない．
 }
@@ -231,11 +225,10 @@ EiReductionOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド
-EiUnaryArithOp::EiUnaryArithOp(const PtExpr* pt_expr,
-			       ElbExpr* opr1) :
-  EiUnaryOp(pt_expr, opr1)
+EiUnaryArithOp::EiUnaryArithOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1
+) : EiUnaryOp{pt_expr, opr1}
 {
 }
 
@@ -253,10 +246,10 @@ EiUnaryArithOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiUnaryArithOp::_set_reqsize(const VlValueType& type)
+EiUnaryArithOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   mOpr1->set_reqsize(type);
 }
@@ -267,11 +260,10 @@ EiUnaryArithOp::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] opr1 オペランド
-EiEventEdgeOp::EiEventEdgeOp(const PtExpr* pt_expr,
-			     ElbExpr* opr1) :
-  EiUnaryOp(pt_expr, opr1)
+EiEventEdgeOp::EiEventEdgeOp(
+  const PtExpr* pt_expr,
+  ElbExpr* opr1
+) : EiUnaryOp{pt_expr, opr1}
 {
 }
 
@@ -288,10 +280,10 @@ EiEventEdgeOp::value_type() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiEventEdgeOp::_set_reqsize(const VlValueType& type)
+EiEventEdgeOp::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }

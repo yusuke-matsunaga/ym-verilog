@@ -53,6 +53,11 @@ public:
   VlValueType
   int_type() { return VlValueType(kIntData); }
 
+  /// @brief 符号なし整数型を返す．
+  static
+  VlValueType
+  uint_type() { return VlValueType(kUintData); }
+
   /// @brief 実数型を返す．
   static
   VlValueType
@@ -171,6 +176,11 @@ private:
   static
   const SizeType kIntData = kSignMask | kSizeMask | kBvMask |
 			   (kVpiSizeInteger << kSizeShift);
+
+  // 符号なし整数を表すパタン
+  static
+  const SizeType kUintData = kSizeMask | kBvMask |
+                            (kVpiSizeInteger << kSizeShift);
 
   // time 型を表すパタン
   static

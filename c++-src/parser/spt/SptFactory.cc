@@ -17,8 +17,9 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-SptFactory::SptFactory(Alloc& alloc) :
-  PtiFactory(alloc)
+SptFactory::SptFactory(
+  Alloc& alloc
+) : PtiFactory{alloc}
 {
 }
 
@@ -29,7 +30,9 @@ SptFactory::~SptFactory()
 
 // 確保したオブジェクトに関する情報を出力する．
 void
-SptFactory::dump_profile(ostream& s) const
+SptFactory::dump_profile(
+  ostream& s
+) const
 {
   // 未実装
 }

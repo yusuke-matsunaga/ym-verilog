@@ -6,7 +6,6 @@
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "FuncEval.h"
 #include "ErrorGen.h"
 #include "ym/vl/VlTaskFunc.h"
@@ -21,9 +20,9 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
-// @param[in] function 関数
-FuncEval::FuncEval(const VlTaskFunc* function) :
-  mFunction{function}
+FuncEval::FuncEval(
+  const VlTaskFunc* function
+) : mFunction{function}
 {
 }
 
@@ -33,27 +32,28 @@ FuncEval::~FuncEval()
 }
 
 // @brief 関数を評価する．
-// @param[in] arg_list 引数のリスト
 VlValue
-FuncEval::operator()(const vector<VlValue>& arg_list)
+FuncEval::operator()(
+  const vector<VlValue>& arg_list
+)
 {
   // 入力変数の値をセットする．
   SizeType io_num{mFunction->io_num()};
   ASSERT_COND( arg_list.size() == io_num );
 
   for ( SizeType index = 0; index < io_num; ++ index ) {
-    auto io{mFunction->io(index)};
+    auto io = mFunction->io(index);
     ASSERT_COND( io->direction() == VpiDir::Input );
-    auto decl{io->decl()};
+    auto decl = io->decl();
     reg_val(decl, arg_list[index]);
   }
 
   // 本体のステートメントを実行する．
-  auto body{mFunction->stmt()};
+  auto body = mFunction->stmt();
   evaluate_stmt(body);
 
   // 出力結果を得る．
-  auto ovar{mFunction->ovar()};
+  auto ovar = mFunction->ovar();
   auto val = get_val(ovar);
 
   return val;
@@ -61,7 +61,9 @@ FuncEval::operator()(const vector<VlValue>& arg_list)
 
 // ステートメントを実行する．
 const VlScope*
-FuncEval::evaluate_stmt(const VlStmt* stmt)
+FuncEval::evaluate_stmt(
+  const VlStmt* stmt
+)
 {
   // disable が実行された場合の対象のスコープ
   const VlScope* break_scope{nullptr};
@@ -130,14 +132,14 @@ FuncEval::evaluate_stmt(const VlStmt* stmt)
 }
 
 // @brief begin-end ブロックの実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_seqblock(const VlStmt* stmt)
+FuncEval::evaluate_seqblock(
+  const VlStmt* stmt
+)
 {
   SizeType n{stmt->child_stmt_num()};
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto break_scope{evaluate_stmt(stmt->child_stmt(i))};
+    auto break_scope = evaluate_stmt(stmt->child_stmt(i));
     if ( break_scope ) {
       return break_scope;
     }
@@ -146,14 +148,14 @@ FuncEval::evaluate_seqblock(const VlStmt* stmt)
 }
 
 // @brief 名前付き begin-end ブロックの実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_namedseqblock(const VlStmt* stmt)
+FuncEval::evaluate_namedseqblock(
+  const VlStmt* stmt
+)
 {
   SizeType n{stmt->child_stmt_num()};
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto break_scope{evaluate_stmt(stmt->child_stmt(i))};
+    auto break_scope = evaluate_stmt(stmt->child_stmt(i));
     if ( break_scope ) {
       if ( break_scope == stmt->scope() ) {
 	// 自分自身のスコープの実行を終了する．
@@ -167,31 +169,31 @@ FuncEval::evaluate_namedseqblock(const VlStmt* stmt)
 }
 
 // @brief 代入文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_assign(const VlStmt* stmt)
+FuncEval::evaluate_assign(
+  const VlStmt* stmt
+)
 {
   ASSERT_COND( stmt->control() == nullptr );
   ASSERT_COND( stmt->is_blocking() );
 
-  auto rhs{stmt->rhs()};
-  auto val{evaluate_expr(rhs)};
+  auto rhs = stmt->rhs();
+  auto val = evaluate_expr(rhs);
 
   // lhs に val を代入する．
-  auto lhs{stmt->lhs()};
+  auto lhs = stmt->lhs();
   SizeType nl{lhs->lhs_elem_num()};
   if ( nl == 1 ) {
     assign_value(lhs, val);
   }
   else {
     // 左辺が連結式の場合
-    auto bv{val.bitvector_value()};
+    auto bv = val.bitvector_value();
     SizeType base{0};
     for ( SizeType i = 0; i < nl; ++ i ) {
-      auto expr{lhs->lhs_elem(i)};
+      auto expr = lhs->lhs_elem(i);
       SizeType w{expr->bit_size()};
-      auto part_val{bv.part_select_op(base + w - 1, base)};
+      auto part_val = bv.part_select_op(base + w - 1, base);
       assign_value(expr, VlValue(part_val));
       base += w;
     }
@@ -201,13 +203,11 @@ FuncEval::evaluate_assign(const VlStmt* stmt)
 }
 
 // @brief 左辺の要素を値を代入する．
-// @param[in] expr 左辺式
-// @param[in] val 値
-//
-// expr は primary か bit-select, part-select
 void
-FuncEval::assign_value(const VlExpr* expr,
-			const VlValue& val)
+FuncEval::assign_value(
+  const VlExpr* expr,
+  const VlValue& val
+)
 {
   // 対象が
   // - 単独の要素
@@ -219,8 +219,8 @@ FuncEval::assign_value(const VlExpr* expr,
   // - 範囲選択
   // の3通りがある．
 
-  auto decl{expr->decl_obj()};
-  auto declarray{expr->declarray_obj()};
+  auto decl = expr->decl_obj();
+  auto declarray = expr->declarray_obj();
   if ( decl ) {
     // 単独の要素
     if ( expr->is_primary() ) {
@@ -229,16 +229,16 @@ FuncEval::assign_value(const VlExpr* expr,
     }
     else if ( expr->is_bitselect() ) {
       // ビット選択
-      auto index_expr{expr->index()};
-      int index{evaluate_int(index_expr)};
+      auto index_expr = expr->index();
+      int index = evaluate_int(index_expr);
       reg_val(decl, val, index);
     }
     else if ( expr->is_partselect() ) {
       // 範囲選択
-      auto left_expr{expr->left_range()};
-      int left_index{evaluate_int(left_expr)};
-      auto right_expr{expr->right_range()};
-      int right_index{evaluate_int(right_expr)};
+      auto left_expr = expr->left_range();
+      int left_index = evaluate_int(left_expr);
+      auto right_expr = expr->right_range();
+      int right_index = evaluate_int(right_expr);
       reg_val(decl, val, left_index, right_index);
     }
   }
@@ -247,7 +247,7 @@ FuncEval::assign_value(const VlExpr* expr,
     SizeType n{expr->declarray_dimension()};
     vector<int> index_array(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      auto index_expr{expr->declarray_index(i)};
+      auto index_expr = expr->declarray_index(i);
       index_array[i] = evaluate_int(index_expr);
     }
 
@@ -261,31 +261,31 @@ FuncEval::assign_value(const VlExpr* expr,
     }
     else if ( expr->is_bitselect() ) {
       // ビット選択
-      auto index_expr{expr->index()};
-      int index{evaluate_int(index_expr)};
+      auto index_expr = expr->index();
+      int index = evaluate_int(index_expr);
       reg_val(declarray, offset, val, index);
     }
     else if ( expr->is_partselect() ) {
       // 範囲選択
-      auto left_expr{expr->left_range()};
-      int left_index{evaluate_int(left_expr)};
+      auto left_expr = expr->left_range();
+      int left_index = evaluate_int(left_expr);
       auto right_expr{expr->right_range()};
-      int right_index{evaluate_int(right_expr)};
+      int right_index = evaluate_int(right_expr);
       reg_val(declarray, offset, val, left_index, right_index);
     }
   }
 }
 
 // @brief while 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_while(const VlStmt* stmt)
+FuncEval::evaluate_while(
+  const VlStmt* stmt
+)
 {
-  auto cond_expr{stmt->expr()};
-  auto body_stmt{stmt->body_stmt()};
+  auto cond_expr = stmt->expr();
+  auto body_stmt = stmt->body_stmt();
   while ( evaluate_bool(cond_expr) ) {
-    auto break_scope{evaluate_stmt(body_stmt)};
+    auto break_scope = evaluate_stmt(body_stmt);
     if ( break_scope ) {
       return break_scope;
     }
@@ -294,16 +294,16 @@ FuncEval::evaluate_while(const VlStmt* stmt)
 }
 
 // @brief repeat 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_repeat(const VlStmt* stmt)
+FuncEval::evaluate_repeat(
+  const VlStmt* stmt
+)
 {
-  auto rep_expr{stmt->expr()};
-  int rep_num{evaluate_int(rep_expr)};
-  auto body_stmt{stmt->body_stmt()};
+  auto rep_expr = stmt->expr();
+  int rep_num = evaluate_int(rep_expr);
+  auto body_stmt = stmt->body_stmt();
   for ( int i: Range(rep_num) ) {
-    auto break_scope{evaluate_stmt(body_stmt)};
+    auto break_scope = evaluate_stmt(body_stmt);
     if ( break_scope ) {
       return break_scope;
     }
@@ -312,16 +312,16 @@ FuncEval::evaluate_repeat(const VlStmt* stmt)
 }
 
 // @brief for 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_for(const VlStmt* stmt)
+FuncEval::evaluate_for(
+  const VlStmt* stmt
+)
 {
-  auto cond_expr{stmt->expr()};
-  auto init_stmt{stmt->init_stmt()};
-  auto body_stmt{stmt->body_stmt()};
-  auto next_stmt{stmt->inc_stmt()};
-  auto break_scope{evaluate_stmt(init_stmt)};
+  auto cond_expr = stmt->expr();
+  auto init_stmt = stmt->init_stmt();
+  auto body_stmt = stmt->body_stmt();
+  auto next_stmt = stmt->inc_stmt();
+  auto break_scope = evaluate_stmt(init_stmt);
   if ( break_scope ) {
     return break_scope;
   }
@@ -339,14 +339,14 @@ FuncEval::evaluate_for(const VlStmt* stmt)
 }
 
 // @brief forever 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_forever(const VlStmt* stmt)
+FuncEval::evaluate_forever(
+  const VlStmt* stmt
+)
 {
-  auto body_stmt{stmt->body_stmt()};
+  auto body_stmt = stmt->body_stmt();
   for ( ; ; ) {
-    auto break_scope{evaluate_stmt(body_stmt)};
+    auto break_scope = evaluate_stmt(body_stmt);
     if ( break_scope ) {
       return break_scope;
     }
@@ -355,54 +355,54 @@ FuncEval::evaluate_forever(const VlStmt* stmt)
 }
 
 // @brief if 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_if(const VlStmt* stmt)
+FuncEval::evaluate_if(
+  const VlStmt* stmt
+)
 {
-  auto cond_expr{stmt->expr()};
+  auto cond_expr = stmt->expr();
   if ( evaluate_bool(cond_expr) ) {
-    auto then_stmt{stmt->body_stmt()};
-    auto break_scope{evaluate_stmt(then_stmt)};
+    auto then_stmt = stmt->body_stmt();
+    auto break_scope = evaluate_stmt(then_stmt);
     return break_scope;
   }
   return nullptr;
 }
 
 // @brief if-else 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_ifelse(const VlStmt* stmt)
+FuncEval::evaluate_ifelse(
+  const VlStmt* stmt
+)
 {
-  auto cond_expr{stmt->expr()};
+  auto cond_expr = stmt->expr();
   if ( evaluate_bool(cond_expr) ) {
-    auto then_stmt{stmt->body_stmt()};
-    auto break_scope{evaluate_stmt(then_stmt)};
+    auto then_stmt = stmt->body_stmt();
+    auto break_scope = evaluate_stmt(then_stmt);
     return break_scope;
   }
   else {
-    auto else_stmt{stmt->else_stmt()};
-    auto break_scope{evaluate_stmt(else_stmt)};
+    auto else_stmt = stmt->else_stmt();
+    auto break_scope = evaluate_stmt(else_stmt);
     return break_scope;
   }
 }
 
 // @brief case 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_case(const VlStmt* stmt)
+FuncEval::evaluate_case(
+  const VlStmt* stmt
+)
 {
-  auto case_type{stmt->case_type()};
-  auto expr{stmt->expr()};
-  auto switch_val{evaluate_expr(expr)};
-  SizeType n{stmt->caseitem_num()};
+  auto case_type = stmt->case_type();
+  auto expr = stmt->expr();
+  auto switch_val = evaluate_expr(expr);
+  SizeType n = stmt->caseitem_num();
   for ( SizeType i = 0; i < n; ++ i ) {
     auto caseitem{stmt->caseitem(i)};
     if ( match(case_type, switch_val, caseitem) ) {
-      auto body{caseitem->body_stmt()};
-      auto break_scope{evaluate_stmt(body)};
+      auto body = caseitem->body_stmt();
+      auto break_scope = evaluate_stmt(body);
       return break_scope;
     }
   }
@@ -410,23 +410,22 @@ FuncEval::evaluate_case(const VlStmt* stmt)
 }
 
 // @brief caseitem のラベルと一致するか調べる．
-// @param[in] case_type case 文の種類
-// @param[in] val case 文の値
-// @param[in] caseitem 対象の caseitem
 bool
-FuncEval::match(VpiCaseType case_type,
-		 const VlValue& val,
-		 const VlCaseItem* caseitem)
+FuncEval::match(
+  VpiCaseType case_type,
+  const VlValue& val,
+  const VlCaseItem* caseitem
+)
 {
-  SizeType nexp{caseitem->expr_num()};
+  SizeType nexp = caseitem->expr_num();
   if ( nexp == 0 ) {
     // default なのでマッチする．
     return true;
   }
 
   for ( SizeType i = 0; i < nexp; ++ i ) {
-    auto label_expr{caseitem->expr(i)};
-    auto label_val{evaluate_expr(label_expr)};
+    auto label_expr = caseitem->expr(i);
+    auto label_val = evaluate_expr(label_expr);
     VlValue eq_val;
     if ( case_type == VpiCaseType::Exact ) {
       eq_val = eq(val, label_val);
@@ -446,18 +445,19 @@ FuncEval::match(VpiCaseType case_type,
 }
 
 // @brief disable 文の実行を行う．
-// @param[in] stmt 対象のステートメント
-// @return break 対象のスコープを返す．
 const VlScope*
-FuncEval::evaluate_disable(const VlStmt* stmt)
+FuncEval::evaluate_disable(
+  const VlStmt* stmt
+)
 {
   return stmt->target_scope();
 }
 
 // @brief 式の評価を行う．
-// @param[in] expr 対象の式を表す構文木要素
 VlValue
-FuncEval::evaluate_expr(const VlExpr* expr)
+FuncEval::evaluate_expr(
+  const VlExpr* expr
+)
 {
   switch ( expr->type() ) {
   case VpiObjType::Operation:   return evaluate_opr(expr);
@@ -473,11 +473,12 @@ FuncEval::evaluate_expr(const VlExpr* expr)
 }
 
 // @brief 演算子に対して式の値を評価する．
-// @param[in] expr 対象の式
 VlValue
-FuncEval::evaluate_opr(const VlExpr* expr)
+FuncEval::evaluate_opr(
+  const VlExpr* expr
+)
 {
-  SizeType n_op{expr->operand_num()};
+  SizeType n_op = expr->operand_num();
   // オペランドの値を評価する．
   vector<VlValue> opr_vals(n_op);
   for ( SizeType i = 0; i < n_op; ++ i ) {
@@ -575,30 +576,32 @@ FuncEval::evaluate_opr(const VlExpr* expr)
 }
 
 // @brief 定数に対して式の値を評価する．
-// @param[in] expr 対象の式
 VlValue
-FuncEval::evaluate_const(const VlExpr* expr)
+FuncEval::evaluate_const(
+  const VlExpr* expr
+)
 {
   return expr->constant_value();
 }
 
 // @brief プライマリに対して式の値を評価する．
-// @param[in] expr 対象の式
 VlValue
-FuncEval::evaluate_primary(const VlExpr* expr)
+FuncEval::evaluate_primary(
+  const VlExpr* expr
+)
 {
-  auto decl{expr->decl_obj()};
-  auto declarray{expr->declarray_obj()};
+  auto decl = expr->decl_obj();
+  auto declarray = expr->declarray_obj();
   VlValue base_val;
   if ( decl ) {
     base_val = get_val(decl);
   }
   else if ( declarray ) {
     // インデックスの値を求める．
-    SizeType n{expr->declarray_dimension()};
+    SizeType n = expr->declarray_dimension();
     vector<int> index_array(n);
     for ( SizeType i = 0; i < n; ++ i ) {
-      auto index_expr{expr->declarray_index(i)};
+      auto index_expr = expr->declarray_index(i);
       index_array[i] = evaluate_int(index_expr);
     }
 
@@ -616,17 +619,17 @@ FuncEval::evaluate_primary(const VlExpr* expr)
     return base_val;
   }
   else if ( expr->is_bitselect() ) {
-    auto index_expr{expr->index()};
-    int index{evaluate_int(index_expr)};
-    auto bv{base_val.bitvector_value()};
+    auto index_expr = expr->index();
+    int index = evaluate_int(index_expr);
+    auto bv = base_val.bitvector_value();
     return VlValue(bv.bit_select_op(index));
   }
   else if ( expr->is_partselect() ) {
-    auto left_expr{expr->left_range()};
-    int left_index{evaluate_int(left_expr)};
-    auto right_expr{expr->right_range()};
-    int right_index{evaluate_int(right_expr)};
-    auto bv{base_val.bitvector_value()};
+    auto left_expr = expr->left_range();
+    int left_index = evaluate_int(left_expr);
+    auto right_expr = expr->right_range();
+    int right_index = evaluate_int(right_expr);
+    auto bv = base_val.bitvector_value();
     return VlValue(bv.part_select_op(left_index, right_index));
   }
 
@@ -635,30 +638,32 @@ FuncEval::evaluate_primary(const VlExpr* expr)
 }
 
 // @brief 関数呼び出しに対して式の値を評価する．
-// @param[in] expr 対象の式
 VlValue
-FuncEval::evaluate_funccall(const VlExpr* expr)
+FuncEval::evaluate_funccall(
+  const VlExpr* expr
+)
 {
-  auto func{expr->function()};
+  auto func = expr->function();
 
   // 引数の値を評価する．
-  SizeType n_io{expr->argument_num()};
+  SizeType n_io = expr->argument_num();
   ASSERT_COND( n_io == func->io_num() );
   vector<VlValue> arg_list(n_io);
   for ( SizeType i = 0; i < n_io; ++ i ) {
     arg_list[i] = evaluate_expr(expr->argument(i));
   }
 
-  FuncEval eval(func);
+  FuncEval eval{func};
   return eval(arg_list);
 }
 
 // @brief 式を評価して整数値を返す．
-// @param[in] expr 対象の式
 int
-FuncEval::evaluate_int(const VlExpr* expr)
+FuncEval::evaluate_int(
+  const VlExpr* expr
+)
 {
-  auto val{evaluate_expr(expr)};
+  auto val = evaluate_expr(expr);
   if ( !val.is_int_compat() ) {
     ErrorGen::int_required(__FILE__, __LINE__, expr->file_region());
   }
@@ -666,72 +671,61 @@ FuncEval::evaluate_int(const VlExpr* expr)
 }
 
 // @brief 式を評価して整数値を返す．
-// @param[in] expr 対象の式
 bool
-FuncEval::evaluate_bool(const VlExpr* expr)
+FuncEval::evaluate_bool(
+  const VlExpr* expr
+)
 {
-  auto val{evaluate_expr(expr)};
+  auto val = evaluate_expr(expr);
   return val.logic_value().to_bool();
 }
 
 // @brief 値を登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] val 値
-//
-// 単独のオブジェクト用
 void
-FuncEval::reg_val(const VlDeclBase* obj,
-		   const VlValue& val)
+FuncEval::reg_val(
+  const VlDeclBase* obj,
+  const VlValue& val
+)
 {
   reg_val(obj, 0, val);
 }
 
 // @brief 値を登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] offset オフセット
-// @param[in] val 値
-//
-// 配列要素用
 void
-FuncEval::reg_val(const VlDeclBase* obj,
-		   SizeType offset,
-		   const VlValue& val)
+FuncEval::reg_val(
+  const VlDeclBase* obj,
+  SizeType offset,
+  const VlValue& val
+)
 {
   Key key{obj, offset};
   mValMap.emplace(key, val);
 }
 
 // @brief 値を登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] val 値
-// @param[in] index ビット選択インデックス
-//
-// 単独のオブジェクト用
 void
-FuncEval::reg_val(const VlDeclBase* obj,
-		   const VlValue& val,
-		   int index)
+FuncEval::reg_val(
+  const VlDeclBase* obj,
+  const VlValue& val,
+  int index
+)
 {
   reg_val(obj, 0, val, index);
 }
 
 // @brief 値を登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] offset オフセット
-// @param[in] val 値
-// @param[in] index ビット選択インデックス
-//
-// 配列要素用
 void
-FuncEval::reg_val(const VlDeclBase* obj,
-		   SizeType offset,
-		   const VlValue& val,
-		   int index)
+FuncEval::reg_val(
+  const VlDeclBase* obj,
+  SizeType offset,
+  const VlValue& val,
+  int index
+)
 {
   Key key{obj, offset};
   BitVector bv;
   if ( mValMap.count(key) > 0 ) {
-    auto val0{mValMap.at(key)};
+    auto val0 = mValMap.at(key);
     ASSERT_COND( val0.is_bitvector_compat() );
     bv = val0.bitvector_value();
   }
@@ -739,44 +733,37 @@ FuncEval::reg_val(const VlDeclBase* obj,
     bv = BitVector(VlScalarVal::x(), obj->bit_size());
   }
 
-  auto sv{val.scalar_value()};
+  auto sv = val.scalar_value();
   bv.bit_select_op(index, sv);
   mValMap.emplace(key, VlValue(bv));
 }
 
 // @brief 値を登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] val 値
-// @param[in] left, right 範囲選択のインデックス
-//
-// 単独のオブジェクト用
 void
-FuncEval::reg_val(const VlDeclBase* obj,
-		   const VlValue& val,
-		   int left,
-		   int right)
+FuncEval::reg_val(
+  const VlDeclBase* obj,
+  const VlValue& val,
+  int left,
+  int right
+)
 {
   reg_val(obj, 0, val, left, right);
 }
 
 // @brief 値を登録する．
-// @param[in] obj 対象のオブジェクト
-// @param[in] offset オフセット
-// @param[in] val 値
-// @param[in] left, right 範囲選択のインデックス
-//
-// 配列要素用
 void
-FuncEval::reg_val(const VlDeclBase* obj,
-		   SizeType offset,
-		   const VlValue& val,
-		   int left,
-		   int right)
+FuncEval::reg_val(
+  const VlDeclBase* obj,
+  SizeType offset,
+  const VlValue& val,
+  int left,
+  int right
+)
 {
   Key key{obj, offset};
   BitVector bv;
   if ( mValMap.count(key) > 0 ) {
-    auto val0{mValMap.at(key)};
+    auto val0 = mValMap.at(key);
     ASSERT_COND( val0.is_bitvector_compat() );
     bv = val0.bitvector_value();
   }
@@ -789,23 +776,20 @@ FuncEval::reg_val(const VlDeclBase* obj,
 }
 
 // @brief 値を取り出す．
-// @param[in] obj 対象のオブジェクト
-//
-// 単独のオブジェクト用
 VlValue
-FuncEval::get_val(const VlDeclBase* obj)
+FuncEval::get_val(
+  const VlDeclBase* obj
+)
 {
   return get_val(obj, 0);
 }
 
 // @brief 値を取り出す．
-// @param[in] obj 対象のオブジェクト
-// @param[in] offset オフセット
-//
-// 配列要素用
 VlValue
-FuncEval::get_val(const VlDeclBase* obj,
-		   SizeType offset)
+FuncEval::get_val(
+  const VlDeclBase* obj,
+  SizeType offset
+)
 {
   Key key{obj, offset};
   ASSERT_COND( mValMap.count(key) > 0 );

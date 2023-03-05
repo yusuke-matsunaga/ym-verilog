@@ -123,11 +123,12 @@ public:
   /// @brief 整数型の値の取得
   /// @return 値
   virtual
-  unsigned int
-  const_uint() const = 0;
+  ymuint32
+  const_uint32() const = 0;
 
   /// @brief 整数型および文字列型の定数の文字列表現の取得
-  /// @return 値の文字列表現\n
+  /// @return 値の文字列表現
+  ///
   /// 整数型時のサイズと基数は含まない．
   virtual
   const char*

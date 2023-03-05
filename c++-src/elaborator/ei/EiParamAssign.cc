@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiParamAssign.h"
 
@@ -25,52 +24,44 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief パラメータ割り当て文を生成する．
-// @param[in] module 親のモジュール
-// @param[in] param 対象の parameter
-// @param[in] rhs_expr 割り当て式の右辺
-// @param[in] rhs_value 右辺の値
 const VlParamAssign*
-EiFactory::new_ParamAssign(const VlModule* module,
-			   const PtBase* pt_obj,
-			   ElbParameter* param,
-			   const PtExpr* rhs_expr,
-			   const VlValue& rhs_value)
+EiFactory::new_ParamAssign(
+  const VlModule* module,
+  const PtBase* pt_obj,
+  ElbParameter* param,
+  const PtExpr* rhs_expr,
+  const VlValue& rhs_value
+)
 {
-  return new EiParamAssign(module, pt_obj, param, rhs_expr, rhs_value);
+  return new EiParamAssign{module, pt_obj, param, rhs_expr, rhs_value};
 }
 
 // @brief 名前によるパラメータ割り当て文を生成する．
-// @param[in] module 親のモジュール
-// @param[in] param 対象の parameter
-// @param[in] rhs_expr 割り当て式の右辺
-// @param[in] rhs_value 右辺の値
 const VlParamAssign*
-EiFactory::new_NamedParamAssign(const VlModule* module,
-				const PtBase* pt_obj,
-				ElbParameter* param,
-				const PtExpr* rhs_expr,
-				const VlValue& rhs_value)
+EiFactory::new_NamedParamAssign(
+  const VlModule* module,
+  const PtBase* pt_obj,
+  ElbParameter* param,
+  const PtExpr* rhs_expr,
+  const VlValue& rhs_value
+)
 {
-  return new EiParamAssign2(module, pt_obj, param, rhs_expr, rhs_value);
+  return new EiParamAssign2{module, pt_obj, param, rhs_expr, rhs_value};
 }
 
 // @brief defparam 文を生成する．
-// @param[in] module 親のモジュール
-// @param[in] pt_header パース木の defparam ヘッダ
-// @param[in] pt_item パース木の defparam 定義
-// @param[in] param 対象の parameter
-// @param[in] rhs_expr 割り当て式の右辺
-// @param[in] rhs_value 右辺の値
 const VlDefParam*
-EiFactory::new_DefParam(const VlModule* module,
-			const PtItem* pt_header,
-			const PtDefParam* pt_defparam,
-			ElbParameter* param,
-			const PtExpr* rhs_expr,
-			const VlValue& rhs_value)
+EiFactory::new_DefParam(
+  const VlModule* module,
+  const PtItem* pt_header,
+  const PtDefParam* pt_defparam,
+  ElbParameter* param,
+  const PtExpr* rhs_expr,
+  const VlValue& rhs_value
+)
 {
-  return new EiDefParam(module, pt_header, pt_defparam,
-			param, rhs_expr, rhs_value);
+  return new EiDefParam{module, pt_header, pt_defparam,
+			param, rhs_expr, rhs_value};
 }
 
 
@@ -79,21 +70,17 @@ EiFactory::new_DefParam(const VlModule* module,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のモジュール
-// @param[in] pt_obj パース木中の対応する要素
-// @param[in] param 対象の parameter
-// @param[in] rhs_expr 割り当て式の右辺
-// @param[in] rhs_value 右辺の値
-EiParamAssign::EiParamAssign(const VlModule* parent,
-			     const PtBase* pt_obj,
-			     ElbParameter* param,
-			     const PtExpr* rhs_expr,
-			     const VlValue& rhs_value) :
-  mModule{parent},
-  mPtObj{pt_obj},
-  mLhs{param},
-  mRhsExpr{rhs_expr},
-  mRhsValue{rhs_value}
+EiParamAssign::EiParamAssign(
+  const VlModule* parent,
+  const PtBase* pt_obj,
+  ElbParameter* param,
+  const PtExpr* rhs_expr,
+  const VlValue& rhs_value
+) : mModule{parent},
+    mPtObj{pt_obj},
+    mLhs{param},
+    mRhsExpr{rhs_expr},
+    mRhsValue{rhs_value}
 {
 }
 
@@ -157,17 +144,13 @@ EiParamAssign::is_conn_by_name() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のモジュール
-// @param[in] pt_obj パース木中の対応する要素
-// @param[in] param 対象の parameter
-// @param[in] rhs_expr 割り当て式の右辺
-// @param[in] rhs_value 右辺の値
-EiParamAssign2::EiParamAssign2(const VlModule* parent,
-			       const PtBase* pt_obj,
-			       ElbParameter* param,
-			       const PtExpr* rhs_expr,
-			       const VlValue& rhs_value) :
-  EiParamAssign(parent, pt_obj, param, rhs_expr, rhs_value)
+EiParamAssign2::EiParamAssign2(
+  const VlModule* parent,
+  const PtBase* pt_obj,
+  ElbParameter* param,
+  const PtExpr* rhs_expr,
+  const VlValue& rhs_value
+) : EiParamAssign{parent, pt_obj, param, rhs_expr, rhs_value}
 {
 }
 
@@ -189,24 +172,19 @@ EiParamAssign2::is_conn_by_name() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のモジュール
-// @param[in] pt_header パース木の defparam ヘッダ
-// @param[in] pt_item パース木の defparam 定義
-// @param[in] param 対象の parameter
-// @param[in] rhs_expr 割り当て式の右辺
-// @param[in] rhs_value 右辺の値
-EiDefParam::EiDefParam(const VlModule* parent,
-		       const PtItem* pt_header,
-		       const PtDefParam* pt_defparam,
-		       ElbParameter* param,
-		       const PtExpr* rhs_expr,
-		       const VlValue& rhs_value) :
-  mModule{parent},
-  mPtHead{pt_header},
-  mPtDefParam{pt_defparam},
-  mLhs{param},
-  mRhsExpr{rhs_expr},
-  mRhsValue{rhs_value}
+EiDefParam::EiDefParam(
+  const VlModule* parent,
+  const PtItem* pt_header,
+  const PtDefParam* pt_defparam,
+  ElbParameter* param,
+  const PtExpr* rhs_expr,
+  const VlValue& rhs_value
+) : mModule{parent},
+    mPtHead{pt_header},
+    mPtDefParam{pt_defparam},
+    mLhs{param},
+    mRhsExpr{rhs_expr},
+    mRhsValue{rhs_value}
 {
 }
 

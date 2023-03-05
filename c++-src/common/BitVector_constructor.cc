@@ -50,7 +50,9 @@ mask(SizeType size)
 END_NONAMESPACE
 
 // unsigned int からの変換コンストラクタ
-BitVector::BitVector(unsigned int val)
+BitVector::BitVector(
+  unsigned int val
+)
 {
   // サイズなし，符号なし，基数10
   set(~val, val, kVpiSizeInteger, false, false, 10);
@@ -58,15 +60,28 @@ BitVector::BitVector(unsigned int val)
 
 // @brief 符号なし整数からの代入演算子
 BitVector&
-BitVector::operator=(unsigned int val)
+BitVector::operator=(
+  unsigned int val
+)
 {
   // サイズなし，符号なし，基数10
   set(~val, val, kVpiSizeInteger, false, false, 10);
   return *this;
 }
 
+// unsigned int からの変換コンストラクタ
+BitVector::BitVector(
+  SizeType val
+)
+{
+  // サイズなし，符号なし，基数10
+  set(~val, val, kVpiSizeInteger, false, false, 10);
+}
+
 // int からのキャスト用コンストラクタ
-BitVector::BitVector(int val)
+BitVector::BitVector(
+  int val
+)
 {
   // サイズなし，符号あり，基数10
   set(~val, val, kVpiSizeInteger, false, true, 10);
@@ -74,7 +89,9 @@ BitVector::BitVector(int val)
 
 // @brief int からの代入演算子
 BitVector&
-BitVector::operator=(int val)
+BitVector::operator=(
+  int val
+)
 {
   // サイズなし，符号あり，基数10
   set(~val, val, kVpiSizeInteger, false, true, 10);
@@ -82,7 +99,9 @@ BitVector::operator=(int val)
 }
 
 // bool からの変換コンストラクタ
-BitVector::BitVector(bool value)
+BitVector::BitVector(
+  bool value
+)
 {
   uword val0 = value ? 1 : 0;
   uword val1 = 1 - val0;
@@ -91,13 +110,10 @@ BitVector::BitVector(bool value)
 }
 
 // @brief bool からの代入演算子
-// @param[in] value ブール値
-// @note 結果の型は
-// - サイズはあり(1ビット)
-// - 符号なし
-// - 基数は2
 BitVector&
-BitVector::operator=(bool value)
+BitVector::operator=(
+  bool value
+)
 {
   uword val0 = value ? 1 : 0;
   uword val1 = 1 - val0;
@@ -107,7 +123,9 @@ BitVector::operator=(bool value)
 }
 
 // @brief time 型からの変換コンストラクタ
-BitVector::BitVector(VlTime time)
+BitVector::BitVector(
+  VlTime time
+)
 {
   // サイズあり, 符号無し, 基数10
   resize(kVpiSizeTime);
@@ -120,7 +138,9 @@ BitVector::BitVector(VlTime time)
 
 // @brief time 型からの代入演算子
 BitVector&
-BitVector::operator=(VlTime time)
+BitVector::operator=(
+  VlTime time
+)
 {
   // サイズあり, 符号無し, 基数10
   resize(kVpiSizeTime);
@@ -133,8 +153,10 @@ BitVector::operator=(VlTime time)
 }
 
 // スカラ値からのキャスト用コンストラクタ
-BitVector::BitVector(const VlScalarVal& value,
-		     SizeType size)
+BitVector::BitVector(
+  const VlScalarVal& value,
+  SizeType size
+)
 {
   resize(size);
   set_type(true, false, 2);
@@ -172,14 +194,18 @@ BitVector::BitVector(const VlScalarVal& value,
 }
 
 // brief C文字列からの変換用コンストラクタ
-BitVector::BitVector(const char* str)
+BitVector::BitVector(
+  const char* str
+)
 {
   operator=(str);
 }
 
 // @brief C文字列からの代入演算子
 BitVector&
-BitVector::operator=(const char* str)
+BitVector::operator=(
+  const char* str
+)
 {
   if ( str ) {
     SizeType strsize = strlen(str);
@@ -193,14 +219,18 @@ BitVector::operator=(const char* str)
 }
 
 // string 文字列からの変換用コンストラクタ
-BitVector::BitVector(const string& str)
+BitVector::BitVector(
+  const string& str
+)
 {
   operator=(str);
 }
 
 // @brief string 文字列からの代入演算子
 BitVector&
-BitVector::operator=(const string& str)
+BitVector::operator=(
+  const string& str
+)
 {
   SizeType strsize = str.size();
   if ( strsize == 0 ) {
@@ -239,7 +269,9 @@ BitVector::operator=(const string& str)
 }
 
 // 浮動小数点数を整数に変換してからビットベクタにする
-BitVector::BitVector(double val)
+BitVector::BitVector(
+  double val
+)
 {
   double r = rint(val);
   int intval = static_cast<int>(r);
@@ -247,11 +279,10 @@ BitVector::BitVector(double val)
 }
 
 // @brief 浮動小数点数からの代入演算子
-// @param[in] val 浮動小数点数
-// @warning 整数で表せない範囲の場合には値は不定
-// @todo 整数を経由しない方法に書き換えること
 BitVector&
-BitVector::operator=(double val)
+BitVector::operator=(
+  double val
+)
 {
   double r = rint(val);
   int intval = static_cast<int>(r);
@@ -260,10 +291,12 @@ BitVector::operator=(double val)
 }
 
 // Verilog-HDL 形式の文字列からの変換コンストラクタ
-BitVector::BitVector(SizeType size,
-		     bool is_signed,
-		     int base,
-		     const string& str)
+BitVector::BitVector(
+  SizeType size,
+  bool is_signed,
+  SizeType base,
+  const string& str
+)
 {
   bool is_sized = true;
   if ( size == 0 ) {
@@ -280,9 +313,9 @@ BitVector::BitVector(SizeType size,
 }
 
 // @brief 連結演算用のコンストラクタ
-// @param[in] src_list 連結する値のリスト
-// src_list の内容を連結したものをセットする
-BitVector::BitVector(const vector<BitVector>& src_list)
+BitVector::BitVector(
+  const vector<BitVector>& src_list
+)
 {
   SizeType tl = 0;
   for ( const auto& bv: src_list ) {
@@ -340,8 +373,9 @@ BitVector::BitVector(const vector<BitVector>& src_list)
 }
 
 // コピーコンストラクタ
-BitVector::BitVector(const BitVector& src)
-  : mSize{src.mSize},
+BitVector::BitVector(
+  const BitVector& src
+) : mSize{src.mSize},
     mFlags{src.mFlags},
     mVal0{unique_ptr<uword>{new uword[block(mSize)]}},
     mVal1{unique_ptr<uword>{new uword[block(mSize)]}}
@@ -354,9 +388,9 @@ BitVector::BitVector(const BitVector& src)
 }
 
 // @brief ムーブコンストラクタ
-// @param[in] src ムーブ元のオブジェクト
-BitVector::BitVector(BitVector&& src)
-  : mSize{src.mSize},
+BitVector::BitVector(
+  BitVector&& src
+) : mSize{src.mSize},
     mFlags{src.mFlags},
     mVal0{move(src.mVal0)},
     mVal1{move(src.mVal1)}
@@ -365,7 +399,9 @@ BitVector::BitVector(BitVector&& src)
 
 // コピー代入演算子
 BitVector&
-BitVector::operator=(const BitVector& src)
+BitVector::operator=(
+  const BitVector& src
+)
 {
   if ( &src != this ) {
     mSize = src.mSize;
@@ -383,7 +419,9 @@ BitVector::operator=(const BitVector& src)
 
 // ムーブ代入演算子
 BitVector&
-BitVector::operator=(BitVector&& src)
+BitVector::operator=(
+  BitVector&& src
+)
 {
   mSize = src.mSize;
   mFlags = src.mFlags;
@@ -393,32 +431,32 @@ BitVector::operator=(BitVector&& src)
 }
 
 // ビット長の変換を行うコピーコンストラクタもどき
-BitVector::BitVector(const BitVector& src,
-		     SizeType size)
+BitVector::BitVector(
+  const BitVector& src,
+  SizeType size
+)
 {
   set(src.mVal0.get(), src.mVal1.get(), src.size(), size, true,
       src.is_signed(), src.base());
 }
 
 // ビット長の変換と属性の変更を行うコピーコンストラクタもどき
-BitVector::BitVector(const BitVector& src,
-		     SizeType size,
-		     bool is_sized,
-		     bool is_signed,
-		     int base)
+BitVector::BitVector(
+  const BitVector& src,
+  SizeType size,
+  bool is_sized,
+  bool is_signed,
+  SizeType base
+)
 {
   set(src.mVal0.get(), src.mVal1.get(), src.size(), size, is_sized, is_signed, base);
 }
 
 // @brief スカラ値からの代入演算子
-// @param[in] value 値 {0, 1, X, Z}
-//
-// 結果の型は
-// - サイズはあり(1ビット)
-// - 符号なし
-// - 基数は2
 BitVector&
-BitVector::operator=(const VlScalarVal& value)
+BitVector::operator=(
+  const VlScalarVal& value
+)
 {
   resize(1);
   set_type(true, false, 2);
@@ -446,29 +484,28 @@ BitVector::operator=(const VlScalarVal& value)
 }
 
 // @brief ビット長の変換と属性の変更を行う代入演算子もどき
-// @param[in] src 変換元のオブジェクト
-// @param[in] size 指定サイズ
-// @param[in] is_sized サイズの有無
-// @param[in] is_signed 符号の有無
-// @param[in] base 基数
 void
-BitVector::set_with_attr(const BitVector& src,
-			 SizeType size,
-			 bool is_sized,
-			 bool is_signed,
-			 int base)
+BitVector::set_with_attr(
+  const BitVector& src,
+  SizeType size,
+  bool is_sized,
+  bool is_signed,
+  SizeType base
+)
 {
   set(src.mVal0.get(), src.mVal1.get(), src.size(), size, is_sized, is_signed, base);
 }
 
 // Verilog-HDL (IEEE1364-2001) の形式の文字列からの値をセットする．
 bool
-BitVector::set_from_verilog_string(const string& str)
+BitVector::set_from_verilog_string(
+  const string& str
+)
 {
   SizeType size = BLOCK_SIZE; // デフォルト値
   bool is_sized = false; // デフォルト値
   bool is_signed = true; // デフォルト値
-  int base = 10; // デフォルト値
+  SizeType base = 10; // デフォルト値
 
   // ビット長を求める．
   string::size_type pos = str.find_first_of('\'');
@@ -537,10 +574,10 @@ BitVector::set_from_verilog_string(const string& str)
 }
 
 // @brief 型変換を行う．
-// @param[in] type 要求される型(サイズも含む)
-// @return 自分自身への参照を返す．
 const BitVector&
-BitVector::coerce(const VlValueType& type)
+BitVector::coerce(
+  const VlValueType& type
+)
 {
   if ( !type.is_no_type() ) {
     bool is_signed = type.is_signed();
@@ -560,39 +597,49 @@ BitVector::coerce(const VlValueType& type)
 
 // 0 を表すオブジェクトを生成する
 BitVector
-BitVector::zero(SizeType size)
+BitVector::zero(
+  SizeType size
+)
 {
-  return BitVector(VlScalarVal::zero(), size);
+  return BitVector{VlScalarVal::zero(), size};
 }
 
 // 1 を表すオブジェクトを生成する
 BitVector
-BitVector::one(SizeType size)
+BitVector::one(
+  SizeType size
+)
 {
-  return BitVector(VlScalarVal::one(), size);
+  return BitVector{VlScalarVal::one(), size};
 }
 
 // X を表すオブジェクトを生成する
 BitVector
-BitVector::x(SizeType size)
+BitVector::x(
+  SizeType size
+)
 {
-  return BitVector(VlScalarVal::x(), size);
+  return BitVector{VlScalarVal::x(), size};
 }
 
 // Z を表すオブジェクトを生成する
 BitVector
-BitVector::z(SizeType size)
+BitVector::z(
+  SizeType size
+)
 {
-  return BitVector(VlScalarVal::z(), size);
+  return BitVector{VlScalarVal::z(), size};
 }
 
 // Verilog 形式の2進数から変換するための共通ルーティン
 void
-BitVector::set_from_binstring(SizeType size,
-			      bool is_sized,
-			      bool is_signed,
-			      const string& str,
-			      int pos)
+BitVector::set_from_binstring(
+  SizeType size,
+  bool is_sized,
+  bool is_signed,
+  const string& str,
+  int pos
+)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
@@ -647,11 +694,13 @@ BitVector::set_from_binstring(SizeType size,
 
 // Verilog 形式の8進数から変換するための共通ルーティン
 void
-BitVector::set_from_octstring(SizeType size,
-			      bool is_sized,
-			      bool is_signed,
-			      const string& str,
-			      int pos)
+BitVector::set_from_octstring(
+  SizeType size,
+  bool is_sized,
+  bool is_signed,
+  const string& str,
+  int pos
+)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
@@ -721,11 +770,13 @@ BitVector::set_from_octstring(SizeType size,
 
 // Verilog 形式の10進数から変換するための共通ルーティン
 void
-BitVector::set_from_decstring(SizeType size,
-			      bool is_sized,
-			      bool is_signed,
-			      const string& str,
-			      int pos)
+BitVector::set_from_decstring(
+  SizeType size,
+  bool is_sized,
+  bool is_signed,
+  const string& str,
+  int pos
+)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
@@ -789,11 +840,13 @@ BitVector::set_from_decstring(SizeType size,
 
 // Verilog 形式の16進数から変換するための共通ルーティン
 void
-BitVector::set_from_hexstring(SizeType size,
-			      bool is_sized,
-			      bool is_signed,
-			      const string& str,
-			      int pos)
+BitVector::set_from_hexstring(
+  SizeType size,
+  bool is_sized,
+  bool is_signed,
+  const string& str,
+  int pos
+)
 {
   // 文字列の表している値を求める．
   // 実際に格納するものはサイズなどの属性が異なるので set() を用いる．
@@ -861,8 +914,10 @@ BitVector::set_from_hexstring(SizeType size,
 
 // 文字列からの変換用コンストラクタの共通ルーティン
 void
-BitVector::set_from_string(SizeType strsize,
-			   const char* str)
+BitVector::set_from_string(
+  SizeType strsize,
+  const char* str
+)
 {
   SizeType s = strsize * 8;
 

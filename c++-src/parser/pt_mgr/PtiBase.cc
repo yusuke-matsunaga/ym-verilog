@@ -270,7 +270,7 @@ decompile_impl(
 
       case VpiConstType::Int:
 	if ( expr->const_str() == nullptr ) {
-	  buf << expr->const_uint();
+	  buf << expr->const_uint32();
 	  return buf.str();
 	}
 	break;

@@ -6,7 +6,6 @@
 /// Copyright (C) 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ExprEval.h"
 #include "FuncEval.h"
 #include "ErrorGen.h"
@@ -24,11 +23,10 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 // @brief コンストラクタ
-// @param[in] elab 生成器
-// @param[in] elb_mgr Elbオブジェクトを管理するクラス
-ExprEval::ExprEval(Elaborator& elab,
-		   ElbMgr& elb_mgr) :
-  ElbProxy(elab, elb_mgr)
+ExprEval::ExprEval(
+  Elaborator& elab,
+  ElbMgr& elb_mgr
+) : ElbProxy{elab, elb_mgr}
 {
 }
 
@@ -38,17 +36,13 @@ ExprEval::~ExprEval()
 }
 
 // @brief 定数式を評価し int 値を返す．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @return 評価した値を返す．
-//
-// * 定数式でなければ EvalConstError 例外を送出する．
-// * 評価結果が int でなければ EvalIntError 例外を送出する．
 int
-ExprEval::evaluate_int(const VlScope* parent,
-		       const PtExpr* pt_expr)
+ExprEval::evaluate_int(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
-  auto val{evaluate_expr(parent, pt_expr)};
+  auto val = evaluate_expr(parent, pt_expr);
   if ( !val.is_int_compat() ) {
     ErrorGen::int_required(__FILE__, __LINE__, pt_expr->file_region());
   }
@@ -57,19 +51,15 @@ ExprEval::evaluate_int(const VlScope* parent,
 }
 
 // @brief 定数式ならばを評価し int 値を返す．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @param[out] is_const 定数式の時に true を返す．
-// @return 評価した値を返す．
-//
-// * 評価結果が int でなければ EvalIntError 例外を送出する．
 int
-ExprEval::evaluate_int_if_const(const VlScope* parent,
-				const PtExpr* pt_expr,
-				bool& is_const)
+ExprEval::evaluate_int_if_const(
+  const VlScope* parent,
+  const PtExpr* pt_expr,
+  bool& is_const
+)
 {
   try {
-    auto val{evaluate_expr(parent, pt_expr)};
+    auto val = evaluate_expr(parent, pt_expr);
     if ( !val.is_int_compat() ) {
       ErrorGen::int_required(__FILE__, __LINE__, pt_expr->file_region());
     }
@@ -86,49 +76,37 @@ ExprEval::evaluate_int_if_const(const VlScope* parent,
 }
 
 // @brief 定数式を評価しスカラー値を返す．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @return 評価した値を返す．
-//
-// * 定数式でなければ EvalConstError 例外を送出する．
-// * いかなる型でもスカラー値に変換可能
 VlScalarVal
-ExprEval::evaluate_scalar(const VlScope* parent,
-			  const PtExpr* pt_expr)
+ExprEval::evaluate_scalar(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
-  auto val{evaluate_expr(parent, pt_expr)};
+  auto val = evaluate_expr(parent, pt_expr);
   // この変換は失敗しない．
   return val.scalar_value();
 }
 
 // @brief 定数式を評価し bool 値を返す．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @return 評価した値を返す．
-//
-// * 定数式でなければ EvalConstError 例外を送出する．
-// * いかなる型でも bool 値に変換可能
 bool
-ExprEval::evaluate_bool(const VlScope* parent,
-			const PtExpr* pt_expr)
+ExprEval::evaluate_bool(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
-  auto val{evaluate_expr(parent, pt_expr)};
+  auto val = evaluate_expr(parent, pt_expr);
   // この変換は失敗しない．
   return val.logic_value().to_bool();
 }
 
 // @brief 定数式を評価しビットベクタ値を返す．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-// @return 評価した値を返す．
-//
-// * 定数式でなければ EvalConstError 例外を送出する．
-// * 評価結果がビットベクタ型でなければ EvalBvError 例外を送出する．
 BitVector
-ExprEval::evaluate_bitvector(const VlScope* parent,
-			     const PtExpr* pt_expr)
+ExprEval::evaluate_bitvector(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
-  auto val{evaluate_expr(parent, pt_expr)};
+  auto val = evaluate_expr(parent, pt_expr);
   if ( !val.is_bitvector_compat() ) {
     ErrorGen::bv_required(__FILE__, __LINE__, pt_expr->file_region());
   }
@@ -137,31 +115,24 @@ ExprEval::evaluate_bitvector(const VlScope* parent,
 }
 
 // @brief 範囲を表す式を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_left 範囲のMSBを表すパース木
-// @param[in] pt_right 範囲のLSBを表すパース木
-// @param[return] 範囲の MSB と LSB の値のペアを返す．
-//
-// * 定数式でなければ EvalConstError 例外を送出する．
-// * 評価結果が int でなければ EvalIntError 例外を送出する．
 pair<int, int>
-ExprEval::evaluate_range(const VlScope* parent,
-			 const PtExpr* pt_left,
-			 const PtExpr* pt_right)
+ExprEval::evaluate_range(
+  const VlScope* parent,
+  const PtExpr* pt_left,
+  const PtExpr* pt_right
+)
 {
-  int left_val{evaluate_int(parent, pt_left)};
-  int right_val{evaluate_int(parent, pt_right)};
+  int left_val = evaluate_int(parent, pt_left);
+  int right_val = evaluate_int(parent, pt_right);
   return make_pair(left_val, right_val);
 }
 
 // @brief 式の値を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
-//
-// * 定数式でなければ EvalConstError 例外を送出する．
 VlValue
-ExprEval::evaluate_expr(const VlScope* parent,
-			const PtExpr* pt_expr)
+ExprEval::evaluate_expr(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   // '(' expression ')' の時の対応
   while ( pt_expr->type() == PtExprType::Opr &&
@@ -189,17 +160,17 @@ ExprEval::evaluate_expr(const VlScope* parent,
     ASSERT_NOT_REACHED;
   }
 
-  return VlValue();
+  return VlValue{};
 }
 
 // @brief 演算子に対して int 型の値を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
 VlValue
-ExprEval::evaluate_opr(const VlScope* parent,
-		       const PtExpr* pt_expr)
+ExprEval::evaluate_opr(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
-  auto op_type{pt_expr->op_type()};
+  auto op_type = pt_expr->op_type();
   SizeType op_size{pt_expr->operand_num()};
 
   // オペランドの値の評価を行う．
@@ -393,15 +364,15 @@ ExprEval::evaluate_opr(const VlScope* parent,
   }
 
   // ダミー
-  return VlValue();
+  return VlValue{};
 }
 
 // @brief プライマリに対して式の値を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
 VlValue
-ExprEval::evaluate_primary(const VlScope* parent,
-			   const PtExpr* pt_expr)
+ExprEval::evaluate_primary(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   // 識別子の階層
   if ( pt_expr->namebranch_num() > 0 ) {
@@ -409,9 +380,9 @@ ExprEval::evaluate_primary(const VlScope* parent,
     ErrorGen::hname_in_ce(__FILE__, __LINE__, pt_expr);
   }
 
-  SizeType isize{pt_expr->index_num()};
-  bool has_bit_select{(isize == 1)};
-  bool has_range_select{(pt_expr->left_range() && pt_expr->right_range())};
+  SizeType isize = pt_expr->index_num();
+  bool has_bit_select = (isize == 1);
+  bool has_range_select = (pt_expr->left_range() && pt_expr->right_range());
 
   if (  isize > 1 || (isize == 1 && has_range_select) ) {
     // 配列型ではない．
@@ -424,54 +395,54 @@ ExprEval::evaluate_primary(const VlScope* parent,
     index1 = evaluate_int(parent, pt_expr->index(0));
   }
   if ( has_range_select ) {
-    auto pt_left{pt_expr->left_range()};
+    auto pt_left = pt_expr->left_range();
     index1 = evaluate_int(parent, pt_left);
-    auto pt_right{pt_expr->right_range()};
+    auto pt_right = pt_expr->right_range();
     index2 = evaluate_int(parent, pt_right);
   }
 
   // モジュール内の識別子を探索する．
-  auto handle{mgr().find_obj_up(parent, pt_expr, parent->parent_module())};
+  auto handle = mgr().find_obj_up(parent, pt_expr, parent->parent_module());
   if ( !handle ) {
     // 見つからなかった．
     ErrorGen::not_found(__FILE__, __LINE__, pt_expr);
   }
 
   // そのオブジェクトが genvar の場合
-  auto genvar{handle->genvar()};
+  auto genvar = handle->genvar();
   if ( genvar ) {
     if ( has_bit_select ) {
       // ビット選択
-      BitVector bv(genvar->value());
-      return VlValue(bv.bit_select_op(index1));
+      BitVector bv{genvar->value()};
+      return VlValue{bv.bit_select_op(index1)};
     }
     else if ( has_range_select ) {
       // 範囲選択
-      BitVector bv(genvar->value());
+      BitVector bv{genvar->value()};
       if ( index1 < index2 ) {
 	ErrorGen::range_order(__FILE__, __LINE__, pt_expr);
       }
-      return VlValue(bv.part_select_op(index1, index2));
+      return VlValue{bv.part_select_op(index1, index2)};
     }
     else {
-      return VlValue(genvar->value());
+      return VlValue{genvar->value()};
     }
   }
 
   // それ以外の宣言要素の場合
   // しかしこの場合には parameter でなければならない．
-  auto param{handle->parameter()};
+  auto param = handle->parameter();
   if ( !param ) {
     ErrorGen::not_a_parameter(__FILE__, __LINE__, pt_expr);
     return VlValue();
   }
 
-  auto pt_init_expr{param->init_expr()};
-  auto val{evaluate_expr(parent, pt_init_expr)};
+  auto pt_init_expr = param->init_expr();
+  auto val = evaluate_expr(parent, pt_init_expr);
   if ( param->value_type().is_real_type() ) {
     if ( has_bit_select || has_range_select ) {
       ErrorGen::illegal_real_type(__FILE__, __LINE__, pt_expr);
-      return VlValue();
+      return VlValue{};
     }
   }
   else {
@@ -484,9 +455,9 @@ ExprEval::evaluate_primary(const VlScope* parent,
       if ( !param->calc_bit_offset(index1, offset) ) {
 	// インデックスが範囲外だった．
 	// エラーではなく X になる．
-	return VlValue(VlScalarVal::x());
+	return VlValue{VlScalarVal::x()};
       }
-      return VlValue(val.bitvector_value().bit_select_op(offset));
+      return VlValue{val.bitvector_value().bit_select_op(offset)};
     }
     else if ( has_range_select ) {
       if ( !val.is_bitvector_compat() ) {
@@ -495,7 +466,7 @@ ExprEval::evaluate_primary(const VlScope* parent,
       switch ( pt_expr->range_mode() ) {
       case VpiRangeMode::Const:
 	{
-	  bool big{(index1 >= index2)};
+	  bool big = (index1 >= index2);
 	  if ( big ^ param->is_big_endian() ) {
 	    ErrorGen::range_order(__FILE__, __LINE__, pt_expr);
 	  }
@@ -532,8 +503,8 @@ ExprEval::evaluate_primary(const VlScope* parent,
 
       SizeType msb_offset;
       SizeType lsb_offset;
-      bool stat1{param->calc_bit_offset(index1, msb_offset)};
-      bool stat2{param->calc_bit_offset(index2, lsb_offset)};
+      bool stat1 = param->calc_bit_offset(index1, msb_offset);
+      bool stat2 = param->calc_bit_offset(index2, lsb_offset);
       if ( stat1 && stat2 ) {
 	return VlValue(val.bitvector_value().part_select_op(msb_offset, lsb_offset));
       }
@@ -545,7 +516,7 @@ ExprEval::evaluate_primary(const VlScope* parent,
       else {
 	bw = index1 - index2 + 1;
       }
-      return VlValue(BitVector(VlScalarVal::x(), bw));
+      return VlValue{BitVector{VlScalarVal::x(), bw}};
     }
   }
 
@@ -553,11 +524,11 @@ ExprEval::evaluate_primary(const VlScope* parent,
 }
 
 // @brief 定数に対して式の値を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
 VlValue
-ExprEval::evaluate_const(const VlScope* parent,
-			 const PtExpr* pt_expr)
+ExprEval::evaluate_const(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   SizeType size{pt_expr->const_size()};
   bool is_signed{false};
@@ -565,12 +536,13 @@ ExprEval::evaluate_const(const VlScope* parent,
   switch ( pt_expr->const_type() ) {
   case VpiConstType::Int:
     if ( pt_expr->const_str() == nullptr ) {
-      return VlValue(static_cast<int>(pt_expr->const_uint()));
+      auto val = static_cast<int>(pt_expr->const_uint32());
+      return VlValue{val};
     }
     break;
 
   case VpiConstType::Real:
-    return VlValue(pt_expr->const_real());
+    return VlValue{pt_expr->const_real()};
 
   case VpiConstType::SignedBinary:
     is_signed = true;
@@ -601,7 +573,7 @@ ExprEval::evaluate_const(const VlScope* parent,
     break;
 
   case VpiConstType::String:
-    return VlValue(BitVector(pt_expr->const_str()));
+    return VlValue{BitVector{pt_expr->const_str()}};
 
   default:
     ASSERT_NOT_REACHED;
@@ -609,15 +581,15 @@ ExprEval::evaluate_const(const VlScope* parent,
   }
 
   // ここに来たということはビットベクタ型
-  return VlValue(BitVector(size, is_signed, base, pt_expr->const_str()));
+  return VlValue{BitVector{size, is_signed, base, pt_expr->const_str()}};
 }
 
 // @brief PtFuncCall から式の値を評価する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_expr 式を表すパース木
 VlValue
-ExprEval::evaluate_funccall(const VlScope* parent,
-			    const PtExpr* pt_expr)
+ExprEval::evaluate_funccall(
+  const VlScope* parent,
+  const PtExpr* pt_expr
+)
 {
   if ( pt_expr->namebranch_num() > 0 ) {
     // 階層名は使えない．
@@ -625,13 +597,13 @@ ExprEval::evaluate_funccall(const VlScope* parent,
   }
 
   // 関数名
-  auto name{pt_expr->name()};
+  auto name = pt_expr->name();
 
   // 関数本体を探し出す．
   // constant function はモジュール直下にしかあり得ない
   // <- generated scope 内の関数は constant function ではない．
-  auto module{parent->parent_module()};
-  auto pt_func{find_funcdef(module, name)};
+  auto module = parent->parent_module();
+  auto pt_func = find_funcdef(module, name);
   if ( !pt_func ) {
     // 関数が見つからなかった．
     ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
@@ -643,7 +615,7 @@ ExprEval::evaluate_funccall(const VlScope* parent,
   }
 
   // 定数関数を探し出す．
-  auto child_func{find_constant_function(module, name)};
+  auto child_func = find_constant_function(module, name);
   if ( child_func == nullptr ) {
     pt_func->set_in_use();
     // なかったので作る．
@@ -665,11 +637,11 @@ ExprEval::evaluate_funccall(const VlScope* parent,
 
   vector<VlValue> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1{pt_expr->operand(i)};
-    auto val1{evaluate_expr(parent, pt_expr1)};
-    auto io_decl{child_func->io(i)};
-    auto decl{io_decl->decl()};
-    auto decl_type{decl->value_type()};
+    auto pt_expr1 = pt_expr->operand(i);
+    auto val1 = evaluate_expr(parent, pt_expr1);
+    auto io_decl = child_func->io(i);
+    auto decl = io_decl->decl();
+    auto decl_type = decl->value_type();
     if ( decl_type.is_real_type() ) {
       if ( !val1.is_real_compat() ) {
 	// 型が異なる．
@@ -686,9 +658,8 @@ ExprEval::evaluate_funccall(const VlScope* parent,
   }
 
   // 関数の評価を行う．
-  FuncEval eval(child_func);
-  auto val{eval(arg_list)};
-
+  FuncEval eval{child_func};
+  auto val = eval(arg_list);
   return val;
 }
 

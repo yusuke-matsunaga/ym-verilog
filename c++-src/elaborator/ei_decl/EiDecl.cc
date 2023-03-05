@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiDecl.h"
 
@@ -24,20 +23,19 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 宣言要素を生成する．
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] init 初期割り当て式
 ElbDecl*
-EiFactory::new_Decl(ElbDeclHead* head,
-		    const PtNamedBase* pt_item,
-		    const VlExpr* init)
+EiFactory::new_Decl(
+  ElbDeclHead* head,
+  const PtNamedBase* pt_item,
+  const VlExpr* init
+)
 {
   ElbDecl* decl = nullptr;
   if ( init ) {
-    decl = new EiDeclI(head, pt_item, init);
+    decl = new EiDeclI{head, pt_item, init};
   }
   else {
-    decl = new EiDecl(head, pt_item);
+    decl = new EiDecl{head, pt_item};
   }
   return decl;
 }
@@ -48,13 +46,12 @@ EiFactory::new_Decl(ElbDeclHead* head,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-EiDecl::EiDecl(ElbDeclHead* head,
-	       const PtNamedBase* pt_item) :
-  mHead{head},
-  mPtItem{pt_item},
-  mAuxSign{false}
+EiDecl::EiDecl(
+  ElbDeclHead* head,
+  const PtNamedBase* pt_item
+) : mHead{head},
+    mPtItem{pt_item},
+    mAuxSign{false}
 {
 }
 
@@ -64,7 +61,6 @@ EiDecl::~EiDecl()
 }
 
 // @brief 型の取得
-// @return vpi_user.h で定義された型 (vpiModule など)
 VpiObjType
 EiDecl::type() const
 {
@@ -93,7 +89,6 @@ EiDecl::name() const
 }
 
 // @breif 値の型を返す．
-// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
 VlValueType
 EiDecl::value_type() const
 {
@@ -127,8 +122,6 @@ EiDecl::value_type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiDecl::is_signed() const
 {
@@ -143,7 +136,6 @@ EiDecl::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDecl::left_range_val() const
 {
@@ -151,7 +143,6 @@ EiDecl::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDecl::right_range_val() const
 {
@@ -159,7 +150,6 @@ EiDecl::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDecl::left_range_string() const
 {
@@ -167,7 +157,6 @@ EiDecl::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDecl::right_range_string() const
 {
@@ -196,20 +185,16 @@ EiDecl::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDecl::calc_bit_offset(int index,
-			SizeType& offset) const
+EiDecl::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return mHead->calc_bit_offset(index, offset);
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 EiDecl::data_type() const
 {
@@ -217,8 +202,6 @@ EiDecl::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
 VpiNetType
 EiDecl::net_type() const
 {
@@ -226,9 +209,6 @@ EiDecl::net_type() const
 }
 
 // @brief vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
 VpiVsType
 EiDecl::vs_type() const
 {
@@ -236,8 +216,6 @@ EiDecl::vs_type() const
 }
 
 // @brief drive0 strength の取得
-// @retval 0 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDecl::drive0() const
 {
@@ -245,8 +223,6 @@ EiDecl::drive0() const
 }
 
 // @brief drive1 strength の取得
-// @retval 1 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDecl::drive1() const
 {
@@ -254,8 +230,6 @@ EiDecl::drive1() const
 }
 
 // @brief charge strength の取得
-// @retval 電荷の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDecl::charge() const
 {
@@ -263,8 +237,6 @@ EiDecl::charge() const
 }
 
 // @brief delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
 const VlDelay*
 EiDecl::delay() const
 {
@@ -272,7 +244,6 @@ EiDecl::delay() const
 }
 
 // @brief 定数値を持つ型のときに true を返す．
-// @note このクラスは false を返す．
 bool
 EiDecl::is_consttype() const
 {
@@ -280,8 +251,6 @@ EiDecl::is_consttype() const
 }
 
 // @brief 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
 const VlExpr*
 EiDecl::init_value() const
 {
@@ -289,7 +258,6 @@ EiDecl::init_value() const
 }
 
 // @brief localparam のときに true 返す．
-// @note このクラスは false を返す．
 bool
 EiDecl::is_local_param() const
 {
@@ -309,14 +277,12 @@ EiDecl::set_signed()
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] init 初期値
-EiDeclI::EiDeclI(ElbDeclHead* head,
-		 const PtNamedBase* pt_item,
-		 const VlExpr* init) :
-  EiDecl(head, pt_item),
-  mInit{init}
+EiDeclI::EiDeclI(
+  ElbDeclHead* head,
+  const PtNamedBase* pt_item,
+  const VlExpr* init
+) : EiDecl{head, pt_item},
+    mInit{init}
 {
 }
 
@@ -326,8 +292,6 @@ EiDeclI::~EiDeclI()
 }
 
 // @brief 初期値の取得
-// @retval 初期値
-// @retval nullptr 設定がない場合
 const VlExpr*
 EiDeclI::init_value() const
 {
@@ -335,9 +299,10 @@ EiDeclI::init_value() const
 }
 
 // @brief 初期値の設定
-// @param[in] expr 初期値
 void
-EiDeclI::set_init(const VlExpr* expr)
+EiDeclI::set_init(
+  const VlExpr* expr
+)
 {
   mInit = expr;
 }

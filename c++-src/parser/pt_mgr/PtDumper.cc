@@ -878,10 +878,10 @@ PtDumper::put(
       put("mFileRegion", expr->file_region());
       put("mConstType", expr->const_type());
       if ( 0 ) {
-	PtHeader x(*this, "mConstUint", "uint");
-	mStream << expr->const_uint();
+	PtHeader x(*this, "mConstInt", "int");
+	mStream << expr->const_uint32();
       }
-      put("mConstUint", static_cast<int>(expr->const_uint()));
+      put("mConstInt", expr->const_uint32());
       put("mConstStr", expr->const_str());
       if ( 0 ) {
 	PtHeader x(*this, "mConstReal", "double");
@@ -1026,6 +1026,17 @@ PtDumper::put(
 )
 {
   PtHeader x(*this, label, "int", false);
+  mStream << d;
+}
+
+// @brief 符号なし整数型データの出力
+void
+PtDumper::put(
+  const char* label,
+  ymuint32 d
+)
+{
+  PtHeader x(*this, label, "uint32", false);
   mStream << d;
 }
 

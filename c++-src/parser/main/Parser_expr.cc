@@ -294,7 +294,7 @@ Parser::new_SysFuncCall(
 const PtExpr*
 Parser::new_IntConst(
   const FileRegion& fr,
-  unsigned int value
+  ymuint32 value
 )
 {
   auto expr = mFactory->new_IntConst(fr, value);

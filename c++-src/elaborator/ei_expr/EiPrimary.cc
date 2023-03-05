@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiPrimary.h"
 
@@ -26,94 +25,92 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief プライマリ式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
 ElbExpr*
-EiFactory::new_Primary(const PtExpr* pt_expr,
-		       const VlDecl* obj)
+EiFactory::new_Primary(
+  const PtExpr* pt_expr,
+  const VlDecl* obj
+)
 {
-  auto expr{new EiPrimary(pt_expr, obj)};
+  auto expr = new EiPrimary{pt_expr, obj};
   return expr;
 }
 
 // @brief プライマリ式を生成する．
-// @param[in] pt_item パース木の定義要素
-// @param[in] obj 本体のオブジェクト
 ElbExpr*
-EiFactory::new_Primary(const PtDeclItem* pt_item,
-		       const VlDecl* obj)
+EiFactory::new_Primary(
+  const PtDeclItem* pt_item,
+  const VlDecl* obj
+)
 {
-  auto expr{new EiDeclPrimary(pt_item, obj)};
+  auto expr = new EiDeclPrimary{pt_item, obj};
   return expr;
 }
 
 // @brief プライマリ式を生成する．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
 ElbExpr*
-EiFactory::new_Primary(const PtExpr* pt_expr,
-		       ElbParameter* obj)
+EiFactory::new_Primary(
+  const PtExpr* pt_expr,
+  ElbParameter* obj
+)
 {
-  auto expr{new EiParamPrimary(pt_expr, obj)};
+  auto expr = new EiParamPrimary{pt_expr, obj};
   return expr;
 }
 
 // @brief プライマリ式を生成する(配列要素版)．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-// @param[in] index_list インデックスのリスト
 ElbExpr*
-EiFactory::new_Primary(const PtExpr* pt_expr,
-		       const VlDeclArray* obj,
-		       const vector<ElbExpr*>& index_list)
+EiFactory::new_Primary(
+  const PtExpr* pt_expr,
+  const VlDeclArray* obj,
+  const vector<ElbExpr*>& index_list
+)
 {
-  auto expr{new EiArrayElemPrimary(pt_expr, obj, index_list)};
+  auto expr = new EiArrayElemPrimary{pt_expr, obj, index_list};
   return expr;
 }
 
 // @brief プライマリ式を生成する(固定インデックスの配列要素版)．
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-// @param[in] offset オフセット
 ElbExpr*
-EiFactory::new_Primary(const PtExpr* pt_expr,
-		       const VlDeclArray* obj,
-		       int offset)
+EiFactory::new_Primary(
+  const PtExpr* pt_expr,
+  const VlDeclArray* obj,
+  SizeType offset
+)
 {
-  auto expr{new EiConstArrayElemPrimary(pt_expr, obj, offset)};
+  auto expr = new EiConstArrayElemPrimary{pt_expr, obj, offset};
   return expr;
 }
 
 // @brief システム関数/システムタスクの引数を生成する．
-// @param[in] pt_expr パース木中で参照している要素
-// @param[in] arg 引数本体
 ElbExpr*
-EiFactory::new_ArgHandle(const PtExpr* pt_expr,
-			 const VlScope* arg)
+EiFactory::new_ArgHandle(
+  const PtExpr* pt_expr,
+  const VlScope* arg
+)
 {
-  auto expr{new EiScopePrimary(pt_expr, arg)};
+  auto expr = new EiScopePrimary{pt_expr, arg};
   return expr;
 }
 
 // @brief システム関数/システムタスクの引数を生成する．
-// @param[in] pt_expr パース木中で参照している要素
-// @param[in] arg 引数本体
 ElbExpr*
-EiFactory::new_ArgHandle(const PtExpr* pt_expr,
-			 const VlPrimitive* arg)
+EiFactory::new_ArgHandle(
+  const PtExpr* pt_expr,
+  const VlPrimitive* arg
+)
 {
-  auto expr{new EiPrimitivePrimary(pt_expr, arg)};
+  auto expr = new EiPrimitivePrimary{pt_expr, arg};
   return expr;
 }
 
 // @brief システム関数/システムタスクの引数を生成する．
-// @param[in] pt_expr パース木中で参照している要素
-// @param[in] arg 引数本体
 ElbExpr*
-EiFactory::new_ArgHandle(const PtExpr* pt_expr,
-			 const VlDeclArray* arg)
+EiFactory::new_ArgHandle(
+  const PtExpr* pt_expr,
+  const VlDeclArray* arg
+)
 {
-  auto expr{new EiDeclArrayPrimary(pt_expr, arg)};
+  auto expr = new EiDeclArrayPrimary{pt_expr, arg};
   return expr;
 }
 
@@ -123,9 +120,9 @@ EiFactory::new_ArgHandle(const PtExpr* pt_expr,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-EiPrimaryBase::EiPrimaryBase(const PtExpr* pt_expr) :
-  EiExprBase(pt_expr)
+EiPrimaryBase::EiPrimaryBase(
+  const PtExpr* pt_expr
+) : EiExprBase{pt_expr}
 {
 }
 
@@ -142,10 +139,10 @@ EiPrimaryBase::is_primary() const
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiPrimaryBase::_set_reqsize(const VlValueType& type)
+EiPrimaryBase::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -156,12 +153,11 @@ EiPrimaryBase::_set_reqsize(const VlValueType& type)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-EiPrimary::EiPrimary(const PtExpr* pt_expr,
-		     const VlDecl* obj) :
-  EiPrimaryBase(pt_expr),
-  mObj{obj}
+EiPrimary::EiPrimary(
+  const PtExpr* pt_expr,
+  const VlDecl* obj
+) : EiPrimaryBase{pt_expr},
+    mObj{obj}
 {
 }
 
@@ -185,7 +181,6 @@ EiPrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiPrimary::is_const() const
 {
@@ -193,7 +188,6 @@ EiPrimary::is_const() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiPrimary::decl_base() const
 {
@@ -201,7 +195,6 @@ EiPrimary::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDecl*
 EiPrimary::decl_obj() const
 {
@@ -209,9 +202,6 @@ EiPrimary::decl_obj() const
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 1 を返す．
 SizeType
 EiPrimary::lhs_elem_num() const
 {
@@ -219,11 +209,10 @@ EiPrimary::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiPrimary::lhs_elem(SizeType pos) const
+EiPrimary::lhs_elem(
+  SizeType pos
+) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -235,12 +224,11 @@ EiPrimary::lhs_elem(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_item パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-EiDeclPrimary::EiDeclPrimary(const PtDeclItem* pt_item,
-			     const VlDecl* obj) :
-  mPtObj{pt_item},
-  mObj{obj}
+EiDeclPrimary::EiDeclPrimary(
+  const PtDeclItem* pt_item,
+  const VlDecl* obj
+) : mPtObj{pt_item},
+    mObj{obj}
 {
 }
 
@@ -264,7 +252,6 @@ EiDeclPrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiDeclPrimary::is_const() const
 {
@@ -279,7 +266,6 @@ EiDeclPrimary::is_primary() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiDeclPrimary::decl_base() const
 {
@@ -287,7 +273,6 @@ EiDeclPrimary::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDecl*
 EiDeclPrimary::decl_obj() const
 {
@@ -302,9 +287,6 @@ EiDeclPrimary::decompile() const
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 1 を返す．
 SizeType
 EiDeclPrimary::lhs_elem_num() const
 {
@@ -312,21 +294,20 @@ EiDeclPrimary::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiDeclPrimary::lhs_elem(SizeType pos) const
+EiDeclPrimary::lhs_elem(
+  SizeType pos
+) const
 {
   ASSERT_COND( pos == 0 );
   return this;
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiDeclPrimary::_set_reqsize(const VlValueType& type)
+EiDeclPrimary::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -344,12 +325,11 @@ EiDeclPrimary::pt_obj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-EiDeclArrayPrimary::EiDeclArrayPrimary(const PtExpr* pt_expr,
-				       const VlDeclArray* obj) :
-  mPtObj{pt_expr},
-  mObj{obj}
+EiDeclArrayPrimary::EiDeclArrayPrimary(
+  const PtExpr* pt_expr,
+  const VlDeclArray* obj
+) : mPtObj{pt_expr},
+    mObj{obj}
 {
 }
 
@@ -388,7 +368,6 @@ EiDeclArrayPrimary::is_primary() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiDeclArrayPrimary::decl_base() const
 {
@@ -396,7 +375,6 @@ EiDeclArrayPrimary::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDecl*
 EiDeclArrayPrimary::decl_obj() const
 {
@@ -411,9 +389,6 @@ EiDeclArrayPrimary::decompile() const
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 1 を返す．
 SizeType
 EiDeclArrayPrimary::lhs_elem_num() const
 {
@@ -421,21 +396,20 @@ EiDeclArrayPrimary::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiDeclArrayPrimary::lhs_elem(SizeType pos) const
+EiDeclArrayPrimary::lhs_elem(
+  SizeType pos
+) const
 {
   ASSERT_COND( pos == 0 );
   return this;
 }
 
 // @brief 要求される式の型を計算してセットする．
-// @param[in] type 要求される式の型
-// @note 必要であればオペランドに対して再帰的に処理を行なう．
 void
-EiDeclArrayPrimary::_set_reqsize(const VlValueType& type)
+EiDeclArrayPrimary::_set_reqsize(
+  const VlValueType& type
+)
 {
   // なにもしない．
 }
@@ -453,12 +427,11 @@ EiDeclArrayPrimary::pt_obj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-EiParamPrimary::EiParamPrimary(const PtExpr* pt_expr,
-			       ElbParameter* obj) :
-  EiPrimaryBase(pt_expr),
-  mObj{obj}
+EiParamPrimary::EiParamPrimary(
+  const PtExpr* pt_expr,
+  ElbParameter* obj
+) : EiPrimaryBase{pt_expr},
+    mObj{obj}
 {
 }
 
@@ -482,7 +455,6 @@ EiParamPrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiParamPrimary::is_const() const
 {
@@ -490,8 +462,6 @@ EiParamPrimary::is_const() const
 }
 
 // @brief 定数値を返す．
-// @note kVpiConstant の時，意味を持つ．
-// @note それ以外では動作は不定
 VlValue
 EiParamPrimary::constant_value() const
 {
@@ -499,7 +469,6 @@ EiParamPrimary::constant_value() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiParamPrimary::decl_base() const
 {
@@ -507,7 +476,6 @@ EiParamPrimary::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDecl*
 EiParamPrimary::decl_obj() const
 {
@@ -520,16 +488,13 @@ EiParamPrimary::decl_obj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-// @param[in] dim 配列の次元
-// @param[in] index_list インデックスのリスト
-EiArrayElemPrimary::EiArrayElemPrimary(const PtExpr* pt_expr,
-				       const VlDeclArray* obj,
-				       const vector<ElbExpr*>& index_list) :
-  EiPrimaryBase(pt_expr),
-  mObj{obj},
-  mIndexList{index_list}
+EiArrayElemPrimary::EiArrayElemPrimary(
+  const PtExpr* pt_expr,
+  const VlDeclArray* obj,
+  const vector<ElbExpr*>& index_list
+) : EiPrimaryBase{pt_expr},
+    mObj{obj},
+    mIndexList{index_list}
 {
 }
 
@@ -553,7 +518,6 @@ EiArrayElemPrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiArrayElemPrimary::is_const() const
 {
@@ -562,7 +526,6 @@ EiArrayElemPrimary::is_const() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiArrayElemPrimary::decl_base() const
 {
@@ -570,7 +533,6 @@ EiArrayElemPrimary::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDeclArray*
 EiArrayElemPrimary::declarray_obj() const
 {
@@ -578,7 +540,6 @@ EiArrayElemPrimary::declarray_obj() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
-// @note それ以外では 0 を返す．
 SizeType
 EiArrayElemPrimary::declarray_dimension() const
 {
@@ -586,18 +547,15 @@ EiArrayElemPrimary::declarray_dimension() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
-// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
-// @note それ以外では nullptr を返す．
 const VlExpr*
-EiArrayElemPrimary::declarray_index(SizeType pos) const
+EiArrayElemPrimary::declarray_index(
+  SizeType pos
+) const
 {
   return mIndexList[pos];
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 1 を返す．
 SizeType
 EiArrayElemPrimary::lhs_elem_num() const
 {
@@ -605,11 +563,10 @@ EiArrayElemPrimary::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiArrayElemPrimary::lhs_elem(SizeType pos) const
+EiArrayElemPrimary::lhs_elem(
+  SizeType pos
+) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -621,15 +578,13 @@ EiArrayElemPrimary::lhs_elem(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-// @param[in] offset オフセット
-EiConstArrayElemPrimary::EiConstArrayElemPrimary(const PtExpr* pt_expr,
-						 const VlDeclArray* obj,
-						 SizeType offset) :
-  EiPrimaryBase(pt_expr),
-  mObj{obj},
-  mOffset{offset}
+EiConstArrayElemPrimary::EiConstArrayElemPrimary(
+  const PtExpr* pt_expr,
+  const VlDeclArray* obj,
+  SizeType offset
+) : EiPrimaryBase{pt_expr},
+    mObj{obj},
+    mOffset{offset}
 {
 }
 
@@ -653,7 +608,6 @@ EiConstArrayElemPrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiConstArrayElemPrimary::is_const() const
 {
@@ -662,8 +616,6 @@ EiConstArrayElemPrimary::is_const() const
 }
 
 // @brief 部分/ビット指定が定数の時 true を返す．
-// @note kVpiPartSelect/kVpiBitSelect の時，意味を持つ．
-// @note それ以外では常に false を返す．
 bool
 EiConstArrayElemPrimary::is_constant_select() const
 {
@@ -671,7 +623,6 @@ EiConstArrayElemPrimary::is_constant_select() const
 }
 
 // @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-// @note それ以外では nullptr を返す．
 const VlDeclBase*
 EiConstArrayElemPrimary::decl_base() const
 {
@@ -679,7 +630,6 @@ EiConstArrayElemPrimary::decl_base() const
 }
 
 // @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
 const VlDeclArray*
 EiConstArrayElemPrimary::declarray_obj() const
 {
@@ -687,7 +637,6 @@ EiConstArrayElemPrimary::declarray_obj() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列の次元を返す．
-// @note それ以外では 0 を返す．
 SizeType
 EiConstArrayElemPrimary::declarray_dimension() const
 {
@@ -695,16 +644,15 @@ EiConstArrayElemPrimary::declarray_dimension() const
 }
 
 // @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
-// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
-// @note それ以外では nullptr を返す．
 const VlExpr*
-EiConstArrayElemPrimary::declarray_index(SizeType pos) const
+EiConstArrayElemPrimary::declarray_index(
+  SizeType pos
+) const
 {
   return nullptr;
 }
 
 // @brief 配列型宣言要素への参照のオフセットを返す．
-// @note 固定インデックスの場合のみ意味を持つ．
 SizeType
 EiConstArrayElemPrimary::declarray_offset() const
 {
@@ -712,9 +660,6 @@ EiConstArrayElemPrimary::declarray_offset() const
 }
 
 // @brief 左辺式の要素数の取得
-// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-// @note このクラスでは 1 を返す．
 SizeType
 EiConstArrayElemPrimary::lhs_elem_num() const
 {
@@ -722,11 +667,10 @@ EiConstArrayElemPrimary::lhs_elem_num() const
 }
 
 // @brief 左辺式の要素の取得
-// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-// @note このクラスでは pos = 0 の時，自分自身を返す．
 const VlExpr*
-EiConstArrayElemPrimary::lhs_elem(SizeType pos) const
+EiConstArrayElemPrimary::lhs_elem(
+  SizeType pos
+) const
 {
   ASSERT_COND( pos == 0 );
   return this;
@@ -738,12 +682,11 @@ EiConstArrayElemPrimary::lhs_elem(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-EiScopePrimary::EiScopePrimary(const PtExpr* pt_expr,
-			       const VlScope* obj) :
-  EiPrimaryBase(pt_expr),
-  mObj{obj}
+EiScopePrimary::EiScopePrimary(
+  const PtExpr* pt_expr,
+  const VlScope* obj
+) : EiPrimaryBase{pt_expr},
+    mObj{obj}
 {
 }
 
@@ -767,7 +710,6 @@ EiScopePrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiScopePrimary::is_const() const
 {
@@ -787,12 +729,11 @@ EiScopePrimary::scope_obj() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] pt_expr パース木の定義要素
-// @param[in] obj 本体のオブジェクト
-EiPrimitivePrimary::EiPrimitivePrimary(const PtExpr* pt_expr,
-				       const VlPrimitive* obj) :
-  EiPrimaryBase(pt_expr),
-  mObj{obj}
+EiPrimitivePrimary::EiPrimitivePrimary(
+  const PtExpr* pt_expr,
+  const VlPrimitive* obj
+) : EiPrimaryBase{pt_expr},
+    mObj{obj}
 {
 }
 
@@ -816,7 +757,6 @@ EiPrimitivePrimary::value_type() const
 }
 
 // @brief 定数の時 true を返す．
-// @note 参照している要素の型によって決まる．
 bool
 EiPrimitivePrimary::is_const() const
 {

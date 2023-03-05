@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiDeclArray.h"
 
@@ -25,14 +24,12 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 宣言要素の配列を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] range_src 範囲の配列
 const VlDeclArray*
-EiFactory::new_DeclArray(ElbDeclHead* head,
-			 const PtNamedBase* pt_item,
-			 const vector<ElbRangeSrc>& range_src)
+EiFactory::new_DeclArray(
+  ElbDeclHead* head,
+  const PtNamedBase* pt_item,
+  const vector<ElbRangeSrc>& range_src
+)
 {
   SizeType dim_size = range_src.size();
   vector<EiRange> range_array(dim_size);
@@ -40,8 +37,7 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
     range_array[i].set(range_src[i]);
   }
 
-  auto decl{new EiDeclArray(head, pt_item, range_array)};
-
+  auto decl = new EiDeclArray{head, pt_item, range_array};
   return decl;
 }
 
@@ -51,16 +47,13 @@ EiFactory::new_DeclArray(ElbDeclHead* head,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] head ヘッダ
-// @param[in] pt_item パース木の宣言要素
-// @param[in] range_array 範囲の配列
-EiDeclArray::EiDeclArray(ElbDeclHead* head,
-			 const PtNamedBase* pt_item,
-			 const vector<EiRange>& range_array) :
-  mHead{head},
-  mPtItem{pt_item},
-  mRangeList(range_array)
+EiDeclArray::EiDeclArray(
+  ElbDeclHead* head,
+  const PtNamedBase* pt_item,
+  const vector<EiRange>& range_array
+) : mHead{head},
+    mPtItem{pt_item},
+    mRangeList(range_array)
 {
 }
 
@@ -70,7 +63,6 @@ EiDeclArray::~EiDeclArray()
 }
 
 // @brief 型の取得
-// @return vpi_user.h で定義された型 (vpiModule など)
 VpiObjType
 EiDeclArray::type() const
 {
@@ -109,7 +101,6 @@ EiDeclArray::name() const
 }
 
 // @breif 値の型を返す．
-// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
 VlValueType
 EiDeclArray::value_type() const
 {
@@ -117,8 +108,6 @@ EiDeclArray::value_type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiDeclArray::is_signed() const
 {
@@ -133,7 +122,6 @@ EiDeclArray::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclArray::left_range_val() const
 {
@@ -141,7 +129,6 @@ EiDeclArray::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclArray::right_range_val() const
 {
@@ -149,7 +136,6 @@ EiDeclArray::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclArray::left_range_string() const
 {
@@ -157,7 +143,6 @@ EiDeclArray::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclArray::right_range_string() const
 {
@@ -186,20 +171,16 @@ EiDeclArray::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclArray::calc_bit_offset(int index,
-			     SizeType& offset) const
+EiDeclArray::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return mHead->calc_bit_offset(index, offset);
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 EiDeclArray::data_type() const
 {
@@ -207,8 +188,6 @@ EiDeclArray::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
 VpiNetType
 EiDeclArray::net_type() const
 {
@@ -216,9 +195,6 @@ EiDeclArray::net_type() const
 }
 
 // @brief vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
 VpiVsType
 EiDeclArray::vs_type() const
 {
@@ -226,8 +202,6 @@ EiDeclArray::vs_type() const
 }
 
 // @brief drive0 strength の取得
-// @retval 0 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDeclArray::drive0() const
 {
@@ -235,8 +209,6 @@ EiDeclArray::drive0() const
 }
 
 // @brief drive1 strength の取得
-// @retval 1 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDeclArray::drive1() const
 {
@@ -244,8 +216,6 @@ EiDeclArray::drive1() const
 }
 
 // @brief charge strength の取得
-// @retval 電荷の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDeclArray::charge() const
 {
@@ -253,8 +223,6 @@ EiDeclArray::charge() const
 }
 
 // @brief delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
 const VlDelay*
 EiDeclArray::delay() const
 {
@@ -283,9 +251,10 @@ EiDeclArray::dimension() const
 }
 
 // @brief 範囲の取得
-// @param[in] pos 位置 ( 0 <= pos < dimension() )
 const VlRange*
-EiDeclArray::range(SizeType pos) const
+EiDeclArray::range(
+  SizeType pos
+) const
 {
   return mRangeList.range(pos);
 }
@@ -298,13 +267,11 @@ EiDeclArray::array_size() const
 }
 
 // @brief 1次元配列の場合にインデックスからオフセットを計算する．
-// @param[in] index インデックス
-// @param[out] offset index に対するオフセット値
-// @retval true index が範囲内だった．
-// @retval false index が範囲外だった．
 bool
-EiDeclArray::calc_array_offset(int index,
-			       SizeType& offset) const
+EiDeclArray::calc_array_offset(
+  int index,
+  SizeType& offset
+) const
 {
   if ( mRangeList.size() == 1 ) {
     return mRangeList.range(0)->calc_offset(index, offset);
@@ -313,13 +280,11 @@ EiDeclArray::calc_array_offset(int index,
 }
 
 // @brief 他次元配列の場合にインデックスのリストからオフセットを計算する．
-// @param[in] index_list インデックスのリスト
-// @param[out] offset index_list に対するオフセット値
-// @retval true オフセットが正しく計算できた．
-// @retval false index_list のいずれかの値が範囲外だった．
 bool
-EiDeclArray::calc_array_offset(const vector<int>& index_list,
-			       SizeType& offset) const
+EiDeclArray::calc_array_offset(
+  const vector<int>& index_list,
+  SizeType& offset
+) const
 {
   return mRangeList.calc_offset(index_list, offset);
 }

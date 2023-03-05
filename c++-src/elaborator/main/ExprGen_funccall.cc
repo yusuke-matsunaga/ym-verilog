@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ExprGen.h"
 #include "ElbEnv.h"
 #include "ErrorGen.h"
@@ -38,8 +37,10 @@ BEGIN_NAMESPACE_YM_VERILOG
 BEGIN_NONAMESPACE
 
 void
-put_value_type(ostream& s,
-	       const VlValueType& type)
+put_value_type(
+  ostream& s,
+  const VlValueType& type
+)
 {
   if ( type.is_int_type() ) {
     s << "integer type";
@@ -71,13 +72,12 @@ put_value_type(ostream& s,
 END_NONAMESPACE
 
 // @brief PtFuncCall から ElbExpr を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_funccall(const VlScope* parent,
-			      const ElbEnv& env,
-			      const PtExpr* pt_expr)
+ExprGen::instantiate_funccall(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
   const VlTaskFunc* child_func{nullptr};
   if ( env.is_constant() ) {
@@ -88,13 +88,13 @@ ExprGen::instantiate_funccall(const VlScope* parent,
     }
 
     // 関数名
-    auto name{pt_expr->name()};
+    auto name = pt_expr->name();
 
     // 関数本体を探し出す．
     // constant function はモジュール直下にしかあり得ない
     // <- generated scope 内の関数は constant function ではない．
-    auto module{parent->parent_module()};
-    auto pt_func{find_funcdef(module, name)};
+    auto module = parent->parent_module();
+    auto pt_func = find_funcdef(module, name);
     if ( !pt_func ) {
       // 関数が見つからなかった．
       ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
@@ -119,7 +119,7 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
   else {
     // 関数本体を探し出す．
-    auto handle{mgr().find_obj_up(parent, pt_expr, nullptr)};
+    auto handle = mgr().find_obj_up(parent, pt_expr, nullptr);
     if ( handle == nullptr ) {
       // 関数が見つからなかった．
       ErrorGen::no_such_function(__FILE__, __LINE__, pt_expr);
@@ -141,10 +141,10 @@ ExprGen::instantiate_funccall(const VlScope* parent,
 
   vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1{pt_expr->operand(i)};
-    auto expr1{instantiate_expr(parent, env, pt_expr1)};
-    auto io_decl{child_func->io(i)};
-    auto decl{io_decl->decl()};
+    auto pt_expr1 = pt_expr->operand(i);
+    auto expr1 = instantiate_expr(parent, env, pt_expr1);
+    auto io_decl = child_func->io(i);
+    auto decl = io_decl->decl();
     if ( decl->value_type() != expr1->value_type() ) {
       if ( debug ) {
 	dout << "decl->value_type() = ";
@@ -160,28 +160,27 @@ ExprGen::instantiate_funccall(const VlScope* parent,
   }
 
   // function call の生成
-  auto expr{mgr().new_FuncCall(pt_expr, child_func, arg_list)};
+  auto expr = mgr().new_FuncCall(pt_expr, child_func, arg_list);
 
   // attribute instance の生成
-  auto attr_list{attribute_list(pt_expr)};
+  auto attr_list = attribute_list(pt_expr);
   mgr().reg_attr(expr, attr_list);
 
   return expr;
 }
 
 // PtSysFuncCall から引数を生成する．
-// @param[in] parent 親のスコープ
-// @param[in] env 生成時の環境
-// @param[in] pt_expr 式を表すパース木
 ElbExpr*
-ExprGen::instantiate_sysfunccall(const VlScope* parent,
-				 const ElbEnv& env,
-				 const PtExpr* pt_expr)
+ExprGen::instantiate_sysfunccall(
+  const VlScope* parent,
+  const ElbEnv& env,
+  const PtExpr* pt_expr
+)
 {
-  auto name{pt_expr->name()};
+  auto name = pt_expr->name();
 
   // system function を探し出す．
-  auto user_systf{mgr().find_user_systf(name)};
+  auto user_systf = mgr().find_user_systf(name);
   if ( user_systf == nullptr ) {
     ErrorGen::no_such_sysfunction(__FILE__, __LINE__, pt_expr);
   }
@@ -193,7 +192,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   SizeType n{pt_expr->operand_num()};
   vector<ElbExpr*> arg_list(n);
   for ( SizeType i = 0; i < n; ++ i ) {
-    auto pt_expr1{pt_expr->operand(i)};
+    auto pt_expr1 = pt_expr->operand(i);
     ElbExpr* arg{nullptr};
     if ( pt_expr ) {
       arg = instantiate_arg(parent, env, pt_expr1);
@@ -206,8 +205,7 @@ ExprGen::instantiate_sysfunccall(const VlScope* parent,
   }
 
   // system function call の生成
-  auto expr{mgr().new_SysFuncCall(pt_expr, user_systf, arg_list)};
-
+  auto expr = mgr().new_SysFuncCall(pt_expr, user_systf, arg_list);
   return expr;
 }
 

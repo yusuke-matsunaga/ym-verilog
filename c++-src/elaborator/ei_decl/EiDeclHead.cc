@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiDeclHead.h"
 
@@ -24,124 +23,110 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // @brief 宣言要素のヘッダを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木の宣言ヘッダ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] delay 遅延値を持つとき true
 ElbDeclHead*
-EiFactory::new_DeclHead(const VlScope* parent,
-			const PtDeclHead* pt_head,
-			const PtExpr* left,
-			const PtExpr* right,
-			int left_val,
-			int right_val,
-			bool delay)
+EiFactory::new_DeclHead(
+  const VlScope* parent,
+  const PtDeclHead* pt_head,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val,
+  bool delay
+)
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
   EiDeclHead* head = nullptr;
   if ( delay ) {
-    head = new EiDeclHeadPtVD(parent, pt_head,
+    head = new EiDeclHeadPtVD{parent, pt_head,
 			      left, right,
-			      left_val, right_val);
+			      left_val, right_val};
   }
   else {
-    head = new EiDeclHeadPtV(parent, pt_head,
+    head = new EiDeclHeadPtV{parent, pt_head,
 			     left, right,
-			     left_val, right_val);
+			     left_val, right_val};
   }
   return head;
 }
 
 // @brief 宣言要素のヘッダを生成する．
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木の宣言ヘッダ
-// @param[in] delay 遅延値を持つとき true
 ElbDeclHead*
-EiFactory::new_DeclHead(const VlScope* parent,
-			const PtDeclHead* pt_head,
-			bool delay)
+EiFactory::new_DeclHead(
+  const VlScope* parent,
+  const PtDeclHead* pt_head,
+  bool delay
+)
 {
   EiDeclHead* head = nullptr;
   if ( delay ) {
-    head = new EiDeclHeadPtD(parent, pt_head);
+    head = new EiDeclHeadPtD{parent, pt_head};
   }
   else {
-    head = new EiDeclHeadPt(parent, pt_head);
+    head = new EiDeclHeadPt{parent, pt_head};
   }
   return head;
 }
 
 // @brief 宣言要素のヘッダを生成する．(IODecl 中の宣言用)
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木のIO宣言ヘッダ
-// @param[in] aux_type 補助的なデータ型
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
 ElbDeclHead*
-EiFactory::new_DeclHead(const VlScope* parent,
-			const PtIOHead* pt_head,
-			VpiAuxType aux_type,
-			const PtExpr* left,
-			const PtExpr* right,
-			int left_val,
-			int right_val)
+EiFactory::new_DeclHead(
+  const VlScope* parent,
+  const PtIOHead* pt_head,
+  VpiAuxType aux_type,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+)
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
-  auto head{new EiDeclHeadPt2V(parent, pt_head, aux_type,
-			       left, right,
-			       left_val, right_val)};
+  auto head = new EiDeclHeadPt2V{parent, pt_head, aux_type,
+				 left, right,
+				 left_val, right_val};
   return head;
 }
 
 // @brief 宣言要素のヘッダを生成する．(IODecl 中の宣言用)
-// @param[in] parent 親のスコープ
-// @param[in] pt_head パース木のIO宣言ヘッダ
-// @param[in] aux_type 補助的なデータ型
 ElbDeclHead*
-EiFactory::new_DeclHead(const VlScope* parent,
-			const PtIOHead* pt_head,
-			VpiAuxType aux_type)
+EiFactory::new_DeclHead(
+  const VlScope* parent,
+  const PtIOHead* pt_head,
+  VpiAuxType aux_type
+)
 {
-  auto head{new EiDeclHeadPt2(parent, pt_head, aux_type)};
+  auto head = new EiDeclHeadPt2{parent, pt_head, aux_type};
   return head;
 }
 
 // @brief 宣言要素のヘッダを生成する．(function の暗黙宣言用)
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の関数定義
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
 ElbDeclHead*
-EiFactory::new_DeclHead(const VlScope* parent,
-			const PtItem* pt_item,
-			const PtExpr* left,
-			const PtExpr* right,
-			int left_val,
-			int right_val)
+EiFactory::new_DeclHead(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+)
 {
   ASSERT_COND( left != nullptr && right != nullptr );
 
-  auto head{new EiDeclHeadPt3V(parent, pt_item,
-			       left, right,
-			       left_val, right_val)};
+  auto head = new EiDeclHeadPt3V{parent, pt_item,
+				 left, right,
+				 left_val, right_val};
   return head;
 }
 
 // @brief 宣言要素のヘッダを生成する．(function の暗黙宣言用)
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の関数定義
 ElbDeclHead*
-EiFactory::new_DeclHead(const VlScope* parent,
-			const PtItem* pt_item)
+EiFactory::new_DeclHead(
+  const VlScope* parent,
+  const PtItem* pt_item
+)
 {
-  auto head{new EiDeclHeadPt3(parent, pt_item)};
+  auto head = new EiDeclHeadPt3{parent, pt_item};
   return head;
 }
 
@@ -151,9 +136,9 @@ EiFactory::new_DeclHead(const VlScope* parent,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-EiDeclHead::EiDeclHead(const VlScope* parent) :
-  mParent{parent}
+EiDeclHead::EiDeclHead(
+  const VlScope* parent
+) : mParent{parent}
 {
 }
 
@@ -175,12 +160,11 @@ EiDeclHead::parent_scope() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_header パース木の宣言ヘッダ
-EiDeclHeadPt::EiDeclHeadPt(const VlScope* parent,
-			   const PtDeclHead* pt_header) :
-  EiDeclHead(parent),
-  mPtHead{pt_header}
+EiDeclHeadPt::EiDeclHeadPt(
+  const VlScope* parent,
+  const PtDeclHead* pt_header
+) : EiDeclHead{parent},
+    mPtHead{pt_header}
 {
 }
 
@@ -190,7 +174,6 @@ EiDeclHeadPt::~EiDeclHeadPt()
 }
 
 // @brief 型の取得
-// @return vpi_user.h で定義された型 (vpiModule など)
 VpiObjType
 EiDeclHeadPt::type() const
 {
@@ -228,8 +211,6 @@ EiDeclHeadPt::type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiDeclHeadPt::is_signed() const
 {
@@ -244,7 +225,6 @@ EiDeclHeadPt::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt::left_range_val() const
 {
@@ -252,7 +232,6 @@ EiDeclHeadPt::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt::right_range_val() const
 {
@@ -260,7 +239,6 @@ EiDeclHeadPt::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt::left_range_string() const
 {
@@ -268,7 +246,6 @@ EiDeclHeadPt::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt::right_range_string() const
 {
@@ -332,13 +309,11 @@ EiDeclHeadPt::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclHeadPt::calc_bit_offset(int index,
-			      SizeType& offset) const
+EiDeclHeadPt::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   switch ( mPtHead->type() ) {
   case PtDeclType::Reg:
@@ -402,8 +377,6 @@ EiDeclHeadPt::calc_bit_offset(int index,
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval kVpiVarNone 上記以外
 VpiVarType
 EiDeclHeadPt::data_type() const
 {
@@ -411,8 +384,6 @@ EiDeclHeadPt::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval kVpiNone net 型の要素でない場合
 VpiNetType
 EiDeclHeadPt::net_type() const
 {
@@ -420,9 +391,6 @@ EiDeclHeadPt::net_type() const
 }
 
 // @brief vectored|scalared 属性の取得
-// @retval kVpiVsNone vectored|scalared 指定なし
-// @retval kVpiVectored vectored 指定あり
-// @retval kVpiScalared scalared 指定あり
 VpiVsType
 EiDeclHeadPt::vs_type() const
 {
@@ -430,8 +398,6 @@ EiDeclHeadPt::vs_type() const
 }
 
 // @brief drive0 strength の取得
-// @retval 0 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDeclHeadPt::drive0() const
 {
@@ -444,8 +410,6 @@ EiDeclHeadPt::drive0() const
 }
 
 // @brief drive1 strength の取得
-// @retval 1 の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDeclHeadPt::drive1() const
 {
@@ -458,8 +422,6 @@ EiDeclHeadPt::drive1() const
 }
 
 // @brief charge strength の取得
-// @retval 電荷の強度
-// @retval kVpiNoStrength strength の指定なし
 VpiStrength
 EiDeclHeadPt::charge() const
 {
@@ -477,11 +439,10 @@ EiDeclHeadPt::charge() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_header パース木の宣言ヘッダ
-EiDeclHeadPtD::EiDeclHeadPtD(const VlScope* parent,
-			     const PtDeclHead* pt_header) :
-  EiDeclHeadPt(parent, pt_header)
+EiDeclHeadPtD::EiDeclHeadPtD(
+  const VlScope* parent,
+  const PtDeclHead* pt_header
+) : EiDeclHeadPt{parent, pt_header}
 {
 }
 
@@ -491,8 +452,6 @@ EiDeclHeadPtD::~EiDeclHeadPtD()
 }
 
 // @brief 遅延式の取得
-// @retval delay
-// @retval nullptr delay の指定なし
 const VlDelay*
 EiDeclHeadPtD::delay() const
 {
@@ -501,7 +460,9 @@ EiDeclHeadPtD::delay() const
 
 // @brief 遅延式の設定
 void
-EiDeclHeadPtD::set_delay(const VlDelay* delay)
+EiDeclHeadPtD::set_delay(
+  const VlDelay* delay
+)
 {
   mDelay = delay;
 }
@@ -512,19 +473,14 @@ EiDeclHeadPtD::set_delay(const VlDelay* delay)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_header パース木の宣言ヘッダ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
-EiDeclHeadPtV::EiDeclHeadPtV(const VlScope* parent,
-			     const PtDeclHead* pt_header,
-			     const PtExpr* left,
-			     const PtExpr* right,
-			     int left_val,
-			     int right_val) :
-  EiDeclHeadPt(parent, pt_header)
+EiDeclHeadPtV::EiDeclHeadPtV(
+  const VlScope* parent,
+  const PtDeclHead* pt_header,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+) : EiDeclHeadPt{parent, pt_header}
 {
   mRange.set(left, right, left_val, right_val);
 }
@@ -542,7 +498,6 @@ EiDeclHeadPtV::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPtV::left_range_val() const
 {
@@ -550,7 +505,6 @@ EiDeclHeadPtV::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPtV::right_range_val() const
 {
@@ -558,7 +512,6 @@ EiDeclHeadPtV::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPtV::left_range_string() const
 {
@@ -566,7 +519,6 @@ EiDeclHeadPtV::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPtV::right_range_string() const
 {
@@ -595,13 +547,11 @@ EiDeclHeadPtV::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclHeadPtV::calc_bit_offset(int index,
-			       SizeType& offset) const
+EiDeclHeadPtV::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return mRange.calc_offset(index, offset);
 }
@@ -612,20 +562,15 @@ EiDeclHeadPtV::calc_bit_offset(int index,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_header パース木の宣言ヘッダ
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
-EiDeclHeadPtVD::EiDeclHeadPtVD(const VlScope* parent,
-			       const PtDeclHead* pt_header,
-			       const PtExpr* left,
-			       const PtExpr* right,
-			       int left_val,
-			       int right_val) :
-  EiDeclHeadPtV(parent, pt_header, left, right, left_val, right_val),
-  mDelay{nullptr}
+EiDeclHeadPtVD::EiDeclHeadPtVD(
+  const VlScope* parent,
+  const PtDeclHead* pt_header,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+) : EiDeclHeadPtV{parent, pt_header, left, right, left_val, right_val},
+    mDelay{nullptr}
 {
 }
 
@@ -635,8 +580,6 @@ EiDeclHeadPtVD::~EiDeclHeadPtVD()
 }
 
 // @brief delay の取得
-// @retval delay
-// @retval nullptr delay の指定なし
 const VlDelay*
 EiDeclHeadPtVD::delay() const
 {
@@ -645,7 +588,9 @@ EiDeclHeadPtVD::delay() const
 
 // @brief 遅延式の設定
 void
-EiDeclHeadPtVD::set_delay(const VlDelay* delay)
+EiDeclHeadPtVD::set_delay(
+  const VlDelay* delay
+)
 {
   mDelay = delay;
 }
@@ -656,15 +601,13 @@ EiDeclHeadPtVD::set_delay(const VlDelay* delay)
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_header パース木のIO宣言ヘッダ
-// @param[in] aux_type 補助的なデータ型
-EiDeclHeadPt2::EiDeclHeadPt2(const VlScope* parent,
-			     const PtIOHead* pt_header,
-			     VpiAuxType aux_type) :
-  EiDeclHead(parent),
-  mPtHead{pt_header},
-  mAuxType{aux_type}
+EiDeclHeadPt2::EiDeclHeadPt2(
+  const VlScope* parent,
+  const PtIOHead* pt_header,
+  VpiAuxType aux_type
+) : EiDeclHead{parent},
+    mPtHead{pt_header},
+    mAuxType{aux_type}
 {
 }
 
@@ -697,8 +640,6 @@ EiDeclHeadPt2::type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiDeclHeadPt2::is_signed() const
 {
@@ -713,7 +654,6 @@ EiDeclHeadPt2::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt2::left_range_val() const
 {
@@ -721,7 +661,6 @@ EiDeclHeadPt2::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt2::right_range_val() const
 {
@@ -729,7 +668,6 @@ EiDeclHeadPt2::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt2::left_range_string() const
 {
@@ -737,7 +675,6 @@ EiDeclHeadPt2::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt2::right_range_string() const
 {
@@ -782,13 +719,11 @@ EiDeclHeadPt2::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclHeadPt2::calc_bit_offset(int index,
-			       SizeType& offset) const
+EiDeclHeadPt2::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   switch ( mAuxType ) {
   case VpiAuxType::Net:
@@ -835,8 +770,6 @@ EiDeclHeadPt2::calc_bit_offset(int index,
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval VpiVarType::None 上記以外
 VpiVarType
 EiDeclHeadPt2::data_type() const
 {
@@ -844,8 +777,6 @@ EiDeclHeadPt2::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval VpiObjType::None net 型の要素でない場合
 VpiNetType
 EiDeclHeadPt2::net_type() const
 {
@@ -858,21 +789,15 @@ EiDeclHeadPt2::net_type() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_header パース木のIO宣言ヘッダ
-// @param[in] aux_type 補助的なデータ型
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
-EiDeclHeadPt2V::EiDeclHeadPt2V(const VlScope* parent,
-			       const PtIOHead* pt_header,
-			       VpiAuxType aux_type,
-			       const PtExpr* left,
-			       const PtExpr* right,
-			       int left_val,
-			       int right_val) :
-  EiDeclHeadPt2(parent, pt_header, aux_type)
+EiDeclHeadPt2V::EiDeclHeadPt2V(
+  const VlScope* parent,
+  const PtIOHead* pt_header,
+  VpiAuxType aux_type,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+) : EiDeclHeadPt2{parent, pt_header, aux_type}
 {
   mRange.set(left, right, left_val, right_val);
 }
@@ -890,7 +815,6 @@ EiDeclHeadPt2V::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt2V::left_range_val() const
 {
@@ -898,7 +822,6 @@ EiDeclHeadPt2V::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt2V::right_range_val() const
 {
@@ -906,7 +829,6 @@ EiDeclHeadPt2V::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt2V::left_range_string() const
 {
@@ -914,7 +836,6 @@ EiDeclHeadPt2V::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt2V::right_range_string() const
 {
@@ -943,13 +864,11 @@ EiDeclHeadPt2V::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclHeadPt2V::calc_bit_offset(int index,
-				SizeType& offset) const
+EiDeclHeadPt2V::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return mRange.calc_offset(index, offset);
 }
@@ -960,12 +879,11 @@ EiDeclHeadPt2V::calc_bit_offset(int index,
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の関数定義
-EiDeclHeadPt3::EiDeclHeadPt3(const VlScope* parent,
-			     const PtItem* pt_item) :
-  EiDeclHead(parent),
-  mPtItem(pt_item)
+EiDeclHeadPt3::EiDeclHeadPt3(
+  const VlScope* parent,
+  const PtItem* pt_item
+) : EiDeclHead{parent},
+    mPtItem{pt_item}
 {
 }
 
@@ -991,8 +909,6 @@ EiDeclHeadPt3::type() const
 }
 
 // @brief 符号の取得
-// @retval true 符号つき
-// @retval false 符号なし
 bool
 EiDeclHeadPt3::is_signed() const
 {
@@ -1007,7 +923,6 @@ EiDeclHeadPt3::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt3::left_range_val() const
 {
@@ -1015,7 +930,6 @@ EiDeclHeadPt3::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt3::right_range_val() const
 {
@@ -1023,7 +937,6 @@ EiDeclHeadPt3::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt3::left_range_string() const
 {
@@ -1031,7 +944,6 @@ EiDeclHeadPt3::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt3::right_range_string() const
 {
@@ -1070,13 +982,11 @@ EiDeclHeadPt3::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclHeadPt3::calc_bit_offset(int index,
-			       SizeType& offset) const
+EiDeclHeadPt3::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   switch ( data_type() ) {
   case VpiVarType::None:
@@ -1115,8 +1025,6 @@ EiDeclHeadPt3::calc_bit_offset(int index,
 }
 
 // @brief データ型の取得
-// @retval データ型 kParam, kLocalParam, kVar の場合
-// @retval VpiVarType::None 上記以外
 VpiVarType
 EiDeclHeadPt3::data_type() const
 {
@@ -1124,8 +1032,6 @@ EiDeclHeadPt3::data_type() const
 }
 
 // @brief net 型の取得
-// @retval net 型 net 型の要素の場合
-// @retval VpiNetType::None net 型の要素でない場合
 VpiNetType
 EiDeclHeadPt3::net_type() const
 {
@@ -1139,19 +1045,14 @@ EiDeclHeadPt3::net_type() const
 //////////////////////////////////////////////////////////////////////
 
 // @brief コンストラクタ
-// @param[in] parent 親のスコープ
-// @param[in] pt_item パース木の関数定義
-// @param[in] left 範囲の左側の式
-// @param[in] right 範囲の右側の式
-// @param[in] left_val 範囲の左側の値
-// @param[in] right_val 範囲の右側の値
-EiDeclHeadPt3V::EiDeclHeadPt3V(const VlScope* parent,
-			       const PtItem* pt_item,
-			       const PtExpr* left,
-			       const PtExpr* right,
-			       int left_val,
-			       int right_val) :
-  EiDeclHeadPt3(parent, pt_item)
+EiDeclHeadPt3V::EiDeclHeadPt3V(
+  const VlScope* parent,
+  const PtItem* pt_item,
+  const PtExpr* left,
+  const PtExpr* right,
+  int left_val,
+  int right_val
+) : EiDeclHeadPt3{parent, pt_item}
 {
   mRange.set(left, right, left_val, right_val);
 }
@@ -1169,7 +1070,6 @@ EiDeclHeadPt3V::has_range() const
 }
 
 // @brief 範囲の MSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt3V::left_range_val() const
 {
@@ -1177,7 +1077,6 @@ EiDeclHeadPt3V::left_range_val() const
 }
 
 // @brief 範囲の LSB の値を返す．
-// @note 範囲を持たないときの値は不定
 int
 EiDeclHeadPt3V::right_range_val() const
 {
@@ -1185,7 +1084,6 @@ EiDeclHeadPt3V::right_range_val() const
 }
 
 // @brief 範囲のMSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt3V::left_range_string() const
 {
@@ -1193,7 +1091,6 @@ EiDeclHeadPt3V::left_range_string() const
 }
 
 // @brief 範囲のLSBを表す文字列の取得
-// @note 範囲を持たない時の値は不定
 string
 EiDeclHeadPt3V::right_range_string() const
 {
@@ -1222,13 +1119,11 @@ EiDeclHeadPt3V::bit_size() const
 }
 
 // @brief オフセット値の取得
-// @param[in] index インデックス
-// @param[out] offset インデックスに対するオフセット値
-// @retval true インデックスが範囲内に入っている時
-// @retval false インデックスが範囲外の時
 bool
-EiDeclHeadPt3V::calc_bit_offset(int index,
-				SizeType& offset) const
+EiDeclHeadPt3V::calc_bit_offset(
+  int index,
+  SizeType& offset
+) const
 {
   return mRange.calc_offset(index, offset);
 }

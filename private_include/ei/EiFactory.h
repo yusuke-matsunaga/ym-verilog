@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbFactory.h"
 
 
@@ -36,7 +35,9 @@ public:
 
   /// @brief 内訳を表示する．
   void
-  dump_prof(ostream& s) override;
+  dump_prof(
+    ostream& s ///< [in] 出力先のストリーム
+  ) override;
 
 
 public:
@@ -52,8 +53,10 @@ public:
   /// @param[in] parent 親のスコープ環境
   /// @param[in] pt_stmt 対応するパース木の要素
   const VlScope*
-  new_StmtBlockScope(const VlScope* parent,
-		     const PtStmt* pt_stmt) override;
+  new_StmtBlockScope(
+    const VlScope* parent,
+    const PtStmt* pt_stmt
+  ) override;
 
   /// @brief generate block を生成する．
   /// @param[in] parent 親のスコープ環境
@@ -857,7 +860,7 @@ public:
   ElbExpr*
   new_Primary(const PtExpr* pt_expr,
 	      const VlDeclArray* obj,
-	      int offset) override;
+	      SizeType offset) override;
 
   /// @brief 固定ビット選択式を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -922,7 +925,7 @@ public:
 		     ElbExpr* obj,
 		     ElbExpr* base,
 		     const PtExpr* range_expr,
-		     int range_val) override;
+		     SizeType range_val) override;
 
   /// @brief 可変部分選択式を生成する．
   /// @param[in] pt_expr パース木の定義要素
@@ -935,7 +938,7 @@ public:
 		      ElbExpr* obj,
 		      ElbExpr* base,
 		      const PtExpr* range_expr,
-		      int range_val) override;
+		      SizeType range_val) override;
 
   /// @brief 定数式を生成する．
   /// @param[in] pt_expr パース木の定義要素

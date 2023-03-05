@@ -8,9 +8,7 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "CptItem.h"
-
 
 
 BEGIN_NAMESPACE_YM_VERILOG
@@ -23,8 +21,10 @@ class CptGenBody
 public:
 
   /// @brief コンストラクタ
-  CptGenBody(PtiDeclHeadArray&& declhead_array,
-	     PtiItemArray&& item_array);
+  CptGenBody(
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenBody();
@@ -34,21 +34,35 @@ public:
 
   /// @brief 宣言ヘッダの要素数の取得
   SizeType
-  declhead_num() const;
+  declhead_num() const
+  {
+    return mDeclHeadArray.size();
+  }
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  declhead(SizeType pos) const;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const
+  {
+    return mDeclHeadArray[pos];
+  }
 
   /// @brief item リストの要素数の取得
   SizeType
-  item_num() const;
+  item_num() const
+  {
+    return mItemArray.size();
+  }
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  item(SizeType pos) const;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const
+  {
+    return mItemArray[pos];
+  }
 
 
 private:
@@ -71,14 +85,14 @@ private:
 class CptGenBase :
   public CptItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenBase(const FileRegion& file_region,
-	     PtiDeclHeadArray&& declhead_array,
-	     PtiItemArray&& item_array);
+  CptGenBase(
+    const FileRegion& file_region,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenBase();
@@ -98,18 +112,20 @@ public:
   declhead_num() const override;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  declhead(SizeType pos) const override;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief item リストの要素数の取得
   SizeType
   item_num() const override;
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
 
 private:
@@ -132,14 +148,14 @@ private:
 class CptGenerate :
   public CptGenBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenerate(const FileRegion& file_region,
-	      PtiDeclHeadArray&& declhead_array,
-	      PtiItemArray&& item_array);
+  CptGenerate(
+    const FileRegion& file_region,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenerate();
@@ -151,7 +167,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは PtItemType::Generate を返す．
   PtItemType
   type() const override;
 
@@ -164,14 +179,14 @@ public:
 class CptGenBlock :
   public CptGenBase
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenBlock(const FileRegion& file_region,
-	      PtiDeclHeadArray&& declhead_array,
-	      PtiItemArray&& item_array);
+  CptGenBlock(
+    const FileRegion& file_region,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenBlock();
@@ -183,7 +198,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 型を返す．
-  /// @note ここでは PtItemType::GenBlock を返す．
   PtItemType
   type() const override;
 
@@ -196,15 +210,15 @@ public:
 class CptGenBlockN :
   public CptGenBlock
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenBlockN(const FileRegion& file_region,
-	       const char* name,
-	       PtiDeclHeadArray&& declhead_array,
-	       PtiItemArray&& item_array);
+  CptGenBlockN(
+    const FileRegion& file_region,
+    const char* name,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenBlockN();
@@ -237,17 +251,17 @@ private:
 class CptGenIf :
   public CptItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenIf(const FileRegion& file_region,
-	   const PtExpr* cond,
-	   PtiDeclHeadArray&& then_declhead_array,
-	   PtiItemArray&& then_item_array,
-	   PtiDeclHeadArray&& else_declhead_array,
-	   PtiItemArray&& else_item_array);
+  CptGenIf(
+    const FileRegion& file_region,
+    const PtExpr* cond,
+    PtiDeclHeadArray&& then_declhead_array,
+    PtiItemArray&& then_item_array,
+    PtiDeclHeadArray&& else_declhead_array,
+    PtiItemArray&& else_item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenIf();
@@ -263,7 +277,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは PtItemType::GenIf を返す．
   PtItemType
   type() const override;
 
@@ -276,36 +289,40 @@ public:
   then_declhead_num() const override;
 
   /// @brief 条件が成り立ったときに生成される宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  then_declhead(SizeType pos) const override;
+  then_declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief 条件が成り立ったときに生成される item リストの要素数の取得
   SizeType
   then_item_num() const override;
 
   /// @brief 条件が成り立ったときに生成される item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  then_item(SizeType pos) const override;
+  then_item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの要素数の取得
   SizeType
   else_declhead_num() const override;
 
   /// @brief 条件が成り立たなかったときに生成される宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  else_declhead(SizeType pos) const override;
+  else_declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief 条件が成り立たなかったときに生成される item リストの要素数の取得
   SizeType
   else_item_num() const override;
 
   /// @brief 条件が成り立たなかったときに生成される item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  else_item(SizeType pos) const override;
+  else_item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
 
 private:
@@ -334,14 +351,14 @@ private:
 class CptGenCase :
   public CptItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenCase(const FileRegion& file_region,
-	     const PtExpr* expr,
-	     PtiGenCaseItemArray&& item_array);
+  CptGenCase(
+    const FileRegion& file_region,
+    const PtExpr* expr,
+    PtiGenCaseItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenCase();
@@ -357,7 +374,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは PtItemType::GenCase を返す．
   PtItemType
   type() const override;
 
@@ -376,9 +392,10 @@ public:
   caseitem_num() const override;
 
   /// @brief case item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < caseitem_num() )
   const PtGenCaseItem*
-  caseitem(SizeType pos) const override;
+  caseitem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < caseitem_num() )
+  ) const override;
 
 
 private:
@@ -404,15 +421,15 @@ private:
 class CptGenCaseItem :
   public PtGenCaseItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenCaseItem(const FileRegion& file_region,
-		 PtiExprArray&& label_array,
-		 PtiDeclHeadArray&& declhead_array,
-		 PtiItemArray&& item_array);
+  CptGenCaseItem(
+    const FileRegion& file_region,
+    PtiExprArray&& label_array,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenCaseItem();
@@ -432,27 +449,30 @@ public:
   label_num() const override;
 
   /// @brief ラベルの取得
-  /// @param[in] pos 位置 ( 0 <= pos < label_num() )
   const PtExpr*
-  label(SizeType pos) const override;
+  label(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < label_num() )
+  ) const override;
 
   /// @brief 宣言ヘッダの要素数の取得
   SizeType
   declhead_num() const override;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  declhead(SizeType pos) const override;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief item リストの要素数の取得
   SizeType
   item_num() const override;
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
 
 private:
@@ -478,19 +498,19 @@ private:
 class CptGenFor :
   public CptItem
 {
-  friend class CptFactory;
-
-protected:
+public:
 
   /// @brief コンストラクタ
-  CptGenFor(const FileRegion& file_region,
-	    const char* loop_var,
-	    const PtExpr* init_expr,
-	    const PtExpr* cond,
-	    const PtExpr* next_expr,
-	    const char* block_name,
-	    PtiDeclHeadArray&& declhead_array,
-	    PtiItemArray&& item_array);
+  CptGenFor(
+    const FileRegion& file_region,
+    const char* loop_var,
+    const PtExpr* init_expr,
+    const PtExpr* cond,
+    const PtExpr* next_expr,
+    const char* block_name,
+    PtiDeclHeadArray&& declhead_array,
+    PtiItemArray&& item_array
+  );
 
   /// @brief デストラクタ
   ~CptGenFor();
@@ -506,7 +526,6 @@ public:
   file_region() const override;
 
   /// @brief 型を返す．
-  /// @note ここでは PtItemType::GenFor を返す．
   PtItemType
   type() const override;
 
@@ -519,18 +538,20 @@ public:
   declhead_num() const override;
 
   /// @brief 宣言ヘッダの取得
-  /// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
   const PtDeclHead*
-  declhead(SizeType pos) const override;
+  declhead(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < declhead_num() )
+  ) const override;
 
   /// @brief item リストの要素数の取得
   SizeType
   item_num() const override;
 
   /// @brief item の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
   /// @brief 繰り返し制御用の変数名を返す．
   const char*
@@ -576,45 +597,6 @@ private:
   CptGenBody mBody;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief 宣言ヘッダの要素数の取得
-inline
-SizeType
-CptGenBody::declhead_num() const
-{
-  return mDeclHeadArray.size();
-}
-
-// @brief 宣言ヘッダの取得
-// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
-inline
-const PtDeclHead*
-CptGenBody::declhead(SizeType pos) const
-{
-  return mDeclHeadArray[pos];
-}
-
-// @brief item リストの要素数の取得
-inline
-SizeType
-CptGenBody::item_num() const
-{
-  return mItemArray.size();
-}
-
-// @brief item の取得
-// @param[in] pos 位置 ( 0 <= pos < item_num() )
-inline
-const PtItem*
-CptGenBody::item(SizeType pos) const
-{
-  return mItemArray[pos];
-}
 
 END_NAMESPACE_YM_VERILOG
 

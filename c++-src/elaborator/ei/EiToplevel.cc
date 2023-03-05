@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiFactory.h"
 #include "ei/EiToplevel.h"
 
@@ -23,8 +22,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 const VlScope*
 EiFactory::new_Toplevel()
 {
-  auto toplevel{new EiToplevel()};
-
+  auto toplevel = new EiToplevel;
   return toplevel;
 }
 
@@ -34,8 +32,8 @@ EiFactory::new_Toplevel()
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-EiToplevel::EiToplevel() :
-  EiScope(nullptr)
+EiToplevel::EiToplevel(
+) : EiScope{nullptr}
 {
 }
 
