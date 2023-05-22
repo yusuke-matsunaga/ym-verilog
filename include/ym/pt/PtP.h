@@ -159,7 +159,7 @@ struct hash<YM_NAMESPACE::nsVerilog::PtModule*>
   SizeType
   operator()(YM_NAMESPACE::nsVerilog::PtModule* module) const
   {
-    ympuint tmp = reinterpret_cast<ympuint>(module)/sizeof(void*);
+    PtrIntType tmp = reinterpret_cast<PtrIntType>(module)/sizeof(void*);
     return static_cast<SizeType>(tmp);
   }
 };
@@ -171,7 +171,7 @@ struct hash<const YM_NAMESPACE::nsVerilog::PtModule*>
   SizeType
   operator()(const YM_NAMESPACE::nsVerilog::PtModule* module) const
   {
-    ympuint tmp = reinterpret_cast<ympuint>(module)/sizeof(void*);
+    PtrIntType tmp = reinterpret_cast<PtrIntType>(module)/sizeof(void*);
     return static_cast<SizeType>(tmp);
   }
 };

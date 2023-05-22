@@ -113,7 +113,7 @@ private:
   FileRegion mFileRegion;
 
   // type と aux_type と符号を格納するメンバ
-  ymuint32 mAttr;
+  std::uint32_t mAttr;
 
   // 要素の配列
   PtiIOItemArray mItemArray;

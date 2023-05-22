@@ -33,7 +33,7 @@ public:
     PLI_UINT32 h  ///< [in] 上位32ビットの値
   )
   {
-    ymuint64 tmp = h;
+    std::uint64_t tmp = h;
     mValue = (tmp << 32) | l;
   }
 
@@ -91,7 +91,7 @@ public:
     PLI_UINT32 h  ///< [in] 上位32ビットの値
   )
   {
-    ymuint64 tmp = h;
+    std::uint64_t tmp = h;
     mValue = (tmp << 32) | l;
   }
 
@@ -116,7 +116,7 @@ public:
     }
     else {
       double val1 = rint(val);
-      mValue = static_cast<ymuint64>(val1);
+      mValue = static_cast<std::uint64_t>(val1);
     }
   }
 
@@ -127,7 +127,7 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 64ビットの値を取り出す．
-  ymuint64
+  std::uint64_t
   value() const { return mValue; }
 
   /// @brief 下位32ビットの値を取り出す．
@@ -185,7 +185,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 64ビットの値
-  ymuint64 mValue{0UL};
+  std::uint64_t mValue{0UL};
 
 };
 

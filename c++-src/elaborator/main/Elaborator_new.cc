@@ -83,7 +83,7 @@ Elaborator::new_Module(const VlScope* parent,
     DOUT << "reg_module( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
   mObjDict.add(obj);
@@ -117,7 +117,7 @@ Elaborator::new_ModuleArray(const VlScope* parent,
     DOUT << "reg_modulearray( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
   mObjDict.add(obj);

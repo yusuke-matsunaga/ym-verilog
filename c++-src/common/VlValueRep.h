@@ -43,7 +43,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -64,9 +64,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．
@@ -130,7 +130,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -151,9 +151,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．
@@ -206,7 +206,7 @@ public:
 
   /// @brief コンストラクタ
   VlValueUint(
-    ymuint val ///< [in] 値
+    unsigned int val ///< [in] 値
   );
 
   /// @brief デストラクタ
@@ -226,7 +226,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -247,9 +247,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．
@@ -286,7 +286,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  ymuint32 mVal;
+  std::uint32_t mVal;
 
 };
 
@@ -322,7 +322,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -343,9 +343,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．
@@ -418,7 +418,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -439,9 +439,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．
@@ -514,7 +514,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -535,9 +535,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．
@@ -610,7 +610,7 @@ private:
   bool
   is_int_compat() const override;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const override;
 
@@ -631,9 +631,9 @@ private:
   int
   int_value() const override;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const override;
 
   /// @brief スカラー型の値を返す．

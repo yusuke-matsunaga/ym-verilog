@@ -260,7 +260,7 @@ private:
       const Key& key
     ) const
     {
-      return ((reinterpret_cast<ympuint>(key.mParent) * key.mTag) >> 8);
+      return ((reinterpret_cast<PtrIntType>(key.mParent) * key.mTag) >> 8);
     }
   };
 

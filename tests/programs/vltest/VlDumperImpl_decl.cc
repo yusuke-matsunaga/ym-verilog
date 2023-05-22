@@ -294,8 +294,8 @@ VlDumperImpl::put_declarray(const char* label,
 
   put("vpiMultiArray", decl->is_multi_array());
 
-  ymuint n = decl->dimension();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = decl->dimension();
+  for ( int i = 0; i < n; ++ i ) {
     put_range("vpiRange", mgr, decl->range(i) );
   }
 
@@ -536,8 +536,8 @@ VlDumperImpl::put_net_array(const char* label,
   put("vpiModule", net_array->module()->full_name() );
   put("vpiScope",  net_array->scope()->full_name() );
 
-  ymuint n = net_array->dimension();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = net_array->dimension();
+  for ( int i = 0; i < n; ++ i ) {
     put("vpiRange", mgr, net_array->range(i) );
   }
 
@@ -701,8 +701,8 @@ VlDumperImpl::put_reg_array(const char* label,
   put("vpiModule", reg_array->module()->full_name() );
   put("vpiScope", reg_array->scope()->full_name() );
 
-  ymuint n = net_array->dimension();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = net_array->dimension();
+  for ( int i = 0; i < n; ++ i ) {
     put("vpiRange", mgr, net_array->range(i) );
   }
 

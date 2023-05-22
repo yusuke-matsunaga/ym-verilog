@@ -209,8 +209,8 @@ decompile_opr(
     {
       ans += "{";
       const char* delim = "";
-      ymuint n = expr->operand_num();
-      for (ymuint i = 0; i < n; ++ i) {
+      auto n = expr->operand_num();
+      for ( SizeType i = 0; i < n; ++ i) {
 	ans += delim + expr->operand(i)->decompile();
 	delim = ",";
       }
@@ -223,8 +223,8 @@ decompile_opr(
       ans = "{";
       ans += expr->operand(0)->decompile() + "{";
       const char* delim = "";
-      ymuint n = expr->operand_num();
-      for (ymuint i = 1; i < n; ++ i) {
+      auto n = expr->operand_num();
+      for ( SizeType i = 1; i < n; ++ i) {
 	ans += delim + expr->operand(i)->decompile();
 	delim = ",";
       }
@@ -308,9 +308,9 @@ decompile_impl(
     {
       string ans(expr->name());
       ans += "(";
-      ymuint n = expr->operand_num();
+      auto n = expr->operand_num();
       const char* comma = "";
-      for (ymuint i = 0; i < n; ++ i) {
+      for ( SizeType i = 0; i < n; ++ i) {
 	ans += comma + expr->operand(i)->decompile();
 	comma = ", ";
       }
@@ -321,8 +321,8 @@ decompile_impl(
   case PtExprType::Primary:
     {
       string ans{expr->fullname()};
-      ymuint n = expr->index_num();
-      for (ymuint i = 0; i < n; ++ i) {
+      auto n = expr->index_num();
+      for ( SizeType i = 0; i < n; ++ i) {
 	ans += "[" + expr->index(i)->decompile() + "]";
       }
       if ( expr->range_mode() != VpiRangeMode::No ) {

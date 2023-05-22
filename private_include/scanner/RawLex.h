@@ -133,7 +133,7 @@ public:
 
   /// @brief 最後に読んだ文字列を unsigned integer に変換する．
   /// @return 最後に読んだ文字列を unsigned integer に変換したもの
-  ymuint32
+  std::uint32_t
   cur_uint() const
   {
     return mCurUint;
@@ -433,7 +433,7 @@ private:
   const char* mCurString;
 
   // 現在のトークンが整数型のとき対応する整数値
-  ymuint32 mCurUint;
+  std::uint32_t mCurUint;
 
   // module 定義中のとき true となるフラグ
   bool mModuleMode;

@@ -492,10 +492,10 @@ SimEqSetMgr::add(SimEqSet* eqset)
 {
   // ヒープに追加
   mHeap.push_back(eqset);
-  ymuint32 pos = mHeap.size() - 1;
+  std::uint32_t pos = mHeap.size() - 1;
   while ( pos > 0 ) {
     SimEqSet* val = mHeap[pos];
-    ymuint32 parent = (pos - 1) >> 1;
+    std::uint32_t parent = (pos - 1) >> 1;
     SimEqSet* val_p = mHeap[parent];
     if ( val_p->time() > val->time() ) {
       SimEqSet* tmp = val_p;
@@ -523,7 +523,7 @@ SimEqSetMgr::add(SimEqSet* eqset)
 SimEqSet*
 SimEqSetMgr::find(const VlTime& time) const
 {
-  ymuint32 pos = time.hash() % mHashSize;
+  std::uint32_t pos = time.hash() % mHashSize;
   for (SimEqSet* eqset = mHash[pos]; eqset; eqset = eqset->mHashLink) {
     if ( eqset->time() == time ) {
       return eqset;
@@ -542,18 +542,18 @@ SimEqSetMgr::get_min()
   SimEqSet* min_eqset = mHeap[0];
 
   // ヒープの先頭の要素を削除する．
-  ymuint32 pos = mHeap.size() - 1;
+  std::uint32_t pos = mHeap.size() - 1;
   if ( pos > 0 ) {
     // 末尾の要素を先頭に持ってくる．
     mHeap[0] = mHeap[pos];
     mHeap.pop_back();
 
-    ymuint32 parent = 0;
-    ymuint32 n = mHeap.size();
+    std::uint32_t parent = 0;
+    std::uint32_t n = mHeap.size();
     for ( ; ; ) {
       // ヒープ木の性質から親から子の位置がわかる
-      ymuint32 left = parent + parent + 1;
-      ymuint32 right = left + 1;
+      std::uint32_t left = parent + parent + 1;
+      std::uint32_t right = left + 1;
       if ( right > n ) {
 	// 左右の子どもを持たない場合
 	break;
@@ -613,22 +613,22 @@ SimEqSetMgr::get_min()
 
 // ハッシュ表のサイズを拡張する．
 void
-SimEqSetMgr::resize(ymuint32 size)
+SimEqSetMgr::resize(std::uint32_t size)
 {
   SimEqSet** old_hash = mHash;
-  ymuint32 old_size = mHashSize;
+  std::uint32_t old_size = mHashSize;
 
   mHashSize = size;
   mHash = new SimEqSet*[mHashSize];
-  for (ymuint32 i = 0; i < mHashSize; ++ i) {
+  for (std::uint32_t i = 0; i < mHashSize; ++ i) {
     mHash[i] = nullptr;
   }
 
-  for (ymuint32 i = 0; i < old_size; ++ i) {
+  for (std::uint32_t i = 0; i < old_size; ++ i) {
     SimEqSet* next;
     for (SimEqSet* eqset = old_hash[i]; eqset; eqset = next) {
       next = eqset->mHashLink;
-      ymuint32 pos = eqset->time().hash() % mHashSize;
+      std::uint32_t pos = eqset->time().hash() % mHashSize;
       eqset->mHashLink = mHash[pos];
       mHash[pos] = eqset;
     }

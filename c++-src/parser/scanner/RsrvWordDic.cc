@@ -226,12 +226,12 @@ STpair init_data[] = {
 };
 
 // 文字列からのハッシュ関数
-ymuint
+SizeType
 hash_func1(const char* str)
 {
-  ymuint h = 0;
-  ymuint c;
-  for ( ; (c = static_cast<ymuint>(*str)); ++ str) {
+  SizeType h = 0;
+  SizeType c;
+  for ( ; (c = static_cast<SizeType>(*str)); ++ str) {
     h = h * 37 + c;
   }
   return h;
@@ -256,21 +256,21 @@ RsrvWordDic::RsrvWordDic()
   mCellArray = new Cell[mSize];
   mTable1 = new Cell*[mSize];
   mTable2 = new Cell*[mSize];
-  for (ymuint i = 0; i < mSize; ++ i) {
+  for ( SizeType i = 0; i < mSize; ++ i ) {
     mTable1[i] = nullptr;
     mTable2[i] = nullptr;
   }
-  for (ymuint i = 0; i < mSize; ++ i) {
+  for ( SizeType i = 0; i < mSize; ++ i ) {
     STpair& p = init_data[i];
     Cell* cell = &mCellArray[i];
     cell->mStr = p.mStr;
     cell->mTok = p.mTok;
     if ( p.mReg ) {
-      ymuint pos1 = hash_func1(p.mStr) % mSize;
+      auto pos1 = hash_func1(p.mStr) % mSize;
       cell->mLink1 = mTable1[pos1];
       mTable1[pos1] = cell;
     }
-    ymuint pos2 = p.mTok % mSize;
+    auto pos2 = p.mTok % mSize;
     cell->mLink2 = mTable2[pos2];
     mTable2[pos2] = cell;
   }
@@ -290,7 +290,7 @@ RsrvWordDic::~RsrvWordDic()
 int
 RsrvWordDic::token(const char* str) const
 {
-  ymuint pos = hash_func1(str) % mSize;
+  auto pos = hash_func1(str) % mSize;
   for (Cell* cell = mTable1[pos]; cell; cell = cell->mLink1) {
     if ( strcmp(str, cell->mStr) == 0 ) {
       return cell->mTok;
@@ -307,7 +307,7 @@ RsrvWordDic::token(const char* str) const
 const char*
 RsrvWordDic::str(int token) const
 {
-  ymuint pos = token % mSize;
+  auto pos = token % mSize;
   for (Cell* cell = mTable2[pos]; cell; cell = cell->mLink2) {
     if ( token == cell->mTok ) {
       return cell->mStr;

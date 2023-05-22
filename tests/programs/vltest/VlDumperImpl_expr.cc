@@ -65,7 +65,7 @@ VlDumperImpl::put_expr(const char* label,
   switch ( expr->type() ) {
   case VpiObjType::Operation:
     put("vpiOpType", expr->op_type());
-    for (ymuint i = 0; i < expr->operand_num(); ++ i) {
+    for ( int i = 0; i < expr->operand_num(); ++ i) {
       put_expr("vpiOperand", mgr, expr->operand(i));
     }
     break;
@@ -77,14 +77,14 @@ VlDumperImpl::put_expr(const char* label,
 
   case VpiObjType::FuncCall:
     put("vpiFunction", expr->function()->full_name());
-    for (ymuint i = 0; i < expr->argument_num(); ++ i) {
+    for ( int i = 0; i < expr->argument_num(); ++ i) {
       put_expr("vpiArgument", mgr, expr->argument(i));
     }
     break;
 
   case VpiObjType::SysFuncCall:
     put("vpiUserSysTf", expr->user_systf()->name());
-    for (ymuint i = 0; i < expr->argument_num(); ++ i) {
+    for ( int i = 0; i < expr->argument_num(); ++ i) {
       put_expr("vpiArgument", mgr, expr->argument(i));
     }
     break;
@@ -136,10 +136,10 @@ VlDumperImpl::put_lhs(const char* label,
 		      const VlExpr* expr)
 {
   put_expr(label, mgr, expr);
-  ymuint n = expr->lhs_elem_num();
+  auto n = expr->lhs_elem_num();
   if ( n > 1 ) {
     VlDumpHeader x1(this, "vpiLhs", "LhsElemArray");
-    for (ymuint i = 0; i < n; ++ i) {
+    for ( int i = 0; i < n; ++ i) {
       put_expr("vpiExpr", mgr, expr->lhs_elem(i));
     }
   }
@@ -159,7 +159,7 @@ VlDumperImpl::put_primary(const VlMgr& mgr,
       put("offset", expr->declarray_offset());
     }
     else {
-      for (ymuint i = 0; i < expr->declarray_dimension(); ++ i) {
+      for ( int i = 0; i < expr->declarray_dimension(); ++ i) {
 	put_expr("array_index", mgr, expr->declarray_index(i));
       }
     }

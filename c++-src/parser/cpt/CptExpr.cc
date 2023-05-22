@@ -145,7 +145,7 @@ CptExpr::const_size() const
 }
 
 // @brief 整数型の値の取得
-ymuint32
+std::uint32_t
 CptExpr::const_uint32() const
 {
   return 0;
@@ -889,7 +889,7 @@ CptConstant::type() const
 // コンストラクタ
 CptIntConstant1::CptIntConstant1(
   const FileRegion& file_region,
-  ymuint32 value
+  std::uint32_t value
 ) : CptConstant{file_region},
     mValue{value}
 {
@@ -915,7 +915,7 @@ CptIntConstant1::is_index_expr() const
 }
 
 // 整数型の値の取得
-ymuint32
+std::uint32_t
 CptIntConstant1::const_uint32() const
 {
   return mValue;
@@ -1218,7 +1218,7 @@ CptFactory::new_SysFuncCall(
 const PtExpr*
 CptFactory::new_IntConst(
   const FileRegion& file_region,
-  ymuint32 value
+  std::uint32_t value
 )
 {
   ++ mNumIntConstant1;

@@ -560,7 +560,7 @@ CptNetH::CptNetH(
   bool sign
 ) : CptDeclHead{file_region}
 {
-  mFlags = (static_cast<ymuint32>(net_type) << 1) | static_cast<ymuint32>(sign);
+  mFlags = (static_cast<std::uint32_t>(net_type) << 1) | static_cast<std::uint32_t>(sign);
 }
 
 // デストラクタ
@@ -699,7 +699,7 @@ CptNetHV::CptNetHV(
     mLeftRange{left},
     mRightRange{right}
 {
-  mFlags |= (static_cast<ymuint32>(vstype) << 5);
+  mFlags |= (static_cast<std::uint32_t>(vstype) << 5);
 }
 
 // デストラクタ

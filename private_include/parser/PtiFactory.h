@@ -1285,7 +1285,7 @@ public:
   const PtExpr*
   new_IntConst(
     const FileRegion& fr, ///< [in] ファイル位置の情報
-    ymuint32 value        ///< [in] 定数を表す整数値
+    std::uint32_t value        ///< [in] 定数を表す整数値
   ) = 0;
 
   /// @brief 整数型の定数の生成

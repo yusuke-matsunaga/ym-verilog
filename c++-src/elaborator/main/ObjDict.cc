@@ -24,15 +24,15 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 #define DOUT cerr
 
-const ymuint debug_none       = 0x00000000;
-const ymuint debug_objdict    = 0x00000001;
-const ymuint debug_find_scope = 0x00000010;
-const ymuint debug_all        = 0xFFFFFFFF;
+const int debug_none       = 0x00000000;
+const int debug_objdict    = 0x00000001;
+const int debug_find_scope = 0x00000010;
+const int debug_all        = 0xFFFFFFFF;
 
 #if 1
-const ymuint debug = debug_none;
+const int debug = debug_none;
 #else
-const ymuint debug = debug_all;
+const int debug = debug_all;
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ ObjHandle::hash() const
   for ( auto c: name() ) {
     h = h * 37 + static_cast<SizeType>(c);
   }
-  return ((reinterpret_cast<ympuint>(parent_scope()) * h) >> 8);
+  return ((reinterpret_cast<PtrIntType>(parent_scope()) * h) >> 8);
 }
 
 
@@ -605,7 +605,7 @@ ObjDict::add(
     DOUT << "reg_taskfunc( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -624,7 +624,7 @@ ObjDict::add(
     DOUT << "reg_decl( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -643,7 +643,7 @@ ObjDict::add(
     DOUT << "reg_declarray( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -672,7 +672,7 @@ ObjDict::add(
     DOUT << "reg_module( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -691,7 +691,7 @@ ObjDict::add(
     DOUT << "reg_modulearray( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -711,7 +711,7 @@ ObjDict::add(
       DOUT << "reg_primarray( " << obj->name() << " @ "
 	   << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
     }
     auto handle = new ElbPrimArrayHandle(obj);
@@ -731,7 +731,7 @@ ObjDict::add(
       DOUT << "reg_primitive( " << obj->name() << " @ "
 	   << parent->full_name()
 	   << " ["
-	   << hex << reinterpret_cast<ympuint>(parent) << dec
+	   << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	   << "] )" << endl << endl;
     }
     auto handle = new ElbPrimitiveHandle(obj);
@@ -750,7 +750,7 @@ ObjDict::add(
     DOUT << "reg_gfroot( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -769,7 +769,7 @@ ObjDict::add(
     DOUT << "reg_genvar( " << obj->name() << " @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 
@@ -797,7 +797,7 @@ ObjDict::find(
     DOUT << "find_obj( " << name << ", @ "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl << endl;
   }
 

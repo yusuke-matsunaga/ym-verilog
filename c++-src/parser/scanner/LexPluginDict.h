@@ -63,7 +63,7 @@ private:
 
   /// @brief ハッシュ表を確保する．
   void
-  new_table(ymuint size);
+  new_table(SizeType size);
 
 
 private:
@@ -72,19 +72,19 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ハッシュ表のサイズ
-  ymuint32 mTableSize;
+  SizeType mTableSize;
 
   // ハッシュのためのマスク
-  ymuint32 mHashMask;
+  SizeType mHashMask;
 
   // ハッシュ表
   LexPlugin** mHashTable;
 
   // ハッシュ表に登録されている要素数
-  ymuint32 mNum;
+  SizeType mNum;
 
   // 拡大する参考値
-  ymuint32 mNextLimit;
+  SizeType mNextLimit;
 
 };
 

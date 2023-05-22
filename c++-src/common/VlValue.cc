@@ -43,9 +43,9 @@ VlValue::VlValue(
 {
 }
 
-// @brief ymuint32 からのコンストラクタ
+// @brief std::uint32_t からのコンストラクタ
 VlValue::VlValue(
-  ymuint32 val
+  std::uint32_t val
 ) : mRep{new VlValueUint{val}}
 {
 }
@@ -179,10 +179,10 @@ VlValue::set(
   mRep = shared_ptr<VlValueRep>{new VlValueInt{val}};
 }
 
-// @brief ymuint の値をセットする．
+// @brief unsigned int の値をセットする．
 void
 VlValue::set(
-  ymuint val
+  unsigned int val
 )
 {
   mRep = shared_ptr<VlValueRep>{new VlValueUint{val}};
@@ -236,7 +236,7 @@ operator-(
 
   case VlValue::Type::UINT:
   case VlValue::Type::SCALAR:
-    return VlValue{ static_cast<ymuint>(- src.int_value()) };
+    return VlValue{ static_cast<unsigned int>(- src.int_value()) };
 
   case VlValue::Type::REAL:
     return VlValue{ - src.real_value() };
@@ -829,7 +829,7 @@ operator<<(
 VlValue
 operator<<(
   const VlValue& src1,
-  ymuint32 src2
+  std::uint32_t src2
 )
 {
   if ( src1.is_error() ) {
@@ -861,7 +861,7 @@ operator>>(
 VlValue
 operator>>(
   const VlValue& src1,
-  ymuint32 src2
+  std::uint32_t src2
 )
 {
   if ( src1.is_error() ) {
@@ -893,7 +893,7 @@ alshift(
 VlValue
 alshift(
   const VlValue& src1,
-  ymuint32 src2
+  std::uint32_t src2
 )
 {
   if ( src1.is_error() ) {
@@ -925,7 +925,7 @@ arshift(
 VlValue
 arshift(
   const VlValue& src1,
-  ymuint32 src2
+  std::uint32_t src2
 )
 {
   if ( src1.is_error() ) {

@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 BEGIN_NONAMESPACE
 
-using uword = ymuint64;
+using uword = std::uint64_t;
 
 /// @brief すべてが0のパタン
 const uword ALL0 = 0x0000000000000000;

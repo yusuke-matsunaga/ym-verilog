@@ -45,8 +45,8 @@ VlDumperImpl::put_primarray_list(const char* label,
     put("vpiRightRange", primarray->right_range_val() );
     put_delay("vpiDelay", mgr, primarray->delay() );
 
-    ymuint n = primarray->elem_num();
-    for (ymuint i = 0; i < n; ++ i) {
+    auto n = primarray->elem_num();
+    for ( int i = 0; i < n; ++ i ) {
       const VlPrimitive* primitive = primarray->elem_by_offset(i);
       put_primitive("vpiPrimitive", mgr, primitive);
     }
@@ -101,8 +101,8 @@ VlDumperImpl::put_primitive(const char* label,
   put("port_num", prim->port_num() );
 #endif
 
-  ymuint n = prim->port_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = prim->port_num();
+  for ( int i = 0; i < n; ++ i ) {
     put_primterm("vpiPrimTerm", mgr, prim->prim_term(i) );
   }
 }
@@ -153,8 +153,8 @@ VlDumperImpl::put_udp_defn(const char* label,
   put("vpiProtected", udp->is_protected() );
   put("port_num", udp->port_num() );
 
-  ymuint n = udp->port_num() - 1;
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = udp->port_num() - 1;
+  for ( int i = 0; i < n; ++ i ) {
     put_iodecl("vpiIODecl", mgr, udp->input(i));
   }
   put_iodecl("vpiIODecl", mgr, udp->output());
@@ -163,8 +163,8 @@ VlDumperImpl::put_udp_defn(const char* label,
 
   {
     VlDumpHeader x(this, "vpiTableEntry", "Iterator");
-    ymuint n = udp->table_size();
-    for (ymuint i = 0; i < n; ++ i) {
+    auto n = udp->table_size();
+    for ( int i = 0; i < n; ++ i ) {
       const VlTableEntry* entry = udp->table_entry(i);
       put("TableEntry", entry->str());
 #if 0
@@ -218,8 +218,8 @@ VlDumperImpl::put_function(const char* label,
   put("vpiLeftRange", func->left_range_val() );
   put("vpiRightRange", func->right_range_val() );
 
-  ymuint n = func->io_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = func->io_num();
+  for ( int i = 0; i < n; ++ i ) {
     put_iodecl("vpiIODecl", mgr, func->io(i) );
   }
 

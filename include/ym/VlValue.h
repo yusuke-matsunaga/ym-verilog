@@ -60,7 +60,7 @@ public:
   bool
   is_int_compat() const = 0;
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned int 型に変換可能な時に true を返す．
   virtual
   bool
   is_uint_compat() const = 0;
@@ -86,10 +86,10 @@ public:
   int
   int_value() const = 0;
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
   virtual
-  ymuint
+  unsigned int
   uint_value() const = 0;
 
   /// @brief スカラー型の値を返す．
@@ -174,7 +174,7 @@ public:
   /// @brief unsined int からのコンストラクタ
   explicit
   VlValue(
-    ymuint32 val ///< [in] 値
+    std::uint32_t val ///< [in] 値
   );
 
   /// @brief スカラー値からのコンストラクタ
@@ -240,7 +240,7 @@ public:
     int val ///< [in] 値
   );
 
-  /// @brief ymuint の値をセットする．
+  /// @brief unsigned int の値をセットする．
   void
   set(
     unsigned int val  ///< [in] 値
@@ -312,7 +312,7 @@ public:
   bool
   is_int_compat() const { return mRep->is_int_compat(); }
 
-  /// @brief ymuint 型に変換可能な時に true を返す．
+  /// @brief unsigned uint 型に変換可能な時に true を返す．
   bool
   is_uint_compat() const { return mRep->is_uint_compat(); }
 
@@ -413,9 +413,9 @@ public:
   int
   int_value() const { return mRep->int_value(); }
 
-  /// @brief ymuint 型の値を返す．
+  /// @brief unsigned int 型の値を返す．
   /// @note 値が整数型に変換できない時の値は不定
-  ymuint
+  unsigned int
   uint_value() const { return mRep->uint_value(); }
 
   /// @brief スカラー型の値を返す．
@@ -907,7 +907,7 @@ operator<<(
 VlValue
 operator<<(
   const VlValue& src1, ///< [in] 元の値
-  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+  std::uint32_t src2        ///< [in] シフト量 (std::uint32_t)
 );
 
 /// @relates VlValue
@@ -925,7 +925,7 @@ operator>>(
 VlValue
 operator>>(
   const VlValue& src1, ///< [in] 元の値
-  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+  std::uint32_t src2        ///< [in] シフト量 (std::uint32_t)
 );
 
 /// @relates VlValue
@@ -944,7 +944,7 @@ alshift(
 VlValue
 alshift(
   const VlValue& src1, ///< [in] 元の値
-  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+  std::uint32_t src2        ///< [in] シフト量 (std::uint32_t)
 );
 
 /// @relates VlValue
@@ -962,7 +962,7 @@ arshift(
 VlValue
 arshift(
   const VlValue& src1, ///< [in] 元の値
-  ymuint32 src2        ///< [in] シフト量 (ymuint32)
+  std::uint32_t src2        ///< [in] シフト量 (std::uint32_t)
 );
 
 /// @}

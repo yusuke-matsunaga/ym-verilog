@@ -998,7 +998,7 @@ EiPrimTerm::set(
 )
 {
   mPrimitive = primitive;
-  mIndexDir = (index << 3) | static_cast<ymuint32>(dir);
+  mIndexDir = (index << 3) | static_cast<std::uint32_t>(dir);
 }
 
 // @brief 接続している式を設定する．

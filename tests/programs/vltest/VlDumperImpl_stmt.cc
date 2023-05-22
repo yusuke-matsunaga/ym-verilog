@@ -244,14 +244,14 @@ VlDumperImpl::put_control(const char* label,
     VlDumpHeader x(this, label, "RepeatControl");
     put("FileRegion", control->file_region() );
     put_expr("vpiExpr", mgr, control->expr() );
-    for (ymuint i = 0; i < control->event_num(); ++ i) {
+    for ( int i = 0; i < control->event_num(); ++ i ) {
       put_expr("vpiCondition", mgr, control->event(i) );
     }
   }
   else {
     VlDumpHeader x(this, label, "EventControl");
     put("FileRegion", control->file_region() );
-    for (ymuint i = 0; i < control->event_num(); ++ i) {
+    for ( int i = 0; i < control->event_num(); ++ i ) {
       put_expr("vpiCondition", mgr, control->event(i) );
     }
   }
@@ -263,8 +263,8 @@ VlDumperImpl::put_child_stmt_list(const char* label,
 				  const VlMgr& mgr,
 				  const VlStmt* stmt)
 {
-  ymuint n = stmt->child_stmt_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = stmt->child_stmt_num();
+  for ( int i = 0; i < n; ++ i ) {
     put_stmt(label, mgr, stmt->child_stmt(i) );
   }
 }
@@ -275,8 +275,8 @@ VlDumperImpl::put_argument_list(const char* label,
 				const VlMgr& mgr,
 				const VlStmt* stmt)
 {
-  ymuint n = stmt->arg_num();
-  for (ymuint i = 0; i < n; ++ i) {
+  auto n = stmt->arg_num();
+  for ( int i = 0; i < n; ++ i ) {
     put_expr(label, mgr, stmt->arg(i) );
   }
 }

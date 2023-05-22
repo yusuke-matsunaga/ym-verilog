@@ -69,7 +69,7 @@ enum tVpiUdpVal {
 
 // シンボルを表す文字から値に変換する
 inline
-ymuint
+unsigned int
 conv(char symbol)
 {
   switch ( symbol ) {
@@ -90,7 +90,7 @@ conv(char symbol)
 
   default:
     cerr << "Illegal symbol char: " << symbol
-	 << " (" << static_cast<ymuint>(symbol) << ")" << endl;
+	 << " (" << static_cast<unsigned int>(symbol) << ")" << endl;
     ASSERT_NOT_REACHED;
   }
 
@@ -125,7 +125,7 @@ VlUdpVal::VlUdpVal(char symbol)
 
   default:
     cerr << "Illegal symbol char: " << symbol
-	 << " (" << static_cast<ymuint>(symbol) << ")" << endl;
+	 << " (" << static_cast<unsigned int>(symbol) << ")" << endl;
     ASSERT_NOT_REACHED;
   }
 }
@@ -221,7 +221,7 @@ VlUdpVal::VlUdpVal(char symbol1,
 }
 
 // @brief 値を直接指定するコンストラクタ
-VlUdpVal::VlUdpVal(ymuint16 val)
+VlUdpVal::VlUdpVal(std::uint16_t val)
   : mData(val)
 {
 }

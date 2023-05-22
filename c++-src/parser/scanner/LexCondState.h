@@ -62,10 +62,10 @@ private:
   bool mCurCond;
 
   // 条件が成り立っていない `ifdef/`ifndef のネストレベル
-  ymuint32 mFalseNestLevel;
+  std::uint32_t mFalseNestLevel;
 
   // 条件が成り立っている `ifdef/`ifndef のネストレベル
-  ymuint32 mTrueNestLevel;
+  std::uint32_t mTrueNestLevel;
 
   // `else 節の中にいるとき true にするフラグ
   // 実際にはスタック

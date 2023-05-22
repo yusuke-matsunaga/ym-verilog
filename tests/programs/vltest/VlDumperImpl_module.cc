@@ -104,10 +104,10 @@ VlDumperImpl::put_module(const char* label,
   }
 #endif
 
-  for (ymuint i = 0; i < module->port_num(); ++ i) {
+  for ( int i = 0; i < module->port_num(); ++ i ) {
     put_port("vpiPort", mgr, module->port(i));
   }
-  for (ymuint i = 0; i < module->io_num(); ++ i) {
+  for ( int i = 0; i < module->io_num(); ++ i ) {
     put_iodecl("vpiIODecl", mgr, module->io(i));
   }
 

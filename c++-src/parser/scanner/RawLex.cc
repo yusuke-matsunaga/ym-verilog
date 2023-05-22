@@ -358,17 +358,17 @@ RawLex::get_token()
 	{
 	  // 小さい整数か大きい整数か判断する．
 	  const char* tmp = cur_string();
-	  ymuint end = strlen(tmp);
-	  const ymuint sft = sizeof(ymuint32) * 8 - 4;
+	  auto end = strlen(tmp);
+	  const auto sft = sizeof(std::uint32_t) * 8 - 4;
 	  mCurUint = 0;
 	  bool overflow = false;
-	  for (ymuint pos = 0; pos < end; ++ pos) {
+	  for ( auto pos = 0; pos < end; ++ pos) {
 	    char c = tmp[pos];
-	    ymuint32 v = c - '0';
-	    ymuint32 u = mCurUint >> sft;
-	    ymuint32 l = mCurUint - (u << sft);
-	    ymuint32 u10 = u * 10;
-	    ymuint32 l10 = l * 10;
+	    std::uint32_t v = c - '0';
+	    std::uint32_t u = mCurUint >> sft;
+	    std::uint32_t l = mCurUint - (u << sft);
+	    std::uint32_t u10 = u * 10;
+	    std::uint32_t l10 = l * 10;
 	    mCurUint = v + l10 + ((u10 % 16) << sft);
 	    if ( u10 / 16 > 0 ) {
 	      // 桁あふれ

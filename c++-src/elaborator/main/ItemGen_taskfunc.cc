@@ -43,7 +43,7 @@ ItemGen::phase1_tf(
 	 << "phase1_tf( "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "], "
 	 << pt_item->name() << " )" << endl
 	 << endl;
@@ -116,7 +116,7 @@ ItemGen::phase2_tf(
 	 << "phase2_tf( "
 	 << taskfunc->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(taskfunc) << dec
+	 << hex << reinterpret_cast<PtrIntType>(taskfunc) << dec
 	 << "] )" << endl
 	 << endl;
   }
@@ -166,7 +166,7 @@ ItemGen::phase3_tf(
 	 << "phase3_tf( "
 	 << taskfunc->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(taskfunc) << dec
+	 << hex << reinterpret_cast<PtrIntType>(taskfunc) << dec
 	 << "] )" << endl
 	 << endl;
   }
@@ -199,7 +199,7 @@ ItemGen::instantiate_constant_function(
 	 << "instantiate_constant_function( "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] , "
 	 << pt_function->name() << " )" << endl
 	 << endl;

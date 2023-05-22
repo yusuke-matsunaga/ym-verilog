@@ -1033,7 +1033,7 @@ PtDumper::put(
 void
 PtDumper::put(
   const char* label,
-  ymuint32 d
+  std::uint32_t d
 )
 {
   PtHeader x(*this, label, "uint32", false);

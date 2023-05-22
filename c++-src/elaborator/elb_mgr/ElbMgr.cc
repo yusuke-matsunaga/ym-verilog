@@ -41,14 +41,14 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 #define DOUT cerr
 
-const ymuint debug_none       = 0x00000000;
-const ymuint debug_find_scope = 0x00000010;
-const ymuint debug_all        = 0xFFFFFFFF;
+const int debug_none       = 0x00000000;
+const int debug_find_scope = 0x00000010;
+const int debug_all        = 0xFFFFFFFF;
 
 #if 1
-const ymuint debug = debug_none;
+const int debug = debug_none;
 #else
-const ymuint debug = debug_all;
+const int debug = debug_all;
 #endif
 
 // @brief コンストラクタ

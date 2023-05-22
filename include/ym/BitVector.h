@@ -787,12 +787,12 @@ public:
   bool
   is_uint32() const { return (size() <= BLOCK_SIZE && !has_xz()); }
 
-  /// @brief is_uint32 の条件を満たしているときに ymuint32 に変換する．
+  /// @brief is_uint32 の条件を満たしているときに std::uint32_t に変換する．
   ///
   /// 上の条件を満たしていないときの値は不定
   /// (というか実際にどういう値を返すのかはソースコードを見ればわかる)
-  ymuint32
-  to_uint32() const { return static_cast<ymuint32>(mVal1.get()[0]); }
+  std::uint32_t
+  to_uint32() const { return static_cast<std::uint32_t>(mVal1.get()[0]); }
 
   /// @brief int の数値に変換可能なら true を返す．
   ///
@@ -941,7 +941,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // ビットベクタ用の符号なし整数
-  using uword = ymuint64;
+  using uword = std::uint64_t;
 
   // mVal0, mVal1 のリサイズをする．
   void

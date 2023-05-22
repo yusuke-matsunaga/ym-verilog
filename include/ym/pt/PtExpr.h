@@ -123,7 +123,7 @@ public:
   /// @brief 整数型の値の取得
   /// @return 値
   virtual
-  ymuint32
+  std::uint32_t
   const_uint32() const = 0;
 
   /// @brief 整数型および文字列型の定数の文字列表現の取得

@@ -172,7 +172,7 @@ SptExpr::const_size() const
 }
 
 // @brief 整数型の値の取得
-ymuint32
+std::uint32_t
 SptExpr::const_uint32() const
 {
   return 0;
@@ -598,7 +598,7 @@ SptConstant::SptConstant(
   const FileRegion& file_region,
   VpiConstType const_type,
   SizeType size,
-  ymuint32 ivalue,
+  std::uint32_t ivalue,
   const char* svalue,
   double rvalue
 ) : SptExpr{file_region, PtExprType::Const},
@@ -623,7 +623,7 @@ SptConstant::const_size() const
 }
 
 // @brief 整数型の値の取得
-ymuint32
+std::uint32_t
 SptConstant::const_uint32() const
 {
   return mIntValue;
@@ -993,7 +993,7 @@ SptFactory::new_SysFuncCall(
 const PtExpr*
 SptFactory::new_IntConst(
   const FileRegion& file_region,
-  ymuint32 value
+  std::uint32_t value
 )
 {
   auto node = new SptConstant{file_region, VpiConstType::Int,

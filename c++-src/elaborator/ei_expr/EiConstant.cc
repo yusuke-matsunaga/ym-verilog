@@ -142,7 +142,7 @@ EiConstant::_set_reqsize(
 // @brief コンストラクタ
 EiIntConst::EiIntConst(
   const PtExpr* pt_expr,
-  ymint32 value
+  std::int32_t value
 ) : EiConstant{pt_expr},
     mValue{value}
 {

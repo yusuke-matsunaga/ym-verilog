@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 BEGIN_NONAMESPACE
 
-using uword = ymuint64;
+using uword = std::uint64_t;
 
 /// @brief すべてが0のパタン
 const uword ALL0 = 0x0000000000000000;
@@ -692,7 +692,7 @@ multi_concat(const BitVector& rep,
   BitVector unit(src_list);
 
   // それを rep 回繰り返す．
-  ymuint32 n = rep.to_uint32();
+  std::uint32_t n = rep.to_uint32();
   vector<BitVector> tmp_list(n, unit);
   return BitVector(tmp_list);
 }

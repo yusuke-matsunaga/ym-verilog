@@ -91,7 +91,7 @@ private:
   Cell** mTable2;
 
   // テーブルサイズ
-  ymuint32 mSize;
+  std::uint32_t mSize;
 
 };
 

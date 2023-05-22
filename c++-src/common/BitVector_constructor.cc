@@ -13,7 +13,7 @@ BEGIN_NAMESPACE_YM_VERILOG
 
 BEGIN_NONAMESPACE
 
-using uword = ymuint64;
+using uword = std::uint64_t;
 
 const SizeType BLOCK_SIZE = sizeof(uword) * 8;
 

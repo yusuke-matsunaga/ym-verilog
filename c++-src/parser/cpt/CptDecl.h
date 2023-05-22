@@ -698,7 +698,7 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   // net type + sign (+ vstype)
-  ymuint32 mFlags;
+  std::uint32_t mFlags;
 
 };
 

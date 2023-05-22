@@ -222,10 +222,10 @@ private:
 
   // 様々な情報をパックしたもの
   mutable
-  ymuint32 mFlags;
+  std::uint32_t mFlags;
 
   // decay time
-  ymint32 mDefDecayTime;
+  std::int32_t mDefDecayTime;
 
   // config 情報
   string mConfig;

@@ -141,10 +141,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 登録されている要素数
-  ymuint32 num() const;
+  std::uint32_t num() const;
 
   // ハッシュ表のサイズを拡張する．
-  void resize(ymuint32 size);
+  void resize(std::uint32_t size);
 
 
 private:
@@ -159,10 +159,10 @@ private:
   SimEqSet** mHash;
 
   // ハッシュ表のサイズ
-  ymuint32 mHashSize;
+  std::uint32_t mHashSize;
 
   // 要素数がこの値を超えたらテーブルを拡張する．
-  ymuint32 mNextLimit;
+  std::uint32_t mNextLimit;
 
 };
 
@@ -245,7 +245,7 @@ SimEqSetMgr::empty() const
 
 // 登録されている要素数
 inline
-ymuint32
+std::uint32_t
 SimEqSetMgr::num() const
 {
   return mHeap.size();

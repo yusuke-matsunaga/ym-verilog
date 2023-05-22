@@ -335,7 +335,7 @@ private:
 
   /// @brief 値を直接指定するコンストラクタ
   explicit
-  VlScalarVal(ymuint8 val) : mData{val} { }
+  VlScalarVal(std::uint8_t val) : mData{val} { }
 
 
 private:
@@ -345,19 +345,19 @@ private:
 
   /// @brief 0 を表す値
   static
-  const ymuint8 kScalar0 = 0U;
+  const std::uint8_t kScalar0 = 0U;
 
   /// @brief 1 を表す値
   static
-  const ymuint8 kScalar1 = 1U;
+  const std::uint8_t kScalar1 = 1U;
 
   /// @brief X を表す値
   static
-  const ymuint8 kScalarX = 2U;
+  const std::uint8_t kScalarX = 2U;
 
   /// @brief high-impedance を表す値
   static
-  const ymuint8 kScalarZ = 3U;
+  const std::uint8_t kScalarZ = 3U;
 
 
 private:
@@ -366,7 +366,7 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   // 値
-  ymuint8 mData{kScalarX};
+  std::uint8_t mData{kScalarX};
 
 };
 

@@ -37,7 +37,7 @@ StmtGen::phase2_namedblock(
 	 << "phase2_namedblock( "
 	 << parent->full_name()
 	 << " ["
-	 << hex << reinterpret_cast<ympuint>(parent) << dec
+	 << hex << reinterpret_cast<PtrIntType>(parent) << dec
 	 << "] )" << endl;
   }
 

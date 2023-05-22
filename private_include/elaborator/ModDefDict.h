@@ -106,7 +106,7 @@ private:
       for ( auto c: key.mName ) {
 	h = h * 37 + static_cast<SizeType>(c);
       }
-      return ((reinterpret_cast<ympuint>(key.mParent) * h) >> 8);
+      return ((reinterpret_cast<PtrIntType>(key.mParent) * h) >> 8);
     }
   };
 

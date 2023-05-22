@@ -56,18 +56,18 @@ CptModule::CptModule(
     mItemArray{move(item_array)}
 {
   mFlags =
-    static_cast<ymuint32>(is_cell)
-    | (static_cast<ymuint32>(is_protected) << 1)
-    | (static_cast<ymuint32>(time_precision + 16) << 2)
-    | (static_cast<ymuint32>(time_unit + 16) << 7)
-    | (static_cast<ymuint32>(net_type) << 12)
-    | (static_cast<ymuint32>(unconn) << 16)
-    | (static_cast<ymuint32>(delay) << 18)
-    | (static_cast<ymuint32>(macro) << 21)
-    | (static_cast<ymuint32>(explicit_name) << 22)
+    static_cast<std::uint32_t>(is_cell)
+    | (static_cast<std::uint32_t>(is_protected) << 1)
+    | (static_cast<std::uint32_t>(time_precision + 16) << 2)
+    | (static_cast<std::uint32_t>(time_unit + 16) << 7)
+    | (static_cast<std::uint32_t>(net_type) << 12)
+    | (static_cast<std::uint32_t>(unconn) << 16)
+    | (static_cast<std::uint32_t>(delay) << 18)
+    | (static_cast<std::uint32_t>(macro) << 21)
+    | (static_cast<std::uint32_t>(explicit_name) << 22)
     | (1U << 23) // top_module
-    | (static_cast<ymuint32>(portfaults) << 25)
-    | (static_cast<ymuint32>(suppress_faults) << 26)
+    | (static_cast<std::uint32_t>(portfaults) << 25)
+    | (static_cast<std::uint32_t>(suppress_faults) << 26)
     ;
 
   mIODeclNum = 0;
