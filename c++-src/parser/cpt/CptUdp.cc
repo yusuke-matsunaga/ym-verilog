@@ -29,11 +29,11 @@ CptUdp::CptUdp(
   PtiUdpEntryArray&& entry_array
 ) : mFileRegion{file_region},
     mName{name},
-    mPortArray{move(port_array)},
-    mIOHeadArray{move(iohead_array)},
+    mPortArray{std::move(port_array)},
+    mIOHeadArray{std::move(iohead_array)},
     mSeq{is_seq},
     mInitValue{init_value},
-    mTableArray{move(entry_array)}
+    mTableArray{std::move(entry_array)}
 {
 }
 
@@ -134,7 +134,7 @@ CptUdpEntry::CptUdpEntry(
   PtiUdpValueArray&& input_array,
   const PtUdpValue* output
 ) : mFileRegion{file_region},
-    mInputArray{move(input_array)},
+    mInputArray{std::move(input_array)},
     mOutput{output}
 {
 }
@@ -192,7 +192,7 @@ CptUdpEntryS::CptUdpEntryS(
   PtiUdpValueArray&& input_array,
   const PtUdpValue* current,
   const PtUdpValue* output
-) : CptUdpEntry{file_region, move(input_array), output},
+) : CptUdpEntry{file_region, std::move(input_array), output},
   mCurrent{current}
 {
 }

@@ -88,7 +88,7 @@ CptPrimaryI::CptPrimaryI(
   PtiExprArray&& index_array
 ) : CptPrimaryBase{name},
     mFileRegion{file_region},
-    mIndexArray{move(index_array)}
+    mIndexArray{std::move(index_array)}
 {
 }
 
@@ -138,7 +138,7 @@ CptPrimaryCI::CptPrimaryCI(
   const FileRegion& file_region,
   const char* name,
   PtiExprArray&& index_array
-) : CptPrimaryI{file_region, name, move(index_array)}
+) : CptPrimaryI{file_region, name, std::move(index_array)}
 {
 }
 
@@ -256,7 +256,7 @@ CptPrimaryIR::CptPrimaryIR(
   VpiRangeMode mode,
   const PtExpr* left,
   const PtExpr* right
-) : CptPrimaryI{file_region, name, move(index_array)},
+) : CptPrimaryI{file_region, name, std::move(index_array)},
     mMode{mode},
     mLeftRange{left},
     mRightRange{right}
@@ -301,7 +301,7 @@ CptPrimaryH::CptPrimaryH(
   const char* tail_name
 ) : CptPrimaryBase{tail_name},
     mFileRegion{file_region},
-    mNbArray{move(nb_array)}
+    mNbArray{std::move(nb_array)}
 {
 }
 
@@ -344,8 +344,8 @@ CptPrimaryHI::CptPrimaryHI(
   PtiNameBranchArray&& nb_array,
   const char* tail_name,
   PtiExprArray&& index_array
-) : CptPrimaryI{file_region, tail_name, move(index_array)},
-    mNbArray{move(nb_array)}
+) : CptPrimaryI{file_region, tail_name, std::move(index_array)},
+    mNbArray{std::move(nb_array)}
 {
 }
 
@@ -381,7 +381,7 @@ CptPrimaryHCI::CptPrimaryHCI(
   PtiNameBranchArray&& nb_array,
   const char* tail_name,
   PtiExprArray&& index_array
-) : CptPrimaryHI{file_region, move(nb_array), tail_name, move(index_array)}
+) : CptPrimaryHI{file_region, std::move(nb_array), tail_name, std::move(index_array)}
 {
 }
 
@@ -411,7 +411,7 @@ CptPrimaryHR::CptPrimaryHR(
   const PtExpr* left,
   const PtExpr* right
 ) : CptPrimaryR{file_region, tail_name, mode, left, right},
-    mNbArray{move(nb_array)}
+    mNbArray{std::move(nb_array)}
 {
 }
 
@@ -450,8 +450,10 @@ CptPrimaryHIR::CptPrimaryHIR(
   VpiRangeMode mode,
   const PtExpr* left,
   const PtExpr* right
-) : CptPrimaryIR{file_region, tail_name, move(index_array), mode, left, right},
-    mNbArray{move(nb_array)}
+) : CptPrimaryIR{file_region, tail_name,
+		 std::move(index_array),
+		 mode, left, right},
+    mNbArray{std::move(nb_array)}
 {
 }
 

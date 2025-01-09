@@ -32,7 +32,7 @@ VlValue::VlValue(
 // @brief ムーブコンストラクタ
 VlValue::VlValue(
   VlValue&& src
-) : mRep{move(src.mRep)}
+) : mRep{std::move(src.mRep)}
 {
 }
 
@@ -118,7 +118,7 @@ VlValue::VlValue(
 {
   if ( this->value_type() == value_type || value_type.is_no_type() ) {
     // 型が同じ場合だけムーブを使う．
-    mRep = move(src.mRep);
+    mRep = std::move(src.mRep);
   }
   else {
     if ( value_type.is_int_type() ) {
@@ -161,7 +161,7 @@ VlValue::operator=(
   VlValue&& src
 )
 {
-  mRep = move(src.mRep);
+  mRep = std::move(src.mRep);
   return *this;
 }
 

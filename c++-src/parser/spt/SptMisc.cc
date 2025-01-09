@@ -33,7 +33,7 @@ SptControl::SptControl(const FileRegion& file_region,
   mFileRegion{file_region},
   mType{type},
   mExpr{expr},
-  mEventArray{move(event_array)}
+  mEventArray{std::move(event_array)}
 {
 }
 
@@ -347,7 +347,7 @@ SptNameBranch::index() const
 // コンストラクタ
 // @param as_array attr_spec のリスト
 SptAttrInst::SptAttrInst(PtiAttrSpecArray&& as_array) :
-  mAttrSpecArray{move(as_array)}
+  mAttrSpecArray{std::move(as_array)}
 {
 }
 

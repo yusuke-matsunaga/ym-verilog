@@ -407,7 +407,7 @@ CptDefParamH::CptDefParamH(
   const FileRegion& file_region,
   PtiDefParamArray&& dp_array
 ) : mFileRegion{file_region},
-    mArray{move(dp_array)}
+    mArray{std::move(dp_array)}
 {
 }
 
@@ -458,7 +458,7 @@ CptDefParam::CptDefParam(
   const char* tail_name,
   const PtExpr* value
 ) : mTopLoc{file_region.start_loc()},
-    mNbArray{move(nb_array)},
+    mNbArray{std::move(nb_array)},
     mName{tail_name},
     mExpr{value}
 {
@@ -517,7 +517,7 @@ CptContAssignH::CptContAssignH(
   const FileRegion& file_region,
   PtiContAssignArray&& ca_array
 ) : mFileRegion{file_region},
-    mArray{move(ca_array)}
+    mArray{std::move(ca_array)}
 {
 }
 
@@ -566,7 +566,7 @@ CptContAssignHS::CptContAssignHS(
   const FileRegion& file_region,
   const PtStrength* strength,
   PtiContAssignArray&& ca_array
-) : CptContAssignH{file_region, move(ca_array)},
+) : CptContAssignH{file_region, std::move(ca_array)},
     mStrength{strength}
 {
 }
@@ -593,7 +593,7 @@ CptContAssignHD::CptContAssignHD(
   const FileRegion& file_region,
   const PtDelay* delay,
   PtiContAssignArray&& ca_array
-) : CptContAssignH{file_region, move(ca_array)},
+) : CptContAssignH{file_region, std::move(ca_array)},
     mDelay{delay}
 {
 }
@@ -621,7 +621,7 @@ CptContAssignHSD::CptContAssignHSD(
   const PtStrength* strength,
   const PtDelay* delay,
   PtiContAssignArray&& ca_array
-) : CptContAssignH{file_region, move(ca_array)},
+) : CptContAssignH{file_region, std::move(ca_array)},
     mStrength{strength},
     mDelay{delay}
 {
@@ -786,8 +786,8 @@ CptTf::CptTf(
 ) : mFileRegion{file_region},
     mName{name},
     mAutomatic{automatic},
-    mIOHeadArray{move(iohead_array)},
-    mDeclHeadArray{move(declhead_array)},
+    mIOHeadArray{std::move(iohead_array)},
+    mDeclHeadArray{std::move(declhead_array)},
     mBody{stmt}
 {
   int n = 0;
@@ -884,8 +884,8 @@ CptTask::CptTask(
   const PtStmt* stmt
 ) : CptTf{file_region,
 	  name, automatic,
-	  move(iohead_array),
-	  move(declhead_array),
+	  std::move(iohead_array),
+	  std::move(declhead_array),
 	  stmt}
 {
 }
@@ -918,8 +918,8 @@ CptFunction::CptFunction(
   const PtStmt* stmt
 ) : CptTf{file_region,
 	  name, automatic,
-	  move(iohead_array),
-	  move(declhead_array),
+	  std::move(iohead_array),
+	  std::move(declhead_array),
 	  stmt},
     mSigned{sign}
 {
@@ -984,8 +984,8 @@ CptSizedFunc::CptSizedFunc(
   const PtStmt* stmt
 ) : CptFunction{file_region,
 		name, automatic, sign,
-		move(iohead_array),
-		move(declhead_array),
+		std::move(iohead_array),
+		std::move(declhead_array),
 		stmt},
     mLeftRange{left},
     mRightRange{right}
@@ -1028,8 +1028,8 @@ CptTypedFunc::CptTypedFunc(
   const PtStmt* stmt
 ) : CptFunction{file_region,
 		name, automatic, sign,
-		move(iohead_array),
-		move(declhead_array),
+		std::move(iohead_array),
+		std::move(declhead_array),
 		stmt},
     mDataType{data_type}
 {

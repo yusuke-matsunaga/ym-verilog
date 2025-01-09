@@ -24,13 +24,13 @@ class SptExpr :
 {
 public:
 
-  /// コンストラクタ
+  /// @brief コンストラクタ
   SptExpr(
     const FileRegion& file_region,
     PtExprType type
   );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptExpr();
 
 
@@ -39,11 +39,11 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// ファイル位置の取得
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 
-  /// 式の型の取得
+  /// @brief 式の型の取得
   PtExprType
   type() const override;
 
@@ -192,7 +192,7 @@ class SptOpr1 :
 {
 public:
 
-  /// コンストラクタ
+  /// @brief コンストラクタ
   SptOpr1(
     const FileRegion& file_region,
     VpiOpType op_type,
@@ -201,7 +201,7 @@ public:
     const PtExpr* opr3 = nullptr
   );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptOpr1();
 
 
@@ -210,15 +210,15 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// インデックスとして使える式のチェック
+  /// @brief インデックスとして使える式のチェック
   bool
   is_index_expr() const override;
 
-  /// インデックスの値の取得
+  /// @brief インデックスの値の取得
   int
   index_value() const override;
 
-  /// 演算子の種類の取得
+  /// @brief 演算子の種類の取得
   VpiOpType
   op_type() const override;
 
@@ -242,7 +242,7 @@ public:
   /// pos 番目のオペランドを取り出す．
   const PtExpr*
   operand(
-    SizeType pos
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < operand_num() )
   ) const override;
 
 
@@ -271,14 +271,14 @@ class SptOpr2 :
 {
 public:
 
-  /// コンストラクタ
+  /// @brief コンストラクタ
   SptOpr2(
     const FileRegion& file_region,
     VpiOpType op_type,
     PtiExprArray&& opr_array
   );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptOpr2();
 
 
@@ -287,15 +287,15 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// インデックスとして使える式のチェック
+  /// @brief インデックスとして使える式のチェック
   bool
   is_index_expr() const override;
 
-  /// インデックスの値の取得
+  /// @brief インデックスの値の取得
   int
   index_value() const override;
 
-  /// 演算子の種類の取得
+  /// @brief 演算子の種類の取得
   VpiOpType
   op_type() const override;
 
@@ -316,9 +316,11 @@ public:
   const PtExpr*
   operand2() const override;
 
-  /// pos 番目のオペランドを取り出す．
+  /// @brief pos 番目のオペランドを取り出す．
   const PtExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos
+  ) const override;
 
 
 private:
@@ -343,7 +345,7 @@ class SptFuncCall :
 {
 public:
 
-  /// コンストラクタ
+  /// @brief コンストラクタ
   SptFuncCall(
     const FileRegion& file_region,
     PtExprType type,
@@ -352,7 +354,7 @@ public:
     PtiExprArray&& arg_array
   );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptFuncCall();
 
 
@@ -425,7 +427,7 @@ class SptPrimary :
 {
 public:
 
-  /// コンストラクタ
+  /// @brief コンストラクタ
   SptPrimary(
     const FileRegion& file_region,
     PtiNameBranchArray&& nb_array,
@@ -437,7 +439,7 @@ public:
     const PtExpr* right = nullptr
   );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptPrimary();
 
 
@@ -456,11 +458,11 @@ public:
     SizeType pos ///< [in] 位置 ( 0 <= pos < namebranch_num() )
   ) const override;
 
-  /// 末尾の名前を取り出す．
+  /// @brief 末尾の名前を取り出す．
   const char*
   name() const override;
 
-  /// インデックスもしくは範囲が定数にならなければならないとき true を返す．
+  /// @brief インデックスもしくは範囲が定数にならなければならないとき true を返す．
   bool
   is_const_index() const override;
 
@@ -475,15 +477,15 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < index_num() )
   ) const override;
 
-  /// 範囲指定モードの取得
+  /// @brief 範囲指定モードの取得
   VpiRangeMode
   range_mode() const override;
 
-  /// range の MSB を取出す．
+  /// @brief range の MSB を取出す．
   const PtExpr*
   left_range() const override;
 
-  /// range の LSB を取出す．
+  /// @brief range の LSB を取出す．
   const PtExpr*
   right_range() const override;
 
@@ -525,7 +527,7 @@ class SptConstant :
 {
 public:
 
-  /// コンストラクタ
+  /// @brief コンストラクタ
   SptConstant(
     const FileRegion& file_region,
     VpiConstType const_type,
@@ -535,7 +537,7 @@ public:
     double rvalue
   );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptConstant();
 
 
@@ -544,27 +546,27 @@ public:
   // PtExpr の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// 階層名の添字として使える式の時に true を返す．
+  /// @brief 階層名の添字として使える式の時に true を返す．
   bool
   is_index_expr() const override;
 
-  /// 定数の種類を表す型を返す．
+  /// @brief 定数の種類を表す型を返す．
   VpiConstType
   const_type() const override;
 
-  // 整数型の定数のサイズの取得
+  /// @brief 整数型の定数のサイズの取得
   SizeType
   const_size() const override;
 
-  // 整数型の値の取得
+  /// @brief 整数型の値の取得
   std::uint32_t
   const_uint32() const override;
 
-  // 文字列型の値の取得
+  /// @brief 文字列型の値の取得
   const char*
   const_str() const override;
 
-  // 実数型の値の取得
+  /// @brief 実数型の値の取得
   double
   const_real() const override;
 

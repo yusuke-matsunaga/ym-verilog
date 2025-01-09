@@ -120,7 +120,7 @@ SptIOHead::set_elem(
   PtiIOItemArray&& elem_array
 )
 {
-  mItemArray = move(elem_array);
+  mItemArray = std::move(elem_array);
 }
 
 
@@ -292,7 +292,7 @@ SptDeclHead::set_elem(
   PtiDeclItemArray&& elem_array
 )
 {
-  mItemArray = move(elem_array);
+  mItemArray = std::move(elem_array);
 }
 
 
@@ -308,7 +308,7 @@ SptDeclItem::SptDeclItem(
   const PtExpr* init_value
 ) : mFileRegion{file_region},
     mName{name},
-    mRangeArray{move(range_array)},
+    mRangeArray{std::move(range_array)},
     mInitValue{init_value}
 {
 }

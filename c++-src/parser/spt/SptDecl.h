@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/FileRegion.h"
 #include "parser/PtiDecl.h"
 #include "parser/PtiArray.h"
@@ -27,17 +26,19 @@ class SptIOHead :
 
 private:
 
-  /// コンストラクタ
-  SptIOHead(const FileRegion& file_region,
-	    VpiDir dir,
-	    VpiAuxType aux_type,
-	    VpiNetType net_type,
-	    VpiVarType var_type,
-	    bool sign,
-	    const PtExpr* left,
-	    const PtExpr* right);
+  /// @brief コンストラクタ
+  SptIOHead(
+    const FileRegion& file_region,
+    VpiDir dir,
+    VpiAuxType aux_type,
+    VpiNetType net_type,
+    VpiVarType var_type,
+    bool sign,
+    const PtExpr* left,
+    const PtExpr* right
+  );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptIOHead();
 
 
@@ -46,35 +47,35 @@ public:
   // PtIOH の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// ファイル位置の取得
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 
-  /// 型の取得
+  /// @brief 型の取得
   VpiDir
   direction() const override;
 
-  /// 補助的な型の取得
+  /// @brief 補助的な型の取得
   VpiAuxType
   aux_type() const override;
 
-  /// 補助的なネット型の取得
+  /// @brief 補助的なネット型の取得
   VpiNetType
   net_type() const override;
 
-  /// 補助的な変数型の取得
+  /// @brief 補助的な変数型の取得
   VpiVarType
   var_type() const override;
 
-  /// 符号の取得
+  /// @brief 符号の取得
   bool
   is_signed() const override;
 
-  /// 範囲のMSBの取得
+  /// @brief 範囲のMSBの取得
   const PtExpr*
   left_range() const override;
 
-  /// 範囲のLSBの取得
+  /// @brief 範囲のLSBの取得
   const PtExpr*
   right_range() const override;
 
@@ -83,9 +84,10 @@ public:
   item_num() const override;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtIOItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
 
 private:
@@ -94,9 +96,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素の配列
   void
-  set_elem(PtiIOItemArray&& elem_array) override;
+  set_elem(
+    PtiIOItemArray&& elem_array ///< [in] 要素の配列
+  ) override;
 
 
 private:
@@ -145,12 +148,14 @@ class SptIOItem :
 
 private:
 
-  /// コンストラクタ
-  SptIOItem(const FileRegion& file_region,
-	    const char* name,
-	    const PtExpr* init_value);
+  /// @brief コンストラクタ
+  SptIOItem(
+    const FileRegion& file_region,
+    const char* name,
+    const PtExpr* init_value
+  );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptIOItem();
 
 
@@ -159,15 +164,15 @@ public:
   // PtIOItem の継承クラスが実装する仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// ファイル位置の取得
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 
-  /// 名前の取得
+  /// @brief 名前の取得
   const char*
   name() const override;
 
-  /// 初期値の取得
+  /// @brief 初期値の取得
   const PtExpr*
   init_value() const override;
 
@@ -199,19 +204,21 @@ class SptDeclHead :
 
 private:
 
-  /// コンストラクタ
-  SptDeclHead(const FileRegion& file_region,
-	      PtDeclType type,
-	      bool sign,
-	      const PtExpr* left,
-	      const PtExpr* right,
-	      VpiVarType var_type,
-	      VpiNetType net_type,
-	      VpiVsType vs_type,
-	      const PtStrength* strength,
-	      const PtDelay* delay);
+  /// @brief コンストラクタ
+  SptDeclHead(
+    const FileRegion& file_region,
+    PtDeclType type,
+    bool sign,
+    const PtExpr* left,
+    const PtExpr* right,
+    VpiVarType var_type,
+    VpiNetType net_type,
+    VpiVsType vs_type,
+    const PtStrength* strength,
+    const PtDelay* delay
+  );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptDeclHead();
 
 
@@ -220,43 +227,43 @@ public:
   // PtDecl の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// ファイル位置の取得
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 
-  /// 宣言要素の型の取得
+  /// @brief 宣言要素の型の取得
   PtDeclType
   type() const override;
 
-  /// 符号の取得
+  /// @brief 符号の取得
   bool
   is_signed() const override;
 
-  /// 範囲のMSBの取得
+  /// @brief 範囲のMSBの取得
   const PtExpr*
   left_range() const override;
 
-  /// 範囲のLSBの取得
+  /// @brief 範囲のLSBの取得
   const PtExpr*
   right_range() const override;
 
-  /// データ型の取得
+  /// @brief データ型の取得
   VpiVarType
   data_type() const override;
 
-  /// net 型の取得
+  /// @brief net 型の取得
   VpiNetType
   net_type() const override;
 
-  /// vectored|scalared 属性の取得
+  /// @brief vectored|scalared 属性の取得
   VpiVsType
   vs_type() const override;
 
-  /// strength の取得
+  /// @brief strength の取得
   const PtStrength*
   strength() const override;
 
-  /// delay の取得
+  /// @brief delay の取得
   const PtDelay*
   delay() const override;
 
@@ -265,9 +272,10 @@ public:
   item_num() const override;
 
   /// @brief 要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < item_num() )
   const PtDeclItem*
-  item(SizeType pos) const override;
+  item(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < item_num() )
+  ) const override;
 
 
 private:
@@ -276,9 +284,10 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素リストの設定
-  /// @param[in] elem_array 要素の配列
   void
-  set_elem(PtiDeclItemArray&& elem_array) override;
+  set_elem(
+    PtiDeclItemArray&& elem_array ///< [in] 要素の配列
+  ) override;
 
 
 private:
@@ -333,13 +342,15 @@ class SptDeclItem :
 
 private:
 
-  /// コンストラクタ
-  SptDeclItem(const FileRegion& file_region,
-	      const char* name,
-	      PtiRangeArray&& range_array,
-	      const PtExpr* init_value);
+  /// @brief コンストラクタ
+  SptDeclItem(
+    const FileRegion& file_region,
+    const char* name,
+    PtiRangeArray&& range_array,
+    const PtExpr* init_value
+  );
 
-  /// デストラクタ
+  /// @brief デストラクタ
   ~SptDeclItem();
 
 
@@ -348,11 +359,11 @@ public:
   // PtDeclItem の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// ファイル位置の取得
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 
-  /// 名前の取得
+  /// @brief 名前の取得
   const char*
   name() const override;
 
@@ -361,11 +372,12 @@ public:
   range_num() const override;
 
   /// @brief 範囲の取得
-  /// @param[in] pos 位置 ( 0 <= pos < range_num() )
   const PtRange*
-  range(SizeType pos) const override;
+  range(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < range_num() )
+  ) const override;
 
-  /// 初期値の取得
+  /// @brief 初期値の取得
   const PtExpr*
   init_value() const override;
 
@@ -400,9 +412,11 @@ class SptRange :
 public:
 
   /// @brief コンストラクタ
-  SptRange(const FileRegion& file_region,
-	   const PtExpr* msb,
-	   const PtExpr* lsb);
+  SptRange(
+    const FileRegion& file_region,
+    const PtExpr* msb,
+    const PtExpr* lsb
+  );
 
   /// @brief デストラクタ
   ~SptRange();
@@ -413,7 +427,7 @@ public:
   // PtRange の仮想関数
   //////////////////////////////////////////////////////////////////////
 
-  /// ファイル位置の取得
+  /// @brief ファイル位置の取得
   FileRegion
   file_region() const override;
 

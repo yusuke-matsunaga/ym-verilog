@@ -20,61 +20,40 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param name 名前
-// @param macro macromodule の時に true にするフラグ
-// @param is_cell セル記述の時に true にするフラグ
-// @param is_protected プロテクトされている時に true にするフラグ
-// @param time_unit 時間の単位
-// @param time_precision 時間の精度
-// @param net_type default net type の値
-// @param unconn unconnected drive の値
-// @param delay default delay mode の値
-// @param decay default decay time の値
-// @param explicit_name 全てのポートが外向きの名前を持っている時に true にするフラグ
-// @param portfaults portfauls 情報
-// @param suppress_faults suppress_faults 情報
-// @param config config 情報
-// @param library library 情報
-// @param cell cell 情報
-// @param paramport_array パラメータポート宣言のリスト
-// @param port_array ポートのリスト
-// @param iohead_array IO宣言のリスト
-// @param declhead_array 宣言のリスト
-// @param item_array 要素のリスト
-SptModule::SptModule(const FileRegion& file_region,
-		     const char* name,
-		     bool macro,
-		     bool is_cell,
-		     bool is_protected,
-		     int time_unit,
-		     int time_precision,
-		     VpiNetType net_type,
-		     VpiUnconnDrive unconn,
-		     VpiDefDelayMode delay,
-		     int decay,
-		     bool explicit_name,
-		     bool portfaults,
-		     bool suppress_faults,
-		     const string& config,
-		     const string& library,
-		     const string& cell,
-		     PtiDeclHeadArray&& paramport_array,
-		     PtiPortArray&& port_array,
-		     PtiIOHeadArray&& iohead_array,
-		     PtiDeclHeadArray&& decl_array,
-		     PtiItemArray&& item_array) :
-  mFileRegion{file_region},
-  mName{name},
-  mDefDecayTime{decay},
-  mConfig{config},
-  mLibrary{library},
-  mCell{cell},
-  mParamPortArray{move(paramport_array)},
-  mPortArray{move(port_array)},
-  mIOHeadArray{move(iohead_array)},
-  mDeclHeadArray{move(decl_array)},
-  mItemArray{move(item_array)}
+SptModule::SptModule(
+  const FileRegion& file_region,
+  const char* name,
+  bool macro,
+  bool is_cell,
+  bool is_protected,
+  int time_unit,
+  int time_precision,
+  VpiNetType net_type,
+  VpiUnconnDrive unconn,
+  VpiDefDelayMode delay,
+  int decay,
+  bool explicit_name,
+  bool portfaults,
+  bool suppress_faults,
+  const string& config,
+  const string& library,
+  const string& cell,
+  PtiDeclHeadArray&& paramport_array,
+  PtiPortArray&& port_array,
+  PtiIOHeadArray&& iohead_array,
+  PtiDeclHeadArray&& decl_array,
+  PtiItemArray&& item_array
+) : mFileRegion{file_region},
+    mName{name},
+    mDefDecayTime{decay},
+    mConfig{config},
+    mLibrary{library},
+    mCell{cell},
+    mParamPortArray{std::move(paramport_array)},
+    mPortArray{std::move(port_array)},
+    mIOHeadArray{std::move(iohead_array)},
+    mDeclHeadArray{std::move(decl_array)},
+    mItemArray{std::move(item_array)}
 {
   mFlags =
     static_cast<std::uint32_t>(is_cell)
@@ -103,7 +82,6 @@ SptModule::~SptModule()
 }
 
 // ファイル位置の取得
-// @return ファイル位置
 FileRegion
 SptModule::file_region() const
 {
@@ -111,7 +89,6 @@ SptModule::file_region() const
 }
 
 // 名前の取得
-// @return name 名前
 const char*
 SptModule::name() const
 {
@@ -126,9 +103,10 @@ SptModule::paramport_num() const
 }
 
 // @brief パラメータポート宣言の取得
-// @param[in] pos 位置 ( 0 <= pos < paramport_num() )
 const PtDeclHead*
-SptModule::paramport(SizeType pos) const
+SptModule::paramport(
+  SizeType pos
+) const
 {
   return mParamPortArray[pos];
 }
@@ -141,9 +119,10 @@ SptModule::port_num() const
 }
 
 // @brief ポートを取り出す．
-// @param[in] pos 位置 ( 0 <= pos < port_num() )
 const PtPort*
-SptModule::port(SizeType pos) const
+SptModule::port(
+  SizeType pos
+) const
 {
   return mPortArray[pos];
 }
@@ -156,9 +135,10 @@ SptModule::iohead_num() const
 }
 
 // @brief 入出力宣言の取得
-// @param[in] pos 位置 ( 0 <= pos < iohead_num() )
 const PtIOHead*
-SptModule::iohead(SizeType pos) const
+SptModule::iohead(
+  SizeType pos
+) const
 {
   return mIOHeadArray[pos];
 }
@@ -178,9 +158,10 @@ SptModule::declhead_num() const
 }
 
 // @brief 宣言ヘッダの取得
-// @param[in] pos 位置 ( 0 <= pos < declhead_num() )
 const PtDeclHead*
-SptModule::declhead(SizeType pos) const
+SptModule::declhead(
+  SizeType pos
+) const
 {
   return mDeclHeadArray[pos];
 }
@@ -193,16 +174,15 @@ SptModule::item_num() const
 }
 
 // @brief item の取得
-// @param[in] pos 位置 ( 0 <= pos < item_num() )
 const PtItem*
-SptModule::item(SizeType pos) const
+SptModule::item(
+  SizeType pos
+) const
 {
   return mItemArray[pos];
 }
 
 // macromodule 情報の取得
-// @retval true macromodule の場合
-// @retval false module の場合
 bool
 SptModule::is_macromodule() const
 {
@@ -210,8 +190,6 @@ SptModule::is_macromodule() const
 }
 
 // cell 情報の取得
-// @retval true `celldefine --- `endcelldefine に挟まれたモジュールの場合
-// @retval false 上記以外
 bool
 SptModule::is_cell() const
 {
@@ -219,7 +197,6 @@ SptModule::is_cell() const
 }
 
 // protect 情報の取得
-// @return プロテクトされていたら true を返す．
 bool
 SptModule::is_protected() const
 {
@@ -227,8 +204,6 @@ SptModule::is_protected() const
 }
 
 // time unit の取得
-// @return 時間の単位を表す 2 〜 -15 の整数
-// もしくは未定義を表す -16
 int
 SptModule::time_unit() const
 {
@@ -236,8 +211,6 @@ SptModule::time_unit() const
 }
 
 // time precision の取得
-// @return 時間の精度を表す 2 〜 -15 の整数
-// もしくは未定義を表す -16
 int
 SptModule::time_precision() const
 {
@@ -245,7 +218,6 @@ SptModule::time_precision() const
 }
 
 // default net type の取得
-// @return default net type
 VpiNetType
 SptModule::nettype() const
 {
@@ -253,7 +225,6 @@ SptModule::nettype() const
 }
 
 // unconnected drive の取得
-// @return unconnected drive
 VpiUnconnDrive
 SptModule::unconn_drive() const
 {
@@ -261,7 +232,6 @@ SptModule::unconn_drive() const
 }
 
 // default delay mode の取得
-// @return default delay mode
 VpiDefDelayMode
 SptModule::delay_mode() const
 {
@@ -269,7 +239,6 @@ SptModule::delay_mode() const
 }
 
 // default decay time の取得
-// @return default decay time
 int
 SptModule::decay_time() const
 {
@@ -277,7 +246,6 @@ SptModule::decay_time() const
 }
 
 // top module のチェック
-// @return top module の場合に true を返す．
 bool
 SptModule::is_topmodule() const
 {
@@ -313,7 +281,6 @@ SptModule::is_in_use() const
 }
 
 // portfaults 情報の取得
-// @return true で enable_portfaults を表す．
 bool
 SptModule::portfaults() const
 {
@@ -321,7 +288,6 @@ SptModule::portfaults() const
 }
 
 // suppress_faults 情報の取得
-// @return true で suppress_faults が効いていることを表す．
 bool
 SptModule::suppress_faults() const
 {
@@ -329,7 +295,6 @@ SptModule::suppress_faults() const
 }
 
 // config 情報の取得
-// @return config 情報
 const string&
 SptModule::config() const
 {
@@ -337,7 +302,6 @@ SptModule::config() const
 }
 
 // library 情報の取得
-// @return library 情報
 const string&
 SptModule::library() const
 {
@@ -345,7 +309,6 @@ SptModule::library() const
 }
 
 // cell 情報の取得
-// @return cell 情報
 const string&
 SptModule::cell() const
 {
@@ -360,8 +323,6 @@ SptModule::set_named_port()
 }
 
 // すべてのポートが外部名を持っているときに true を返す．
-//  { a, b } のような名無しポートがあると false となる．
-//  true の時しか名前による結合は行えない．
 bool
 SptModule::explicit_name() const
 {
@@ -374,17 +335,15 @@ SptModule::explicit_name() const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-// @param file_region ファイル位置の情報
-// @param portref_array ポートの参照式の配列
-// @param ext_name 外向きの名前
-SptPort::SptPort(const FileRegion& file_region,
-		 const PtExpr* portref,
-		 PtiExprArray&& portref_array,
-		 const char* ext_name) :
-  mFileRegion{file_region},
-  mExtName{ext_name},
-  mPortRef{portref},
-  mPortRefArray{move(portref_array)}
+SptPort::SptPort(
+  const FileRegion& file_region,
+  const PtExpr* portref,
+  PtiExprArray&& portref_array,
+  const char* ext_name
+) : mFileRegion{file_region},
+    mExtName{ext_name},
+    mPortRef{portref},
+    mPortRefArray{std::move(portref_array)}
 {
 }
 
@@ -394,7 +353,6 @@ SptPort::~SptPort()
 }
 
 // ファイル位置の取得
-// @return ファイル位置
 FileRegion
 SptPort::file_region() const
 {
@@ -402,8 +360,6 @@ SptPort::file_region() const
 }
 
 // 外向の名前の取得
-// @return 外向の名前(本当のポート名)
-// 無い場合は nullptr を返す
 const char*
 SptPort::ext_name() const
 {
@@ -418,7 +374,6 @@ SptPort::portref() const
 }
 
 // 内部のポート結線リストのサイズの取得
-// @return 内部のポート結線リストのサイズ
 SizeType
 SptPort::portref_size() const
 {
@@ -426,26 +381,29 @@ SptPort::portref_size() const
 }
 
 // 内部のポート結線の取得
-// @return 先頭のポート結線
 const PtExpr*
-SptPort::portref_elem(int pos) const
+SptPort::portref_elem(
+  int pos
+) const
 {
   return mPortRefArray[pos];
 }
 
 // @brief 内部のポート結線の報告の取得
 VpiDir
-SptPort::portref_dir(int pos) const
+SptPort::portref_dir(
+  int pos
+) const
 {
   return mDirArray[pos];
 }
 
 // @brief portref の方向を設定する．
-// @param[in] pos 位置番号 ( 0 <= pos < portref_num() )
-// @param[in] dir 方向
 void
-SptPort::_set_portref_dir(int pos,
-			  VpiDir dir)
+SptPort::_set_portref_dir(
+  int pos,
+  VpiDir dir
+)
 {
   mDirArray[pos] = dir;
 }

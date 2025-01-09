@@ -49,11 +49,11 @@ CptModule::CptModule(
     mConfig{config},
     mLibrary{library},
     mCell{cell},
-    mParamPortArray{move(paramport_array)},
-    mPortArray{move(port_array)},
-    mIOHeadArray{move(iohead_array)},
-    mDeclHeadArray{move(declhead_array)},
-    mItemArray{move(item_array)}
+    mParamPortArray{std::move(paramport_array)},
+    mPortArray{std::move(port_array)},
+    mIOHeadArray{std::move(iohead_array)},
+    mDeclHeadArray{std::move(declhead_array)},
+    mItemArray{std::move(item_array)}
 {
   mFlags =
     static_cast<std::uint32_t>(is_cell)
@@ -483,7 +483,7 @@ CptPort2::CptPort2(
   const char* ext_name,
   void* q
 ) : CptPort1{file_region, portref, ext_name},
-    mPortRefArray{move(portref_array)},
+    mPortRefArray{std::move(portref_array)},
     mDirArray{new (q) VpiDir[mPortRefArray.size()]}
 {
 }

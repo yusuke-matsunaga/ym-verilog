@@ -21,8 +21,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 CptGenBody::CptGenBody(
   PtiDeclHeadArray&& declhead_array,
   PtiItemArray&& item_array
-) : mDeclHeadArray{move(declhead_array)},
-    mItemArray{move(item_array)}
+) : mDeclHeadArray{std::move(declhead_array)},
+    mItemArray{std::move(item_array)}
 {
 }
 
@@ -42,7 +42,7 @@ CptGenBase::CptGenBase(
   PtiDeclHeadArray&& declhead_array,
   PtiItemArray&& item_array
 ) : mFileRegion{file_region},
-    mBody{move(declhead_array), move(item_array)}
+    mBody{std::move(declhead_array), std::move(item_array)}
 {
 }
 
@@ -100,7 +100,7 @@ CptGenerate::CptGenerate(
   const FileRegion& file_region,
   PtiDeclHeadArray&& declhead_array,
   PtiItemArray&& item_array
-) : CptGenBase{file_region, move(declhead_array), move(item_array)}
+) : CptGenBase{file_region, std::move(declhead_array), std::move(item_array)}
 {
 }
 
@@ -126,7 +126,7 @@ CptGenBlock::CptGenBlock(
   const FileRegion& file_region,
   PtiDeclHeadArray&& declhead_array,
   PtiItemArray&& item_array
-) : CptGenBase{file_region, move(declhead_array), move(item_array)}
+) : CptGenBase{file_region, std::move(declhead_array), std::move(item_array)}
 {
 }
 
@@ -153,7 +153,7 @@ CptGenBlockN::CptGenBlockN(
   const char* name,
   PtiDeclHeadArray&& declhead_array,
   PtiItemArray&& item_array
-) : CptGenBlock{file_region, move(declhead_array), move(item_array)},
+) : CptGenBlock{file_region, std::move(declhead_array), std::move(item_array)},
     mName{name}
 {
 }
@@ -185,8 +185,8 @@ CptGenIf::CptGenIf(
   PtiItemArray&& else_item_array
 ) : mFileRegion{file_region},
     mCond{cond},
-    mThenBody{move(then_declhead_array), move(then_item_array)},
-    mElseBody{move(else_declhead_array), move(else_item_array)}
+    mThenBody{std::move(then_declhead_array), std::move(then_item_array)},
+    mElseBody{std::move(else_declhead_array), std::move(else_item_array)}
 {
 }
 
@@ -292,8 +292,8 @@ CptGenCaseItem::CptGenCaseItem(
   PtiDeclHeadArray&& declhead_array,
   PtiItemArray&& item_array
 ) : mFileRegion{file_region},
-    mLabelArray{move(label_array)},
-    mBody{move(declhead_array), move(item_array)}
+    mLabelArray{std::move(label_array)},
+    mBody{std::move(declhead_array), std::move(item_array)}
 {
 }
 
@@ -369,7 +369,7 @@ CptGenCase::CptGenCase(
   PtiGenCaseItemArray&& item_array
 ) : mFileRegion{file_region},
     mExpr{expr},
-    mCaseItemArray{move(item_array)}
+    mCaseItemArray{std::move(item_array)}
 {
 }
 
@@ -436,7 +436,7 @@ CptGenFor::CptGenFor(
     mInitExpr{init_expr},
     mCond{cond},
     mNextExpr{next_expr},
-    mBody{move(declhead_array), move(item_array)}
+    mBody{std::move(declhead_array), std::move(item_array)}
 {
 }
 

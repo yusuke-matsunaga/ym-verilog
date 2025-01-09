@@ -472,7 +472,7 @@ CptConcat::CptConcat(
   const FileRegion& file_region,
   PtiExprArray&& expr_array
 ) : mFileRegion{file_region},
-    mExprArray{move(expr_array)}
+    mExprArray{std::move(expr_array)}
 {
 }
 
@@ -568,7 +568,7 @@ CptConcat::operand(
 CptMultiConcat::CptMultiConcat(
   const FileRegion& file_region,
   PtiExprArray&& expr_array
-) : CptConcat{file_region, move(expr_array)}
+) : CptConcat{file_region, std::move(expr_array)}
 {
 }
 
@@ -681,7 +681,7 @@ CptFuncCallBase::CptFuncCallBase(
   PtiExprArray&& arg_array
 ) : mFileRegion{file_region},
     mName{name},
-    mArgArray{move(arg_array)}
+    mArgArray{std::move(arg_array)}
 {
 }
 
@@ -771,7 +771,7 @@ CptFuncCall::CptFuncCall(
   const FileRegion& file_region,
   const char* name,
   PtiExprArray&& arg_array
-) : CptFuncCallBase{file_region, name, move(arg_array)}
+) : CptFuncCallBase{file_region, name, std::move(arg_array)}
 {
 }
 
@@ -798,8 +798,8 @@ CptFuncCallH::CptFuncCallH(
   PtiNameBranchArray&& nb_array,
   const char* tail_name,
   PtiExprArray&& arg_array
-) : CptFuncCall{file_region, tail_name, move(arg_array)},
-    mNbArray{move(nb_array)}
+) : CptFuncCall{file_region, tail_name, std::move(arg_array)},
+    mNbArray{std::move(nb_array)}
 {
 }
 
@@ -834,7 +834,7 @@ CptSysFuncCall::CptSysFuncCall(
   const FileRegion& file_region,
   const char* name,
   PtiExprArray&& arg_array
-) : CptFuncCallBase{file_region, name, move(arg_array)}
+) : CptFuncCallBase{file_region, name, std::move(arg_array)}
 {
 }
 

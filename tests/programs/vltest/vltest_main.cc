@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2006, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
 #include "ym/ClibCellLibrary.h"
 #include "ym/PoptMainApp.h"
@@ -15,31 +14,37 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 void
-parse_mode(const vector<string>& filename_list,
-	   const char* spath,
-	   int watch_line,
-	   bool verbose,
-	   bool profile,
-	   int loop,
-	   bool dump_pt);
+parse_mode(
+  const vector<string>& filename_list,
+  const char* spath,
+  int watch_line,
+  bool verbose,
+  bool profile,
+  int loop,
+  bool dump_pt
+);
 
 void
-elaborate_mode(const vector<string>& filename_list,
-	       bool all_msg,
-	       const char* spath,
-	       const ClibCellLibrary& cell_library,
-	       int watch_line,
-	       bool verbose,
-	       bool profile,
-	       int loop,
-	       bool dump_vpi);
+elaborate_mode(
+  const vector<string>& filename_list,
+  bool all_msg,
+  const char* spath,
+  const ClibCellLibrary& cell_library,
+  int watch_line,
+  bool verbose,
+  bool profile,
+  int loop,
+  bool dump_vpi
+);
 
 END_NAMESPACE_YM_VERILOG
 
 
 int
-main(int argc,
-     const char** argv)
+main(
+  int argc,
+  const char** argv
+)
 {
   using namespace nsYm;
   using namespace nsYm::nsVerilog;

@@ -33,34 +33,35 @@ BEGIN_NAMESPACE_YM_VERILOG
 // @param decl_array 宣言のリスト
 // @param stmt_array ステートメントのリスト
 // @param arg_array 引数のリスト
-SptStmt::SptStmt(const FileRegion& file_region,
-		 PtStmtType type,
-		 const PtStmt* body1,
-		 const PtStmt* body2,
-		 const PtStmt* body3,
-		 const PtExpr* expr1,
-		 const PtExpr* expr2,
-		 const PtControl* control,
-		 const char* name,
-		 PtiNameBranchArray&& nb_array,
-		 PtiCaseItemArray&& caseitem_array,
-		 PtiDeclHeadArray&& decl_array,
-		 PtiStmtArray&& stmt_array,
-		 PtiExprArray&& arg_array) :
-  mFileRegion{file_region},
-  mType{type},
-  mNbArray{move(nb_array)},
-  mName{name},
-  mControl{control},
-  mBody1{body1},
-  mBody2{body2},
-  mBody3{body3},
-  mExpr1{expr1},
-  mExpr2{expr2},
-  mCaseItemArray{move(caseitem_array)},
-  mDeclArray{move(decl_array)},
-  mStmtArray{move(stmt_array)},
-  mArgArray{move(arg_array)}
+SptStmt::SptStmt(
+  const FileRegion& file_region,
+  PtStmtType type,
+  const PtStmt* body1,
+  const PtStmt* body2,
+  const PtStmt* body3,
+  const PtExpr* expr1,
+  const PtExpr* expr2,
+  const PtControl* control,
+  const char* name,
+  PtiNameBranchArray&& nb_array,
+  PtiCaseItemArray&& caseitem_array,
+  PtiDeclHeadArray&& decl_array,
+  PtiStmtArray&& stmt_array,
+  PtiExprArray&& arg_array
+) : mFileRegion{file_region},
+    mType{type},
+    mNbArray{std::move(nb_array)},
+    mName{name},
+    mControl{control},
+    mBody1{body1},
+    mBody2{body2},
+    mBody3{body3},
+    mExpr1{expr1},
+    mExpr2{expr2},
+    mCaseItemArray{std::move(caseitem_array)},
+    mDeclArray{std::move(decl_array)},
+    mStmtArray{std::move(stmt_array)},
+    mArgArray{std::move(arg_array)}
 {
 }
 
@@ -296,12 +297,13 @@ SptStmt::stmt(SizeType pos) const
 //////////////////////////////////////////////////////////////////////
 
 // コンストラクタ
-SptCaseItem::SptCaseItem(const FileRegion& file_region,
-			 PtiExprArray&& label_array,
-			 const PtStmt* body) :
-  mFileRegion{file_region},
-  mLabelArray{move(label_array)},
-  mBody{body}
+SptCaseItem::SptCaseItem(
+  const FileRegion& file_region,
+  PtiExprArray&& label_array,
+  const PtStmt* body
+) : mFileRegion{file_region},
+    mLabelArray{std::move(label_array)},
+    mBody{body}
 {
   ASSERT_COND( body );
 }
@@ -350,8 +352,10 @@ SptCaseItem::body() const
 // @param[in] name 停止するスコープ名
 // @return 生成された disable 文
 const PtStmt*
-SptFactory::new_Disable(const FileRegion& file_region,
-			const char* name)
+SptFactory::new_Disable(
+  const FileRegion& file_region,
+  const char* name
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Disable,
@@ -389,9 +393,11 @@ SptFactory::new_Disable(const FileRegion& file_region,
 // @param[in] arg_array 引数のリスト
 // @return 生成された enable 文
 const PtStmt*
-SptFactory::new_Enable(const FileRegion& file_region,
-		       const char* name,
-		       const vector<const PtExpr*>& arg_array)
+SptFactory::new_Enable(
+  const FileRegion& file_region,
+  const char* name,
+  const vector<const PtExpr*>& arg_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Enable,
@@ -414,9 +420,11 @@ SptFactory::new_Enable(const FileRegion& file_region,
 // @param[in] arg_array 引数のリスト
 // @return 生成された enable 文
 const PtStmt*
-SptFactory::new_Enable(const FileRegion& file_region,
-		       PuHierName* hname,
-		       const vector<const PtExpr*>& arg_array)
+SptFactory::new_Enable(
+  const FileRegion& file_region,
+  PuHierName* hname,
+  const vector<const PtExpr*>& arg_array
+)
 {
   auto nb_array = hname->name_branch_to_vector();
   auto tail_name = hname->tail_name();
@@ -440,9 +448,11 @@ SptFactory::new_Enable(const FileRegion& file_region,
 // @param[in] arg_array 引数のリスト
 // @return 生成された system task enable 文
 const PtStmt*
-SptFactory::new_SysEnable(const FileRegion& file_region,
-			  const char* name,
-			  const vector<const PtExpr*>& arg_array)
+SptFactory::new_SysEnable(
+  const FileRegion& file_region,
+  const char* name,
+  const vector<const PtExpr*>& arg_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::SysEnable,
@@ -464,9 +474,11 @@ SptFactory::new_SysEnable(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された delay control 文
 const PtStmt*
-SptFactory::new_DcStmt(const FileRegion& file_region,
-		       const PtControl* delay,
-		       const PtStmt* body)
+SptFactory::new_DcStmt(
+  const FileRegion& file_region,
+  const PtControl* delay,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::DelayControl,
@@ -482,9 +494,11 @@ SptFactory::new_DcStmt(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された event control 文
 const PtStmt*
-SptFactory::new_EcStmt(const FileRegion& file_region,
-		       const PtControl* event,
-		       const PtStmt* body)
+SptFactory::new_EcStmt(
+  const FileRegion& file_region,
+  const PtControl* event,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::EventControl,
@@ -500,9 +514,11 @@ SptFactory::new_EcStmt(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された wait 文
 const PtStmt*
-SptFactory::new_Wait(const FileRegion& file_region,
-		     const PtExpr* cond,
-		     const PtStmt* body)
+SptFactory::new_Wait(
+  const FileRegion& file_region,
+  const PtExpr* cond,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Wait,
@@ -518,9 +534,11 @@ SptFactory::new_Wait(const FileRegion& file_region,
 // @param[in] rhs 右辺式
 // @return 生成された assign 文
 const PtStmt*
-SptFactory::new_Assign(const FileRegion& file_region,
-		       const PtExpr* lhs,
-		       const PtExpr* rhs)
+SptFactory::new_Assign(
+  const FileRegion& file_region,
+  const PtExpr* lhs,
+  const PtExpr* rhs
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Assign,
@@ -536,10 +554,12 @@ SptFactory::new_Assign(const FileRegion& file_region,
 // @param[in] control 制御式
 // @return 生成された assign 文
 const PtStmt*
-SptFactory::new_Assign(const FileRegion& file_region,
-		       const PtExpr* lhs,
-		       const PtExpr* rhs,
-		       const PtControl* control)
+SptFactory::new_Assign(
+  const FileRegion& file_region,
+  const PtExpr* lhs,
+  const PtExpr* rhs,
+  const PtControl* control
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Assign,
@@ -555,9 +575,11 @@ SptFactory::new_Assign(const FileRegion& file_region,
 // @param[in] rhs 右辺式
 // @return 生成された nonblocking assign 文
 const PtStmt*
-SptFactory::new_NbAssign(const FileRegion& file_region,
-			 const PtExpr* lhs,
-			 const PtExpr* rhs)
+SptFactory::new_NbAssign(
+  const FileRegion& file_region,
+  const PtExpr* lhs,
+  const PtExpr* rhs
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NbAssign,
@@ -573,10 +595,12 @@ SptFactory::new_NbAssign(const FileRegion& file_region,
 // @param[in] control 制御式
 // @return 生成された nonblocking assign 文
 const PtStmt*
-SptFactory::new_NbAssign(const FileRegion& file_region,
-			 const PtExpr* lhs,
-			 const PtExpr* rhs,
-			 const PtControl* control)
+SptFactory::new_NbAssign(
+  const FileRegion& file_region,
+  const PtExpr* lhs,
+  const PtExpr* rhs,
+  const PtControl* control
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NbAssign,
@@ -591,8 +615,10 @@ SptFactory::new_NbAssign(const FileRegion& file_region,
 // @param[in] event イベント名
 // @return 生成された event 文
 const PtStmt*
-SptFactory::new_EventStmt(const FileRegion& file_region,
-			  const PtExpr* event)
+SptFactory::new_EventStmt(
+  const FileRegion& file_region,
+  const PtExpr* event
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Event,
@@ -605,7 +631,9 @@ SptFactory::new_EventStmt(const FileRegion& file_region,
 // @param[in] file_region ファイル位置の情報
 // @return 生成された null 文
 const PtStmt*
-SptFactory::new_NullStmt(const FileRegion& file_region)
+SptFactory::new_NullStmt(
+  const FileRegion& file_region
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Null);
@@ -618,9 +646,11 @@ SptFactory::new_NullStmt(const FileRegion& file_region)
 // @param[in] then_body 成り立ったときに実行されるステートメント
 // @return 生成された if 文
 const PtStmt*
-SptFactory::new_If(const FileRegion& file_region,
-		   const PtExpr* expr,
-		   const PtStmt* then_body)
+SptFactory::new_If(
+  const FileRegion& file_region,
+  const PtExpr* expr,
+  const PtStmt* then_body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::If,
@@ -636,10 +666,12 @@ SptFactory::new_If(const FileRegion& file_region,
 // @param[in] else_body 成り立たなかったときに実行されるステートメント
 // @return 生成された if 文
 const PtStmt*
-SptFactory::new_If(const FileRegion& file_region,
-		   const PtExpr* expr,
-		   const PtStmt* then_body,
-		   const PtStmt* else_body)
+SptFactory::new_If(
+  const FileRegion& file_region,
+  const PtExpr* expr,
+  const PtStmt* then_body,
+  const PtStmt* else_body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::If,
@@ -654,9 +686,11 @@ SptFactory::new_If(const FileRegion& file_region,
 // @param[in] caseitem_list case item のリスト
 // @return 生成された case 文
 const PtStmt*
-SptFactory::new_Case(const FileRegion& file_region,
-		     const PtExpr* expr,
-		     const vector<const PtCaseItem*>& caseitem_array)
+SptFactory::new_Case(
+  const FileRegion& file_region,
+  const PtExpr* expr,
+  const vector<const PtCaseItem*>& caseitem_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Case,
@@ -675,9 +709,11 @@ SptFactory::new_Case(const FileRegion& file_region,
 // @param[in] caseitem_list case item のリスト
 // @return 生成された casex 文
 const PtStmt*
-SptFactory::new_CaseX(const FileRegion& file_region,
-		      const PtExpr* expr,
-		      const vector<const PtCaseItem*>& caseitem_array)
+SptFactory::new_CaseX(
+  const FileRegion& file_region,
+  const PtExpr* expr,
+  const vector<const PtCaseItem*>& caseitem_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::CaseX,
@@ -696,9 +732,11 @@ SptFactory::new_CaseX(const FileRegion& file_region,
 // @param[in] caseitem_list case item のリスト
 // @return 生成された casez 文
 const PtStmt*
-SptFactory::new_CaseZ(const FileRegion& file_region,
-		      const PtExpr* expr,
-		      const vector<const PtCaseItem*>& caseitem_array)
+SptFactory::new_CaseZ(
+  const FileRegion& file_region,
+  const PtExpr* expr,
+  const vector<const PtCaseItem*>& caseitem_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::CaseZ,
@@ -717,9 +755,11 @@ SptFactory::new_CaseZ(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された case item
 const PtCaseItem*
-SptFactory::new_CaseItem(const FileRegion& file_region,
-			 const vector<const PtExpr*>& label_array,
-			 const PtStmt* body)
+SptFactory::new_CaseItem(
+  const FileRegion& file_region,
+  const vector<const PtExpr*>& label_array,
+  const PtStmt* body
+)
 {
   auto node = new SptCaseItem(file_region,
 			      PtiExprArray(mAlloc, label_array),
@@ -732,8 +772,10 @@ SptFactory::new_CaseItem(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された forever 文
 const PtStmt*
-SptFactory::new_Forever(const FileRegion& file_region,
-			const PtStmt* body)
+SptFactory::new_Forever(
+  const FileRegion& file_region,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Forever,
@@ -747,9 +789,11 @@ SptFactory::new_Forever(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された repeat 文
 const PtStmt*
-SptFactory::new_Repeat(const FileRegion& file_region,
-		       const PtExpr* expr,
-		       const PtStmt* body)
+SptFactory::new_Repeat(
+  const FileRegion& file_region,
+  const PtExpr* expr,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Repeat,
@@ -764,9 +808,11 @@ SptFactory::new_Repeat(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された while 文
 const PtStmt*
-SptFactory::new_While(const FileRegion& file_region,
-		      const PtExpr* cond,
-		      const PtStmt* body)
+SptFactory::new_While(
+  const FileRegion& file_region,
+  const PtExpr* cond,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::White,
@@ -783,11 +829,13 @@ SptFactory::new_While(const FileRegion& file_region,
 // @param[in] body 本体のステートメント
 // @return 生成された for 文
 const PtStmt*
-SptFactory::new_For(const FileRegion& file_region,
-		    const PtStmt* init,
-		    const PtExpr* cond,
-		    const PtStmt* next,
-		    const PtStmt* body)
+SptFactory::new_For(
+  const FileRegion& file_region,
+  const PtStmt* init,
+  const PtExpr* cond,
+  const PtStmt* next,
+  const PtStmt* body
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::For,
@@ -802,9 +850,11 @@ SptFactory::new_For(const FileRegion& file_region,
 // @param[in] rhs 右辺式
 // @return 生成された procedural assign 文
 const PtStmt*
-SptFactory::new_PcAssign(const FileRegion& file_region,
-			 const PtExpr* lhs,
-			 const PtExpr* rhs)
+SptFactory::new_PcAssign(
+  const FileRegion& file_region,
+  const PtExpr* lhs,
+  const PtExpr* rhs
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::PcAssign,
@@ -818,8 +868,10 @@ SptFactory::new_PcAssign(const FileRegion& file_region,
 // @param[in] lhs 左辺式
 // @return 生成された deassign 文
 const PtStmt*
-SptFactory::new_Deassign(const FileRegion& file_region,
-			 const PtExpr* lhs)
+SptFactory::new_Deassign(
+  const FileRegion& file_region,
+  const PtExpr* lhs
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Deassign,
@@ -834,9 +886,11 @@ SptFactory::new_Deassign(const FileRegion& file_region,
 // @param[in] rhs 右辺式
 // @return 生成された force 文
 const PtStmt*
-SptFactory::new_Force(const FileRegion& file_region,
-		      const PtExpr* lhs,
-		      const PtExpr* rhs)
+SptFactory::new_Force(
+  const FileRegion& file_region,
+  const PtExpr* lhs,
+  const PtExpr* rhs
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Force,
@@ -850,8 +904,10 @@ SptFactory::new_Force(const FileRegion& file_region,
 // @param[in] lhs 左辺式
 // @return 生成された release 文
 const PtStmt*
-SptFactory::new_Release(const FileRegion& file_region,
-			const PtExpr* lhs)
+SptFactory::new_Release(
+  const FileRegion& file_region,
+  const PtExpr* lhs
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::Release,
@@ -865,8 +921,10 @@ SptFactory::new_Release(const FileRegion& file_region,
 // @param[in] stmt_top 本体のステートメントのリスト
 // @return 生成された parallel block
 const PtStmt*
-SptFactory::new_ParBlock(const FileRegion& file_region,
-			 const vector<const PtStmt*>& stmt_array)
+SptFactory::new_ParBlock(
+  const FileRegion& file_region,
+  const vector<const PtStmt*>& stmt_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::ParBlock,
@@ -888,10 +946,12 @@ SptFactory::new_ParBlock(const FileRegion& file_region,
 // @param[in] stmt_top 本体のステートメントのリスト
 // @return 生成された parallel block
 const PtStmt*
-SptFactory::new_NamedParBlock(const FileRegion& file_region,
-			      const char* name,
-			      const vector<const PtDeclHead*>& decl_array,
-			      const vector<const PtStmt*>& stmt_array)
+SptFactory::new_NamedParBlock(
+  const FileRegion& file_region,
+  const char* name,
+  const vector<const PtDeclHead*>& decl_array,
+  const vector<const PtStmt*>& stmt_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NamedParBlock,
@@ -911,8 +971,10 @@ SptFactory::new_NamedParBlock(const FileRegion& file_region,
 // @param[in] stmt_top 本体のステートメントのリスト
 // @return 生成された sequential block
 const PtStmt*
-SptFactory::new_SeqBlock(const FileRegion& file_region,
-			 const vector<const PtStmt*>& stmt_array)
+SptFactory::new_SeqBlock(
+  const FileRegion& file_region,
+  const vector<const PtStmt*>& stmt_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::SeqBlock,
@@ -934,10 +996,12 @@ SptFactory::new_SeqBlock(const FileRegion& file_region,
 // @param[in] stmt_top 本体のステートメントのリスト
 // @return 生成された sequential block
 const PtStmt*
-SptFactory::new_NamedSeqBlock(const FileRegion& file_region,
-			      const char* name,
-			      const vector<const PtDeclHead*>& decl_array,
-			      const vector<const PtStmt*>& stmt_array)
+SptFactory::new_NamedSeqBlock(
+  const FileRegion& file_region,
+  const char* name,
+  const vector<const PtDeclHead*>& decl_array,
+  const vector<const PtStmt*>& stmt_array
+)
 {
   auto node = new SptStmt(file_region,
 			  PtStmtType::NamedSeqBlock,

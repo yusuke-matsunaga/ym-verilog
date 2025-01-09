@@ -235,7 +235,7 @@ Elaborator::operator()(
 
     // Phase1Stub の実行中に新しい stub が追加されるので
     // 追加用のリストと評価用のリストを分離している．
-    mPhase1StubList2 = move(mPhase1StubList1);
+    mPhase1StubList2 = std::move(mPhase1StubList1);
     mPhase1StubList2.eval();
   }
 

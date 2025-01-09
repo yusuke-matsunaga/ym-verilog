@@ -338,7 +338,7 @@ SptOpr2::SptOpr2(
   PtiExprArray&& opr_array
 ) : SptExpr{file_region, PtExprType::Opr},
     mOpType{op_type},
-    mExprArray{move(opr_array)}
+    mExprArray{std::move(opr_array)}
 {
 }
 
@@ -419,9 +419,9 @@ SptFuncCall::SptFuncCall(
   const char* name,
   PtiExprArray&& arg_array
 ) : SptExpr{file_region, type},
-    mNbArray{move(nb_array)},
+    mNbArray{std::move(nb_array)},
     mName{name},
-    mArgArray{move(arg_array)}
+    mArgArray{std::move(arg_array)}
 {
 }
 
@@ -506,10 +506,10 @@ SptPrimary::SptPrimary(
   const PtExpr* left,
   const PtExpr* right
 ) : SptExpr{file_region, PtExprType::Primary},
-    mNbArray{move(nb_array)},
+    mNbArray{std::move(nb_array)},
     mName{tail_name},
     mConstIndex{const_index},
-    mIndexArray{move(index_array)},
+    mIndexArray{std::move(index_array)},
     mMode{mode},
     mLeftRange{left},
     mRightRange{right}

@@ -23,7 +23,7 @@ CptSpecItem::CptSpecItem(
   PtiExprArray&& terminal_array
 ) : mFileRegion{file_region},
     mId{id},
-    mTerminalArray{move(terminal_array)}
+    mTerminalArray{std::move(terminal_array)}
 {
 }
 
@@ -145,10 +145,10 @@ CptPathDecl::CptPathDecl(
   const PtPathDelay* path_delay
 ) : mFileRegion{file_region},
     mEdge{edge},
-    mInputArray{move(input_array)},
+    mInputArray{std::move(input_array)},
     mInputPol{input_pol},
     mOp{op},
-    mOutputArray{move(output_array)},
+    mOutputArray{std::move(output_array)},
     mOutputPol{output_pol},
     mExpr{expr},
     mPathDelay{path_delay}

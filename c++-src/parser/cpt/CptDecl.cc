@@ -115,7 +115,7 @@ CptDeclHead::set_elem(
   PtiDeclItemArray&& elem_array
 )
 {
-  mItemArray = move(elem_array);
+  mItemArray = std::move(elem_array);
 }
 
 
@@ -1002,7 +1002,7 @@ CptDeclItemR::CptDeclItemR(
   PtiRangeArray&& range_array
 ) : CptDeclItemBase{name},
     mFileRegion{file_region},
-    mRangeArray{move(range_array)}
+    mRangeArray{std::move(range_array)}
 {
 }
 

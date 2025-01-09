@@ -6,7 +6,6 @@
 /// Copyright (C) 2005-2006, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/verilog.h"
 #include "ym/PoptMainApp.h"
 
@@ -14,26 +13,33 @@
 BEGIN_NAMESPACE_YM_VERILOG
 
 void
-rawlex_mode(const vector<string>& filename_list,
-	    const char* spath,
-	    int watch_line,
-	    int loop,
-	    bool verbose,
-	    bool dump_token);
+rawlex_mode(
+  const vector<string>& filename_list,
+  const char* spath,
+  int watch_line,
+  int loop,
+  bool verbose,
+  bool dump_token
+);
+
 void
-lex_mode(const vector<string>& filename_list,
-	 const char* spath,
-	 int watch_line,
-	 int loop,
-	 bool verbose,
-	 bool dump_token);
+lex_mode(
+  const vector<string>& filename_list,
+  const char* spath,
+  int watch_line,
+  int loop,
+  bool verbose,
+  bool dump_token
+);
 
 END_NAMESPACE_YM_VERILOG
 
 
 int
-main(int argc,
-     const char** argv)
+main(
+  int argc,
+  const char** argv
+)
 {
   using namespace nsYm;
   using namespace nsYm::nsVerilog;

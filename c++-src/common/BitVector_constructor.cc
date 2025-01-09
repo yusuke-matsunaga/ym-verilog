@@ -392,8 +392,8 @@ BitVector::BitVector(
   BitVector&& src
 ) : mSize{src.mSize},
     mFlags{src.mFlags},
-    mVal0{move(src.mVal0)},
-    mVal1{move(src.mVal1)}
+    mVal0{std::move(src.mVal0)},
+    mVal1{std::move(src.mVal1)}
 {
 }
 
@@ -425,8 +425,8 @@ BitVector::operator=(
 {
   mSize = src.mSize;
   mFlags = src.mFlags;
-  mVal0 = move(src.mVal0);
-  mVal1 = move(src.mVal1);
+  mVal0 = std::move(src.mVal0);
+  mVal1 = std::move(src.mVal1);
   return *this;
 }
 

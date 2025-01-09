@@ -25,7 +25,7 @@ CptGateH::CptGateH(
   PtiInstArray&& inst_array
 ) : mFileRegion{file_region},
     mPrimType{prim_type},
-    mInstArray{move(inst_array)}
+    mInstArray{std::move(inst_array)}
 {
 }
 
@@ -82,7 +82,7 @@ CptGateHS::CptGateHS(
   VpiPrimType prim_type,
   const PtStrength* strength,
   PtiInstArray&& inst_array
-) : CptGateH{file_region, prim_type, move(inst_array)},
+) : CptGateH{file_region, prim_type, std::move(inst_array)},
     mStrength{strength}
 {
 }
@@ -110,7 +110,7 @@ CptGateHD::CptGateHD(
   VpiPrimType prim_type,
   const PtDelay* delay,
   PtiInstArray&& inst_array
-) : CptGateH{file_region, prim_type, move(inst_array)},
+) : CptGateH{file_region, prim_type, std::move(inst_array)},
     mDelay{delay}
 {
 }
@@ -139,7 +139,7 @@ CptGateHSD::CptGateHSD(
   const PtStrength* strength,
   const PtDelay* delay,
   PtiInstArray&& inst_array
-) : CptGateH{file_region, prim_type, move(inst_array)},
+) : CptGateH{file_region, prim_type, std::move(inst_array)},
     mStrength{strength},
     mDelay{delay}
 {
@@ -176,7 +176,7 @@ CptMuH::CptMuH(
   PtiInstArray&& inst_array
 ) : mFileRegion{file_region},
     mName{def_name},
-    mInstArray{move(inst_array)}
+    mInstArray{std::move(inst_array)}
 {
 }
 
@@ -233,8 +233,8 @@ CptMuHP::CptMuHP(
   const char* def_name,
   PtiConnectionArray&& con_array,
   PtiInstArray&& inst_array
-) : CptMuH{file_region, def_name, move(inst_array)},
-    mParamAssignArray{move(con_array)}
+) : CptMuH{file_region, def_name, std::move(inst_array)},
+    mParamAssignArray{std::move(con_array)}
 {
 }
 
@@ -270,7 +270,7 @@ CptMuHS::CptMuHS(
   const char* def_name,
   const PtStrength* strength,
   PtiInstArray&& inst_array
-) : CptMuH{file_region, def_name, move(inst_array)},
+) : CptMuH{file_region, def_name, std::move(inst_array)},
     mStrength{strength}
 {
 }
@@ -298,7 +298,7 @@ CptMuHD::CptMuHD(
   const char* def_name,
   const PtDelay* delay,
   PtiInstArray&& inst_array
-) : CptMuH{file_region, def_name, move(inst_array)},
+) : CptMuH{file_region, def_name, std::move(inst_array)},
     mDelay{delay}
 {
 }
@@ -327,7 +327,7 @@ CptMuHSD::CptMuHSD(
   const PtStrength* strength,
   const PtDelay* delay,
   PtiInstArray&& inst_array
-) : CptMuH{file_region, def_name, move(inst_array)},
+) : CptMuH{file_region, def_name, std::move(inst_array)},
     mStrength{strength},
     mDelay{delay}
 {
@@ -362,7 +362,7 @@ CptInst::CptInst(
   const FileRegion& file_region,
   PtiConnectionArray&& con_array
 ) : mFileRegion{file_region},
-    mPortArray{move(con_array)}
+    mPortArray{std::move(con_array)}
 {
 }
 
@@ -425,7 +425,7 @@ CptInstN::CptInstN(
   const FileRegion& file_region,
   const char* name,
   PtiConnectionArray&& con_array
-) : CptInst{file_region, move(con_array)},
+) : CptInst{file_region, std::move(con_array)},
     mName{name}
 {
 }
@@ -454,7 +454,7 @@ CptInstR::CptInstR(
   const PtExpr* left,
   const PtExpr* right,
   PtiConnectionArray&& con_array
-) : CptInstN{file_region, name, move(con_array)},
+) : CptInstN{file_region, name, std::move(con_array)},
     mLeftRange{left},
     mRightRange{right}
 {

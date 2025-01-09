@@ -119,7 +119,7 @@ CptIOHBase::set_elem(
   PtiIOItemArray&& elem_array
 )
 {
-  mItemArray = move(elem_array);
+  mItemArray = std::move(elem_array);
 }
 
 

@@ -424,7 +424,7 @@ SptDefParamH::SptDefParamH(
   const FileRegion& file_region,
   PtiDefParamArray&& dp_array
 ) : SptItem{file_region, PtItemType::DefParam},
-    mArray{move(dp_array)}
+    mArray{std::move(dp_array)}
 {
 }
 
@@ -461,7 +461,7 @@ SptDefParam::SptDefParam(
   const char* tail_name,
   const PtExpr* value
 ) : mFileRegion{file_region},
-    mNbArray{move(nb_array)},
+    mNbArray{std::move(nb_array)},
     mName{tail_name},
     mExpr{value}
 {
@@ -525,7 +525,7 @@ SptContAssignH::SptContAssignH(
 ) : SptItem{file_region, PtItemType::ContAssign},
     mStrength{strength},
     mDelay{delay},
-    mArray{move(ca_array)}
+    mArray{std::move(ca_array)}
 {
 }
 
@@ -660,8 +660,8 @@ SptTf::SptTf(
     mLeftRange{left},
     mRightRange{right},
     mDataType{data_type},
-    mIOHeadArray{move(iohead_array)},
-    mDeclHeadArray{move(declhead_array)},
+    mIOHeadArray{std::move(iohead_array)},
+    mDeclHeadArray{std::move(declhead_array)},
     mBody{stmt}
 {
   mInUse = false;
@@ -801,7 +801,7 @@ SptGateH::SptGateH(
     mPrimType{prim_type},
     mStrength{strength},
     mDelay{delay},
-    mElemArray{move(elem_array)}
+    mElemArray{std::move(elem_array)}
 {
 }
 
@@ -860,10 +860,10 @@ SptMuH::SptMuH(
   PtiInstArray&& elem_array
 ) : SptItem{file_region, PtItemType::MuInst},
     mName{def_name},
-    mParamArray{move(con_array)},
+    mParamArray{std::move(con_array)},
     mStrength{strength},
     mDelay{delay},
-    mElemArray{move(elem_array)}
+    mElemArray{std::move(elem_array)}
 {
 }
 
@@ -941,7 +941,7 @@ SptInst::SptInst(
     mName{name},
     mLeftRange{left},
     mRightRange{right},
-    mPortArray{move(con_array)}
+    mPortArray{std::move(con_array)}
 {
 }
 

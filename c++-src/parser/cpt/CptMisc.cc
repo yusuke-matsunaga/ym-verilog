@@ -110,7 +110,7 @@ CptEventControl::CptEventControl(
   const FileRegion& file_region,
   PtiExprArray&& event_array
 ) : mFileRegion{file_region},
-    mEventArray{move(event_array)}
+    mEventArray{std::move(event_array)}
 {
 }
 
@@ -159,7 +159,7 @@ CptRepeatControl::CptRepeatControl(
   const FileRegion& file_region,
   const PtExpr* expr,
   PtiExprArray&& event_array
-) : CptEventControl{file_region, move(event_array)},
+) : CptEventControl{file_region, std::move(event_array)},
     mRepExpr{expr}
 {
   ASSERT_COND( expr );
@@ -464,7 +464,7 @@ CptNameBranchI::index() const
 // コンストラクタ
 CptAttrInst::CptAttrInst(
   PtiAttrSpecArray&& as_array
-) : mAttrSpecArray{move(as_array)}
+) : mAttrSpecArray{std::move(as_array)}
 {
 }
 

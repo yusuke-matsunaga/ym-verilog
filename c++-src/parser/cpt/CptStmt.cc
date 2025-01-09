@@ -270,7 +270,7 @@ CptDisableH::CptDisableH(
   PtiNameBranchArray&& nb_array,
   const char* tail_name
 ) : CptDisable{file_region, tail_name},
-    mNbArray{move(nb_array)}
+    mNbArray{std::move(nb_array)}
 {
 }
 
@@ -307,7 +307,7 @@ CptEnableBase::CptEnableBase(
   PtiExprArray&& arg_array
 ) : CptStmt{file_region},
     mName{name},
-    mArgArray{move(arg_array)}
+    mArgArray{std::move(arg_array)}
 {
 }
 
@@ -349,7 +349,7 @@ CptEnable::CptEnable(
   const FileRegion& file_region,
   const char* name,
   PtiExprArray&& arg_array
-) : CptEnableBase{file_region, name, move(arg_array)}
+) : CptEnableBase{file_region, name, std::move(arg_array)}
 {
 }
 
@@ -376,8 +376,8 @@ CptEnableH::CptEnableH(
   PtiNameBranchArray&& nb_array,
   const char* tail_name,
   PtiExprArray&& arg_array
-) : CptEnable{file_region, tail_name, move(arg_array)},
-    mNbArray{move(nb_array)}
+) : CptEnable{file_region, tail_name, std::move(arg_array)},
+    mNbArray{std::move(nb_array)}
 {
 }
 
@@ -412,7 +412,7 @@ CptSysEnable::CptSysEnable(
   const FileRegion& file_region,
   const char* task_name,
   PtiExprArray&& arg_array
-) : CptEnableBase{file_region, task_name, move(arg_array)}
+) : CptEnableBase{file_region, task_name, std::move(arg_array)}
 {
 }
 
@@ -958,7 +958,7 @@ CptCase::CptCase(
   PtiCaseItemArray&& caseitem_array
 ) : CptStmt{file_region},
     mExpr{expr},
-    mCaseItemArray{move(caseitem_array)}
+    mCaseItemArray{std::move(caseitem_array)}
 {
   ASSERT_COND( expr );
 }
@@ -1008,7 +1008,7 @@ CptCaseX::CptCaseX(
   const FileRegion& file_region,
   const PtExpr* expr,
   PtiCaseItemArray&& caseitem_array
-) : CptCase{file_region, expr, move(caseitem_array)}
+) : CptCase{file_region, expr, std::move(caseitem_array)}
 {
 }
 
@@ -1034,7 +1034,7 @@ CptCaseZ::CptCaseZ(
   const FileRegion& file_region,
   const PtExpr* expr,
   PtiCaseItemArray&& caseitem_array
-) : CptCase{file_region, expr, move(caseitem_array)}
+) : CptCase{file_region, expr, std::move(caseitem_array)}
 {
 }
 
@@ -1061,7 +1061,7 @@ CptCaseItem::CptCaseItem(
   PtiExprArray&& label_array,
   const PtStmt* body
 ) : mFileRegion{file_region},
-    mLabelArray{move(label_array)},
+    mLabelArray{std::move(label_array)},
     mBody{body}
 {
   ASSERT_COND( body );
@@ -1271,7 +1271,7 @@ CptStmtBlock::CptStmtBlock(
   const FileRegion& file_region,
   PtiStmtArray&& stmt_array
 ) : CptStmt{file_region},
-    mStmtArray{move(stmt_array)}
+    mStmtArray{std::move(stmt_array)}
 {
 }
 
@@ -1307,9 +1307,9 @@ CptStmtBlockN::CptStmtBlockN(
   const char* name,
   PtiDeclHeadArray&& declhead_array,
   PtiStmtArray&& stmt_array
-) : CptStmtBlock{file_region, move(stmt_array)},
+) : CptStmtBlock{file_region, std::move(stmt_array)},
     mName{name},
-    mDeclHeadArray{move(declhead_array)}
+    mDeclHeadArray{std::move(declhead_array)}
 {
 }
 
@@ -1350,7 +1350,7 @@ CptStmtBlockN::declhead(
 CptParBlock::CptParBlock(
   const FileRegion& file_region,
   PtiStmtArray&& stmt_array
-) : CptStmtBlock{file_region, move(stmt_array)}
+) : CptStmtBlock{file_region, std::move(stmt_array)}
 {
 }
 
@@ -1377,7 +1377,7 @@ CptParBlockN::CptParBlockN(
   const char* name,
   PtiDeclHeadArray&& declhead_array,
   PtiStmtArray&& stmt_array
-) : CptStmtBlockN{file_region, name, move(declhead_array), move(stmt_array)}
+) : CptStmtBlockN{file_region, name, std::move(declhead_array), std::move(stmt_array)}
 {
 }
 
@@ -1402,7 +1402,7 @@ CptParBlockN::type() const
 CptSeqBlock::CptSeqBlock(
   const FileRegion& file_region,
   PtiStmtArray&& stmt_array
-) : CptStmtBlock{file_region, move(stmt_array)}
+) : CptStmtBlock{file_region, std::move(stmt_array)}
 {
 }
 
@@ -1429,7 +1429,9 @@ CptSeqBlockN::CptSeqBlockN(
   const char* name,
   PtiDeclHeadArray&& declhead_array,
   PtiStmtArray&& stmt_array
-) : CptStmtBlockN{file_region, name, move(declhead_array), move(stmt_array)}
+) : CptStmtBlockN{file_region, name,
+		  std::move(declhead_array),
+		  std::move(stmt_array)}
 {
 }
 
