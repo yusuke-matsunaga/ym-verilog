@@ -77,7 +77,7 @@ public:
   ///  - kVpiTaskCall
   virtual
   SizeType
-  arg_num() const = 0;
+  argument_num() const = 0;
 
   /// @brief 引数の取得
   ///
@@ -86,9 +86,18 @@ public:
   ///  - kVpiTaskCall
   virtual
   const VlExpr*
-  arg(
+  argument(
     SizeType pos ///< [in] 位置 (0 <= pos < arg_num())
   ) const = 0;
+
+  /// @brief 引数のリストの取得
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  ///  - kVpiSysTaskCall
+  ///  - kVpiTaskCall
+  virtual
+  vector<const VlExpr*>
+  argument_list() const = 0;
 
   /// @brief control の取得
   ///
@@ -208,6 +217,15 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < caseitem_num() )
   ) const = 0;
 
+  /// @brief case item のリストの取得
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  ///  - kVpiCase
+  /// default caseitem がある場合には常に最後の要素となる．
+  virtual
+  vector<const VlCaseItem*>
+  caseitem_list() const = 0;
+
   /// @brief 初期化代入文の取得
   ///
   /// この関数が意味を持つオブジェクトの型
@@ -248,6 +266,17 @@ public:
     SizeType pos ///< [in] 位置番号 (0 <= pos < stmt_num())
   ) const = 0;
 
+  /// @brief 子供のステートメントのリストの取得
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  ///  - kVpiBegin
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  virtual
+  vector<const VlStmt*>
+  child_stmt_list() const = 0;
+
   /// @brief disable 対象のスコープを得る．
   virtual
   const VlScope*
@@ -282,6 +311,11 @@ public:
   expr(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < expr_num() )
   ) const = 0;
+
+  /// @brief 条件式のリストを返す．
+  virtual
+  vector<const VlExpr*>
+  expr_list() const = 0;
 
   /// @brief 本体のステートメントを返す．
   virtual

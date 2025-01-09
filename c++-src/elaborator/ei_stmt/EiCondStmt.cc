@@ -483,6 +483,13 @@ EiCaseItem::expr(
   return mExprList[pos];
 }
 
+// @brief 条件式のリストを返す．
+vector<const VlExpr*>
+EiCaseItem::expr_list() const
+{
+  return vector<const VlExpr*>{mExprList.begin(), mExprList.end()};
+}
+
 // @brief 本体のステートメントを返す．
 const VlStmt*
 EiCaseItem::body_stmt() const
@@ -556,6 +563,13 @@ EiCaseStmt::caseitem(
 {
   ASSERT_COND( 0 <= pos && pos < caseitem_num() );
   return mCaseItemList[pos];
+}
+
+// @brief case item のリストを返す．
+vector<const VlCaseItem*>
+EiCaseStmt::caseitem_list() const
+{
+  return mCaseItemList;
 }
 
 END_NAMESPACE_YM_VERILOG

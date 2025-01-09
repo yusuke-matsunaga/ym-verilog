@@ -11,7 +11,6 @@
 // ステートメントを表すクラス
 // IEEE Std 1364-2001 26.6.27 Process, block, statement, event statement
 
-
 #include "EiStmt.h"
 
 
@@ -28,14 +27,12 @@ class EiBlockStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt_list ステートメントのリスト
-  EiBlockStmt(const VlScope* parent,
-	      const VlProcess* process,
-	      const PtStmt* pt_stmt,
-	      const vector<const VlStmt*>& stmt_list);
+  EiBlockStmt(
+    const VlScope* parent,                 ///< [in] 親のスコープ
+    const VlProcess* process,              ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,                 ///< [in] パース木のステートメント定義
+    const vector<const VlStmt*>& stmt_list ///< [in] ステートメントのリスト
+  );
 
   /// @brief デストラクタ
   ~EiBlockStmt();
@@ -51,9 +48,14 @@ public:
   child_stmt_num() const override;
 
   /// @brief 子供のステートメントの取得
-  /// @param[in] pos 位置番号 (0 <= pos < stmt_num())
   const VlStmt*
-  child_stmt(SizeType pos) const override;
+  child_stmt(
+    SizeType pos ///< [in] 位置番号 (0 <= pos < stmt_num())
+  ) const override;
+
+  /// @brief 子供のステートメントのリストの取得
+  vector<const VlStmt*>
+  child_stmt_list() const override;
 
 
 private:
@@ -78,14 +80,12 @@ class EiBegin :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt_list ステートメントのリスト
-  EiBegin(const VlScope* parent,
-	  const VlProcess* process,
-	  const PtStmt* pt_stmt,
-	  const vector<const VlStmt*>& stmt_list);
+  EiBegin(
+    const VlScope* parent,                 ///< [in] 親のスコープ
+    const VlProcess* process,		   ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,		   ///< [in] パース木のステートメント定義
+    const vector<const VlStmt*>& stmt_list ///< [in] ステートメントのリスト
+  );
 
   /// @brief デストラクタ
   ~EiBegin();
@@ -114,14 +114,12 @@ class EiFork :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt_list ステートメントのリスト
-  EiFork(const VlScope* parent,
-	 const VlProcess* process,
-	 const PtStmt* pt_stmt,
-	 const vector<const VlStmt*>& stmt_list);
+  EiFork(
+    const VlScope* parent,                 ///< [in] 親のスコープ
+    const VlProcess* process,		   ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,		   ///< [in] パース木のステートメント定義
+    const vector<const VlStmt*>& stmt_list ///< [in] ステートメントのリスト
+  );
 
   /// @brief デストラクタ
   ~EiFork();
@@ -150,14 +148,12 @@ class EiNamedBlockStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] scope 自分自身に対応するスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt_list ステートメントのリスト
-  EiNamedBlockStmt(const VlScope* scope,
-		   const VlProcess* process,
-		   const PtStmt* pt_stmt,
-		   const vector<const VlStmt*>& stmt_list);
+  EiNamedBlockStmt(
+    const VlScope* scope,                  ///< [in] 親のスコープ
+    const VlProcess* process,		   ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,		   ///< [in] パース木のステートメント定義
+    const vector<const VlStmt*>& stmt_list ///< [in] ステートメントのリスト
+  );
 
   /// @brief デストラクタ
   ~EiNamedBlockStmt();
@@ -195,14 +191,12 @@ class EiNamedBegin :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] block 自分自身に対応するスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt_list ステートメントのリスト
-  EiNamedBegin(const VlScope* block,
-	       const VlProcess* process,
-	       const PtStmt* pt_stmt,
-	       const vector<const VlStmt*>& stmt_list);
+  EiNamedBegin(
+    const VlScope* block,                  ///< [in] 親のスコープ
+    const VlProcess* process,		   ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,		   ///< [in] パース木のステートメント定義
+    const vector<const VlStmt*>& stmt_list ///< [in] ステートメントのリスト
+  );
 
   /// @brief デストラクタ
   ~EiNamedBegin();
@@ -231,14 +225,12 @@ class EiNamedFork :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] block 自分自身に対応するスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt_list ステートメントのリスト
-  EiNamedFork(const VlScope* block,
-	      const VlProcess* process,
-	      const PtStmt* pt_stmt,
-	      const vector<const VlStmt*>& stmt_list);
+  EiNamedFork(
+    const VlScope* block,                  ///< [in] 親のスコープ
+    const VlProcess* process,		   ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,		   ///< [in] パース木のステートメント定義
+    const vector<const VlStmt*>& stmt_list ///< [in] ステートメントのリスト
+  );
 
   /// @brief デストラクタ
   ~EiNamedFork();

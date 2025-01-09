@@ -748,6 +748,18 @@ EiPrimitive::prim_term(
   return &mPortArray[pos];
 }
 
+// @brief ポート端子のリストを得る．
+vector<const VlPrimTerm*>
+EiPrimitive::prim_term_list() const
+{
+  vector<const VlPrimTerm*> term_list;
+  term_list.reserve(port_num());
+  for ( auto& term: mPortArray ) {
+    term_list.push_back(&term);
+  }
+  return term_list;
+}
+
 // @brief ポート配列を初期化する．
 void
 EiPrimitive::init_port(

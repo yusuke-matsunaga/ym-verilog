@@ -80,6 +80,13 @@ EiFcBase::argument(
   return mArgList[pos];
 }
 
+// @brief 引数のリストの取得
+vector<const VlExpr*>
+EiFcBase::argument_list() const
+{
+  return vector<const VlExpr*>{mArgList.begin(), mArgList.end()};
+}
+
 // @brief 要求される式の型を計算してセットする．
 void
 EiFcBase::_set_reqsize(

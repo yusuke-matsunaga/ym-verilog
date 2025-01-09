@@ -104,6 +104,13 @@ EiUnaryOp::operand(
   return mOpr1;
 }
 
+// @brief オペランドのリストを返す．
+vector<const VlExpr*>
+EiUnaryOp::operand_list() const
+{
+  return vector<const VlExpr*>{mOpr1};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiNotOp

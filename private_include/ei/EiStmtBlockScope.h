@@ -23,10 +23,10 @@ class EiStmtBlockScope :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ環境
-  /// @param[in] pt_stmt 対応するパース木の要素
-  EiStmtBlockScope(const VlScope* parent,
-		   const PtStmt* pt_stmt);
+  EiStmtBlockScope(
+    const VlScope* parent, ///< [in] 親のスコープ環境
+    const PtStmt* pt_stmt  ///< [in] 対応するパース木の要素
+  );
 
   /// @brief デストラクタ
   ~EiStmtBlockScope();

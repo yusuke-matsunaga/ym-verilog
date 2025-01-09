@@ -68,6 +68,11 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < event_num() )
   ) const = 0;
 
+  /// @brief イベント条件式のリストを返す．
+  virtual
+  vector<const VlExpr*>
+  event_list() const = 0;
+
 };
 
 END_NAMESPACE_YM_VERILOG

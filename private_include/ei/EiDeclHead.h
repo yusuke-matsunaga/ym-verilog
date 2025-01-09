@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbDecl.h"
 #include "ei/EiRange.h"
 
@@ -25,8 +24,9 @@ class EiDeclHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  EiDeclHead(const VlScope* parent);
+  EiDeclHead(
+    const VlScope* parent ///< [in] 親のスコープ
+  );
 
   /// @brief デストラクタ
   ~EiDeclHead();
@@ -63,10 +63,10 @@ class EiDeclHeadPt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木の宣言ヘッダ
-  EiDeclHeadPt(const VlScope* parent,
-	       const PtDeclHead* pt_head);
+  EiDeclHeadPt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const PtDeclHead* pt_head ///< [in] パース木の宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPt();
@@ -92,26 +92,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -128,13 +120,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -195,10 +187,10 @@ class EiDeclHeadPtD :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木の宣言ヘッダ
-  EiDeclHeadPtD(const VlScope* parent,
-		const PtDeclHead* pt_head);
+  EiDeclHeadPtD(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const PtDeclHead* pt_head ///< [in] パース木の宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPtD();
@@ -223,7 +215,9 @@ public:
 
   /// @brief 遅延式の設定
   void
-  set_delay(const VlDelay* delay) override;
+  set_delay(
+    const VlDelay* delay ///< [in] 遅延式
+  ) override;
 
 
 private:
@@ -247,18 +241,14 @@ class EiDeclHeadPtV :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木の宣言ヘッダ
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の左側の値
-  /// @param[in] right_val 範囲の右側の値
-  EiDeclHeadPtV(const VlScope* parent,
-		const PtDeclHead* pt_head,
-		const PtExpr* left,
-		const PtExpr* right,
-		int left_val,
-		int right_val);
+  EiDeclHeadPtV(
+    const VlScope* parent,     ///< [in] ヘッダ
+    const PtDeclHead* pt_head, ///< [in] パース木の宣言ヘッダ
+    const PtExpr* left,        ///< [in] 範囲の左側の式
+    const PtExpr* right,       ///< [in] 範囲の右側の式
+    int left_val,              ///< [in] 範囲の左側の値
+    int right_val              ///< [in] 範囲の右側の値
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPtV();
@@ -274,26 +264,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -310,13 +292,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
 
 protected:
@@ -340,18 +322,14 @@ class EiDeclHeadPtVD :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木の宣言ヘッダ
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の左側の値
-  /// @param[in] right_val 範囲の右側の値
-  EiDeclHeadPtVD(const VlScope* parent,
-		 const PtDeclHead* pt_head,
-		 const PtExpr* left,
-		 const PtExpr* right,
-		 int left_val,
-		 int right_val);
+  EiDeclHeadPtVD(
+    const VlScope* parent,     ///< [in] ヘッダ
+    const PtDeclHead* pt_head, ///< [in] パース木の宣言ヘッダ
+    const PtExpr* left,	       ///< [in] 範囲の左側の式
+    const PtExpr* right,       ///< [in] 範囲の右側の式
+    int left_val,	       ///< [in] 範囲の左側の値
+    int right_val	       ///< [in] 範囲の右側の値
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPtVD();
@@ -376,7 +354,9 @@ public:
 
   /// @brief 遅延式の設定
   void
-  set_delay(const VlDelay* delay) override;
+  set_delay(
+    const VlDelay* delay ///< [in] 遅延式
+  ) override;
 
 
 private:
@@ -400,12 +380,11 @@ class EiDeclHeadPt2 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木のIO宣言ヘッダ
-  /// @param[in] aux_type 補助的なデータ型
-  EiDeclHeadPt2(const VlScope* parent,
-		const PtIOHead* pt_head,
-		VpiAuxType aux_type);
+  EiDeclHeadPt2(
+    const VlScope* parent,   ///< [in] 親のスコープ
+    const PtIOHead* pt_head, ///< [in] パース木のIO宣言ヘッダ
+    VpiAuxType aux_type      ///< [in] 補助的なデータ型
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPt2();
@@ -432,26 +411,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -468,13 +439,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -513,20 +484,15 @@ class EiDeclHeadPt2V :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木のIO宣言ヘッダ
-  /// @param[in] aux_type 補助的なデータ型
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の MSB の値
-  /// @param[in] right_val 範囲の LSB の値
-  EiDeclHeadPt2V(const VlScope* parent,
-		 const PtIOHead* pt_head,
-		 VpiAuxType aux_type,
-		 const PtExpr* left,
-		 const PtExpr* right,
-		 int left_val,
-		 int right_val);
+  EiDeclHeadPt2V(
+    const VlScope* parent,   ///< [in] ヘッダ
+    const PtIOHead* pt_head, ///< [in] パース木のIO宣言ヘッダ
+    VpiAuxType aux_type,     ///< [in] 補助的なデータ型
+    const PtExpr* left,	     ///< [in] 範囲の左側の式
+    const PtExpr* right,     ///< [in] 範囲の右側の式
+    int left_val,	     ///< [in] 範囲の左側の値
+    int right_val	     ///< [in] 範囲の右側の値
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPt2V();
@@ -542,26 +508,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -578,13 +536,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
 
 private:
@@ -608,10 +566,10 @@ class EiDeclHeadPt3 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の関数定義
-  EiDeclHeadPt3(const VlScope* parent,
-		const PtItem* pt_item);
+  EiDeclHeadPt3(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item  ///< [in] パース木の宣言要素
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPt3();
@@ -638,26 +596,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -674,13 +624,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -718,18 +668,14 @@ class EiDeclHeadPt3V :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の関数定義
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の MSB の値
-  /// @param[in] right_val 範囲の LSB の値
-  EiDeclHeadPt3V(const VlScope* parent,
-		 const PtItem* pt_item,
-		 const PtExpr* left,
-		 const PtExpr* right,
-		 int left_val,
-		 int right_val);
+  EiDeclHeadPt3V(
+    const VlScope* parent, ///< [in] ヘッダ
+    const PtItem* pt_item, ///< [in] パース木の宣言ヘッダ
+    const PtExpr* left,	   ///< [in] 範囲の左側の式
+    const PtExpr* right,   ///< [in] 範囲の右側の式
+    int left_val,	   ///< [in] 範囲の左側の値
+    int right_val	   ///< [in] 範囲の右側の値
+  );
 
   /// @brief デストラクタ
   ~EiDeclHeadPt3V();
@@ -745,26 +691,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -781,13 +719,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
 
 private:

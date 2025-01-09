@@ -22,7 +22,6 @@
 //     - MinTypMaxOp
 //////////////////////////////////////////////////////////////////////
 
-
 #include "EiOperation.h"
 
 
@@ -38,14 +37,12 @@ class EiTernaryOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド1
-  /// @param[in] opr2 オペランド2
-  /// @param[in] opr3 オペランド3
-  EiTernaryOp(const PtExpr* pt_expr,
-	      ElbExpr* opr1,
-	      ElbExpr* opr2,
-	      ElbExpr* opr3);
+  EiTernaryOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1,         ///< [in] オペランド1
+    ElbExpr* opr2,         ///< [in] オペランド2
+    ElbExpr* opr3          ///< [in] オペランド3
+  );
 
   /// @brief デストラクタ
   ~EiTernaryOp();
@@ -57,7 +54,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数の時 true を返す．
-  /// @note オペランドが定数ならこの式も定数となる．
   bool
   is_const() const override;
 
@@ -66,9 +62,10 @@ public:
   operand_num() const override;
 
   /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
   const VlExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 位置番号
+  ) const override;
 
 
 protected:
@@ -92,14 +89,12 @@ class EiConditionOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド1
-  /// @param[in] opr2 オペランド2
-  /// @param[in] opr3 オペランド3
-  EiConditionOp(const PtExpr* pt_expr,
-		ElbExpr* opr1,
-		ElbExpr* opr2,
-		ElbExpr* opr3);
+  EiConditionOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1,         ///< [in] オペランド1
+    ElbExpr* opr2,         ///< [in] オペランド2
+    ElbExpr* opr3          ///< [in] オペランド3
+  );
 
   /// @brief デストラクタ
   ~EiConditionOp();
@@ -121,10 +116,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 
 private:
@@ -148,14 +143,12 @@ class EiMinTypMaxOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド1
-  /// @param[in] opr2 オペランド2
-  /// @param[in] opr3 オペランド3
-  EiMinTypMaxOp(const PtExpr* pt_expr,
-		ElbExpr* opr1,
-		ElbExpr* opr2,
-		ElbExpr* opr3);
+  EiMinTypMaxOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1,         ///< [in] オペランド1
+    ElbExpr* opr2,         ///< [in] オペランド2
+    ElbExpr* opr3          ///< [in] オペランド3
+  );
 
   /// @brief デストラクタ
   ~EiMinTypMaxOp();
@@ -177,10 +170,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 
 private:

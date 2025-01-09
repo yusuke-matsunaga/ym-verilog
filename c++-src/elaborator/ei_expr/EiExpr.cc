@@ -245,6 +245,13 @@ EiExpr::operand(
   return nullptr;
 }
 
+// @brief オペランドのリストを返す．
+vector<const VlExpr*>
+EiExpr::operand_list() const
+{
+  return {};
+}
+
 // @brief 繰り返し数を返す．
 SizeType
 EiExpr::rep_num() const
@@ -297,6 +304,13 @@ EiExpr::argument(
   return nullptr;
 }
 
+// @brief 引数のリストを返す．
+vector<const VlExpr*>
+EiExpr::argument_list() const
+{
+  return {};
+}
+
 // @brief 左辺式の要素数の取得
 SizeType
 EiExpr::lhs_elem_num() const
@@ -311,6 +325,13 @@ EiExpr::lhs_elem(
 ) const
 {
   return nullptr;
+}
+
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiExpr::lhs_elem_list() const
+{
+  return {};
 }
 
 

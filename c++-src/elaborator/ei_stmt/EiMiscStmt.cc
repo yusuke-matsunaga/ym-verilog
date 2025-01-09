@@ -195,19 +195,26 @@ EiTcBase::~EiTcBase()
 
 // @brief 引数の数を返す．
 SizeType
-EiTcBase::arg_num() const
+EiTcBase::argument_num() const
 {
   return mArgumentList.size();
 }
 
 // @brief 引数の取得
 const VlExpr*
-EiTcBase::arg(
+EiTcBase::argument(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= pos && pos < arg_num() );
+  ASSERT_COND( 0 <= pos && pos < argument_num() );
   return mArgumentList[pos];
+}
+
+// @brief 引数の取得
+vector<const VlExpr*>
+EiTcBase::argument_list() const
+{
+  return vector<const VlExpr*>{mArgumentList.begin(), mArgumentList.end()};
 }
 
 

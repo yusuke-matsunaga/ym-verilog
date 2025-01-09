@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbGenvar.h"
 #include "ym/pt/PtP.h"
 
@@ -25,12 +24,11 @@ class EiGenvar :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の定義要素
-  /// @param[in] val 初期値
-  EiGenvar(const VlScope* parent,
-	   const PtDeclItem* pt_item,
-	   int val);
+  EiGenvar(
+    const VlScope* parent,     ///< [in] 親のスコープ
+    const PtDeclItem* pt_item, ///< [in] パース木の定義要素
+    int val                    ///< [in] 初期値
+  );
 
   /// @brief デストラクタ
   ~EiGenvar();
@@ -87,7 +85,9 @@ public:
 
   /// @brief 値を設定する．
   void
-  set_value(int value) override;
+  set_value(
+    int value
+  ) override;
 
   /// @brief 元となったパース木の定義要素を返す．
   const PtDeclItem*

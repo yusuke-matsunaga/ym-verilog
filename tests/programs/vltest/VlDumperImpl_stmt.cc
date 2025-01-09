@@ -26,9 +26,11 @@ BEGIN_NAMESPACE_YM_VERILOG
 // initial/always の内容を出力する関数
 // IEEE 1364-2001 p.656
 void
-VlDumperImpl::put_process(const char* label,
-			  const VlMgr& mgr,
-			  const VlProcess* process)
+VlDumperImpl::put_process(
+  const char* label,
+  const VlMgr& mgr,
+  const VlProcess* process
+)
 {
   const char* nm = nullptr;
   switch ( process->type() ) {
@@ -45,9 +47,11 @@ VlDumperImpl::put_process(const char* label,
 
 // @brief initial/always のリストの内容を出力する関数
 void
-VlDumperImpl::put_process_list(const char* label,
-			       const VlMgr& mgr,
-			       const vector<const VlProcess*>& process_list)
+VlDumperImpl::put_process_list(
+  const char* label,
+  const VlMgr& mgr,
+  const vector<const VlProcess*>& process_list
+)
 {
   VlDumpHeader x(this, label, "ProcessList");
 
@@ -58,9 +62,11 @@ VlDumperImpl::put_process_list(const char* label,
 
 // statement の内容を出力する関数
 void
-VlDumperImpl::put_stmt(const char* label,
-		       const VlMgr& mgr,
-		       const VlStmt* stmt)
+VlDumperImpl::put_stmt(
+  const char* label,
+  const VlMgr& mgr,
+  const VlStmt* stmt
+)
 {
   const char* nm = nullptr;
   switch ( stmt->type() ) {
@@ -211,9 +217,11 @@ VlDumperImpl::put_stmt(const char* label,
 
 // @brief statement のリストの内容を出力する関数
 void
-VlDumperImpl::put_stmt_list(const char* label,
-			    const VlMgr& mgr,
-			    const vector<const VlStmt*>& stmt_list)
+VlDumperImpl::put_stmt_list(
+  const char* label,
+  const VlMgr& mgr,
+  const vector<const VlStmt*>& stmt_list
+)
 {
   VlDumpHeader x(this, label, "StmtList");
 
@@ -224,9 +232,11 @@ VlDumperImpl::put_stmt_list(const char* label,
 
 // @brief delay/event/repeat control の内容を出力する関数
 void
-VlDumperImpl::put_control(const char* label,
-			  const VlMgr& mgr,
-			  const VlControl* control)
+VlDumperImpl::put_control(
+  const char* label,
+  const VlMgr& mgr,
+  const VlControl* control
+)
 {
   if ( control == nullptr ) {
     if ( !nullptr_suppress_mode() ) {
@@ -259,9 +269,11 @@ VlDumperImpl::put_control(const char* label,
 
 // @brief 子供のステートメントの内容を出力する関数
 void
-VlDumperImpl::put_child_stmt_list(const char* label,
-				  const VlMgr& mgr,
-				  const VlStmt* stmt)
+VlDumperImpl::put_child_stmt_list(
+  const char* label,
+  const VlMgr& mgr,
+  const VlStmt* stmt
+)
 {
   auto n = stmt->child_stmt_num();
   for ( int i = 0; i < n; ++ i ) {
@@ -271,13 +283,14 @@ VlDumperImpl::put_child_stmt_list(const char* label,
 
 // @brief 引数のリストを出力する関数
 void
-VlDumperImpl::put_argument_list(const char* label,
-				const VlMgr& mgr,
-				const VlStmt* stmt)
+VlDumperImpl::put_argument_list(
+  const char* label,
+  const VlMgr& mgr,
+  const VlStmt* stmt
+)
 {
-  auto n = stmt->arg_num();
-  for ( int i = 0; i < n; ++ i ) {
-    put_expr(label, mgr, stmt->arg(i) );
+  for ( auto arg: stmt->argument_list() ) {
+    put_expr(label, mgr, arg );
   }
 }
 

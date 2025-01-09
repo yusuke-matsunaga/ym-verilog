@@ -123,6 +123,13 @@ EiBinaryOp::operand(
   return mOpr[pos];
 }
 
+// @brief オペランドのリストを返す．
+vector<const VlExpr*>
+EiBinaryOp::operand_list() const
+{
+  return {mOpr[0], mOpr[1]};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiCompareOp

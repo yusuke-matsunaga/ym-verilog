@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlAttribute.h"
 #include "ym/pt/PtP.h"
 
@@ -25,12 +24,11 @@ class EiAttribute :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_attr パース木の定義要素
-  /// @param[in] expr 値
-  /// @param[in] def 定義側の属性の時 true
-  EiAttribute(const PtAttrSpec* pt_attr,
-	      const VlExpr* expr,
-	      bool def);
+  EiAttribute(
+    const PtAttrSpec* pt_attr, ///< [in] パース木の定義要素
+    const VlExpr* expr,        ///< [in] 値
+    bool def                   ///< [in] 定義側の属性の時 true
+  );
 
   /// @brief デストラクタ
   ~EiAttribute();

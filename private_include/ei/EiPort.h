@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlPort.h"
 #include "ym/pt/PtP.h"
 #include "elaborator/ElbFwd.h"
@@ -94,22 +93,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期設定を行う．
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_port パース木のポート定義
-  /// @param[in] index ポート番号
-  /// @param[in] low_conn 下位の接続
-  /// @param[in] dir 向き
   void
-  init(const VlModule* parent,
-       const PtPort* pt_port,
-       SizeType index,
-       ElbExpr* low_conn,
-       VpiDir dir);
+  init(
+    const VlModule* parent, ///< [in] 親のモジュール
+    const PtPort* pt_port,  ///< [in] パース木のポート定義
+    SizeType index,         ///< [in] ポート番号
+    ElbExpr* low_conn,      ///< [in] 下位の接続
+    VpiDir dir              ///< [in] 向き
+  );
 
   /// @brief high_conn を接続する．
   void
-  set_high_conn(ElbExpr* high_conn,
-		bool conn_by_name);
+  set_high_conn(
+    ElbExpr* high_conn,
+    bool conn_by_name
+  );
 
 
 private:

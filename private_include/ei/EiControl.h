@@ -12,7 +12,6 @@
 // IEEE Std 1364-2001 26.6.30 Event control
 // IEEE Std 1364-2001 26.6.31 Repeat control
 
-
 #include "ym/vl/VlControl.h"
 #include "ym/pt/PtP.h"
 
@@ -29,8 +28,9 @@ class EiControl :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_control パース木の定義要素
-  EiControl(const PtControl* pt_control);
+  EiControl(
+    const PtControl* pt_control ///< [in] パース木の定義要素
+  );
 
   /// デストラクタ
   ~EiControl();
@@ -52,25 +52,26 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 遅延式を返す．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
   delay() const override;
 
   /// @brief 繰り返し式を返す．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
   expr() const override;
 
   /// @brief イベント条件式の数を返す．
-  /// @note このクラスでは 0 を返す．
   SizeType
   event_num() const override;
 
   /// @brief イベント条件式を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  event(SizeType pos) const override;
+  event(
+    SizeType pos
+  ) const override;
+
+  /// @brief イベント条件式のリストを返す．
+  vector<const VlExpr*>
+  event_list() const override;
 
 
 private:
@@ -97,10 +98,10 @@ class EiDelayControl :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_control パース木の定義要素
-  /// @param[in] delay 遅延式
-  EiDelayControl(const PtControl* pt_control,
-		 ElbExpr* delay);
+  EiDelayControl(
+    const PtControl* pt_control, ///< [in] パース木の定義要素
+    ElbExpr* delay               ///< [in] 遅延式
+  );
 
   /// デストラクタ
   ~EiDelayControl();
@@ -150,10 +151,10 @@ class EiEventControl :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_control パース木の定義要素
-  /// @param[in] event_list イベントリスト
-  EiEventControl(const PtControl* pt_control,
-		 const vector<ElbExpr*>& event_list);
+  EiEventControl(
+    const PtControl* pt_control,       ///< [in] パース木の定義要素
+    const vector<ElbExpr*>& event_list ///< [in] イベントリスト
+  );
 
   /// @brief デストラクタ
   ~EiEventControl();
@@ -179,9 +180,14 @@ public:
   event_num() const override;
 
   /// @brief イベント条件式を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < event_num() )
   const VlExpr*
-  event(SizeType pos) const override;
+  event(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < event_num() )
+  ) const override;
+
+  /// @brief イベント条件式のリストを返す．
+  vector<const VlExpr*>
+  event_list() const override;
 
 
 private:
@@ -206,12 +212,11 @@ class EiRepeatControl :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_control パース木の定義要素
-  /// @param[in] rep 繰り返し式
-    /// @param[in] event_list イベントリスト
-  EiRepeatControl(const PtControl* pt_control,
-		  ElbExpr* rep,
-		  const vector<ElbExpr*>& event_list);
+  EiRepeatControl(
+    const PtControl* pt_control,       ///< [in] パース木の定義要素
+    ElbExpr* rep,                      ///< [in] 繰り返し式
+    const vector<ElbExpr*>& event_list ///< [in] イベントリスト
+  );
 
   /// デストラクタ
   ~EiRepeatControl();

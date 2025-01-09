@@ -11,7 +11,6 @@
 // UDP定義を表すクラス
 // IEEE Std 1364-2001 26.6.14 UDP
 
-
 #include "elaborator/ElbUdp.h"
 #include "ym/vl/VlIODecl.h"
 #include "ym/VlScalarVal.h"
@@ -33,15 +32,12 @@ class EiUdpDefn :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_udp パース木の UDP 定義
-  /// @param[in] is_protected プロテクト属性
-  /// @param[in] io_num ポート数
-  /// @param[in] io_array IOの配列
-  /// @param[in] table_num テーブルの行数
-  EiUdpDefn(const PtUdp* pt_udp,
-	    bool is_protected,
-	    SizeType io_num,
-	    SizeType table_num);
+  EiUdpDefn(
+    const PtUdp* pt_udp, ///< [in] パース木の UDP 定義
+    bool is_protected,   ///< [in] プロテクト属性
+    SizeType io_num,     ///< [in] ポート数
+    SizeType table_num   ///< [in] テーブルの行数
+  );
 
   /// @brief デストラクタ
   ~EiUdpDefn();
@@ -79,9 +75,10 @@ public:
   port_num() const override;
 
   /// @brief 入力の宣言要素を返す．
-  /// @param[in] pos 入力番号 ( 0 <= pos < port_num() - 1 )
   const VlIODecl*
-  input(SizeType pos) const override;
+  input(
+    SizeType pos ///< [in] 入力番号 ( 0 <= pos < port_num() - 1 )
+  ) const override;
 
   /// @brief 出力の宣言要素を返す．
   const VlIODecl*
@@ -105,9 +102,10 @@ public:
   table_size() const override;
 
   /// @brief table entry を返す．
-  /// @param[in] pos 行番号
   const VlTableEntry*
-  table_entry(SizeType pos) const override;
+  table_entry(
+    SizeType pos ///< [in] 行番号
+  ) const override;
 
 
 public:
@@ -116,30 +114,27 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力オブジェクトの内容を設定する．
-  /// @param[in] pos ポート中の位置
-  /// @param[in] file_region ソースファイル上の位置
-  /// @param[in] name 名前
-  /// @param[in] dir 向き
   void
-  set_io(SizeType pos,
-	 const PtIOHead* pt_header,
-	 const PtIOItem* pt_item) override;
+  set_io(
+    SizeType pos,              ///< [in] ポート中の位置
+    const PtIOHead* pt_header, ///< [in] パース木の宣言ヘッダ
+    const PtIOItem* pt_item    ///< [in] パース木の宣言要素
+  ) override;
 
   /// @brief 初期値を設定する．
-  /// @param[in] init_expr 初期値を表す式
-  /// @param[in] init_val 初期値
   void
-  set_initial(const PtExpr* init_expr,
-	      const VlScalarVal& init_val) override;
+  set_initial(
+    const PtExpr* init_expr,    ///< [in] 初期値を表す式
+    const VlScalarVal& init_val ///< [in] 初期値
+  ) override;
 
   /// @brief table entry の内容を設定する．
-  /// @param[in] pos 行番号
-  /// @param[in] pt_udp_entry パース木の一行分の定義
-  /// @param[in] vals シンボル値の配列
   void
-  set_tableentry(SizeType pos,
-		 const PtUdpEntry* pt_udp_entry,
-		 const vector<VlUdpVal>& vals) override;
+  set_tableentry(
+    SizeType pos,                   ///< [in] 行番号
+    const PtUdpEntry* pt_udp_entry, ///< [in] パース木の一行分の定義
+    const vector<VlUdpVal>& vals    ///< [in] シンボル値の配列
+  ) override;
 
 
 private:
@@ -215,7 +210,6 @@ public:
 
   /// @brief 符号の属性の取得
   /// @return 符号付きのとき true を返す．
-  /// @note このクラスは false を返す．
   bool
   is_signed() const override;
 
@@ -224,22 +218,18 @@ public:
   has_range() const override;
 
   /// @brief MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -249,12 +239,10 @@ public:
   bit_size() const override;
 
   /// @brief 対応する宣言要素を返す．
-  /// @note このクラスでは nullptr を返す．
   const VlDecl*
   decl() const override;
 
   /// @brief 親のモジュールの取得
-  /// @return このクラスは nullptr を返す．
   const VlModule*
   module() const override;
 
@@ -263,12 +251,10 @@ public:
   udp_defn() const override;
 
   /// @brief 親のタスクの取得
-  /// @return このクラスは nullptr を返す．
   const VlTaskFunc*
   task() const override;
 
   /// @brief 親の関数の取得
-  /// @return このクラスは nullptr を返す．
   const VlTaskFunc*
   function() const override;
 
@@ -280,14 +266,16 @@ public:
 
   /// @brief 親のUDPを設定する．
   void
-  set_udp(ElbUdpDefn* udp);
+  set_udp(
+    ElbUdpDefn* udp
+  );
 
   /// @brief 内容を設定する．
-  /// @param[in] pt_header パース木のIO宣言ヘッダ
-  /// @param[in] pt_item パース木のIO宣言定義
   void
-  set(const PtIOHead* pt_header,
-      const PtIOItem* pt_item);
+  set(
+    const PtIOHead* pt_header, ///< [in] パース木のIO宣言ヘッダ
+    const PtIOItem* pt_item    ///< [in] パース木のIO宣言定義
+  );
 
 
 private:
@@ -348,7 +336,9 @@ public:
 
   /// @brief pos 番目の位置の値を返す．
   VlUdpVal
-  val(SizeType pos) const override;
+  val(
+    SizeType pos
+  ) const override;
 
   /// @brief 一行文の内容を表す文字列をつくる．
   string
@@ -362,12 +352,16 @@ public:
 
   /// @brief 初期化する．
   void
-  init(ElbUdpDefn* udp);
+  init(
+    ElbUdpDefn* udp
+  );
 
   /// @brief 設定する．
   void
-  set(const PtUdpEntry* pt_entry,
-      const vector<VlUdpVal>& vals) override;
+  set(
+    const PtUdpEntry* pt_entry,
+    const vector<VlUdpVal>& vals
+  ) override;
 
 
 private:

@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbDecl.h"
 
 
@@ -24,10 +23,10 @@ class EiDecl :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiDecl(ElbDeclHead* head,
-	 const PtNamedBase* pt_item);
+  EiDecl(
+    ElbDeclHead* head,         ///< [in] ヘッダ
+    const PtNamedBase* pt_item ///< [in] パース木の宣言要素
+  );
 
   /// @brief デストラクタ
   ~EiDecl();
@@ -67,13 +66,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @breif 値の型を返す．
-  /// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
   VlValueType
   value_type() const override;
 
   /// @brief 符号の取得
-  /// @retval true 符号つき
-  /// @retval false 符号なし
   bool
   is_signed() const override;
 
@@ -82,22 +78,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -114,13 +106,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -166,7 +158,6 @@ public:
   delay() const override;
 
   /// @brief 定数値を持つ型のときに true を返す．
-  /// @note このクラスは false を返す．
   bool
   is_consttype() const override;
 
@@ -177,7 +168,6 @@ public:
   init_value() const override;
 
   /// @brief localparam のときに true 返す．
-  /// @note このクラスは false を返す．
   bool
   is_local_param() const override;
 
@@ -219,12 +209,11 @@ class EiDeclI :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  /// @param[in] init 初期値
-  EiDeclI(ElbDeclHead* head,
-	  const PtNamedBase* pt_item,
-	  const VlExpr* init);
+  EiDeclI(
+    ElbDeclHead* head,          ///< [in] ヘッダ
+    const PtNamedBase* pt_item, ///< [in] パース木の宣言要素
+    const VlExpr* init          ///< [in] 初期値
+  );
 
   /// @brief デストラクタ
   ~EiDeclI();
@@ -248,9 +237,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期値の設定
-  /// @param[in] expr 初期値
   void
-  set_init(const VlExpr* expr) override;
+  set_init(
+    const VlExpr* expr ///< [in] 初期値
+  ) override;
 
 
 private:

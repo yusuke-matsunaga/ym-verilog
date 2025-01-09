@@ -23,10 +23,10 @@ class EiGenBlockScope :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ環境
-  /// @param[in] pt_item 対応するパース木の要素
-  EiGenBlockScope(const VlScope* parent,
-		  const PtItem* pt_item);
+  EiGenBlockScope(
+    const VlScope* parent, ///< [in] 親のスコープ環境
+    const PtItem* pt_item  ///< [in] 対応するパース木の要素
+  );
 
   /// @brief デストラクタ
   ~EiGenBlockScope();
@@ -73,12 +73,11 @@ class EiGfBlockScope :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ環境
-  /// @param[in] pt_item 対応するパース木の要素
-  /// @param[in] index インデックス
-  EiGfBlockScope(const VlScope* parent,
-		 const PtItem* pt_item,
-		 int index);
+  EiGfBlockScope(
+    const VlScope* parent, ///< [in] 親のスコープ環境
+    const PtItem* pt_item, ///< [in] 対応するパース木の要素
+    int index              ///< [in] インデックス
+  );
 
   /// @brief デストラクタ
   ~EiGfBlockScope();

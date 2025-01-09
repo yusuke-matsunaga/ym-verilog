@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "EiExpr.h"
 
 
@@ -24,11 +23,10 @@ class EiBitSelect :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] base_expr 対象の式
-  /// @param[in] index_expr ビット選択式
-  EiBitSelect(const PtExpr* pt_expr,
-	      ElbExpr* base_expr);
+  EiBitSelect(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* base_expr     ///< [in] 対象の式
+  );
 
   /// @brief デストラクタ
   ~EiBitSelect();
@@ -54,7 +52,6 @@ public:
   value_type() const override;
 
   /// @brief 定数の時 true を返す．
-  /// @note 参照している要素の型によって決まる．
   bool
   is_const() const override;
 
@@ -63,48 +60,44 @@ public:
   is_bitselect() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-  /// @note それ以外では nullptr を返す．
   const VlDeclBase*
   decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-  /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
   const VlDecl*
   decl_obj() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-  /// @note 宣言要素に対するビット選択，部分選択の場合にも意味を持つ．
   const VlDeclArray*
   declarray_obj() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
-  /// @note それ以外では 0 を返す．
   SizeType
   declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
-  /// @note それ以外では nullptr を返す．
   const VlExpr*
-  declarray_index(SizeType pos) const override;
+  declarray_index(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < declarray_dimension() )
+  ) const override;
 
   /// @brief 親の式を返す．
   const VlExpr*
   parent_expr() const override;
 
   /// @brief 左辺式の要素数の取得
-  /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-  /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-  /// @note このクラスでは 1 を返す．
   SizeType
   lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-  /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-  /// @note このクラスでは pos = 0 の時，自分自身を返す．
   const VlExpr*
-  lhs_elem(SizeType pos) const override;
+  lhs_elem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
+  ) const override;
+
+  /// @brief 左辺式の要素のリストの取得
+  vector<const VlExpr*>
+  lhs_elem_list() const override;
 
 
 public:
@@ -113,10 +106,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 
 private:
@@ -140,14 +133,12 @@ class EiConstBitSelect :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] base_expr 対象の式
-  /// @param[in] index_expr ビット選択式
-  /// @param[in] index_val ビット選択式の値
-  EiConstBitSelect(const PtExpr* pt_expr,
-		   ElbExpr* base_expr,
-		   const PtExpr* index_expr,
-		   int index_val);
+  EiConstBitSelect(
+    const PtExpr* pt_expr,    ///< [in] パース木の定義要素
+    ElbExpr* base_expr,       ///< [in] 対象の式
+    const PtExpr* index_expr, ///< [in] ビット選択式
+    int index_val             ///< [in] ビット選択式の値
+  );
 
   /// @brief デストラクタ
   ~EiConstBitSelect();
@@ -159,7 +150,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 固定選択子の時 true を返す．
-  /// @note ビット選択，部分選択の時，意味を持つ．
   bool
   is_constant_select() const override;
 
@@ -196,12 +186,11 @@ class EiVarBitSelect :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] base_expr 対象の式
-  /// @param[in] index_expr ビット選択式
-  EiVarBitSelect(const PtExpr* pt_expr,
-		 ElbExpr* base_expr,
-		 ElbExpr* index_expr);
+  EiVarBitSelect(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* base_expr,    ///< [in] 対象の式
+    ElbExpr* index_expr    ///< [in] ビット選択式
+  );
 
   /// @brief デストラクタ
   ~EiVarBitSelect();
@@ -213,7 +202,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 固定選択子の時 true を返す．
-  /// @note ビット選択，部分選択の時，意味を持つ．
   bool
   is_constant_select() const override;
 

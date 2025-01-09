@@ -41,6 +41,11 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < elem_num() )
   ) const = 0;
 
+  /// @brief 値のリストを返す．
+  virtual
+  vector<const VlExpr*>
+  expr_list() const = 0;
+
   /// @brief Verilog-HDL の文字列を得る．
   virtual
   string

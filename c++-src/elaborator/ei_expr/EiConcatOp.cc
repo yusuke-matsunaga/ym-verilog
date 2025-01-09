@@ -120,6 +120,13 @@ EiConcatOp::operand(
   return mOprList[pos];
 }
 
+// @brief オペランドのリストを返す．
+vector<const VlExpr*>
+EiConcatOp::operand_list() const
+{
+  return vector<const VlExpr*>{mOprList.begin(), mOprList.end()};
+}
+
 // @brief ビット幅を返す．
 SizeType
 EiConcatOp::bit_size() const
@@ -172,6 +179,21 @@ EiMultiConcatOp::operand(
     return mRepExpr;
   }
   return EiConcatOp::operand(pos - 1);
+}
+
+// @brief オペランドのリストを返す．
+vector<const VlExpr*>
+EiMultiConcatOp::operand_list() const
+{
+  vector<const VlExpr*> ans_list;
+  auto n = EiConcatOp::operand_num();
+  ans_list.reserve(n);
+  ans_list.push_back(mRepExpr);
+  for ( SizeType i = 0; i < n; ++ i ) {
+    auto expr = EiConcatOp::operand(i);
+    ans_list.push_back(expr);
+  }
+  return ans_list;
 }
 
 // @brief 繰り返し数を返す．

@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbTaskFunc.h"
 #include "ei/EiRange.h"
 
@@ -27,13 +26,11 @@ class EiTaskFunc :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の定義
-  /// @param[in] io_num IOの数
-  /// @param[in] io_array IO の配列
-  EiTaskFunc(const VlScope* parent,
-	     const PtItem* pt_item,
-	     SizeType io_num);
+  EiTaskFunc(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item, ///< [in] パース木の定義
+    SizeType io_num        ///< [in] IOの数
+  );
 
   /// @brief デストラクタ
   ~EiTaskFunc();
@@ -77,9 +74,14 @@ public:
   io_num() const override;
 
   /// @brief 入出力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   const VlIODecl*
-  io(SizeType pos) const override;
+  io(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
+  ) const override;
+
+  /// @brief 入出力のリストの取得
+  vector<const VlIODecl*>
+  io_list() const override;
 
   /// @brief 本体のステートメントを得る．
   const VlStmt*
@@ -92,17 +94,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力の初期設定を行う．
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木のIO宣言要素
-  /// @param[in] decl 対応する宣言要素
   void
-  add_iodecl(ElbIOHead* head,
-	     const PtIOItem* pt_item,
-	     const VlDecl* decl) override;
+  add_iodecl(
+    ElbIOHead* head,         ///< [in] ヘッダ
+    const PtIOItem* pt_item, ///< [in] パース木のIO宣言要素
+    const VlDecl* decl       ///< [in] 対応する宣言要素
+  ) override;
 
   /// @brief 本体のステートメントをセットする．
   void
-  set_stmt(const VlStmt* stmt) override;
+  set_stmt(
+    const VlStmt* stmt
+  ) override;
 
 
 protected:
@@ -112,7 +115,10 @@ protected:
 
   /// @brief PtItem を取り出す．
   const PtItem*
-  pt_item() const;
+  pt_item() const
+  {
+    return mPtItem;
+  }
 
 
 private:
@@ -148,13 +154,11 @@ class EiTask :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の定義
-  /// @param[in] io_num IOの数
-  /// @param[in] io_array IO の配列
-  EiTask(const VlScope* parent,
-	 const PtItem* pt_item,
-	 SizeType io_num);
+  EiTask(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item, ///< [in] パース木の定義
+    SizeType io_num        ///< [in] IOの数
+  );
 
   /// @brief デストラクタ
   ~EiTask();
@@ -188,22 +192,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -219,9 +219,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力変数をセットする．
-  /// @param[in] ovar 出力変数
   void
-  set_ovar(ElbDecl* ovar) override;
+  set_ovar(
+    ElbDecl* ovar ///< [in] 出力変数
+  ) override;
 
   /// @brief constant function の時に true を返す．
   bool
@@ -246,15 +247,12 @@ class EiFunction :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の定義
-  /// @param[in] io_num IOの数
-  /// @param[in] io_array IO の配列
-  /// @param[in] const_func constant function の時 true にする．
-  EiFunction(const VlScope* parent,
-	     const PtItem* pt_item,
-	     SizeType io_num,
-	     bool const_func);
+  EiFunction(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item, ///< [in] パース木の定義
+    SizeType io_num,       ///< [in] IOの数
+    bool const_func        ///< [in] constant function の時 true にする．
+  );
 
   /// @brief デストラクタ
   ~EiFunction();
@@ -288,22 +286,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -329,9 +323,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 出力変数をセットする．
-  /// @param[in] ovar 出力変数
   void
-  set_ovar(ElbDecl* ovar) override;
+  set_ovar(
+    ElbDecl* ovar ///< [in] 出力変数
+  ) override;
 
 
 private:
@@ -358,23 +353,16 @@ class EiFunctionV :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の定義
-  /// @param[in] io_num IOの数
-  /// @param[in] io_array IO の配列
-  /// @param[in] left 範囲の MSB の式
-  /// @param[in] right 範囲の LSB の式
-  /// @param[in] left_val 範囲の MSB の値
-  /// @param[in] right_val 範囲の LSB の値
-  /// @param[in] const_func 定数関数フラグ
-  EiFunctionV(const VlScope* parent,
-	      const PtItem* pt_item,
-	      SizeType io_num,
-	      const PtExpr* left,
-	      const PtExpr* right,
-	      int left_val,
-	      int right_val,
-	      bool const_func);
+  EiFunctionV(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item, ///< [in] パース木の定義
+    SizeType io_num,       ///< [in] IOの数
+    const PtExpr* left,    ///< [in] 範囲の MSB の式
+    const PtExpr* right,   ///< [in] 範囲の LSB の式
+    int left_val,          ///< [in] 範囲の MSB の値
+    int right_val,         ///< [in] 範囲の LSB の値
+    bool const_func        ///< [in] 定数関数フラグ
+  );
 
   /// @brief デストラクタ
   ~EiFunctionV();
@@ -390,22 +378,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -423,19 +407,6 @@ private:
   EiRangeImpl mRange;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief PtItem を取り出す．
-inline
-const PtItem*
-EiTaskFunc::pt_item() const
-{
-  return mPtItem;
-}
 
 END_NAMESPACE_YM_VERILOG
 

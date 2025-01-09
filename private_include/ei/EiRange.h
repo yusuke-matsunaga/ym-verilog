@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbRange.h"
 #include "ym/pt/PtDecl.h"
 
@@ -75,41 +74,44 @@ public:
   right_range_string() const override;
 
   /// @brief 範囲のチェック
-  /// @param[in] index インデックス
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   bool
-  is_in(int index) const override;
+  is_in(
+    int index ///< [in] インデックス
+  ) const override;
 
   /// @brief LSB からのオフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset index の LSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   bool
-  calc_offset(int index,
-	      SizeType& offset) const override;
+  calc_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index の LSB からのオフセット
+  ) const override;
 
   /// @brief MSB からのオフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset index の MSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   bool
-  calc_roffset(int index,
-	       SizeType& offset) const override;
+  calc_roffset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index の MSB からのオフセット
+  ) const override;
 
   /// @brief offset の逆関数
-  /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   int
-  index(SizeType offset) const override;
+  index(
+    SizeType offset ///< [in] LSB からのオフセット値
+  ) const override;
 
   /// @brief roffset の逆関数
-  /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   int
-  rindex(SizeType roffset) const override;
+  rindex(
+    SizeType roffset ///< [in] MSB からのオフセット値
+  ) const override;
 
 
 public:
@@ -118,9 +120,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を設定する．
-  /// @param[in] src 元となる情報
   void
-  set(const ElbRangeSrc& src) override;
+  set(
+    const ElbRangeSrc& src ///< [in] 元となる情報
+  ) override;
 
 
 public:
@@ -129,74 +132,131 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素数(ビット幅)を返す．
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
   static
   SizeType
-  calc_size(int left,
-	    int right);
+  calc_size(
+    int left, ///< [in] 範囲の MSB
+    int right ///< [in] 範囲の LSB
+  )
+  {
+    SizeType ans = 0;
+    if ( left >= right ) {
+      ans = left - right + 1;
+    }
+    else {
+      ans = right - left + 1;
+    }
+    return ans;
+  }
 
   /// @brief 範囲のチェック
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] index インデックス
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   static
   bool
-  is_in(int left,
-	int right,
-	int index);
+  is_in(
+    int left,  ///< [in] 範囲の MSB
+    int right, ///< [in] 範囲の LSB
+    int index  ///< [in] インデックス
+  )
+  {
+    if ( left >= right ) {
+      return right <= index && index <= left;
+    }
+    else {
+      return right >= index && index >= left;
+    }
+  }
 
   /// @brief LSB からのオフセット値の取得
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] index インデックス
-  /// @param[out] offset index の LSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   static
   bool
-  calc_offset(int left,
-	      int right,
-	      int index,
-	      SizeType& offset);
+  calc_offset(
+    int left,        ///< [in]  範囲の MSB
+    int right,       ///< [in]	範囲の LSB
+    int index,       ///< [in]	インデックス
+    SizeType& offset ///< [out] index の LSB からのオフセット
+  )
+  {
+    if ( left >= right ) {
+      if ( right <= index && index <= left ) {
+	offset = index - right;
+	return true;
+      }
+    }
+    else {
+      if ( right >= index && index >= left ) {
+	offset = right - index;
+	return true;
+      }
+    }
+    return false;
+  }
 
   /// @brief MSB からのオフセット値の取得
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] index インデックス
-  /// @param[out] offset index の MSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   static
   bool
-  calc_roffset(int left,
-	       int right,
-	       int index,
-	       SizeType& offset);
+  calc_roffset(
+    int left,        ///< [in]  範囲の MSB
+    int right,       ///< [in]	範囲の LSB
+    int index,       ///< [in]	インデックス
+    SizeType& offset ///< [out]	index の MSB からのオフセット
+  )
+  {
+    if ( left >= right ) {
+      if ( right <= index && index <= left ) {
+	offset = left - index;
+	return true;
+      }
+    }
+    else {
+      if ( right >= index && index >= left ) {
+	offset = index - left;
+	return true;
+      }
+    }
+    return false;
+  }
 
   /// @brief offset の逆関数
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   static
   int
-  index(int left,
-	int right,
-	SizeType offset);
+  index(
+    int left,       ///< [in] 範囲の MSB
+    int right,      ///< [in] 範囲の LSB
+    SizeType offset ///< [in] LSB からのオフセット値
+  )
+  {
+    if ( left >= right ) {
+      return offset + right;
+    }
+    else {
+      return right - offset;
+    }
+  }
 
   /// @brief roffset の逆関数
-  /// @param[in] left 範囲の MSB
-  /// @param[in] right 範囲の LSB
-  /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   static
   int
-  rindex(int left,
-	 int right,
-	 SizeType roffset);
+  rindex(
+    int left,        ///< [in] 範囲の MSB
+    int right,       ///< [in] 範囲の LSB
+    SizeType roffset ///< [in] MSB からのオフセット値
+  )
+  {
+    if ( left >= right ) {
+      return left - roffset;
+    }
+    else {
+      return roffset + left;
+    }
+  }
 
 
 private:
@@ -244,15 +304,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 値を設定する．
-  /// @param[in] left 範囲の MSB の式
-  /// @param[in] right 範囲の LSB の式
-  /// @param[in] left_val 範囲の MSB の値
-  /// @param[in] right_val 範囲の LSB の値
   void
-  set(const PtExpr* left,
-      const PtExpr* right,
-      int left_val,
-      int right_val);
+  set(
+    const PtExpr* left,  ///< [in] 範囲の MSB の式
+    const PtExpr* right, ///< [in] 範囲の LSB の式
+    int left_val,        ///< [in] 範囲の MSB の値
+    int right_val        ///< [in] 範囲の LSB の値
+  );
 
 
 public:
@@ -282,48 +340,57 @@ public:
 
   /// @brief left_range >= right_range の時に true を返す．
   bool
-  is_big_endian() const;
+  is_big_endian() const
+  {
+    return mLeftVal >= mRightVal;
+  }
 
   /// @brief left_range <= right_range の時に true を返す．
   bool
-  is_little_endian() const;
+  is_little_endian() const
+  {
+    return mRightVal >= mLeftVal;
+  }
 
   /// @brief 範囲のチェック
-  /// @param[in] index インデックス
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   bool
-  is_in(int index) const;
+  is_in(
+    int index ///< [in] インデックス
+  ) const;
 
   /// @brief LSB からのオフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset index の LSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   bool
-  calc_offset(int index,
-	      SizeType& offset) const;
+  calc_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index の LSB からのオフセット
+  ) const;
 
   /// @brief MSB からのオフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset index の MSB からのオフセット
   /// @retval true index が範囲内に入っている．
   /// @retval false index が範囲外
   bool
-  calc_roffset(int index,
-	       SizeType& offset) const;
+  calc_roffset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index の MSB からのオフセット
+  ) const;
 
   /// @brief offset の逆関数
-  /// @param[in] offset LSB からのオフセット値
   /// @return offset に対応したインデックスを返す．
   int
-  index(SizeType offset) const;
+  index(
+    SizeType offset ///< [in] LSB からのオフセット値
+  ) const;
 
   /// @brief roffset の逆関数
-  /// @param[in] roffset MSB からのオフセット値
   /// @return roffset に対応したインデックスを返す．
   int
-  rindex(SizeType roffset) const;
+  rindex(
+    SizeType roffset ///< [in] MSB からのオフセット値
+  ) const;
 
 
 private:
@@ -355,8 +422,9 @@ class EiRangeArray
 public:
 
   /// @brief コンストラクタ
-  /// @brief array 範囲のリスト
-  EiRangeArray(const vector<EiRange>& array);
+  EiRangeArray(
+    const vector<EiRange>& array ///< [in] 範囲のリスト
+  );
 
   // デストラクタ
   ~EiRangeArray();
@@ -369,33 +437,44 @@ public:
 
   /// @brief 次元数を得る．
   SizeType
-  size() const;
+  size() const
+  {
+    return mArray.size();
+  }
 
   /// @brief 要素数を計算する
   /// @return サイズを返す．
   SizeType
-  elem_size() const;
+  elem_size() const
+  {
+    return mElemSize;
+  }
 
   /// @brief pos 番めの範囲を返す．
-  /// @param[in] pos 位置番号
   const EiRange*
-  range(SizeType pos) const;
+  range(
+    SizeType pos ///< [in] 位置番号
+  ) const
+  {
+    ASSERT_COND( 0 <= pos && pos < mArray.size() );
+    return &mArray[pos];
+  }
 
   /// @brief アドレス(オフセット)からインデックスのリストを作る．
-  /// @param[in] offset オフセット
-  /// @param[out] index_list インデックスのリスト
   void
-  index(SizeType offset,
-	vector<int>& index_list) const;
+  index(
+    SizeType offset,        ///< [in] オフセット
+    vector<int>& index_list ///< [out] インデックスのリスト
+  ) const;
 
   /// @brief インデックスのリストからオフセットを得る．
-  /// @param[in] index_list インデックスのリスト
-  /// @param[out] offset index_list の値に対応したオフセット値
   /// @retval true オフセットの計算が正しく行えた．
   /// @retval false index_list のいずれかの値が範囲外だった．
   bool
-  calc_offset(const vector<int>& index_list,
-	      SizeType& offset) const;
+  calc_offset(
+    const vector<int>& index_list, ///< [in] インデックスのリスト
+    SizeType& offset               ///< [out] index_list の値に対応したオフセット値
+  ) const;
 
 
 private:
@@ -410,175 +489,6 @@ private:
   SizeType mElemSize;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief サイズを返す．
-inline
-SizeType
-EiRange::calc_size(int left,
-		   int right)
-{
-  SizeType ans = 0;
-  if ( left >= right ) {
-    ans = left - right + 1;
-  }
-  else {
-    ans = right - left + 1;
-  }
-  return ans;
-}
-
-// index が範囲内に入っていたら true を返す．
-// 範囲外の時には false を返す．
-inline
-bool
-EiRange::is_in(int left,
-	       int right,
-	       int index)
-{
-  if ( left >= right ) {
-    return right <= index && index <= left;
-  }
-  else {
-    return right >= index && index >= left;
-  }
-}
-
-// @brief LSB からのオフセット値の取得
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] index インデックス
-// @param[out] offset index の LSB からのオフセット
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
-inline
-bool
-EiRange::calc_offset(int left,
-		     int right,
-		     int index,
-		     SizeType& offset)
-{
-  if ( left >= right ) {
-    if ( right <= index && index <= left ) {
-      offset = index - right;
-      return true;
-    }
-  }
-  else {
-    if ( right >= index && index >= left ) {
-      offset = right - index;
-      return true;
-    }
-  }
-  return false;
-}
-
-// @brief MSB からのオフセット値の取得
-// @param[in] left 範囲の MSB
-// @param[in] right 範囲の LSB
-// @param[in] index インデックス
-// @param[out] offset index の MSB からのオフセット
-// @retval true index が範囲内に入っている．
-// @retval false index が範囲外
-inline
-bool
-EiRange::calc_roffset(int left,
-		      int right,
-		      int index,
-		      SizeType& offset)
-{
-  if ( left >= right ) {
-    if ( right <= index && index <= left ) {
-      offset = left - index;
-      return true;
-    }
-  }
-  else {
-    if ( right >= index && index >= left ) {
-      offset = index - left;
-      return true;
-    }
-  }
-  return false;
-}
-
-// offset の逆関数
-inline
-int
-EiRange::index(int left,
-	       int right,
-	       SizeType offset)
-{
-  if ( left >= right ) {
-    return offset + right;
-  }
-  else {
-    return right - offset;
-  }
-}
-
-// roffset の逆関数
-inline
-int
-EiRange::rindex(int left,
-		int right,
-		SizeType roffset)
-{
-  if ( left >= right ) {
-    return left - roffset;
-  }
-  else {
-    return roffset + left;
-  }
-}
-
-// @brief left_range >= right_range の時に true を返す．
-inline
-bool
-EiRangeImpl::is_big_endian() const
-{
-  return mLeftVal >= mRightVal;
-}
-
-// @brief left_range <= right_range の時に true を返す．
-inline
-bool
-EiRangeImpl::is_little_endian() const
-{
-  return mRightVal >= mLeftVal;
-}
-
-// @brief 次元数を得る．
-inline
-SizeType
-EiRangeArray::size() const
-{
-  return mArray.size();
-}
-
-// @brief 要素数を計算する
-// @return サイズを返す．
-inline
-SizeType
-EiRangeArray::elem_size() const
-{
-  return mElemSize;
-}
-
-// @brief pos 番めの範囲を返す．
-// @param[in] pos 位置番号
-inline
-const EiRange*
-EiRangeArray::range(SizeType pos) const
-{
-  ASSERT_COND( 0 <= pos && pos < mArray.size() );
-  return &mArray[pos];
-}
-
 
 END_NAMESPACE_YM_VERILOG
 

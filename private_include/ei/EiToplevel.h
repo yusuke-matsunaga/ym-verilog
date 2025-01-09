@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiScope.h"
 
 

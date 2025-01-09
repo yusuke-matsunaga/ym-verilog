@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbModule.h"
 #include "elaborator/ElbModuleArray.h"
 #include "ei/EiRange.h"
@@ -32,14 +31,12 @@ class EiModuleHead
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_module モジュールテンプレート
-  /// @param[in] pt_head パース木のヘッダ定義
-  /// @param[in] pt_inst インスタンス定義
-  EiModuleHead(const VlScope* parent,
-	       const PtModule* pt_module,
-	       const PtItem* pt_head,
-	       const PtInst* pt_inst);
+  EiModuleHead(
+    const VlScope* parent,     ///< [in] 親のスコープ
+    const PtModule* pt_module, ///< [in] モジュールテンプレート
+    const PtItem* pt_head,     ///< [in] パース木のヘッダ定義
+    const PtInst* pt_inst      ///< [in] インスタンス定義
+  );
 
   /// @brief デストラクタ
   ~EiModuleHead();
@@ -174,11 +171,11 @@ protected:
 public:
 
   /// @brief ポート配列とIO配列を初期化する．
-  /// @param[in] port_num ポート数
-  /// @param[in] io_num IO 数
   void
-  init(SizeType port_num,
-       SizeType io_num);
+  init(
+    SizeType port_num, ///< [in] ポート数
+    SizeType io_num    ///< [in] IO 数
+  );
 
 
 public:
@@ -279,19 +276,21 @@ public:
   port_num() const override;
 
   /// @brief ポートの取得
-  /// @param[in] pos 取得するポートの位置 (0 <= pos < port_num())
   /// @return pos 番目のポートを返す．
   const VlPort*
-  port(SizeType pos) const override;
+  port(
+    SizeType pos ///< [in] 取得するポートの位置 (0 <= pos < port_num())
+  ) const override;
 
   /// @brief 入出力数を得る．
   SizeType
   io_num() const override;
 
   /// @brief 入出力の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < io_num() )
   const VlIODecl*
-  io(SizeType pos) const override;
+  io(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
+  ) const override;
 
 
 public:
@@ -300,33 +299,29 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 入出力を追加する．
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木のIO宣言要素
-  /// @param[in] decl 対応する宣言要素
   void
-  add_iodecl(ElbIOHead* head,
-	     const PtIOItem* pt_item,
-	     const VlDecl* decl) override;
+  add_iodecl(
+    ElbIOHead* head,         ///< [in] ヘッダ
+    const PtIOItem* pt_item, ///< [in] パース木のIO宣言要素
+    const VlDecl* decl       ///< [in] 対応する宣言要素
+  ) override;
 
   /// @brief ポートの初期設定を行う．
-  /// @param[in] index ポート番号
-  /// @param[in] pt_port パース木のポート定義
-  /// @param[in] low_conn 下位の接続
-  /// @param[in] dir 向き
   void
-  init_port(SizeType index,
-	    const PtPort* pt_port,
-	    ElbExpr* low_conn,
-	    VpiDir dir) override;
+  init_port(
+    SizeType index,        ///< [in] ポート番号
+    const PtPort* pt_port, ///< [in] パース木のポート定義
+    ElbExpr* low_conn,     ///< [in] 下位の接続
+    VpiDir dir             ///< [in] 向き
+  ) override;
 
   /// @brief ポートの high_conn を接続する．
-  /// @param[in] index ポート番号
-  /// @param[in] high_conn 上位の接続の式
-  /// @param[in] conn_by_name 名前による割り当て時に true とするフラグ
   void
-  set_port_high_conn(SizeType index,
-		     ElbExpr* high_conn,
-		     bool conn_by_name) override;
+  set_port_high_conn(
+    SizeType index,     ///< [in] ポート番号
+    ElbExpr* high_conn, ///< [in] 上位の接続の式
+    bool conn_by_name   ///< [in] 名前による割り当て時に true とするフラグ
+  ) override;
 
 
 private:
@@ -381,15 +376,13 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期設定を行う．
-  /// @param[in] port_array ポート配列
-  /// @param[in] io_array IO 配列
-  /// @param[in] module_array 親の配列
-  /// @param[in] index 配列中のインデックス
   void
-  init(SizeType port_num,
-       SizeType io_num,
-       EiModuleArray* module_array,
-       int index);
+  init(
+    SizeType port_num,           ///< [in] ポート配列
+    SizeType io_num,             ///< [in] IO 配列
+    EiModuleArray* module_array, ///< [in] 親の配列
+    int index                    ///< [in] 配列中のインデックス
+  );
 
 
 public:
@@ -412,12 +405,10 @@ public:
   is_array() const override;
 
   /// @brief インデックスの値を返す．
-  /// @note 配列要素の時のみ意味を持つ．
   int
   index() const override;
 
   /// @brief 親の配列を返す．
-  /// @note 配列要素の時のみ意味を持つ．
   const VlModuleArray*
   module_array() const override;
 
@@ -463,14 +454,12 @@ class EiModule2 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_module モジュールテンプレート
-  /// @param[in] pt_head パース木のヘッダ定義
-  /// @param[in] pt_inst パース木のインスタンス定義
-  EiModule2(const VlScope* parent,
-	    const PtModule* pt_module,
-	    const PtItem* pt_head,
-	    const PtInst* pt_inst);
+  EiModule2(
+    const VlScope* parent,     ///< [in] 親のスコープ
+    const PtModule* pt_module, ///< [in] モジュールテンプレート
+    const PtItem* pt_head,     ///< [in] パース木のヘッダ定義
+    const PtInst* pt_inst      ///< [in] パース木のインスタンス定義
+  );
 
   /// @brief デストラクタ
   ~EiModule2();
@@ -496,12 +485,10 @@ public:
   is_array() const override;
 
   /// @brief インデックスの値を返す．
-  /// @note 配列要素の時のみ意味を持つ．
   int
   index() const override;
 
   /// @brief 親の配列を返す．
-  /// @note 配列要素の時のみ意味を持つ．
   const VlModuleArray*
   module_array() const override;
 
@@ -541,17 +528,13 @@ class EiModuleArray :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_module モジュールテンプレート
-  /// @param[in] pt_head パース木のヘッダ定義
-  /// @param[in] pt_inst パース木のインスタンス定義
-  /// @param[in] range 範囲
-  /// @param[in] array モジュール配列
-  EiModuleArray(const VlScope* parent,
-		const PtModule* pt_module,
-		const PtItem* pt_head,
-		const PtInst* pt_inst,
-		const EiRangeImpl& range);
+  EiModuleArray(
+    const VlScope* parent,     ///< [in] 親のスコープ
+    const PtModule* pt_module, ///< [in] モジュールテンプレート
+    const PtItem* pt_head,     ///< [in] パース木のヘッダ定義
+    const PtInst* pt_inst,     ///< [in] パース木のインスタンス定義
+    const EiRangeImpl& range   ///< [in] 範囲
+  );
 
   /// @brief デストラクタ
   ~EiModuleArray();
@@ -611,14 +594,16 @@ public:
   elem_num() const override;
 
   /// @brief 要素を返す．
-  /// @param[in] offset 位置番号 (0 <= offset < elem_num())
   const VlModule*
-  elem_by_offset(SizeType offset) const override;
+  elem_by_offset(
+    SizeType offset ///< [in] 位置番号 (0 <= offset < elem_num())
+  ) const override;
 
   /// @brief 要素を返す．
-  /// @param[in] index インデックス
   const VlModule*
-  elem_by_index(int index) const override;
+  elem_by_index(
+    int index ///< [in] インデックス
+  ) const override;
 
 
 public:
@@ -627,9 +612,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要素を取り出す．
-  /// @param[in] index モジュール番号
   ElbModule*
-  elem(SizeType index) override;
+  elem(
+    SizeType index ///< [in] モジュール番号
+  ) override;
 
 
 public:

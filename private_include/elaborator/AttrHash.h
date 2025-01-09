@@ -38,8 +38,8 @@ public:
   /// @brief 属性を追加する．
   void
   add(
-    const VlObj* obj,                           ///< [in] 対象のオブジェクト
-    bool def,                                   ///< [in] 定義側の属性の時 true とするフラグ
+    const VlObj* obj, ///< [in] 対象のオブジェクト
+    bool def,         ///< [in] 定義側の属性の時 true とするフラグ
     const vector<const VlAttribute*>& attr_list ///< [in] 付加する属性リスト
   );
 

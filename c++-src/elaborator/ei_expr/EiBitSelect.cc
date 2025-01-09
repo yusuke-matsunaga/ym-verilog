@@ -172,6 +172,13 @@ EiBitSelect::lhs_elem(
   return this;
 }
 
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiBitSelect::lhs_elem_list() const
+{
+  return {this};
+}
+
 // @brief 要求される式の型を計算してセットする．
 void
 EiBitSelect::_set_reqsize(

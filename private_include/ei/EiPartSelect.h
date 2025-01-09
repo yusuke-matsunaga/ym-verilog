@@ -91,6 +91,10 @@ public:
     SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
   ) const override;
 
+  /// @brief 左辺式の要素のリストの取得
+  vector<const VlExpr*>
+  lhs_elem_list() const override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////

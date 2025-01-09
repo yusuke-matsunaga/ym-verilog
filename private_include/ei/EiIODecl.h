@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlIODecl.h"
 #include "elaborator/ElbIOHead.h"
 #include "EiRange.h"
@@ -26,8 +25,9 @@ class EiIOHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiIOHead(const PtIOHead* pt_header);
+  EiIOHead(
+    const PtIOHead* pt_header ///< [in] パース木のIO宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiIOHead();
@@ -43,17 +43,14 @@ public:
   direction() const override;
 
   /// @brief 親のモジュールの取得
-  /// @note このクラスでは nullptr を返す．
   const VlModule*
   module() const override;
 
   /// @brief 親のタスクの取得
-  /// @note このクラスでは nullptr を返す．
   const VlTaskFunc*
   task() const override;
 
   /// @brief 親の関数の取得
-  /// @note このクラスでは nullptr を返す．
   const VlTaskFunc*
   function() const override;
 
@@ -79,10 +76,10 @@ class EiModIOHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiModIOHead(const VlModule* module,
-	      const PtIOHead* pt_header);
+  EiModIOHead(
+    const VlModule* module,   ///< [in] 親のモジュール
+    const PtIOHead* pt_header ///< [in] パース木のIO宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiModIOHead();
@@ -119,10 +116,10 @@ class EiTaskIOHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] task 親のタスク
-  /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiTaskIOHead(const VlTaskFunc* task,
-	       const PtIOHead* pt_header);
+  EiTaskIOHead(
+    const VlTaskFunc* task,   ///< [in] 親のタスク
+    const PtIOHead* pt_header ///< [in]	パース木のIO宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiTaskIOHead();
@@ -159,10 +156,10 @@ class EiFunctionIOHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] func 親の関数
-  /// @param[in] pt_header パース木のIO宣言ヘッダ
-  EiFunctionIOHead(const VlTaskFunc* func,
-		   const PtIOHead* pt_header);
+  EiFunctionIOHead(
+    const VlTaskFunc* func,   ///< [in] 親の関数
+    const PtIOHead* pt_header ///< [in] パース木のIO宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiFunctionIOHead();
@@ -199,12 +196,11 @@ class EiIODecl :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木のIO宣言要素
-  /// @param[in] decl 対応する宣言要素
-  EiIODecl(ElbIOHead* head,
-	   const PtIOItem* pt_item,
-	   const VlDecl* decl);
+  EiIODecl(
+    ElbIOHead* head,         ///< [in] ヘッダ
+    const PtIOItem* pt_item, ///< [in] パース木のIO宣言要素
+    const VlDecl* decl       ///< [in] 対応する宣言要素
+  );
 
   /// @brief デストラクタ
   ~EiIODecl();
@@ -248,22 +244,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -280,7 +272,6 @@ public:
   module() const override;
 
   /// @brief 親の UDP の取得
-  /// @note このクラスでは nullptr を返す．
   const VlUdpDefn*
   udp_defn() const override;
 

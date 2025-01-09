@@ -109,6 +109,13 @@ EiBlockStmt::child_stmt(
   return mStmtList[pos];
 }
 
+// @brief 子供のステートメントのリストの取得
+vector<const VlStmt*>
+EiBlockStmt::child_stmt_list() const
+{
+  return mStmtList;
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiBegin

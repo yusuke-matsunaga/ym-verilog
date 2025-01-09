@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2010, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "EiOperation.h"
 
 
@@ -24,10 +23,10 @@ class EiConcatOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr_list オペランドのリスト
-  EiConcatOp(const PtExpr* pt_expr,
-	     const vector<ElbExpr*>& opr_list);
+  EiConcatOp(
+    const PtExpr* pt_expr,           ///< [in] パース木の定義要素
+    const vector<ElbExpr*>& opr_list ///< [in] オペランドのリスト
+  );
 
   /// @brief デストラクタ
   ~EiConcatOp();
@@ -43,7 +42,6 @@ public:
   value_type() const override;
 
   /// @brief 定数の時 true を返す．
-  /// @note オペランドが定数ならこの式も定数となる．
   bool
   is_const() const override;
 
@@ -53,7 +51,13 @@ public:
 
   /// @brief オペランドを返す．
   const VlExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos
+  ) const override;
+
+  /// @brief オペランドのリストを返す．
+  vector<const VlExpr*>
+  operand_list() const override;
 
 
 public:
@@ -62,10 +66,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 
 protected:
@@ -102,14 +106,12 @@ class EiMultiConcatOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] rep_num 繰り返し数
-  /// @param[in] rep_expr 繰り返し数を表す式
-  /// @param[in] opr_list オペランドのリスト
-  EiMultiConcatOp(const PtExpr* pt_expr,
-		  SizeType rep_num,
-		  ElbExpr* rep_expr,
-		  const vector<ElbExpr*>& opr_array);
+  EiMultiConcatOp(
+    const PtExpr* pt_expr,            ///< [in] パース木の定義要素
+    SizeType rep_num,                 ///< [in] 繰り返し数
+    ElbExpr* rep_expr,                ///< [in] 繰り返し数を表す式
+    const vector<ElbExpr*>& opr_array ///< [in] オペランドのリスト
+  );
 
   /// @brief デストラクタ
   ~EiMultiConcatOp();
@@ -130,7 +132,13 @@ public:
 
   /// @brief オペランドを返す．
   const VlExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos
+  ) const override;
+
+  /// @brief オペランドのリストを返す．
+  vector<const VlExpr*>
+  operand_list() const override;
 
   /// @brief 繰り返し数を返す．
   /// @note multiple concatenation の時のみ意味を持つ．

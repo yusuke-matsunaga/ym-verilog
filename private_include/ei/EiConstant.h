@@ -79,7 +79,7 @@ public:
   /// @brief コンストラクタ
   EiIntConst(
     const PtExpr* pt_expr, ///< [in] パース木の定義要素
-    std::int32_t value          ///< [in] 値
+    std::int32_t value     ///< [in] 値
   );
 
   /// @brief デストラクタ

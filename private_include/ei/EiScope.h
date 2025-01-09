@@ -25,8 +25,9 @@ class EiScope :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ環境
-  EiScope(const VlScope* parent);
+  EiScope(
+    const VlScope* parent ///< [in] 親のスコープ環境
+  );
 
   /// @brief デストラクタ
   ~EiScope();

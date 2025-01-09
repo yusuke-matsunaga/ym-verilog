@@ -264,6 +264,14 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < operand_num() )
   ) const = 0;
 
+  /// @brief オペランドのリストを返す．
+  ///
+  /// kVpiOperation の時，意味を持つ．
+  /// それ以外では nullptr を返す．
+  virtual
+  vector<const VlExpr*>
+  operand_list() const = 0;
+
   /// @brief 繰り返し数を返す．
   ///
   /// multiple concatenation の時のみ意味を持つ．
@@ -322,6 +330,14 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < argument_num() )
   ) const = 0;
 
+  /// @brief 引数のリストを返す．
+  ///
+  /// kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
+  /// それ以外では nullptr を返す．
+  virtual
+  vector<const VlExpr*>
+  argument_list() const = 0;
+
   /// @brief 左辺式の要素数の取得
   ///
   /// 通常は1だが，連結演算子の場合はその子供の数となる．
@@ -338,6 +354,13 @@ public:
   lhs_elem(
     SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
   ) const = 0;
+
+  /// @brief 左辺式の要素のリストの取得
+  ///
+  /// 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
+  virtual
+  vector<const VlExpr*>
+  lhs_elem_list() const = 0;
 
 };
 

@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ei/EiExpr.h"
 
 
@@ -24,10 +23,10 @@ class EiFcBase :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] arg_list 引数のリスト
-  EiFcBase(const PtExpr* pt_expr,
-	   const vector<ElbExpr*>& arg_list);
+  EiFcBase(
+    const PtExpr* pt_expr,           ///< [in] パース木の定義要素
+    const vector<ElbExpr*>& arg_list ///< [in] 引数のリスト
+  );
 
   /// @brief デストラクタ
   ~EiFcBase();
@@ -43,9 +42,14 @@ public:
   argument_num() const override;
 
   /// @brief 引数の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
   const VlExpr*
-  argument(SizeType pos) const override;
+  argument(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < argument_num() )
+  ) const override;
+
+  /// @brief 引数のリストの取得
+  vector<const VlExpr*>
+  argument_list() const override;
 
 
 public:
@@ -54,10 +58,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 
 protected:
@@ -81,12 +85,11 @@ class EiFuncCall :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] func 関数
-  /// @param[in] arg_list 引数のリスト
-  EiFuncCall(const PtExpr* pt_expr,
-	     const VlTaskFunc* func,
-	     const vector<ElbExpr*>& arg_list);
+  EiFuncCall(
+    const PtExpr* pt_expr,           ///< [in] パース木の定義要素
+    const VlTaskFunc* func,          ///< [in] 関数
+    const vector<ElbExpr*>& arg_list ///< [in] 引数のリスト
+  );
 
   /// @brief デストラクタ
   ~EiFuncCall();
@@ -120,7 +123,6 @@ public:
   is_funccall() const override;
 
   /// @brief 対象の関数を返す．
-  /// @note kVpiFuncCall の時，意味を持つ．
   const VlTaskFunc*
   function() const override;
 
@@ -146,12 +148,11 @@ class EiSysFuncCall :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] user_systf システム関数
-  /// @param[in] arg_list 引数のリスト
-  EiSysFuncCall(const PtExpr* pt_expr,
-		const VlUserSystf* user_systf,
-		const vector<ElbExpr*>& arg_list);
+  EiSysFuncCall(
+    const PtExpr* pt_expr,           ///< [in] パース木の定義要素
+    const VlUserSystf* user_systf,   ///< [in] システム関数
+    const vector<ElbExpr*>& arg_list ///< [in] 引数のリスト
+  );
 
   /// @brief デストラクタ
   ~EiSysFuncCall();
@@ -177,7 +178,6 @@ public:
   value_type() const override;
 
   /// @brief 定数の時 true を返す．
-  /// @note このクラスは false を返す．
   bool
   is_const() const override;
 
@@ -186,7 +186,6 @@ public:
   is_sysfunccall() const override;
 
   /// @brief 対象のシステム関数を返す．
-  /// @note kVpiSysFuncCall の時，意味を持つ．
   const VlUserSystf*
   user_systf() const override;
 

@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlNamedObj.h"
 #include "elaborator/ElbGfRoot.h"
 
@@ -20,7 +19,8 @@ BEGIN_NAMESPACE_YM_VERILOG
 //////////////////////////////////////////////////////////////////////
 /// @class EiGfRoot EiGfRoot.h "EiGfRoot.h"
 /// @brief GfBlock の親となるクラス
-/// @note スコープとしての親ではなく，名前による検索のためのオブジェクト
+///
+/// スコープとしての親ではなく，名前による検索のためのオブジェクト
 //////////////////////////////////////////////////////////////////////
 class EiGfRoot :
   public ElbGfRoot
@@ -28,10 +28,10 @@ class EiGfRoot :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item 対応するパース木の要素
-  EiGfRoot(const VlScope* parent,
-	   const PtItem* pt_item);
+  EiGfRoot(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item  ///< [in] 対応するパース木の要素
+  );
 
   /// @brief デストラクタ
   ~EiGfRoot();
@@ -72,12 +72,16 @@ public:
 
   /// @brief 子供のスコープを追加する．
   void
-  add(SizeType index,
-      const VlScope* block) override;
+  add(
+    SizeType index,
+    const VlScope* block
+  ) override;
 
   /// @brief 子供のスコープを取り出す．
   const VlScope*
-  elem_by_index(SizeType index) override;
+  elem_by_index(
+    SizeType index
+  ) override;
 
 
 private:

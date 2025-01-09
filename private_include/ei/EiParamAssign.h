@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlParamAssign.h"
 #include "ym/VlValue.h"
 
@@ -25,15 +24,13 @@ class EiParamAssign :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] param 対象の parameter
-  /// @param[in] rhs_expr 割り当て式の右辺
-  /// @param[in] rhs_value 右辺の値
-  EiParamAssign(const VlModule* module,
-		const PtBase* pt_obj,
-		ElbParameter* param,
-		const PtExpr* rhs_expr,
-		const VlValue& rhs_value);
+  EiParamAssign(
+    const VlModule* module,  ///< [in] 親のモジュール
+    const PtBase* pt_obj,    ///< [in] パース木の宣言要素
+    ElbParameter* param,     ///< [in] 対象の parameter
+    const PtExpr* rhs_expr,  ///< [in] 割り当て式の右辺
+    const VlValue& rhs_value ///< [in] 右辺の値
+  );
 
   /// @brief デストラクタ
   ~EiParamAssign();
@@ -75,7 +72,6 @@ public:
   rhs_string() const override;
 
   /// @brief 名前による接続の場合に true を返す．
-  /// @note このクラスでは false を返す．
   bool
   is_conn_by_name() const override;
 
@@ -113,16 +109,13 @@ class EiParamAssign2 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_obj パース木の接続を表す要素
-  /// @param[in] param 対象の parameter
-  /// @param[in] rhs_expr 割り当て式の右辺
-  /// @param[in] rhs_value 右辺の値
-  EiParamAssign2(const VlModule* module,
-		 const PtBase* pt_obj,
-		 ElbParameter* param,
-		 const PtExpr* rhs_expr,
-		 const VlValue& rhs_value);
+  EiParamAssign2(
+    const VlModule* module,  ///< [in] 親のモジュール
+    const PtBase* pt_obj,    ///< [in] パース木の接続を表す要素
+    ElbParameter* param,     ///< [in] 対象の parameter
+    const PtExpr* rhs_expr,  ///< [in] 割り当て式の右辺
+    const VlValue& rhs_value ///< [in] 右辺の値
+  );
 
   /// @brief デストラクタ
   ~EiParamAssign2();
@@ -151,18 +144,14 @@ class EiDefParam :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_header パース木の defparam ヘッダ
-  /// @param[in] pt_item パース木の defparam 定義
-  /// @param[in] param 対象の parameter
-  /// @param[in] rhs_expr 割り当て式の右辺
-  /// @param[in] rhs_value 右辺の値
-  EiDefParam(const VlModule* module,
-	     const PtItem* pt_header,
-	     const PtDefParam* pt_defparam,
-	     ElbParameter* param,
-	     const PtExpr* rhs_expr,
-	     const VlValue& rhs_value);
+  EiDefParam(
+    const VlModule* module,        ///< [in] 親のモジュール
+    const PtItem* pt_header,       ///< [in] パース木の defparam ヘッダ
+    const PtDefParam* pt_defparam, ///< [in] パース木の defparam 定義
+    ElbParameter* param,           ///< [in] 対象の parameter
+    const PtExpr* rhs_expr,        ///< [in] 割り当て式の右辺
+    const VlValue& rhs_value       ///< [in] 右辺の値
+  );
 
   /// @brief デストラクタ
   ~EiDefParam();

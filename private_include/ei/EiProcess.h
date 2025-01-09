@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbProcess.h"
 
 
@@ -24,10 +23,10 @@ class EiProcess :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_item パース木の要素定義
-  EiProcess(const VlScope* parent,
-	    const PtItem* pt_item);
+  EiProcess(
+    const VlScope* parent, ///< [in] 親のスコープ
+    const PtItem* pt_item  ///< [in] パース木の要素定義
+  );
 
   /// @brief デストラクタ
   ~EiProcess();
@@ -67,9 +66,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 本体のステートメントをセットする．
-  /// @param[in] stmt 本体のステートメント
   void
-  set_stmt(const VlStmt* stmt) override;
+  set_stmt(
+    const VlStmt* stmt ///< [in] 本体のステートメント
+  ) override;
 
 
 private:

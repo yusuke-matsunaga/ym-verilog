@@ -27,13 +27,11 @@ class EiDeclArray :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  /// @param[in] range_array 範囲の配列
-  EiDeclArray(ElbDeclHead* head,
-	      const PtNamedBase* pt_item,
-	      const vector<EiRange>& range_array);
+  EiDeclArray(
+    ElbDeclHead* head,                 ///< [in] ヘッダ
+    const PtNamedBase* pt_item,        ///< [in] パース木の宣言要素
+    const vector<EiRange>& range_array ///< [in] 範囲の配列
+  );
 
   /// @brief デストラクタ
   ~EiDeclArray();
@@ -73,7 +71,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @breif 値の型を返す．
-  /// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
   VlValueType
   value_type() const override;
 
@@ -88,26 +85,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  ///
-  /// 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  ///
-  /// 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -124,13 +113,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -188,31 +177,32 @@ public:
   dimension() const override;
 
   /// @brief 範囲の取得
-  /// @param[in] pos 位置 ( 0 <= pos < dimension() )
   const VlRange*
-  range(SizeType pos) const override;
+  range(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < dimension() )
+  ) const override;
 
   /// @brief 配列の要素数の取得
   SizeType
   array_size() const override;
 
   /// @brief 1次元配列の場合にインデックスからオフセットを計算する．
-  /// @param[in] index インデックス
-  /// @param[out] offset index に対するオフセット値
   /// @retval true index が範囲内だった．
   /// @retval false index が範囲外だった．
   bool
-  calc_array_offset(int index,
-		    SizeType& offset) const override;
+  calc_array_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] index に対するオフセット値
+  ) const override;
 
   /// @brief 他次元配列の場合にインデックスのリストからオフセットを計算する．
-  /// @param[in] index_list インデックスのリスト
-  /// @param[out] offset index_list に対するオフセット値
   /// @retval true オフセットが正しく計算できた．
   /// @retval false index_list のいずれかの値が範囲外だった．
   bool
-  calc_array_offset(const vector<int>& index_list,
-		    SizeType& offset) const override;
+  calc_array_offset(
+    const vector<int>& index_list, ///< [in] インデックスのリスト
+    SizeType& offset               ///< [out] index_list に対するオフセット値
+  ) const override;
 
 
 private:

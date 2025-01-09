@@ -12,7 +12,6 @@
 // IEEE Std 1364-2001 26.6.27 Process, block, statement, event statement
 // IEEE Std 1364-2001 26.6.38 Disable
 
-
 #include "EiStmt.h"
 
 
@@ -29,14 +28,12 @@ class EiEventStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] named_event 対象のイベント
-  EiEventStmt(const VlScope* parent,
-	      const VlProcess* process,
-	      const PtStmt* pt_stmt,
-	      ElbExpr* named_event);
+  EiEventStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in]	パース木のステートメント定義
+    ElbExpr* named_event      ///< [in]	対象のイベント
+  );
 
   /// @brief デストラクタ
   ~EiEventStmt();
@@ -83,12 +80,11 @@ class EiNullStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  EiNullStmt(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt);
+  EiNullStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt     ///< [in]	パース木のステートメント定義
+  );
 
   /// @brief デストラクタ
   ~EiNullStmt();
@@ -116,14 +112,12 @@ class EiTcBase :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] arg_array 引数を納める配列
-  EiTcBase(const VlScope* parent,
-	   const VlProcess* process,
-	   const PtStmt* pt_stmt,
-	   const vector<ElbExpr*>& arg_array);
+  EiTcBase(
+    const VlScope* parent,            ///< [in] 親のスコープ
+    const VlProcess* process,         ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,            ///< [in]	パース木のステートメント定義
+    const vector<ElbExpr*>& arg_array ///< [in] 引数を納める配列
+  );
 
   /// @brief デストラクタ
   ~EiTcBase() override;
@@ -136,12 +130,17 @@ public:
 
   /// @brief 引数の数を返す．
   SizeType
-  arg_num() const override;
+  argument_num() const override;
 
   /// @brief 引数の取得
-  /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
   const VlExpr*
-  arg(SizeType pos) const override;
+  argument(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < argument_num() )
+  ) const override;
+
+  /// @brief 引数のリストの取得
+  vector<const VlExpr*>
+  argument_list() const override;
 
 
 private:
@@ -150,11 +149,11 @@ private:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 引数の設定
-  /// @param[in] pos 位置番号
-  /// @param[in] arg 設定する引数
   void
-  set_argument(SizeType pos,
-	       ElbExpr* arg);
+  set_argument(
+    SizeType pos, ///< [in] 位置番号
+    ElbExpr* arg  ///< [in] 設定する引数
+  );
 
 
 private:
@@ -178,16 +177,13 @@ class EiTaskCall :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] task 対象のタスク
-  /// @param[in] arg_array 引数を納める配列
-  EiTaskCall(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt,
-	     const VlTaskFunc* task,
-	     const vector<ElbExpr*>& arg_array);
+  EiTaskCall(
+    const VlScope* parent,            ///< [in] 親のスコープ
+    const VlProcess* process,         ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,            ///< [in]	パース木のステートメント定義
+    const VlTaskFunc* task,           ///< [in]	対象のタスク
+    const vector<ElbExpr*>& arg_array ///< [in]	引数を納める配列
+  );
 
   /// @brief デストラクタ
   ~EiTaskCall();
@@ -234,16 +230,13 @@ class EiSysTaskCall :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] user_systf システムタスク
-  /// @param[in] arg_array 引数を納める配列
-  EiSysTaskCall(const VlScope* parent,
-		const VlProcess* process,
-		const PtStmt* pt_stmt,
-		const VlUserSystf* user_systf,
-		const vector<ElbExpr*>& arg_array);
+  EiSysTaskCall(
+    const VlScope* parent,            ///< [in] 親のスコープ
+    const VlProcess* process,         ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,            ///< [in]	パース木のステートメント定義
+    const VlUserSystf* user_systf,    ///< [in]	システムタスク
+    const vector<ElbExpr*>& arg_array ///< [in]	引数を納める配列
+  );
 
   /// @brief デストラクタ
   ~EiSysTaskCall();
@@ -291,14 +284,12 @@ class EiDisableStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] target 対象のスコープ
-  EiDisableStmt(const VlScope* parent,
-		const VlProcess* process,
-		const PtStmt* pt_stmt,
-		const VlScope* target);
+  EiDisableStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in]	パース木のステートメント定義
+    const VlScope* target     ///< [in] 対象のスコープ
+  );
 
   /// @brief デストラクタ
   ~EiDisableStmt();
@@ -351,16 +342,13 @@ class EiCtrlStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] control コントロール
-  /// @param[in] stmt 本体のステートメント
-  EiCtrlStmt(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt,
-	     const VlControl* control,
-	     const VlStmt* stmt);
+  EiCtrlStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in]	パース木のステートメント定義
+    const VlControl* control, ///< [in]	コントロール
+    const VlStmt* stmt        ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiCtrlStmt();

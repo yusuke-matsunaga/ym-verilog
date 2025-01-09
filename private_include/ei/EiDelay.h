@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlDelay.h"
 
 
@@ -24,10 +23,10 @@ class EiDelay :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_obj パース木の定義要素
-  /// @param[in] expr_list 式の配列
-  EiDelay(const PtBase* pt_obj,
-	  const vector<ElbExpr*>& expr_list);
+  EiDelay(
+    const PtBase* pt_obj,             ///< [in] パース木の定義要素
+    const vector<ElbExpr*>& expr_list ///< [in] 式の配列
+  );
 
   /// @brief デストラクタ
   ~EiDelay();
@@ -57,9 +56,14 @@ public:
   elem_num() const override;
 
   /// @brief 値を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < elem_num() )
   const VlExpr*
-  expr(SizeType pos) const override;
+  expr(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < elem_num() )
+  ) const override;
+
+  /// @brief 値のリストを返す．
+  vector<const VlExpr*>
+  expr_list() const override;
 
   /// @brief Verilog-HDL の文字列を得る．
   string

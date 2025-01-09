@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "EiConcatOp.h"
 
 
@@ -24,13 +23,11 @@ class EiLhs :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr_array オペランドを格納する配列
-  /// @param[in] lhs_elem_array 左辺の要素の配列
-  /// @note opr_array と lhs_elem_array は別物
-  EiLhs(const PtExpr* pt_expr,
-	const vector<ElbExpr*>& opr_array,
-	const vector<ElbExpr*>& lhs_elem_array);
+  EiLhs(
+    const PtExpr* pt_expr,                 ///< [in] パース木の定義要素
+    const vector<ElbExpr*>& opr_array,     ///< [in] オペランドを格納する配列
+    const vector<ElbExpr*>& lhs_elem_array ///< [in] 左辺の要素の配列
+  );
 
   /// @brief デストラクタ
   ~EiLhs();
@@ -42,16 +39,18 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 左辺式の要素数の取得
-  /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-  /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
   SizeType
   lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-  /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
   const VlExpr*
-  lhs_elem(SizeType pos) const override;
+  lhs_elem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
+  ) const override;
+
+  /// @brief 左辺式の要素のリストの取得
+  vector<const VlExpr*>
+  lhs_elem_list() const override;
 
 
 private:

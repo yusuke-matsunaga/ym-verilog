@@ -166,6 +166,11 @@ public:
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < port_num() )
   ) const = 0;
 
+  /// @brief ポート端子のリストを得る．
+  virtual
+  vector<const VlPrimTerm*>
+  prim_term_list() const = 0;
+
 };
 
 

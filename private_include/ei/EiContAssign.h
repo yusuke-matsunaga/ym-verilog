@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2008, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "ym/vl/VlContAssign.h"
 #include "elaborator/ElbCaHead.h"
 
@@ -25,10 +24,10 @@ class EiCaHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_head パース木のヘッダ定義
-  EiCaHead(const VlModule* module,
-	   const PtItem* pt_head);
+  EiCaHead(
+    const VlModule* module, ///< [in] 親のモジュール
+    const PtItem* pt_head   ///< [in] パース木のヘッダ定義
+  );
 
   /// @brief デストラクタ
   ~EiCaHead();
@@ -81,12 +80,11 @@ class EiCaHeadD :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_head パース木のヘッダ定義
-  /// @param[in] delay 遅延値
-  EiCaHeadD(const VlModule* module,
-	    const PtItem* pt_head,
-	    const VlDelay* delay);
+  EiCaHeadD(
+    const VlModule* module, ///< [in] 親のモジュール
+    const PtItem* pt_head,  ///< [in] パース木のヘッダ定義
+    const VlDelay* delay    ///< [in] 遅延値
+  );
 
   /// @brief デストラクタ
   ~EiCaHeadD();
@@ -123,12 +121,11 @@ class EiContAssign :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_obj 対応するパース木中の定義要素
-  /// @param[in] lhs 左辺式
-  /// @param[in] rhs 右辺式
-  EiContAssign(const PtBase* pt_obj,
-	       const VlExpr* lhs,
-	       const VlExpr* rhs);
+  EiContAssign(
+    const PtBase* pt_obj, ///< [in] 対応するパース木中の定義要素
+    const VlExpr* lhs,    ///< [in] 左辺式
+    const VlExpr* rhs     ///< [in] 右辺式
+  );
 
   /// @brief デストラクタ
   ~EiContAssign();
@@ -193,14 +190,12 @@ class EiContAssign1 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_obj 対応するパース木中の定義要素
-  /// @param[in] lhs 左辺式
-  /// @param[in] rhs 右辺式
-  EiContAssign1(ElbCaHead* head,
-		const PtBase* pt_obj,
-		const VlExpr* lhs,
-		const VlExpr* rhs);
+  EiContAssign1(
+    ElbCaHead* head,      ///< [in] ヘッダ
+    const PtBase* pt_obj, ///< [in] 対応するパース木中の定義要素
+    const VlExpr* lhs,    ///< [in] 左辺式
+    const VlExpr* rhs     ///< [in] 右辺式
+  );
 
   /// @brief デストラクタ
   ~EiContAssign1();
@@ -253,14 +248,12 @@ class EiContAssign2 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] module 親のモジュール
-  /// @param[in] pt_obj パース木の定義要素
-  /// @param[in] lhs 左辺式
-  /// @param[in] rhs 右辺式
-  EiContAssign2(const VlModule* module,
-		const PtBase* pt_obj,
-		const VlExpr* lhs,
-		const VlExpr* rhs);
+  EiContAssign2(
+    const VlModule* module, ///< [in] 親のモジュール
+    const PtBase* pt_obj,   ///< [in] パース木の定義要素
+    const VlExpr* lhs,      ///< [in] 左辺式
+    const VlExpr* rhs       ///< [in] 右辺式
+  );
 
   /// @brief デストラクタ
   ~EiContAssign2();

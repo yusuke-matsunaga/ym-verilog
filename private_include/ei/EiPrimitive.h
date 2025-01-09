@@ -30,10 +30,10 @@ class EiPrimHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_header パース木の定義
-  EiPrimHead(const VlScope* parent,
-	     const PtItem* pt_header);
+  EiPrimHead(
+    const VlScope* parent,  ///< [in] 親のスコープ
+    const PtItem* pt_header ///< [in] パース木の定義
+  );
 
   /// @brief デストラクタ
   ~EiPrimHead();
@@ -57,7 +57,6 @@ public:
   def_name() const override;
 
   /// @brief UDP 定義を返す．
-  /// @note このクラスでは nullptr を返す．
   const VlUdpDefn*
   udp_defn() const override;
 
@@ -74,14 +73,14 @@ public:
   drive1() const override;
 
   /// @brief 遅延式を得る．
-  /// @note このクラスでは nullptr を返す．
   const VlDelay*
   delay() const override;
 
   /// @brief 遅延式を設定する．
-  /// @note このクラスではなにもしない．
   void
-  set_delay(const VlDelay* expr) override;
+  set_delay(
+    const VlDelay* expr
+  ) override;
 
 
 private:
@@ -108,10 +107,10 @@ class EiPrimHeadD :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_header パース木の定義
-  EiPrimHeadD(const VlScope* parent,
-	      const PtItem* pt_header);
+  EiPrimHeadD(
+    const VlScope* parent,  ///< [in] 親のスコープ
+    const PtItem* pt_header ///< [in] パース木の定義
+  );
 
   /// @brief デストラクタ
   ~EiPrimHeadD();
@@ -128,7 +127,9 @@ public:
 
   /// @brief 遅延式を設定する．
   void
-  set_delay(const VlDelay* expr) override;
+  set_delay(
+    const VlDelay* expr
+  ) override;
 
 
 private:
@@ -152,12 +153,11 @@ class EiPrimHeadU :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_header パース木の定義
-  /// @param[in] udp UDP 定義
-  EiPrimHeadU(const VlScope* parent,
-	      const PtItem* pt_header,
-	      const VlUdpDefn* udp);
+  EiPrimHeadU(
+    const VlScope* parent,   ///< [in] 親のスコープ
+    const PtItem* pt_header, ///< [in] パース木の定義
+    const VlUdpDefn* udp     ///< [in] 定義
+  );
 
   /// @brief デストラクタ
   ~EiPrimHeadU();
@@ -202,12 +202,11 @@ class EiPrimHeadUD :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_header パース木の定義
-  /// @param[in] udp UDP 定義
-  EiPrimHeadUD(const VlScope* parent,
-	       const PtItem* pt_header,
-	       const VlUdpDefn* udp);
+  EiPrimHeadUD(
+    const VlScope* parent,   ///< [in] 親のスコープ
+    const PtItem* pt_header, ///< [in] パース木の定義
+    const VlUdpDefn* udp     ///< [in] 定義
+  );
 
   /// @brief デストラクタ
   ~EiPrimHeadUD();
@@ -224,7 +223,9 @@ public:
 
   /// @brief 遅延式を設定する．
   void
-  set_delay(const VlDelay* expr) override;
+  set_delay(
+    const VlDelay* expr
+  ) override;
 
 
 private:
@@ -248,12 +249,11 @@ class EiPrimHeadC :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_header パース木の定義
-  /// @param[in] cell セル
-  EiPrimHeadC(const VlScope* parent,
-	      const PtItem* pt_header,
-	      const ClibCell& cell);
+  EiPrimHeadC(
+    const VlScope* parent,   ///< [in] 親のスコープ
+    const PtItem* pt_header, ///< [in] パース木の定義
+    const ClibCell& cell     ///< [in] セル
+  );
 
   /// @brief デストラクタ
   ~EiPrimHeadC();
@@ -366,9 +366,14 @@ public:
   port_num() const override;
 
   /// @brief ポート端子を得る．
-  /// @param[in] pos 位置番号 (0 <= pos < port_num())
   const VlPrimTerm*
-  prim_term(SizeType pos) const override;
+  prim_term(
+    SizeType pos ///< [in] 位置番号 (0 <= pos < port_num())
+  ) const override;
+
+  /// @brief ポート端子のリストを得る．
+  vector<const VlPrimTerm*>
+  prim_term_list() const override;
 
 
 public:
@@ -377,11 +382,11 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 接続する．
-  /// @param[in] pos ポート番号 (0 から始まる)
-  /// @param[in] expr 接続する式
   void
-  connect(SizeType pos,
-	  const VlExpr* expr) override;
+  connect(
+    SizeType pos,      ///< [in] ポート番号 (0 から始まる)
+    const VlExpr* expr ///< [in] 接続する式
+  ) override;
 
 
 protected:
@@ -390,16 +395,17 @@ protected:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief ポート配列を初期化する．
-  /// @param[in] port_num ポート数
   void
-  init_port(SizeType port_num);
+  init_port(
+    SizeType port_num ///< [in] ポート数
+  );
 
   /// @brief ポート配列を初期化する．
-  /// @param[in] port_num ポート数
-  /// @param[in] cell セル
   void
-  init_port(SizeType port_num,
-	    const ClibCell& cell);
+  init_port(
+    SizeType port_num,   ///< [in] ポート数
+    const ClibCell& cell ///< [in] セル
+  );
 
 
 private:
@@ -446,24 +452,21 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 初期設定を行う．
-  /// @param[in] prim_array 親の配列
-  /// @param[in] index インデックス番号
-  /// @param[in] port_num 端子数
   void
-  init(EiPrimArray* prim_array,
-       SizeType index,
-       SizeType port_num);
+  init(
+    EiPrimArray* prim_array, ///< [in] 親の配列
+    SizeType index,          ///< [in] インデックス番号
+    SizeType port_num        ///< [in] 端子数
+  );
 
   /// @brief 初期設定を行う．
-  /// @param[in] prim_array 親の配列
-  /// @param[in] index インデックス番号
-  /// @param[in] port_num 端子数
-  /// @param[in] cell セル
   void
-  init(EiPrimArray* prim_array,
-       SizeType index,
-       SizeType port_num,
-       const ClibCell& cell);
+  init(
+    EiPrimArray* prim_array, ///< [in] 親の配列
+    SizeType index,          ///< [in] インデックス番号
+    SizeType port_num,       ///< [in] 端子数
+    const ClibCell& cell     ///< [in] セル
+  );
 
 
 public:
@@ -514,20 +517,17 @@ class EiPrimitive2 :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_inst インスタンス定義
-  /// @param[in] term_array 端子の配列
-  EiPrimitive2(ElbPrimHead* head,
-	       const PtInst* pt_inst);
+  EiPrimitive2(
+    ElbPrimHead* head,    ///< [in] ヘッダ
+    const PtInst* pt_inst ///< [in] インスタンス定義
+  );
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] cell セル
-  /// @param[in] pt_inst インスタンス定義
-  /// @param[in] term_array 端子の配列
-  EiPrimitive2(ElbPrimHead* head,
-	       const ClibCell& cell,
-	       const PtInst* pt_inst);
+  EiPrimitive2(
+    ElbPrimHead* head,    ///< [in] ヘッダ
+    const ClibCell& cell, ///< [in] セル
+    const PtInst* pt_inst ///< [in] インスタンス定義
+  );
 
   /// @brief デストラクタ
   ~EiPrimitive2();
@@ -581,26 +581,19 @@ class EiPrimArray :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_inst インスタンス定義
-  /// @param[in] range 範囲
-  /// @param[in] elem_array 要素の配列
-  /// @param[in] term_array 端子の配列
-  EiPrimArray(ElbPrimHead* head,
-	      const PtInst* pt_inst,
-	      const EiRangeImpl& range);
+  EiPrimArray(
+    ElbPrimHead* head,       ///< [in] ヘッダ
+    const PtInst* pt_inst,   ///< [in] インスタンス定義
+    const EiRangeImpl& range ///< [in] 範囲
+  );
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] cell セル
-  /// @param[in] pt_inst インスタンス定義
-  /// @param[in] range 範囲
-  /// @param[in] elem_array 要素の配列
-  /// @param[in] term_array 端子の配列
-  EiPrimArray(ElbPrimHead* head,
-	      const ClibCell& cell,
-	      const PtInst* pt_inst,
-	      const EiRangeImpl& range);
+  EiPrimArray(
+    ElbPrimHead* head,       ///< [in] ヘッダ
+    const ClibCell& cell,    ///< [in] セル
+    const PtInst* pt_inst,   ///< [in] インスタンス定義
+    const EiRangeImpl& range ///< [in] 範囲
+  );
 
   /// @brief デストラクタ
   ~EiPrimArray();
@@ -688,14 +681,16 @@ public:
   elem_num() const override;
 
   /// @brief 要素のプリミティブを返す．
-  /// @param[in] offset 位置番号 ( 0 <= offset < elem_num() )
   const VlPrimitive*
-  elem_by_offset(SizeType offset) const override;
+  elem_by_offset(
+    SizeType offset ///< [in] 位置番号 ( 0 <= offset < elem_num() )
+  ) const override;
 
   /// @brief 要素を返す．
-  /// @param[in] index インデックス
   const VlPrimitive*
-  elem_by_index(int index) const override;
+  elem_by_index(
+    int index ///< [in] インデックス
+  ) const override;
 
 
 public:
@@ -705,11 +700,15 @@ public:
 
   /// @brief 要素のプリミティブを取り出す．
   ElbPrimitive*
-  _primitive_by_offset(SizeType offset) override;
+  _primitive_by_offset(
+    SizeType offset
+  ) override;
 
   /// @brief 要素のプリミティブを取り出す．
   ElbPrimitive*
-  _primitive_by_index(int index) override;
+  _primitive_by_index(
+    int index
+  ) override;
 
   /// @brief ヘッダを得る．
   ElbPrimHead*
@@ -799,13 +798,17 @@ public:
 
   /// @brief 内容を設定する．
   void
-  set(const VlPrimitive* primitive,
-      SizeType index,
-      VpiDir dir);
+  set(
+    const VlPrimitive* primitive,
+    SizeType index,
+    VpiDir dir
+  );
 
   /// @brief 接続している式を設定する．
   void
-  set_expr(const VlExpr* expr);
+  set_expr(
+    const VlExpr* expr
+  );
 
 
 private:

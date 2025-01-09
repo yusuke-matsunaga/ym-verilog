@@ -46,18 +46,25 @@ EiStmt::user_systf() const
 
 // @brief 引数の数の取得
 SizeType
-EiStmt::arg_num() const
+EiStmt::argument_num() const
 {
   return 0;
 }
 
 // @brief 引数の取得
 const VlExpr*
-EiStmt::arg(
+EiStmt::argument(
   SizeType pos
 ) const
 {
   return nullptr;
+}
+
+// @brief 引数のリストの取得
+vector<const VlExpr*>
+EiStmt::argument_list() const
+{
+  return {};
 }
 
 // @brief control の取得
@@ -140,6 +147,14 @@ EiStmt::caseitem(
   return nullptr;
 }
 
+// @brief case item のリストの取得
+vector<const VlCaseItem*>
+EiStmt::caseitem_list() const
+{
+  ASSERT_NOT_REACHED;
+  return {};
+}
+
 // @brief 初期化代入文の取得
 const VlStmt*
 EiStmt::init_stmt() const
@@ -168,6 +183,13 @@ EiStmt::child_stmt(
 ) const
 {
   return nullptr;
+}
+
+// @brief 子供のステートメントのリストの取得
+vector<const VlStmt*>
+EiStmt::child_stmt_list() const
+{
+  return {};
 }
 
 // @brief disable 対象のスコープを得る．

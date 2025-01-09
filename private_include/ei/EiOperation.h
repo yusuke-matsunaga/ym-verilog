@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "EiExpr.h"
 
 
@@ -24,8 +23,9 @@ class EiOperation :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  EiOperation(const PtExpr* pt_expr);
+  EiOperation(
+    const PtExpr* pt_expr ///< [in] パース木の定義要素
+  );
 
   /// @brief デストラクタ
   ~EiOperation();

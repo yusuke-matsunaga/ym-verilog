@@ -218,6 +218,13 @@ EiPrimary::lhs_elem(
   return this;
 }
 
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiPrimary::lhs_elem_list() const
+{
+  return {this};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiDeclPrimary
@@ -301,6 +308,13 @@ EiDeclPrimary::lhs_elem(
 {
   ASSERT_COND( pos == 0 );
   return this;
+}
+
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiDeclPrimary::lhs_elem_list() const
+{
+  return {this};
 }
 
 // @brief 要求される式の型を計算してセットする．
@@ -403,6 +417,13 @@ EiDeclArrayPrimary::lhs_elem(
 {
   ASSERT_COND( pos == 0 );
   return this;
+}
+
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiDeclArrayPrimary::lhs_elem_list() const
+{
+  return {this};
 }
 
 // @brief 要求される式の型を計算してセットする．
@@ -572,6 +593,13 @@ EiArrayElemPrimary::lhs_elem(
   return this;
 }
 
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiArrayElemPrimary::lhs_elem_list() const
+{
+  return {this};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // クラス EiConstArrayElemPrimary
@@ -674,6 +702,13 @@ EiConstArrayElemPrimary::lhs_elem(
 {
   ASSERT_COND( pos == 0 );
   return this;
+}
+
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiConstArrayElemPrimary::lhs_elem_list() const
+{
+  return {this};
 }
 
 

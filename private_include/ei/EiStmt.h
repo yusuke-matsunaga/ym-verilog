@@ -14,7 +14,6 @@
 // IEEE Std 1364-2001 26.6.30 Event control
 // IEEE Std 1364-2001 26.6.37 Assign statement, deassign, force, release
 
-
 #include "ym/vl/VlStmt.h"
 #include "ym/pt/PtP.h"
 
@@ -33,8 +32,9 @@ class EiStmt :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] process 親のプロセス (or nullptr)
-  EiStmt(const VlProcess* process);
+  EiStmt(
+    const VlProcess* process ///< [in] 親のプロセス (or nullptr)
+  );
 
   /// デストラクタ
   ~EiStmt() = default;
@@ -81,10 +81,9 @@ public:
   ///
   /// このクラスでは 0 を返す．
   SizeType
-  arg_num() const override;
+  argument_num() const override;
 
   /// @brief 引数の取得
-  /// @param[in] pos 位置 (0 <= pos < arg_num())
   ///
   /// この関数が意味を持つオブジェクトの型
   ///  - kVpiSysTaskCall
@@ -92,7 +91,19 @@ public:
   ///
   /// このクラスでは nullptr を返す．
   const VlExpr*
-  arg(SizeType pos) const override;
+  argument(
+    SizeType pos ///< [in] 位置 (0 <= pos < arg_num())
+  ) const override;
+
+  /// @brief 引数のリストの取得
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  ///  - kVpiSysTaskCall
+  ///  - kVpiTaskCall
+  ///
+  /// このクラスでは {} を返す．
+  vector<const VlExpr*>
+  argument_list() const override;
 
   /// @brief control の取得
   ///
@@ -212,14 +223,24 @@ public:
   caseitem_num() const override;
 
   /// @brief case item の取得
-  /// @param[in] pos 位置番号 (0 <= pos < caseitem_num())
   ///
   /// この関数が意味を持つオブジェクトの型
   ///  - kVpiCase
   ///
   /// このクラスでは nullptr を返す．
   const VlCaseItem*
-  caseitem(SizeType pos) const override;
+  caseitem(
+    SizeType pos ///< [in] 位置番号 (0 <= pos < caseitem_num())
+  ) const override;
+
+  /// @brief case item のリストの取得
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  ///  - kVpiCase
+  ///
+  /// このクラスでは {} を返す．
+  vector<const VlCaseItem*>
+  caseitem_list() const override;
 
   /// @brief 初期化代入文の取得
   ///
@@ -252,7 +273,6 @@ public:
   child_stmt_num() const override;
 
   /// @brief 子供のステートメントの取得
-  /// @param[in] pos 位置番号 (0 <= pos < stmt_num())
   ///
   /// この関数が意味を持つオブジェクトの型
   /// このクラスではなにもしない．
@@ -261,7 +281,20 @@ public:
   ///  - kVpiNamedBegin
   ///  - kVpiNamedFork
   const VlStmt*
-  child_stmt(SizeType pos) const override;
+  child_stmt(
+    SizeType pos ///< [in] 位置番号 (0 <= pos < stmt_num())
+  ) const override;
+
+  /// @brief 子供のステートメントのリストの取得
+  ///
+  /// この関数が意味を持つオブジェクトの型
+  /// このクラスではなにもしない．
+  ///  - kVpiBegin
+  ///  - kVpiFork
+  ///  - kVpiNamedBegin
+  ///  - kVpiNamedFork
+  vector<const VlStmt*>
+  child_stmt_list() const override;
 
   /// @brief disable 対象のスコープを得る．
   const VlScope*
@@ -291,12 +324,11 @@ class EiStmtBase :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  EiStmtBase(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt);
+  EiStmtBase(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in]	親のプロセス (or nullptr)
+    const PtStmt* pt_stmt     ///< [in]	パース木のステートメント定義
+  );
 
   /// デストラクタ
   ~EiStmtBase() = default;
@@ -323,7 +355,10 @@ protected:
 
   /// @brief パース木の定義要素を得る．
   const PtStmt*
-  pt_stmt() const;
+  pt_stmt() const
+  {
+    return mPtStmt;
+  }
 
 
 private:
@@ -338,19 +373,6 @@ private:
   const PtStmt* mPtStmt;
 
 };
-
-
-//////////////////////////////////////////////////////////////////////
-// インライン関数の定義
-//////////////////////////////////////////////////////////////////////
-
-// @brief パース木の定義要素を得る．
-inline
-const PtStmt*
-EiStmtBase::pt_stmt() const
-{
-  return mPtStmt;
-}
 
 END_NAMESPACE_YM_VERILOG
 

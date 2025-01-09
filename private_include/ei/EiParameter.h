@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbParameter.h"
 #include "EiRange.h"
 
@@ -27,10 +26,10 @@ class EiParamHead :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木の宣言ヘッダ
-  EiParamHead(const VlScope* parent,
-	      const PtDeclHead* pt_head);
+  EiParamHead(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const PtDeclHead* pt_head ///< [in] パース木の宣言ヘッダ
+  );
 
   /// @brief デストラクタ
   ~EiParamHead();
@@ -50,34 +49,30 @@ public:
   parent_scope() const override;
 
   /// @brief 符号の取得
-  /// @param[in] val 値
   /// @retval true 符号つき
   /// @retval false 符号なし
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   bool
-  is_signed(const VlValue& val) const override;
+  is_signed(
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @brief 範囲指定を持つとき true を返す．
   bool
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -90,28 +85,26 @@ public:
   is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  /// @param[in] val 値
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   SizeType
-  bit_size(const VlValue& val) const override;
+  bit_size(
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
-  /// @param[in] val 値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset,
-		  const VlValue& val) const override;
+  calc_bit_offset(
+    int index,         ///< [in] インデックス
+    SizeType& offset,  ///< [out] インデックスに対するオフセット値
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @breif 値の型を返す．
-  /// @param[in] val 値
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   VlValueType
-  value_type(const VlValue& val) const override;
+  value_type(
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @brief データ型の取得
   VpiVarType
@@ -152,18 +145,14 @@ class EiParamHeadV :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] pt_head パース木の宣言ヘッダ
-  /// @param[in] left 範囲の左側の式
-  /// @param[in] right 範囲の右側の式
-  /// @param[in] left_val 範囲の左側の値
-  /// @param[in] right_val 範囲の右側の値
-  EiParamHeadV(const VlScope* parent,
-	       const PtDeclHead* pt_head,
-	       const PtExpr* left,
-	       const PtExpr* right,
-	       int left_val,
-	       int right_val);
+  EiParamHeadV(
+    const VlScope* parent,     ///< [in] 親のスコープ
+    const PtDeclHead* pt_head, ///< [in] パース木の宣言ヘッダ
+    const PtExpr* left,        ///< [in] 範囲の左側の式
+    const PtExpr* right,       ///< [in] 範囲の右側の式
+    int left_val,              ///< [in] 範囲の左側の値
+    int right_val              ///< [in] 範囲の右側の値
+  );
 
   /// @brief デストラクタ
   ~EiParamHeadV();
@@ -175,34 +164,30 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 符号の取得
-  /// @param[in] val 値
   /// @retval true 符号つき
   /// @retval false 符号なし
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   bool
-  is_signed(const VlValue& val) const override;
+  is_signed(
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @brief 範囲指定を持つとき true を返す．
   bool
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -215,28 +200,26 @@ public:
   is_little_endian() const override;
 
   /// @brief ビット幅を返す．
-  /// @param[in] val 値
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   SizeType
-  bit_size(const VlValue& val) const override;
+  bit_size(
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
-  /// @param[in] val 値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset,
-		  const VlValue& val) const override;
+  calc_bit_offset(
+    int index,         ///< [in] インデックス
+    SizeType& offset,  ///< [out] インデックスに対するオフセット値
+    const VlValue& val ///< [in] 値
+  ) const override;
 
   /// @breif 値の型を返す．
-  /// @param[in] val 値
-  /// @note ヘッダに型指定がない時は値から情報を得る．
   VlValueType
-  value_type(const VlValue& val) const override;
+  value_type(
+    const VlValue& val ///< [in] 値
+  ) const override;
 
 
 protected:
@@ -260,10 +243,10 @@ class EiParameter :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiParameter(ElbParamHead* head,
-	      const PtNamedBase* pt_item);
+  EiParameter(
+    ElbParamHead* head,        ///< [in] ヘッダ
+    const PtNamedBase* pt_item ///< [in] パース木の宣言要素
+  );
 
   /// @brief デストラクタ
   ~EiParameter();
@@ -303,7 +286,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @breif 値の型を返す．
-  /// @note 値を持たないオブジェクトの場合には kVpiValueNone を返す．
   VlValueType
   value_type() const override;
 
@@ -318,22 +300,18 @@ public:
   has_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 範囲を持たないときの値は不定
   int
   right_range_val() const override;
 
   /// @brief 範囲のMSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   left_range_string() const override;
 
   /// @brief 範囲のLSBを表す文字列の取得
-  /// @note 範囲を持たない時の値は不定
   string
   right_range_string() const override;
 
@@ -350,13 +328,13 @@ public:
   bit_size() const override;
 
   /// @brief オフセット値の取得
-  /// @param[in] index インデックス
-  /// @param[out] offset インデックスに対するオフセット値
   /// @retval true インデックスが範囲内に入っている時
   /// @retval false インデックスが範囲外の時
   bool
-  calc_bit_offset(int index,
-		  SizeType& offset) const override;
+  calc_bit_offset(
+    int index,       ///< [in] インデックス
+    SizeType& offset ///< [out] インデックスに対するオフセット値
+  ) const override;
 
   /// @brief データ型の取得
   /// @retval データ型 kParam, kLocalParam, kVar の場合
@@ -367,7 +345,6 @@ public:
   /// @brief net 型の取得
   /// @retval net 型 net 型の要素の場合
   /// @retval kVpiNone net 型の要素でない場合
-  /// @note このクラスでは kVpiNone を返す．
   VpiNetType
   net_type() const override;
 
@@ -375,40 +352,34 @@ public:
   /// @retval kVpiVsNone vectored|scalared 指定なし
   /// @retval kVpiVectored vectored 指定あり
   /// @retval kVpiScalared scalared 指定あり
-  /// @note このクラスでは kVpiVsNone を返す．
   VpiVsType
   vs_type() const override;
 
   /// @brief drive0 strength の取得
   /// @retval 0 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  /// @note このクラスでは kVpiNoStrength を返す．
   VpiStrength
   drive0() const override;
 
   /// @brief drive1 strength の取得
   /// @retval 1 の強度
   /// @retval kVpiNoStrength strength の指定なし
-  /// @note kVpiNoStrength を返す．
   VpiStrength
   drive1() const override;
 
   /// @brief charge strength の取得
   /// @retval 電荷の強度
   /// @retval kVpiNoStrength strength の指定なし
-  /// @note このクラスでは kVpiNoStrength を返す．
   VpiStrength
   charge() const override;
 
   /// @brief delay の取得
   /// @retval delay
   /// @retval nullptr delay の指定なし
-  /// @note このクラスでは nullptr を返す．
   const VlDelay*
   delay() const override;
 
   /// @brief 定数値を持つ型のときに true を返す．
-  /// @note このクラスは true を返す．
   bool
   is_consttype() const override;
 
@@ -419,7 +390,6 @@ public:
   init_value() const override;
 
   /// @brief localparam のときに true 返す．
-  /// @note このクラスでは false を返す．
   bool
   is_local_param() const override;
 
@@ -438,11 +408,11 @@ public:
   value() const override;
 
   /// @brief 値の設定
-  /// @param[in] expr 値を表す式
-  /// @param[in] value 値
   void
-  set_init_expr(const PtExpr* expr,
-		const VlValue& value) override;
+  set_init_expr(
+    const PtExpr* expr,  ///< [in] 値を表す式
+    const VlValue& value ///< [in] 値
+  ) override;
 
 
 private:
@@ -475,10 +445,10 @@ class EiLocalParam :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] head ヘッダ
-  /// @param[in] pt_item パース木の宣言要素
-  EiLocalParam(ElbParamHead* head,
-	       const PtNamedBase* pt_item);
+  EiLocalParam(
+    ElbParamHead* head,        ///< [in] ヘッダ
+    const PtNamedBase* pt_item ///< [in] パース木の宣言要素
+  );
 
   /// @brief デストラクタ
   ~EiLocalParam();

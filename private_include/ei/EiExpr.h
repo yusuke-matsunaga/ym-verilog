@@ -8,7 +8,6 @@
 /// Copyright (C) 2005-2011, 2014, 2020 Yusuke Matsunaga
 /// All rights reserved.
 
-
 #include "elaborator/ElbExpr.h"
 #include "ym/pt/PtP.h"
 
@@ -47,13 +46,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数の時 true を返す．
-  /// @note このクラスは false を返す．
   bool
   is_const() const override;
 
   /// @brief 固定選択子の時 true を返す．
-  /// @note ビット選択，部分選択の時，意味を持つ．
-  /// @note このクラスでは false を返す．
   bool
   is_constant_select() const override;
 
@@ -82,38 +78,32 @@ public:
   is_sysfunccall() const override;
 
   /// @brief 宣言要素もしくは配列型宣言要素への参照を返す．
-  /// @note それ以外では nullptr を返す．
   const VlDeclBase*
   decl_base() const override;
 
   /// @brief 宣言要素への参照の場合，対象のオブジェクトを返す．
-  /// @note このクラスでは nullptr を返す．
   const VlDecl*
   decl_obj() const override;
 
   /// @brief 宣言要素の配列への参照の場合，対象のオブジェクトを返す．
-  /// @note それ以外では nullptr を返す．
   const VlDeclArray*
   declarray_obj() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列の次元を返す．
-  /// @note このクラスでは 0 を返す．
   SizeType
   declarray_dimension() const override;
 
   /// @brief 配列型宣言要素への参照の場合，配列のインデックスを返す．
- /// @param[in] pos 位置番号 ( 0 <= pos < declarray_dimension() )
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  declarray_index(SizeType pos) const override;
+  declarray_index(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < declarray_dimension() )
+  ) const override;
 
   /// @brief 配列型宣言要素への参照のオフセットを返す．
-  /// @note 固定インデックスの場合のみ意味を持つ．
   SizeType
   declarray_offset() const override;
 
   /// @brief スコープへの参照の場合，対象のオブジェクトを返す．
-  /// @note このクラスでは nullptr を返す．
   const VlScope*
   scope_obj() const override;
 
@@ -122,20 +112,14 @@ public:
   primitive_obj() const override;
 
   /// @brief 親の式を返す．
-  /// @note 式に対するビット選択/範囲選択の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
   parent_expr() const override;
 
   /// @brief インデックス式を返す．
-  /// @note ビット選択の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
   index() const override;
 
   /// @brief インデックス値を返す．
-  /// @note 式に対するビット選択の時，意味を持つ．
-  /// @note このクラスでは 0 を返す．
   int
   index_val() const override;
 
@@ -144,115 +128,94 @@ public:
   range_mode() const override;
 
   /// @brief 範囲の MSB を返す．
-  /// @note 部分選択の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
   left_range() const override;
 
   /// @brief 範囲の MSB の値を返す．
-  /// @note 式に対する範囲選択の時，意味を持つ．
-  /// @note このクラスでは 0 を返す．
   int
   left_range_val() const override;
 
   /// @brief 範囲の LSB を返す．
-  /// @note 部分選択の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
   right_range() const override;
 
   /// @brief 範囲の LSB の値を返す．
-  /// @note 式に対する範囲選択の時，意味を持つ．
-  /// @note このクラスでは 0 を返す．
   int
   right_range_val() const override;
 
   /// @brief 範囲のベースを表す式を返す．
-  /// @note 可変範囲選択の時，意味を持つ．
-  /// @note それ以外では nullptr を返す．
   const VlExpr*
   base() const override;
 
   /// @brief 範囲のビット幅を返す．
-  /// @note 可変範囲選択の時，意味を持つ．
-  /// @note それ以外では 0 を返す．
   SizeType
   range_width() const override;
 
   /// @brief 演算子のタイプを返す．
-  /// @note 演算子の時，意味を持つ．
-  /// @note このクラスでは kVlNullOp を返す．
   VpiOpType
   op_type() const override;
 
   /// @brief オペランド数を返す．
-  /// @note 演算子の時，意味を持つ．
-  /// @note このクラスでは 0 を返す．
   SizeType
   operand_num() const override;
 
   /// @brief オペランドを返す．
-  /// @param[in] pos 位置番号
-  /// @note 演算子の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos ///< [in] 位置番号
+  ) const override;
+
+  /// @brief オペランドのリストを返す．
+  vector<const VlExpr*>
+  operand_list() const override;
 
   /// @brief 繰り返し数を返す．
-  /// @note multiple concatenation の時のみ意味を持つ．
   SizeType
   rep_num() const override;
 
   /// @brief 定数の型を返す．
-  /// @note 定数の時，意味を持つ．
-  /// @note このクラスでは動作は不定
   VpiConstType
   constant_type() const override;
 
   /// @brief 定数値を返す．
-  /// @note kVpiConstant の時，意味を持つ．
-  /// @note それ以外では動作は不定
   VlValue
   constant_value() const override;
 
   /// @brief 対象の関数を返す．
-  /// @note kVpiFuncCall の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlTaskFunc*
   function() const override;
 
   /// @brief 対象のシステム関数を返す．
-  /// @note kVpiSysFuncCall の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlUserSystf*
   user_systf() const override;
 
   /// @brief 引数の数を返す．
-  /// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
-  /// @note このクラスでは 0 を返す．
   SizeType
   argument_num() const override;
 
   /// @brief 引数を返す．
-  /// @param[in] pos 位置番号 ( 0 <= pos < argument_num() )
-  /// @note kVpiFuncCall/kVpiSysFuncCall の時，意味を持つ．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  argument(SizeType pos) const override;
+  argument(
+    SizeType pos ///< [in] 位置番号 ( 0 <= pos < argument_num() )
+  ) const override;
+
+  /// @brief 引数のリストを返す．
+  vector<const VlExpr*>
+  argument_list() const override;
 
   /// @brief 左辺式の要素数の取得
-  /// @note 通常は1だが，連結演算子の場合はその子供の数となる．
-  /// @note ただし，連結演算の入れ子はすべて平坦化して考える．
-  /// @note このクラスでは 0 を返す．
   SizeType
   lhs_elem_num() const override;
 
   /// @brief 左辺式の要素の取得
-  /// @param[in] pos 位置 ( 0 <= pos < lhs_elem_num() )
-  /// @note 連結演算子の見かけと異なり LSB 側が0番めの要素となる．
-  /// @note このクラスでは nullptr を返す．
   const VlExpr*
-  lhs_elem(SizeType pos) const override;
+  lhs_elem(
+    SizeType pos ///< [in] 位置 ( 0 <= pos < lhs_elem_num() )
+  ) const override;
+
+  /// @brief 左辺式の要素のリストの取得
+  vector<const VlExpr*>
+  lhs_elem_list() const override;
 
 
 private:
@@ -278,8 +241,9 @@ class EiExprBase :
 protected:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  EiExprBase(const PtExpr* pt_expr);
+  EiExprBase(
+    const PtExpr* pt_expr ///< [in] パース木の定義要素
+  );
 
   /// @brief デストラクタ
   ~EiExprBase();

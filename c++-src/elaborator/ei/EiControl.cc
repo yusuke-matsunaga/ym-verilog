@@ -108,6 +108,13 @@ EiControl::event(
   return nullptr;
 }
 
+// @brief イベント条件式のリストを返す．
+vector<const VlExpr*>
+EiControl::event_list() const
+{
+  return {};
+}
+
 
 //////////////////////////////////////////////////////////////////////
 /// クラス EiDelayControl
@@ -182,6 +189,13 @@ EiEventControl::event(
 {
   ASSERT_COND( 0 <= pos && pos < event_num() );
   return mEventList[pos];
+}
+
+// @brief イベント条件式のリストを返す．
+vector<const VlExpr*>
+EiEventControl::event_list() const
+{
+  return vector<const VlExpr*>{mEventList.begin(), mEventList.end()};
 }
 
 

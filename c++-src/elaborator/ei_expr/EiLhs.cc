@@ -66,4 +66,11 @@ EiLhs::lhs_elem(
   return mArray[pos];
 }
 
+// @brief 左辺式の要素のリストの取得
+vector<const VlExpr*>
+EiLhs::lhs_elem_list() const
+{
+  return vector<const VlExpr*>{mArray.begin(), mArray.end()};
+}
+
 END_NAMESPACE_YM_VERILOG

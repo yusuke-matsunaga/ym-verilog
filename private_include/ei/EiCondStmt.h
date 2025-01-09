@@ -15,7 +15,6 @@
 // IEEE Std 1364-2001 26.6.35 If, if-else
 // IEEE Std 1364-2001 26.6.36 Case
 
-
 #include "EiStmt.h"
 
 
@@ -32,16 +31,13 @@ class EiLoopStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] stmt 本体のステートメント
-  EiLoopStmt(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt,
-	     const VlExpr* cond,
-	     const VlStmt* stmt);
+  EiLoopStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,       ///< [in] 条件式
+    const VlStmt* stmt        ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiLoopStmt();
@@ -86,16 +82,13 @@ class EiWhileStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] stmt 本体のステートメント
-  EiWhileStmt(const VlScope* parent,
-	      const VlProcess* process,
-	      const PtStmt* pt_stmt,
-	      const VlExpr* cond,
-	      const VlStmt* stmt);
+  EiWhileStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,       ///< [in] 条件式
+    const VlStmt* stmt        ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiWhileStmt();
@@ -124,16 +117,13 @@ class EiRepeatStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] stmt 本体のステートメント
-  EiRepeatStmt(const VlScope* parent,
-	       const VlProcess* process,
-	       const PtStmt* pt_stmt,
-	       const VlExpr* cond,
-	       const VlStmt* stmt);
+  EiRepeatStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,	      ///< [in] 条件式
+    const VlStmt* stmt	      ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiRepeatStmt();
@@ -162,16 +152,13 @@ class EiWaitStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] stmt 本体のステートメント
-  EiWaitStmt(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt,
-	     const VlExpr* cond,
-	     const VlStmt* stmt);
+  EiWaitStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,	      ///< [in] 条件式
+    const VlStmt* stmt	      ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiWaitStmt();
@@ -200,20 +187,15 @@ class EiForStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] init_stmt 初期化式
-  /// @param[in] inc_stmt 増加式
-  /// @param[in] stmt 本体のステートメント
-  EiForStmt(const VlScope* parent,
-	    const VlProcess* process,
-	    const PtStmt* pt_stmt,
-	    const VlExpr* cond,
-	    const VlStmt* init_stmt,
-	    const VlStmt* inc_stmt,
-	    const VlStmt* stmt);
+  EiForStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,	      ///< [in] 条件式
+    const VlStmt* init_stmt,  ///< [in] 初期化式
+    const VlStmt* inc_stmt,   ///< [in] 増加式
+    const VlStmt* stmt        ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiForStmt();
@@ -268,14 +250,12 @@ class EiForeverStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] stmt 本体のステートメント
-  EiForeverStmt(const VlScope* parent,
-		const VlProcess* process,
-		const PtStmt* pt_stmt,
-		const VlStmt* stmt);
+  EiForeverStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlStmt* stmt	      ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiForeverStmt();
@@ -323,16 +303,13 @@ class EiIfStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] stmt 本体のステートメント
-  EiIfStmt(const VlScope* parent,
-	   const VlProcess* process,
-	   const PtStmt* pt_stmt,
-	   const VlExpr* cond,
-	   const VlStmt* stmt);
+  EiIfStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,	      ///< [in] 条件式
+    const VlStmt* stmt	      ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiIfStmt();
@@ -387,18 +364,14 @@ class EiIfElseStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] cond 条件式
-  /// @param[in] stmt 本体のステートメント
-  /// @param[in] else_stmt else節のステートメント
-  EiIfElseStmt(const VlScope* parent,
-	       const VlProcess* process,
-	       const PtStmt* pt_stmt,
-	       const VlExpr* cond,
-	       const VlStmt* stmt,
-	       const VlStmt* else_stmt);
+  EiIfElseStmt(
+    const VlScope* parent,    ///< [in] 親のスコープ
+    const VlProcess* process, ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,    ///< [in] パース木のステートメント定義
+    const VlExpr* cond,	      ///< [in] 条件式
+    const VlStmt* stmt,	      ///< [in] 本体のステートメント
+    const VlStmt* else_stmt   ///< [in] else節のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiIfElseStmt();
@@ -446,12 +419,11 @@ class EiCaseItem :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_item パース木の caseitem 要素
-  /// @param[in] label_list ラベルを表す式のリスト
-  /// @param[in] body 本体のステートメント
-  EiCaseItem(const PtCaseItem* pt_item,
-	     const vector<ElbExpr*>& label_list,
-	     const VlStmt* body);
+  EiCaseItem(
+    const PtCaseItem* pt_item,          ///< [in] パース木の caseitem 要素
+    const vector<ElbExpr*>& label_list, ///< [in] ラベルを表す式のリスト
+    const VlStmt* body                  ///< [in] 本体のステートメント
+  );
 
   /// @brief デストラクタ
   ~EiCaseItem();
@@ -481,9 +453,14 @@ public:
   expr_num() const override;
 
   /// @brief 条件式を返す．
-  /// @param[in] pos 位置番号
   const VlExpr*
-  expr(SizeType pos) const override;
+  expr(
+    SizeType pos ///< [in] 位置番号
+  ) const override;
+
+  /// @brief 条件式のリストを返す．
+  vector<const VlExpr*>
+  expr_list() const override;
 
   /// @brief 本体のステートメントを返す．
   const VlStmt*
@@ -518,16 +495,13 @@ class EiCaseStmt :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] parent 親のスコープ
-  /// @param[in] process 親のプロセス (or nullptr)
-  /// @param[in] pt_stmt パース木のステートメント定義
-  /// @param[in] expr 条件式
-  /// @param[in] caseitem_list caseitem のリスト
-  EiCaseStmt(const VlScope* parent,
-	     const VlProcess* process,
-	     const PtStmt* pt_stmt,
-	     const VlExpr* expr,
-	     const vector<const VlCaseItem*>& caseitem_list);
+  EiCaseStmt(
+    const VlScope* parent,                     ///< [in] 親のスコープ
+    const VlProcess* process,                  ///< [in] 親のプロセス (or nullptr)
+    const PtStmt* pt_stmt,                     ///< [in] パース木のステートメント定義
+    const VlExpr* expr,                        ///< [in] 条件式
+    const vector<const VlCaseItem*>& item_list ///< [in] caseitem のリスト
+  );
 
   /// @brief デストラクタ
   ~EiCaseStmt();
@@ -561,9 +535,14 @@ public:
   caseitem_num() const override;
 
   /// @brief case item を返す．
-  /// @param[in] pos 位置番号
   const VlCaseItem*
-  caseitem(SizeType pos) const override;
+  caseitem(
+    SizeType pos ///< [in] 位置番号
+  ) const override;
+
+  /// @brief case item のリストを返す．
+  vector<const VlCaseItem*>
+  caseitem_list() const override;
 
 
 private:

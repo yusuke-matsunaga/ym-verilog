@@ -141,6 +141,18 @@ EiTaskFunc::io(
   return &mIODeclList[pos];
 }
 
+// @brief 入出力のリストの取得
+vector<const VlIODecl*>
+EiTaskFunc::io_list() const
+{
+  vector<const VlIODecl*> ans_list;
+  ans_list.reserve(io_num());
+  for ( auto& io: mIODeclList ) {
+    ans_list.push_back(&io);
+  }
+  return ans_list;
+}
+
 // @brief 本体のステートメントを得る．
 const VlStmt*
 EiTaskFunc::stmt() const

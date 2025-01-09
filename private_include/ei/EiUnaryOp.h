@@ -30,7 +30,6 @@
 //     - PosedgeOp, NegedgeOp
 //////////////////////////////////////////////////////////////////////
 
-
 #include "EiOperation.h"
 
 
@@ -46,10 +45,10 @@ class EiUnaryOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド
-  EiUnaryOp(const PtExpr* pt_expr,
-	    ElbExpr* opr1);
+  EiUnaryOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1          ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
   ~EiUnaryOp();
@@ -61,7 +60,6 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 定数の時 true を返す．
-  /// @note オペランドが定数ならこの式も定数となる．
   bool
   is_const() const override;
 
@@ -71,7 +69,13 @@ public:
 
   /// @brief オペランドを返す．
   const VlExpr*
-  operand(SizeType pos) const override;
+  operand(
+    SizeType pos
+  ) const override;
+
+  /// @brief オペランドのリストを返す．
+  vector<const VlExpr*>
+  operand_list() const override;
 
 
 protected:
@@ -95,10 +99,10 @@ class EiNotOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド
-  EiNotOp(const PtExpr* pt_expr,
-	  ElbExpr* opr1);
+  EiNotOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1          ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
   ~EiNotOp();
@@ -120,10 +124,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 };
 
@@ -138,10 +142,10 @@ class EiBitNegOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド
-  EiBitNegOp(const PtExpr* pt_expr,
-	     ElbExpr* opr1);
+  EiBitNegOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1          ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
   ~EiBitNegOp();
@@ -163,10 +167,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 
 private:
@@ -190,10 +194,10 @@ class EiReductionOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド
-  EiReductionOp(const PtExpr* pt_expr,
-		ElbExpr* opr1);
+  EiReductionOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1          ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
   ~EiReductionOp();
@@ -215,10 +219,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 };
 
@@ -232,10 +236,10 @@ class EiUnaryArithOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド
-  EiUnaryArithOp(const PtExpr* pt_expr,
-		 ElbExpr* opr1);
+  EiUnaryArithOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1	   ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
   ~EiUnaryArithOp();
@@ -257,10 +261,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 };
 
@@ -275,10 +279,10 @@ class EiEventEdgeOp :
 public:
 
   /// @brief コンストラクタ
-  /// @param[in] pt_expr パース木の定義要素
-  /// @param[in] opr1 オペランド
-  EiEventEdgeOp(const PtExpr* pt_expr,
-		ElbExpr* opr1);
+  EiEventEdgeOp(
+    const PtExpr* pt_expr, ///< [in] パース木の定義要素
+    ElbExpr* opr1	   ///< [in] オペランド
+  );
 
   /// @brief デストラクタ
   ~EiEventEdgeOp();
@@ -300,10 +304,10 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief 要求される式の型を計算してセットする．
-  /// @param[in] type 要求される式の型
-  /// @note 必要であればオペランドに対して再帰的に処理を行なう．
   void
-  _set_reqsize(const VlValueType& type) override;
+  _set_reqsize(
+    const VlValueType& type ///< [in] 要求される式の型
+  ) override;
 
 };
 

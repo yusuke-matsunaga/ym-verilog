@@ -84,6 +84,13 @@ EiDelay::expr(
   return mElemList[pos];
 }
 
+// @brief 値のリストを返す．
+vector<const VlExpr*>
+EiDelay::expr_list() const
+{
+  return vector<const VlExpr*>{mElemList.begin(), mElemList.end()};
+}
+
 // @brief Verilog-HDL の文字列を得る．
 string
 EiDelay::decompile() const
