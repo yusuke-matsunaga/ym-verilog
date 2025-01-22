@@ -204,6 +204,11 @@ public:
     SizeType pos ///< [in] 取得するポートの位置 (0 <= pos < port_num())
   ) const = 0;
 
+  /// @brief ポートのリストの取得
+  virtual
+  vector<const VlPort*>
+  port_list() const = 0;
+
   /// @brief 入出力数を得る．
   virtual
   SizeType
@@ -215,6 +220,11 @@ public:
   io(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
   ) const = 0;
+
+  /// @brief 入出力のリストの取得
+  virtual
+  vector<const VlIODecl*>
+  io_list() const = 0;
 
 };
 

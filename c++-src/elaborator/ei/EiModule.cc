@@ -388,8 +388,22 @@ EiModule::port(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= pos && pos < port_num() );
+  if ( pos >= port_num() ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return &mPortList[pos];
+}
+
+// @brief ポートのリストの取得
+vector<const VlPort*>
+EiModule::port_list() const
+{
+  vector<const VlPort*> ans_list;
+  ans_list.reserve(port_num());
+  for ( auto& port: mPortList ) {
+    ans_list.push_back(&port);
+  }
+  return ans_list;
 }
 
 // @brief 入出力数を得る．
@@ -405,8 +419,22 @@ EiModule::io(
   SizeType pos
 ) const
 {
-  ASSERT_COND( 0 <= pos && pos < io_num() );
+  if ( pos >= io_num() ) {
+    throw std::out_of_range{"pos is out of range"};
+  }
   return &mIODeclList[pos];
+}
+
+// @brief 入出力のリストの取得
+vector<const VlIODecl*>
+EiModule::io_list() const
+{
+  vector<const VlIODecl*> ans_list;
+  ans_list.reserve(io_num());
+  for ( auto& io: mIODeclList ) {
+    ans_list.push_back(&io);
+  }
+  return ans_list;
 }
 
 // @brief 入出力を追加する．

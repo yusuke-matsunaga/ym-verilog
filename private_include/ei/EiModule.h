@@ -282,6 +282,10 @@ public:
     SizeType pos ///< [in] 取得するポートの位置 (0 <= pos < port_num())
   ) const override;
 
+  /// @brief ポートのリストの取得
+  vector<const VlPort*>
+  port_list() const override;
+
   /// @brief 入出力数を得る．
   SizeType
   io_num() const override;
@@ -291,6 +295,10 @@ public:
   io(
     SizeType pos ///< [in] 位置番号 ( 0 <= pos < io_num() )
   ) const override;
+
+  /// @brief 入出力のリストの取得
+  vector<const VlIODecl*>
+  io_list() const override;
 
 
 public:
