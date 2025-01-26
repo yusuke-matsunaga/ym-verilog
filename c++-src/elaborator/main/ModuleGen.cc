@@ -205,7 +205,7 @@ ModuleGen::instantiate_port(
   SizeType index{0};
   for ( auto pt_port: pt_module->port_list() ) {
     // 内側の接続と向きを作る．
-    SizeType n{pt_port->portref_size()};
+    auto n = pt_port->portref_size();
 
     ElbExpr* low_conn{nullptr};
     auto dir = VpiDir::NoDirection;
@@ -254,16 +254,19 @@ ModuleGen::instantiate_portref(
   auto name = pt_portref->name();
   auto handle = mgr().find_obj(module, name);
   if ( !handle ) {
-    ErrorGen::not_found(__FILE__, __LINE__, pt_portref->file_region(), name);
+    ErrorGen::not_found(__FILE__, __LINE__,
+			pt_portref->file_region(), name);
   }
 
   if ( handle->declarray() ) {
-    ErrorGen::port_array(__FILE__, __LINE__, pt_portref->file_region(), handle->declarray());
+    ErrorGen::port_array(__FILE__, __LINE__,
+			 pt_portref->file_region(), handle->declarray());
   }
 
   auto decl = handle->decl();
   if ( decl == nullptr ) {
-    ErrorGen::illegal_port(__FILE__, __LINE__, pt_portref->file_region(), name);
+    ErrorGen::illegal_port(__FILE__, __LINE__,
+			   pt_portref->file_region(), name);
   }
 
   auto primary = mgr().new_Primary(pt_portref, decl);
