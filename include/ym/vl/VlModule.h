@@ -226,6 +226,15 @@ public:
   vector<const VlIODecl*>
   io_list() const = 0;
 
+  /// @brief 宣言要素に対応する入出力を得る．
+  ///
+  /// 対応する入出力がない場合は nullptr を返す．
+  virtual
+  const VlIODecl*
+  find_io(
+    const VlDecl* decl ///< [in] 対象の宣言要素
+  ) const = 0;
+
 };
 
 END_NAMESPACE_YM_VERILOG

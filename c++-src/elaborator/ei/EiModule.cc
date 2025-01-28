@@ -437,6 +437,18 @@ EiModule::io_list() const
   return ans_list;
 }
 
+// @brief 宣言要素に対応する入出力を得る．
+const VlIODecl*
+EiModule::find_io(
+  const VlDecl* decl
+) const
+{
+  if ( mIODict.count(decl) > 0 ) {
+    return mIODict.at(decl);
+  }
+  return nullptr;
+}
+
 // @brief 入出力を追加する．
 void
 EiModule::add_iodecl(
@@ -446,6 +458,8 @@ EiModule::add_iodecl(
 )
 {
   mIODeclList.push_back({head, pt_item, decl});
+  auto io_decl = &mIODeclList.back();
+  mIODict.emplace(decl, io_decl);
 }
 
 // @brief ポートの初期設定を行う．

@@ -300,6 +300,14 @@ public:
   vector<const VlIODecl*>
   io_list() const override;
 
+  /// @brief 宣言要素に対応する入出力を得る．
+  ///
+  /// 対応する入出力がない場合は nullptr を返す．
+  const VlIODecl*
+  find_io(
+    const VlDecl* decl ///< [in] 対象の宣言要素
+  ) const override;
+
 
 public:
   //////////////////////////////////////////////////////////////////////
@@ -358,6 +366,9 @@ private:
 
   // 入出力の配列
   vector<EiIODecl> mIODeclList;
+
+  // 宣言要素と入出力の対応を持つ辞書
+  std::unordered_map<const VlDecl*, const VlIODecl*> mIODict;
 
 };
 
