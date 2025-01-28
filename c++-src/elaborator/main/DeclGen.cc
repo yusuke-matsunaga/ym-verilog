@@ -129,7 +129,8 @@ DeclGen::instantiate_iodecl(
 	// 同名の要素が見つかった．
 	if ( def_aux_type != VpiAuxType::None ) {
 	  // なのに IO 宣言の aux_type もある．
-	  ErrorGen::duplicate_type(__FILE__, __LINE__, pt_item, handle->file_region());
+	  ErrorGen::duplicate_type(__FILE__, __LINE__,
+				   pt_item, handle->file_region());
 	}
 	decl = handle->decl();
 	if ( decl ) {
@@ -156,7 +157,9 @@ DeclGen::instantiate_iodecl(
 	  // 不適切な型だった場合．
 	  // 上の decl = nullptr にした時もここに来る．
 	  bool is_module{module != nullptr};
-	  ErrorGen::illegal_io(__FILE__, __LINE__, pt_item, handle->full_name(), is_module);
+	  ErrorGen::illegal_io(__FILE__, __LINE__,
+			       pt_item, handle->full_name(),
+			       is_module);
 	}
 
 	// ここに来たら decl != nullptr
@@ -175,12 +178,14 @@ DeclGen::instantiate_iodecl(
 	      right_val = right_val2;
 	    }
 	    else {
-	      ErrorGen::conflict_io_range(__FILE__, __LINE__, pt_item);
+	      ErrorGen::conflict_io_range(__FILE__, __LINE__,
+					  pt_item);
 	    }
 	  }
 	  else if ( left_val != left_val2 || right_val != right_val2 ) {
 	    // 範囲が異なっていた．
-	    ErrorGen::conflict_io_range(__FILE__, __LINE__, pt_item);
+	    ErrorGen::conflict_io_range(__FILE__, __LINE__,
+					pt_item);
 	    DOUT << "IO range: [" << left_val << ":" << right_val << "]"
 		 << endl
 		 << "Decl range: [" << left_val2 << ":" << right_val2 << "]"
@@ -191,7 +196,8 @@ DeclGen::instantiate_iodecl(
 	else if ( has_range ) {
 	  // decl は範囲を持っていないが IO は持っている．
 	  // エラーとする．
-	  ErrorGen::conflict_io_range(__FILE__, __LINE__, pt_item);
+	  ErrorGen::conflict_io_range(__FILE__, __LINE__,
+				      pt_item);
 	}
 	// どちらか一方でも符号付きなら両方符号付きにする．
 	// ちょっと ad-hoc な仕様
@@ -207,7 +213,8 @@ DeclGen::instantiate_iodecl(
 	    // モジュール IO の場合は `default_net_type を参照する．
 	    auto net_type = module->def_net_type();
 	    if ( net_type == VpiNetType::None ) {
-	      ErrorGen::no_impnet(__FILE__, __LINE__, pt_item);
+	      ErrorGen::no_impnet(__FILE__, __LINE__,
+				  pt_item);
 	    }
 	    aux_type = VpiAuxType::Net;
 	  }
